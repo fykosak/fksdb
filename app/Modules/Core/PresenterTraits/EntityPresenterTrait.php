@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\Services\AbstractServiceSingle;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
@@ -186,11 +186,11 @@ trait EntityPresenterTrait {
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
     /**
-     * @param null $name
+     * @param string $name
      * @param null $default
      * @return mixed
      */
-    abstract public function getParameter($name, $default = null);
+    abstract public function getParameter(string $name, $default = null);
 
     /**
      * @param bool $access

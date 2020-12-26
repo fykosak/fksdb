@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase {

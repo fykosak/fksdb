@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\StoredQuery;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

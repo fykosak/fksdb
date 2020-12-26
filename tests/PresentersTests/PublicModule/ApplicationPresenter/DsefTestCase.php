@@ -40,7 +40,7 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],  []);
+        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
     }
 
     protected function tearDown(): void {

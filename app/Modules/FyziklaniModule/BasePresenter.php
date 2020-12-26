@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
-use FKSDB\ORM\Models\ModelEventType;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEventType;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
 /**
  *

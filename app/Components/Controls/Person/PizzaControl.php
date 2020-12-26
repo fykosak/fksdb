@@ -7,8 +7,8 @@ use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Form;
 
 class PizzaControl extends BaseComponent {
@@ -29,7 +29,7 @@ class PizzaControl extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
         $personsField->setMultiSelect(true);

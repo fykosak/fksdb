@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\DBReflection;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
  * Class LinkPrinterComponent

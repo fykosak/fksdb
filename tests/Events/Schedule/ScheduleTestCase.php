@@ -34,7 +34,6 @@ EOT
             ,
         ]);
 
-
         $this->groupId = $this->insert('schedule_group', [
             'event_id' => $this->eventId,
             'schedule_group_type' => 'accommodation',
@@ -57,10 +56,8 @@ EOT
             'capacity' => 4,
         ]);
 
-
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
-
 
         $this->persons[] = $this->createPerson('Paní', 'Bílá',
             [
@@ -76,7 +73,6 @@ EOT
             'person_id' => end($this->persons),
             'schedule_item_id' => $this->itemId,
         ]);
-
 
         $this->persons[] = $this->createPerson('Paní', 'Bílá II.',
             [
@@ -121,8 +117,8 @@ EOT
                         'accommodation' => json_encode([$this->groupId => $this->itemId]),
                     ],
                 ],
-                'e_dsef_group_id' => 2,
-                'lunch_count' => 0,
+                'e_dsef_group_id' => (string)2,
+                'lunch_count' => (string)0,
                 'message' => "",
             ],
             'privacy' => "on",

@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -37,13 +37,13 @@ class NewApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
-     * @throws DuplicateColumnException
      * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumns([

@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use NiftyGrid\DuplicateColumnException;
 
 /**

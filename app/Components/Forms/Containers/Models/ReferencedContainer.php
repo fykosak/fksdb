@@ -4,11 +4,11 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\IModel;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
@@ -100,7 +100,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     private function createClearButton(): void {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
-            ->setValidationScope(false);
+            ->setValidationScope(null);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             if ($this->allowClear) {

@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
 
 /**
  * Trait ReferencedPersonTrait

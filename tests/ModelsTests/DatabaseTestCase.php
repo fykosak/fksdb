@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests;
+namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Authentication\PasswordAuthenticator;
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Database\Context;
-use Nette\Database\Row;
+use Nette\Database\IRow;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -25,6 +25,7 @@ abstract class DatabaseTestCase extends TestCase {
      * @param Container $container
      */
     public function __construct(Container $container) {
+
         $this->container = $container;
         /** @var Context $context */
         $context = $container->getByType(Context::class);
@@ -86,9 +87,9 @@ abstract class DatabaseTestCase extends TestCase {
         return $personId;
     }
 
-    protected function assertPersonInfo(int $personId): Row {
+    protected function assertPersonInfo(int $personId): IRow {
         $personInfo = $this->connection->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
-        Assert::notEqual(false, $personInfo);
+        Assert::notEqual(null, $personInfo);
         return $personInfo;
     }
 

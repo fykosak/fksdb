@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Services\ServiceTeacher;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Services\ServiceTeacher;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
  *
@@ -37,13 +37,13 @@ class TeachersGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns([
             'person.full_name',
@@ -54,7 +54,7 @@ class TeachersGrid extends BaseGrid {
             'teacher.number_brochures',
             'school.school',
         ]);
-        $this->addLink('teacher.edit', false);
-        $this->addLink('teacher.detail', false);
+        $this->addLink('teacher.edit');
+        $this->addLink('teacher.detail');
     }
 }

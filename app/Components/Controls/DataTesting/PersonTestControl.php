@@ -5,13 +5,13 @@ namespace FKSDB\Components\Controls\DataTesting;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\DataTesting\Tests\ModelPerson\PersonTest;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\DataTesting\TestLog;
+use FKSDB\Models\DataTesting\DataTestingFactory;
+use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
 /**
@@ -57,7 +57,7 @@ class PersonTestControl extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
             ->addRule(Form::INTEGER)

@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FolTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -34,6 +34,7 @@ class AnonymousTest extends FolTestCase {
     }
 
     public function testAnonymousRegistration(): void {
+
         $request = $this->createPostRequest([
             'team' => [
                 'name' => 'Okurkový tým',
@@ -52,7 +53,7 @@ class AnonymousTest extends FolTestCase {
                     ],
                     'person_history' => [
                         'school_id__meta' => 'JS',
-                        'school_id' => 1,
+                        'school_id' => (string)1,
                         'study_year' => '',
                     ],
                 ],

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\UI\Title;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 

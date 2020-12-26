@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Inbox\PointsForm;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\SeriesTable;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;

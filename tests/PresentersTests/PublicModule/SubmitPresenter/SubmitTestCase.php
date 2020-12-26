@@ -3,14 +3,14 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Database\Row;
-use Nette\DI\Config\Helpers;
+use Nette\Database\IRow;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
+use Nette\Schema\Helpers;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tester\Environment;
@@ -90,9 +90,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             'person_id' => $this->personId,
         ]);
 
-
         $this->fixture = $this->createPresenter('Public:Submit');
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
 
@@ -114,15 +113,16 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest(array $postData, array $post = []): Request {
-        $post = Helpers::merge($post, [
+    protected function createPostRequest(array $formData): Request {
+        $formData = Helpers::merge($formData, [
+            '_do' => 'uploadForm-form-submit',
+        ]);
+        return new Request('Public:Submit', 'POST', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
-            'do' => 'uploadForm-form-submit',
-        ]);
-        return new Request('Public:Submit', 'POST', $post, $postData);
+        ], $formData);
     }
 
     protected function createFileUpload(): array {
@@ -150,21 +150,20 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             "task{$this->taskRestricted}" => $this->createFileUpload(),
         ]);
         $response = $this->fixture->run($request);
-
         Assert::type(RedirectResponse::class, $response);
 
         $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): Row {
+    protected function assertSubmit(int $contestantId, int $taskId): IRow {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
-        Assert::notEqual(false, $submit);
+        Assert::notEqual(null, $submit);
         return $submit;
     }
 
     protected function assertNotSubmit(int $contestantId, int $taskId): void {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
-        Assert::equal(false, $submit);
+        Assert::equal(null, $submit);
     }
 
 }

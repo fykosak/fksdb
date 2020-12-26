@@ -5,17 +5,17 @@ namespace FKSDB\Modules\FyziklaniModule;
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -74,11 +74,11 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
 

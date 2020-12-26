@@ -6,17 +6,17 @@ use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
-use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\Payment\Handler\DuplicatePaymentException;
-use FKSDB\Payment\Handler\EmptyDataException;
-use FKSDB\Payment\Transition\PaymentMachine;
-use FKSDB\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
+use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
+use FKSDB\Models\Payment\Handler\EmptyDataException;
+use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -105,11 +105,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         try {
             $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $connection->rollBack();
-            return;
-        } catch (EmptyDataException $exception) {
+        } catch (DuplicatePaymentException|EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;

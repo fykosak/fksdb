@@ -3,17 +3,17 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Services\ServiceEventParticipant;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -23,7 +23,7 @@ use Nette\Application\ForbiddenRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));

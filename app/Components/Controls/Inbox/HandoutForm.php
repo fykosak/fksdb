@@ -6,14 +6,14 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelTask;
-use FKSDB\ORM\Models\ModelTaskContribution;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\Submits\SeriesTable;
-use FKSDB\YearCalculator;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\ModelTaskContribution;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\Submits\SeriesTable;
+use FKSDB\Models\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -48,7 +48,7 @@ class HandoutForm extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $formControl = new FormControl();
+        $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
         $orgProvider->filterOrgs($this->seriesTable->getContest(), $this->yearCalculator);

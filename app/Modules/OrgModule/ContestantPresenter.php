@@ -3,9 +3,9 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Services\ServiceContestant;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 
 /**

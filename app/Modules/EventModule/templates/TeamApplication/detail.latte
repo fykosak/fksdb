@@ -50,7 +50,7 @@
 
     {var $counter = 0;}
     {foreach $model->getParticipants() as $row}
-        {var $participant = FKSDB\ORM\Models\ModelEventParticipant::createFromActiveRow($row->event_participant)}
+        {var $participant = FKSDB\Models\ORM\Models\ModelEventParticipant::createFromActiveRow($row->event_participant)}
         {do $counter ++}
         {var $history=$participant->getPerson()->getHistory($acYear)}
 
