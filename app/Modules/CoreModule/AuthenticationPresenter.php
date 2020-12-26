@@ -3,26 +3,26 @@
 namespace FKSDB\Modules\CoreModule;
 
 use Exception;
-use FKSDB\Authentication\AccountManager;
-use FKSDB\Authentication\GoogleAuthenticator;
-use FKSDB\Authentication\LoginUserStorage;
-use FKSDB\Authentication\PasswordAuthenticator;
-use FKSDB\Authentication\Provider\GoogleProvider;
-use FKSDB\Authentication\Exceptions\RecoveryException;
-use FKSDB\Authentication\SSO\IGlobalSession;
-use FKSDB\Authentication\SSO\ServiceSide\Authentication;
-use FKSDB\Authentication\TokenAuthenticator;
-use FKSDB\Authentication\Exceptions\UnknownLoginException;
+use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\Authentication\GoogleAuthenticator;
+use FKSDB\Models\Authentication\LoginUserStorage;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\Provider\GoogleProvider;
+use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Models\Authentication\SSO\IGlobalSession;
+use FKSDB\Models\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Mail\SendFailedException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceAuthToken;
-use FKSDB\UI\PageTitle;
-use FKSDB\Utils\Utils;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceAuthToken;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\Utils;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
@@ -93,6 +93,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws InvalidLinkException
+     * @throws Exception
      */
     public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
@@ -133,6 +134,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadTypeException
+     * @throws Exception
      */
     public function actionLogin(): void {
         if ($this->isLoggedIn()) {
@@ -260,7 +262,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form): void {
@@ -275,10 +277,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');
-        } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-            $connection->rollBack();
-        } catch (RecoveryException $exception) {
+        } catch (AuthenticationException | RecoveryException $exception) {
             $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
             $connection->rollBack();
         } catch (SendFailedException $exception) {
@@ -290,6 +289,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param ModelLogin|null $login
      * @return void
+     * @throws Exception
      */
     private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
@@ -327,6 +327,9 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function actionGoogle(): void {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
             $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
@@ -343,7 +346,7 @@ final class AuthenticationPresenter extends BasePresenter {
         } catch (UnknownLoginException $exception) {
             $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
             $this->redirect('login');
-        } catch (IdentityProviderException|AuthenticationException $exception) {
+        } catch (IdentityProviderException | AuthenticationException $exception) {
             $this->flashMessage(_('Error'), self::FLASH_ERROR);
             $this->redirect('login');
         }

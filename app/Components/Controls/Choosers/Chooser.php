@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\UI\Title;
+use FKSDB\Models\UI\Title;
 
 /**
  * Class Chooser
@@ -31,7 +31,7 @@ abstract class Chooser extends BaseComponent {
      * @return bool
      */
     abstract public function isItemActive($item): bool;
-    
+
     /**
      * @param mixed $item
      * @return Title

@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
-use Nette\Database\Row;
+use Nette\Database\IRow;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -37,7 +37,7 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],  []);
+        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
     }
 
     protected function tearDown(): void {
@@ -46,9 +46,9 @@ EOT
         parent::tearDown();
     }
 
-    protected function assertTeamApplication(int $eventId, string $teamName): Row {
+    protected function assertTeamApplication(int $eventId, string $teamName): IRow {
         $application = $this->connection->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
-        Assert::notEqual(false, $application);
+        Assert::notEqual(null, $application);
         return $application;
     }
 

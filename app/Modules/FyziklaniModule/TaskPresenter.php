@@ -4,13 +4,13 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 
@@ -58,7 +58,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentTaskImportForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addUpload('csvfile')->setRequired();

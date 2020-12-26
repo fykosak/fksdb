@@ -3,16 +3,16 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\ILogger;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\ORM\Models\ModelTask;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\StorageException;
-use FKSDB\Submits\SubmitHandlerFactory;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -87,7 +87,7 @@ class AjaxSubmit extends AjaxComponent {
      */
     protected function getData(): array {
         $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
-        return ServiceSubmit::serializeSubmit($this->getSubmit(false), $this->task, $studyYear);
+        return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
     /**
@@ -126,9 +126,9 @@ class AjaxSubmit extends AjaxComponent {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
-        } catch (ForbiddenRequestException|NotFoundException$exception) {
+        } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (StorageException|ModelException$exception) {
+        } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
             $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
         }
@@ -144,7 +144,7 @@ class AjaxSubmit extends AjaxComponent {
     public function handleDownload(): void {
         try {
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $this->getSubmit(true));
-        } catch (ForbiddenRequestException|StorageException|NotFoundException$exception) {
+        } catch (ForbiddenRequestException | StorageException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         }
         $this->sendAjaxResponse();

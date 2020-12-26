@@ -12,13 +12,13 @@ class WithDSEFAnonymousTest extends TsafTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId);
+        $this->authenticate($adminId, $this->fixture);
 
         $dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
@@ -34,9 +34,10 @@ class WithDSEFAnonymousTest extends TsafTestCase {
     }
 
     public function testRegistration(): void {
+
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [

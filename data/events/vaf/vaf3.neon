@@ -65,7 +65,7 @@ events:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit náhradníka')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: role('admin')
                         label: _('Nasadit náhradníka')
@@ -115,7 +115,7 @@ events:
                     required: true
                     primary: true
             formAdjustments:
-                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', _('Zvolená osoba je již přihlášená.'))
                 - @events.privacyPolicy
                 - @events.captcha
 

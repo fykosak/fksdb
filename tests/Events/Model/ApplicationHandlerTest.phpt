@@ -4,16 +4,16 @@ namespace FKSDB\Tests\Events\Model;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\Model\ApplicationHandler;
-use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Tests\Events\EventTestCase;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Logging\DevNullLogger;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Logging\DevNullLogger;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -53,7 +53,6 @@ class ApplicationHandlerTest extends EventTestCase {
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 
-
         $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
         /** @var ModelEvent $event */
         $event = $serviceEvent->findByPrimary(1);
@@ -74,7 +73,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws \FKSDB\Events\Model\ApplicationHandlerException
+     * @throws \FKSDB\Models\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication(): void {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
@@ -92,7 +91,7 @@ class ApplicationHandlerTest extends EventTestCase {
                     'name' => $teamName,
                     'phone' => '+420987654321',
                     'force_a' => false,
-                    'teacher_id' => $id1,
+                    'teacher_id' => (string)$id1,
                     'teacher_id_1' =>
                         [
                             '_c_compact' => 'Karel Kolář',
@@ -111,7 +110,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p1' =>
                 [
-                    'person_id' => $id2,
+                    'person_id' => (string)$id2,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Michal Koutný',
@@ -135,7 +134,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p2' =>
                 [
-                    'person_id' => $id3,
+                    'person_id' => (string)$id3,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Kristína Nešporová',

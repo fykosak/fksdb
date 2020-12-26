@@ -2,15 +2,16 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Authentication\GithubAuthenticator;
-use FKSDB\Authentication\PasswordAuthenticator;
-use FKSDB\Authentication\TokenAuthenticator;
-use FKSDB\Authorization\ContestAuthorizator;
-use FKSDB\Authorization\EventAuthorizator;
+use FKSDB\Models\Authentication\GithubAuthenticator;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
 use ReflectionClass;
@@ -61,7 +62,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException
+     * @throws ForbiddenRequestException|BadRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -162,7 +163,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws Exception
      */
     private function tryAuthToken(): void {
         $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
@@ -187,6 +188,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws Exception
+     */
     private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
@@ -221,7 +226,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @throws ForbiddenRequestException|BadRequestException
+     * @throws Exception
      */
     private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

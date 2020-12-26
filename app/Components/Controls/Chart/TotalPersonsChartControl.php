@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Chart;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 
 /**

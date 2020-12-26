@@ -2,18 +2,18 @@
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Events\Model\ApplicationHandler;
-use FKSDB\Events\Model\Grid\SingleEventSource;
-use FKSDB\Events\Model\ImportHandler;
-use FKSDB\Events\Model\ImportHandlerException;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Model\ImportHandler;
+use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Utils\CSVParser;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Utils\CSVParser;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -44,7 +44,7 @@ class ImportComponent extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentFormImport(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addUpload('file', _('Soubor s přihláškami'))

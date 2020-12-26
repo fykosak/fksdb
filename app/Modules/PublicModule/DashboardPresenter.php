@@ -2,13 +2,12 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\News;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use FKSDB\News;
 
 /**
  * Just proof of concept.
@@ -37,8 +36,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
-        $access = (bool)$login;
-        $this->setAuthorized($access);
+        $this->setAuthorized((bool)$login);
     }
 
     public function titleDefault(): void {
@@ -46,8 +44,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException
      */
     public function renderDefault(): void {

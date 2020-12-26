@@ -100,7 +100,7 @@ class Action extends \Nette\Application\UI\Component
 	public function getAction()
 	{
 		if(empty($this->callback)){
-			throw new UnknownActionCallbackException("Action $this->name doesn't have callback.");
+			throw new NiftyGrid\UnknownActionCallbackException("Action $this->name doesn't have callback.");
 		}
 
 		$option = \Nette\Utils\Html::el('option')->setValue($this->name)->setText($this->label);

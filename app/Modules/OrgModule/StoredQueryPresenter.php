@@ -6,14 +6,13 @@ use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -34,7 +33,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -48,7 +46,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
@@ -57,7 +54,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -71,14 +67,12 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
     }
 
-
     protected function startup(): void {
         switch ($this->getAction()) {
             case 'execute':
                 $this->redirect(':Org:Export:execute', $this->getParameters());
         }
         parent::startup();
-        $this->seriesTraitStartup();
     }
 
     /**
@@ -119,21 +113,8 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

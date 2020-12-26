@@ -6,18 +6,18 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\ILogger;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceAuthToken;
-use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\Utils\FormUtils;
-use FKSDB\Utils\Utils;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceAuthToken;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Models\Utils\Utils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -146,10 +146,10 @@ class EventFormComponent extends AbstractEntityFormComponent {
             $item = Html::el('li');
             $result->addText($item);
 
-            $item->addHtml(Html::el(null)->setText($key));
+            $item->addHtml(Html::el()->setText($key));
             if (isset($meta['default'])) {
                 $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(Utils::getRepresentation($meta['default'])));
+                $item->addHtml(Html::el()->setText(Utils::getRepresentation($meta['default'])));
             }
         }
         return $result;

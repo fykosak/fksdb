@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
-use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
 
 /**
  * Class ContestantsPerSeries

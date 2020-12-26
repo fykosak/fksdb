@@ -4,9 +4,9 @@ namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\DI\Container;
 
 class ParticipantsInTimeGeoChartControl extends ReactComponent implements IChart {
@@ -31,7 +31,7 @@ class ParticipantsInTimeGeoChartControl extends ReactComponent implements IChart
         $rawData = [];
         foreach ($this->event->getParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
-            $iso = $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso3;;
+            $iso = $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso3;
             $rawData[] = [
                 'country' => $iso,
                 'created' => $participant->created->format('c'),

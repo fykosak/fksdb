@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Fyziklani\Seating;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
 /**
  * Class SeatingControl

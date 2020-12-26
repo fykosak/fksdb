@@ -2,19 +2,18 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Astrid\Downloader;
+use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Pipeline\PipelineException;
-use FKSDB\SeriesCalculator;
-use FKSDB\Submits\UploadException;
-use FKSDB\Tasks\PipelineFactory;
-use FKSDB\Tasks\SeriesData;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Pipeline\PipelineException;
+use FKSDB\Models\SeriesCalculator;
+use FKSDB\Models\Submits\UploadException;
+use FKSDB\Models\Tasks\PipelineFactory;
+use FKSDB\Models\Tasks\SeriesData;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
@@ -45,10 +44,6 @@ class TasksPresenter extends BasePresenter {
         $this->downloader = $downloader;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedImport(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
@@ -60,10 +55,9 @@ class TasksPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $source = $form->addRadioList('source', _('Problem source'), [
@@ -97,8 +91,6 @@ class TasksPresenter extends BasePresenter {
      * @param Form $seriesForm
      * @return void
      * @throws AbortException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();

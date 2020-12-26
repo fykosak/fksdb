@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Controls\FormControl;
 
 use FKSDB\Components\Forms\OptimisticForm;
+use Nette\DI\Container;
+
 /**
  * Class OptimisticFormControl
  * @author Michal Červeňák <miso@fykos.cz>
@@ -15,10 +17,10 @@ class OptimisticFormControl extends FormControl {
     /** @var callable */
     private $defaultsCallback;
 
-    public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
+    public function __construct(Container $container, callable $fingerprintCallback, callable $defaultsCallback) {
+        parent::__construct($container);
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
-        parent::__construct();
     }
 
     protected function createComponentForm(): OptimisticForm {

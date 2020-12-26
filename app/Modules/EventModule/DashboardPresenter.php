@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  * Class DashboardPresenter

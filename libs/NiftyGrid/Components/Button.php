@@ -86,7 +86,7 @@ class Button extends \Nette\Application\UI\Component
 
 	/**
 	 * @param $text
-	 * @return mixed
+	 * @return static
 	 */
 	public function setText($text)
 	{

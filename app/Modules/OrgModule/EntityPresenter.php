@@ -4,10 +4,9 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\IModel;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\IModel;
 use Nette\Application\UI\Form;
 
 /**
@@ -31,34 +30,20 @@ abstract class EntityPresenter extends BasePresenter {
 
     private ?IModel $model;
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedCreate(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedEdit(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedList(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
     /**
      * @param int $id
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     public function authorizedDelete($id): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));

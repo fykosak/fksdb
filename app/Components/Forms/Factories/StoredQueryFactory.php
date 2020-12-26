@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
@@ -73,7 +73,7 @@ class StoredQueryFactory {
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
 
-        $submit->setValidationScope(false)
+        $submit->setValidationScope(null)
             ->addCreateOnClick();
 
         return $replicator;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\ContestPresenter;
 
-use FKSDB\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContest;
 
 /**
  * For presenters that provide contest and year context.
@@ -20,7 +20,7 @@ interface IContestPresenter {
     /**
      * @param string $message
      * @param string $type
-     * @return void
+     * @return \stdClass
      */
-    public function flashMessage($message, $type = 'info');
+    public function flashMessage($message, string $type = 'info'): \stdClass;
 }

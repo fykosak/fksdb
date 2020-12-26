@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;

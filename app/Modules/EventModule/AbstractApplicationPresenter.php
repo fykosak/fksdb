@@ -4,20 +4,20 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\ORM\Services\ServiceEventParticipant;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -40,7 +40,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
@@ -60,7 +60,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     final public function titleTransitions(): void {
         $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
@@ -68,11 +68,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 

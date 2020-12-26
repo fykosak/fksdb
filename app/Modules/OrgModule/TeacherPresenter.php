@@ -4,12 +4,11 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\ORM\Models\ModelTeacher;
-use FKSDB\ORM\Services\ServiceTeacher;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -80,10 +79,8 @@ class TeacherPresenter extends BasePresenter {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 

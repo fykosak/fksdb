@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\EventOrg;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use Nette\Application\IPresenter;
+use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -27,13 +27,13 @@ class EventOrgsGrid extends EntityGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->addLink('event_org.edit');

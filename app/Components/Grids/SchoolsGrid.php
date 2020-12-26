@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
  *
@@ -38,13 +38,13 @@ class SchoolsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         //

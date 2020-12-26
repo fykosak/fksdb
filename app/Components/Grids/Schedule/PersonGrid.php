@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
@@ -39,12 +39,12 @@ class PersonGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 

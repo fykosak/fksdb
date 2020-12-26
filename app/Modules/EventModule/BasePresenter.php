@@ -2,19 +2,20 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -167,6 +168,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

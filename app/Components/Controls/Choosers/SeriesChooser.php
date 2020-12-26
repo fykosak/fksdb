@@ -2,11 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\SeriesCalculator;
-use FKSDB\UI\Title;
-use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
@@ -16,67 +12,15 @@ use Nette\DI\Container;
  */
 class SeriesChooser extends Chooser {
 
-    private SeriesCalculator $seriesCalculator;
-    private ?int $urlSeries;
-    private ModelContest $contest;
     private int $year;
     private int $series;
+    private array $allowedSeries;
 
-    public function __construct(Container $container, ModelContest $contest, int $year, ?int $urlSeries) {
+    public function __construct(Container $container, int $year, int $series, array $allowedSeries) {
         parent::__construct($container);
-        $this->urlSeries = $urlSeries;
-        $this->contest = $contest;
+        $this->series = $series;
         $this->year = $year;
-    }
-
-    final public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
-        $this->seriesCalculator = $seriesCalculator;
-    }
-
-    /**
-     * @param bool $redirect
-     * @return void
-     * @throws AbortException
-     * @throws ForbiddenRequestException
-     */
-    public function init(bool $redirect = true): void {
-        if (!isset($this->series)) {
-            $this->series = $this->selectSeries();
-        }
-        if ($redirect && +$this->urlSeries !== $this->series) {
-            $this->getPresenter()->redirect('this', array_merge($this->getPresenter()->getParameters(), ['series' => $this->series]));
-        }
-    }
-
-    /**
-     * @param bool $redirect
-     * @return int
-     * @throws AbortException
-     * @throws ForbiddenRequestException
-     */
-    public function getSelectedSeries(bool $redirect = true): int {
-        $this->init($redirect);
-        return $this->series;
-    }
-
-    /**
-     * @return int
-     * @throws ForbiddenRequestException
-     */
-    private function selectSeries(): int {
-        $candidate = $this->urlSeries ?? $this->seriesCalculator->getLastSeries($this->contest, $this->year);
-        if (!$this->isValidSeries($candidate)) {
-            throw new ForbiddenRequestException();
-        }
-        return $candidate;
-    }
-
-    private function isValidSeries(?int $series): bool {
-        return in_array($series, $this->getAllowedSeries());
-    }
-
-    private function getAllowedSeries(): array {
-        return $this->seriesCalculator->getAllowedSeries($this->contest, $this->year);
+        $this->allowedSeries = $allowedSeries;
     }
 
     /* ************ CHOOSER METHODS *************** */
@@ -85,7 +29,7 @@ class SeriesChooser extends Chooser {
     }
 
     protected function getItems(): array {
-        return $this->getAllowedSeries();
+        return $this->allowedSeries;
     }
 
     /**

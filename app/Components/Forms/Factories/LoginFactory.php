@@ -26,7 +26,7 @@ class LoginFactory {
         $container->setCurrentGroup($group);
 
         $login = $container->addText('login', _('Přihlašovací jméno'));
-        $login->setAttribute('autocomplete', 'username');
+        $login->setHtmlAttribute('autocomplete', 'username');
 
         if ($loginRule) {
             $login->addRule($loginRule, _('Daný login již někdo používá.'));
@@ -34,10 +34,10 @@ class LoginFactory {
 
         if ($options & self::SHOW_PASSWORD) {
             if ($options & self::VERIFY_OLD_PASSWORD) {
-                $container->addPassword('old_password', _('Staré heslo'))->setAttribute('autocomplete', 'current-password');
+                $container->addPassword('old_password', _('Staré heslo'))->setHtmlAttribute('autocomplete', 'current-password');
             }
             $newPwd = $container->addPassword('password', _('Heslo'));
-            $newPwd->setAttribute('autocomplete', 'new-password');
+            $newPwd->setHtmlAttribute('autocomplete', 'new-password');
             $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('Heslo musí mít alespoň %d znaků.'), 6);
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
@@ -50,7 +50,7 @@ class LoginFactory {
 
             $container->addPassword('password_verify', _('Heslo (ověření)'))
                 ->addRule(Form::EQUAL, _('Zadaná hesla se neshodují.'), $newPwd)
-                ->setAttribute('autocomplete', 'new-password');
+                ->setHtmlAttribute('autocomplete', 'new-password');
         }
 
         return $container;

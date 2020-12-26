@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Github\EventFactory;
-use FKSDB\Github\Events\Event;
-use FKSDB\Github\Events\PushEvent;
-use FKSDB\Maintenance\Updater;
+use FKSDB\Models\Github\EventFactory;
+use FKSDB\Models\Github\Events\Event;
+use FKSDB\Models\Github\Events\PushEvent;
+use FKSDB\Models\Maintenance\Updater;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 

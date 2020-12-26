@@ -3,22 +3,19 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Models\StoredQuery\StoredQuery;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\UI\PageTitle;
-use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 use Nette\Utils\Strings;
@@ -31,7 +28,6 @@ use Nette\Utils\Strings;
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     use EntityPresenterTrait;
-    use SeriesPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
 
@@ -60,15 +56,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
-        $this->seriesTraitStartup();
         parent::startup();
     }
 
     /**
      * @return void
      * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function authorizedExecute(): void {
@@ -78,8 +71,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return void
      * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
@@ -148,16 +139,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return null;
     }
 
-    protected function createComponentContestChooser(): ContestChooser {
-        $component = parent::createComponentContestChooser();
-        if ($this->getAction() == 'execute') {
-            // Contest and year check is done in StoredQueryComponent
-            $component->setContests(ContestChooser::CONTESTS_ALL);
-            $component->setYears(ContestChooser::YEARS_ALL);
-        }
-        return $component;
-    }
-
     /**
      * @return ResultsComponent
      * @throws BadRequestException
@@ -171,17 +152,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     protected function createComponentTagCloud(): StoredQueryTagCloud {
         return new StoredQueryTagCloud($this->getContext());
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 
     protected function createComponentCreateForm(): Control {
@@ -198,10 +168,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return false;
     }
 

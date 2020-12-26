@@ -25,7 +25,7 @@ abstract class AbstractDateInput extends TextInput {
     public function __construct(string $type, string $format, $label = null, $maxLength = null) {
         $this->format = $format;
         parent::__construct($label, $maxLength);
-        $this->setType($type);
+        $this->setHtmlType($type);
     }
 
     public function getControl(): Html {
@@ -39,6 +39,7 @@ abstract class AbstractDateInput extends TextInput {
     /**
      * @param string|\DateTimeInterface|\DateInterval $value
      * @return static
+     * @throws \Exception
      */
     public function setValue($value): self {
         if ($value instanceof \DateTimeInterface) {

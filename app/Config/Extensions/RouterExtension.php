@@ -15,10 +15,7 @@ class RouterExtension extends CompilerExtension {
         parent::loadConfiguration();
 
         $container = $this->getContainerBuilder();
-        $config = $this->getConfig([
-            'routes' => [],
-            'disableSecured' => false,
-        ]);
+        $config = $this->getConfig();
         $router = $container->getDefinition('router');
 
         foreach ($config['routes'] as $action) {

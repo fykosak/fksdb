@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\Request as AppRequest;
 
 /**
