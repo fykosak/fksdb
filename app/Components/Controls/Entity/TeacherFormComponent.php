@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Class TeacherForm
@@ -41,6 +42,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $container = $this->createTeacherContainer();

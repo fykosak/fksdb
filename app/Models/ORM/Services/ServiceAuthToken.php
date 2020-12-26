@@ -5,6 +5,7 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
+use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -98,6 +99,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     /**
      * @param string|ModelAuthToken $token
      * @return void
+     * @throws InvalidStateException
      */
     public function disposeToken($token): void {
         if (!$token instanceof ModelAuthToken) {

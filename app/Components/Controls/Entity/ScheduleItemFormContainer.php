@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Class ScheduleGroupFormComponent
@@ -62,9 +63,10 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws BadTypeException
      * @throws AbstractColumnException
+     * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
 

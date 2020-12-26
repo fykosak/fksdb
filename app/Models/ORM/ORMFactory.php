@@ -6,6 +6,7 @@ use FKSDB\Models\ORM\Columns\IColumnFactory;
 use FKSDB\Models\ORM\Links\ILinkFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\DI\Container;
+use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 
 /**
@@ -27,6 +28,7 @@ final class ORMFactory {
      * @param string $colName
      * @return IColumnFactory
      * @throws BadTypeException
+     * @throws MissingServiceException
      */
     public function loadColumnFactory(string $tableName, string $colName): IColumnFactory {
         $service = $this->container->getService('orm.' . $tableName . '.column.' . $colName);
@@ -41,6 +43,7 @@ final class ORMFactory {
      * @param string $linkId
      * @return ILinkFactory
      * @throws BadTypeException
+     * @throws MissingServiceException
      */
     public function loadLinkFactory(string $tableName, string $linkId): ILinkFactory {
         $service = $this->container->getService('orm.' . $tableName . '.link.' . $linkId);

@@ -20,6 +20,7 @@ use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Nette\InvalidStateException;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
@@ -65,7 +66,7 @@ class ORMExtension extends CompilerExtension {
         $builder = $this->getContainerBuilder();
 
         $factory = $builder->addDefinition($this->prefix($tableName));
-        $factory->setFactory(ReferencedFactory::class, [$fieldDefinitions['modelClassName'], $fieldDefinitions['referencedAccess'] ?? null]);
+        $factory->setFactory(ReferencedFactory::class, [$fieldDefinitions['modelClassName']]);
         return $factory;
     }
 
@@ -74,6 +75,7 @@ class ORMExtension extends CompilerExtension {
      * @param string $linkId
      * @param string|array $def
      * @return ServiceDefinition
+     * @throws InvalidStateException
      */
     private function createLinkFactory(string $tableName, string $linkId, $def): ServiceDefinition {
         $builder = $this->getContainerBuilder();
@@ -92,6 +94,7 @@ class ORMExtension extends CompilerExtension {
      * @param array|string $field
      * @return ServiceDefinition
      * @throws NotImplementedException
+     * @throws InvalidStateException
      */
     private function createColumnFactory(string $tableName, string $fieldName, $field): ServiceDefinition {
         $builder = $this->getContainerBuilder();

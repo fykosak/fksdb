@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\InvalidStateException;
 
 /**
  *
@@ -27,6 +28,7 @@ abstract class BasePresenter extends EventBasePresenter {
     /**
      * @return FyziklaniChooser
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooser {
         return new FyziklaniChooser($this->getContext(), $this->getEvent());

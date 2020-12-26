@@ -6,6 +6,7 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\InvalidStateException;
 
 /**
  * Class AbstractSymbolGenerator
@@ -31,6 +32,7 @@ abstract class AbstractSymbolGenerator {
      * @param ModelPayment $modelPayment
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws InvalidStateException
      */
     final public function __invoke(ModelPayment $modelPayment): void {
         $info = $this->create($modelPayment);

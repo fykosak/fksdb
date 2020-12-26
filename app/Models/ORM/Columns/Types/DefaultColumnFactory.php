@@ -4,12 +4,12 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\ORM\Columns\IColumnFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
@@ -143,7 +143,7 @@ abstract class DefaultColumnFactory implements IColumnFactory {
      * @param AbstractModelSingle $model
      * @param int $userPermissionsLevel
      * @return Html
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     final public function render(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
@@ -157,12 +157,12 @@ abstract class DefaultColumnFactory implements IColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle $modelSingleSingle
-     * @return AbstractModelSingle|null
-     * @throws BadTypeException
+     * @param AbstractModelSingle $modelSingle
+     * @return AbstractModelSingle|
+     * @throws CannotAccessModelException
      */
-    protected function resolveModel(AbstractModelSingle $modelSingleSingle): ?AbstractModelSingle {
-        return $this->referencedFactory->accessModel($modelSingleSingle);
+    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
+        return ReferencedFactory::accessModel($modelSingle, $this->referencedFactory->getModelClassName());
     }
 
     final public function hasReadPermissions(int $userValue): bool {

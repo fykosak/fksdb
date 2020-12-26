@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
@@ -24,6 +25,7 @@ class ServiceEmailMessage extends AbstractServiceSingle {
      * @param array $data
      * @param int $priority
      * @return ModelEmailMessage|ActiveRow
+     * @throws ModelException
      */
     public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;

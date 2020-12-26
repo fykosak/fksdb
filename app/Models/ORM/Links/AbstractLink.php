@@ -25,7 +25,6 @@ abstract class AbstractLink implements ILinkFactory {
      * @param Presenter $presenter
      * @param AbstractModelSingle $model
      * @return string
-     * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
@@ -37,17 +36,15 @@ abstract class AbstractLink implements ILinkFactory {
      * @param AbstractModelSingle $modelSingle
      * @return AbstractModelSingle|null
      * @throws CannotAccessModelException
-     * @throws BadTypeException
      */
     protected function getModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
-        return $this->referencedFactory->accessModel($modelSingle);
+        return ReferencedFactory::accessModel($modelSingle, $this->referencedFactory->getModelClassName());
     }
 
     /**
      * @param AbstractModelSingle $model
      * @return array
      * @throws CannotAccessModelException
-     * @throws BadTypeException
      * @throws InvalidLinkException
      */
     public function createLinkParameters(AbstractModelSingle $model): array {

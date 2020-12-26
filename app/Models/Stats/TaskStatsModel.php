@@ -38,6 +38,7 @@ class TaskStatsModel {
     /**
      * @param string[] $labels
      * @return Row[]
+     * @throws \PDOException
      */
     public function getData(array $labels): array {
         $sql = "SELECT * FROM `v_task_stats` WHERE " .

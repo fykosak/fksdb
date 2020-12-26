@@ -22,6 +22,7 @@ use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 
 /**
  * Class AbstractPersonFormControl
@@ -84,6 +85,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];

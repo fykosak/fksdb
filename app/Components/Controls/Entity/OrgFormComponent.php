@@ -16,6 +16,7 @@ use FKSDB\Models\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Class OrgForm
@@ -49,6 +50,7 @@ class OrgFormComponent extends AbstractEntityFormComponent {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $container = $this->createOrgContainer();
@@ -87,9 +89,10 @@ class OrgFormComponent extends AbstractEntityFormComponent {
 
     /**
      * @return ModelContainer
-     * @throws BadTypeException
      * @throws AbstractColumnException
+     * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     private function createOrgContainer(): ModelContainer {
         $container = new ModelContainer();

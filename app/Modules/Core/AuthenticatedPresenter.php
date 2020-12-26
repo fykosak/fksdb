@@ -14,6 +14,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
+use Nette\InvalidStateException;
 use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Http\UserStorage;
@@ -62,7 +63,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException|BadRequestException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws InvalidStateException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);

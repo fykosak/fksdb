@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
+use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
@@ -55,6 +56,7 @@ class SingleReflectionFormFactory {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     public function createContainer(string $table, array $fields, ...$args): ModelContainer {
         $container = new ModelContainer();
@@ -74,6 +76,7 @@ class SingleReflectionFormFactory {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer {
         $container = new ModelContainer();

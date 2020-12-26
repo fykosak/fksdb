@@ -39,9 +39,6 @@ orm:
         contest:
             serviceClassName: FKSDB\Models\ORM\Services\ServiceContest
             modelClassName: FKSDB\Models\ORM\Models\ModelContest
-            referencedAccess:
-               modelClassName: FKSDB\Models\ORM\Models\IContestReferencedModel
-               method: getContest
             columnFactories:
                 contest:
                    type: class
@@ -110,9 +107,6 @@ orm:
         event:
             serviceClassName: FKSDB\Models\ORM\Services\ServiceEvent
             modelClassName: FKSDB\Models\ORM\Models\ModelEvent
-            referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\IEventReferencedModel
-                method: getEvent
             columnFactories:
                 event:
                     type: string
@@ -353,9 +347,6 @@ orm:
         payment:
              serviceClassName: FKSDB\Models\ORM\Services\ServicePayment
              modelClassName: FKSDB\Models\ORM\Models\ModelPayment
-             referencedAccess:
-                  modelClassName: FKSDB\Models\ORM\Models\IPaymentReferencedModel
-                  method: getPayment
              columnFactories:
                  payment:
                     type: class
@@ -412,9 +403,6 @@ orm:
         person:
              serviceClassName: FKSDB\Models\ORM\Services\ServicePerson
              modelClassName: FKSDB\Models\ORM\Models\ModelPerson
-             referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\IPersonReferencedModel
-                method: getPerson
              columnFactories:
                 person_link:
                     type: class
@@ -614,9 +602,6 @@ orm:
         school:
               serviceClassName: FKSDB\Models\ORM\Services\ServiceSchool
               modelClassName: FKSDB\Models\ORM\Models\ModelSchool
-              referencedAccess:
-                 modelClassName: FKSDB\Models\ORM\Models\ISchoolReferencedModel
-                 method: getSchool
               columnFactories:
                   school:
                       type: string
@@ -645,9 +630,6 @@ orm:
         task:
              serviceClassName: FKSDB\Models\ORM\Services\ServiceTask
              modelClassName: FKSDB\Models\ORM\Models\ModelTask
-             referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\ITaskReferencedModel
-                method: getTask
              columnFactories:
                  fq_name:
                     type: class
@@ -744,9 +726,6 @@ orm:
         fyziklani_task:
              serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
              modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask
-             referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\Fyziklani\IFyziklaniTaskReferencedModel
-                method: getFyziklaniTask
              columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
@@ -790,9 +769,6 @@ orm:
         e_fyziklani_team:
              serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
              modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
-             referencedAccess:
-                 modelClassName: FKSDB\Models\ORM\Models\Fyziklani\IFyziklaniTeamReferencedModel
-                 method: getFyziklaniTeam
              columnFactories:
                 e_fyziklani_team_id:
                   type: primaryKey
@@ -864,9 +840,6 @@ orm:
             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
         schedule_group:
              serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
-             referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\Schedule\IScheduleGroupReferencedModel
-                method: getScheduleGroup
              modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
                 schedule_group_id:
@@ -895,9 +868,6 @@ orm:
         schedule_item:
              serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem
              modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem
-             referencedAccess:
-                modelClassName: FKSDB\Models\ORM\Models\Schedule\IScheduleItemReferencedModel
-                method: getScheduleItem
              columnFactories:
                 schedule_item_id:
                     type: primaryKey

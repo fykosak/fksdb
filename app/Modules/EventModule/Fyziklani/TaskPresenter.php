@@ -11,8 +11,9 @@ use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 
 /**
  * Class TaskPresenter
@@ -56,6 +57,7 @@ class TaskPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function createComponentTaskImportForm(): FormControl {
         $control = new FormControl($this->getContext());
@@ -77,8 +79,9 @@ class TaskPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
      * @throws EventNotFoundException
+     * @throws MissingServiceException
+     * @throws InvalidStateException
      */
     private function taskImportFormSucceeded(Form $form): void {
         $values = $form->getValues();
@@ -92,6 +95,7 @@ class TaskPresenter extends BasePresenter {
     /**
      * @return TaskGrid
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): TaskGrid {
         return new TaskGrid($this->getEvent(), $this->getContext());

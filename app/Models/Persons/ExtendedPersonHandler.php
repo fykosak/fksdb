@@ -104,8 +104,8 @@ class ExtendedPersonHandler {
      * @param IExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 

@@ -17,6 +17,8 @@ use FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -156,6 +158,8 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentMachine
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws MissingServiceException
+     * @throws InvalidStateException
      */
     private function getMachine(): PaymentMachine {
         if (!isset($this->machine)) {
@@ -187,6 +191,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
         return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
@@ -195,6 +200,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return EventPaymentGrid
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): EventPaymentGrid {
         return new EventPaymentGrid($this->getEvent(), $this->getContext());
@@ -204,6 +210,7 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): PaymentFormComponent {
         return new PaymentFormComponent(
@@ -220,6 +227,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentEditForm(): PaymentFormComponent {
         return new PaymentFormComponent(

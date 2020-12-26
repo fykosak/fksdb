@@ -12,7 +12,6 @@ use Nette\Database\Connection;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
-use Nette\InvalidStateException;
 use PDOException;
 use Tracy\Debugger;
 
@@ -136,6 +135,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param AbstractModelSingle|IModel $model
      * @param array $data
      * @return bool
+     * @throws ModelException
      */
     public function updateModel2(IModel $model, array $data): bool {
         try {
@@ -151,7 +151,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelSingle $model
-     * @throws InvalidArgumentException
      * @throws ModelException
      * @deprecated
      */
@@ -187,8 +186,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * (Name chosen not to collide with parent.)
      *
      * @param IModel|AbstractModelSingle $model
-     * @throws InvalidArgumentException
-     * @throws InvalidStateException
+     * @throws ModelException
      */
     public function dispose(IModel $model): void {
         $this->checkType($model);

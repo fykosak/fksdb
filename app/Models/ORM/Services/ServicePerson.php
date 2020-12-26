@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
@@ -24,6 +25,7 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * @param IModel|ModelPerson $model
      * @return void
+     * @throws ModelException
      */
     public function save(IModel &$model): void {
         if (is_null($model->gender)) {

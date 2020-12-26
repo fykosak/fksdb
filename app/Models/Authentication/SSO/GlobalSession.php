@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Authentication\SSO;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
 use FKSDB\Models\ORM\Services\ServiceGlobalSession;
 use Nette\InvalidArgumentException;
@@ -143,6 +144,7 @@ class GlobalSession implements IGlobalSession {
     /**
      * @param mixed $offset
      * @return void
+     * @throws ModelException
      */
     public function offsetUnset($offset): void {
         if (!$this->started) {

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
@@ -23,6 +24,7 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
@@ -65,6 +67,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $eventContainer = $this->createEventContainer();
@@ -90,6 +93,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {

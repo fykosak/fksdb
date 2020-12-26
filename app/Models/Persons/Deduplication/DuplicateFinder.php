@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
 /**
@@ -74,8 +75,8 @@ class DuplicateFinder {
      * @param ModelPerson|ModelPersonInfo $a
      * @param ModelPerson|ModelPersonInfo $b
      * @return float
+     * @throws InvalidStateException
      * @todo Implement more than binary score.
-     *
      */
     private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
         /*

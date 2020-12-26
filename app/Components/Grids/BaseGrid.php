@@ -18,7 +18,6 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Localization\ITranslator;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;

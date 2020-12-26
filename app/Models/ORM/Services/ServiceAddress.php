@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
@@ -23,6 +24,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      * @param array $data
      * @return ModelAddress
+     * @throws ModelException
      */
     public function createNewModel(array $data): AbstractModelSingle {
         if (!isset($data['region_id'])) {

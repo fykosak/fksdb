@@ -26,7 +26,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
 
     /**
      * @return YearCalculator
-     * @throws InvalidStateException
      * @internal
      */
     private function getYearCalculator(): YearCalculator {

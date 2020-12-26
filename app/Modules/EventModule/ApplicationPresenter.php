@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -15,6 +16,7 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -50,6 +52,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AbstractApplicationsGrid {
         return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
@@ -59,6 +63,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return ImportComponent
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);

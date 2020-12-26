@@ -24,6 +24,8 @@ class ServiceEventParticipant extends AbstractServiceSingle {
 
     /**
      * @param ModelEventParticipant|IModel $model
+     * @throws DuplicateApplicationException
+     * @throws ModelException
      * @deprecated
      */
     public function save(IModel &$model): void {

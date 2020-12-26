@@ -9,7 +9,6 @@ use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
 use Nette\Database\Row;
-use Nette\InvalidStateException;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -62,6 +61,7 @@ abstract class AbstractResultsModel {
     /**
      * @param ModelCategory $category
      * @return Row[]
+     * @throws \PDOException
      */
     public function getData(ModelCategory $category): array {
         $sql = $this->composeQuery($category);
@@ -159,10 +159,5 @@ abstract class AbstractResultsModel {
      */
     abstract public function getSeries();
 
-    /**
-     * @param ModelCategory $category
-     * @return array
-     * @throws InvalidStateException
-     */
     abstract public function getDataColumns(ModelCategory $category): array;
 }

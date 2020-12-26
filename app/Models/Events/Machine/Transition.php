@@ -238,6 +238,8 @@ class Transition {
      *
      * @param Holder $holder
      * @return array
+     * @throws TransitionConditionFailedException
+     * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
      */
     final public function execute(Holder $holder): array {
@@ -267,6 +269,7 @@ class Transition {
      *
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
+     * @throws TransitionOnExecutedException
      */
     final public function executed(Holder $holder, array $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {

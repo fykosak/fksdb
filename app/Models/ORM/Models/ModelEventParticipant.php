@@ -67,10 +67,6 @@ class ModelEventParticipant extends AbstractModelSingle implements
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @return string
-     * @throws InvalidStateException
-     */
     public function __toString(): string {
         if (!$this->getPerson()) {
             throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));

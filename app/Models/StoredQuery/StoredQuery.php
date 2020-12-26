@@ -266,6 +266,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @param string $column
      * @return false|int|mixed|null
+     * @throws \PDOException
      */
     public function getCount($column = '*') {
         if ($this->count === null) {
@@ -285,6 +286,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @return mixed|\PDOStatement|null
+     * @throws \PDOException
      */
     public function getData() {
         if ($this->data === null) {

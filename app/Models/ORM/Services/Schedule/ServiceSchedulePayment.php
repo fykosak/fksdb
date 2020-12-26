@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelPayment;
@@ -24,8 +25,10 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
      * @param ModelPayment $payment
      * @return void
      * @throws DuplicatePaymentException
-     * @throws NotImplementedException
      * @throws EmptyDataException
+     * @throws NotImplementedException
+     * @throws StorageException
+     * @throws ModelException
      */
     public function store(array $data, ModelPayment $payment): void {
         if (!$this->getConnection()->getPdo()->inTransaction()) {

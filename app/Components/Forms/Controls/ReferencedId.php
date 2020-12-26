@@ -18,6 +18,7 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -124,6 +125,7 @@ class ReferencedId extends HiddenField {
      * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
      * @return static
+     * @throws InvalidStateException
      */
     public function setValue($pValue, bool $force = false): self {
 

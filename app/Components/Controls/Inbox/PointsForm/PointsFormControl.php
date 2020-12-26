@@ -4,12 +4,13 @@ namespace FKSDB\Components\Controls\Inbox\PointsForm;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 /**
  * Class PointsFormControl
@@ -33,8 +34,9 @@ class PointsFormControl extends SeriesTableFormControl {
 
     /**
      * @param Form $form
-     * @throws AbortException
      * @throws ForbiddenRequestException
+     * @throws ModelException
+     * @throws InvalidStateException
      */
     protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {

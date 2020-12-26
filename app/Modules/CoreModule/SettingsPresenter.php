@@ -9,15 +9,16 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
+use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -52,6 +53,7 @@ class SettingsPresenter extends BasePresenter {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     public function actionDefault(): void {
         /** @var ModelLogin $login */
@@ -82,6 +84,7 @@ class SettingsPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl($this->getContext());
@@ -128,7 +131,8 @@ class SettingsPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws ModelException
+     * @throws InvalidStateException
      */
     private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();

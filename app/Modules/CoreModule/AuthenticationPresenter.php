@@ -31,6 +31,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Http\Url;
+use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 
@@ -185,6 +186,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * False is return in order to AuthenticatedPresenter to correctly login the user.
      *
      * @return bool
+     * @throws InvalidStateException
      */
     private function isLoggedIn(): bool {
         return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);

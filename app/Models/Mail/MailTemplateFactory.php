@@ -10,6 +10,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 use Nette\Localization\Translator;
 
 /**
@@ -89,8 +90,9 @@ class MailTemplateFactory {
      * @param string $filename
      * @param string|null $lang ISO 639-1
      * @return ITemplate
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
+     * @throws UnsupportedLanguageException
+     * @throws InvalidStateException
      */
     final public function createFromFile(string $filename, ?string $lang): ITemplate {
         $presenter = $this->application->getPresenter();

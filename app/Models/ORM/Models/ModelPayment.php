@@ -14,6 +14,7 @@ use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -99,6 +100,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @param Explorer $connection
      * @param Conventions $conventions
      * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
+     * @throws InvalidStateException
      */
     public function refresh(Explorer $connection, Conventions $conventions): IStateModel {
         $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);

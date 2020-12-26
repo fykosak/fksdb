@@ -23,6 +23,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Class StoredQueryForm
@@ -86,9 +87,10 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws BadTypeException
      * @throws AbstractColumnException
+     * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $group = $form->addGroup(_('SQL'));
@@ -138,6 +140,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {
@@ -167,7 +170,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     private function handleComposeExecute(Form $form): void {
         $data = $form->getValues(true);

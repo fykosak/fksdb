@@ -29,6 +29,7 @@ use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
 /**
@@ -80,7 +81,9 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * @return void
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     public function loadConfiguration(): void {
         parent::loadConfiguration();
@@ -235,7 +238,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $name
      * @param array $definition
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createMachineFactory(string $name, array $definition): ServiceDefinition {
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -281,7 +286,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $baseName
      * @param string $instanceName
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
@@ -325,7 +332,9 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param string $name
      * @param array $definition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createHolderFactory(string $name, array $definition): void {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -369,7 +378,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $instanceName
      * @param array $instanceDefinition
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);

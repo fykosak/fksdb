@@ -3,8 +3,10 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\GraphComponent;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
+use Nette\InvalidStateException;
 
 /**
  * Class ModelPresenter
@@ -31,6 +33,8 @@ class ModelPresenter extends BasePresenter {
     /**
      * @return GraphComponent
      * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGraphComponent(): GraphComponent {
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());

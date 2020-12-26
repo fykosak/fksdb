@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -29,6 +30,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
      * @return bool
+     * @throws ModelException
      */
     public function updateModel2(IModel $model, array $data): bool {
         if (isset($data['agreed'])) {

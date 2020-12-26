@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServicePostContact;
+use Nette\InvalidStateException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -24,6 +25,7 @@ class ServiceMPostContact extends AbstractServiceMulti {
     /**
      * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
+     * @throws InvalidStateException
      */
     public function dispose(IModel $model): void {
         parent::dispose($model);

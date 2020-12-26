@@ -4,6 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -25,10 +26,10 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -132,11 +133,13 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @param int $eventId
      * @param int $id
-     * @throws AbortException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
+     * @throws ConfigurationNotFoundException
+     * @throws InvalidStateException
      */
     public function actionDefault($eventId, $id): void {
         if (!$this->getEvent()) {
@@ -195,6 +198,7 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @return ApplicationComponent
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
@@ -258,6 +262,7 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @return Holder
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     private function getHolder(): Holder {
         if (!isset($this->holder)) {

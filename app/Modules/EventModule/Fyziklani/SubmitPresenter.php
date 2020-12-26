@@ -10,14 +10,15 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\PointsMismatchException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -110,6 +111,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return AllSubmitsGrid
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AllSubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
@@ -118,6 +120,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return TaskCodeInput
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): TaskCodeInput {
         return new TaskCodeInput($this->getContext(), $this->getEvent());
@@ -129,6 +132,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentEditForm(): FyziklaniSubmitEditComponent {
         return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent(), $this->getEntity());
@@ -136,12 +140,12 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws BadTypeException
      * @throws ClosedSubmittingException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws PointsMismatchException
      */
     public function handleCheck(): void {
         $logger = new MemoryLogger();

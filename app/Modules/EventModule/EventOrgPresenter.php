@@ -15,6 +15,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -81,6 +82,7 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @return EventOrgsGrid
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): EventOrgsGrid {
         return new EventOrgsGrid($this->getEvent(), $this->getContext());
@@ -89,6 +91,7 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @return EventOrgFormComponent
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), null);
@@ -100,6 +103,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentEditForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());

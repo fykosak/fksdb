@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
+use Nette\InvalidStateException;
 
 /**
  *
@@ -119,6 +120,7 @@ class SeatingPresenter extends BasePresenter {
     /**
      * @return void
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     public function renderList(): void {
         $this->template->event = $this->getEvent();
