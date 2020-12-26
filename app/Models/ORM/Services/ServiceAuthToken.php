@@ -12,7 +12,7 @@ use Nette\Utils\Random;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceAuthToken extends OldAbstractServiceSingle {
+class ServiceAuthToken extends AbstractServiceSingle {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
