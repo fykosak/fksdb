@@ -124,10 +124,6 @@ parameters:
                   required: false
                 homepage:
                   required: false
-                im:
-                  required: false
-                linkedin_id:
-                    required: false
                 pizza:
                     reuired: false
                 # place to others onfo
@@ -296,10 +292,6 @@ parameters:
                   required: false
                 homepage:
                   required: false
-                im:
-                  required: false
-                linkedin_id:
-                    required: false
                 pizza:
                     reuired: false
                 # place to others onfo
