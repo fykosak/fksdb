@@ -27,7 +27,7 @@ parameters:
     rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
-    modules: org|public|warehouse
+    modules: org|public
     eventModules: event|fyziklani
 
     # Pipe-separated list of contest names

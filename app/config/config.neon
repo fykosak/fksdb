@@ -188,7 +188,6 @@ application:
     errorPresenter: Core:Error
     mapping:
         Fyziklani: FKSDB\Modules\EventModule\Fyziklani\*Presenter
-        Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days

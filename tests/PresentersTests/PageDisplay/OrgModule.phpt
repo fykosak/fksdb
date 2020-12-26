@@ -75,15 +75,6 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Validation', 'default'],
             ['Org:Validation', 'list'],
             ['Org:Validation', 'preview'],
-
-            ['Warehouse:Dashboard', 'default'],
-
-            //['Warehouse:Item', 'create'],
-            ['Warehouse:Item', 'list'],
-
-            ['Warehouse:Producer', 'list'],
-
-            ['Warehouse:Product', 'list'],
         ];
     }
 
