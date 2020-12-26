@@ -35,7 +35,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     public const AUTH_ALLOW_HTTP = 0x2;
     public const AUTH_ALLOW_TOKEN = 0x4;
     public const AUTH_ALLOW_GITHUB = 0x8;
-
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected GithubAuthenticator $githubAuthenticator;

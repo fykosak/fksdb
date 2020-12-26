@@ -4,8 +4,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
@@ -15,9 +13,7 @@ use Tracy\Debugger;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceAddress extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
+class ServiceAddress extends OldAbstractServiceSingle {
 
     private const PATTERN = '/[0-9]{5}/';
 
@@ -33,7 +29,7 @@ class ServiceAddress extends AbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

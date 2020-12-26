@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
@@ -15,8 +14,6 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  * @method ModelScheduleGroup refresh(AbstractModelSingle $model)
  */
 class ServiceScheduleGroup extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function store(?ModelScheduleGroup $group, array $data): ModelScheduleGroup {
         if (is_null($group)) {

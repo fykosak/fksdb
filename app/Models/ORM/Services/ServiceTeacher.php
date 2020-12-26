@@ -2,15 +2,12 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelTeacher;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceTeacher extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function store(?ModelTeacher $model, array $data): ModelTeacher {
         if (is_null($model)) {

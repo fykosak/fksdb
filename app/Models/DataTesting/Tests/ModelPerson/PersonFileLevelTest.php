@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -29,7 +30,7 @@ abstract class PersonFileLevelTest extends PersonTest {
     }
 
     /**
-     * @return TestedColumnFactory
+     * @return TestedColumnFactory|ColumnFactory
      * @throws BadTypeException
      */
     final protected function getRowFactory(): TestedColumnFactory {

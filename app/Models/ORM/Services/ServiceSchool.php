@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
@@ -11,8 +10,6 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSchool extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function getSchools(): TypedTableSelection {
         return $this->getTable()

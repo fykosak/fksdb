@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -25,7 +26,6 @@ use Nette\InvalidStateException;
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
     protected bool $sendEmail = true;
-
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
@@ -60,7 +60,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): IService;
+    abstract protected function getORMService(): AbstractServiceSingle;
 
     protected function getAcYearFromModel(): ?int {
         return null;

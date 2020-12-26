@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
@@ -14,8 +13,6 @@ use Nette\Database\Table\ActiveRow;
  * @method ModelEmailMessage createNewModel(array $data)
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);

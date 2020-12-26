@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -12,7 +11,7 @@ namespace FKSDB\Models\ORM\Models;
  * @property-read string session_id
  * @property-read string remote_ip
  */
-class ModelGlobalSession extends AbstractModelSingle {
+class ModelGlobalSession extends OldAbstractModelSingle {
 
     public function isValid(): bool {
         $now = time();

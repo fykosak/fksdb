@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelOrg;
 
@@ -13,7 +12,7 @@ use FKSDB\Models\ORM\Models\ModelOrg;
  */
 class ServiceOrg extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
         if (!$signature) {

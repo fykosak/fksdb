@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read string class
  * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
+class ModelPersonHistory extends OldAbstractModelSingle {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
@@ -13,9 +12,7 @@ use Nette\Utils\Random;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceGlobalSession extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
+class ServiceGlobalSession extends OldAbstractServiceSingle {
 
     private const SESSION_ID_LENGTH = 32;
     private Request $request;

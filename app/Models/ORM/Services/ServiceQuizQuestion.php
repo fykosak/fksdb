@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelTask;
 
@@ -11,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelTask;
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     /**
      * Find question from quiz by task

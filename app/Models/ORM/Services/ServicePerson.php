@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */
-class ServicePerson extends AbstractServiceSingle {
+class ServicePerson extends OldAbstractServiceSingle {
 
     public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {

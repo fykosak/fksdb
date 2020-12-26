@@ -42,7 +42,7 @@ use Nette\Security\IResource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModelSingle implements
+class ModelEventParticipant extends OldAbstractModelSingle implements
     IPaymentModel,
     IResource,
     INodeCreator {

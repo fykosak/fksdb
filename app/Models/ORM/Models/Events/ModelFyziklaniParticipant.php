@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\Models\Events;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int e_fyziklani_team_id
  * @property-read ActiveRow e_fyziklani_team
  */
-class ModelFyziklaniParticipant extends AbstractModelSingle {
+class ModelFyziklaniParticipant extends OldAbstractModelSingle {
 
     public function getEventParticipant(): ModelEventParticipant {
         return ModelEventParticipant::createFromActiveRow($this->event_participant);
