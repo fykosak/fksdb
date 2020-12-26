@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 
 /**
@@ -11,5 +10,5 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 }

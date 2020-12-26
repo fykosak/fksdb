@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
@@ -16,8 +15,6 @@ use Tracy\Debugger;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceAddress extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     private const PATTERN = '/[0-9]{5}/';
 

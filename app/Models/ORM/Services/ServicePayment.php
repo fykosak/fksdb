@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPayment;
 
@@ -12,5 +11,5 @@ use FKSDB\Models\ORM\Models\ModelPayment;
  */
 class ServicePayment extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 }

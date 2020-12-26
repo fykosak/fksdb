@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelFlag;
 
 /**
@@ -10,7 +9,7 @@ use FKSDB\Models\ORM\Models\ModelFlag;
  */
 class ServiceFlag extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     /**
      * Syntactic sugar.

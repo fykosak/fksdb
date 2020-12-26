@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services\Schedule;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
@@ -18,7 +17,7 @@ use FKSDB\Models\Submits\StorageException;
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     /**
      * @param array $data

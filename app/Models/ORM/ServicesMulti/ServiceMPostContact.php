@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\ServicesMulti;
 
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\Models\ORM\Services\ServiceAddress;
@@ -16,7 +15,6 @@ use Nette\InvalidStateException;
  * @method ServiceAddress getMainService()
  */
 class ServiceMPostContact extends AbstractServiceMulti {
-    use DeprecatedLazyDBTrait;
 
     public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
         parent::__construct($mainService, $joinedService, 'address_id', ModelMPostContact::class);

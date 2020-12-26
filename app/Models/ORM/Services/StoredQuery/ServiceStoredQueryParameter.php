@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 
 /**
@@ -10,5 +9,5 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServiceStoredQueryParameter extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 }

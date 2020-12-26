@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Database\Table\Selection;
 
@@ -12,7 +11,7 @@ use Nette\Database\Table\Selection;
  */
 class ServiceContestant extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     protected string $viewName = DbNames::VIEW_CONTESTANT;
 

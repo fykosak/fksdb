@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelTask;
 
@@ -11,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelTask;
  */
 class ServiceTask extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr): ?ModelTask {
         /** @var ModelTask $result */

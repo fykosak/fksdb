@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services\Schedule;
 
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
@@ -17,7 +16,7 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function store(?ModelScheduleItem $group, array $data): ModelScheduleItem {
         if (is_null($group)) {

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
@@ -12,7 +11,7 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  */
 class ServiceRegion extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function getCountries(): TypedTableSelection {
         return $this->getTable()->where('country_iso = nuts');

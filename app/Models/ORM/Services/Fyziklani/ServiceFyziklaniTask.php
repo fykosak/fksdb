@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
@@ -13,7 +12,7 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
         /** @var ModelFyziklaniTask $result */

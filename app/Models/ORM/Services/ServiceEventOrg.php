@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
@@ -17,7 +16,7 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  */
 class ServiceEventOrg extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     /*/**
      * @param IModel|ModelEventOrg $model

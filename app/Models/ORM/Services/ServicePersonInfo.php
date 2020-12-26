@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -17,7 +16,7 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
  */
 class ServicePersonInfo extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {

@@ -2,12 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * Class ServiceFyziklaniRoom
@@ -15,7 +11,7 @@ use Nette\Database\Explorer;
  */
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
+
 
     /**
      * @param array $ids

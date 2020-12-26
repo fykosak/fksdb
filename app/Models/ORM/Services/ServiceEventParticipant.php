@@ -4,14 +4,11 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
