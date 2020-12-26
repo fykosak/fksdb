@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -10,7 +11,6 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
@@ -76,11 +76,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         parent::renderDetail();

@@ -43,15 +43,11 @@ use Nette\Security\IResource;
  * @property-read int lunch_count
  */
 class ModelEventParticipant extends AbstractModelSingle implements
-    IEventReferencedModel,
     IPaymentModel,
-    IPersonReferencedModel,
     IResource,
-    IContestReferencedModel,
     INodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
-
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 

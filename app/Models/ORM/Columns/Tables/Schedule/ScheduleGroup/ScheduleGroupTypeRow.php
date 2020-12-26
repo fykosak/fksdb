@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Utils\Html;
@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  * Class ScheduleGroupTypeRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ScheduleGroupTypeRow extends DefaultColumnFactory {
+class ScheduleGroupTypeRow extends ColumnFactory {
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $container = Html::el('span');

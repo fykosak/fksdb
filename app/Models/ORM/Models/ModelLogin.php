@@ -20,7 +20,7 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
+class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     private YearCalculator $yearCalculator;
 

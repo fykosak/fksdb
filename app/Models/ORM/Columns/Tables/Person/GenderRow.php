@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class GenderRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class GenderRow extends DefaultColumnFactory {
+class GenderRow extends ColumnFactory {
 
     /**
      * @param array $args

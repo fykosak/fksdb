@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Utils\Html;
@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  * Class AvailablePointsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class AvailablePointsRow extends DefaultColumnFactory{
+class AvailablePointsRow extends ColumnFactory{
     /**
      * @param AbstractModelSingle|ModelFyziklaniGameSetup $model
      * @return Html

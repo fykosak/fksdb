@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServiceRegion;
@@ -13,7 +13,7 @@ use Nette\Forms\Controls\SelectBox;
  * Class CitizenshipRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class CitizenshipRow extends DefaultColumnFactory {
+class CitizenshipRow extends ColumnFactory {
 
     private ServiceRegion $serviceRegion;
 

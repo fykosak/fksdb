@@ -187,7 +187,7 @@ class StoredQuery implements IDataSource, IResource {
         if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
+            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . '';
 
             $statement = $this->bindParams($sql);
             $statement->execute();

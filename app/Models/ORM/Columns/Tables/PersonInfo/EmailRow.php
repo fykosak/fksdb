@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  * Class EmailRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EmailRow extends DefaultColumnFactory {
+class EmailRow extends ColumnFactory {
 
     /**
      * @param array $args

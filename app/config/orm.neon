@@ -29,7 +29,6 @@ parameters:
 
 
 orm:
-    tables:
         address:
             serviceClassName: FKSDB\Models\ORM\Services\ServiceAddress
             modelClassName: FKSDB\Models\ORM\Models\ModelAddress
@@ -195,6 +194,7 @@ orm:
                          id: e_org_id
                      title: Detail
         event_participant:
+             serviceClassName: FKSDB\Models\ORM\Services\ServiceEventParticipant
              modelClassName: FKSDB\Models\ORM\Models\ModelEventParticipant
              columnFactories:
                 team:
@@ -956,17 +956,19 @@ orm:
         stored_query_tag_type:
              serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType
              modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType
+        e_fyziklani_participant:
+            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
+            modelClassName: FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant
 
 services:
 
     - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
     - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
 
-    event.ServiceEventParticipant:          FKSDB\Models\ORM\Services\ServiceEventParticipant
     event.ServiceDsefGroup:                 FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
     event.ServiceDsefParticipant:           FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
-    event.ServiceFyziklaniParticipant:      FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
+    #event.ServiceFyziklaniParticipant:      FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
     - FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact

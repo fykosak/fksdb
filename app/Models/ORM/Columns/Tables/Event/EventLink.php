@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Application\LinkGenerator;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class EventLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventLink extends DefaultColumnFactory {
+class EventLink extends ColumnFactory {
 
     private LinkGenerator $linkGenerator;
 

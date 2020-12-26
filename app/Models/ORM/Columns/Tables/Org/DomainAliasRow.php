@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -17,7 +17,7 @@ use Nette\Utils\Html;
  * Class DomainAliasRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class DomainAliasRow extends DefaultColumnFactory {
+class DomainAliasRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model

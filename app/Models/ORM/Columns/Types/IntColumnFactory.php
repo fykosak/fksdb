@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
@@ -13,7 +14,7 @@ use Nette\Utils\Html;
  * Class IntRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class IntColumnFactory extends DefaultColumnFactory {
+class IntColumnFactory extends ColumnFactory {
 
     private string $nullValue = 'notSet';
 

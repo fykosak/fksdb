@@ -39,12 +39,12 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IPaymentModel {
+
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received
     public const STATE_CANCELED = 'canceled'; // payment canceled
     public const STATE_NEW = 'new'; // new payment
-
     public const RESOURCE_ID = 'event.payment';
 
     public function getPerson(): ModelPerson {

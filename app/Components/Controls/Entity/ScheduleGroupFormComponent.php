@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\ILogger;
@@ -13,7 +12,6 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class ScheduleGroupFormComponent
@@ -62,10 +60,8 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end']);

@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
@@ -17,7 +18,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -25,7 +25,6 @@ use Nette\Security\IResource;
 
 /**
  * Class ClosePresenter
- * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  */
@@ -39,10 +38,10 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleTeam(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
@@ -50,10 +49,10 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
      */
     public function titleHard(): void {
         $this->titleTeam();
@@ -87,11 +86,11 @@ class ClosePresenter extends BasePresenter {
     /* *********** ACTIONS **************** */
     /**
      * @return void
-     * @throws AbortException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
+     * @throws CannotAccessModelException
      */
     public function actionTeam(): void {
         try {
@@ -106,9 +105,10 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
+     * @throws CannotAccessModelException
      */
     public function actionHard(): void {
         $control = $this->getComponent('closeTeamControl');
@@ -131,11 +131,10 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @return TeamSubmitsGrid
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws InvalidStateException
+     * @throws CannotAccessModelException
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());

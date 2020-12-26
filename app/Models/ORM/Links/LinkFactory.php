@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Links;
 
 use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -13,12 +12,14 @@ use Nette\Application\UI\Presenter;
  * Class AbstractLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractLink implements ILinkFactory {
+abstract class LinkFactory {
 
-    protected ReferencedFactory $referencedFactory;
+    protected string $modelClassName;
 
-    public function setReferencedFactory(ReferencedFactory $factory): void {
-        $this->referencedFactory = $factory;
+    public function __construct(?string $modelClassName = null) {
+        if ($modelClassName) {
+            $this->modelClassName = $modelClassName;
+        }
     }
 
     /**
@@ -38,7 +39,10 @@ abstract class AbstractLink implements ILinkFactory {
      * @throws CannotAccessModelException
      */
     protected function getModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
-        return ReferencedFactory::accessModel($modelSingle, $this->referencedFactory->getModelClassName());
+        if (!isset($this->modelClassName)) {
+            return $modelSingle;
+        }
+        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
     }
 
     /**

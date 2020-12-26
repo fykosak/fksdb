@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Contest;
 
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class ContestRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ContestColumnFactory extends DefaultColumnFactory {
+class ContestColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelContest $model

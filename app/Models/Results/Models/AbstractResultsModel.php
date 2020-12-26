@@ -116,7 +116,7 @@ abstract class AbstractResultsModel {
                         $set[] = $subValue;
                     }
                 }
-                $inClause = "$col IN (" . implode(',', $set) . ")";
+                $inClause = "$col IN (" . implode(',', $set) . ')';
                 if ($hasNull) {
                     $where[] = "$inClause OR $col IS NULL";
                 } else {
@@ -128,7 +128,7 @@ abstract class AbstractResultsModel {
                 $where[] = "$col = $value";
             }
         }
-        return "(" . implode(') and (', $where) . ")";
+        return '(' . implode(') and (', $where) . ')';
     }
 
     protected function getTasks(int $series): TypedTableSelection {

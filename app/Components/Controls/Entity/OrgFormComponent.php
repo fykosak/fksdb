@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
@@ -16,7 +15,6 @@ use FKSDB\Models\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class OrgForm
@@ -47,10 +45,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $container = $this->createOrgContainer();
@@ -89,10 +85,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
 
     /**
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     private function createOrgContainer(): ModelContainer {
         $container = new ModelContainer();

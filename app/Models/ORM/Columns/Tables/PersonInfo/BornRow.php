@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class BornRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class BornRow extends DefaultColumnFactory {
+class BornRow extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());

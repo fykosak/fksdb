@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -32,10 +31,8 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     public function createConsole(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
@@ -48,10 +45,8 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     public function createMetadata(?ControlGroup $group = null): ModelContainer {
         $container = $this->reflectionFormFactory->createContainer('stored_query', ['name', 'qid', 'tags', 'description']);

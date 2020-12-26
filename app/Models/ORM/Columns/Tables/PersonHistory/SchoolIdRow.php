@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class SchoolIdRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolIdRow extends DefaultColumnFactory {
+class SchoolIdRow extends ColumnFactory {
 
     private SchoolFactory $schoolFactory;
 

@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
  * Class ParticipantListLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ParticipantListLink extends AbstractLink {
+class ParticipantListLink extends LinkFactory {
 
     public function getText(): string {
         return _('List of applications');

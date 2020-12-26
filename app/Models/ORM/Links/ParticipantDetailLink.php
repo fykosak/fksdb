@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
  * Class ParticipantDetailLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ParticipantDetailLink extends AbstractLink {
+class ParticipantDetailLink extends LinkFactory {
 
     public function getText(): string {
         return _('Detail');

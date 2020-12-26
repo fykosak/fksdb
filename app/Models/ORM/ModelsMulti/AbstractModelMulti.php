@@ -109,14 +109,14 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
      * @param mixed $value
      */
     public function __set($name, $value): void {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param string|int $name
      */
     public function __unset($name) {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
@@ -160,14 +160,14 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
      * @param mixed $value
      */
     public function offsetSet($offset, $value): void {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param mixed $offset
      */
     public function offsetUnset($offset): void {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
 }

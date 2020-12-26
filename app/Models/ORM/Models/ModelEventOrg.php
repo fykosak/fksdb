@@ -13,7 +13,7 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IContestReferencedModel, IPersonReferencedModel {
+class ModelEventOrg extends AbstractModelSingle implements IResource {
     public const RESOURCE_ID = 'event.org';
 
     public function getPerson(): ModelPerson {

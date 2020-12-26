@@ -98,13 +98,13 @@ class CumulativeResultsModel extends AbstractResultsModel {
         }
 
         $select = [];
-        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . "`";
-        $select[] = "sch.name_abbrev AS `" . self::DATA_SCHOOL . "`";
+        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . '`';
+        $select[] = 'sch.name_abbrev AS `' . self::DATA_SCHOOL . '`';
 
         $sum = $this->evaluationStrategy->getSumColumn();
         $i = 0;
         foreach ($this->getSeries() as $series) {
-            $select[] = "round(SUM(IF(t.series = " . $series . ", " . $sum . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
+            $select[] = 'round(SUM(IF(t.series = ' . $series . ', ' . $sum . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
             $i += 1;
         }
 
@@ -114,13 +114,13 @@ class CumulativeResultsModel extends AbstractResultsModel {
         $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
-        $select[] = "ct.ct_id";
+        $select[] = 'ct.ct_id';
 
-        $from = " from v_contestant ct
+        $from = ' from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
-left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
+left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
 
         $conditions = [
             'ct.year' => $this->year,
@@ -129,17 +129,17 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
             'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
         ];
 
-        $query = "select " . implode(', ', $select);
+        $query = 'select ' . implode(', ', $select);
         $query .= $from;
 
         $where = $this->conditionsToWhere($conditions);
         $query .= " where $where";
 
-        $query .= " group by p.person_id, sch.name_abbrev "; //abuse MySQL misimplementation of GROUP BY
-        $query .= " order by `" . self::ALIAS_SUM . "` DESC, p.family_name ASC, p.other_name ASC";
+        $query .= ' group by p.person_id, sch.name_abbrev '; //abuse MySQL misimplementation of GROUP BY
+        $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
-        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . " is null and @prevSum is null), @rank, @rownum) AS `" . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
+        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
         from ($query) data, (select @rownum := 0, @rank := 0, @prevSum := -1) init";
     }
 

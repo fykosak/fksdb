@@ -52,7 +52,7 @@ events:
 
         baseMachines:
             PARTICIPANT_TSAF:
-                service: @event.ServiceEventParticipant
+                service: @orm.event_participant.service
 
                 states:
                     - auto.invited

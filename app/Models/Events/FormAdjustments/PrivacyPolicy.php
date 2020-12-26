@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
@@ -14,7 +13,6 @@ use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -44,10 +42,8 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Machine $machine
      * @param Holder $holder
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {

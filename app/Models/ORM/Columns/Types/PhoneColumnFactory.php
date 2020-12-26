@@ -3,9 +3,10 @@
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
-use FKSDB\Models\ORM\Columns\ITestedColumnFactory;
+use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -19,7 +20,7 @@ use Nette\Utils\Html;
  * Class PhoneRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFactory {
+class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
 
     protected PhoneNumberFactory $phoneNumberFactory;
 

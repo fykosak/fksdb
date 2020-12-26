@@ -10,10 +10,6 @@ use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-/**
- * Class EventAuthorizator
- * *
- */
 class EventAuthorizator {
     use SmartObject;
 

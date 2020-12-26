@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  * Class StudyYearRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StudyYearRow extends DefaultColumnFactory {
+class StudyYearRow extends ColumnFactory {
 
     private YearCalculator $yearCalculator;
 

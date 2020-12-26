@@ -4,6 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -19,11 +20,11 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -37,8 +38,8 @@ use Nette\InvalidStateException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
-    public const PARAM_AFTER = 'a';
 
+    public const PARAM_AFTER = 'a';
     private ?ModelEvent $event;
     private ?IModel $eventApplication = null;
     private Holder $holder;
@@ -133,13 +134,13 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @param int $eventId
      * @param int $id
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
      * @throws ConfigurationNotFoundException
      * @throws InvalidStateException
+     * @throws CannotAccessModelException
      */
     public function actionDefault($eventId, $id): void {
         if (!$this->getEvent()) {
@@ -150,10 +151,8 @@ class ApplicationPresenter extends BasePresenter {
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            if (!$eventApplication instanceof IEventReferencedModel) {
-                throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
-            }
-            if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
+            $event = ReferencedFactory::accessModel($eventApplication, ModelEvent::class);
+            if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }
         }
@@ -169,7 +168,6 @@ class ApplicationPresenter extends BasePresenter {
         }
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
-
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
@@ -234,7 +232,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel|null
+     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
     private function getEventApplication(): ?IModel {

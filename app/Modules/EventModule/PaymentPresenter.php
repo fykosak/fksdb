@@ -5,6 +5,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -23,7 +24,6 @@ use Nette\Security\IResource;
 
 /**
  * Class PaymentPresenter
- * *
  * @method ModelPayment getEntity
  */
 class PaymentPresenter extends BasePresenter {
@@ -47,20 +47,20 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
@@ -92,11 +92,10 @@ class PaymentPresenter extends BasePresenter {
     /* ********* actions *****************/
 
     /**
-     * @throws AbortException
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function actionEdit(): void {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
@@ -122,10 +121,10 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* render *****************/
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderEdit(): void {
         $this->template->model = $this->getEntity();
@@ -136,6 +135,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         $payment = $this->getEntity();
@@ -191,7 +191,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws InvalidStateException
+     * @throws CannotAccessModelException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
         return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
@@ -227,7 +227,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws InvalidStateException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): PaymentFormComponent {
         return new PaymentFormComponent(

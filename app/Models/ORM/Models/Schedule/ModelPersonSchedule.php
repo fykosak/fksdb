@@ -5,9 +5,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
-use FKSDB\Models\ORM\Models\IPaymentReferencedModel;
-use FKSDB\Models\ORM\Models\IPersonReferencedModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -18,7 +15,6 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelPersonSchedule
- * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -26,13 +22,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements
-    IStateModel,
-    IPersonReferencedModel,
-    IScheduleGroupReferencedModel,
-    IPaymentReferencedModel,
-    IEventReferencedModel,
-    IScheduleItemReferencedModel {
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

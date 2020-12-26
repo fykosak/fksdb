@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Utils\Html;
@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  * Class NameColumnFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class NameColumnFactory extends DefaultColumnFactory {
+class NameColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model

@@ -5,12 +5,11 @@ namespace FKSDB\Modules\EventModule\Fyziklani;
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Models\Fyziklani\Submit\PointsMismatchException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -23,7 +22,6 @@ use Nette\Security\IResource;
 
 /**
  * Class SubmitPresenter
- * *
  * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {
@@ -62,10 +60,10 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil'));
@@ -87,10 +85,10 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         $this->template->model = $this->getEntity();
@@ -98,10 +96,10 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderEdit(): void {
         $this->template->model = $this->getEntity();
@@ -128,11 +126,10 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return FyziklaniSubmitEditComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws InvalidStateException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): FyziklaniSubmitEditComponent {
         return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent(), $this->getEntity());
@@ -140,12 +137,11 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ClosedSubmittingException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws PointsMismatchException
+     * @throws CannotAccessModelException
      */
     public function handleCheck(): void {
         $logger = new MemoryLogger();

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
@@ -12,7 +12,7 @@ use Nette\Utils\Html;
  * Class UsedCapacityRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UsedCapacityRow extends DefaultColumnFactory {
+class UsedCapacityRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model

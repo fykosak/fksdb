@@ -3,15 +3,13 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\IColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
@@ -28,10 +26,10 @@ class SingleReflectionFormFactory {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @return IColumnFactory
+     * @return ColumnFactory
      * @throws BadTypeException
      */
-    protected function loadFactory(string $tableName, string $fieldName): IColumnFactory {
+    protected function loadFactory(string $tableName, string $fieldName): ColumnFactory {
         return $this->tableReflectionFactory->loadColumnFactory($tableName, $fieldName);
     }
 
@@ -40,9 +38,8 @@ class SingleReflectionFormFactory {
      * @param string $fieldName
      * @param mixed ...$args
      * @return BaseControl
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function createField(string $tableName, string $fieldName, ...$args): BaseControl {
         return $this->loadFactory($tableName, $fieldName)->createField(...$args);
@@ -53,10 +50,8 @@ class SingleReflectionFormFactory {
      * @param array $fields
      * @param array $args
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     public function createContainer(string $table, array $fields, ...$args): ModelContainer {
         $container = new ModelContainer();
@@ -73,10 +68,8 @@ class SingleReflectionFormFactory {
      * @param array $fields
      * @param FieldLevelPermission $userPermissions
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws InvalidStateException
      */
     public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer {
         $container = new ModelContainer();

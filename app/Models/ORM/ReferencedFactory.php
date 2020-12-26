@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM;
 
 use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ReferencedFactory
@@ -11,19 +10,13 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  */
 final class ReferencedFactory {
 
-    private string $modelClassName;
-
-    public function __construct(string $modelClassName) {
-        $this->modelClassName = $modelClassName;
-    }
-
     /**
-     * @param AbstractModelSingle $model
+     * @param IModel $model
      * @param string $modelClassName
-     * @return AbstractModelSingle|null
+     * @return IModel|null
      * @throws CannotAccessModelException
      */
-    public static function accessModel(AbstractModelSingle $model,string $modelClassName): ?AbstractModelSingle {
+    public static function accessModel(IModel $model, string $modelClassName): ?IModel {
         // model is already instance of desired model
         if ($model instanceof $modelClassName) {
             return $model;
@@ -42,9 +35,5 @@ final class ReferencedFactory {
             throw new CannotAccessModelException($modelClassName, $model);
         }
         return $newModel;
-    }
-
-    public function getModelClassName(): string {
-        return $this->modelClassName;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\Types;
+namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ReferencedFactory;
-use FKSDB\Models\ORM\Columns\IColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
@@ -20,7 +19,7 @@ use Nette\Utils\Html;
  * Class DefaultRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class DefaultColumnFactory implements IColumnFactory {
+abstract class ColumnFactory {
 
     use SmartObject;
 
@@ -28,41 +27,28 @@ abstract class DefaultColumnFactory implements IColumnFactory {
     public const PERMISSION_ALLOW_BASIC = 16;
     public const PERMISSION_ALLOW_RESTRICT = 128;
     public const PERMISSION_ALLOW_FULL = 1024;
-
     private string $title;
-
     private string $tableName;
-
     private string $modelAccessKey;
-
     private ?string $description;
-
     private array $metaData;
-
     private bool $required = false;
-
     private bool $omitInputField = false;
-
     private FieldLevelPermission $permission;
-
     private MetaDataFactory $metaDataFactory;
-
-    protected ReferencedFactory $referencedFactory;
+    private string $modelClassName;
 
     public function __construct(MetaDataFactory $metaDataFactory) {
         $this->metaDataFactory = $metaDataFactory;
         $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
-    final public function setUp(string $tableName, string $modelAccessKey, string $title, ?string $description): void {
+    final public function setUp(string $tableName, string $modelClassName, string $modelAccessKey, string $title, ?string $description): void {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
         $this->description = $description;
-    }
-
-    public function setReferencedFactory(ReferencedFactory $factory): void {
-        $this->referencedFactory = $factory;
+        $this->modelClassName = $modelClassName;
     }
 
     /**
@@ -158,11 +144,11 @@ abstract class DefaultColumnFactory implements IColumnFactory {
 
     /**
      * @param AbstractModelSingle $modelSingle
-     * @return AbstractModelSingle|
+     * @return AbstractModelSingle|null
      * @throws CannotAccessModelException
      */
     protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
-        return ReferencedFactory::accessModel($modelSingle, $this->referencedFactory->getModelClassName());
+        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
     }
 
     final public function hasReadPermissions(int $userValue): bool {

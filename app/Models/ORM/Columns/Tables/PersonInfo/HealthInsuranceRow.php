@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class HealthInsuranceRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class HealthInsuranceRow extends DefaultColumnFactory {
+class HealthInsuranceRow extends ColumnFactory {
     protected const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',
         201 => '(201) Vojenská zdravotní pojišťovna ČR',

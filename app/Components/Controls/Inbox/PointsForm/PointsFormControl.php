@@ -12,10 +12,6 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 
-/**
- * Class PointsFormControl
- * *
- */
 class PointsFormControl extends SeriesTableFormControl {
 
     /** @var callable */
@@ -45,9 +41,9 @@ class PointsFormControl extends SeriesTableFormControl {
                 throw new ForbiddenRequestException();
             }
             $submit = $this->serviceSubmit->findByPrimary($submitId);
-            if ($points !== "" && $points !== $submit->raw_points) {
+            if ($points !== '' && $points !== $submit->raw_points) {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
-            } elseif (!is_null($submit->raw_points) && $points === "") {
+            } elseif (!is_null($submit->raw_points) && $points === '') {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => null]);
             }
         }

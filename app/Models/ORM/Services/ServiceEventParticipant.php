@@ -18,10 +18,6 @@ use Nette\Database\Explorer;
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
 
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class, $connection, $conventions);
-    }
-
     /**
      * @param ModelEventParticipant|IModel $model
      * @throws DuplicateApplicationException

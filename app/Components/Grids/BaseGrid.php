@@ -144,7 +144,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
-            throw new InvalidStateException("Cannot create search form without searchable data source.");
+            throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
         $control = new FormControl($this->getContext());
         $form = $control->getForm();

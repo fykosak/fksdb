@@ -3,11 +3,12 @@
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
-use FKSDB\Models\ORM\Models\IContestReferencedModel;
-use FKSDB\Models\ORM\Models\IPersonReferencedModel;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\ReferencedFactory;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
@@ -35,7 +36,6 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
-
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
@@ -46,7 +46,6 @@ class OwnerAssertion {
             return false;
         }
         return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getIdentity()->getId();
-
     }
 
     /**
@@ -111,18 +110,23 @@ class OwnerAssertion {
 
         $loggedPerson = $this->user->getIdentity()->getPerson();
         $model = $acl->getQueriedResource();
-        if ($model instanceof IContestReferencedModel) {
-            if ($model->getContest()->contest_id !== $acl->getQueriedRole()->getContestId()) {
+        try {
+            $contest = ReferencedFactory::accessModel($model, ModelContest::class);
+            if ($contest->contest_id !== $acl->getQueriedRole()->getContestId()) {
                 return false;
             }
-        }
-        if ($model instanceof IPersonReferencedModel) {
-            $model = $model->getPerson();
+        } catch (CannotAccessModelException $exception) {
         }
 
-        if (!$model instanceof ModelPerson) {
+        $person = null;
+        try {
+            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+        } catch (CannotAccessModelException $exception) {
+        }
+
+        if (!$person instanceof ModelPerson) {
             return false;
         }
-        return ($loggedPerson && $loggedPerson->person_id == $model->person_id);
+        return ($loggedPerson && $loggedPerson->person_id == $person->person_id);
     }
 }

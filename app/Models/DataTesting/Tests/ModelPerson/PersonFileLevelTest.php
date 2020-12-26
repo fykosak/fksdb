@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\ORM\Columns\ITestedColumnFactory;
+use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 
@@ -12,7 +12,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
  */
 abstract class PersonFileLevelTest extends PersonTest {
 
-    private ITestedColumnFactory $rowFactory;
+    private TestedColumnFactory $rowFactory;
     private string $fieldName;
     private ORMFactory $tableReflectionFactory;
 
@@ -29,14 +29,14 @@ abstract class PersonFileLevelTest extends PersonTest {
     }
 
     /**
-     * @return ITestedColumnFactory
+     * @return TestedColumnFactory
      * @throws BadTypeException
      */
-    final protected function getRowFactory(): ITestedColumnFactory {
+    final protected function getRowFactory(): TestedColumnFactory {
         if (!isset($this->rowFactory)) {
             $rowFactory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $this->fieldName));
-            if (!$rowFactory instanceof ITestedColumnFactory) {
-                throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
+            if (!$rowFactory instanceof TestedColumnFactory) {
+                throw new BadTypeException(TestedColumnFactory::class, $this->rowFactory);
             }
             $this->rowFactory = $rowFactory;
         }

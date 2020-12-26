@@ -248,7 +248,7 @@ class SubmitPresenter extends BasePresenter {
                         continue;
                     }
                     if (!$taskValues['file']->isOk()) {
-                        Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                        Debugger::log(sprintf('Uploaded file error %s.', $taskValues['file']->getError()), Debugger::WARNING);
                         continue;
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());

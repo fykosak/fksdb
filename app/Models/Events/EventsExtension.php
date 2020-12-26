@@ -312,7 +312,7 @@ class EventsExtension extends CompilerExtension {
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         foreach ($definition['states'] as $state) {
             if (strlen($state) > self::STATE_SIZE) {
-                throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
+                throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . ' characters at most.');
             }
             $factory->addSetup('addState', [$state]);
         }
