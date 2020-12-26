@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
@@ -24,7 +23,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel|AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
      * @return bool
      * @throws ModelException

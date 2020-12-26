@@ -25,7 +25,7 @@ class ServiceMPostContact extends AbstractServiceMulti {
      * @param IModel|AbstractModelMulti $model
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model): void {
+    public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }

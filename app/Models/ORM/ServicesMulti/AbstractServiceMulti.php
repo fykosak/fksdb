@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
 use Nette\Database\Connection;
@@ -22,17 +22,15 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceMulti implements IService {
+
     use SmartObject;
 
-    protected AbstractServiceSingle $mainService;
-
-    protected AbstractServiceSingle $joinedService;
-
+    protected OldAbstractServiceSingle $mainService;
+    protected OldAbstractServiceSingle $joinedService;
     private string $joiningColumn;
-
     private string $modelClassName;
 
-    public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
+    public function __construct(OldAbstractServiceSingle $mainService, OldAbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
         $this->modelClassName = $modelClassName;
@@ -134,17 +132,17 @@ abstract class AbstractServiceMulti implements IService {
      * @param IModel|AbstractModelMulti $model
      * @throws InvalidArgumentException
      */
-    public function dispose(IModel $model): void {
+    public function dispose(AbstractModelMulti $model): void {
         $this->checkType($model);
         $this->getJoinedService()->dispose($model->getJoinedModel());
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    final public function getMainService(): AbstractServiceSingle {
+    final public function getMainService(): OldAbstractServiceSingle {
         return $this->mainService;
     }
 
-    final public function getJoinedService(): AbstractServiceSingle {
+    final public function getJoinedService(): OldAbstractServiceSingle {
         return $this->joinedService;
     }
 

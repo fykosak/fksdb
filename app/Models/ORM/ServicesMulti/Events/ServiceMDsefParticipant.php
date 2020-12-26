@@ -26,7 +26,7 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
      * @throws ModelException
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model): void {
+    public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }

@@ -9,8 +9,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\BadRequestException;
@@ -35,10 +33,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|IModel|null $model
+     * @param ModelContestant|null|AbstractModelSingle $model
      * @param Form|IControl[][] $form
      */
-    protected function setDefaults(?IModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -131,7 +129,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param int $id
      * @return AbstractModelSingle
      */
-    protected function loadModel($id): ?IModel {
+    protected function loadModel($id): ?AbstractModelSingle {
         return $this->getORMService()->findByPrimary($id);
     }
 }

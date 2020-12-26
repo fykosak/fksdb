@@ -7,12 +7,12 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceContestant;
@@ -53,6 +53,7 @@ use FKSDB\Models\Persons\SelfResolver;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
+
     /**
      * @var int
      * @persistent
@@ -68,7 +69,6 @@ class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPres
      * @persistent
      */
     public $personId;
-
     private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
@@ -115,7 +115,6 @@ class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPres
      * @throws AbortException
      */
     public function actionContestant(): void {
-
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
 
@@ -203,7 +202,6 @@ class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPres
 
     private function getPerson(): ?ModelPerson {
         if (!isset($this->person)) {
-
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
             } else {
@@ -301,7 +299,7 @@ class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPres
         return $control;
     }
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModelSingle {
         return null; //we always create new contestant
     }
 

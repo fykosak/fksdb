@@ -12,7 +12,7 @@ use Nette\Utils\Random;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceGlobalSession extends OldAbstractServiceSingle {
+class ServiceGlobalSession extends AbstractServiceSingle {
 
     private const SESSION_ID_LENGTH = 32;
     private Request $request;

@@ -99,7 +99,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     /**
      * @param Explorer $connection
      * @param Conventions $conventions
-     * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
+     * @return static
      * @throws InvalidStateException
      */
     public function refresh(Explorer $connection, Conventions $conventions): IStateModel {

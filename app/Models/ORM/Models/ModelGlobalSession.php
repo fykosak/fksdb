@@ -11,7 +11,7 @@ namespace FKSDB\Models\ORM\Models;
  * @property-read string session_id
  * @property-read string remote_ip
  */
-class ModelGlobalSession extends OldAbstractModelSingle {
+class ModelGlobalSession extends AbstractModelSingle {
 
     public function isValid(): bool {
         $now = time();
