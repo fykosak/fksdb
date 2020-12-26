@@ -18,10 +18,6 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class, $connection, $conventions);
-    }
-
     public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
         /** @var ModelFyziklaniTeamPosition $row */
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();

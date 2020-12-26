@@ -17,10 +17,6 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class, $connection, $conventions);
-    }
-
     /**
      * @param array $ids
      * @return ModelFyziklaniRoom[]

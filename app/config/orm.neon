@@ -698,6 +698,13 @@ orm:
                          id: teacher_id
                      title: Detail
 #fyziklani
+        fyziklani_room:
+            serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+            modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom
+        fyziklani_team_position:
+            serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+            modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
+
         fyziklani_submit:
              serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
              modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit
@@ -960,15 +967,15 @@ orm:
             serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
             modelClassName: FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant
 
+        e_dsef_participant:
+            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
+            modelClassName: FKSDB\Models\ORM\Models\Events\ModelDsefParticipant
+        e_dsef_group:
+            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
+            modelClassName: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
+
 services:
-
-    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
-    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
-
-    event.ServiceDsefGroup:                 FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
-    event.ServiceDsefParticipant:           FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
-    #event.ServiceFyziklaniParticipant:      FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
     - FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact

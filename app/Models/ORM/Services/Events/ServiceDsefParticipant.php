@@ -13,7 +13,4 @@ use Nette\Database\Explorer;
  */
 class ServiceDsefParticipant extends AbstractServiceSingle {
 
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_E_DSEF_PARTICIPANT, ModelDsefParticipant::class, $connection, $conventions);
-    }
 }

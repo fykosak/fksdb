@@ -48,5 +48,4 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
         return $session;
     }
-    //TODO garbage collection
 }
