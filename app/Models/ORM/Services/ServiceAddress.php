@@ -22,7 +22,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
      * @return ModelAddress
      * @throws ModelException
      */
-    public function createNewModel(array $data): AbstractModelSingle {
+    public function createNewModel(array $data): ModelAddress {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

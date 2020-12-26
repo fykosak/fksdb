@@ -9,4 +9,9 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5fb6a5848edeb949c089ce68e107402352d64d58
 }

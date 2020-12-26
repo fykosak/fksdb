@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 

@@ -7,7 +7,6 @@ use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use Nette\Utils\ArrayHash;
 
 /**

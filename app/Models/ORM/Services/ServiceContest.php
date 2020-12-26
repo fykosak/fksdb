@@ -9,4 +9,5 @@ use FKSDB\Models\ORM\Models\ModelContest;
  * @method ModelContest findByPrimary($key)
  */
 class ServiceContest extends AbstractServiceSingle {
+
 }

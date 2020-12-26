@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 
 /**
@@ -11,6 +10,11 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 5fb6a5848edeb949c089ce68e107402352d64d58
     /**
      * @param array $ids
      * @return ModelFyziklaniRoom[]
