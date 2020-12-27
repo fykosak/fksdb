@@ -64,7 +64,7 @@ class NavigationChooser extends Chooser {
             } catch (\Exception $exception) {
                 /* empty */
             }
-            $result = $this->getPresenter()->getLastCreatedRequestFlag("current");
+            $result = $this->getPresenter()->getLastCreatedRequestFlag('current');
             if ($result) {
                 return true;
             }

@@ -4,9 +4,9 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
@@ -15,6 +15,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -44,7 +45,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
@@ -81,6 +82,7 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @return EventOrgsGrid
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): EventOrgsGrid {
         return new EventOrgsGrid($this->getEvent(), $this->getContext());
@@ -89,6 +91,7 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @return EventOrgFormComponent
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), null);
@@ -96,10 +99,10 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return EventOrgFormComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());

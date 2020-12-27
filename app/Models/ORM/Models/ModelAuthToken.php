@@ -14,20 +14,17 @@ use Nette\Database\Table\ActiveRow;
  * @property-read \DateTimeInterface until
  */
 class ModelAuthToken extends AbstractModelSingle {
+
     /** @const The first login for setting up a password. */
     public const TYPE_INITIAL_LOGIN = 'initial_login';
-
     /** @const Single sign-on inter-domain ticket */
     public const TYPE_SSO = 'sso';
-
     /** @const Password recovery login */
     public const TYPE_RECOVERY = 'recovery';
-
     /** @const Notification about an event application. */
     public const TYPE_EVENT_NOTIFY = 'event_notify';
 
     public function getLogin(): ModelLogin {
-        $data = $this->login;
-        return ModelLogin::createFromActiveRow($data);
+        return ModelLogin::createFromActiveRow($this->login);
     }
 }

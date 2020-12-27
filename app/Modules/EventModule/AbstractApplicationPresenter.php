@@ -3,7 +3,8 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
@@ -12,7 +13,6 @@ use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -48,7 +48,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -99,12 +98,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
-     *
+     * @throws CannotAccessModelException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
@@ -118,12 +116,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return TransitionButtonsComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
-     *
+     * @throws CannotAccessModelException
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);

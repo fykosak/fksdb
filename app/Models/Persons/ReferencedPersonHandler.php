@@ -98,7 +98,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return ModelPerson
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws ModelDataConflictException
+     * @throws ModelException
      * @throws NotImplementedException
+     * @throws StorageException
      */
     public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
@@ -114,7 +117,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
+     * @throws ModelDataConflictException
+     * @throws ModelException
      * @throws NotImplementedException
+     * @throws StorageException
      */
     public function update(IModel $model, ArrayHash $values): void {
         /** @var ModelPerson $model */

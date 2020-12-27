@@ -14,10 +14,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-/**
- * Class FlagProcessing
- * *
- */
 class FlagProcessing extends AbstractProcessing {
 
     private YearCalculator $yearCalculator;

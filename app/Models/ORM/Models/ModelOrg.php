@@ -21,7 +21,8 @@ use Nette\Security\IResource;
  * @property-read string tex_signature
  * @property-read string domain_alias
  */
-class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
+class ModelOrg extends AbstractModelSingle implements IResource {
+
     public const RESOURCE_ID = 'org';
 
     public function getContest(): ModelContest {

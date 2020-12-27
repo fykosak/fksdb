@@ -9,10 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
 
-/**
- * Class CheckboxFactory
- * *
- */
 class CheckboxFactory extends AbstractFactory {
 
     public function createComponent(Field $field): Checkbox {

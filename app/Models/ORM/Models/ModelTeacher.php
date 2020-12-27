@@ -19,7 +19,8 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int teacher_id
  */
-class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
+class ModelTeacher extends AbstractModelSingle implements IResource {
+
     public const RESOURCE_ID = 'teacher';
 
     public function getPerson(): ModelPerson {

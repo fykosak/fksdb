@@ -2,23 +2,15 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelSubmitQuizQuestion;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
 class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT_QUIZ, ModelSubmitQuizQuestion::class);
-    }
 
     public function findByContestant(int $ctId, int $questionId): ?ModelSubmitQuizQuestion {
         /** @var ModelSubmitQuizQuestion $result */

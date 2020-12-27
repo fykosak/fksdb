@@ -11,6 +11,7 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnavailableTransitionException extends \Exception {
+
     /**
      * UnavailableTransitionException constructor.
      * @param EventTransition|Transition $transition

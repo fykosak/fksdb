@@ -14,81 +14,59 @@ use Nette\Application\IPresenter;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
 use Nette\ComponentModel\IComponent;
+use Nette\Localization\Translator;
 use NiftyGrid\Components\Column;
 
 abstract class Grid extends \Nette\Application\UI\Control {
+
     const ROW_FORM = "rowForm";
-
     const ADD_ROW = "addRow";
-
     /** @persistent array */
     public $filter;
-
     /** @persistent string */
     public $order;
-
     /** @persistent int */
     public $perPage;
-
     /** @persistent int */
     public $activeSubGridId;
-
     /** @persistent string */
     public $activeSubGridName;
-
     /** @var array */
     protected $perPageValues = [20 => 20, 50 => 50, 100 => 100];
-
     public bool $paginate = true;
-
     /** @var string */
     protected $defaultOrder;
-
     /** @var DataSource\IDataSource */
     protected $dataSource;
-
     /** @var string */
     protected $primaryKey;
-
     /** @var string */
     public $gridName;
-
     /** @var string */
     public $width;
-
     /** @var bool */
     public $enableSorting = true;
-
     /** @var int */
     public $activeRowForm;
-
     /** @var callback */
     public $rowFormCallback;
-
     /** @var bool */
     public $showAddRow = false;
-
     /** @var bool */
     public $isSubGrid = false;
-
     /** @var array */
     public $subGrids = [];
-
     /** @var callback */
     public $afterConfigureSettings;
-
     /** @var string */
     protected $templatePath;
-
     /** @var string */
     public $messageNoRecords = 'Žádné záznamy';
-
     /** @var \Nette\Localization\ITranslator */
     protected $translator;
 
     public function __construct() {
         $this->monitor(IPresenter::class, function (IPresenter $presenter) {
-
             $this->addComponent(new Container(), "columns");
             $this->addComponent(new Container(), "buttons");
             $this->addComponent(new Container(), "globalButtons");
@@ -896,22 +874,16 @@ abstract class Grid extends \Nette\Application\UI\Control {
         $this->template->render();
     }
 
-    /**
-     * @param \Nette\Localization\ITranslator $translator
-     * @return Grid
-     */
-    public function setTranslator(\Nette\Localization\ITranslator $translator) {
+    public function setTranslator(Translator $translator): self {
         $this->translator = $translator;
 
         return $this;
     }
 
-    /**
-     * @return \Nette\Localization\ITranslator|null
-     */
-    public function getTranslator() {
-        if ($this->translator instanceof \Nette\Localization\ITranslator)
+    public function getTranslator(): ?Translator {
+        if ($this->translator instanceof Translator) {
             return $this->translator;
+        }
 
         return null;
     }

@@ -15,7 +15,6 @@ use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
- * *
  * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {

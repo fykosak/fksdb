@@ -7,7 +7,7 @@ use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
@@ -155,7 +155,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): IRow {
+    protected function assertSubmit(int $contestantId, int $taskId): Row {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::notEqual(null, $submit);
         return $submit;

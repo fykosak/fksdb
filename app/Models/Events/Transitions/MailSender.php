@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -137,8 +138,9 @@ class MailSender {
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
      * @return ModelEmailMessage
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
+     * @throws UnsupportedLanguageException
+     * @throws ModelException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();

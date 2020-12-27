@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 class PersonPaymentContainer extends ContainerWithOptions {
 
@@ -43,6 +44,7 @@ class PersonPaymentContainer extends ContainerWithOptions {
     /**
      * @return void
      * @throws NotImplementedException
+     * @throws InvalidStateException
      */
     protected function configure(): void {
         $query = $this->servicePersonSchedule->getTable()

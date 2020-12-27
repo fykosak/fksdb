@@ -19,6 +19,7 @@ use Nette\Security\IResource;
  * @method ModelEvent getEntity()
  */
 class EventPresenter extends BasePresenter {
+
     use EntityPresenterTrait;
 
     private ServiceEvent $serviceEvent;

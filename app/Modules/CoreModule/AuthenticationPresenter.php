@@ -31,6 +31,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Http\Url;
+use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 
@@ -52,13 +53,10 @@ final class AuthenticationPresenter extends BasePresenter {
     public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
-
     /** @persistent */
     public $backlink = '';
-
     /** @persistent */
     public $flag;
-
     private ServiceAuthToken $serviceAuthToken;
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
@@ -185,6 +183,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * False is return in order to AuthenticatedPresenter to correctly login the user.
      *
      * @return bool
+     * @throws InvalidStateException
      */
     private function isLoggedIn(): bool {
         return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);

@@ -81,7 +81,7 @@ class WebServiceModel {
 
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
-            $this->log("Successfully authenticated for web service request.");
+            $this->log('Successfully authenticated for web service request.');
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
@@ -326,9 +326,9 @@ class WebServiceModel {
 
     private function log(string $msg): void {
         if (!$this->authenticatedLogin) {
-            $message = "unauthenticated@";
+            $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . "@";
+            $message = $this->authenticatedLogin->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);

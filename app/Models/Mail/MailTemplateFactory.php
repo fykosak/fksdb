@@ -10,7 +10,8 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
-use Nette\Localization\ITranslator;
+use Nette\InvalidStateException;
+use Nette\Localization\Translator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,11 +26,11 @@ class MailTemplateFactory {
     /** @var Application */
     private $application;
 
-    private ITranslator $translator;
+    private Translator $translator;
 
     private IRequest $request;
 
-    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
+    public function __construct(string $templateDir, Application $application, Translator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
@@ -89,8 +90,9 @@ class MailTemplateFactory {
      * @param string $filename
      * @param string|null $lang ISO 639-1
      * @return ITemplate
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
+     * @throws UnsupportedLanguageException
+     * @throws InvalidStateException
      */
     final public function createFromFile(string $filename, ?string $lang): ITemplate {
         $presenter = $this->application->getPresenter();

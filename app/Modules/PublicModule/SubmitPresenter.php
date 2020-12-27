@@ -21,11 +21,12 @@ use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
+use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
+use Nette\InvalidStateException;
 use Tracy\Debugger;
 
 /**
@@ -112,6 +113,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function createComponentUploadForm(): FormControl {
         $control = new FormControl($this->getContext());
@@ -203,7 +205,8 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     * @throws StorageException
+     * @throws InvalidStateException
      */
     private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -245,7 +248,7 @@ class SubmitPresenter extends BasePresenter {
                         continue;
                     }
                     if (!$taskValues['file']->isOk()) {
-                        Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                        Debugger::log(sprintf('Uploaded file error %s.', $taskValues['file']->getError()), Debugger::WARNING);
                         continue;
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
