@@ -6,14 +6,15 @@ use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+
 use Nette\Application\AbortException;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 

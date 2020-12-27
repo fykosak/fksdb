@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Model\React\AjaxResponse;
+use FKSDB\Models\React\AjaxResponse;
 use Nette\Application\AbortException;
 use Nette\Http\IRequest;
 use Nette\Http\Response;

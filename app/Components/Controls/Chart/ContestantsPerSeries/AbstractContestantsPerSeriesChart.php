@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\DI\Container;
 
 /**

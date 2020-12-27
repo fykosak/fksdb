@@ -4,16 +4,16 @@ namespace FKSDB\Tests\Events\Model;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Events\Model\ApplicationHandler;
-use FKSDB\Model\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Tests\Events\EventTestCase;
-use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Logging\DevNullLogger;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Model\ORM\Services\ServiceEvent;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Logging\DevNullLogger;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -73,7 +73,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws \FKSDB\Model\Events\Model\ApplicationHandlerException
+     * @throws \FKSDB\Models\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication(): void {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);

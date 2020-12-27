@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
-use FKSDB\Model\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;

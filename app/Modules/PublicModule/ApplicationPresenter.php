@@ -2,29 +2,29 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Model\Authorization\RelatedPersonAuthorizator;
+use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Events\Machine\Machine;
-use FKSDB\Model\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\GoneException;
-use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\IEventReferencedModel;
-use FKSDB\Model\ORM\Models\ModelAuthToken;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventParticipant;
-use FKSDB\Model\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\IEventReferencedModel;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -117,7 +117,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function unauthorizedAccess(): void {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 return;
             }
         }
@@ -167,7 +167,7 @@ class ApplicationPresenter extends BasePresenter {
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {

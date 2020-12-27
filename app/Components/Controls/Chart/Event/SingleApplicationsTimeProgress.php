@@ -4,11 +4,11 @@ namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventParticipant;
-use FKSDB\Model\ORM\Models\ModelEventType;
-use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelEventType;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\DI\Container;
 
 /**

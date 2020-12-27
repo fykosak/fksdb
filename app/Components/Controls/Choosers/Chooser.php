@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Model\UI\Title;
+use FKSDB\Models\UI\Title;
 
 /**
  * Class Chooser

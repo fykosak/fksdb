@@ -7,19 +7,19 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\IService;
-use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\IControl;
-use FKSDB\Model\Persons\AclResolver;
-use FKSDB\Model\Persons\ExtendedPersonHandler;
-use FKSDB\Model\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Tests\MockEnvironment;
 
-use FKSDB\Model\Authentication\LoginUserStorage;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Services\ServiceLogin;
-use FKSDB\Model\Mail\MailTemplateFactory;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\Authentication\LoginUserStorage;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\Mail\MailTemplateFactory;
+use FKSDB\Models\YearCalculator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;

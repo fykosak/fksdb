@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\DBReflection\DBReflectionFactory;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\SQL\SearchableDataSource;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;

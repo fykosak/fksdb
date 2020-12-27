@@ -4,7 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\DataTesting\PersonTestControl;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  * Class ValidationPresenter

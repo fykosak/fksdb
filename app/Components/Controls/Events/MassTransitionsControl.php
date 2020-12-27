@@ -4,12 +4,12 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Model\Events\Model\Grid\SingleEventSource;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
