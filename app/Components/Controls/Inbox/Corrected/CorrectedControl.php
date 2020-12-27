@@ -4,9 +4,11 @@ namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Submits\FileSystemStorage\CorrectedStorage;
+
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use Fykosak\Utils\Logging\Message;
+
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 

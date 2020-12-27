@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
 /**

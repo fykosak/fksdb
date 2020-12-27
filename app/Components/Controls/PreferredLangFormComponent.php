@@ -4,11 +4,13 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use Fykosak\Utils\ORM\Exceptions\ModelException;
+
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;

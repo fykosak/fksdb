@@ -5,7 +5,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\SchoolFormComponent;
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;

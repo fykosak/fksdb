@@ -5,13 +5,15 @@ namespace FKSDB\Components\Controls\DataTesting;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Model\DataTesting\DataTestingFactory;
-use FKSDB\Model\DataTesting\Tests\ModelPerson\PersonTest;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\DataTesting\DataTestingFactory;
+use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\DataTesting\TestLog;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\DataTesting\TestLog;
+
 use Nette\Forms\Form;
 
 /**

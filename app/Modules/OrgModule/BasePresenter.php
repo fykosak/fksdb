@@ -5,8 +5,8 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Security\IResource;
 
 abstract class BasePresenter extends AuthenticatedPresenter implements ISeriesPresenter {

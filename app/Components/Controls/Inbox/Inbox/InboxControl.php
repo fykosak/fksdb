@@ -4,10 +4,12 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Model\ORM\Models\ModelSubmit;
-use FKSDB\Model\ORM\Services\ServiceSubmit;
-use FKSDB\Model\Submits\SeriesTable;
+
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
+
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;

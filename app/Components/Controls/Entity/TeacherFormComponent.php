@@ -5,13 +5,15 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelTeacher;
-use FKSDB\Model\ORM\Services\ServiceTeacher;
-use FKSDB\Model\Utils\FormUtils;
+use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\Utils\FormUtils;
+
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 

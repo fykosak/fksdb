@@ -2,15 +2,17 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Model\Authentication\GithubAuthenticator;
-use FKSDB\Model\Authentication\PasswordAuthenticator;
-use FKSDB\Model\Authentication\TokenAuthenticator;
-use FKSDB\Model\Authorization\ContestAuthorizator;
-use FKSDB\Model\Authorization\EventAuthorizator;
+use FKSDB\Models\Authentication\GithubAuthenticator;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Model\ORM\Models\ModelAuthToken;
+
+use FKSDB\Models\ORM\Models\ModelAuthToken;
 use Fykosak\Utils\Logging\Message;
+
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

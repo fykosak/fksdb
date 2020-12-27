@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Controls\Events;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Loaders\IJavaScriptCollector;
-use FKSDB\Model\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\BaseMachine;
+
 use Nette\DI\Container;
 
 /**

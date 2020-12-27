@@ -40,7 +40,7 @@ events:
                         condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
                         label: _('Přihlásit účastníka')
                         onExecuted:
-                            - FKSDB\Model\Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
@@ -108,7 +108,7 @@ events:
                     required: true
                     primary: true
             formAdjustments:
-                - FKSDB\Model\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

@@ -2,14 +2,16 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
-use FKSDB\Model\Authorization\EventAuthorizator;
-use FKSDB\Model\Fyziklani\NotSetGameParametersException;
+
+use FKSDB\Models\Authorization\EventAuthorizator;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Modules\FyziklaniModule\BasePresenter;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Fykosak\Utils\FrontEndComponents\AjaxComponent;
+
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;

@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Model\Authentication\LoginUserStorage;
+use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;

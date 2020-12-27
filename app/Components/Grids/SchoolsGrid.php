@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\ModelSchool;
-use FKSDB\Model\ORM\Services\ServiceSchool;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\Model\SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
  *

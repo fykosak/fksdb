@@ -4,7 +4,7 @@ namespace FKSDB\Tests\ModelsTests;
 
 $container = require '../Bootstrap.php';
 
-use FKSDB\Model\WebService\WebServiceModel;
+use FKSDB\Models\WebService\WebServiceModel;
 use Nette\DI\Container;
 use SoapVar;
 use Tester\Assert;

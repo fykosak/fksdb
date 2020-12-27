@@ -2,11 +2,13 @@
 
 namespace FKSDB\Components\Controls\Transitions;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Model\Transitions\IStateModel;
-use FKSDB\Model\Transitions\Machine\Machine;
-use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Transitions\IStateModel;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\Utils\Logging\Message;
+
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;

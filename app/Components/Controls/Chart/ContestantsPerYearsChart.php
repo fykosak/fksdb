@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Services\ServiceSubmit;
+
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
 use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
+
 use Nette\DI\Container;
 
 class ContestantsPerYearsChart extends FrontEndComponent implements IChart {

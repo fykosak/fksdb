@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\BadTypeException;
+
 use Nette\Application\UI\Form;
 
 /**

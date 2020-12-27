@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceLogin;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

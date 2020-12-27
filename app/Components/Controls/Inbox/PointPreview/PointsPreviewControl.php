@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Inbox\PointPreview;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Model\Submits\SeriesTable;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\DI\Container;
 
 /**

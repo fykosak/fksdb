@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Exceptions;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\Services\AbstractServiceSingle;
-use FKSDB\Model\UI\PageTitle;
+
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\UI\PageTitle;
 use Fykosak\Utils\ORM\Exceptions\ModelException;
+
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;

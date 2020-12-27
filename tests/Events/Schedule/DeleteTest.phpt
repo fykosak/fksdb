@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Schema\Helpers;

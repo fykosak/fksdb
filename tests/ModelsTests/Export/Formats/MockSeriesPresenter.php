@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Services\ServiceContest;
 use Nette\DI\Container;
 
 class MockSeriesPresenter implements ISeriesPresenter {

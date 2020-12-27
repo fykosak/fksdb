@@ -4,20 +4,22 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Models\ModelPostContact;
-use FKSDB\Model\ORM\Services\ServiceAddress;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Services\ServicePersonInfo;
-use FKSDB\Model\ORM\Services\ServicePostContact;
-use FKSDB\Model\Utils\FormUtils;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Services\ServiceAddress;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\ServicePostContact;
+use FKSDB\Models\Utils\FormUtils;
+
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;

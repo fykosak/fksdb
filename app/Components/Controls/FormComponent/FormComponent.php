@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\FormComponent;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;

@@ -4,20 +4,22 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Modules\OrgModule\StoredQueryPresenter;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryTag;
-use FKSDB\Model\StoredQuery\StoredQueryFactory;
-use FKSDB\Model\StoredQuery\StoredQueryParameter;
-use FKSDB\Model\Utils\FormUtils;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
+use FKSDB\Models\StoredQuery\StoredQueryParameter;
+use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\ORM\Exceptions\ModelException;
+
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;

@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
+
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Fykosak\Utils\ORM\Exceptions\ModelException;
+
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;

@@ -3,7 +3,7 @@
 namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
 use Fykosak\Utils\ORM\AbstractModel;
 
 class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
@@ -31,5 +31,4 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
     public function flashMessage($message, string $type = 'info'): \stdClass {
         return new \stdClass();
     }
-
 }

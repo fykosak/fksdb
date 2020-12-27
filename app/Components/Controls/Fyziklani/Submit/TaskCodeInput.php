@@ -2,16 +2,18 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+
 use Fykosak\Utils\Loaders\IJavaScriptCollector;
-use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use Fykosak\Utils\FrontEndComponents\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\Fyziklani\NotSetGameParametersException;
-use FKSDB\Model\Fyziklani\Submit\TaskCodeException;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

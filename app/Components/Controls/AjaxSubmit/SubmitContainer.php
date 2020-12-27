@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelContestant;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceTask;
 use Fykosak\Utils\ORM\TypedTableSelection;
+
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 

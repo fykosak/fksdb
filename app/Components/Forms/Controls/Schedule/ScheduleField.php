@@ -2,12 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
+
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Fykosak\Utils\FrontEndComponents\FrontEndComponentTrait;
+
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 

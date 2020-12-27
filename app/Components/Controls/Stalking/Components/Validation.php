@@ -3,10 +3,12 @@
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
+
+use FKSDB\Models\DBReflection\FieldLevelPermission;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\DataTesting\DataTestingFactory;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\DataTesting\DataTestingFactory;
+
 
 /**
  * Class Validation

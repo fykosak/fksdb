@@ -3,11 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Services\ServiceEmailMessage;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;

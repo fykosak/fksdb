@@ -2,16 +2,18 @@
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Model\Exceptions\NotFoundException;
+
+use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\FrontEndComponents\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelContestant;
-use FKSDB\Model\ORM\Models\ModelSubmit;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Services\ServiceSubmit;
-use FKSDB\Model\Submits\StorageException;
-use FKSDB\Model\Submits\SubmitHandlerFactory;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\Utils\ORM\Exceptions\ModelException;
+
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

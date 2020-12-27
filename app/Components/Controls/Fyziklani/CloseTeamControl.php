@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Model\Fyziklani\NotSetGameParametersException;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Fykosak\Utils\Logging\Message;
+
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 

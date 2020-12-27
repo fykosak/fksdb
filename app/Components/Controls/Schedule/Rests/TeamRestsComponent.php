@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+
 
 /**
  * Class TeamRestsComponent

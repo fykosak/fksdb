@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Model\UI\Title;
+use FKSDB\Models\UI\Title;
+
 
 /**
  * Class Chooser

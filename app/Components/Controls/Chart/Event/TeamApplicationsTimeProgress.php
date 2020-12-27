@@ -3,11 +3,13 @@
 namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventType;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Model\ORM\Services\ServiceEvent;
+
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventType;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceEvent;
 use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
+
 use Nette\DI\Container;
 
 /**

@@ -4,10 +4,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;

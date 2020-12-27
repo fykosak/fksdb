@@ -4,8 +4,10 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
+
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+
 use Nette\Application\UI\Form;
 
 /**

@@ -16,14 +16,16 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
-use FKSDB\Model\ORM\Services\ServiceContest;
-use FKSDB\Model\UI\PageStyleContainer;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\UI\PageStyleContainer;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\YearCalculator;
 use Fykosak\Utils\Localization\GettextTranslator;
+
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -33,7 +35,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
-use FKSDB\Model\Utils\Utils;
+use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.

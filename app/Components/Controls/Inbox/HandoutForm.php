@@ -6,14 +6,16 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Models\ModelTaskContribution;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Services\ServiceTaskContribution;
-use FKSDB\Model\Submits\SeriesTable;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\ModelTaskContribution;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\Submits\SeriesTable;
+use FKSDB\Models\YearCalculator;
+
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;

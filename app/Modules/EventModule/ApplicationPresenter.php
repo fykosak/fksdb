@@ -3,17 +3,19 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
+
+use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelEventParticipant;
-use FKSDB\Model\ORM\Services\ServiceEventParticipant;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\UI\PageTitle;
+
 use Nette\Application\ForbiddenRequestException;
 
 /**

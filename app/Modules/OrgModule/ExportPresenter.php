@@ -3,17 +3,19 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Model\StoredQuery\StoredQuery;
-use FKSDB\Model\StoredQuery\StoredQueryFactory;
+use FKSDB\Models\StoredQuery\StoredQuery;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use FKSDB\Model\UI\PageTitle;
+
+use FKSDB\Models\UI\PageTitle;
+
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;

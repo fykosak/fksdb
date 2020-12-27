@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
  * Interface IEditEntityForm

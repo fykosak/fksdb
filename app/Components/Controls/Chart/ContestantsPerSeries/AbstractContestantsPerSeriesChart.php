@@ -3,8 +3,10 @@
 namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Model\ORM\Models\ModelContest;
+
+use FKSDB\Models\ORM\Models\ModelContest;
 use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
+
 use Nette\DI\Container;
 
 /**
