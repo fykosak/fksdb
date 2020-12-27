@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
@@ -38,9 +37,6 @@ class SubmitCheckComponent extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @throws AbortException
-     */
     public function handleCheck(): void {
         /** @var ModelSubmit $submit */
         $errors = 0;

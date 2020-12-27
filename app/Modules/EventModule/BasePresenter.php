@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -45,7 +44,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -167,7 +166,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException

@@ -28,13 +28,13 @@ class PriceCalculator implements TransitionCallback {
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(ModelHolder $model, ...$args): void {
-        $price = new Price(0, $model->getModel()->currency);
+    final public function __invoke(ModelHolder $holder, ...$args): void {
+        $price = new Price(0, $holder->getModel()->currency);
         foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($model->getModel());
+            $subPrice = $preProcess->calculate($holder->getModel());
             $price->add($subPrice);
         }
-        $this->servicePayment->updateModel2($model->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**

@@ -12,7 +12,6 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -149,7 +148,7 @@ class ResultsComponent extends BaseComponent {
     /**
      * @param string $format
      * @return void
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */

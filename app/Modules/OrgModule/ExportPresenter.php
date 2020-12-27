@@ -10,7 +10,6 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use Nette\Application\AbortException;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -68,7 +67,7 @@ class ExportPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */

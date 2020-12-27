@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Inbox\HandoutForm;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
-use Nette\Application\AbortException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -50,42 +49,22 @@ class InboxPresenter extends BasePresenter {
 
     /* ***************** TITLES ***********************/
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleInbox(): void {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleCorrected(): void {
         $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
     }

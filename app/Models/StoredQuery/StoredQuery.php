@@ -41,8 +41,6 @@ class StoredQuery implements IDataSource, IResource {
 
     /** default parameter of ModelStoredQueryParameter     */
     private array $parameterDefaultValues = [];
-
-    /** @var int|null */
     private ?int $count;
 
     /** @var iterable|null */

@@ -12,7 +12,6 @@ use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidStateException;
@@ -61,9 +60,6 @@ class EventOrgPresenter extends BasePresenter {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionDelete(): void {
         try {
             $this->traitHandleDelete();

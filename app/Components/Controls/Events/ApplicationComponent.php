@@ -14,7 +14,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -164,11 +163,6 @@ class ApplicationComponent extends BaseComponent {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     * @param string|null $explicitTransitionName
-     * @throws AbortException
-     */
     public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void {
         try {
             $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);

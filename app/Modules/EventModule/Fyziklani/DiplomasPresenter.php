@@ -7,7 +7,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
@@ -69,7 +68,7 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @param string|null $category
-     * @throws AbortException
+     *
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */

@@ -47,9 +47,9 @@ abstract class AbstractFactory implements IFieldFactory {
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return mixed|bool|void TODO what is the return type?
+     * @return void TODO what is the return type?
      */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }

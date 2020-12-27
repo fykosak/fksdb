@@ -5,7 +5,6 @@ namespace FKSDB\Models\Mail;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -92,7 +91,7 @@ class MailTemplateFactory {
      * @param string|null $lang ISO 639-1
      * @return ITemplate
      * @throws UnsupportedLanguageException
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws InvalidStateException

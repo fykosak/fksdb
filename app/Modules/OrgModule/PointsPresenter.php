@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
@@ -50,18 +49,10 @@ class PointsPresenter extends BasePresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleEntry(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
     }
@@ -97,10 +88,6 @@ class PointsPresenter extends BasePresenter {
         return new PointsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
@@ -115,7 +102,7 @@ class PointsPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void {
@@ -141,10 +128,6 @@ class PointsPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleCalculateQuizPoints(): void {
         try {
             $contest = $this->getSelectedContest();

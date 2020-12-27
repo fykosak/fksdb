@@ -10,7 +10,6 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
@@ -46,7 +45,7 @@ class MassTransitionsControl extends BaseComponent {
     /**
      * @param string $name
      * @return void
-     * @throws AbortException
+     *
      *
      * @throws NeonSchemaException
      */

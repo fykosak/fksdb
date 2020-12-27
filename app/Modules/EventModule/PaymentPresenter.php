@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\InvalidStateException;
@@ -106,7 +105,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      *
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      */

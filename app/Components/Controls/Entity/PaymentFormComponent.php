@@ -24,7 +24,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * Class SelectForm

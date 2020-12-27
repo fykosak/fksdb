@@ -26,7 +26,6 @@ use FKSDB\Models\Persons\SelfResolver;
 class PersonFactory extends AbstractFactory {
 
     private const VALUE_LOGIN = 'fromLogin';
-
     /** @var mixed */
     private $fieldsDefinition;
     /** @var mixed */
@@ -37,17 +36,11 @@ class PersonFactory extends AbstractFactory {
     private $modifiable;
     /** @var mixed */
     private $visible;
-
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private SelfResolver $selfResolver;
-
     private ExpressionEvaluator $evaluator;
-
     private User $user;
-
     private ServicePerson $servicePerson;
-
     private DIContainer $container;
 
     /**
@@ -145,10 +138,10 @@ class PersonFactory extends AbstractFactory {
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool|void
+     * @return void
      * @throws \ReflectionException
      */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         // check person ID itself
         parent::validate($field, $validator);
 

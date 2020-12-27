@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\IPresenter;
@@ -118,7 +117,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param int $id
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
@@ -132,7 +131,7 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param int $id
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {

@@ -124,7 +124,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @param mixed[]|\DateTimeInterface[][] $data
      * @return mixed
      */
-    private function formatDate($data) {
+    private function formatDate(iterable $data): iterable {
         foreach ($data as $row) {
             if ($row[self::SPAM_DATE]) {
                 $row[self::SPAM_DATE] = $row[self::SPAM_DATE]->format('Y-m-d');

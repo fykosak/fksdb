@@ -10,7 +10,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 
-use Nette\Application\AbortException;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\UI\PageTitle;
@@ -34,7 +33,7 @@ class StoredQueryPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -48,7 +47,7 @@ class StoredQueryPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
@@ -57,7 +56,7 @@ class StoredQueryPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */

@@ -11,7 +11,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
@@ -45,10 +44,6 @@ class TransitionButtonsComponent extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @param string $transitionName
-     * @throws AbortException
-     */
     public function handleTransition(string $transitionName): void {
         try {
             $this->handler->onlyExecute($this->holder, $transitionName);

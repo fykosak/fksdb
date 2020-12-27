@@ -18,7 +18,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -140,11 +139,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @return AbstractApplicationsGrid
-     * @throws AbortException
-     *
-     */
     abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**

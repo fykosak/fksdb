@@ -8,7 +8,6 @@ use FKSDB\Modules\Core\BasePresenter;
 
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
@@ -34,10 +33,6 @@ class TransitionButtonsComponent extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @param string $name
-     * @throws AbortException
-     */
     public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);

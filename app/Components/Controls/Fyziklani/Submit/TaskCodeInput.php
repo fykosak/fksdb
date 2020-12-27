@@ -13,7 +13,6 @@ use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
@@ -67,10 +66,6 @@ class TaskCodeInput extends AjaxComponent {
         ];
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleSave(): void {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {

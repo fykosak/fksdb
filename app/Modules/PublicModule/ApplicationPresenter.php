@@ -27,7 +27,6 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
@@ -294,7 +293,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException
