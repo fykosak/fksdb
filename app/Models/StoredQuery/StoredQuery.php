@@ -243,15 +243,15 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param string $column
-     * @return false|int|mixed|null
+     * @return int|null
      */
-    public function getCount($column = '*') {
+    public function getCount($column = '*'): ?int {
         if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
             $statement->execute();
-            $this->count = $statement->fetchColumn();
+            $this->count = (int)$statement->fetchColumn();
             if ($this->postProcessing) {
                 if (!$this->postProcessing->keepsCount()) {
                     $this->count = count($this->getData());
