@@ -89,12 +89,12 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     }
 
     /**
-     * @param Explorer $connection
+     * @param Explorer $explorer
      * @param Conventions $conventions
      * @return IStateModel
      * @throws NotImplementedException
      */
-    public function refresh(Explorer $connection, Conventions $conventions): IStateModel {
+    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
         throw new NotImplementedException();
     }
 }

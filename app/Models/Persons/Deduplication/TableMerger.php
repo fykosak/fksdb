@@ -22,26 +22,19 @@ use FKSDB\Models\Persons\Deduplication\MergeStrategy\IMergeStrategy;
 class TableMerger {
 
     private string $table;
-
     private Merger $merger;
-
-    private Explorer $context;
-
+    private Explorer $explorer;
     private ActiveRow $trunkRow;
-
     private ActiveRow $mergedRow;
-
     /** @var IMergeStrategy[] */
     private array $columnMergeStrategies = [];
-
     private IMergeStrategy $globalMergeStrategy;
-
     private ILogger $logger;
 
     public function __construct(string $table, Merger $merger, Explorer $explorer, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
-        $this->context = $explorer;
+        $this->explorer = $explorer;
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
     }
@@ -256,9 +249,9 @@ class TableMerger {
     private function getReferencingTables() {
         if ($this->refTables === null) {
             $this->refTables = [];
-            foreach ($this->context->getConnection()->getDriver()->getTables() as $otherTable) {
+            foreach ($this->explorer->getConnection()->getDriver()->getTables() as $otherTable) {
                 try {
-                    [$table, $refColumn] = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name']);
+                    [$table, $refColumn] = $this->explorer->getConventions()->getHasManyReference($this->table, $otherTable['name']);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
                 } catch (AmbiguousReferenceKeyException $exception) {
@@ -278,7 +271,7 @@ class TableMerger {
     private function getColumns() {
         if ($this->columns === null) {
             $this->columns = [];
-            foreach ($this->context->getConnection()->getDriver()->getColumns($this->table) as $column) {
+            foreach ($this->explorer->getConnection()->getDriver()->getColumns($this->table) as $column) {
                 $this->columns[] = $column['name'];
             }
         }
@@ -294,7 +287,7 @@ class TableMerger {
      */
     private function isPrimaryKey($column): bool {
         if ($this->primaryKey === null) {
-            $this->primaryKey = $this->context->getConventions()->getPrimary($this->table);
+            $this->primaryKey = $this->explorer->getConventions()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;
     }
@@ -311,7 +304,7 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                [$table, $refColumn] = $this->context->getConventions()->getBelongsToReference($this->table, $column);
+                [$table, $refColumn] = $this->explorer->getConventions()->getBelongsToReference($this->table, $column);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (\Exception $exception) {
@@ -330,7 +323,7 @@ class TableMerger {
     private function getSecondaryKey() {
         if ($this->secondaryKey === null) {
             $this->secondaryKey = [];
-            foreach ($this->context->getConnection()->getDriver()->getIndexes($this->table) as $index) {
+            foreach ($this->explorer->getConnection()->getDriver()->getIndexes($this->table) as $index) {
                 if ($index['unique']) {
                     $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);
                 }

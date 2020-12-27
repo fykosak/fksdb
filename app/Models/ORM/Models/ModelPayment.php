@@ -97,13 +97,13 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param Explorer $connection
+     * @param Explorer $explorer
      * @param Conventions $conventions
      * @return static
      * @throws InvalidStateException
      */
-    public function refresh(Explorer $connection, Conventions $conventions): IStateModel {
-        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
+    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $explorer, $conventions);
         return $query->get($this->getPrimary());
     }
 }

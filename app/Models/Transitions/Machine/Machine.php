@@ -22,7 +22,7 @@ abstract class Machine {
     public const STATE_INIT = '__init';
     public const STATE_TERMINATED = '__terminated';
     private array $transitions = [];
-    protected Explorer $context;
+    protected Explorer $explorer;
     private AbstractServiceSingle $service;
     /**
      * @var callable
@@ -31,7 +31,7 @@ abstract class Machine {
     private $explicitCondition;
 
     public function __construct(Explorer $explorer, AbstractServiceSingle $service) {
-        $this->context = $explorer;
+        $this->explorer=$explorer;
         $this->service = $service;
     }
 
@@ -131,25 +131,25 @@ abstract class Machine {
      * @throws Exception
      */
     private function execute(Transition $transition, ?IStateModel $model = null): IStateModel {
-        if (!$this->context->getConnection()->getPdo()->inTransaction()) {
-            $this->context->getConnection()->beginTransaction();
+        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $this->explorer->getConnection()->beginTransaction();
         }
         try {
             $transition->beforeExecute($model);
         } catch (Exception $exception) {
-            $this->context->getConnection()->rollBack();
+            $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
         if (!$model instanceof IStateModel) {
             throw new BadTypeException(IStateModel::class, $model);
         }
 
-        $this->context->getConnection()->commit();
+        $this->explorer->getConnection()->commit();
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh($this->context, $this->context->getConventions());
+        $newModel = $model->refresh($this->explorer, $this->explorer->getConventions());
         $transition->afterExecute($newModel);
         return $newModel;
     }

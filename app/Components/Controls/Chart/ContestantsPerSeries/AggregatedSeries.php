@@ -10,14 +10,14 @@ use Nette\Database\Explorer;
  */
 class AggregatedSeries extends AbstractContestantsPerSeriesChart {
 
-    private Explorer $context;
+    private Explorer $explorer;
 
     public function injectSecondary(Explorer $explorer): void {
-        $this->context = $explorer;
+        $this->explorer = $explorer;
     }
 
     protected function getData(): array {
-        $query = $this->context->query('select ts.year,
+        $query = $this->explorer->query('select ts.year,
        ts.series,
        (
            select COUNT(DISTINCT ct_id) as count

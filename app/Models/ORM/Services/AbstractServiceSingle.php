@@ -27,10 +27,10 @@ abstract class AbstractServiceSingle extends Selection {
     private string $modelClassName;
     private string $tableName;
 
-    public function __construct(string $tableName, string $modelClassName, Explorer $connection, Conventions $conventions) {
+    public function __construct(string $tableName, string $modelClassName, Explorer $explorer, Conventions $conventions) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
-        parent::__construct($connection, $conventions, $tableName);
+        parent::__construct($explorer, $conventions, $tableName);
     }
 
     /**
