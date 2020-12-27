@@ -20,15 +20,16 @@ use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
 use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Config\NeonScheme;
+use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonScheme;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
 use Nette\DI\Definitions\ServiceDefinition;
 use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
 /**
@@ -80,7 +81,9 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * @return void
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     public function loadConfiguration(): void {
         parent::loadConfiguration();
@@ -238,7 +241,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $name
      * @param array $definition
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createMachineFactory(string $name, array $definition): ServiceDefinition {
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -284,7 +289,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $baseName
      * @param string $instanceName
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
@@ -308,7 +315,7 @@ class EventsExtension extends CompilerExtension {
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
         foreach ($definition['states'] as $state) {
             if (strlen($state) > self::STATE_SIZE) {
-                throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
+                throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . ' characters at most.');
             }
             $factory->addSetup('addState', [$state]);
         }
@@ -328,7 +335,9 @@ class EventsExtension extends CompilerExtension {
     /**
      * @param string $name
      * @param array $definition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createHolderFactory(string $name, array $definition): void {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
@@ -372,7 +381,9 @@ class EventsExtension extends CompilerExtension {
      * @param string $instanceName
      * @param array $instanceDefinition
      * @return ServiceDefinition
+     * @throws MachineDefinitionException
      * @throws NeonSchemaException
+     * @throws InvalidStateException
      */
     private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);

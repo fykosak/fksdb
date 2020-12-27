@@ -2,12 +2,13 @@
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
+use Nette\DI\MissingServiceException;
 
 /**
  * Class EventDispatchFactory
@@ -42,6 +43,7 @@ class EventDispatchFactory {
      * @param ModelEvent $event
      * @return Machine
      * @throws ConfigurationNotFoundException
+     * @throws MissingServiceException
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);

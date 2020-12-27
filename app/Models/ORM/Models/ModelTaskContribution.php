@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 
@@ -16,8 +14,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow person
  * @property-read ActiveRow task
  */
-class ModelTaskContribution extends AbstractModelSingle implements IPersonReferencedModel, ITaskReferencedModel, IContestReferencedModel {
-
+class ModelTaskContribution extends AbstractModelSingle {
 
     public const TYPE_AUTHOR = 'author';
     public const TYPE_SOLUTION = 'solution';

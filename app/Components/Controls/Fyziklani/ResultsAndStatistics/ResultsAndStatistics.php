@@ -4,15 +4,15 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Components\React\AjaxComponent;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Modules\FyziklaniModule\BasePresenter;
+use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\ArgumentOutOfRangeException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
@@ -27,7 +27,6 @@ class ResultsAndStatistics extends AjaxComponent {
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
     private EventAuthorizator $eventAuthorizator;
     private ModelEvent $event;
-
     private ?string $lastUpdated = null;
 
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
@@ -64,13 +63,14 @@ class ResultsAndStatistics extends AjaxComponent {
     /**
      * @return array
      * @throws NotSetGameParametersException
+     * @throws BadTypeException
      */
     protected function getData(): array {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
 
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
-            throw new ArgumentOutOfRangeException();
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
         $isOrg = $this->eventAuthorizator->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 

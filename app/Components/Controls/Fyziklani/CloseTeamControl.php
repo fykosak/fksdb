@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 /**
  * Class CloseTeamControl
@@ -40,7 +40,7 @@ class CloseTeamControl extends BaseComponent {
 
     /**
      * @return void
-     * @throws AbortException
+     * @throws InvalidStateException
      */
     public function handleClose(): void {
         $connection = $this->serviceFyziklaniTask->getConnection();

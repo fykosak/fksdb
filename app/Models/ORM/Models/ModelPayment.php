@@ -2,11 +2,10 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
+use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
@@ -34,15 +33,12 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
-
+class ModelPayment extends AbstractModelSingle implements IResource, IPaymentModel {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received
     public const STATE_CANCELED = 'canceled'; // payment canceled
     public const STATE_NEW = 'new'; // new payment
-
-
     public const RESOURCE_ID = 'event.payment';
 
     public function getPerson(): ModelPerson {
@@ -84,9 +80,5 @@ class ModelPayment extends AbstractModelSingle implements IResource, IEventRefer
 
     public function hasGeneratedSymbols(): bool {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
-    }
-
-    public function getState(): ?string {
-        return $this->state;
     }
 }

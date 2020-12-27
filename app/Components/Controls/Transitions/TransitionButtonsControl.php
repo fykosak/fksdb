@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Transitions;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Transitions\Holder\IModelHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\Core\BasePresenter;
 
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -21,9 +21,9 @@ class TransitionButtonsControl extends BaseComponent {
 
     private Machine $machine;
 
-    private IModelHolder $model;
+    private ModelHolder $model;
 
-    public function __construct(Machine $machine, Container $container, IModelHolder $model) {
+    public function __construct(Machine $machine, Container $container, ModelHolder $model) {
         parent::__construct($container);
         $this->machine = $machine;
         $this->model = $model;

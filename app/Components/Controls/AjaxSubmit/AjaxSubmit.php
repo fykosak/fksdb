@@ -92,7 +92,7 @@ class AjaxSubmit extends AjaxComponent {
 
     /**
      * @return void
-     * @throws AbortException
+     * @throws StorageException
      */
     public function handleUpload(): void {
         $files = $this->getHttpRequest()->getFiles();

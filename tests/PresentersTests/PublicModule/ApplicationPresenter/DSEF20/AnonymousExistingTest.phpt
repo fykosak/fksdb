@@ -7,6 +7,7 @@ $container = require '../../../../Bootstrap.php';
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 
+use Nette\Application\Responses\TextResponse;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 

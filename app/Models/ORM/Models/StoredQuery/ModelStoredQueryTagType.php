@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-
-
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
@@ -16,5 +14,4 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int color
  */
 class ModelStoredQueryTagType extends AbstractModelSingle {
-
 }

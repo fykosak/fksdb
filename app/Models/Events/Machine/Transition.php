@@ -98,11 +98,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
-            throw new InvalidArgumentException("Cannot induce transition in the same machine.");
+            throw new InvalidArgumentException('Cannot induce transition in the same machine.');
         }
         $targetName = $targetMachine->getName();
         if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . ".");
+            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . '.');
         }
         $this->inducedTransitions[$targetName] = $targetState;
     }
@@ -170,6 +170,8 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
      *
      * @param Holder $holder
      * @return array
+     * @throws TransitionConditionFailedException
+     * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
      */
     final public function execute(Holder $holder): array {
@@ -199,6 +201,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
      *
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
+     * @throws TransitionOnExecutedException
      */
     final public function executed(Holder $holder, array $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {

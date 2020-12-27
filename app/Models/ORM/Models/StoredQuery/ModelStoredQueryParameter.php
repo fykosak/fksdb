@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-
-
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\InvalidStateException;
 use PDO;
@@ -20,14 +18,12 @@ use PDO;
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
-
     public const TYPE_INT = 'integer';
     public const TYPE_STRING = 'string';
     public const TYPE_BOOL = 'bool';
 
     /**
      * @return int|string
-     * @throws InvalidStateException
      */
     public function getDefaultValue() {
         switch ($this->type) {
@@ -43,7 +39,6 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
 
     /**
      * @param mixed $value
-     * @throws InvalidStateException
      */
     public function setDefaultValue($value): void {
         switch ($this->type) {
@@ -80,10 +75,6 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
         return $data;
     }
 
-    /**
-     * @return int
-     * @throws InvalidStateException
-     */
     public function getPDOType(): int {
         return static::staticGetPDOType($this->type);
     }

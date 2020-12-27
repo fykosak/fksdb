@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -22,8 +21,7 @@ use Nette\Security\IResource;
  * @property-read string tex_signature
  * @property-read string domain_alias
  */
-class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
-
+class ModelOrg extends AbstractModelSingle implements IResource {
 
     public const RESOURCE_ID = 'org';
 

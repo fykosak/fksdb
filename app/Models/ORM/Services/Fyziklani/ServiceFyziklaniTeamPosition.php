@@ -2,14 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * Class ServiceFyziklaniTeamPosition
@@ -18,9 +13,6 @@ use Nette\Database\IConventions;
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class);
-    }
 
     public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
         /** @var ModelFyziklaniTeamPosition $row */
@@ -36,7 +28,6 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                 /** @var ModelFyziklaniTeamPosition $model */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
-
                     $data = [
                         'e_fyziklani_team_id' => $teamData->teamId,
                         'row' => $teamData->y,

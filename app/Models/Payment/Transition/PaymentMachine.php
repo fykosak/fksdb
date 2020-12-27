@@ -9,9 +9,9 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Models\Transitions\ITransitionsDecorator;
+use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 /**
  * Class PaymentMachine
@@ -25,13 +25,13 @@ class PaymentMachine extends Machine {
     private array $scheduleGroupTypes;
     private ServicePayment $servicePayment;
 
-    public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
-        parent::__construct($connection);
+    public function __construct(Explorer $explorer, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
+        parent::__construct($explorer, $servicePayment);
         $this->serviceEvent = $serviceEvent;
         $this->servicePayment = $servicePayment;
     }
 
-    public function decorateTransitions(ITransitionsDecorator $decorator): void {
+    public function decorateTransitions(TransitionsDecorator $decorator): void {
         $decorator->decorate($this);
     }
 

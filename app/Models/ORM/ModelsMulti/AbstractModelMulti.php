@@ -2,9 +2,8 @@
 
 namespace FKSDB\Models\ORM\ModelsMulti;
 
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
@@ -16,20 +15,21 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelMulti extends ActiveRow implements IModel {
+
     use SmartObject;
 
-    protected AbstractModelSingle $mainModel;
-    protected AbstractModelSingle $joinedModel;
+    protected OldAbstractModelSingle $mainModel;
+    protected OldAbstractModelSingle $joinedModel;
     protected AbstractServiceMulti $service;
 
     /**
      * @note DO NOT use directly, use AbstractServiceMulti::composeModel or FKSDB\Models\ORM\AbstractModelMulti::createFromExistingModels.
      *
      * @param AbstractServiceMulti|null $service
-     * @param AbstractModelSingle $mainModel
-     * @param AbstractModelSingle $joinedModel
+     * @param OldAbstractModelSingle $mainModel
+     * @param OldAbstractModelSingle $joinedModel
      */
-    public function __construct(?AbstractServiceMulti $service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
+    public function __construct(?AbstractServiceMulti $service, OldAbstractModelSingle $mainModel, OldAbstractModelSingle $joinedModel) {
         parent::__construct($mainModel->toArray(), $mainModel->getTable());
         if (is_null($service)) {
             $this->joinedModel = $joinedModel;
@@ -41,7 +41,7 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
         }
     }
 
-    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel): self {
+    public static function createFromExistingModels(OldAbstractModelSingle $mainModel, OldAbstractModelSingle $joinedModel): self {
         return new static(null, $mainModel, $joinedModel);
     }
 
@@ -49,11 +49,11 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
         return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
     }
 
-    public function getMainModel(): AbstractModelSingle {
+    public function getMainModel(): OldAbstractModelSingle {
         return $this->mainModel;
     }
 
-    public function setMainModel(AbstractModelSingle $mainModel): void {
+    public function setMainModel(OldAbstractModelSingle $mainModel): void {
         if (!isset($this->service)) {
             throw new InvalidStateException('Cannot set main model on multiModel w/out service.');
         }
@@ -64,11 +64,11 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
         }
     }
 
-    public function getJoinedModel(): AbstractModelSingle {
+    public function getJoinedModel(): OldAbstractModelSingle {
         return $this->joinedModel;
     }
 
-    public function setJoinedModel(AbstractModelSingle $joinedModel): void {
+    public function setJoinedModel(OldAbstractModelSingle $joinedModel): void {
         $this->joinedModel = $joinedModel;
     }
 
@@ -110,14 +110,14 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
      * @param mixed $value
      */
     public function __set($name, $value): void {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param string|int $name
      */
     public function __unset($name) {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
@@ -161,20 +161,13 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
      * @param mixed $value
      */
     public function offsetSet($offset, $value): void {
-        throw new LogicException("Cannot update multiModel directly.");
+        throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param mixed $offset
      */
     public function offsetUnset($offset): void {
-        throw new LogicException("Cannot update multiModel directly.");
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    public function refresh(): self {
-        throw new NotImplementedException();
+        throw new LogicException('Cannot update multiModel directly.');
     }
 }

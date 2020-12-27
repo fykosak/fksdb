@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
@@ -32,7 +32,8 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $excludeStates;
     /** @var string */
     private $message;
-    private Context $database;
+
+    private Explorer $database;
 
     /**
      * @param array|string $fields
@@ -50,13 +51,13 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Context $database
+     * @param Explorer $explorer
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct($fields, $paramCapacity, $message, Explorer $explorer, $includeStates = \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
-        $this->database = $database;
+        $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
         $this->includeStates = $includeStates;

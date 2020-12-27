@@ -2,28 +2,18 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
-
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_SUBMIT, ModelFyziklaniSubmit::class);
-    }
 
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */

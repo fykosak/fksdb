@@ -2,13 +2,11 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
 use Nette\Mail\Message;
 use Nette\Security\IResource;
 
 /**
  * Class ModelEmailMessage
- * *
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read string sender
@@ -22,8 +20,6 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface sent
  */
 class ModelEmailMessage extends AbstractModelSingle implements IResource {
-
-
     public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const STATE_WAITING = 'waiting'; //čaká na poslanie
     public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)

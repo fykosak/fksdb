@@ -3,8 +3,6 @@
 namespace FKSDB\Models\ORM\Models;
 
 
-
-
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>

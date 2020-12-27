@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Nette\Utils\Strings;
@@ -21,8 +19,7 @@ use Nette\Utils\Strings;
  * @property-read \DateTimeInterface submit_deadline
  * @property-read \DateTimeInterface submit_start
  */
-class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
-
+class ModelTask extends AbstractModelSingle {
 
     public function getFQName(): string {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);

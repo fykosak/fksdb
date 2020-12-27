@@ -2,15 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -20,12 +16,7 @@ use Nette\Database\IConventions;
  */
 class ServiceSubmit extends AbstractServiceSingle {
 
-
     private array $submitCache = [];
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
-    }
 
     /**
      * Syntactic sugar.

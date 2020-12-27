@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Transitions;
 
-use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 

@@ -63,6 +63,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     /**
      * @param string $token
      * @return null
+     * @throws \PDOException
      */
     private function getGSIDFromDB($token) {
         $sql = 'SELECT data FROM `' . self::TABLE . '`

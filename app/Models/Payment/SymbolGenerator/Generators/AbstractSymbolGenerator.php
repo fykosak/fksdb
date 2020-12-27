@@ -3,18 +3,19 @@
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
 
-use FKSDB\Models\Transitions\Holder\IModelHolder;
-use FKSDB\Models\Transitions\Callbacks\ITransitionCallback;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\InvalidStateException;
 
 /**
  * Class AbstractSymbolGenerator
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractSymbolGenerator implements ITransitionCallback {
+abstract class AbstractSymbolGenerator implements TransitionCallback {
 
     protected ServicePayment $servicePayment;
 
@@ -32,23 +33,24 @@ abstract class AbstractSymbolGenerator implements ITransitionCallback {
     abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
-     * @param IModelHolder $model
+     * @param ModelHolder $model
      * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    final public function __invoke(IModelHolder $model, ...$args): void {
+    final public function __invoke(ModelHolder $model, ...$args): void {
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel2($model, $info);
     }
 
     /**
-     * @param IModelHolder $modelPayment
+     * @param ModelHolder $modelPayment
      * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws InvalidStateException
      */
-    final public function invoke(IModelHolder $model, ...$args): void {
+    final public function invoke(ModelHolder $model, ...$args): void {
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel2($model, $info);
     }

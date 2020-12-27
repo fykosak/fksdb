@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -27,8 +28,9 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));

@@ -2,13 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelOrg;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -18,9 +13,6 @@ use Nette\Database\IConventions;
 class ServiceOrg extends AbstractServiceSingle {
 
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_ORG, ModelOrg::class);
-    }
 
     public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
         if (!$signature) {

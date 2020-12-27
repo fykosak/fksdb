@@ -38,10 +38,11 @@ class TaskStatsModel {
     /**
      * @param string[] $labels
      * @return Row[]
+     * @throws \PDOException
      */
     public function getData(array $labels): array {
-        $sql = "SELECT * FROM `v_task_stats` WHERE " .
-            "contest_id = ? AND year = ? " .
+        $sql = 'SELECT * FROM `v_task_stats` WHERE ' .
+            'contest_id = ? AND year = ? ' .
             "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
 
         $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);

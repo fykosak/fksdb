@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
-use FKSDB\Models\Transitions\ITransitionsDecorator;
+use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -19,7 +19,7 @@ use Tracy\Debugger;
  * Class PaymentTransitions
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class PaymentTransitions implements ITransitionsDecorator {
+abstract class PaymentTransitions implements TransitionsDecorator {
 
     protected EventAuthorizator $eventAuthorizator;
 

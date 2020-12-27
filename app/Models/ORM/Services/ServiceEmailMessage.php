@@ -2,13 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -18,11 +14,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
 
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_EMAIL_MESSAGE, ModelEmailMessage::class);
-    }
-
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }
@@ -31,6 +22,7 @@ class ServiceEmailMessage extends AbstractServiceSingle {
      * @param array $data
      * @param int $priority
      * @return ModelEmailMessage|ActiveRow
+     * @throws ModelException
      */
     public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;

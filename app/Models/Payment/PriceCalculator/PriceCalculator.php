@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Payment\PriceCalculator;
 
 
-use FKSDB\Models\Transitions\Holder\IModelHolder;
-use FKSDB\Models\Transitions\Callbacks\ITransitionCallback;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Price;
@@ -14,7 +14,7 @@ use FKSDB\Models\Payment\PriceCalculator\PreProcess\IPreprocess;
  * Class PriceCalculator
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceCalculator implements ITransitionCallback {
+class PriceCalculator implements TransitionCallback {
 
     private ServicePayment $servicePayment;
     /** @var IPreprocess[] */
@@ -28,7 +28,7 @@ class PriceCalculator implements ITransitionCallback {
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(IModelHolder $model, ...$args): void {
+    final public function __invoke(ModelHolder $model, ...$args): void {
         $price = new Price(0, $model->getModel()->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($model->getModel());
@@ -49,7 +49,7 @@ class PriceCalculator implements ITransitionCallback {
         return $items;
     }
 
-    public function invoke(IModelHolder $model, ...$args): void {
+    public function invoke(ModelHolder $model, ...$args): void {
         $this->__invoke($model, ...$args);
     }
 }

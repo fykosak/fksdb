@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use Nette\Security\IResource;
 
@@ -20,8 +18,7 @@ use Nette\Security\IResource;
  * @property-read int task_id
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
-
+class ModelSubmit extends AbstractModelSingle implements IResource {
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';

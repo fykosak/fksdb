@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-
-
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Database\Table\GroupedSelection;
@@ -20,7 +18,6 @@ use Nette\Security\IResource;
  * @property-read string name
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
-
 
     public const RESOURCE_ID = 'storedQuery';
 

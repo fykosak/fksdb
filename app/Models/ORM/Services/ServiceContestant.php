@@ -2,13 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestant;
-
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;
 
 /**
@@ -16,13 +11,7 @@ use Nette\Database\Table\Selection;
  */
 class ServiceContestant extends AbstractServiceSingle {
 
-
     protected string $viewName = DbNames::VIEW_CONTESTANT;
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_CONTESTANT_BASE, ModelContestant::class);
-    }
-
 
     /**
      * @note Read-only (loads data from view).

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -11,8 +10,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int flag_id
  * @property-read ActiveRow flag
  */
-class ModelPersonHasFlag extends AbstractModelSingle {
-
+class ModelPersonHasFlag extends OldAbstractModelSingle {
 
     public function getFlag(): ModelFlag {
         return ModelFlag::createFromActiveRow($this->flag);

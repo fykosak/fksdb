@@ -2,10 +2,11 @@
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
@@ -14,9 +15,10 @@ use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Utils\CSVParser;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\DI\MissingServiceException;
+use Nette\InvalidStateException;
 use Tracy\Debugger;
 
 /**
@@ -81,8 +83,10 @@ class ImportComponent extends BaseComponent {
 
     /**
      * @param Form $form
-     * @throws AbortException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     * @throws MissingServiceException
+     * @throws InvalidStateException
      */
     private function handleFormImport(Form $form): void {
         $values = $form->getValues();

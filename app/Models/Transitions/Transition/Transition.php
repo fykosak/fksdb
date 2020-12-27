@@ -4,7 +4,7 @@ namespace FKSDB\Models\Transitions\Transition;
 
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Transitions\Holder\IModelHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use FKSDB\Models\Logging\ILogger;
@@ -117,7 +117,7 @@ class Transition {
         return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
     }
 
-    public function canExecute2(?IModelHolder $model): bool {
+    public function canExecute2(?ModelHolder $model): bool {
         return $this->isConditionFulfilled($model);
     }
 

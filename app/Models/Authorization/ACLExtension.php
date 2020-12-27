@@ -4,7 +4,7 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization\Assertions\QIDAssertion;
 use FKSDB\Models\Authorization\Assertions\StoredQueryTagAssertion;
-use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
 

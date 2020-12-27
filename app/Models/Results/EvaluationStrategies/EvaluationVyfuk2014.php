@@ -78,7 +78,7 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
-                return "IF (s.raw_points IS NOT NULL, t.points, NULL)";
+                return 'IF (s.raw_points IS NOT NULL, t.points, NULL)';
             default:
                 return "IF (s.raw_points IS NOT NULL, IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
         }

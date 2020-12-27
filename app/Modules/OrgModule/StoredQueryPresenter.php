@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 
 use Nette\Application\AbortException;
@@ -23,7 +22,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
+class StoredQueryPresenter extends BasePresenter {
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 

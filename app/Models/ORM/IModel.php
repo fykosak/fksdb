@@ -24,7 +24,6 @@ interface IModel extends ArrayAccess {
      */
     public function getPrimary(bool $need = true);
 
-    public function refresh(): self;
     /**
      * @note This is here to straddle duck-typing of ActiveRow.
      *

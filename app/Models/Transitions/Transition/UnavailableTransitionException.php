@@ -4,7 +4,7 @@ namespace FKSDB\Models\Transitions\Transition;
 
 
 use FKSDB\Models\Events\Machine\Transition as EventTransition;
-use FKSDB\Models\Transitions\Holder\IModelHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidStateException;
 
 /**
@@ -16,9 +16,9 @@ class UnavailableTransitionException extends \Exception {
     /**
      * UnavailableTransitionException constructor.
      * @param EventTransition|Transition $transition
-     * @param IModelHolder|null $holder
+     * @param ModelHolder|null $holder
      */
-    public function __construct($transition, ?IModelHolder $holder) {
+    public function __construct($transition, ?ModelHolder $holder) {
         $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();

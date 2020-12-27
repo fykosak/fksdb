@@ -2,18 +2,14 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-
-
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * Class ServiceSchedulePayment
@@ -21,18 +17,15 @@ use Nette\Database\IConventions;
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SCHEDULE_PAYMENT, ModelSchedulePayment::class);
-    }
-
     /**
      * @param array $data
      * @param ModelPayment $payment
      * @return void
      * @throws DuplicatePaymentException
-     * @throws NotImplementedException
      * @throws EmptyDataException
+     * @throws NotImplementedException
+     * @throws StorageException
+     * @throws ModelException
      */
     public function store(array $data, ModelPayment $payment): void {
         if (!$this->getConnection()->getPdo()->inTransaction()) {

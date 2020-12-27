@@ -2,14 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * Class ServiceScheduleItem
@@ -19,11 +14,6 @@ use Nette\Database\IConventions;
  * @method ModelScheduleItem refresh(AbstractModelSingle $model)
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
-
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SCHEDULE_ITEM, ModelScheduleItem::class);
-    }
 
     public function store(?ModelScheduleItem $group, array $data): ModelScheduleItem {
         if (is_null($group)) {

@@ -2,13 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelTask;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
@@ -16,9 +11,6 @@ use Nette\Database\IConventions;
 class ServiceQuizQuestion extends AbstractServiceSingle {
 
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_QUIZ, ModelQuizQuestion::class);
-    }
 
     /**
      * Find question from quiz by task

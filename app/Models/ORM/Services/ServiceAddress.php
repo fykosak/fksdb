@@ -2,42 +2,34 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceAddress extends AbstractServiceSingle {
-
+class ServiceAddress extends OldAbstractServiceSingle {
 
     private const PATTERN = '/[0-9]{5}/';
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
-    }
 
     /**
      * @param array $data
      * @return ModelAddress
+     * @throws ModelException
      */
-    public function createNewModel(array $data): AbstractModelSingle {
+    public function createNewModel(array $data): ModelAddress {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

@@ -1,11 +1,7 @@
 <?php
 
-
 namespace FKSDB\Models\ORM\Models\Fyziklani;
-
-
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-
 
 /**
  * @property-read int room_id
@@ -14,7 +10,6 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int columns
  */
 class ModelFyziklaniRoom extends AbstractModelSingle {
-
 
     public function __toArray(): array {
         return [

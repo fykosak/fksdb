@@ -2,13 +2,10 @@
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-
-
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ModelFyziklaniGameSetup
- * *
  * @property-read int event_id
  * @property-read \DateTimeInterface game_start
  * @property-read \DateTimeInterface game_end
@@ -20,8 +17,6 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read string available_points
  */
 class ModelFyziklaniGameSetup extends AbstractModelSingle {
-
-
     /**
      * @return int[]
      */

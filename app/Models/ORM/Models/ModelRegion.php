@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-
-
 use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
 
 /**
@@ -18,7 +16,6 @@ use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
  * @property-read string phone_prefix
  */
 class ModelRegion extends AbstractModelSingle {
-
 
     public const CZECH_REPUBLIC = 3;
     public const SLOVAKIA = 2;

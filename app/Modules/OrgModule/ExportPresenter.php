@@ -10,8 +10,6 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-
 use Nette\Application\AbortException;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -27,17 +25,15 @@ use Nette\Utils\Strings;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+class ExportPresenter extends BasePresenter {
 
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-
     /**
      * @persistent
      */
     public $qid;
-
     private ServiceStoredQuery $serviceStoredQuery;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;

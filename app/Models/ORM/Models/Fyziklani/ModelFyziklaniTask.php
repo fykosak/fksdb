@@ -1,9 +1,6 @@
 <?php
 
-
 namespace FKSDB\Models\ORM\Models\Fyziklani;
-
-
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
@@ -14,7 +11,6 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int fyziklani_task_id
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
-
 
     public function __toArray(bool $hideName = false): array {
         return [

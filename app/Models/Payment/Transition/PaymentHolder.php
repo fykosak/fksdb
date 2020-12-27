@@ -5,9 +5,9 @@ namespace FKSDB\Models\Payment\Transition;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
-use FKSDB\Models\Transitions\Holder\IModelHolder;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-class PaymentHolder implements IModelHolder {
+class PaymentHolder implements ModelHolder {
 
     private ?ModelPayment $model;
     private ServicePayment $service;
