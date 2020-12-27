@@ -60,6 +60,9 @@ abstract class AbstractServiceSingle extends Selection {
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key): ?AbstractModelSingle {
+        if (is_null($key)) {
+            return null;
+        }
         /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         return $result;
