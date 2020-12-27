@@ -1,4 +1,4 @@
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { axisBottom } from 'd3-axis';
 import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';

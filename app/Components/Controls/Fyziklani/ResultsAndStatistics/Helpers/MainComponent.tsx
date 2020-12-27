@@ -1,7 +1,7 @@
-import Downloader, { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import LoadingSwitch from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/LoadingSwitch';
-import ActionsStoreCreator from '@FKSDB/Model/FrontEnd/Fetch/ActionsStoreCreator';
-import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import Downloader, { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
+import LoadingSwitch from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/LoadingSwitch';
+import ActionsStoreCreator from 'FKSDB/Models/FrontEnd/Fetch/ActionsStoreCreator';
+import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
 import * as React from 'react';
 
 interface OwnProps {

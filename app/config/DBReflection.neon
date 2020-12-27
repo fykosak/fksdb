@@ -31,9 +31,9 @@ parameters:
 DBReflection:
     tables:
          event:
-             modelClassName: FKSDB\Model\ORM\Models\ModelEvent
+             modelClassName: FKSDB\Models\ORM\Models\ModelEvent
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\IEventReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\IEventReferencedModel
                 method: getEvent
              columnFactories:
                 event:
@@ -42,7 +42,7 @@ DBReflection:
                     accessKey: name
                 role:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Event\EventRole
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Event\EventRole
                     title: _('Event role')
                 event_id:
                     type: primaryKey
@@ -86,31 +86,31 @@ DBReflection:
                     omitInputField: true
                 event_type:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Event\EventTypeColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Event\EventTypeColumnFactory
                     title: _('Event type')
                 event_type_id:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Event\EventTypeColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Event\EventTypeColumnFactory
                     title: _('Event type')
                 event_link:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Event\EventLink
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Event\EventLink
                     title: _('Event')
              linkFactories:
-                 application.list: FKSDB\Model\DBReflection\LinkFactories\ParticipantListLink
+                 application.list: FKSDB\Models\DBReflection\LinkFactories\ParticipantListLink
          payment:
-             modelClassName: FKSDB\Model\ORM\Models\ModelPayment
+             modelClassName: FKSDB\Models\ORM\Models\ModelPayment
              referencedAccess:
-                  modelClassName: FKSDB\Model\ORM\Models\IPaymentReferencedModel
+                  modelClassName: FKSDB\Models\ORM\Models\IPaymentReferencedModel
                   method: getPayment
              columnFactories:
                  payment:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Payment\PaymentColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Payment\PaymentColumnFactory
                     title: _('Payment')
                  payment_uid:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Payment\UIdColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Payment\UIdColumnFactory
                     title: _('Payment UId')
                  bank_account:
                     type: string
@@ -138,7 +138,7 @@ DBReflection:
                     title: _(Recipient)
                  price:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Payment\PriceColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Payment\PriceColumnFactory
                     title: _('Price')
                  #currency:
                  state:
@@ -157,31 +157,31 @@ DBReflection:
                           id: payment_id
                       title: Detail
          org:
-             modelClassName: FKSDB\Model\ORM\Models\ModelOrg
+             modelClassName: FKSDB\Models\ORM\Models\ModelOrg
              columnFactories:
                 org_id:
                     type: primaryKey
                     title: _(Org Id)
                 since:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Org\SinceColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Org\SinceColumnFactory
                     title: _('Since')
                 until:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Org\UntilColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Org\UntilColumnFactory
                     title: _('Until')
                 order:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Org\OrderColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Org\OrderColumnFactory
                     description: _('Pro řazení v seznamu organizátorů')
                     title: _('Order')
                 tex_signature:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Org\TexSignatureColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Org\TexSignatureColumnFactory
                     title: _('Tex signature')
                 domain_alias:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Org\DomainAliasColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Org\DomainAliasColumnFactory
                     title: _('Domain alias')
                 contribution:
                     type: string
@@ -204,18 +204,18 @@ DBReflection:
                         id: org_id
                     title: Edit
          person:
-             modelClassName: FKSDB\Model\ORM\Models\ModelPerson
+             modelClassName: FKSDB\Models\ORM\Models\ModelPerson
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\IPersonReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\IPersonReferencedModel
                 method: getPerson
              columnFactories:
                 person_link:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Person\PersonLinkColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Person\PersonLinkColumnFactory
                     title: _('Person')
                 full_name:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Person\FullNameColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Person\FullNameColumnFactory
                     title: _('Person')
                 person_id:
                     type: primaryKey
@@ -223,7 +223,7 @@ DBReflection:
                     permission: BASIC
                 gender:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Person\GenderColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Person\GenderColumnFactory
                     permission: FULL
                     title: _('Gender')
                 created:
@@ -248,21 +248,21 @@ DBReflection:
                     title: _(Other name)
                     permission: BASIC
          person_info:
-             modelClassName: FKSDB\Model\ORM\Models\ModelPersonInfo
+             modelClassName: FKSDB\Models\ORM\Models\ModelPersonInfo
              columnFactories:
                 email:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\EmailColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\EmailColumnFactory
                     permision: RESTRICT
                     title:  _('E-mail')
                 health_insurance:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\HealthInsuranceColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\HealthInsuranceColumnFactory
                     permisson: FULL
                     title: _('Health insurance')
                 citizenship:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\CitizenshipColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\CitizenshipColumnFactory
                     permission: FULL
                     title: _('Státní příslušnost')
                 account:
@@ -273,7 +273,7 @@ DBReflection:
                         write: FULL
                 homepage:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\HomepageColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\HomepageColumnFactory
                     title: _('Homepage')
                 phone:
                     type: phone
@@ -300,18 +300,18 @@ DBReflection:
                     permission: RESTRICT
                 id_number:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\IdNumberColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\IdNumberColumnFactory
                     description: _('U cizinců číslo pasu.')
                     title: _('Číslo OP')
                     permission: FULL
                 born:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\BornColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\BornColumnFactory
                     permission: FULL
                     title: _('Datum narození')
                 born_id:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\BornIdColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\BornIdColumnFactory
                     title: _('Rodné číslo')
                     description: _('U cizinců prázdné.')
                     permission: FULL
@@ -328,12 +328,12 @@ DBReflection:
                     description: _(Zobrazeno v seznamu organizátorů)
                 im:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\ImColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\ImColumnFactory
                     permission: RESTRICT
                     title: _('ICQ, Jabber, apod.')
                 agreed:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonInfo\AgreedColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonInfo\AgreedColumnFactory
                     title: _('I agree with the privacy policy')
                 uk_login:
                     type: string
@@ -369,11 +369,11 @@ DBReflection:
                     permission: RESTRICT
 
          person_history:
-             modelClassName: FKSDB\Model\ORM\Models\ModelPersonHistory
+             modelClassName: FKSDB\Models\ORM\Models\ModelPersonHistory
              columnFactories:
                 school_id:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonHistory\SchoolIdColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonHistory\SchoolIdColumnFactory
                     title: _(School)
                 ac_year:
                     type: string
@@ -381,7 +381,7 @@ DBReflection:
                     omitInputField: true
                 study_year:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\PersonHistory\StudyYearColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\PersonHistory\StudyYearColumnFactory
                     description: _('Kvůli zařazení do kategorie.')
                     title: _('Study year')
                 class:
@@ -389,14 +389,14 @@ DBReflection:
                     title: _('Class')
                     permissions: RESTRICT
          login:
-             modelClassName: FKSDB\Model\ORM\Models\ModelLogin
+             modelClassName: FKSDB\Models\ORM\Models\ModelLogin
              columnFactories:
                 login_id:
                     type: primaryKey
                     title: _(login Id)
                 hash:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Login\HashColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Login\HashColumnFactory
                     permissions: RESTRICT
                     title: _('Password')
                     omitInputField: true
@@ -408,11 +408,11 @@ DBReflection:
                     title: _(Login)
                     permission: RESTRICT
          event_participant:
-             modelClassName: FKSDB\Model\ORM\Models\ModelEventParticipant
+             modelClassName: FKSDB\Models\ORM\Models\ModelEventParticipant
              columnFactories:
                 team:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\EventParticipant\TeamColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\EventParticipant\TeamColumnFactory
                     title: _('Team')
                 status:
                     type: state
@@ -426,7 +426,7 @@ DBReflection:
                     title: _(Swimmer)
                 price:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\EventParticipant\PriceColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\EventParticipant\PriceColumnFactory
                     title: _('Price')
                 diet:
                     type: text
@@ -442,11 +442,11 @@ DBReflection:
                     title: _(Note)
                 tshirt_color:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\EventParticipant\TShirtColorColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\EventParticipant\TShirtColorColumnFactory
                     title: _('T-shirt color')
                 tshirt_size:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\EventParticipant\TShirtSizeColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\EventParticipant\TShirtSizeColumnFactory
                     title: _('T-shirt size')
                 arrival_ticket:
                     type: logic
@@ -475,10 +475,10 @@ DBReflection:
                     type: int
                     title: _('Počet baget k obědu')
              linkFactories:
-                   detail: FKSDB\Model\DBReflection\LinkFactories\ParticipantDetailLink
-                   edit: FKSDB\Model\DBReflection\LinkFactories\ApplicationEditLink
+                   detail: FKSDB\Models\DBReflection\LinkFactories\ParticipantDetailLink
+                   edit: FKSDB\Models\DBReflection\LinkFactories\ApplicationEditLink
          contestant_base:
-             modelClassName: FKSDB\Model\ORM\Models\ModelContestant
+             modelClassName: FKSDB\Models\ORM\Models\ModelContestant
              columnFactories:
                 ct_id:
                     type: primaryKey
@@ -494,7 +494,7 @@ DBReflection:
                         id: ct_id
                     title: Edit
          event_org:
-             modelClassName: FKSDB\Model\ORM\Models\ModelEventOrg
+             modelClassName: FKSDB\Models\ORM\Models\ModelEventOrg
              columnFactories:
                 event_org_id:
                     accessKey: e_org_id
@@ -517,7 +517,7 @@ DBReflection:
                          id: e_org_id
                      title: Detail
          email_message:
-             modelClassName: FKSDB\Model\ORM\Models\ModelEmailMessage
+             modelClassName: FKSDB\Models\ORM\Models\ModelEmailMessage
              columnFactories:
                 email_message_id:
                     type: primaryKey
@@ -556,7 +556,7 @@ DBReflection:
              #created:
              #send:
          fyziklani_submit:
-             modelClassName: FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit
+             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit
              columnFactories:
                 fyziklani_submit_id:
                     type: primaryKey
@@ -577,12 +577,12 @@ DBReflection:
                     format: 'H:m:s d-M-Y'
                 points:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
                     title: _('Points')
          fyziklani_task:
-             modelClassName: FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask
+             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\Fyziklani\IFyziklaniTaskReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\Fyziklani\IFyziklaniTaskReferencedModel
                 method: getFyziklaniTask
              columnFactories:
                 fyziklani_task_id:
@@ -595,7 +595,7 @@ DBReflection:
                     type: string
                     title: _(Label)
          fyziklani_game_setup:
-             modelClassName: FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
+             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
              columnFactories:
                 tasks_on_board:
                     type: string
@@ -621,12 +621,12 @@ DBReflection:
                     title: _(Hard display)
                 available_points:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
          e_fyziklani_team:
-             modelClassName: FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam
+             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
              referencedAccess:
-                 modelClassName: FKSDB\Model\ORM\Models\Fyziklani\IFyziklaniTeamReferencedModel
+                 modelClassName: FKSDB\Models\ORM\Models\Fyziklani\IFyziklaniTeamReferencedModel
                  method: getFyziklaniTeam
              columnFactories:
                 e_fyziklani_team_id:
@@ -671,19 +671,19 @@ DBReflection:
                     title: _(Force A)
                 password:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
                     title: _('Password')
                 name:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
                     title: _('Team name')
                 name_n_id:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\NameNIdColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\NameNIdColumnFactory
                     title: _('Team')
                 opened_submitting:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                     title: _('Submit opened?')
              linkFactories:
                 detail:
@@ -693,23 +693,23 @@ DBReflection:
                        id: e_fyziklani_team_id
                     title: Detail
          stored_query:
-             modelClassName: FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery
+             modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery
              columnFactories:
                 qid:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\QIDColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\QIDColumnFactory
                     title: _('QID')
                 tags:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\TagsColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\TagsColumnFactory
                     title: _('Tags')
                 sql:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\SQLColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\SQLColumnFactory
                     title: _('SQL')
                 name:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\NameColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery\NameColumnFactory
                     title: _('Query name')
                 query_id:
                     type: primaryKey
@@ -724,9 +724,9 @@ DBReflection:
 
          schedule_group:
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\Schedule\IScheduleGroupReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\Schedule\IScheduleGroupReferencedModel
                 method: getScheduleGroup
-             modelClassName: FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup
+             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
                  schedule_group_id:
                      type: primaryKey
@@ -756,12 +756,12 @@ DBReflection:
                      title: _(Name en)
                  name:
                      type: class
-                     class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleGroup\NameColumnFactory
+                     class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleGroup\NameColumnFactory
                      title: _(Group name)
          schedule_item:
-             modelClassName: FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem
+             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\Schedule\IScheduleItemReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\Schedule\IScheduleItemReferencedModel
                 method: getScheduleItem
              columnFactories:
                 schedule_item_id:
@@ -772,11 +772,11 @@ DBReflection:
                     title: _(Require Id number)
                 price_czk:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\PriceCZKColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\PriceCZKColumnFactory
                     title: _(Price CZK)
                 price_eur:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
                     title: _(Price EUR)
                 name_en:
                     type: string
@@ -786,7 +786,7 @@ DBReflection:
                     title: _(Name cs)
                 name:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\NameColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\NameColumnFactory
                     title: _(Item name)
                     omitInputField: true
                 description_en:
@@ -801,14 +801,14 @@ DBReflection:
                     nullValueFormat: infinite
                 free_capacity:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
                     title: _(Free capacity)
                 used_capacity:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                     title: _(Used capacity)
          teacher:
-             modelClassName: FKSDB\Model\ORM\Models\ModelTeacher
+             modelClassName: FKSDB\Models\ORM\Models\ModelTeacher
              columnFactories:
                  state:
                     type: state
@@ -843,20 +843,20 @@ DBReflection:
                          id: teacher_id
                      title: Detail
          task_contribution:
-             modelClassName: FKSDB\Model\ORM\Models\ModelTaskContribution
+             modelClassName: FKSDB\Models\ORM\Models\ModelTaskContribution
              columnFactories:
                  type:
                     type: string
                     title: _(Type)
          task:
-             modelClassName: FKSDB\Model\ORM\Models\ModelTask
+             modelClassName: FKSDB\Models\ORM\Models\ModelTask
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\ITaskReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\ITaskReferencedModel
                 method: getTask
              columnFactories:
                  fq_name:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Task\FQNameColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Task\FQNameColumnFactory
                     title: _('Task')
                  series:
                     type: string
@@ -877,19 +877,19 @@ DBReflection:
                      type: string
                      title: _(Year)
          contest:
-             modelClassName: FKSDB\Model\ORM\Models\ModelContest
+             modelClassName: FKSDB\Models\ORM\Models\ModelContest
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\IContestReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\IContestReferencedModel
                 method: getContest
              columnFactories:
                  contest:
                     type: class
-                    class: FKSDB\Model\DBReflection\ColumnFactories\Tables\Contest\ContestColumnFactory
+                    class: FKSDB\Models\DBReflection\ColumnFactories\Tables\Contest\ContestColumnFactory
                     title: _('Contest')
          school:
-             modelClassName: FKSDB\Model\ORM\Models\ModelSchool
+             modelClassName: FKSDB\Models\ORM\Models\ModelSchool
              referencedAccess:
-                modelClassName: FKSDB\Model\ORM\Models\ISchoolReferencedModel
+                modelClassName: FKSDB\Models\ORM\Models\ISchoolReferencedModel
                 method: getSchool
              columnFactories:
                  school:

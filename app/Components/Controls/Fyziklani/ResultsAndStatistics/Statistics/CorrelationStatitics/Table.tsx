@@ -1,8 +1,8 @@
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { translator } from '@translator/translator';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getTimeLabel } from '../Middleware/correlation';

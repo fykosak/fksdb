@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsTable;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
 class ResultsTableComponent extends ResultsAndStatistics {

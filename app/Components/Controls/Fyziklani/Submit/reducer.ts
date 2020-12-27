@@ -1,7 +1,7 @@
 import {
     fetchApi,
     FetchApiState,
-} from '@FKSDB/Model/FrontEnd/Fetch/reducer';
+} from 'FKSDB/Models/FrontEnd/Fetch/reducer';
 import { combineReducers } from 'redux';
 import {
     FormReducer,

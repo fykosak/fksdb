@@ -1,7 +1,7 @@
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
-import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
-import { ExtendedPointData, LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import ChartContainer from 'FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import LineChartLegend from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
+import { ExtendedPointData, LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
 import Ordinal from '@translator/Ordinal';
 import { translator } from '@translator/translator';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';

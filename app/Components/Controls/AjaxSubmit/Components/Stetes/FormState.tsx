@@ -1,13 +1,13 @@
-import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
-import { dragEnd, dragStart, dropItem } from '@FKSDB/Model/FrontEnd/shared/dragndrop';
+import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
+import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
+import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { addError } from '../../actions';
 import { handleFileUpload } from '../../middleware';
 import { Store } from '../../Reducers';
-import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
 
 interface OwnProps {
     submit: ModelSubmit;

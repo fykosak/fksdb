@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
 
 class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
 

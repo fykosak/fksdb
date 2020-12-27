@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FolTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;

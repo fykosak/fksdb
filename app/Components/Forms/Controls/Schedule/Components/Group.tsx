@@ -1,6 +1,6 @@
-import { Params } from '@FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
-import TimeDisplay from '@FKSDB/Model/ValuePrinters/DatePrinter';
+import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
+import TimeDisplay from 'FKSDB/Models/ValuePrinters/DatePrinter';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import ScheduleItem from './Item';

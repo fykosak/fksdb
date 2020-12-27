@@ -1,5 +1,5 @@
-import { Message } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
-import { FetchApiState } from '@FKSDB/Model/FrontEnd/Fetch/reducer';
+import { Message } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import { FetchApiState } from 'FKSDB/Models/FrontEnd/Fetch/reducer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State as ErrorLoggerState } from '../Reducers/errorLogger';

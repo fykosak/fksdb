@@ -10,11 +10,11 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@FKSDB/*": [
+      "FKSDB/*": [
         "./app/*"
       ],
       "@translator/*": [
-        "./app/Model/Localization/*"
+        "./app/Models/Localization/*"
       ]
     }
   },

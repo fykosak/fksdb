@@ -1,6 +1,6 @@
-import { ACTION_ADD_ERROR } from '@FKSDB/Components/Controls/AjaxSubmit/actions';
-import { ACTION_FETCH_START } from '@FKSDB/Model/FrontEnd/Fetch/actions';
-import { Message } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
+import { ACTION_ADD_ERROR } from 'FKSDB/Components/Controls/AjaxSubmit/actions';
+import { ACTION_FETCH_START } from 'FKSDB/Models/FrontEnd/Fetch/actions';
+import { Message } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
 
 export interface State {
     errors: Message[];

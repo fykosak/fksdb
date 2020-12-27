@@ -100,7 +100,7 @@ parameters:
                 name: name_en
 
         # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be FKSDB\Model\ORM\Models\ModelTaskContribution::TYPE_* constants.
+        # Contributions types must be FKSDB\Models\ORM\Models\ModelTaskContribution::TYPE_* constants.
         contributionMapping:
             author: authors
             solution: solution-authors
@@ -193,11 +193,11 @@ session:
    autoStart: true
 extensions:
     fksrouter: FKSDB\Config\Extensions\RouterExtension
-    acl: FKSDB\Model\Authorization\ACLExtension
+    acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
-    events: FKSDB\Model\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    payment: FKSDB\Model\Payment\PaymentExtension
-    DBReflection: FKSDB\Model\DBReflection\DBReflectionExtension
+    events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    payment: FKSDB\Models\Payment\PaymentExtension
+    DBReflection: FKSDB\Models\DBReflection\DBReflectionExtension
 
 includes:
     - router.neon

@@ -1,6 +1,6 @@
-import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import MainComponent from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
-import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
+import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
+import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
 import * as React from 'react';
 import { app } from './Reducers';
 import App from './StatisticsComponentsRouter';

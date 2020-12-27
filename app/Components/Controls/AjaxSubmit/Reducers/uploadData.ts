@@ -1,6 +1,6 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@FKSDB/Model/FrontEnd/Fetch/actions';
-import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
-import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
+import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from 'FKSDB/Models/FrontEnd/Fetch/actions';
+import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 
 export interface State {
     submit?: ModelSubmit;

@@ -1,9 +1,9 @@
-import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@FKSDB/Model/FrontEnd/Fetch/actions';
-import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from 'FKSDB/Models/FrontEnd/Fetch/actions';
+import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 
 export interface State {
     submits?: Submits;

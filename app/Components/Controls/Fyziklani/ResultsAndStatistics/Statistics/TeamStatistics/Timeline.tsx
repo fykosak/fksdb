@@ -1,11 +1,11 @@
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { axisBottom } from 'd3-axis';
 import { ScaleLinear, scaleLinear, ScaleTime, scaleTime } from 'd3-scale';
 import { select } from 'd3-selection';
 import { timeMinute } from 'd3-time';
+import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';

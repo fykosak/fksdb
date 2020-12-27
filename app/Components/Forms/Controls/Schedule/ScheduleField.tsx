@@ -1,10 +1,10 @@
-import Container from '@FKSDB/Components/Forms/Controls/Schedule/Components/Container';
-import { app } from '@FKSDB/Components/Forms/Controls/Schedule/reducer';
-import NetteInputConnector from '@FKSDB/Model/FrontEnd/InputConnector/NetteInputConnector';
-import { App } from '@FKSDB/Model/FrontEnd/Loader/Loader';
-import StoreCreator from '@FKSDB/Model/FrontEnd/Loader/StoreCreator';
-import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
 import { translator } from '@translator/translator';
+import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
+import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
+import NetteInputConnector from 'FKSDB/Models/FrontEnd/InputConnector/NetteInputConnector';
+import { App } from 'FKSDB/Models/FrontEnd/Loader/Loader';
+import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './style.scss';

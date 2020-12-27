@@ -1,11 +1,11 @@
-import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
+import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';

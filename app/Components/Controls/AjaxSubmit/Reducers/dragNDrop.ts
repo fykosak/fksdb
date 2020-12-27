@@ -1,4 +1,4 @@
-import { ACTION_DRAG_END, ACTION_DRAG_START, ACTION_DROP_ITEM } from '@FKSDB/Model/FrontEnd/shared/dragndrop';
+import { ACTION_DRAG_END, ACTION_DRAG_START, ACTION_DROP_ITEM } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 
 const dragStart = (): State => {
     return {

@@ -4,10 +4,10 @@ namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 $container = require '../../../Bootstrap.php';
 
-use FKSDB\Model\Exports\ExportFormatFactory;
-use FKSDB\Model\Exports\Formats\AESOPFormat;
-use FKSDB\Model\Exports\Formats\PlainTextResponse;
-use FKSDB\Model\StoredQuery\StoredQueryFactory;
+use FKSDB\Models\Exports\ExportFormatFactory;
+use FKSDB\Models\Exports\Formats\AESOPFormat;
+use FKSDB\Models\Exports\Formats\PlainTextResponse;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;

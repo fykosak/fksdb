@@ -1,6 +1,6 @@
-import { OwnProps } from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Container';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { OwnProps } from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Container';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { FormErrors } from 'redux-form';
 
 export const getFullCode = (code: string): string => {

@@ -1,7 +1,7 @@
-import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
-import StoreCreator from '@FKSDB/Model/FrontEnd/Loader/StoreCreator';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import Container from './Components/Container';
 import { app } from './reducer';

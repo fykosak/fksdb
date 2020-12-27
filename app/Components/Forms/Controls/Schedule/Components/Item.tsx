@@ -1,8 +1,8 @@
-import { Params } from '@FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { changeData } from '@FKSDB/Model/FrontEnd/InputConnector/actions';
-import { ScheduleGroupType } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
-import { ModelScheduleItem } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleItem';
 import { translator } from '@translator/translator';
+import { Params } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
+import { changeData } from 'FKSDB/Models/FrontEnd/InputConnector/actions';
+import { ScheduleGroupType } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
+import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';

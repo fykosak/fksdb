@@ -3,16 +3,16 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\ORM\Models\ModelContestant;
-use FKSDB\Model\ORM\Models\ModelSubmit;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Services\ServiceSubmit;
-use FKSDB\Model\Submits\StorageException;
-use FKSDB\Model\Submits\SubmitHandlerFactory;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

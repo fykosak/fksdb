@@ -4,10 +4,10 @@ namespace FKSDB\Components\Controls\Chart\Event\ApplicationsTimeProgress;
 
 use FKSDB\Components\Controls\Chart\Contestants\Core\Chart;
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventType;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Model\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventType;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
 
 /**

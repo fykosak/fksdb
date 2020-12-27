@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart\Event\Applications;
 
-use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
 class ApplicationRationGeoChart extends ApplicationsPerCountryChartComponent {

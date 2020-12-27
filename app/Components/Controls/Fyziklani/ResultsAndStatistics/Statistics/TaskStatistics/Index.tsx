@@ -1,4 +1,4 @@
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import ChartContainer from 'FKSDB/Components/Controls/Chart/Core/ChartContainer';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';

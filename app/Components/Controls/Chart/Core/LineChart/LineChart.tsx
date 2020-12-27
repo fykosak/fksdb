@@ -1,9 +1,9 @@
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import {
     getAreaPath,
     getLinePath,
     LineChartData,
-} from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+} from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, ScaleTime } from 'd3-scale';
 import { select } from 'd3-selection';

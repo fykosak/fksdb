@@ -4,8 +4,8 @@ namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Model\ORM\DbNames;
-use FKSDB\Model\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;

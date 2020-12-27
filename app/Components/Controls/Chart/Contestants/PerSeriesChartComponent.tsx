@@ -1,7 +1,7 @@
-import BarHistogram from '@FKSDB/Components/Controls/Chart/Core/BarHistogram/BarHistogram';
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
-import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import BarHistogram from 'FKSDB/Components/Controls/Chart/Core/BarHistogram/BarHistogram';
+import ChartContainer from 'FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import LineChartLegend from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
+import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';

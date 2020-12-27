@@ -1,5 +1,5 @@
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import TimeDisplay from '@FKSDB/Model/ValuePrinters/TimePrinter';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import TimeDisplay from 'FKSDB/Models/ValuePrinters/TimePrinter';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';

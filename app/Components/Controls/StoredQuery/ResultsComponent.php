@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Model\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Model\Exports\ExportFormatFactory;
-use FKSDB\Model\StoredQuery\StoredQuery;
-use FKSDB\Model\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
+use FKSDB\Models\Exports\ExportFormatFactory;
+use FKSDB\Models\StoredQuery\StoredQuery;
+use FKSDB\Models\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;

@@ -1,6 +1,6 @@
-import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
+import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import {
     scaleLinear,
     scaleTime,

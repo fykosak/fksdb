@@ -2,10 +2,10 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Model\News;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\News;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 

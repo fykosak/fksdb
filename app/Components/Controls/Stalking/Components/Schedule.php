@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**
  * Class Schedule

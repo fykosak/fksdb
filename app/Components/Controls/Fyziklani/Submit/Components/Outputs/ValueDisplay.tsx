@@ -2,9 +2,9 @@ import {
     getFullCode,
     getTask,
     getTeam,
-} from '@FKSDB/Components/Controls/Fyziklani/Submit/middleware';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+} from 'FKSDB/Components/Controls/Fyziklani/Submit/middleware';
+import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 

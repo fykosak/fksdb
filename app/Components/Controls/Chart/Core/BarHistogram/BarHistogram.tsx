@@ -1,4 +1,4 @@
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
+import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear } from 'd3-scale';
 import { select } from 'd3-selection';

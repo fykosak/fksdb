@@ -1,4 +1,4 @@
-import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
+import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
 import {
     Action,
     Dispatch,

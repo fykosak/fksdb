@@ -1,4 +1,4 @@
-import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import {
     getAverageNStandardDeviation,
     StdDevOutput,

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Model\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use Nette\DI\Container;
 
 /**

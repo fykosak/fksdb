@@ -1,6 +1,6 @@
-import { FyziklaniResultsCoreStore } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
-import Images from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Images';
-import Timer from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Timer';
+import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
+import Images from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Images';
+import Timer from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Timer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 

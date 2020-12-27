@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\ColumnFactories\IColumnFactory;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\DBReflection\OmittedControlException;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\ColumnFactories\IColumnFactory;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Model\DBReflection\DBReflectionFactory;
-use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
 
 /**

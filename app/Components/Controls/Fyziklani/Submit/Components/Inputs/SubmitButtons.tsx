@@ -1,5 +1,5 @@
-import { SubmitFormRequest } from '@FKSDB/Components/Controls/Fyziklani/Submit/actions';
-import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
+import { SubmitFormRequest } from 'FKSDB/Components/Controls/Fyziklani/Submit/actions';
+import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
 

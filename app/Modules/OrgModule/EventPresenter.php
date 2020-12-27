@@ -4,13 +4,13 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\Security\IResource;
 
 /**

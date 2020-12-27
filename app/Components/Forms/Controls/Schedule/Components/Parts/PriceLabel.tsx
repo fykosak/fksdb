@@ -1,5 +1,5 @@
-import { Price } from '@FKSDB/Model/Payment/price';
-import PricePrinter from '@FKSDB/Model/ValuePrinters/PricePrinter';
+import { Price } from 'FKSDB/Models/Payment/price';
+import PricePrinter from 'FKSDB/Models/ValuePrinters/PricePrinter';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 

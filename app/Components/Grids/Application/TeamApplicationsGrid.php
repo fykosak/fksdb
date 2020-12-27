@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\DbNames;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\ActiveRow;

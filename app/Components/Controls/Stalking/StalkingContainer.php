@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\DI\Container;
 use FKSDB\Components\Controls\Stalking\Components;
 

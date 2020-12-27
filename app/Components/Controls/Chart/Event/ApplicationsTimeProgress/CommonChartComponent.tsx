@@ -1,7 +1,7 @@
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
-import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
-import { ModelEvent } from '@FKSDB/Model/ORM/Models/modelEvent';
+import ChartContainer from 'FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { ModelEvent } from 'FKSDB/Models/ORM/Models/modelEvent';
 import { translator } from '@translator/translator';
 import {
     scaleLinear,

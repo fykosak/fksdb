@@ -1,5 +1,5 @@
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
-import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
+import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import {
     axisBottom,
     axisLeft,

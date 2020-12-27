@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;

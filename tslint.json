@@ -48,7 +48,7 @@
       true,
       [
         "@translator",
-        "@FKSDB"
+        "FKSDB"
       ]
     ],
     "member-access": true,
