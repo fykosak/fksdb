@@ -46,7 +46,7 @@ class MailCallback implements TransitionCallback {
      * @param mixed ...$args
      * @return void
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
+     * @throws UnsupportedLanguageException|CannotAccessModelException
      */
     public function __invoke(ModelHolder $model, ...$args): void {
         $this->invoke($model, ...$args);

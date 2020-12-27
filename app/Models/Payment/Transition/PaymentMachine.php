@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Models\Payment\Transition;
 
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -31,18 +30,18 @@ class PaymentMachine extends Machine {
         $this->servicePayment = $servicePayment;
     }
 
-    public function decorateTransitions(TransitionsDecorator $decorator): void {
+    final public function decorateTransitions(TransitionsDecorator $decorator): void {
         $decorator->decorate($this);
     }
 
-    public function setEventId(int $eventId): void {
+    final public function setEventId(int $eventId): void {
         $event = $this->serviceEvent->findByPrimary($eventId);
         if (!is_null($event)) {
             $this->event = $event;
         }
     }
 
-    public function setScheduleGroupTypes(array $types): void {
+    final public function setScheduleGroupTypes(array $types): void {
         $this->scheduleGroupTypes = $types;
     }
 
@@ -50,7 +49,7 @@ class PaymentMachine extends Machine {
         return $this->scheduleGroupTypes;
     }
 
-    public function setPriceCalculator(PriceCalculator $priceCalculator): void {
+    final public function setPriceCalculator(PriceCalculator $priceCalculator): void {
         $this->priceCalculator = $priceCalculator;
     }
 

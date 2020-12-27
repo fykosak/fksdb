@@ -24,6 +24,7 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use Tracy\Debugger;
 
 /**
  * Class SelectForm
@@ -98,9 +99,9 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $this->servicePayment->updateModel2($this->model, $data);
             $model = $this->servicePayment->refresh($this->model);
         } else {
-            $model = $this->machine->createNewModel(array_merge($data, [
+            $model = $this->machine->initNewModel(array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
-            ]), $this->servicePayment);
+            ]), $this->servicePayment)->getModel();
         }
 
         $connection = $this->servicePayment->getConnection();
@@ -109,7 +110,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         try {
             $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException|EmptyDataException $exception) {
+        } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;

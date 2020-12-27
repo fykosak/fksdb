@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
-
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
@@ -33,24 +32,26 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
     abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
-     * @param ModelHolder $model
+     * @param ModelHolder $holder
      * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    final public function __invoke(ModelHolder $model, ...$args): void {
+    final public function __invoke(ModelHolder $holder, ...$args): void {
+        $model = $holder->getModel();
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel2($model, $info);
     }
 
     /**
-     * @param ModelHolder $modelPayment
+     * @param ModelHolder $holder
      * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      * @throws InvalidStateException
      */
-    final public function invoke(ModelHolder $model, ...$args): void {
+    final public function invoke(ModelHolder $holder, ...$args): void {
+        $model = $holder->getModel();
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel2($model, $info);
     }

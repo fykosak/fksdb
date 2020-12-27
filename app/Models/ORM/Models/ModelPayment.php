@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
@@ -33,7 +32,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IPaymentModel {
+class ModelPayment extends AbstractModelSingle implements IResource {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received

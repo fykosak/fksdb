@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\INodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -43,7 +42,6 @@ use Nette\Security\IResource;
  * @property-read int lunch_count
  */
 class ModelEventParticipant extends OldAbstractModelSingle implements
-    IPaymentModel,
     IResource,
     INodeCreator {
 

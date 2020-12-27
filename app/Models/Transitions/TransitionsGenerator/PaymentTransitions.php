@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
@@ -22,7 +23,6 @@ use Tracy\Debugger;
 abstract class PaymentTransitions implements TransitionsDecorator {
 
     protected EventAuthorizator $eventAuthorizator;
-
     protected ServicePersonSchedule $servicePersonSchedule;
 
     /**
@@ -84,14 +84,12 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @throws UnavailableTransitionsException
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void {
-
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
-
             $transition = $machine->getTransitionById(Transition::createId($state, ModelPayment::STATE_CANCELED));
             $transition->setCondition(true);
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
-            $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
-                $modelPayment->update(['price' => null]);
+            $transition->beforeExecuteCallbacks[] = function (ModelHolder $holder) {
+                $holder->getModel()->update(['price' => null]);
             };
         }
     }
@@ -103,18 +101,18 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      */
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void {
         $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED));
-        $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
-            foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {
-                $this->servicePersonSchedule->updateModel2($personSchedule, [$personSchedule->getStateColumn() => 'received']);
+        $transition->beforeExecuteCallbacks[] = function (ModelHolder $holder) {
+            foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
+                $this->servicePersonSchedule->updateModel2($personSchedule, [$personSchedule->state => 'received']);
             }
         };
         $transition->setCondition(false);
     }
 
     private function getClosureDeleteRows(): callable {
-        return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');
-            foreach ($modelPayment->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
+        return function (ModelHolder $holder) {
+            Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
+            foreach ($holder->getModel()->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
                 Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                 $row->delete();
             }

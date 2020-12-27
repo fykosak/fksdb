@@ -17,10 +17,9 @@ use Tracy\Debugger;
  * Class TransitionButtonsControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TransitionButtonsControl extends BaseComponent {
+class TransitionButtonsComponent extends BaseComponent {
 
     private Machine $machine;
-
     private ModelHolder $model;
 
     public function __construct(Machine $machine, Container $container, ModelHolder $model) {
@@ -42,7 +41,7 @@ class TransitionButtonsControl extends BaseComponent {
     public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
-        } catch (ForbiddenRequestException | UnavailableTransitionsException$exception) {
+        } catch (ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             return;
         } catch (\Exception $exception) {

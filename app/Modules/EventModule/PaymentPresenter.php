@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -27,10 +27,10 @@ use Nette\Security\IResource;
  * @method ModelPayment getEntity
  */
 class PaymentPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     private Machine\Machine $machine;
-
     private ServicePayment $servicePayment;
 
     final public function injectServicePayment(ServicePayment $servicePayment): void {
@@ -111,7 +111,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function actionCreate(): void {
-        if (\count($this->getMachine()->getAvailableTransitions()) === 0) {
+        if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Core:Dashboard:default');
@@ -163,7 +163,6 @@ class PaymentPresenter extends BasePresenter {
      */
     private function getMachine(): PaymentMachine {
         if (!isset($this->machine)) {
-
             $machine = $this->getContext()->getService(sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year));
             if (!$machine instanceof PaymentMachine) {
                 throw new BadTypeException(PaymentMachine::class, $this->machine);
@@ -187,15 +186,15 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsControl
+     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
+        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getMachine()->createHolder($this->getEntity()));
     }
 
     /**
