@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
@@ -81,6 +82,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return Holder
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function getHolder(): Holder {
         if (!isset($this->holder)) {

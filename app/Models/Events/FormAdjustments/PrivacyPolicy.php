@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
@@ -43,9 +42,8 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Machine $machine
      * @param Holder $holder
      * @return void
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {

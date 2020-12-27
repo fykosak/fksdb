@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 
-/**
- * Class PersonScheduleFactory
- * *
- */
 class PersonScheduleFactory {
 
     private ServiceScheduleItem $serviceScheduleItem;

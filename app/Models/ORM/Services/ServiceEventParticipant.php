@@ -4,26 +4,21 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceEventParticipant extends AbstractServiceSingle {
-
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class, $connection, $conventions);
-    }
+class ServiceEventParticipant extends OldAbstractServiceSingle {
 
     /**
      * @param ModelEventParticipant|IModel $model
+     * @throws DuplicateApplicationException
+     * @throws ModelException
      * @deprecated
      */
     public function save(IModel &$model): void {

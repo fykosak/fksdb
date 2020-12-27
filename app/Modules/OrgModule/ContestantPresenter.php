@@ -10,7 +10,6 @@ use Nette\Application\UI\Form;
 
 /**
  * Class ContestantPresenter
- * *
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {

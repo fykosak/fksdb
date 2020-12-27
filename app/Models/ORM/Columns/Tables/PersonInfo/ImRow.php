@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -11,7 +11,7 @@ use Nette\Forms\Form;
  * Class ImRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ImRow extends DefaultColumnFactory {
+class ImRow extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new  WriteOnlyInput($this->getTitle());

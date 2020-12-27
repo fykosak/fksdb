@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelContest;
 
 /**
@@ -11,5 +10,4 @@ use FKSDB\Models\ORM\Models\ModelContest;
  */
 class ServiceContest extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
 }

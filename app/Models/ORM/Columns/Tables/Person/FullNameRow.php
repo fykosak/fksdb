@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class FullNameRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FullNameRow extends DefaultColumnFactory {
+class FullNameRow extends ColumnFactory {
 
     /**
      * @param mixed ...$args

@@ -12,6 +12,7 @@ use FKSDB\Models\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Definitions\Statement;
 use Nette\DI\Resolver;
+use Nette\DI\ServiceCreationException;
 use Nette\Reflection\ClassType;
 
 /**
@@ -71,6 +72,7 @@ class Helpers {
      * @param mixed $expression
      * @param Container $container
      * @return mixed
+     * @throws ServiceCreationException
      * @throws \ReflectionException
      */
     public static function evalExpression($expression, Container $container) {

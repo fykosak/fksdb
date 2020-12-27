@@ -10,6 +10,7 @@ use FKSDB\Components\Controls\Chart\GeoCharts\TeamsGeoChartControl;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
+use Nette\InvalidStateException;
 
 /**
  * Class ChartPresenter
@@ -40,6 +41,7 @@ class ChartPresenter extends BasePresenter {
     /**
      * @return array
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function registerCharts(): array {
         return [

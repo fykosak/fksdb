@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Tracy\Debugger;
 
@@ -114,6 +115,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @return void
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     public function renderDetail(): void {
         $person = $this->getEntity();
@@ -129,6 +131,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function createComponentFormSearch(): FormControl {
         $control = new FormControl($this->getContext());

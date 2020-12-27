@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -11,7 +11,7 @@ use Nette\Forms\Form;
  * Class HomepageRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class HomepageRow extends DefaultColumnFactory {
+class HomepageRow extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());

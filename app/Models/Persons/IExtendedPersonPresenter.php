@@ -3,6 +3,7 @@
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
  *
@@ -10,7 +11,7 @@ use FKSDB\Models\ORM\IModel;
  */
 interface IExtendedPersonPresenter {
 
-    public function getModel(): ?IModel;
+    public function getModel(): ?AbstractModelSingle;
 
     /**
      * @note First '%s' is replaced with referenced person's name.

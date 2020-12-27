@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\InvalidStateException;
 
 /**
  * Class DispatchPresenter
@@ -22,6 +23,7 @@ class DispatchPresenter extends BasePresenter {
 
     /**
      * @throws InvalidLinkException
+     * @throws InvalidStateException
      */
     public function renderDefault(): void {
         /** @var ModelLogin $login */

@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
-use FKSDB\Models\ORM\Models\IPersonReferencedModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\YearCalculator;
 use Nette\Security\IUserStorage;
@@ -18,10 +18,9 @@ use Nette\Utils\Html;
  * Class EventRole
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventRole extends DefaultColumnFactory {
+class EventRole extends ColumnFactory {
 
     private IUserStorage $userStorage;
-
     private YearCalculator $yearCalculator;
 
     public function __construct(IUserStorage $userStorage, YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
@@ -33,21 +32,16 @@ class EventRole extends DefaultColumnFactory {
     /**
      * @param AbstractModelSingle $model
      * @return Html
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if ($model instanceof IPersonReferencedModel) {
-            $person = $model->getPerson();
-        } else {
+        try {
+            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+        } catch (CannotAccessModelException$exception) {
             $person = $this->userStorage->getIdentity()->getPerson();
         }
-        if ($model instanceof IEventReferencedModel) {
-            $event = $model->getEvent();
-        } elseif ($model instanceof ModelEvent) {
-            $event = $model;
-        } else {
-            throw new BadTypeException(IEventReferencedModel::class, $model);
-        }
+
+        $event = ReferencedFactory::accessModel($model, ModelEvent::class);
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }
 

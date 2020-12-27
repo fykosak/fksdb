@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
@@ -46,7 +45,6 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -88,7 +86,6 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     /**
      * @return ModelContainer
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     private function createOrgContainer(): ModelContainer {

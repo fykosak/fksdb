@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -112,6 +113,7 @@ trait EntityPresenterTrait {
      * @param bool $throw
      * @return AbstractModelSingle|null
      * @throws ModelNotFoundException
+     * @throws InvalidStateException
      */
     public function getEntity(bool $throw = true): ?AbstractModelSingle {
         $id = $this->getParameter($this->getPrimaryParameterName());
@@ -144,6 +146,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
+     * @throws Exceptions\ModelException
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void {

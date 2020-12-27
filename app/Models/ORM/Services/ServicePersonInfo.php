@@ -3,8 +3,7 @@
 namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
-use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
@@ -16,8 +15,6 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
  */
 class ServicePersonInfo extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
-
     public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
@@ -26,11 +23,12 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel|AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
      * @return bool
+     * @throws ModelException
      */
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

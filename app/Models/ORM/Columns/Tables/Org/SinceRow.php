@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -11,7 +11,7 @@ use Nette\Forms\Form;
  * Class SinceRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SinceRow extends DefaultColumnFactory {
+class SinceRow extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         [$min, $max] = $args;

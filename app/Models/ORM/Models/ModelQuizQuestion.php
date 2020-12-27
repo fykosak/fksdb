@@ -12,7 +12,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int question_id
  * @property-read int question_nr
  */
-class ModelQuizQuestion extends AbstractModelSingle implements IContestReferencedModel {
+class ModelQuizQuestion extends AbstractModelSingle {
 
     public function getFQName(): string {
         return sprintf(_('%s. otázka'), $this->question_nr);

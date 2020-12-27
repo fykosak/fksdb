@@ -20,7 +20,7 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    private Explorer $context;
+    private Explorer $explorer;
 
     /** @var mixed */
     private $teamsPerSchool;
@@ -38,7 +38,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      */
     public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Explorer $explorer, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
-        $this->context = $explorer;
+        $this->explorer = $explorer;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);
     }
@@ -100,7 +100,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
              * This may not be optimal.
              */
             $acYear = $event->getContest()->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
-            $result = $this->context->table(DbNames::TAB_EVENT_PARTICIPANT)
+            $result = $this->explorer->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                 ->where($baseHolder->getEventIdColumn(), $event->getPrimary())

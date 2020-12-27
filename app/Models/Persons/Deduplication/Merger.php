@@ -28,7 +28,7 @@ class Merger {
     /** @var ActiveRow */
     private $mergedRow;
 
-    private Explorer $context;
+    private Explorer $explorer;
 
     /** @var array */
     private $configuration;
@@ -48,7 +48,7 @@ class Merger {
      */
     public function __construct($configuration, Explorer $explorer) {
         $this->configuration = $configuration;
-        $this->context = $explorer;
+        $this->explorer = $explorer;
         $this->logger = new DevNullLogger();
     }
 
@@ -96,24 +96,24 @@ class Merger {
         $commit = is_null($commit) ? $this->configuration['commit'] : $commit;
 
 
-        $this->context->getConnection()->beginTransaction();
+        $this->explorer->getConnection()->beginTransaction();
 
         $tableMerger->setMergedPair($this->trunkRow, $this->mergedRow);
         $this->resetConflicts();
         try {
             $tableMerger->merge();
         } catch (MemberAccessException $exception) { // this is workaround for non-working Nette database cache
-            $this->context->getConnection()->rollBack();
+            $this->explorer->getConnection()->rollBack();
             return false;
         }
         if ($this->hasConflicts()) {
-            $this->context->getConnection()->rollBack();
+            $this->explorer->getConnection()->rollBack();
             return false;
         } else {
             if ($commit) {
-                $this->context->getConnection()->commit();
+                $this->explorer->getConnection()->commit();
             } else {
-                $this->context->getConnection()->rollBack();
+                $this->explorer->getConnection()->rollBack();
             }
             return true;
         }
@@ -133,7 +133,7 @@ class Merger {
     }
 
     private function createTableMerger(string $table): TableMerger {
-        $tableMerger = new TableMerger($table, $this, $this->context, $this->configuration['defaultStrategy'], $this->getLogger());
+        $tableMerger = new TableMerger($table, $this, $this->explorer, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
         }

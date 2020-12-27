@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 
 /**
@@ -11,5 +10,4 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
 
-    use DeprecatedLazyDBTrait;
 }

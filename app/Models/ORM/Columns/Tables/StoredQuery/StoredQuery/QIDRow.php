@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -11,7 +11,7 @@ use Nette\Forms\Controls\TextInput;
  * Class QIDRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class QIDRow extends DefaultColumnFactory {
+class QIDRow extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());

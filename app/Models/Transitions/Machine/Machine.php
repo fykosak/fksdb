@@ -4,8 +4,7 @@ namespace FKSDB\Models\Transitions\Machine;
 
 use Exception;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\Transitions\IStateModel;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
@@ -22,20 +21,17 @@ abstract class Machine {
 
     public const STATE_INIT = '__init';
     public const STATE_TERMINATED = '__terminated';
-
     private array $transitions = [];
-
-    protected Explorer $context;
-
-    private IService $service;
+    protected Explorer $explorer;
+    private AbstractServiceSingle $service;
     /**
      * @var callable
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $explicitCondition;
 
-    public function __construct(Explorer $explorer, IService $service) {
-        $this->context = $explorer;
+    public function __construct(Explorer $explorer, AbstractServiceSingle $service) {
+        $this->explorer=$explorer;
         $this->service = $service;
     }
 
@@ -135,25 +131,25 @@ abstract class Machine {
      * @throws Exception
      */
     private function execute(Transition $transition, ?IStateModel $model = null): IStateModel {
-        if (!$this->context->getConnection()->getPdo()->inTransaction()) {
-            $this->context->getConnection()->beginTransaction();
+        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
+            $this->explorer->getConnection()->beginTransaction();
         }
         try {
             $transition->beforeExecute($model);
         } catch (Exception $exception) {
-            $this->context->getConnection()->rollBack();
+            $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
-        if (!$model instanceof IModel) {
-            throw new BadTypeException(IModel::class, $model);
+        if (!$model instanceof IStateModel) {
+            throw new BadTypeException(IStateModel::class, $model);
         }
 
-        $this->context->getConnection()->commit();
+        $this->explorer->getConnection()->commit();
         $model->updateState($transition->getToState());
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh($this->context, $this->context->getConventions());
+        $newModel = $model->refresh($this->explorer, $this->explorer->getConventions());
         $transition->afterExecute($newModel);
         return $newModel;
     }
@@ -183,19 +179,18 @@ abstract class Machine {
 
     /**
      * @param array $data
-     * @param IService $service
+     * @param AbstractServiceSingle $service
      * @return IStateModel
-     *
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
      * @throws Exception
      */
-    public function createNewModel(array $data, IService $service): IStateModel {
+    public function createNewModel(array $data, AbstractServiceSingle $service): IStateModel {
         $transition = $this->getCreatingTransition();
-        if (!$this->canExecute($transition )) {
+        if (!$this->canExecute($transition)) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
         }
-        /** @var IStateModel|IModel|ActiveRow $model */
+        /** @var IStateModel|ActiveRow $model */
         $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }

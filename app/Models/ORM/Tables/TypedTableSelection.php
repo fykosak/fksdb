@@ -15,8 +15,8 @@ class TypedTableSelection extends Selection {
 
     protected string $modelClassName;
 
-    public function __construct(string $modelClassName, string $table, Explorer $connection, Conventions $conventions) {
-        parent::__construct($connection, $conventions, $table);
+    public function __construct(string $modelClassName, string $table, Explorer $explorer, Conventions $conventions) {
+        parent::__construct($explorer, $conventions, $table);
         $this->modelClassName = $modelClassName;
     }
 

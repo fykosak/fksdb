@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\Payment\Price;
@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * Class PriceEURRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceEURRow extends DefaultColumnFactory {
+class PriceEURRow extends ColumnFactory {
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model
      * @return Html

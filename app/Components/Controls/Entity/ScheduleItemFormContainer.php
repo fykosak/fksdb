@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\ILogger;
@@ -63,7 +62,6 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void {

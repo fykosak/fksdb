@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\Teacher;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class StateRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StateRow extends DefaultColumnFactory {
+class StateRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model

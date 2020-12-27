@@ -18,7 +18,6 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Localization\ITranslator;
 use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
@@ -145,7 +144,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
-            throw new InvalidStateException("Cannot create search form without searchable data source.");
+            throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
         $control = new FormControl($this->getContext());
         $form = $control->getForm();

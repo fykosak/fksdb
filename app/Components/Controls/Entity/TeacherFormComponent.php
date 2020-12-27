@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
@@ -38,7 +37,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -78,7 +76,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
 
     /**
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */

@@ -3,9 +3,11 @@
 namespace FKSDB\Components\Controls\LinkPrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class LinkPrinterComponent
@@ -24,6 +26,8 @@ class LinkPrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @return void
      * @throws BadTypeException
+     * @throws CannotAccessModelException
+     * @throws InvalidLinkException
      */
     public function render(string $linkId, AbstractModelSingle $model): void {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));

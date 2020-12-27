@@ -2,24 +2,14 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * Class ServiceFyziklaniRoom
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
-
-    public function __construct(Explorer $connection, Conventions $conventions) {
-        parent::__construct(DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class, $connection, $conventions);
-    }
 
     /**
      * @param array $ids

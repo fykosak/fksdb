@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\ModelException;
@@ -20,9 +19,9 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Class StoredQueryForm
@@ -87,7 +86,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void {
@@ -138,6 +136,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {
@@ -167,7 +166,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     private function handleComposeExecute(Form $form): void {
         $data = $form->getValues(true);

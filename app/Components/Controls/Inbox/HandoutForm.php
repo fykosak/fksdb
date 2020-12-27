@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Models\ModelTaskContribution;
@@ -14,9 +15,9 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\YearCalculator;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 class HandoutForm extends BaseComponent {
     public const TASK_PREFIX = 'task';
@@ -46,6 +47,7 @@ class HandoutForm extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
+     * @throws InvalidStateException
      */
     protected function createComponentForm(): FormControl {
         $formControl = new FormControl($this->getContext());
@@ -69,7 +71,7 @@ class HandoutForm extends BaseComponent {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws ModelException
      */
     public function handleFormSuccess(Form $form): void {
         $values = $form->getValues();

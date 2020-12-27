@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -26,6 +27,7 @@ class ColumnPrinter extends BaseComponent {
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function render(string $field, AbstractModelSingle $model, int $userPermission): void {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
@@ -41,6 +43,7 @@ class ColumnPrinter extends BaseComponent {
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
@@ -53,6 +56,7 @@ class ColumnPrinter extends BaseComponent {
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
@@ -65,6 +69,7 @@ class ColumnPrinter extends BaseComponent {
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');

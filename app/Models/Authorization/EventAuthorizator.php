@@ -10,26 +10,18 @@ use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-/**
- * Class EventAuthorizator
- * *
- */
 class EventAuthorizator {
+
     use SmartObject;
 
     private IUserStorage $userStorage;
-
     private Permission $permission;
-
-    private Explorer $context;
-
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Explorer $explorer) {
+    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->userStorage = $identity;
         $this->permission = $acl;
-        $this->context = $explorer;
     }
 
     public function getUser(): IUserStorage {

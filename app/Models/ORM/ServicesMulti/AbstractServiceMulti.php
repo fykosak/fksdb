@@ -2,17 +2,17 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
 use Nette\Database\Connection;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
-use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
@@ -22,17 +22,15 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceMulti implements IService {
+
     use SmartObject;
 
-    protected AbstractServiceSingle $mainService;
-
-    protected AbstractServiceSingle $joinedService;
-
+    protected OldAbstractServiceSingle $mainService;
+    protected OldAbstractServiceSingle $joinedService;
     private string $joiningColumn;
-
     private string $modelClassName;
 
-    public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
+    public function __construct(OldAbstractServiceSingle $mainService, OldAbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
         $this->modelClassName = $modelClassName;
@@ -44,6 +42,7 @@ abstract class AbstractServiceMulti implements IService {
      *
      * @param iterable|null $data
      * @return AbstractModelMulti
+     * @throws ModelException
      * @deprecated
      */
     public function createNew(?iterable $data = null) {
@@ -57,6 +56,7 @@ abstract class AbstractServiceMulti implements IService {
      *
      * @param array $data
      * @return AbstractModelMulti
+     * @throws ModelException
      */
     public function createNewModel(array $data): AbstractModelMulti {
         $mainModel = $this->getMainService()->createNewModel($data);
@@ -87,6 +87,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param IModel|AbstractModelMulti $model
      * @param array $data
      * @return bool
+     * @throws ModelException
      */
     public function updateModel2(IModel $model, array $data): bool {
         $this->checkType($model);
@@ -109,6 +110,7 @@ abstract class AbstractServiceMulti implements IService {
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelMulti $model
+     * @throws ModelException
      * @deprecated
      */
     public function save(IModel &$model): void {
@@ -129,19 +131,18 @@ abstract class AbstractServiceMulti implements IService {
      *
      * @param IModel|AbstractModelMulti $model
      * @throws InvalidArgumentException
-     * @throws InvalidStateException
      */
-    public function dispose(IModel $model): void {
+    public function dispose(AbstractModelMulti $model): void {
         $this->checkType($model);
         $this->getJoinedService()->dispose($model->getJoinedModel());
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    final public function getMainService(): AbstractServiceSingle {
+    final public function getMainService(): OldAbstractServiceSingle {
         return $this->mainService;
     }
 
-    final public function getJoinedService(): AbstractServiceSingle {
+    final public function getJoinedService(): OldAbstractServiceSingle {
         return $this->joinedService;
     }
 

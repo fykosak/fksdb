@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -12,6 +11,7 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,9 +31,8 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function createConsole(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
@@ -46,7 +45,6 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -103,6 +101,7 @@ class StoredQueryFactory {
      * @param ControlGroup|null $group
      * @return ModelContainer
      * TODO
+     * @throws InvalidStateException
      */
     public function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();

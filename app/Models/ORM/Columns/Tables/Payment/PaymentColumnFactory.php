@@ -2,8 +2,9 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -16,7 +17,7 @@ use Nette\Utils\Html;
  * Class Payment
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PaymentColumnFactory extends DefaultColumnFactory {
+class PaymentColumnFactory extends ColumnFactory {
 
     private ORMFactory $reflectionFactory;
 
@@ -38,6 +39,7 @@ class PaymentColumnFactory extends DefaultColumnFactory {
      * @param AbstractModelSingle $model
      * @return Html
      * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));

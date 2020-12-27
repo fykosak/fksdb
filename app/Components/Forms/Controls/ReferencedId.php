@@ -18,6 +18,7 @@ use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
+use Nette\InvalidStateException;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -30,27 +31,17 @@ class ReferencedId extends HiddenField {
     public const MODE_NORMAL = 'MODE_NORMAL';
     public const MODE_FORCE = 'MODE_FORCE';
     public const MODE_ROLLBACK = 'MODE_ROLLBACK';
-
     public const VALUE_PROMISE = '__promise';
-
     private const JSON_DATA = 'referencedContainer';
-
     private ReferencedContainer $referencedContainer;
-
     private SearchContainer $searchContainer;
-
     private IService $service;
-
     private IReferencedHandler $handler;
-
     private ?Promise $promise = null;
-
     private bool $modelCreated = false;
     /** @var IModel */
     private $model;
-
     private bool $attachedOnValidate = false;
-
     private bool $attachedSearch = false;
 
     public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
@@ -114,7 +105,7 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @return IModel
+     * @return IModel|AbstractModelSingle
      */
     public function getModel() {
         return $this->model;
@@ -124,9 +115,9 @@ class ReferencedId extends HiddenField {
      * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
      * @return static
+     * @throws InvalidStateException
      */
     public function setValue($pValue, bool $force = false): self {
-
         if ($pValue instanceof IModel) {
             $personModel = $pValue;
         } elseif ($pValue === self::VALUE_PROMISE) {
@@ -183,13 +174,11 @@ class ReferencedId extends HiddenField {
     }
 
     private function createPromise(): void {
-
         $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-
                     $model = $this->handler->createFromValues($values);
                     $this->setValue($model, self::MODE_FORCE);
                     $this->setModelCreated(true);

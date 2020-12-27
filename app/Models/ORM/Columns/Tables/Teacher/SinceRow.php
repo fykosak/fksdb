@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Teacher;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class SinceRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SinceRow extends DefaultColumnFactory {
+class SinceRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model

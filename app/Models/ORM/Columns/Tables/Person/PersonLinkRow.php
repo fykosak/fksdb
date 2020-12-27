@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ValuePrinters\PersonLink;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class PersonLinkRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonLinkRow extends DefaultColumnFactory {
+class PersonLinkRow extends ColumnFactory {
 
     private LinkGenerator $presenterComponent;
 

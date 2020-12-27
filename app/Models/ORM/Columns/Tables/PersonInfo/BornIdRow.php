@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -12,7 +12,7 @@ use Nette\Forms\Form;
  * Class BornIdRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class BornIdRow extends DefaultColumnFactory {
+class BornIdRow extends ColumnFactory {
     /**
      * @param array $args
      * @return BaseControl

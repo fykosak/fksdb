@@ -5,6 +5,7 @@ namespace FKSDB\Modules\EventModule\Fyziklani;
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
+use Nette\InvalidStateException;
 
 /**
  * Class ResultsPresenter
@@ -110,6 +111,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return ResultsAndStatistics
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentTable(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
@@ -118,6 +120,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return ResultsAndStatistics
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentPresentation(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
@@ -126,6 +129,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return ResultsAndStatistics
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentTeamStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
@@ -134,6 +138,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return ResultsAndStatistics
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentTaskStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
@@ -142,6 +147,7 @@ class ResultsPresenter extends BasePresenter {
     /**
      * @return ResultsAndStatistics
      * @throws EventNotFoundException
+     * @throws InvalidStateException
      */
     protected function createComponentCorrelationStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');

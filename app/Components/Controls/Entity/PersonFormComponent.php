@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -22,6 +21,7 @@ use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
+use Nette\InvalidStateException;
 
 /**
  * Class AbstractPersonFormControl
@@ -81,9 +81,9 @@ class PersonFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];

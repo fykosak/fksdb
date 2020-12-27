@@ -13,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow region
  * @property-read int region_id
  */
-class ModelAddress extends AbstractModelSingle {
+class ModelAddress extends OldAbstractModelSingle {
 
     public function getRegion(): ?ModelRegion {
         return $this->region_id ? ModelRegion::createFromActiveRow($this->region) : null;

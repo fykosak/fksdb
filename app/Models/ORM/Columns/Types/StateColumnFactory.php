@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
@@ -12,7 +13,7 @@ use Nette\Utils\Html;
  * Class StateRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StateColumnFactory extends DefaultColumnFactory {
+class StateColumnFactory extends ColumnFactory {
 
     protected array $states = [];
 

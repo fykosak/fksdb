@@ -40,7 +40,6 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
      * @param string|null $postProcessingClass
      * @return StoredQuery
-     * @throws BadRequestException
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
         $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
@@ -48,12 +47,6 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    /**
-     * @param BasePresenter $presenter
-     * @param ModelStoredQuery $patternQuery
-     * @return StoredQuery
-     * @throws BadRequestException
-     */
     public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));

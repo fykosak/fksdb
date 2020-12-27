@@ -25,7 +25,6 @@ class BaseHolder {
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
-
     private string $name;
     private ?string $description;
     private ExpressionEvaluator $evaluator;
@@ -45,10 +44,8 @@ class BaseHolder {
     private ?IModel $model = null;
     private array $paramScheme;
     private array $parameters;
-
     /** @var bool|callable */
     private $modifiable;
-
     /** @var bool|callable */
     private $visible;
 
@@ -354,8 +351,7 @@ class BaseHolder {
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
+            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . '.', null, $exception);
         }
     }
-
 }

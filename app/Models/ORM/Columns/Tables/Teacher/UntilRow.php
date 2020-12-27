@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Teacher;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilRow extends DefaultColumnFactory {
+class UntilRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model

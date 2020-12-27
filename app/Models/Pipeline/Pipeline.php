@@ -42,7 +42,6 @@ class Pipeline {
      * Stages can be added only in the build phase (not after setting the data).
      *
      * @param Stage $stage
-     * @throws InvalidStateException
      */
     public function addStage(Stage $stage): void {
         if ($this->fixedStages) {

@@ -6,10 +6,10 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -29,6 +29,7 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExtendedPersonHandler {
+
     use SmartObject;
 
     public const CONT_AGGR = 'aggr';
@@ -37,26 +38,18 @@ class ExtendedPersonHandler {
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-
-    protected IService $service;
-
+    protected AbstractServiceSingle $service;
     protected ServicePerson $servicePerson;
-
     private Connection $connection;
-
     private AccountManager $accountManager;
-
     private ModelContest $contest;
-
     private int $year;
-
     private string $invitationLang;
-
     /** @var ModelPerson */
     private $person;
 
     public function __construct(
-        IService $service,
+        AbstractServiceSingle $service,
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
@@ -91,7 +84,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @return ModelPerson|null|AbstractModelSingle|IModel
+     * @return ModelPerson|null|AbstractModelSingle
      */
     final protected function getReferencedPerson(Form $form) {
         /** @var ReferencedId $input */
@@ -104,11 +97,10 @@ class ExtendedPersonHandler {
      * @param IExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
-
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
@@ -10,11 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * Class AgreedField
- * *
- */
-class AgreedRow extends DefaultColumnFactory {
+class AgreedRow extends ColumnFactory {
 
     /**
      * @param array $args

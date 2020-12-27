@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string note neverejná poznámka
  * @property-read string url URL k objednaniu produktu
  */
-class ModelProduct extends AbstractModelSingle implements IResource, IProducerReferencedModel {
+class ModelProduct extends AbstractModelSingle implements IResource {
 
     public const CATEGORY_APPAREL = 'apparel';
     public const CATEGORY_GAME = 'game';

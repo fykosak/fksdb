@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class TeamRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamRow extends DefaultColumnFactory {
+class TeamRow extends ColumnFactory {
 
     /**
      * @param ModelEventParticipant|AbstractModelSingle $model

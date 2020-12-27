@@ -4,14 +4,14 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelFyziklaniTeam|null findByPrimary($key)
  */
-class ServiceFyziklaniTeam extends AbstractServiceSingle {
+class ServiceFyziklaniTeam extends OldAbstractServiceSingle {
 
     public function findParticipating(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);

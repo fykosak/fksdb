@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -17,8 +16,6 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  * @method ModelEvent refresh(AbstractModelSingle $model)
  */
 class ServiceEvent extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
         return $this->getTable()

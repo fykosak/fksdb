@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\Task;
 
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelTask;
 use Nette\Forms\Controls\BaseControl;
@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class FQNameRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FQNameRow extends DefaultColumnFactory {
+class FQNameRow extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTask $model

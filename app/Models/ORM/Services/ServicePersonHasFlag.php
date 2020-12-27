@@ -12,7 +12,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class ServicePersonHasFlag extends AbstractServiceSingle {
+class ServicePersonHasFlag extends OldAbstractServiceSingle {
 
     /**
      * @param null|iterable $data
@@ -20,7 +20,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @throws ModelException
      * @deprecated
      */
-    public function createNew(?iterable $data = null) {
+    public function createNew(?iterable $data = null): ModelPersonHasFlag {
         if ($data === null) {
             $data = new ArrayHash();
         }
@@ -47,7 +47,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         parent::updateModel($model, $data);
     }
 
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         $data['modified'] = new DateTime();
         return parent::updateModel2($model, $data);
     }

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -15,8 +14,6 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
 
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */
