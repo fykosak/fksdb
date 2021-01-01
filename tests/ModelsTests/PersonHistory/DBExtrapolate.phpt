@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\PersonHistory;
+namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 

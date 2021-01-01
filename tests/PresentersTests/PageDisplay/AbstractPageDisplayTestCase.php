@@ -2,9 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
@@ -18,8 +18,8 @@ use Tester\Assert;
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $personId;
+    protected int $personId;
+    private int $loginId;
 
     /**
      * PageDisplayTest constructor.
@@ -39,11 +39,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
             'gender' => 'M',
         ]);
 
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
+        $this->loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
 
-
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 1000, 'contest_id' => 1]);
-        $this->authenticate($loginId);
+        $this->insert(DbNames::TAB_GRANT, ['login_id' => $this->loginId, 'role_id' => 1000, 'contest_id' => 1]);
+        $this->authenticate($this->loginId);
     }
 
     final protected function createRequest(string $presenterName, string $action, array $params): Request {
@@ -56,15 +55,17 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * @dataProvider getPages
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void {
+
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
+        $this->authenticate($this->loginId, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
         Assert::type(TextResponse::class, $response);
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) : string {
+        Assert::noError(function () use ($source): string {
             return (string)$source;
         });
     }
@@ -76,10 +77,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        //   $this->connection->query('DELETE FROM global_session');
-        //    $this->connection->query('DELETE FROM `grant`');
-        //    $this->connection->query('DELETE FROM login');
-        //    $this->connection->query('DELETE FROM person');
+        $this->connection->query('DELETE FROM global_session');
+        $this->connection->query('DELETE FROM `grant`');
+        $this->connection->query('DELETE FROM login');
+        $this->connection->query('DELETE FROM person');
         parent::tearDown();
     }
 }

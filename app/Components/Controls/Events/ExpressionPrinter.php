@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;

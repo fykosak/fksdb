@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking;
+namespace FKSDB\Components\Controls\Stalking\Components;
 
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Components\Controls\Stalking\StalkingControl;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**
  * Class Flag

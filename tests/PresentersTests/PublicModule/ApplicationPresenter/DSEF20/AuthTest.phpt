@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
@@ -16,8 +16,7 @@ class AuthTest extends DsefTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
     }
 
     public function testDisplay(): void {
@@ -26,9 +25,9 @@ class AuthTest extends DsefTestCase {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
         ]);
 
         $response = $this->fixture->run($request);
@@ -48,7 +47,7 @@ class AuthTest extends DsefTestCase {
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -88,7 +87,6 @@ class AuthTest extends DsefTestCase {
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
-
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);

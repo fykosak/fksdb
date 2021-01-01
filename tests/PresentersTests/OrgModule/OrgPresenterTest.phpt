@@ -2,12 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\OrgFormComponent;
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
-use Nette\Application\Request;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -15,7 +13,7 @@ use Tester\Assert;
  * Class OrgPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgPresenterTest extends EntityPresenterTestCase {
+class OrgPresenterTest extends AbstractOrgPresenterTestCase {
 
     /** @var int */
     private $personId;
@@ -48,9 +46,9 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
-                'person_id' => $this->personId,
-                'since' => 1,
-                'order' => 0,
+                'person_id' => (string)$this->personId,
+                'since' => (string)1,
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -64,9 +62,9 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
-                'person_id' => $this->personId,
-                'since' => 2, // out of range
-                'order' => 0,
+                'person_id' => (string)$this->personId,
+                'since' => (string)2, // out of range
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -82,8 +80,8 @@ class OrgPresenterTest extends EntityPresenterTestCase {
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
                 'person_id' => null, // empty personId
-                'since' => 1,
-                'order' => 0,
+                'since' => (string)1,
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -93,24 +91,22 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => $this->orgPersonId,
-                'since' => 1,
-                'order' => 2,
+                'person_id__meta' => (string)$this->orgPersonId,
+                'since' => (string)1,
+                'order' => (string)2,
                 'domain_alias' => 'b',
             ],
         ], [
-            'id' => $this->orgId,
+            'id' => (string)$this->orgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM org where org_id=?', $this->orgId)->fetch();
         Assert::equal('b', $org->domain_alias);
         Assert::equal(2, $org->order);
     }
-
 
     public function testDetail() {
         $request = $this->createGetRequest('list', []);
@@ -123,18 +119,6 @@ class OrgPresenterTest extends EntityPresenterTestCase {
 
     protected function getPresenterName(): string {
         return 'Org:Org';
-    }
-
-    protected function createPostRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createPostRequest($action, $params, $postData);
-    }
-
-    protected function createGetRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createGetRequest($action, $params, $postData);
     }
 
     protected function tearDown(): void {

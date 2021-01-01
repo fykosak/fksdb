@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
 
 /**
@@ -57,7 +57,6 @@ group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($cu
         $this->template->schools = $schools;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
         $this->template->render();
-
     }
 
     /**

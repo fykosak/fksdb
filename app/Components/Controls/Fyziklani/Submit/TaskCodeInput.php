@@ -2,17 +2,17 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Messages\Message;
-use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\Fyziklani\Submit\TaskCodeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
@@ -76,9 +76,7 @@ class TaskCodeInput extends AjaxComponent {
         try {
             $handler = $this->handlerFactory->create($this->event);
             $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
-        } catch (TaskCodeException $exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
-        } catch (ClosedSubmittingException $exception) {
+        } catch (TaskCodeException | ClosedSubmittingException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         }
         $this->sendAjaxResponse();

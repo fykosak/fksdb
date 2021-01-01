@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use Nette\DI\Container;
 
 /**

@@ -3,18 +3,18 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\SQL\SearchableDataSource;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
-use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -55,7 +55,7 @@ abstract class BaseGrid extends Grid {
         $this->setTranslator($translator);
     }
 
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
@@ -148,11 +148,11 @@ abstract class BaseGrid extends Grid {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
         }
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         //$form = new Form();
         $form->setMethod(Form::GET);
-        $form->addText('term')->setDefaultValue($this->searchTerm)->setAttribute('placeholder', _('Vyhledat'));
+        $form->addText('term')->setDefaultValue($this->searchTerm)->setHtmlAttribute('placeholder', _('Vyhledat'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
@@ -176,7 +176,7 @@ abstract class BaseGrid extends Grid {
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, ?string $label = null): Button {
+    protected function addButton(string $name, ?string $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -189,7 +189,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateGlobalButtonException
      * @deprecated do not use for links!
      */
-    public function addGlobalButton($name, ?string $label = null): GlobalButton {
+    public function addGlobalButton(string $name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;
@@ -248,7 +248,6 @@ abstract class BaseGrid extends Grid {
         }
     }
 
-
     /**
      * @param string $destination
      * @param string $id
@@ -266,7 +265,6 @@ abstract class BaseGrid extends Grid {
             }
             return $hrefParams;
         };
-        /** @var Button $button */
         $button = $this->addButton($id, $label)
             ->setText($label)
             ->setLink(function ($model) use ($destination, $paramMapCallback): string {
@@ -295,7 +293,6 @@ abstract class BaseGrid extends Grid {
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
-        /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {

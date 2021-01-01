@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -141,7 +141,7 @@ class AutocompleteSelectBox extends TextBase {
         } catch (InvalidArgumentException $exception) {
             $wasSent = false;
         }
-        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath, null)) {
+        if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath)) {
             $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->caption));
             $this->setValue(null);
         } else {

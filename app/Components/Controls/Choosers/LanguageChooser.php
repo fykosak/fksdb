@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\UI\Title;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\UI\Title;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -28,13 +28,13 @@ class DispatchGrid extends EntityGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('begin DESC');
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);

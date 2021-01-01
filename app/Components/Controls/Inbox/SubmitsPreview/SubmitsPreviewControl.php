@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\SubmitsPreview;
 
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Messages\Message;
-use FKSDB\Submits\StorageException;
-use FKSDB\Submits\SubmitHandlerFactory;
+use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

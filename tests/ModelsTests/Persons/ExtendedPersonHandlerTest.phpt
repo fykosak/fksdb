@@ -1,28 +1,21 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\Person;
+namespace FKSDB\Tests\ModelsTests\Persons;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceContest;
-use FKSDB\ORM\Services\ServiceContestant;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use FKSDB\Persons\ExtendedPersonHandler;
-use FKSDB\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Persons\IExtendedPersonPresenter;
-use FKSDB\Persons\IModifiabilityResolver;
-use FKSDB\Persons\IVisibilityResolver;
-use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -50,7 +43,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $service = $this->getContainer()->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
     }
 
     protected function tearDown(): void {
@@ -60,7 +52,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         parent::tearDown();
     }
-
 
     public function testNewPerson(): void {
 
@@ -183,50 +174,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 /*
  * Mock classes
  */
-
-class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
-
-    public function getModel(): ?IModel {
-        return null;
-    }
-
-    public function messageCreate(): string {
-        return '';
-    }
-
-    public function messageEdit(): string {
-        return '';
-    }
-
-    public function messageError(): string {
-        return '';
-    }
-
-    public function messageExists(): string {
-        return '';
-    }
-
-    public function flashMessage($message, $type = 'info') {
-
-    }
-
-}
-
-class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
-
-    public function getResolutionMode(ModelPerson $person): string {
-        return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
-    }
-
-    public function isModifiable(ModelPerson $person): bool {
-        return true;
-    }
-
-    public function isVisible(ModelPerson $person): bool {
-        return true;
-    }
-
-}
 
 $testCase = new ExtendedPersonHandlerTest($container);
 $testCase->run();

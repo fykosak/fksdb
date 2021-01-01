@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
@@ -15,13 +15,13 @@ class CancelTest extends TsafTestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId);
+        $this->authenticate($adminId, $this->fixture);
 
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
@@ -45,7 +45,7 @@ class CancelTest extends TsafTestCase {
     public function testCancel(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -79,8 +79,8 @@ class CancelTest extends TsafTestCase {
             'c_a_p_t_cha' => "pqrt",
             'auto_invited_or_invited_or_applied_or_applied_nodsef__cancelled' => "Zrušit přihlášku",
         ], [
-            'eventId' => $this->tsafEventId,
-            'id' => $this->tsafAppId,
+            'eventId' => (string)$this->tsafEventId,
+            'id' => (string)$this->tsafAppId,
         ]);
 
         $response = $this->fixture->run($request);
@@ -91,7 +91,6 @@ class CancelTest extends TsafTestCase {
         Assert::equal('cancelled', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
         Assert::equal('F_M', $application->jumper_size);
-
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.notsaf', $application->status);

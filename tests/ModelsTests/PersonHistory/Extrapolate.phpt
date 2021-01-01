@@ -1,21 +1,18 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\PersonHistory;
+namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Services\ServicePersonHistory;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 
 class Extrapolate extends DatabaseTestCase {
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $service;
+    private ServicePersonHistory $service;
     /** @var int */
     private $personId;
     /** @var int */
@@ -92,7 +89,7 @@ class Extrapolate extends DatabaseTestCase {
     /**
      * @dataProvider getStudyYearData
      */
-    public function testStudyYear(int $from, int $step,?int $to): void {
+    public function testStudyYear(int $from, int $step, ?int $to): void {
         $fixture = $this->service->createNewModel([
             'person_id' => $this->personId,
             'ac_year' => 2000,

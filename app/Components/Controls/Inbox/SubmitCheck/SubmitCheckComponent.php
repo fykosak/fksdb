@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Logging\ILogger;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
-use FKSDB\Submits\SeriesTable;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 

@@ -1,23 +1,23 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Fyziklani\Submit\TaskCodePreprocessor;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -25,7 +25,7 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
  * @author Michal Červeňák
@@ -58,13 +58,13 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -78,7 +78,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
-        $this->addButton('delete', null)
+        $this->addButton('delete')
             ->setClass('btn btn-sm btn-danger')
             ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
@@ -152,7 +152,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
         }
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->setMethod(Form::GET);
 
@@ -172,7 +172,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
-        $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
+        $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form): void {

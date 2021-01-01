@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
 /**

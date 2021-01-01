@@ -4,9 +4,8 @@ namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use Nette\Application\UI\Control;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\DI\Container;
 
 /**

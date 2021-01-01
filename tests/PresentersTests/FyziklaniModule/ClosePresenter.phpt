@@ -2,25 +2,22 @@
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
+use Nette\Schema\Helpers;
 use Tester\Assert;
 
 class ClosePresenter extends FyziklaniTestCase {
-
     use MockApplicationTrait;
 
     private IPresenter $fixture;
-    /** @var int */
-    private $teamIds;
-    /** @var int */
-    private $taskIds;
+    private array $teamIds;
+    private array $taskIds;
 
     /**
      * ClosePresenterTest constructor.
@@ -99,28 +96,22 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->fixture = $this->createPresenter('Fyziklani:Close');
         $this->mockApplication();
 
-        $this->authenticate($this->userPersonId);
+        $this->authenticate($this->userPersonId, $this->fixture);
     }
 
     protected function tearDown(): void {
         parent::tearDown();
     }
 
-    /**
-     * @param $postData
-     * @param array $post
-     * @return Request
-     */
-    private function createPostRequest($postData, $post = []): Request {
-        $post = Helpers::merge($post, [
-            'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-        ]);
-
-        return new Request('Fyziklani:Close', 'POST', $post, $postData);
-
+    private function createPostRequest(array $formData, array $params = []): Request {
+        return new Request('Fyziklani:Close', 'POST',
+            Helpers::merge([
+                'lang' => 'cs',
+                'contestId' => 1,
+                'year' => 1,
+                'eventId' => $this->eventId,
+            ], $params)
+            , $formData);
     }
 
     /**
@@ -166,11 +157,10 @@ class ClosePresenter extends FyziklaniTestCase {
      */
     private function innertestCloseTeam(int $teamId, int $pointsSum): void {
         $request = $this->createPostRequest([
-            'id' => $teamId,
+            '_do' => 'closeTeamControl-close',
         ], [
             'id' => $teamId,
             'action' => 'team',
-            'do' => 'closeTeamControl-close',
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
@@ -183,11 +173,11 @@ class ClosePresenter extends FyziklaniTestCase {
      * @dataProvider getCategories
      */
     public function testCloseCategory(string $category): void {
+
         foreach ($this->getTestTeams($category) as $teamData) {
             [$teamId, $pointsSum,] = $teamData;
             $this->innertestCloseTeam($teamId, $pointsSum);
         }
-
         /*    $request = $this->createPostDiplomasRequest([], [
                 'category' => $category,
                 'do' => 'close',
@@ -205,6 +195,7 @@ class ClosePresenter extends FyziklaniTestCase {
     }
 
     public function testCloseAll(): void {
+
         foreach ($this->getCategories() as $catData) {
             [$category] = $catData;
             foreach ($this->getTestTeams($category) as $teamData) {
@@ -212,7 +203,6 @@ class ClosePresenter extends FyziklaniTestCase {
                 $this->innertestCloseTeam($teamId, $pointsSum);
             }
         }
-
         /*  $request = $this->createPostDiplomasRequest([], [
               'action' => 'default',
               'do' => 'close',

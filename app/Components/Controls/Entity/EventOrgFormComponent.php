@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventOrg;
-use FKSDB\ORM\Services\ServiceEventOrg;
-use FKSDB\Utils\FormUtils;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventOrg;
+use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;

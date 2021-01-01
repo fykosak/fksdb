@@ -2,10 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use FKSDB\ORM\DbNames;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -43,21 +43,21 @@ class Authorization extends FyziklaniTestCase {
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
 
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]);
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]);
 
         $this->eventId = $this->createEvent([]);
@@ -100,11 +100,11 @@ class Authorization extends FyziklaniTestCase {
     private function createGetRequest(string $presenterName, string $action): Request {
         $params = [
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
             'action' => $action,
-            'id' => $this->submitId,
+            'id' => (string)$this->submitId,
         ];
 
         return new Request($presenterName, 'GET', $params);
@@ -120,12 +120,12 @@ class Authorization extends FyziklaniTestCase {
         if (!is_array($results)) {
             $results = array_fill(0, count($actions), $results);
         }
+        $presenter = $this->createPresenter($presenterName);
         if ($personCol) {
             /* Use indirect access because data provider is called before test set up. */
-            $this->authenticate($this->{$personCol});
+            $this->authenticate($this->{$personCol}, $presenter);
         }
 
-        $presenter = $this->createPresenter($presenterName);
         foreach ($actions as $i => $action) {
             $request = $this->createGetRequest($presenterName, $action);
             $forbidden = false;

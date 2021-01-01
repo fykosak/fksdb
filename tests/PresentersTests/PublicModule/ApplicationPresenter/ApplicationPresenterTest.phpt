@@ -2,10 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
 
 /**

@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking;
+namespace FKSDB\Components\Controls\Stalking\Components;
 
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\DataTestingFactory;
+use FKSDB\Components\Controls\Stalking\StalkingControl;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\DataTesting\DataTestingFactory;
 
 /**
  * Class Validation

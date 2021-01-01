@@ -2,9 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -15,7 +15,7 @@ class WithDSEFTest extends TsafTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
 
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
@@ -39,7 +39,7 @@ class WithDSEFTest extends TsafTestCase {
     public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -73,8 +73,8 @@ class WithDSEFTest extends TsafTestCase {
             'c_a_p_t_cha' => "pqrt",
             'invited__applied' => "Potvrdit účast",
         ], [
-            'eventId' => $this->tsafEventId,
-            'id' => $this->tsafAppId,
+            'eventId' => (string)$this->tsafEventId,
+            'id' => (string)$this->tsafAppId,
         ]);
 
         $response = $this->fixture->run($request);

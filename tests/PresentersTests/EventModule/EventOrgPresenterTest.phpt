@@ -2,10 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -56,7 +56,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'note' => 'note-c',
             ],
         ]);
@@ -68,33 +68,31 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     public function testModelErrorCreate(): void {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-                EventOrgFormComponent::CONTAINER => [
-                    'person_id__meta' => 'JS',
-                    'person_id' => null, // empty personId
-                    'note' => '',
-                ],]
-        );
+            EventOrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => null, // empty personId
+                'note' => '',
+            ],
+        ]);
         $html = $this->assertPageDisplay($response);
         Assert::contains('Error', $html);
         $after = $this->countEventOrgs();
         Assert::equal($init, $after);
     }
 
-
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventOrgFormComponent::CONTAINER => [
-                'person_id__meta' => $this->eventOrgPersonId,
+                'person_id__meta' => (string)$this->eventOrgPersonId,
                 'note' => 'note-edited',
             ],
         ], [
-            'id' => $this->eventOrgId,
+            'id' => (string)$this->eventOrgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM event_org where e_org_id=?', $this->eventOrgId)->fetch();
         Assert::equal('note-edited', $org->note);
     }
-
 
     public function testDetail(): void {
         $request = $this->createGetRequest('list', []);

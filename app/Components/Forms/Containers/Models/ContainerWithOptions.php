@@ -17,7 +17,6 @@ class ContainerWithOptions extends Container {
         if ($container) {
             $container->callInjects($this);
         }
-        parent::__construct();
     }
 
     /**

@@ -1,21 +1,18 @@
 <?php
 
-namespace FKSDB\Tests\Events\FormAdjustment;
+namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class SecondaryLimitOk extends ResourceAvailabilityTestCase {
-    /**
-     * @var int
-     */
-    private $tsafEventId;
+
+    private int $tsafEventId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -28,7 +25,7 @@ EOT
         ]);
 
         foreach ($this->persons as $personId) {
-            $eid = $this->insert('event_participant', [
+            $this->insert('event_participant', [
                 'person_id' => $personId,
                 'event_id' => $this->tsafEventId,
                 'status' => 'applied',
@@ -56,9 +53,9 @@ EOT
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->tsafEventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->tsafEventId,
         ]);
         $response = $this->fixture->run($request);
 

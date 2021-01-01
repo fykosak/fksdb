@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
-use FKSDB\ORM\Services\ServiceAddress;
-use FKSDB\ORM\Services\ServiceRegion;
-use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Models\ORM\Services\ServiceAddress;
+use FKSDB\Models\ORM\Services\ServiceRegion;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -93,11 +93,9 @@ class AddressFactory {
             $city->setWriteOnly(false);
         }
 
-
         $postalCode = $container->addText('postal_code', _('PSČ'))
             ->addRule(Form::MAX_LENGTH, null, 5)
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
-
 
         $country = $container->addSelect('country_iso', _('Country'));
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));

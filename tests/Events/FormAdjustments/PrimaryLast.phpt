@@ -1,18 +1,15 @@
 <?php
 
-namespace FKSDB\Events\Model;
+namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
 
-/** @var Container $container */
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class PrimaryLast extends ResourceAvailabilityTestCase {
 
@@ -32,17 +29,17 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
             'event_participant_id' => $this->appId,
             'e_dsef_group_id' => 1,
         ]);
-        $this->authenticate($personId);
+        $this->authenticate($personId, $this->fixture);
     }
 
     public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-            'id' => $this->appId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
+            'id' => (string)$this->appId,
         ]);
 
         $response = $this->fixture->run($request);

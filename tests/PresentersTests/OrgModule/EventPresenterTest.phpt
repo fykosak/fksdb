@@ -2,24 +2,20 @@
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\EventFormComponent;
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
-use Nette\Application\Request;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 /**
  * Class EventPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventPresenterTest extends EntityPresenterTestCase {
+class EventPresenterTest extends AbstractOrgPresenterTestCase {
 
-    /** @var int */
-    private $eventId;
+    private int $eventId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -49,9 +45,9 @@ class EventPresenterTest extends EntityPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 2,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)2,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -66,9 +62,9 @@ class EventPresenterTest extends EntityPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -84,9 +80,9 @@ class EventPresenterTest extends EntityPresenterTestCase {
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event edited',
@@ -94,29 +90,13 @@ class EventPresenterTest extends EntityPresenterTestCase {
         ], [
             'id' => $this->eventId,
         ]);
-        if ($response instanceof TextResponse) {
-            file_put_contents('t.html', (string)$response->getSource());
-        }
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);
     }
 
-
     protected function getPresenterName(): string {
         return 'Org:Event';
-    }
-
-    protected function createPostRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createPostRequest($action, $params, $postData);
-    }
-
-    protected function createGetRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createGetRequest($action, $params, $postData);
     }
 
     protected function tearDown(): void {

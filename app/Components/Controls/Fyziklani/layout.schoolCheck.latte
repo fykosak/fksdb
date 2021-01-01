@@ -4,7 +4,7 @@
         <h3>{$row['school']->name_abbrev}</h3>
         <ul>
             {foreach $row as $team}
-                {continueIf !$team instanceof FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam}
+                {continueIf !$team instanceof FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam}
                 <li>{control valuePrinter:onlyValue 'e_fyziklani_team.name',$team}
                     ({control valuePrinter:onlyValue 'e_fyziklani_team.e_fyziklani_team_id',$team})
                     {control valuePrinter:onlyValue 'e_fyziklani_team.status',$team }</li>

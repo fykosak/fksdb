@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\IWriteOnly;
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\ColumnFactories\IColumnFactory;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
 
 /**

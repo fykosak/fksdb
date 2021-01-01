@@ -4,10 +4,11 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\Controls\Stalking\Timeline\TimelineControl;
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\DI\Container;
-use FKSDB\Components\Controls\Stalking;
+use FKSDB\Components\Controls\Stalking\Components;
 
 /**
  * Class StalkingContainer
@@ -64,27 +65,27 @@ class StalkingContainer extends BaseComponent {
         return new StalkingComponent($this->getContext());
     }
 
-    protected function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getContext());
+    protected function createComponentAddress(): Components\Address {
+        return new Components\Address($this->getContext());
     }
 
-    protected function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getContext());
+    protected function createComponentRole(): Components\Role {
+        return new Components\Role($this->getContext());
     }
 
-    protected function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getContext());
+    protected function createComponentFlag(): Components\Flag {
+        return new Components\Flag($this->getContext());
     }
 
-    protected function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getContext());
+    protected function createComponentSchedule(): Components\Schedule {
+        return new Components\Schedule($this->getContext());
     }
 
-    protected function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->getContext());
+    protected function createComponentValidation(): Components\Validation {
+        return new Components\Validation($this->getContext());
     }
 
-    protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
-        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->person);
+    protected function createComponentTimeline(): TimelineControl {
+        return new TimelineControl($this->getContext(), $this->person);
     }
 }
