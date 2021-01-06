@@ -2,12 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -15,10 +12,6 @@ use Nette\Database\IConventions;
  * @method ModelPersonHistory refresh(AbstractModelSingle $model)
  */
 class ServicePersonHistory extends AbstractServiceSingle {
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_HISTORY, ModelPersonHistory::class);
-    }
 
     public function store(ModelPerson $person, ?ModelPersonHistory $history, array $data, int $acYear): ModelPersonHistory {
         if ($history) {

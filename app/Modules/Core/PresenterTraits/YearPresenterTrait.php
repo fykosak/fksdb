@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\Container;
 
 /**
  * Trait YearPresenterTrait

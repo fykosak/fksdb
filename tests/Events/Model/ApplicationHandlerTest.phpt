@@ -48,7 +48,7 @@ class ApplicationHandlerTest extends EventTestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->context->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
+        $this->explorer->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         /** @var ServiceEvent $serviceEvent */
@@ -210,7 +210,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
         Assert::equal($teamName, $team->name);
 
-        $count = $this->context->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
+        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
         Assert::equal(2, $count);
     }
 }

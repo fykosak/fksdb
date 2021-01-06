@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Events\Model\Grid;
 
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -48,6 +48,7 @@ class SingleEventSource implements IHolderSource {
      * @param Container $container
      * @param EventDispatchFactory $eventDispatchFactory
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
@@ -107,6 +108,7 @@ class SingleEventSource implements IHolderSource {
     /**
      * @return void
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     private function createHolders(): void {
         $cache = [];

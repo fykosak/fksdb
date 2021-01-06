@@ -45,8 +45,8 @@ EOT
      * @dataProvider getTestData
      */
     public function testDisplay(int $capacity, bool $disabled): void {
-        Assert::equal(2, (int)$this->context->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
-        $this->context->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
+        Assert::equal(2, (int)$this->explorer->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
+        $this->explorer->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
 accomodationCapacity: $capacity                
 EOT
             , $this->eventId);

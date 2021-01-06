@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -20,13 +19,13 @@ use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
-class PointsPresenter extends BasePresenter implements ISeriesPresenter {
+class PointsPresenter extends BasePresenter {
+
     /**
      * Show all tasks?
      * @persistent
      */
     public $all;
-
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
     private ServiceTask $serviceTask;

@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authentication\AccountManager;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Database\Connection;
 
@@ -16,9 +16,7 @@ use Nette\Database\Connection;
 class ExtendedPersonHandlerFactory {
 
     private ServicePerson $servicePerson;
-
     private Connection $connection;
-
     private AccountManager $accountManager;
 
     public function __construct(ServicePerson $servicePerson, Connection $connection, AccountManager $accountManager) {
@@ -27,7 +25,7 @@ class ExtendedPersonHandlerFactory {
         $this->accountManager = $accountManager;
     }
 
-    public function create(IService $service, ModelContest $contest, int $year, string $invitationLang): ExtendedPersonHandler {
+    public function create(AbstractServiceSingle $service, ModelContest $contest, int $year, string $invitationLang): ExtendedPersonHandler {
         return new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->accountManager, $contest, $year, $invitationLang);
     }
 }

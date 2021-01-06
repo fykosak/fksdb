@@ -29,6 +29,7 @@ class SQLResultsCache {
      *
      * @param ModelContest|null $contest
      * @param int|null $year
+     * @throws \PDOException
      */
     public function invalidate(ModelContest $contest = null, $year = null): void {
         $data = [
@@ -56,6 +57,7 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      * @throws BadRequestException
+     * @throws \PDOException
      */
     public function recalculate(ModelContest $contest, int $year): void {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
@@ -98,6 +100,7 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      * @param int $series
+     * @throws \PDOException
      */
     public function calculateQuizPoints(ModelContest $contest, int $year, int $series): void {
         $params = [];

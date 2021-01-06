@@ -15,7 +15,7 @@ class CreateTest extends ScheduleTestCase {
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        Assert::equal(3, (int)$this->context->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
+        Assert::equal(3, (int)$this->explorer->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
     }
 
     public function getAccommodationCapacity(): int {

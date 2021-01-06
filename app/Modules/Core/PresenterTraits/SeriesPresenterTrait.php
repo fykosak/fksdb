@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Models\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\Container;
 
 /**
  * Class SeriesPresenter

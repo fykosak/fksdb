@@ -65,7 +65,7 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceEventParticipant
+                service: @orm.event_participant.service
 
                 states: %events.defaultSous.states%
 

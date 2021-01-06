@@ -10,7 +10,6 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -25,7 +24,7 @@ use Nette\Utils\Strings;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+class ExportPresenter extends BasePresenter {
 
     use EntityPresenterTrait;
 

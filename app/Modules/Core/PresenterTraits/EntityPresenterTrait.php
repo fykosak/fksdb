@@ -143,6 +143,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
+     * @throws Exceptions\ModelException
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void {
@@ -178,7 +179,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

@@ -16,10 +16,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
-/**
- * Class CategoryProcessing
- * *
- */
 class CategoryProcessing extends AbstractCategoryProcessing {
 
     private int $rulesVersion;

@@ -3,14 +3,11 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -19,12 +16,6 @@ use Nette\Database\IConventions;
  * @method ModelEvent refresh(AbstractModelSingle $model)
  */
 class ServiceEvent extends AbstractServiceSingle {
-
-    use DeprecatedLazyDBTrait;
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_EVENT, ModelEvent::class);
-    }
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
         return $this->getTable()

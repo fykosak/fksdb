@@ -4,8 +4,8 @@ namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\ORM\DbNames;
-use Nette\Database\Context;
-use Nette\Database\IRow;
+use Nette\Database\Explorer;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -14,7 +14,7 @@ use Tester\TestCase;
 abstract class DatabaseTestCase extends TestCase {
 
     private Container $container;
-    protected Context $context;
+    protected Explorer $explorer;
     private int $instanceNo;
 
     /**
@@ -24,10 +24,10 @@ abstract class DatabaseTestCase extends TestCase {
     public function __construct(Container $container) {
         $this->container = $container;
 
-        $this->context = $container->getByType(Context::class);
+        $this->explorer = $container->getByType(Explorer::class);
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
-        $this->context->query('USE fksdb_test' . $this->instanceNo);
+        $this->explorer->query('USE fksdb_test' . $this->instanceNo);
     }
 
     protected function getContainer(): Container {
@@ -36,10 +36,10 @@ abstract class DatabaseTestCase extends TestCase {
 
     protected function setUp(): void {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $this->context->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
-        $this->context->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
-        $this->context->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, 2000)");
-        $this->context->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
+        $this->explorer->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
+        $this->explorer->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
+        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, 2000)");
+        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
     }
 
     protected function tearDown(): void {
@@ -56,8 +56,8 @@ abstract class DatabaseTestCase extends TestCase {
     }
 
     protected function createPerson(string $name, string $surname, array $info = [], ?array $loginData = null): int {
-        $this->context->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
-        $personId = $this->context->getInsertId();
+        $this->explorer->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
+        $personId = $this->explorer->getInsertId();
 
         if ($info) {
             $info['person_id'] = $personId;
@@ -77,32 +77,32 @@ abstract class DatabaseTestCase extends TestCase {
             if (isset($loginData['hash'])) {
                 $pseudoLogin = (object)$loginData;
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
-                $this->context->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $personId);
+                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $personId);
             }
         }
 
         return $personId;
     }
 
-    protected function assertPersonInfo(int $personId): IRow {
-        $personInfo = $this->context->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
+    protected function assertPersonInfo(int $personId): Row {
+        $personInfo = $this->explorer->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
         Assert::notEqual(null, $personInfo);
         return $personInfo;
     }
 
     protected function createPersonHistory(int $personId, int $acYear, ?int $school = null, ?int $studyYear = null, ?string $class = null): int {
-        $this->context->query('INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)', $personId, $acYear, $school, $class, $studyYear);
-        return $this->context->getInsertId();
+        $this->explorer->query('INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)', $personId, $acYear, $school, $class, $studyYear);
+        return $this->explorer->getInsertId();
     }
 
     protected function insert(string $table, array $data): int {
-        $this->context->query("INSERT INTO `$table`", $data);
-        return $this->context->getInsertId();
+        $this->explorer->query("INSERT INTO `$table`", $data);
+        return $this->explorer->getInsertId();
     }
 
     protected function truncateTables(array $tables): void {
         foreach ($tables as $table) {
-            $this->context->query("DELETE FROM `$table`");
+            $this->explorer->query("DELETE FROM `$table`");
         }
     }
 }

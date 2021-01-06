@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Person;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -50,7 +50,7 @@ class PizzaControl extends BaseComponent {
         $this->template->render();
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinter {
+        return new ColumnPrinter($this->getContext());
     }
 }

@@ -52,7 +52,7 @@ class GithubPresenter extends AuthenticatedPresenter {
      * @throws AbortException
      */
     public function renderApi(): void {
-        $response = new TextResponse("Thank you, Github.");
+        $response = new TextResponse('Thank you, Github.');
         $this->sendResponse($response);
     }
 }

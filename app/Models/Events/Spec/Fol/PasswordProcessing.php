@@ -11,10 +11,6 @@ use FKSDB\Models\Messages\Message;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-/**
- * Class PasswordProcessing
- * *
- */
 class PasswordProcessing extends AbstractProcessing {
 
     protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {

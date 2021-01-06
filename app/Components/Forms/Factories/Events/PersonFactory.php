@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;

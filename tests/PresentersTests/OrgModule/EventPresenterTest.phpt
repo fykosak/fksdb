@@ -91,7 +91,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
             'id' => $this->eventId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->context->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
+        $org = $this->explorer->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);
     }
 
@@ -105,7 +105,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
     }
 
     private function countEvents(): int {
-        return $this->context->query('SELECT * FROM event')->getRowCount();
+        return $this->explorer->query('SELECT * FROM event')->getRowCount();
     }
 }
 

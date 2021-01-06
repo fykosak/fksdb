@@ -152,7 +152,6 @@ class Breadcrumbs extends BaseComponent {
         }
     }
 
-
     /**
      * @param AppRequest $request
      * @param int|null $maxLen
@@ -281,8 +280,8 @@ class Breadcrumbs extends BaseComponent {
      * @param AppRequest $request
      * @param string|null $backLink
      * @return Request
-     * @throws \ReflectionException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);

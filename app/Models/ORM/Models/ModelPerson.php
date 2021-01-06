@@ -21,7 +21,8 @@ use Nette\Security\IResource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends AbstractModelSingle implements IResource {
+class ModelPerson extends OldAbstractModelSingle implements IResource {
+
     public const RESOURCE_ID = 'person';
 
     /**

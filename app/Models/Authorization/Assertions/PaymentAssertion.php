@@ -4,7 +4,6 @@ namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Transitions\Machine;
-use Nette\InvalidStateException;
 use Nette\Security\Permission;
 
 /**
@@ -21,7 +20,6 @@ class PaymentAssertion {
      * @param string $resourceId
      * @param string $privilege
      * @return bool
-     * @throws InvalidStateException
      */
     public function isPaymentEditable(Permission $acl, $role, $resourceId, $privilege): bool {
         /** @var ModelPayment $payment */

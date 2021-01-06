@@ -6,7 +6,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Schema\Helpers;
 use Tester\Assert;
@@ -63,17 +63,18 @@ abstract class EventTestCase extends DatabaseTestCase {
 
     abstract protected function getEventId(): int;
 
-    protected function assertApplication(int $eventId, string $email): IRow {
-        $personId = $this->context->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
+    protected function assertApplication(int $eventId, string $email): Row {
+        $personId = $this->explorer->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
+
         Assert::notEqual(null, $personId);
 
-        $application = $this->context->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
+        $application = $this->explorer->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
         Assert::notEqual(null, $application);
         return $application;
     }
 
-    protected function assertExtendedApplication(IRow $application, string $table): IRow {
-        $application = $this->context->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
+    protected function assertExtendedApplication(Row $application, string $table): Row {
+        $application = $this->explorer->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
         Assert::notEqual(null, $application);
         return $application;
     }

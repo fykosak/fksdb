@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Transitions;
 
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 
 /**
  * Interface IStateModel
@@ -15,5 +15,5 @@ interface IStateModel {
 
     public function getState(): ?string;
 
-    public function refresh(Context $connection, IConventions $conventions): self;
+    public function refresh(Explorer $explorer, Conventions $conventions): self;
 }

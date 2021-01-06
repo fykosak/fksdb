@@ -165,7 +165,7 @@ class StoredQuery implements IDataSource, IResource {
         if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
+            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . '';
 
             $statement = $this->bindParams($sql);
             $statement->execute();
@@ -243,6 +243,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param string $column
+     * @throws \PDOException
      * @return int|null
      */
     public function getCount($column = '*'): ?int {
@@ -263,6 +264,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @return mixed|\PDOStatement|null
+     * @throws \PDOException
      */
     public function getData() {
         if (!isset($this->data)) {

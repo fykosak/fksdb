@@ -13,7 +13,6 @@ use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
@@ -90,7 +89,7 @@ class TasksPresenter extends BasePresenter {
     /**
      * @param Form $seriesForm
      * @return void
-     * @throws AbortException
+     * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();

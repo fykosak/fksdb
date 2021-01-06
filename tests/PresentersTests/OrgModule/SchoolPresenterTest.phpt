@@ -94,9 +94,9 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
         $after = $this->countSchools();
         Assert::equal($init, $after);
 
-        $school = $this->context->query('SELECT * FROM school where school_id=?', $this->schoolId)->fetch();
+        $school = $this->explorer->query('SELECT * FROM school where school_id=?', $this->schoolId)->fetch();
         Assert::equal('Test school edited', $school->name);
-        $school = $this->context->query('SELECT * FROM address where address_id=?', $school->address_id)->fetch();
+        $school = $this->explorer->query('SELECT * FROM address where address_id=?', $school->address_id)->fetch();
         Assert::equal('PU edited', $school->city);
     }
 
@@ -110,7 +110,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
     }
 
     private function countSchools(): int {
-        return $this->context->query('SELECT * FROM school')->getRowCount();
+        return $this->explorer->query('SELECT * FROM school')->getRowCount();
     }
 }
 
