@@ -4,9 +4,8 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
@@ -81,7 +80,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */

@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -46,7 +46,7 @@ EOT
         parent::tearDown();
     }
 
-    protected function assertTeamApplication(int $eventId, string $teamName): IRow {
+    protected function assertTeamApplication(int $eventId, string $teamName): Row {
         $application = $this->connection->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
         Assert::notEqual(null, $application);
         return $application;

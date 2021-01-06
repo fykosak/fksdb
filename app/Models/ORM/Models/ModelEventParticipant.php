@@ -42,16 +42,12 @@ use Nette\Security\IResource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModelSingle implements
-    IEventReferencedModel,
+class ModelEventParticipant extends OldAbstractModelSingle implements
     IPaymentModel,
-    IPersonReferencedModel,
     IResource,
-    IContestReferencedModel,
     INodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
-
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
@@ -67,10 +63,6 @@ class ModelEventParticipant extends AbstractModelSingle implements
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @return string
-     * @throws InvalidStateException
-     */
     public function __toString(): string {
         if (!$this->getPerson()) {
             throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));

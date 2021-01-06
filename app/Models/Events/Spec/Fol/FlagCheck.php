@@ -41,7 +41,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
-        $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
+        $studyYearControls = $this->getControl('p*.person_id.person_history.study_year');
         $personControls = $this->getControl('p*.person_id');
         $spamControls = $this->getControl('p*.person_id.person_has_flag.spam_mff');
 

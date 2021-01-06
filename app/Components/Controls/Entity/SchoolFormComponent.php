@@ -5,12 +5,12 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
 /**
@@ -51,7 +51,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();

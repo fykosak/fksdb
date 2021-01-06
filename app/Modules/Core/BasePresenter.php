@@ -6,8 +6,8 @@ use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
-use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
@@ -241,8 +241,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new ThemeChooser($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinter {
+        return new ColumnPrinter($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent {

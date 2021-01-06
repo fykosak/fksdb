@@ -36,7 +36,7 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
  */
-class ModelPersonInfo extends AbstractModelSingle {
+class ModelPersonInfo extends OldAbstractModelSingle {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));

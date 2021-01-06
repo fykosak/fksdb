@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**

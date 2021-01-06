@@ -66,5 +66,4 @@ class DbNames {
     public const TAB_SCHEDULE_ITEM = 'schedule_item';
     public const TAB_PERSON_SCHEDULE = 'person_schedule';
     public const TAB_SCHEDULE_PAYMENT = 'schedule_payment';
-
 }

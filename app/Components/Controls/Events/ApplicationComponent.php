@@ -88,7 +88,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     *
      */
     protected function createComponentForm(): FormControl {
         $result = new FormControl($this->getContext());
@@ -192,9 +191,6 @@ class ApplicationComponent extends BaseComponent {
         return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
-    /**
-     * @throws AbortException
-     */
     private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);

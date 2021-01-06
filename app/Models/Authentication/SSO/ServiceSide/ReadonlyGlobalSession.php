@@ -87,14 +87,14 @@ class ReadonlyGlobalSession implements IGlobalSession {
      * @param mixed $value
      */
     public function offsetSet($offset, $value) {
-        throw new LogicException("This session is read-only.");
+        throw new LogicException('This session is read-only.');
     }
 
     /**
      * @param mixed $offset
      */
     public function offsetUnset($offset) {
-        throw new LogicException("This session is read-only.");
+        throw new LogicException('This session is read-only.');
     }
 
 }

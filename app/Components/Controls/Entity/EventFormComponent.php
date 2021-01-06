@@ -4,10 +4,10 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Config\NeonScheme;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -62,7 +62,6 @@ class EventFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -90,6 +89,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {
@@ -121,9 +121,9 @@ class EventFormComponent extends AbstractEntityFormComponent {
     }
 
     /**
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
+     * @return ModelContainer
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     private function createEventContainer(): ModelContainer {
         return $this->singleReflectionFormFactory->createContainer('event', [

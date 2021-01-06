@@ -27,8 +27,8 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));

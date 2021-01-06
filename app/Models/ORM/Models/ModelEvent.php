@@ -26,7 +26,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel, INodeCreator {
+class ModelEvent extends AbstractModelSingle implements IResource, INodeCreator {
 
     public const TEAM_EVENTS = [1, 9, 13];
 

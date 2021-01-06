@@ -4,8 +4,8 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\IModel;
