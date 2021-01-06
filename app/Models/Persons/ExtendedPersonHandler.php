@@ -9,7 +9,6 @@ use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;

@@ -21,7 +21,6 @@ use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class StoredQueryForm
@@ -136,7 +135,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @return void
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {
@@ -163,11 +161,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         return $grid;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws InvalidStateException
-     */
     private function handleComposeExecute(Form $form): void {
         $data = $form->getValues(true);
         $parameters = [];

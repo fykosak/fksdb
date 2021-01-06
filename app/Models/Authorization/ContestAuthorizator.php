@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelRole;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\Security\User;
@@ -46,7 +45,6 @@ class ContestAuthorizator {
      * @param string|null $privilege
      * @param int|ModelContest $contest queried contest
      * @return bool
-     * @throws InvalidStateException
      */
     public function isAllowed($resource, ?string $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
@@ -62,7 +60,6 @@ class ContestAuthorizator {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws InvalidStateException
      */
     final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
         if (!$this->getUser()->isLoggedIn()) {
@@ -89,7 +86,6 @@ class ContestAuthorizator {
      * @param string|null $privilege
      * @param ModelContest|int $contest
      * @return bool
-     * @throws InvalidStateException
      */
     final public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;

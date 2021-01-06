@@ -10,7 +10,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 class PointsFormControl extends SeriesTableFormControl {
 
@@ -32,7 +31,6 @@ class PointsFormControl extends SeriesTableFormControl {
      * @param Form $form
      * @throws ForbiddenRequestException
      * @throws ModelException
-     * @throws InvalidStateException
      */
     protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {

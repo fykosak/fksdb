@@ -4,7 +4,6 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Database\Explorer;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;

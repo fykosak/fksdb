@@ -19,7 +19,6 @@ use FKSDB\Models\Persons\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\IExtendedPersonPresenter;
-use Nette\InvalidStateException;
 
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
@@ -68,7 +67,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param bool $create
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      * @throws \ReflectionException
      */
     private function createComponentFormControl(bool $create): FormControl {
