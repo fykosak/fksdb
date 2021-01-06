@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
@@ -14,7 +13,6 @@ use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -100,7 +98,6 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @param Explorer $explorer
      * @param Conventions $conventions
      * @return static
-     * @throws InvalidStateException
      */
     public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
         $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $explorer, $conventions);

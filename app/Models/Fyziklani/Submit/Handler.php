@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\InvalidStateException;
 use Nette\Security\User;
 use Tracy\Debugger;
 
@@ -110,7 +109,6 @@ class Handler {
      * @return void
      * @throws ClosedSubmittingException
      * @throws ModelException
-     * @throws InvalidStateException
      */
     public function changePoints(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {
@@ -141,7 +139,6 @@ class Handler {
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      * @throws ModelException
-     * @throws InvalidStateException
      */
     public function revokeSubmit(ILogger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
@@ -167,7 +164,6 @@ class Handler {
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws ModelException
-     * @throws InvalidStateException
      */
     public function checkSubmit(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {

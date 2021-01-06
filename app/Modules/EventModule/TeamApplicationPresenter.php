@@ -15,7 +15,6 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -64,7 +63,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return SchoolCheckComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
         return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
@@ -74,7 +72,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AbstractApplicationsGrid {
         return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());

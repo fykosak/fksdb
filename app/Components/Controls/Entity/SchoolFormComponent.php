@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class AbstractForm
@@ -53,7 +52,6 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws ModelException
-     * @throws InvalidStateException
      */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();

@@ -8,7 +8,6 @@ use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 /**
@@ -92,7 +91,6 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @return FinalResults
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentResults(): FinalResults {
         return new FinalResults($this->getContext(), $this->getEvent());

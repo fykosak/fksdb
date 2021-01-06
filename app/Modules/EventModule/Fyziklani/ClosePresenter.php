@@ -20,7 +20,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -123,7 +122,6 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return CloseTeamControl
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
@@ -151,7 +149,6 @@ class ClosePresenter extends BasePresenter {
     /**
      * @return BaseGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): BaseGrid {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());

@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;

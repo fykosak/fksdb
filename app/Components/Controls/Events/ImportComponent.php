@@ -18,7 +18,6 @@ use FKSDB\Models\Utils\CSVParser;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
-use Nette\InvalidStateException;
 use Tracy\Debugger;
 
 /**
@@ -86,7 +85,6 @@ class ImportComponent extends BaseComponent {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
-     * @throws InvalidStateException
      */
     private function handleFormImport(Form $form): void {
         $values = $form->getValues();

@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\IModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\InvalidStateException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -44,7 +43,6 @@ abstract class OldAbstractModelSingle extends AbstractModelSingle implements IMo
     /**
      * @param ActiveRow $row
      * @return static
-     * @throws InvalidStateException
      */
     public static function createFromActiveRow(ActiveRow $row): self {
         if ($row instanceof static) {
