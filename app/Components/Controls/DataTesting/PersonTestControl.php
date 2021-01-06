@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class PersonTestControl
@@ -56,7 +55,6 @@ class PersonTestControl extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl($this->getContext());

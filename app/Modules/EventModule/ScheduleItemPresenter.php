@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -75,7 +74,6 @@ class ScheduleItemPresenter extends BasePresenter {
     /**
      * @return ScheduleItemFormContainer
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): ScheduleItemFormContainer {
         return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), null);

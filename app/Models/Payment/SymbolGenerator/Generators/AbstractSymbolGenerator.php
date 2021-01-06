@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use Nette\InvalidStateException;
 
 /**
  * Class AbstractSymbolGenerator
@@ -49,7 +48,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
      * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
-     * @throws InvalidStateException
      */
     final public function invoke(ModelHolder $holder, ...$args): void {
         /** @var ModelPayment $model */

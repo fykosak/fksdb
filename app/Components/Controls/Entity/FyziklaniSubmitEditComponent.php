@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class EditControl
@@ -39,7 +38,6 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws NotSetGameParametersException
-     * @throws InvalidStateException
      */
     protected function configureForm(Form $form): void {
         $form->addComponent($this->createPointsField(), 'points');

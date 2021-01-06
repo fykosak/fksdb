@@ -11,7 +11,6 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -101,7 +100,6 @@ class StoredQueryFactory {
      * @param ControlGroup|null $group
      * @return ModelContainer
      * TODO
-     * @throws InvalidStateException
      */
     public function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();

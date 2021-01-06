@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\Utils\CSVParser;
 use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
-use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -33,7 +32,6 @@ class FyziklaniTaskImportProcessor {
      * @param ArrayHash $values
      * @param ILogger $logger
      * @return void
-     * @throws InvalidStateException
      */
     public function process($values, ILogger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();

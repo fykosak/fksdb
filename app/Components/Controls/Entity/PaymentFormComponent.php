@@ -23,7 +23,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\InvalidStateException;
 
 /**
  * Class SelectForm
@@ -86,7 +85,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
      * @throws UnavailableTransitionsException
      * @throws ModelException
      * @throws StorageException
-     * @throws InvalidStateException
      */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -123,7 +121,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
     /**
      * @return void
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {

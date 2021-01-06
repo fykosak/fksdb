@@ -26,7 +26,6 @@ use FKSDB\Models\Submits\SubmitHandlerFactory;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
-use Nette\InvalidStateException;
 use Tracy\Debugger;
 
 /**
@@ -113,7 +112,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentUploadForm(): FormControl {
         $control = new FormControl($this->getContext());
@@ -206,7 +204,6 @@ class SubmitPresenter extends BasePresenter {
      * @param Form $form
      * @return void
      * @throws StorageException
-     * @throws InvalidStateException
      */
     private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();

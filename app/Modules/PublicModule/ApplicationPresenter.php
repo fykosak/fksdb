@@ -30,7 +30,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -139,7 +138,6 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws NotFoundException
      * @throws ConfigurationNotFoundException
-     * @throws InvalidStateException
      * @throws CannotAccessModelException
      */
     public function actionDefault($eventId, $id): void {

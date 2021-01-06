@@ -16,7 +16,6 @@ use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Routing\Router;
 use Nette\Utils\Random;
 use Tracy\Debugger;
@@ -157,7 +156,6 @@ class Breadcrumbs extends BaseComponent {
      * @param AppRequest $request
      * @param int|null $maxLen
      * @return NaviRequest[]
-     * @throws InvalidStateException
      */
     private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
         $requests = $this->getRequests();
@@ -283,7 +281,6 @@ class Breadcrumbs extends BaseComponent {
      * @param string|null $backLink
      * @return Request
      * @throws BadTypeException
-     * @throws InvalidStateException
      * @throws \ReflectionException
      */
     protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {

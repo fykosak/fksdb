@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -109,7 +108,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return AllSubmitsGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AllSubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
@@ -118,7 +116,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return TaskCodeInput
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): TaskCodeInput {
         return new TaskCodeInput($this->getContext(), $this->getEvent());
