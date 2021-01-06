@@ -10,7 +10,6 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Form;
-use Nette\InvalidStateException;
 
 class PizzaControl extends BaseComponent {
 
@@ -28,7 +27,6 @@ class PizzaControl extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl($this->getContext());

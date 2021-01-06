@@ -17,7 +17,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\YearCalculator;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 class HandoutForm extends BaseComponent {
     public const TASK_PREFIX = 'task';
@@ -47,7 +46,6 @@ class HandoutForm extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentForm(): FormControl {
         $formControl = new FormControl($this->getContext());

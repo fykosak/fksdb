@@ -15,7 +15,6 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -70,7 +69,6 @@ class ScheduleGroupPresenter extends BasePresenter {
     /**
      * @return ScheduleGroupFormComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): ScheduleGroupFormComponent {
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), null);
@@ -90,7 +88,6 @@ class ScheduleGroupPresenter extends BasePresenter {
     /**
      * @return BaseGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): BaseGrid {
         return new GroupsGrid($this->getEvent(), $this->getContext());
@@ -99,7 +96,6 @@ class ScheduleGroupPresenter extends BasePresenter {
     /**
      * @return AllPersonsGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentAllPersonsGrid(): AllPersonsGrid {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());

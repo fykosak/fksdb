@@ -12,7 +12,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -35,7 +34,6 @@ class InboxControl extends SeriesTableFormControl {
      * @param Form $form
      * @throws ForbiddenRequestException
      * @throws ModelException
-     * @throws InvalidStateException
      */
     protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {

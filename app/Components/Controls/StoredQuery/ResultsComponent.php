@@ -16,7 +16,6 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use PDOException;
 
 /**
@@ -86,7 +85,6 @@ class ResultsComponent extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentParametrizeForm(): FormControl {
         $control = new FormControl($this->getContext());
