@@ -2,12 +2,12 @@
 
 namespace FKSDB\Model\Payment\SymbolGenerator\Generators;
 
-use FKSDB\Model\Transitions\IStateModel;
-use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Model\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Model\Transitions\IStateModel;
+use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 
 /**
  * Class AbstractSymbolGenerator
@@ -42,8 +42,8 @@ abstract class AbstractSymbolGenerator implements ITransitionCallback {
     }
 
     /**
-     * @param IStateModel $modelPayment
-     * @param $args
+     * @param IStateModel $model
+     * @param mixed ...$args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */

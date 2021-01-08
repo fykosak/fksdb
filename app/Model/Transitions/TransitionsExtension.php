@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Transitions;
+namespace FKSDB\Model\Transitions;
 
 use FKSDB\Config\Expressions\Helpers;
 use Nette\DI\CompilerExtension;

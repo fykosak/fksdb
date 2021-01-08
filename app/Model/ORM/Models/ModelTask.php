@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Models;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\Utils\Utils;
 use Nette\Utils\Strings;

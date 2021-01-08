@@ -2,12 +2,12 @@
 
 namespace FKSDB\Model\Payment\PriceCalculator;
 
-use FKSDB\Model\Transitions\IStateModel;
-use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\Price;
 use FKSDB\Model\Payment\PriceCalculator\PreProcess\IPreprocess;
+use FKSDB\Model\Transitions\IStateModel;
+use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 
 /**
  * Class PriceCalculator

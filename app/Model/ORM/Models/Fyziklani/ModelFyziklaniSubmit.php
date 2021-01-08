@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\ORM\Models\Fyziklani;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\DeprecatedLazyModel;
 use FKSDB\Model\ORM\Models\IEventReferencedModel;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\Events\Spec\Fyziklani;
 
+use FKSDB\Model\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Model\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\Messages\Message;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\ORM\Services\StoredQuery;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Model\ORM\Services\DeprecatedLazyService;
 use FKSDB\Model\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;

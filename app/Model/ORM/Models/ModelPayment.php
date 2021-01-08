@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Models;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Model\ORM\Models\Schedule\ModelSchedulePayment;

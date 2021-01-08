@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM;
+namespace FKSDB\Model\ORM\Services;
 
 use FKSDB\Model\ORM\IModel;
 use Nette\DeprecatedException;

@@ -8,12 +8,12 @@ use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Model\Events\Exceptions\EventNotFoundException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\Transition\PaymentMachine;
 use FKSDB\Model\Transitions\Machine;
 use FKSDB\Model\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -37,7 +37,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* titles *****************/
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
@@ -65,7 +65,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\ORM\Models\StoredQuery;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\DeprecatedLazyModel;
 
 /**
  * @todo Better (general) support for related collection setter.

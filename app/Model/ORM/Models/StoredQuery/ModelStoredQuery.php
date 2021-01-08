@@ -2,9 +2,9 @@
 
 namespace FKSDB\Model\ORM\Models\StoredQuery;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\DeprecatedLazyModel;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 

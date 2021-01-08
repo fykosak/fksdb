@@ -4,7 +4,6 @@ namespace FKSDB\Model\ORM\Services;
 
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelFlag;
-use FKSDB\ORM\DeprecatedLazyService;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 

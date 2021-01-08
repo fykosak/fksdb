@@ -4,7 +4,7 @@
         {if $submit }
             {var $name = 'submits['.$submit->submit_id.']'}
             {if ($submit->source === FKSDB\Model\ORM\Models\ModelSubmit::SOURCE_QUIZ)}
-                <span class="form-control">{$submit->raw_points}<span/>
+                <span class="form-control">{$submit->raw_points}</span>
             {else}
                 <input type="number" class="form-control" min="0" step="1" name="{$name}" value="{$submit->raw_points}"/>
             {/if}

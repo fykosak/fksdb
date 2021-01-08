@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Services;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;

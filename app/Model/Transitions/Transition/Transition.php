@@ -3,11 +3,11 @@
 namespace FKSDB\Model\Transitions\Transition;
 
 use FKSDB\Model\Events\Model\ExpressionEvaluator;
-use Nette\InvalidArgumentException;
-use Nette\SmartObject;
 use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine\Machine;
+use Nette\InvalidArgumentException;
+use Nette\SmartObject;
 
 /**
  * Class Transition

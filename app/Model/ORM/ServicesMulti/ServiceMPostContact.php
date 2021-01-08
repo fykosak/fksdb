@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\ORM\ServicesMulti;
 
-use FKSDB\ORM\DeprecatedLazyService;
-use FKSDB\Model\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Model\ORM\IModel;
+use FKSDB\Model\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Model\ORM\ModelsMulti\ModelMPostContact;
+use FKSDB\Model\ORM\Services\DeprecatedLazyService;
 use FKSDB\Model\ORM\Services\ServiceAddress;
 use FKSDB\Model\ORM\Services\ServicePostContact;
 

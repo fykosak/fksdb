@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Transitions\Machine\Machine;
 use FKSDB\Model\Events\EventDispatchFactory;
 use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\ServiceEvent;
+use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;

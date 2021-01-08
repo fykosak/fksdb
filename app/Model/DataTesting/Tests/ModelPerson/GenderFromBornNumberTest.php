@@ -3,9 +3,9 @@
 namespace FKSDB\Model\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Model\DataTesting\TestLog;
 use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\DataTesting\TestLog;
 
 /**
  * Class GenderFromBornNumberTest
@@ -21,7 +21,7 @@ class GenderFromBornNumberTest extends PersonTest {
         $info = $person->getInfo();
 
         if (!$info) {
-            $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_SKIP));
+            $logger->log(new TestLog($this->title, 'Person info is not set', TestLog::LVL_SKIP));
             return;
         }
 
@@ -30,7 +30,7 @@ class GenderFromBornNumberTest extends PersonTest {
             return;
         }
         if (!$info->born_id) {
-            $logger->log(new TestLog($this->getTitle(), _('Born number is not set'), TestLog::LVL_SKIP));
+            $logger->log(new TestLog($this->title, _('Born number is not set'), TestLog::LVL_SKIP));
             return;
         }
 

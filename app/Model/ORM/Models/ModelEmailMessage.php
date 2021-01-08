@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Models;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Mail\Message;
 use Nette\Security\IResource;
 

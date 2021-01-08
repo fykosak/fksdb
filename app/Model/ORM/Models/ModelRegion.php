@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Models;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\PhoneNumber\InvalidPhoneNumberException;
 
 /**

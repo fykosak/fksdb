@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\Events\Model\Holder;
 
-use FKSDB\Model\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
+use FKSDB\Model\Events\Model\ExpressionEvaluator;
 use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;

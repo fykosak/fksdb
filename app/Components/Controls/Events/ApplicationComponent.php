@@ -2,22 +2,22 @@
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Model\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Model\Authorization\ContestAuthorizator;
 use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\ApplicationHandler;
 use FKSDB\Model\Events\Model\ApplicationHandlerException;
 use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**

@@ -2,8 +2,6 @@
 
 namespace FKSDB\Model\ORM\Models;
 
-use FKSDB\ORM\DeprecatedLazyModel;
-
 
 /**
  *

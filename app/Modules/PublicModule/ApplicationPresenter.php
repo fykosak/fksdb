@@ -2,9 +2,9 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Model\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Model\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Model\Events\EventDispatchFactory;
 use FKSDB\Model\Events\Exceptions\EventNotFoundException;
 use FKSDB\Model\Events\Machine\Machine;

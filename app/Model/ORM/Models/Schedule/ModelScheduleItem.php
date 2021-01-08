@@ -2,9 +2,9 @@
 
 namespace FKSDB\Model\ORM\Models\Schedule;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\DeprecatedLazyModel;
 use FKSDB\Model\ORM\Models\IEventReferencedModel;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\Payment\Price;

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Model\ORM\Services;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelRole;
 use Nette\Database\Context;

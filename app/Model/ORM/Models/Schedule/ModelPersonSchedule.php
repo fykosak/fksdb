@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\ORM\Models\Schedule;
 
-use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\DeprecatedLazyModel;
 use FKSDB\Model\ORM\Models\IEventReferencedModel;
 use FKSDB\Model\ORM\Models\IPaymentReferencedModel;
 use FKSDB\Model\ORM\Models\IPersonReferencedModel;

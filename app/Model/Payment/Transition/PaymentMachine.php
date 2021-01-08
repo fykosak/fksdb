@@ -7,7 +7,7 @@ use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServiceEvent;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\model\Transitions\ITransitionsDecorator;
+use FKSDB\Model\Transitions\ITransitionsDecorator;
 use FKSDB\Model\Transitions\Machine;
 use Nette\Database\Context;
 

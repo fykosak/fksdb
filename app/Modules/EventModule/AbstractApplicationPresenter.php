@@ -40,7 +40,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     final public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
@@ -60,7 +60,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     final public function titleTransitions(): void {
         $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));

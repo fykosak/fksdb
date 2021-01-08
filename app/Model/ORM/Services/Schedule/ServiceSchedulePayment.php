@@ -2,12 +2,12 @@
 
 namespace FKSDB\Model\ORM\Services\Schedule;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Model\ORM\Services\DeprecatedLazyService;
 use FKSDB\Model\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Model\Payment\Handler\EmptyDataException;
 use FKSDB\Model\Submits\StorageException;

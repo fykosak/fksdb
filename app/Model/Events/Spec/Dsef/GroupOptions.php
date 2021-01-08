@@ -6,9 +6,9 @@ use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Model\Events\Model\Holder\Field;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Services\Events\ServiceDsefGroup;
+use FKSDB\Model\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\SmartObject;
-use FKSDB\Model\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *

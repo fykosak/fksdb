@@ -54,7 +54,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));

@@ -23,7 +23,7 @@ use Nette\Application\ForbiddenRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\model\Transitions\Transition\Callbacks;
+namespace FKSDB\Model\Transitions\Transition\Callbacks;
 
 use FKSDB\Model\Transitions\IStateModel;
 

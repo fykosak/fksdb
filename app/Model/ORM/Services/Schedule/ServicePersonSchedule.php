@@ -2,10 +2,10 @@
 
 namespace FKSDB\Model\ORM\Services\Schedule;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Model\ORM\Services\DeprecatedLazyService;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 

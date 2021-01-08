@@ -5,7 +5,6 @@ namespace FKSDB\Model\ORM\Services;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelContestant;
-use FKSDB\ORM\DeprecatedLazyService;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;

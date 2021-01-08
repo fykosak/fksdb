@@ -2,11 +2,11 @@
 
 namespace FKSDB\Model\ORM\Services\Fyziklani;
 
-use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Model\ORM\Services\DeprecatedLazyService;
 use FKSDB\Model\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
