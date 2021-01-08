@@ -3,11 +3,10 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Model\Github\EventFactory;
-use FKSDB\Model\Github\Events\Event;
-use FKSDB\Model\Github\Events\PushEvent;
-use FKSDB\Model\Maintenance\Updater;
-use Nette\Application\AbortException;
+use FKSDB\Models\Github\EventFactory;
+use FKSDB\Models\Github\Events\Event;
+use FKSDB\Models\Github\Events\PushEvent;
+use FKSDB\Models\Maintenance\Updater;
 use Nette\Application\Responses\TextResponse;
 
 /**
@@ -48,11 +47,8 @@ class GithubPresenter extends AuthenticatedPresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     public function renderApi(): void {
-        $response = new TextResponse("Thank you, Github.");
+        $response = new TextResponse('Thank you, Github.');
         $this->sendResponse($response);
     }
 }

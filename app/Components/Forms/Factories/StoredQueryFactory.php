@@ -3,11 +3,10 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;
@@ -21,7 +20,6 @@ use Nette\Forms\ControlGroup;
 class StoredQueryFactory {
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
-
     private SingleReflectionFormFactory $reflectionFormFactory;
 
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, SingleReflectionFormFactory $reflectionFormFactory) {
@@ -32,9 +30,8 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function createConsole(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
@@ -47,7 +44,6 @@ class StoredQueryFactory {
     /**
      * @param ControlGroup|null $group
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */

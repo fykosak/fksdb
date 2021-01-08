@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
-use FKSDB\Model\DBReflection\DBReflectionFactory as ReflectionFactory;
-use FKSDB\Model\Events\Model\Holder\Field;
-use FKSDB\Model\ORM\Services\AbstractServiceSingle;
-use FKSDB\Model\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Model\Transitions\Machine\Machine;
+use FKSDB\Models\Events\Model\Holder\Field;
+use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
@@ -50,7 +50,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
             }
         } catch (\Exception $e) {
         }
@@ -146,7 +146,7 @@ class DBReflectionFactory extends AbstractFactory {
     private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
-            foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
+            foreach ($this->connection->getDriver()->getColumns($table) as $columnMeta) {
                 $columns[$columnMeta['name']] = $columnMeta;
             }
             $this->columns[$table] = $columns;

@@ -5,29 +5,27 @@ namespace FKSDB\Modules\PublicModule;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServiceContestant;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
-use FKSDB\Model\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use FKSDB\Model\Persons\ExtendedPersonHandler;
-use FKSDB\Model\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Model\Persons\IExtendedPersonPresenter;
-use FKSDB\Model\Persons\SelfResolver;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\SelfResolver;
 
 /**
  * INPUT:
@@ -53,7 +51,8 @@ use FKSDB\Model\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
+class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
+
     /**
      * @var int
      * @persistent
@@ -69,7 +68,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @persistent
      */
     public $personId;
-
     private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
@@ -105,18 +103,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
-    /**
-     * @throws AbortException
-     */
     public function actionDefault(): void {
         $this->redirect('contest');
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionContestant(): void {
-
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
 
@@ -151,10 +142,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->template->contests = $this->serviceContest->getTable();
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->yearCalculator->getForwardShift($contest);
@@ -204,7 +191,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     private function getPerson(): ?ModelPerson {
         if (!isset($this->person)) {
-
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
             } else {
@@ -229,10 +215,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);
@@ -250,7 +232,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
@@ -303,7 +285,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModelSingle {
         return null; //we always create new contestant
     }
 
@@ -325,7 +307,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

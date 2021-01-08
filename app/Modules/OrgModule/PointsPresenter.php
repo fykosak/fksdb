@@ -5,32 +5,26 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Models\ModelTaskContribution;
-use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Services\ServiceTaskContribution;
-use FKSDB\Model\Results\SQLResultsCache;
-use FKSDB\Model\Submits\SeriesTable;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\ModelTaskContribution;
+use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\Results\SQLResultsCache;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
-/**
- * Class PointsPresenter
- *
- */
-class PointsPresenter extends BasePresenter implements ISeriesPresenter {
+class PointsPresenter extends BasePresenter {
+
     /**
      * Show all tasks?
      * @persistent
      */
     public $all;
-
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
     private ServiceTask $serviceTask;
@@ -55,18 +49,10 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleEntry(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
     }
@@ -102,10 +88,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return new PointsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
@@ -120,7 +102,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void {
@@ -146,10 +128,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleCalculateQuizPoints(): void {
         try {
             $contest = $this->getSelectedContest();
@@ -189,15 +167,5 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     protected function beforeRender(): void {
         $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws AbortException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

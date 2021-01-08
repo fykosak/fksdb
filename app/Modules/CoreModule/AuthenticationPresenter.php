@@ -3,29 +3,28 @@
 namespace FKSDB\Modules\CoreModule;
 
 use Exception;
-use FKSDB\Model\Authentication\AccountManager;
-use FKSDB\Model\Authentication\GoogleAuthenticator;
-use FKSDB\Model\Authentication\LoginUserStorage;
-use FKSDB\Model\Authentication\PasswordAuthenticator;
-use FKSDB\Model\Authentication\Provider\GoogleProvider;
-use FKSDB\Model\Authentication\Exceptions\RecoveryException;
-use FKSDB\Model\Authentication\SSO\IGlobalSession;
-use FKSDB\Model\Authentication\SSO\ServiceSide\Authentication;
-use FKSDB\Model\Authentication\TokenAuthenticator;
-use FKSDB\Model\Authentication\Exceptions\UnknownLoginException;
+use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\Authentication\GoogleAuthenticator;
+use FKSDB\Models\Authentication\LoginUserStorage;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\Provider\GoogleProvider;
+use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Models\Authentication\SSO\IGlobalSession;
+use FKSDB\Models\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Model\Mail\SendFailedException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\Models\ModelAuthToken;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Services\ServiceAuthToken;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\Utils\Utils;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceAuthToken;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\Utils;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
@@ -52,13 +51,10 @@ final class AuthenticationPresenter extends BasePresenter {
     public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
-
     /** @persistent */
     public $backlink = '';
-
     /** @persistent */
     public $flag;
-
     private ServiceAuthToken $serviceAuthToken;
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
@@ -91,7 +87,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     *
      * @throws InvalidLinkException
      * @throws Exception
      */
@@ -132,7 +128,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws Exception
      */
@@ -170,9 +166,6 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionRecover(): void {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
@@ -242,7 +235,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     *
      * @throws Exception
      */
     private function loginFormSubmitted(Form $form): void {
@@ -353,7 +346,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     *
      * @throws Exception
      */
     public function handleGoogle(): void {
@@ -362,9 +355,6 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirectUrl($url);
     }
 
-    /**
-     * @throws AbortException
-     */
     private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);

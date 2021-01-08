@@ -6,29 +6,23 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\IService;
-use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\IControl;
-use FKSDB\Model\Persons\AclResolver;
-use FKSDB\Model\Persons\ExtendedPersonHandler;
-use FKSDB\Model\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
 
-/**
- * Class ExtendedPersonPresenter
- *
- */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
     protected bool $sendEmail = true;
-
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
@@ -38,10 +32,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|IModel|null $model
+     * @param ModelContestant|null|AbstractModelSingle $model
      * @param Form|IControl[][] $form
      */
-    protected function setDefaults(?IModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -63,7 +57,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): IService;
+    abstract protected function getORMService(): AbstractServiceSingle;
 
     protected function getAcYearFromModel(): ?int {
         return null;
@@ -133,7 +127,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param int $id
      * @return AbstractModelSingle
      */
-    protected function loadModel($id): ?IModel {
+    protected function loadModel($id): ?AbstractModelSingle {
         return $this->getORMService()->findByPrimary($id);
     }
 }

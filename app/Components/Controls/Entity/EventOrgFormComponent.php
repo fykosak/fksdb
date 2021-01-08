@@ -3,13 +3,12 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventOrg;
-use FKSDB\Model\ORM\Services\ServiceEventOrg;
-use FKSDB\Model\Utils\FormUtils;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventOrg;
+use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -45,11 +44,6 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {

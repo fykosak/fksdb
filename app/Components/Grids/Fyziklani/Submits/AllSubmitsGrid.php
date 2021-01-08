@@ -3,19 +3,18 @@
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Model\Fyziklani\Submit\TaskCodePreprocessor;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
@@ -25,7 +24,7 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\Model\SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
  * @author Michal Červeňák
@@ -121,10 +120,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
     }
 
-    /**
-     * @param int $id
-     * @throws AbortException
-     */
     public function handleDelete(int $id): void {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
@@ -150,7 +145,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
-            throw new InvalidStateException("Cannot create search form without searchable data source.");
+            throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
         $control = new FormControl($this->getContext());
         $form = $control->getForm();

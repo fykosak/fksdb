@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelEventParticipant;
-use FKSDB\Model\ORM\Models\ModelSchool;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Model\ORM\Services\ServiceSchool;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
 
 /**
@@ -73,8 +73,8 @@ group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($cu
         return $schools;
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinter {
+        return new ColumnPrinter($this->getContext());
     }
 }
 // there are very nice nette workaround, but very slow

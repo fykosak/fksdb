@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Model\Events\Model\Holder\DataValidator;
-use FKSDB\Model\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\Holder\DataValidator;
+use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;
 
@@ -34,9 +34,9 @@ interface IFieldFactory {
      *
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool
+     * @return void
      */
-    public function validate(Field $field, DataValidator $validator);
+    public function validate(Field $field, DataValidator $validator): void;
 
     public function setFieldDefaultValue(IComponent $component, Field $field): void;
 }

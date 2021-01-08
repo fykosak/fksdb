@@ -3,14 +3,13 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\DBReflection\DBReflectionFactory;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\SQL\SearchableDataSource;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -18,7 +17,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -37,11 +36,10 @@ use PePa\CSVResponse;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
+
     /** @persistent string */
     public $searchTerm;
-
-    protected DBReflectionFactory $tableReflectionFactory;
-
+    protected ORMFactory $tableReflectionFactory;
     private Container $container;
 
     public function __construct(Container $container) {
@@ -50,7 +48,7 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    final public function injectBase(DBReflectionFactory $tableReflectionFactory, ITranslator $translator): void {
+    final public function injectBase(ORMFactory $tableReflectionFactory, Translator $translator): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->setTranslator($translator);
     }
@@ -59,7 +57,6 @@ abstract class BaseGrid extends Grid {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
-
         }
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         /** @var GridPaginator $paginator */
@@ -146,7 +143,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
-            throw new InvalidStateException("Cannot create search form without searchable data source.");
+            throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
@@ -187,7 +184,6 @@ abstract class BaseGrid extends Grid {
      * @param string|null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
-     * @deprecated do not use for links!
      */
     public function addGlobalButton(string $name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
@@ -203,7 +199,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateColumnException
      */
     private function addReflectionColumn(string $field, int $userPermission): Column {
-        $factory = $this->tableReflectionFactory->loadColumnFactory($field);
+        $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission): Html {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
@@ -220,7 +216,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateColumnException
      */
     protected function addJoinedColumn(string $factoryName, callable $accessCallback): Column {
-        $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
+        $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $factoryName));
         return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->render($model, 1);
@@ -292,7 +288,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateButtonException
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
-        $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId,2));
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {
@@ -323,9 +319,6 @@ abstract class BaseGrid extends Grid {
             ->setLink($this->link('csv!'));
     }
 
-    /**
-     * @throws AbortException
-     */
     public function handleCsv(): void {
         $columns = $this['columns']->components;
         $rows = $this->dataSource->getData();

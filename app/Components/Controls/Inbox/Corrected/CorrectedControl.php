@@ -4,10 +4,9 @@ namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Submits\FileSystemStorage\CorrectedStorage;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\UI\Form;
 
 /**
@@ -43,10 +42,6 @@ class CorrectedControl extends SeriesTableComponent {
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];

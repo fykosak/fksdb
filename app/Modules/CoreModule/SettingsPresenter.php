@@ -3,18 +3,18 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
-use FKSDB\Model\ORM\Models\ModelAuthToken;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Services\ServiceLogin;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\Utils\FormUtils;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -128,7 +128,7 @@ class SettingsPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws ModelException
      */
     private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();

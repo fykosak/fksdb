@@ -5,17 +5,16 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\ORM\Models\ModelSchool;
-use FKSDB\Model\ORM\Services\ServiceSchool;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
- * *
  * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {

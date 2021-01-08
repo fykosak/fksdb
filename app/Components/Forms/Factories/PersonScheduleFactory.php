@@ -3,15 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 
-/**
- * Class PersonScheduleFactory
- * *
- */
 class PersonScheduleFactory {
 
     private ServiceScheduleItem $serviceScheduleItem;

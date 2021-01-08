@@ -3,19 +3,17 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Model\StoredQuery\StoredQuery;
-use FKSDB\Model\StoredQuery\StoredQueryFactory;
+use FKSDB\Models\StoredQuery\StoredQuery;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use Nette\Application\AbortException;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
@@ -26,17 +24,15 @@ use Nette\Utils\Strings;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+class ExportPresenter extends BasePresenter {
 
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-
     /**
      * @persistent
      */
     public $qid;
-
     private ServiceStoredQuery $serviceStoredQuery;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
@@ -71,7 +67,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -154,16 +150,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     protected function createComponentTagCloud(): StoredQueryTagCloud {
         return new StoredQueryTagCloud($this->getContext());
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws AbortException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 
     protected function createComponentCreateForm(): Control {

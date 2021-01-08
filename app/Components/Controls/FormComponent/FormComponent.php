@@ -4,8 +4,7 @@ namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Exceptions\BadTypeException;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -54,11 +53,6 @@ abstract class FormComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @param SubmitButton $button
-     * @return void
-     * @throws AbortException
-     */
     abstract protected function handleSuccess(SubmitButton $button): void;
 
     abstract protected function appendSubmitButton(Form $form): SubmitButton;

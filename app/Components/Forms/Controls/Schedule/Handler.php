@@ -2,14 +2,15 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\Model\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleGroup;
-use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
 use PDOException;
 
@@ -59,6 +60,8 @@ class Handler {
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
+     * @throws PDOException
+     * @throws ModelException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
         $oldRows = $this->servicePersonSchedule->getTable()

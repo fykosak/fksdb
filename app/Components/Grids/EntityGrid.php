@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;

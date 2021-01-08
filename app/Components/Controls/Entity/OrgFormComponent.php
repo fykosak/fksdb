@@ -4,16 +4,14 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelOrg;
-use FKSDB\Model\ORM\Services\ServiceOrg;
-use FKSDB\Model\Utils\FormUtils;
-use FKSDB\Model\YearCalculator;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Models\YearCalculator;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -46,7 +44,6 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -60,11 +57,6 @@ class OrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
@@ -88,7 +80,6 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     /**
      * @return ModelContainer
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     private function createOrgContainer(): ModelContainer {

@@ -3,8 +3,9 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\GraphComponent;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  * Class ModelPresenter
@@ -31,6 +32,7 @@ class ModelPresenter extends BasePresenter {
     /**
      * @return GraphComponent
      * @throws EventNotFoundException
+     * @throws ConfigurationNotFoundException
      */
     protected function createComponentGraphComponent(): GraphComponent {
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Model\Authentication\PasswordAuthenticator;
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Connection;
-use Nette\Database\Context;
-use Nette\Database\IRow;
+use Nette\Database\Explorer;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -15,9 +15,7 @@ use Tester\TestCase;
 abstract class DatabaseTestCase extends TestCase {
 
     private Container $container;
-
     protected Connection $connection;
-
     private int $instanceNo;
 
     /**
@@ -25,10 +23,9 @@ abstract class DatabaseTestCase extends TestCase {
      * @param Container $container
      */
     public function __construct(Container $container) {
-
         $this->container = $container;
-        /** @var Context $context */
-        $context = $container->getByType(Context::class);
+        /** @var Explorer $context */
+        $context = $container->getByType(Explorer::class);
         $this->connection = $context->getConnection();
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
@@ -87,7 +84,7 @@ abstract class DatabaseTestCase extends TestCase {
         return $personId;
     }
 
-    protected function assertPersonInfo(int $personId): IRow {
+    protected function assertPersonInfo(int $personId): Row {
         $personInfo = $this->connection->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
         Assert::notEqual(null, $personInfo);
         return $personInfo;
@@ -102,5 +99,4 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query("INSERT INTO `$table`", $data);
         return $this->connection->getInsertId();
     }
-
 }

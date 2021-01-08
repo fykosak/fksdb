@@ -2,19 +2,18 @@
 
 namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\ApplicationHandlerException;
+use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Authorization\ContestAuthorizator;
-use FKSDB\Model\Events\Machine\BaseMachine;
-use FKSDB\Model\Events\Machine\Machine;
-use FKSDB\Model\Events\Model\ApplicationHandler;
-use FKSDB\Model\Events\Model\ApplicationHandlerException;
-use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\FlashMessageDump;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -88,7 +87,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     *
      */
     protected function createComponentForm(): FormControl {
         $result = new FormControl($this->getContext());
@@ -165,11 +163,6 @@ class ApplicationComponent extends BaseComponent {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     * @param string|null $explicitTransitionName
-     * @throws AbortException
-     */
     public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void {
         try {
             $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
@@ -189,12 +182,9 @@ class ApplicationComponent extends BaseComponent {
     }
 
     private function canEdit(): bool {
-        return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
-    /**
-     * @throws AbortException
-     */
     private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);

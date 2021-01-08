@@ -7,8 +7,8 @@
 
 services:
     # assertions
-    ownerAssertion: FKSDB\Model\Authorization\Assertions\OwnerAssertion
-    paymentAssertion: FKSDB\Model\Authorization\Assertions\PaymentAssertion
+    ownerAssertion: FKSDB\Models\Authorization\Assertions\OwnerAssertion
+    paymentAssertion: FKSDB\Models\Authorization\Assertions\PaymentAssertion
 
 acl:
     ## Roles

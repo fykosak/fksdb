@@ -4,11 +4,11 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\IModel;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\IModel;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;

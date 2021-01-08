@@ -3,20 +3,20 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Model\Events\EventsExtension;
-use FKSDB\Model\Events\Model\ExpressionEvaluator;
-use FKSDB\Model\Events\Model\Holder\DataValidator;
-use FKSDB\Model\Events\Model\Holder\Field;
-use FKSDB\Model\Events\Model\PersonContainerResolver;
+use FKSDB\Models\Events\EventsExtension;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Events\Model\Holder\DataValidator;
+use FKSDB\Models\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\IControl;
 use Nette\Security\User;
-use FKSDB\Model\Persons\SelfResolver;
+use FKSDB\Models\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,7 +26,6 @@ use FKSDB\Model\Persons\SelfResolver;
 class PersonFactory extends AbstractFactory {
 
     private const VALUE_LOGIN = 'fromLogin';
-
     /** @var mixed */
     private $fieldsDefinition;
     /** @var mixed */
@@ -37,17 +36,11 @@ class PersonFactory extends AbstractFactory {
     private $modifiable;
     /** @var mixed */
     private $visible;
-
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private SelfResolver $selfResolver;
-
     private ExpressionEvaluator $evaluator;
-
     private User $user;
-
     private ServicePerson $servicePerson;
-
     private DIContainer $container;
 
     /**
@@ -145,10 +138,10 @@ class PersonFactory extends AbstractFactory {
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool|void
+     * @return void
      * @throws \ReflectionException
      */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         // check person ID itself
         parent::validate($field, $validator);
 

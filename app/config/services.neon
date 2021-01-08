@@ -4,9 +4,9 @@
 
 services:
     ## extends nette
-    nette.userStorage: FKSDB\Model\Authentication\LoginUserStorage
+    nette.userStorage: FKSDB\Models\Authentication\LoginUserStorage
     nette.mailer:
-        factory: FKSDB\Model\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
+        factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
     readOnlyConnection:
@@ -14,11 +14,11 @@ services:
         autowired: false
     ## need setUp
     globalSession:
-        factory: FKSDB\Model\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
+        factory: FKSDB\Models\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:
             - start()
     submitUploatedStorage:
-        factory: FKSDB\Model\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
@@ -28,74 +28,73 @@ services:
 
     ## Anonymous
     # astrid
-    - FKSDB\Model\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     #auth
-    - FKSDB\Model\Authentication\SSO\TokenGSIDHolder
-    - FKSDB\Model\Authentication\FacebookAuthenticator
-    - FKSDB\Model\Authentication\GithubAuthenticator
-    - FKSDB\Model\Authentication\PasswordAuthenticator
-    - FKSDB\Model\Authentication\TokenAuthenticator
-    - FKSDB\Model\Authentication\GoogleAuthenticator
-    - FKSDB\Model\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
-    - FKSDB\Model\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
+    - FKSDB\Models\Authentication\SSO\TokenGSIDHolder
+    - FKSDB\Models\Authentication\FacebookAuthenticator
+    - FKSDB\Models\Authentication\GithubAuthenticator
+    - FKSDB\Models\Authentication\PasswordAuthenticator
+    - FKSDB\Models\Authentication\TokenAuthenticator
+    - FKSDB\Models\Authentication\GoogleAuthenticator
+    - FKSDB\Models\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
+    - FKSDB\Models\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     #auth
-    - FKSDB\Model\Authorization\ContestAuthorizator
-    - FKSDB\Model\Authorization\EventAuthorizator
-    - FKSDB\Model\Authorization\RelatedPersonAuthorizator
+    - FKSDB\Models\Authorization\ContestAuthorizator
+    - FKSDB\Models\Authorization\EventAuthorizator
+    - FKSDB\Models\Authorization\RelatedPersonAuthorizator
     #datatesting
-    - FKSDB\Model\DataTesting\DataTestingFactory
+    - FKSDB\Models\DataTesting\DataTestingFactory
     #DBreflection
-    - FKSDB\Model\DBReflection\MetaDataFactory
-    - FKSDB\Model\DBReflection\DBReflectionFactory
+    - FKSDB\Models\ORM\MetaDataFactory
+    - FKSDB\Models\ORM\ORMFactory
     # Events
-    events.dataValidator: FKSDB\Model\Events\Model\Holder\DataValidator
-    events.expressionEvaluator: FKSDB\Model\Events\Model\ExpressionEvaluator
-    events.privacyPolicy: FKSDB\Model\Events\FormAdjustments\PrivacyPolicy
-    events.captcha: FKSDB\Model\Events\FormAdjustments\Captcha
-    - FKSDB\Model\Events\Model\ApplicationHandlerFactory
+    events.dataValidator: FKSDB\Models\Events\Model\Holder\DataValidator
+    events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
+    events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
+    events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
+    - FKSDB\Models\Events\Model\ApplicationHandlerFactory
     #export
-    - FKSDB\Model\Exports\ExportFormatFactory
+    - FKSDB\Models\Exports\ExportFormatFactory
     #fyziklani
-    - FKSDB\Model\Fyziklani\Submit\HandlerFactory
+    - FKSDB\Models\Fyziklani\Submit\HandlerFactory
     #github
-    - FKSDB\Model\Github\EventFactory
+    - FKSDB\Models\Github\EventFactory
      #localization
-    - FKSDB\Model\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    - FKSDB\Models\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #maitenance
-    - FKSDB\Model\Maintenance\Updater
+    - FKSDB\Models\Maintenance\Updater
     #main
-    - FKSDB\Model\Mail\MailTemplateFactory(%email.templatesDir%)
+    - FKSDB\Models\Mail\MailTemplateFactory(%email.templatesDir%)
     #person
-    - FKSDB\Model\Persons\ReferencedPersonHandlerFactory
-    - FKSDB\Model\Persons\ExtendedPersonHandlerFactory
-    - FKSDB\Model\Persons\SelfResolver
-    - FKSDB\Model\Persons\Deduplication\Merger(%merger%, ...)
+    - FKSDB\Models\Persons\ReferencedPersonHandlerFactory
+    - FKSDB\Models\Persons\ExtendedPersonHandlerFactory
+    - FKSDB\Models\Persons\SelfResolver
+    - FKSDB\Models\Persons\Deduplication\Merger(%merger%, ...)
     #phone
-    - FKSDB\Model\PhoneNumber\PhoneNumberFactory
+    - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
-    - FKSDB\Model\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
-    - FKSDB\Model\Submits\SubmitHandlerFactory
-    PDFStamper: FKSDB\Model\Submits\PDFStamper(%stamper.fontSize%)
-    - FKSDB\Model\Submits\SeriesTable
+    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Models\Submits\SubmitHandlerFactory
+    PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
+    - FKSDB\Models\Submits\SeriesTable
     #results
-    - FKSDB\Model\Results\SQLResultsCache
-    - FKSDB\Model\Results\ResultsModelFactory
+    - FKSDB\Models\Results\SQLResultsCache
+    - FKSDB\Models\Results\ResultsModelFactory
     #strored query
-    - FKSDB\Model\StoredQuery\StoredQueryFactory(@readOnlyConnection,...)
+    - FKSDB\Models\StoredQuery\StoredQueryFactory(@readOnlyConnection,...)
     #stats
-    - FKSDB\Model\Stats\StatsModelFactory
+    - FKSDB\Models\Stats\StatsModelFactory
     #tasks
-    - FKSDB\Model\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    #transitions
-    - FKSDB\Model\Transitions\Transition\TransitionsFactory
+
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
 
     #webservice
-    - FKSDB\Model\WebService\EventSoapFactory
-    webServiceModel: FKSDB\Model\WebService\WebServiceModel(%inverseContestMapping%, ...)
+    - FKSDB\Models\WebService\EventSoapFactory
+    webServiceModel: FKSDB\Models\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
-    - FKSDB\Model\YearCalculator
-    - FKSDB\Model\SeriesCalculator
-    - FKSDB\Model\News
+    - FKSDB\Models\YearCalculator
+    - FKSDB\Models\SeriesCalculator
+    - FKSDB\Models\News
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
     - FKSDB\Components\Controls\Events\ExpressionPrinter

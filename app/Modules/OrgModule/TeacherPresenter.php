@@ -4,11 +4,11 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Model\ORM\Models\ModelTeacher;
-use FKSDB\Model\ORM\Services\ServiceTeacher;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 

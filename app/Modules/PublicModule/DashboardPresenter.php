@@ -2,11 +2,10 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Model\News;
-use FKSDB\Model\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\News;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -23,7 +22,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess(): void {
@@ -44,7 +43,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     *
      * @throws UnsupportedLanguageException
      */
     public function renderDefault(): void {

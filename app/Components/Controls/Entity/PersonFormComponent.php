@@ -4,21 +4,19 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Models\ModelPostContact;
-use FKSDB\Model\ORM\Services\ServiceAddress;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Services\ServicePersonInfo;
-use FKSDB\Model\ORM\Services\ServicePostContact;
-use FKSDB\Model\Utils\FormUtils;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Services\ServiceAddress;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\ServicePostContact;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -81,7 +79,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -105,11 +102,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();

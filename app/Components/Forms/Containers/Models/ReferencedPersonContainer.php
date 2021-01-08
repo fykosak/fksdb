@@ -4,19 +4,18 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
@@ -25,9 +24,9 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use FKSDB\Model\Persons\IModifiabilityResolver;
-use FKSDB\Model\Persons\IVisibilityResolver;
-use FKSDB\Model\Persons\ReferencedPersonHandler;
+use FKSDB\Models\Persons\IModifiabilityResolver;
+use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
 
 /**
  * Class ReferencedPersonContainer
@@ -100,7 +99,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     /**
      * @return void
-     * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws NotImplementedException
@@ -223,7 +221,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $fieldName
      * @param array $metadata
      * @return IComponent
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws NotImplementedException
      * @throws OmittedControlException

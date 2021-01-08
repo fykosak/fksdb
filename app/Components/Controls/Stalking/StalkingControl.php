@@ -6,10 +6,10 @@ use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
-use FKSDB\Model\DBReflection\DBReflectionFactory;
-use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
+use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**
  * Class StalkingControl
@@ -17,9 +17,9 @@ use FKSDB\Model\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    protected DBReflectionFactory $tableReflectionFactory;
+    protected ORMFactory $tableReflectionFactory;
 
-    final public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectPrimary(ORMFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -44,8 +44,8 @@ abstract class StalkingControl extends BaseComponent {
         return new NoRecordsBadge($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinter {
+        return new ColumnPrinter($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent {

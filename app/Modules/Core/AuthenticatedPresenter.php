@@ -2,15 +2,14 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Model\Authentication\GithubAuthenticator;
-use FKSDB\Model\Authentication\PasswordAuthenticator;
-use FKSDB\Model\Authentication\TokenAuthenticator;
-use FKSDB\Model\Authorization\ContestAuthorizator;
-use FKSDB\Model\Authorization\EventAuthorizator;
+use FKSDB\Models\Authentication\GithubAuthenticator;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Authentication\TokenAuthenticator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Model\ORM\Models\ModelAuthToken;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
@@ -34,7 +33,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     public const AUTH_ALLOW_HTTP = 0x2;
     public const AUTH_ALLOW_TOKEN = 0x4;
     public const AUTH_ALLOW_GITHUB = 0x8;
-
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected GithubAuthenticator $githubAuthenticator;
@@ -62,7 +60,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException|BadRequestException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -77,7 +76,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      * @throws Exception
      */
@@ -106,9 +105,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
@@ -116,9 +112,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->loginRedirect();
     }
 
-    /**
-     * @throws AbortException
-     */
     final protected function loginRedirect(): void {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;

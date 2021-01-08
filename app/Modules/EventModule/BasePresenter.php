@@ -2,19 +2,19 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -44,7 +44,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -81,6 +81,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return Holder
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function getHolder(): Holder {
         if (!isset($this->holder)) {
@@ -165,7 +166,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException

@@ -2,12 +2,9 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\UI\PageTitle;
 
-/**
- * Homepage presenter.
- */
 class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {

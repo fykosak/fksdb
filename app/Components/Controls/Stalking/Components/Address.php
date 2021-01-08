@@ -3,14 +3,15 @@
 namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**
  * Class Address
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Address extends StalkingControl {
+
     public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $this->template->MAddress = $person->getMPostContacts();

@@ -7,13 +7,13 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleGroup;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -57,10 +57,10 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      *
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         $this->template->model = $this->getEntity();
@@ -76,10 +76,10 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return ScheduleGroupFormComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): ScheduleGroupFormComponent {
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
@@ -103,10 +103,10 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return ItemsGrid
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentItemsGrid(): ItemsGrid {
         return new ItemsGrid($this->getContext(), $this->getEntity());

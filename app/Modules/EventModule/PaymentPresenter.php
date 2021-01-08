@@ -3,31 +3,31 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\ModelPayment;
-use FKSDB\Model\ORM\Services\ServicePayment;
-use FKSDB\Model\Payment\Transition\PaymentMachine;
-use FKSDB\Model\Transitions\Machine;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Machine;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
+use Nette\DI\MissingServiceException;
 use Nette\Security\IResource;
 
 /**
  * Class PaymentPresenter
- * *
  * @method ModelPayment getEntity
  */
 class PaymentPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     private Machine\Machine $machine;
-
     private ServicePayment $servicePayment;
 
     final public function injectServicePayment(ServicePayment $servicePayment): void {
@@ -44,20 +44,20 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
@@ -89,11 +89,10 @@ class PaymentPresenter extends BasePresenter {
     /* ********* actions *****************/
 
     /**
-     * @throws AbortException
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function actionEdit(): void {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
@@ -104,12 +103,12 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      *
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
     public function actionCreate(): void {
-        if (\count($this->getMachine()->getAvailableTransitions()) === 0) {
+        if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Core:Dashboard:default');
@@ -119,10 +118,10 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* render *****************/
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderEdit(): void {
         $this->template->model = $this->getEntity();
@@ -133,6 +132,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         $payment = $this->getEntity();
@@ -155,10 +155,10 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentMachine
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws MissingServiceException
      */
     private function getMachine(): PaymentMachine {
         if (!isset($this->machine)) {
-
             $machine = $this->getContext()->getService(sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year));
             if (!$machine instanceof PaymentMachine) {
                 throw new BadTypeException(PaymentMachine::class, $this->machine);
@@ -182,14 +182,15 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsControl
+     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
+        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getMachine()->createHolder($this->getEntity()));
     }
 
     /**
@@ -220,6 +221,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): PaymentFormComponent {
         return new PaymentFormComponent(

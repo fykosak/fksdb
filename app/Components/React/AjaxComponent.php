@@ -2,8 +2,7 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Model\React\AjaxResponse;
-use Nette\Application\AbortException;
+use FKSDB\Models\React\AjaxResponse;
 use Nette\Http\IRequest;
 use Nette\Http\Response;
 
@@ -23,11 +22,6 @@ abstract class AjaxComponent extends ReactComponent {
         return [];
     }
 
-    /**
-     * @param int $code
-     * @return void
-     * @throws AbortException
-     */
     protected function sendAjaxResponse(int $code = Response::S200_OK): void {
         $response = new AjaxResponse();
         $response->setCode($code);

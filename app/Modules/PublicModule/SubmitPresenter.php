@@ -6,24 +6,24 @@ use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\GoneException;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Models\ModelQuizQuestion;
-use FKSDB\Model\ORM\Models\ModelSubmit;
-use FKSDB\Model\ORM\Models\ModelTask;
-use FKSDB\Model\ORM\Services\ServiceQuizQuestion;
-use FKSDB\Model\ORM\Services\ServiceSubmit;
-use FKSDB\Model\ORM\Services\ServiceSubmitQuizQuestion;
-use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
-use FKSDB\Model\Submits\FileSystemStorage\UploadedStorage;
-use FKSDB\Model\Submits\ProcessingException;
-use FKSDB\Model\Submits\SubmitHandlerFactory;
-use FKSDB\Model\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelQuizQuestion;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceQuizQuestion;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\ServiceSubmitQuizQuestion;
+use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Models\Submits\ProcessingException;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -203,7 +203,7 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     * @throws StorageException
      */
     private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -245,7 +245,7 @@ class SubmitPresenter extends BasePresenter {
                         continue;
                     }
                     if (!$taskValues['file']->isOk()) {
-                        Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                        Debugger::log(sprintf('Uploaded file error %s.', $taskValues['file']->getError()), Debugger::WARNING);
                         continue;
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());

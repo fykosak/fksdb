@@ -6,8 +6,8 @@ use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
-use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
@@ -16,17 +16,16 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\GettextTranslator;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Model\Logging\ILogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\GettextTranslator;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
-use FKSDB\Model\ORM\Services\ServiceContest;
-use FKSDB\Model\UI\PageStyleContainer;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\UI\PageStyleContainer;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -34,7 +33,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
-use FKSDB\Model\Utils\Utils;
+use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
@@ -93,7 +92,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return void
      * @throws UnsupportedLanguageException
-     * @throws AbortException
+     *
      */
     protected function startup(): void {
         parent::startup();
@@ -111,11 +110,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /*	 * ******************************
      * IJSONProvider
      * ****************************** */
-    /**
-     * @param string $acName
-     * @return void
-     * @throws AbortException
-     */
     public function handleAutocomplete(string $acName): void {
         ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         $component = $this->getComponent($acName);
@@ -241,8 +235,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new ThemeChooser($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinter {
+        return new ColumnPrinter($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
@@ -256,7 +250,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return string
      * @throws UnsupportedLanguageException
-     * @throws AbortException
+     *
      */
     public function getLang(): string {
         /** @var LanguageChooser $control */
@@ -266,7 +260,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param bool $need
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws ReflectionException
      */

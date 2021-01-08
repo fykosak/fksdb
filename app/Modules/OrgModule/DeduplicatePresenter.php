@@ -5,19 +5,18 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Services\ServicePersonInfo;
-use FKSDB\Model\Persons\Deduplication\DuplicateFinder;
-use FKSDB\Model\Persons\Deduplication\Merger;
-use FKSDB\Model\UI\PageTitle;
-use FKSDB\Model\Utils\FormUtils;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Models\Persons\Deduplication\Merger;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -88,7 +87,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @param int $trunkId
      * @param int $mergedId
      * @return void
-     * @throws AbortException
+     *
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -205,7 +204,7 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     *
      * @throws \ReflectionException
      * @throws BadTypeException
      */

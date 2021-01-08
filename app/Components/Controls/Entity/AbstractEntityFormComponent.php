@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
@@ -35,11 +35,6 @@ abstract class AbstractEntityFormComponent extends FormComponent {
         return !isset($this->model);
     }
 
-    /**
-     * @param SubmitButton $button
-     * @return void
-     * @throws AbortException
-     */
     final protected function handleSuccess(SubmitButton $button): void {
         try {
             $this->handleFormSuccess($button->getForm());
@@ -69,7 +64,7 @@ abstract class AbstractEntityFormComponent extends FormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     *
      * @throws ModelException
      */
     abstract protected function handleFormSuccess(Form $form): void;

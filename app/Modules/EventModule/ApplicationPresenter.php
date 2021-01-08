@@ -2,18 +2,19 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\ORM\Models\ModelEventParticipant;
-use FKSDB\Model\ORM\Services\ServiceEventParticipant;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -50,6 +51,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function createComponentGrid(): AbstractApplicationsGrid {
         return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
@@ -59,6 +61,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return ImportComponent
      * @throws EventNotFoundException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
@@ -70,11 +73,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         parent::renderDetail();

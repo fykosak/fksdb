@@ -4,21 +4,20 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Config\NeonScheme;
-use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Model\DBReflection\OmittedControlException;
-use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\ServiceAuthToken;
-use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\Utils\FormUtils;
-use FKSDB\Model\Utils\Utils;
-use Nette\Application\AbortException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceAuthToken;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\Utils\FormUtils;
+use FKSDB\Models\Utils\Utils;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -62,7 +61,6 @@ class EventFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -71,11 +69,6 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
@@ -90,6 +83,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
      */
     protected function setDefaults(): void {
         if (isset($this->model)) {
@@ -121,9 +115,9 @@ class EventFormComponent extends AbstractEntityFormComponent {
     }
 
     /**
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
+     * @return ModelContainer
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     private function createEventContainer(): ModelContainer {
         return $this->singleReflectionFormFactory->createContainer('event', [

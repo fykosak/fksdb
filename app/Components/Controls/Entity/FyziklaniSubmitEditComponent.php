@@ -2,16 +2,15 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Fyziklani\NotSetGameParametersException;
-use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
@@ -57,10 +56,6 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
         }
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         try {

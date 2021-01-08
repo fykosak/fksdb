@@ -3,11 +3,10 @@
 namespace FKSDB\Components\Controls\Inbox\SubmitsPreview;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\Submits\StorageException;
-use FKSDB\Model\Submits\SubmitHandlerFactory;
-use Nette\Application\AbortException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -31,7 +30,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
     /**
      * @param int $id
      * @return void
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
@@ -45,7 +44,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     /**
      * @param int $id
-     * @throws AbortException
+     *
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {

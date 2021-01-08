@@ -7,21 +7,16 @@ use FKSDB\Components\Controls\Inbox\HandoutForm;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use Nette\Application\AbortException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
-use FKSDB\Model\Submits\SeriesTable;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Permission;
 
-/**
- * Class InboxPresenter
- *
- */
-class InboxPresenter extends BasePresenter implements ISeriesPresenter {
+class InboxPresenter extends BasePresenter {
+
     use SeriesPresenterTrait;
 
     private SeriesTable $seriesTable;
@@ -54,42 +49,22 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /* ***************** TITLES ***********************/
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleInbox(): void {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function titleCorrected(): void {
         $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
     }
@@ -149,15 +124,5 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->getPageStyleContainer()->setWidePage();
         }
         parent::beforeRender();
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws AbortException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

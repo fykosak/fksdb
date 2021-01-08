@@ -7,15 +7,15 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Services\ServiceContest;
-use FKSDB\Model\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use FKSDB\Model\Persons\ExtendedPersonHandler;
-use FKSDB\Model\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -144,7 +144,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getPermanentAddress();
+        $address = $person->getPermanentAddress2();
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);

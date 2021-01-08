@@ -2,17 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Model\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
 
-/**
- * Class CheckboxFactory
- * *
- */
 class CheckboxFactory extends AbstractFactory {
 
     public function createComponent(Field $field): Checkbox {

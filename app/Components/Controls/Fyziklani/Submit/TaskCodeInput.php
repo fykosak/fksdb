@@ -4,16 +4,15 @@ namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Model\Fyziklani\NotSetGameParametersException;
-use FKSDB\Model\Fyziklani\Submit\TaskCodeException;
-use FKSDB\Model\ORM\Models\ModelEvent;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
@@ -67,10 +66,6 @@ class TaskCodeInput extends AjaxComponent {
         ];
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleSave(): void {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\Models\IEventReferencedModel;
-use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\ReferencedFactory;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -15,24 +15,22 @@ use Nette\Application\ForbiddenRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EventEntityPresenterTrait {
+
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
 
     /**
-     * @return AbstractModelSingle|IEventReferencedModel|null
-     * @throws BadTypeException
+     * @return AbstractModelSingle|null
+     * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     protected function getEntity(): AbstractModelSingle {
         $model = $this->getBaseEntity();
-
-        if (!$model instanceof IEventReferencedModel) {
-            throw new BadTypeException(IEventReferencedModel::class, $model);
-        }
-        if ($model->getEvent()->event_id !== $this->getEvent()->event_id) {
+        $event = ReferencedFactory::accessModel($model, ModelEvent::class);
+        if ($event->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
         return $model;

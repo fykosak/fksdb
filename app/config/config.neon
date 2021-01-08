@@ -100,7 +100,7 @@ parameters:
                 name: name_en
 
         # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be FKSDB\Model\ORM\Models\ModelTaskContribution::TYPE_* constants.
+        # Contributions types must be FKSDB\Models\ORM\Models\ModelTaskContribution::TYPE_* constants.
         contributionMapping:
             author: authors
             solution: solution-authors
@@ -187,17 +187,19 @@ database:
 application:
     errorPresenter: Core:Error
     mapping:
+        Fyziklani: FKSDB\Modules\EventModule\Fyziklani\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days
    autoStart: true
 extensions:
-    fksrouter: FKSDB\Config\Extensions\RouterExtension
-    acl: FKSDB\Model\Authorization\ACLExtension
+    fksrouter: FKSDB\Models\Router\RouterExtension
+    acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
-    events: FKSDB\Model\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    payment: FKSDB\Model\Payment\PaymentExtension
-    DBReflection: FKSDB\Model\DBReflection\DBReflectionExtension
+    events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    payment: FKSDB\Models\Payment\PaymentExtension
+    transitions: FKSDB\Models\Transitions\TransitionsExtension
+    orm: FKSDB\Models\ORM\ORMExtension
 
 includes:
     - router.neon
@@ -209,4 +211,3 @@ includes:
     - exports.neon
     - stalking.neon
     - payment.neon
-    - DBReflection.neon

@@ -6,18 +6,19 @@ use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Model\ORM\Models\ModelLogin;
-use FKSDB\Model\ORM\Models\ModelPayment;
-use FKSDB\Model\ORM\Services\Schedule\ServiceSchedulePayment;
-use FKSDB\Model\ORM\Services\ServicePayment;
-use FKSDB\Model\Payment\Handler\DuplicatePaymentException;
-use FKSDB\Model\Payment\Handler\EmptyDataException;
-use FKSDB\Model\Payment\Transition\PaymentMachine;
-use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
+use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
+use FKSDB\Models\Payment\Handler\EmptyDataException;
+use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -79,10 +80,11 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
+     * @throws ModelException
+     * @throws StorageException
      */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -94,9 +96,9 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $this->servicePayment->updateModel2($this->model, $data);
             $model = $this->servicePayment->refresh($this->model);
         } else {
-            $model = $this->machine->createNewModel(array_merge($data, [
+            $model = $this->machine->initNewModel(array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
-            ]), $this->servicePayment);
+            ]), $this->servicePayment)->getModel();
         }
 
         $connection = $this->servicePayment->getConnection();
@@ -105,7 +107,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         try {
             $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException|EmptyDataException $exception) {
+        } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;

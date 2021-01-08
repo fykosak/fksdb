@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Utils\Utils;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Utils\Utils;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\ComponentReflection;
@@ -152,7 +152,6 @@ class Breadcrumbs extends BaseComponent {
         }
     }
 
-
     /**
      * @param AppRequest $request
      * @param int|null $maxLen
@@ -281,8 +280,8 @@ class Breadcrumbs extends BaseComponent {
      * @param AppRequest $request
      * @param string|null $backLink
      * @return Request
-     * @throws \ReflectionException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Model\ORM\Models\ModelContest;
-use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
-use FKSDB\Model\YearCalculator;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -75,9 +75,9 @@ class PersonProvider implements IFilteredDataProvider {
 
     private function getItem(ModelPerson $person): array {
         $place = null;
-        $address = $person->getDeliveryAddress();
+        $address = $person->getDeliveryAddress2();
         if ($address) {
-            $place = $address->getAddress()->city;
+            $place = $address->city;
         }
         return [
             self::LABEL => $person->getFullName(),

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Schema\Helpers;
 use Tester\Assert;
@@ -65,7 +65,7 @@ abstract class EventTestCase extends DatabaseTestCase {
 
     abstract protected function getEventId(): int;
 
-    protected function assertApplication(int $eventId, string $email): IRow {
+    protected function assertApplication(int $eventId, string $email): Row {
         $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
         Assert::notEqual(null, $personId);
 
@@ -74,7 +74,7 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $application;
     }
 
-    protected function assertExtendedApplication(IRow $application, string $table): IRow {
+    protected function assertExtendedApplication(Row $application, string $table): Row {
         $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
         Assert::notEqual(null, $application);
         return $application;

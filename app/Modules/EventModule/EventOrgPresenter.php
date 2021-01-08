@@ -4,15 +4,14 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Model\ORM\Models\ModelEventOrg;
-use FKSDB\Model\ORM\Services\ServiceEventOrg;
-use FKSDB\Model\UI\PageTitle;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\ModelEventOrg;
+use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -44,7 +43,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
@@ -60,9 +59,6 @@ class EventOrgPresenter extends BasePresenter {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionDelete(): void {
         try {
             $this->traitHandleDelete();
@@ -96,10 +92,10 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return EventOrgFormComponent
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());

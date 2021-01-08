@@ -3,8 +3,7 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Model\Logging\ILogger;
-use Nette\Application\AbortException;
+use FKSDB\Models\Logging\ILogger;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
@@ -38,7 +37,7 @@ abstract class SeriesTableFormControl extends SeriesTableComponent {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
      */
     abstract protected function handleFormSuccess(Form $form);
