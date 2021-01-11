@@ -4,7 +4,7 @@ namespace FKSDB\Models\Exports;
 
 use FKSDB\Models\Exports\Formats\CSVFormat;
 use FKSDB\Models\Exports\Formats\AESOPFormat;
-use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceTask;

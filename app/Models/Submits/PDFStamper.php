@@ -57,7 +57,6 @@ class PDFStamper implements IStorageProcessing {
     /**
      * @param ModelSubmit $submit
      * @throws ProcessingException
-     * @throws InvalidStateException
      */
     public function process(ModelSubmit $submit): void {
         if (!$this->getInputFile()) {

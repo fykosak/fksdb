@@ -3,13 +3,13 @@
 namespace FKSDB\Models\Localization;
 
 use Nette\InvalidArgumentException;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class GettextTranslator implements ITranslator {
+class GettextTranslator implements Translator {
 
     /** @var array[lang] => locale */
     private array $locales;
@@ -41,7 +41,7 @@ class GettextTranslator implements ITranslator {
         putenv("LANGUAGE=$locale"); // for the sake of CLI tests
         setlocale(LC_MESSAGES, $locale);
         bindtextdomain('messages', $this->localeDir);
-        bind_textdomain_codeset('messages', "utf-8");
+        bind_textdomain_codeset('messages', 'utf-8');
         textdomain('messages');
     }
 
@@ -59,8 +59,8 @@ class GettextTranslator implements ITranslator {
      */
     public function translate($message, ...$parameters): string {
         [$count] = $parameters;
-        if ($message === "" || $message === null) {
-            return "";
+        if ($message === '' || $message === null) {
+            return '';
         }
         if ($count !== null) {
             return ngettext($message, $message, (int)$count);

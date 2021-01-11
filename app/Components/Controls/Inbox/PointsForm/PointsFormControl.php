@@ -4,17 +4,13 @@ namespace FKSDB\Components\Controls\Inbox\PointsForm;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-/**
- * Class PointsFormControl
- * *
- */
 class PointsFormControl extends SeriesTableFormControl {
 
     /** @var callable */
@@ -33,8 +29,8 @@ class PointsFormControl extends SeriesTableFormControl {
 
     /**
      * @param Form $form
-     * @throws AbortException
      * @throws ForbiddenRequestException
+     * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
@@ -43,9 +39,9 @@ class PointsFormControl extends SeriesTableFormControl {
                 throw new ForbiddenRequestException();
             }
             $submit = $this->serviceSubmit->findByPrimary($submitId);
-            if ($points !== "" && $points !== $submit->raw_points) {
+            if ($points !== '' && $points !== $submit->raw_points) {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
-            } elseif (!is_null($submit->raw_points) && $points === "") {
+            } elseif (!is_null($submit->raw_points) && $points === '') {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => null]);
             }
         }

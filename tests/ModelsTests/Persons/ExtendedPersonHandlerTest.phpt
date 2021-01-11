@@ -144,7 +144,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getPermanentAddress();
+        $address = $person->getPermanentAddress2();
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);

@@ -5,13 +5,11 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
-use FKSDB\Models\ORM\Models\IContestReferencedModel;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\WebService\INodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -40,9 +38,9 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel, INodeCreator {
-    public const RESOURCE_ID = 'fyziklani.team';
+class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, INodeCreator {
 
+    public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';
     public const CATEGORY_HIGH_SCHOOL_B = 'B';
     public const CATEGORY_HIGH_SCHOOL_C = 'C';

@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\WebService\INodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
@@ -14,7 +13,6 @@ use Nette\Security\IResource;
 
 /**
  * Class ModelScheduleGroup
- * *
  * @property-read int schedule_group_id
  * @property-read string schedule_group_type
  * @property-read int event_id
@@ -24,10 +22,9 @@ use Nette\Security\IResource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource, INodeCreator {
+class ModelScheduleGroup extends AbstractModelSingle implements IResource, INodeCreator {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
-
     public const TYPE_ACCOMMODATION = 'accommodation';
     public const TYPE_VISA = 'visa';
     public const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';

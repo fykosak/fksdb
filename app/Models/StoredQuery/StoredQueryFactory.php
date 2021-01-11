@@ -2,19 +2,17 @@
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\IXMLNodeSerializer;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,9 +26,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     public const PARAM_YEAR = 'year';
     public const PARAM_SERIES = 'series';
     public const PARAM_AC_YEAR = 'ac_year';
-
     private Connection $connection;
-
     private ServiceStoredQuery $serviceStoredQuery;
 
     public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
@@ -39,26 +35,19 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param ISeriesPresenter $presenter
+     * @param BasePresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
      * @param string|null $postProcessingClass
      * @return StoredQuery
-     * @throws BadRequestException
      */
-    public function createQueryFromSQL(ISeriesPresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
+    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
         $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
-    /**
-     * @param ISeriesPresenter $presenter
-     * @param ModelStoredQuery $patternQuery
-     * @return StoredQuery
-     * @throws BadRequestException
-     */
-    public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
+    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
@@ -74,23 +63,14 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    private function presenterContextParameters(ISeriesPresenter $presenter): array {
-        try {
-            return [
-                self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
-                self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-                self::PARAM_YEAR => $presenter->getSelectedYear(),
-                self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
-                self::PARAM_SERIES => $presenter->getSelectedSeries(),
-            ];
-        } catch (BadRequestException $exception) {
-            if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Series context for queries is not available'), BasePresenter::FLASH_WARNING);
-                return [];
-            } else {
-                throw $exception;
-            }
-        }
+    private function presenterContextParameters(BasePresenter $presenter): array {
+        return [
+            self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
+            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
+            self::PARAM_YEAR => $presenter->getSelectedYear(),
+            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+            self::PARAM_SERIES => $presenter->getSelectedSeries(),
+        ];
     }
 
     /**
