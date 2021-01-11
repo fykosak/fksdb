@@ -19,9 +19,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
     /** @var mixed */
     private $schoolsInTeam;
-
     private int $schoolsInTeamValue;
-
     private ExpressionEvaluator $evaluator;
 
     /**
@@ -67,13 +65,13 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
                 return true;
             }, $msgMixture);
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) : void {
-            if ($form->isValid()) { // it means that all schools may have been disabled
-                $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMixture($schools)) {
-                    $form->addError($msgMixture);
-                }
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture): void {
+            //if ($form->isValid()) { // it means that all schools may have been disabled
+            $schools = $this->getSchools($schoolControls, $personControls);
+            if (!$this->checkMixture($schools)) {
+                $form->addError($msgMixture);
             }
+            // }
         };
     }
 
