@@ -127,8 +127,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?: [],
-                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?: [],
+                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress() ?: [],
+                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress() ?: [],
             ]);
         }
     }

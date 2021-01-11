@@ -1,9 +1,10 @@
 {layout '../@layout.latte'}
 {block content}
-    {if count($MAddress)}
-        {foreach $MAddress as $address}
+    {if count($postContacts)}
+        {foreach $postContacts as $postContact}
+            {var $adrress = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($postContact)->getAddress()}
             <h3 class="card-header">
-                {if $address->type == 'P'}
+                {if $postContact->type == 'P'}
                     {_'Permanent address'}
                 {else}
                     {_'Delivery address'}

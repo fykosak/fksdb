@@ -4,13 +4,14 @@ namespace FKSDB\Models\Persons;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceFlag;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonHasFlag;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\ServicePostContact;
 use Nette\SmartObject;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,7 +27,8 @@ class ReferencedPersonHandlerFactory {
 
     private ServicePersonHistory $servicePersonHistory;
 
-    private ServiceMPostContact $serviceMPostContact;
+    private ServicePostContact $servicePostContact;
+    private ServiceAddress $serviceAddress;
 
     private ServicePersonHasFlag $servicePersonHasFlag;
 
@@ -38,32 +40,29 @@ class ReferencedPersonHandlerFactory {
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
-        ServiceMPostContact $serviceMPostContact,
+        ServicePostContact $servicePostContact,
+        ServiceAddress $serviceAddress,
         ServicePersonHasFlag $servicePersonHasFlag,
         Handler $eventScheduleHandler,
         ServiceFlag $serviceFlag
     ) {
+        $this->serviceAddress = $serviceAddress;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
-        $this->serviceMPostContact = $serviceMPostContact;
+        $this->servicePostContact = $servicePostContact;
         $this->servicePersonHasFlag = $servicePersonHasFlag;
         $this->eventScheduleHandler = $eventScheduleHandler;
         $this->serviceFlag = $serviceFlag;
     }
 
-    /**
-     * @param int $acYear
-     * @param string $resolution
-     * @param ModelEvent|null $event
-     * @return ReferencedPersonHandler
-     */
-    public function create(int $acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, ModelEvent $event = null): ReferencedPersonHandler {
+    public function create(int $acYear, ?string $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, ?ModelEvent $event = null): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $this->servicePerson,
             $this->servicePersonInfo,
             $this->servicePersonHistory,
-            $this->serviceMPostContact,
+            $this->servicePostContact,
+            $this->serviceAddress,
             $this->servicePersonHasFlag,
             $this->serviceFlag,
             $this->eventScheduleHandler,

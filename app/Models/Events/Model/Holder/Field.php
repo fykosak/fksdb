@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use FKSDB\Models\Transitions\Machine\Machine;

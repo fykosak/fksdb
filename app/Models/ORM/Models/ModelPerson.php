@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
@@ -128,67 +127,41 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
-    /**
-     * @param string|null $type
-     * @return ModelMPostContact[]
-     */
-    public function getMPostContacts(?string $type = null): array {
-        $postContacts = $this->getPostContacts();
-        if ($postContacts && $type !== null) {
-            $postContacts->where(['type' => $type]);
-        }
-
-        if (!$postContacts || count($postContacts) == 0) {
-            return [];
-        }
-
-        $result = [];
-        foreach ($postContacts as $postContact) {
-            $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
-            $result[] = ModelMPostContact::createFromExistingModels(
-                ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
-            );
-        }
-        return $result;
-    }
-
-    /**
-     * Main delivery address of the contestant.
-     *
-     * @return ModelMPostContact|null
-     */
-    public function getDeliveryAddress(): ?ModelMPostContact {
-        $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
-        if (count($dAddresses)) {
-            return reset($dAddresses);
-        } else {
-            return null;
-        }
-    }
-
-    public function getPermanentAddress(bool $noFallback = false): ?ModelMPostContact {
-        $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
-        if (count($pAddresses)) {
-            return reset($pAddresses);
-        } elseif (!$noFallback) {
-            return $this->getDeliveryAddress();
-        } else {
-            return null;
-        }
-    }
-
-    public function getDeliveryAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
-    }
-
-    public function getPermanentAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+    public function getPostContact(string $type): ?ModelPostContact {
+        $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
     }
 
     public function getAddress2(string $type): ?ModelAddress {
-        $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
+        $postContact = $this->getPostContact($type);
         return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
     }
+
+    public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
+        $postContact = $this->getPostContact(ModelPostContact::TYPE_PERMANENT);
+        if ($postContact) {
+            return $postContact;
+        } elseif (!$noFallback) {
+            return $this->getDeliveryPostContact();
+        } else {
+            return null;
+        }
+    }
+
+    public function getDeliveryPostContact(): ?ModelPostContact {
+        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+    }
+
+    public function getDeliveryAddress(): ?ModelAddress {
+        $postContact = $this->getPermanentPostContact();
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+    }
+
+    public function getPermanentAddress(bool $noFallback = false): ?ModelAddress {
+        $postContact = $this->getPermanentPostContact($noFallback);
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+    }
+
 
     public function getEventParticipants(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);

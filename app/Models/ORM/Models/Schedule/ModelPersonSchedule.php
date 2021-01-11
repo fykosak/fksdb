@@ -8,6 +8,8 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -50,7 +52,7 @@ class ModelPersonSchedule extends AbstractModelSingle {
         if (!$payment) {
             return false;
         }
-        if ($payment->state == ModelPayment::STATE_CANCELED) {
+        if ($payment->getState() == ModelPayment::STATE_CANCELED) {
             return false;
         }
         return true;
@@ -75,5 +77,13 @@ class ModelPersonSchedule extends AbstractModelSingle {
             default:
                 throw new NotImplementedException();
         }
+    }
+
+    public function updateState(?string $newState): void {
+        $this->update(['state' => $newState]);
+    }
+
+    public function getState(): ?string {
+        return $this->state;
     }
 }

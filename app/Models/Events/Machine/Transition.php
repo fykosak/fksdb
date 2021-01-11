@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;

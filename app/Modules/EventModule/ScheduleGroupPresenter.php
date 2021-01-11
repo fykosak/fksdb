@@ -33,7 +33,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
@@ -41,7 +41,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titlePersons(): void {
         $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
@@ -49,7 +49,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o'));

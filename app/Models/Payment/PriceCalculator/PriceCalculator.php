@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;

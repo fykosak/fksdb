@@ -10,7 +10,6 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
@@ -38,7 +37,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* titles *****************/
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
@@ -66,7 +65,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
+     * @throws EventNotFoundException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));

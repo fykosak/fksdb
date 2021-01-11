@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
-
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;

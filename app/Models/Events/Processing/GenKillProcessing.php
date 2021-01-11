@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Processing;
 
-
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;

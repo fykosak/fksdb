@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Transitions\Transition;
 
-
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidArgumentException;

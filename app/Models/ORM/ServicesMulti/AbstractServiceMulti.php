@@ -45,7 +45,7 @@ abstract class AbstractServiceMulti implements IService {
      * @throws ModelException
      * @deprecated
      */
-    public function createNew(?iterable $data = null): AbstractModelMulti {
+    public function createNew(?iterable $data = null) {
         $mainModel = $this->getMainService()->createNew($data);
         $joinedModel = $this->getJoinedService()->createNew($data);
         return $this->composeModel($mainModel, $joinedModel);

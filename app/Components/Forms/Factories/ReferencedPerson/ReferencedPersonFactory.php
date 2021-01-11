@@ -11,12 +11,12 @@ use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use Nette\DI\Container;
-use Nette\InvalidArgumentException;
-use Nette\SmartObject;
 use FKSDB\Models\Persons\IModifiabilityResolver;
 use FKSDB\Models\Persons\IVisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
+use Nette\DI\Container;
+use Nette\InvalidArgumentException;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -106,12 +106,15 @@ class ReferencedPersonFactory {
             case 'person_history':
                 return ($history = $person->getHistory($acYear, (bool)($options & ReferencedPersonContainer::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
-                return $person->getDeliveryAddress();
+                $postContact = $person->getDeliveryPostContact();
+                return $postContact ? $postContact->getAddress() : null;
             case 'post_contact_p':
                 if (($options & ReferencedPersonContainer::TARGET_VALIDATION) || !($options & ReferencedPersonContainer::HAS_DELIVERY)) {
-                    return $person->getPermanentAddress();
+                    $postContact = $person->getPermanentPostContact();
+                    return $postContact ? $postContact->getAddress() : null;
                 }
-                return $person->getPermanentAddress(true);
+                $postContact = $person->getPermanentPostContact(true);
+                return $postContact ? $postContact->getAddress() : null;
             case 'person_has_flag':
                 return ($flag = $person->getPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:
