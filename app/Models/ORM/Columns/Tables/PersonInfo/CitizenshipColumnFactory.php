@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\PersonInfo;
+namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
-use FKSDB\Models\ORM\Columns\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
@@ -13,7 +13,7 @@ use Nette\Forms\Controls\SelectBox;
  * Class CitizenshipRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class CitizenshipColumnFactory extends DefaultColumnFactory {
+class CitizenshipColumnFactory extends ColumnFactory {
 
     private ServiceRegion $serviceRegion;
 

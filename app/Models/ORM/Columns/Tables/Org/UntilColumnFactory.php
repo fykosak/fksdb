@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\Org;
+namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelOrg;
@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilColumnFactory extends DefaultColumnFactory {
+class UntilColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model

@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  * Class PointsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PointsRow extends ColumnFactory {
+class PointsColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelFyziklaniSubmit $model

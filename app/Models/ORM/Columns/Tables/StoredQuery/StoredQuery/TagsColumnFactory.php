@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\StoredQuery\StoredQuery;
+namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
-use FKSDB\Models\ORM\Columns\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
@@ -17,7 +17,7 @@ use Nette\Utils\Html;
  * Class TagsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TagsColumnFactory extends DefaultColumnFactory {
+class TagsColumnFactory extends ColumnFactory {
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 

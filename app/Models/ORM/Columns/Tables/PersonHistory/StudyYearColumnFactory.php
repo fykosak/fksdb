@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\PersonHistory;
+namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
-use FKSDB\Models\ORM\Columns\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\YearCalculator;
@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  * Class StudyYearRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StudyYearColumnFactory extends DefaultColumnFactory {
+class StudyYearColumnFactory extends ColumnFactory {
 
     private YearCalculator $yearCalculator;
 

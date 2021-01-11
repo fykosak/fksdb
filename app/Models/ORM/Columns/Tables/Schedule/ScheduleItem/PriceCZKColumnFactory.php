@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\Schedule\ScheduleItem;
+namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\Payment\Price;
@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * Class PriceCZKRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceCZKColumnFactory extends DefaultColumnFactory {
+class PriceCZKColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model
      * @return Html

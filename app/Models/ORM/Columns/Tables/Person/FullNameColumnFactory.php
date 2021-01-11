@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\Person;
+namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
-use FKSDB\Models\ORM\Columns\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * Class FullNameRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FullNameColumnFactory extends DefaultColumnFactory {
+class FullNameColumnFactory extends ColumnFactory {
 
     /**
      * @param mixed ...$args

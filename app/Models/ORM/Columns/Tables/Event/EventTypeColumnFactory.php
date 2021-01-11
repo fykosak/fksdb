@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Models\ORM\Columns\ColumnFactories\Tables\Event;
+namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\ORM\Columns\ColumnFactories\Types\DefaultColumnFactory;
-use FKSDB\Models\ORM\Columns\MetaDataFactory;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * Class EventTypeRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventTypeColumnFactory extends DefaultColumnFactory {
+class EventTypeColumnFactory extends ColumnFactory {
 
     private ServiceEventType $serviceEventType;
 
