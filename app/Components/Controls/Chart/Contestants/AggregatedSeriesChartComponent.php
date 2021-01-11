@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart\Contestants;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 /**
  * Class ContestantsPerSeries
@@ -10,14 +10,14 @@ use Nette\Database\Context;
  */
 class AggregatedSeriesChartComponent extends AbstractPerSeriesChart {
 
-    private Context $context;
+    private Explorer $explorer;
 
-    public function injectSecondary(Context $context): void {
-        $this->context = $context;
+    public function injectSecondary(Explorer $explorer): void {
+        $this->explorer = $explorer;
     }
 
     protected function getData(): array {
-        $query = $this->context->query('select ts.year,
+        $query = $this->explorer->query('select ts.year,
        ts.series,
        (
            select COUNT(DISTINCT ct_id) as count

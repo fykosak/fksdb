@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\IModel;
 use Nette\Application\UI\Form;
 
 /**
@@ -25,7 +24,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @persistent
      */
     public ?int $id = null;
-    private ?IModel $model;
+    private ?AbstractModelSingle $model;
 
     public function authorizedCreate(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
@@ -68,17 +67,17 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelSingle|null|IModel
+     * @return AbstractModelSingle|null
      * @deprecated
      */
-    final public function getModel(): ?IModel {
+    final public function getModel(): ?AbstractModelSingle {
         if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
     }
 
-    protected function setDefaults(?IModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -89,7 +88,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @param int $id
      * @return AbstractModelSingle
      */
-    abstract protected function loadModel($id): ?IModel;
+    abstract protected function loadModel($id): ?AbstractModelSingle;
 
     abstract protected function createComponentEditComponent(): FormControl;
 

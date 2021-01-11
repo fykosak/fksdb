@@ -11,6 +11,7 @@ use Nette\Utils\Strings;
  * @property-read string $name
  */
 class ModelContest extends AbstractModelSingle {
+
     public const ID_FYKOS = 1;
     public const ID_VYFUK = 2;
 

@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
@@ -11,8 +10,8 @@ use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\IStateModel;
 use FKSDB\Models\Transitions\Machine;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -38,12 +37,12 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IPaymentModel {
+
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received
     public const STATE_CANCELED = 'canceled'; // payment canceled
     public const STATE_NEW = 'new'; // new payment
-
     public const RESOURCE_ID = 'event.payment';
 
     public function getPerson(): ModelPerson {
@@ -96,12 +95,12 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
+     * @param Explorer $explorer
+     * @param Conventions $conventions
+     * @return static
      */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
+    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $explorer, $conventions);
         return $query->get($this->getPrimary());
     }
 }

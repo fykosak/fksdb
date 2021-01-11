@@ -60,8 +60,8 @@ class AddressFactory {
      * (Created because of KdybyReplicator.)
      *
      * @param AddressContainer $container
-     * @param IControl|null $conditioningField
      * @param int $options
+     * @param IControl|null $conditioningField
      */
     public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {

@@ -52,13 +52,10 @@ final class AuthenticationPresenter extends BasePresenter {
     public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
-
     /** @persistent */
     public ?string $backlink = '';
-
     /** @persistent */
     public $flag;
-
     private ServiceAuthToken $serviceAuthToken;
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;

@@ -7,17 +7,16 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -53,8 +52,7 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
-
+class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
     /**
      * @persistent
      */
@@ -297,7 +295,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModelSingle {
         return null; //we always create new contestant
     }
 

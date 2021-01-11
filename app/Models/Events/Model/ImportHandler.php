@@ -2,13 +2,15 @@
 
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
+use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -43,7 +45,10 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
+     * @throws ImportHandlerException
      * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     * @throws MissingServiceException
      */
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
@@ -92,6 +97,7 @@ class ImportHandler {
     /**
      * @param mixed $row
      * @return array
+     * @throws ImportHandlerException
      */
     private function rowToValues($row): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
