@@ -26,14 +26,14 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use SoapFault;
 use Tracy\Debugger;
-use FKSDB\Models\WebService\IXMLNodeSerializer;
+use FKSDB\Models\WebService\XMLNodeSerializer;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory
  *
  * @author michal
  */
-class ResultsModelFactory implements IXMLNodeSerializer {
+class ResultsModelFactory implements XMLNodeSerializer {
     use SmartObject;
 
     private Connection $connection;

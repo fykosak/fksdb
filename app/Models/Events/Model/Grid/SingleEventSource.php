@@ -26,7 +26,7 @@ use Nette\SmartObject;
  * @method SingleEventSource count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
-class SingleEventSource implements IHolderSource {
+class SingleEventSource implements HolderSource {
 
     use SmartObject;
 
@@ -137,7 +137,7 @@ class SingleEventSource implements IHolderSource {
      * @staticvar array $delegated
      * @param string $name
      * @param array $args
-     * @return SingleEventSource
+     * @return SingleEventSource|int
      */
     public function __call($name, $args) {
         static $delegated = [

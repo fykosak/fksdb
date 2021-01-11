@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -37,13 +37,13 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     public function __construct(DIContainer $container, bool $allowClear) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
                 $collector->registerJSFile('js/referencedContainer.js');
                 $this->updateHtmlData();
             }
-        }, function (IJavaScriptCollector $collector) {
+        }, function (JavaScriptCollector $collector) {
             $this->attachedJS = false;
             $collector->unregisterJSFile('js/referencedContainer.js');
         });

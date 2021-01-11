@@ -39,9 +39,7 @@ class LoginUserStorage extends UserStorage {
     private YearCalculator $yearCalculator;
     private GlobalSession $globalSession;
     private Application $application;
-
-    /** @var IPresenter */
-    private $presenter;
+    private IPresenter $presenter;
 
     private Request $request;
 

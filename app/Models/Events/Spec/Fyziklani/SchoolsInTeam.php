@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -15,7 +15,7 @@ use Nette\Forms\IControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
+class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
 
     /** @var mixed */
     private $schoolsInTeam;

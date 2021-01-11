@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Models\Persons\IReferencedHandler;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
@@ -35,14 +35,14 @@ class ReferencedId extends HiddenField {
     private ReferencedContainer $referencedContainer;
     private SearchContainer $searchContainer;
     private IService $service;
-    private IReferencedHandler $handler;
+    private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
     private ?IModel $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, ReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -90,7 +90,7 @@ class ReferencedId extends HiddenField {
         return $this->service;
     }
 
-    public function getHandler(): IReferencedHandler {
+    public function getHandler(): ReferencedHandler {
         return $this->handler;
     }
 

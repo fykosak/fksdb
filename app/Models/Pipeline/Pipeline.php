@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\Messages\Message;
 use Nette\InvalidStateException;
@@ -25,16 +25,16 @@ class Pipeline {
 
     private bool $fixedStages = false;
 
-    private ?ILogger $logger = null;
+    private ?Logger $logger = null;
 
-    public function setLogger(ILogger $logger): void {
+    public function setLogger(Logger $logger): void {
         $this->logger = $logger;
     }
 
     /**
      * @return MemoryLogger
      */
-    public function getLogger(): ILogger {
+    public function getLogger(): Logger {
         return $this->logger;
     }
 

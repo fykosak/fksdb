@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\Transitions\IStateModel;
+use FKSDB\Models\Transitions\StateModel;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
@@ -22,7 +22,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
+class ModelPersonSchedule extends AbstractModelSingle implements StateModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -91,10 +91,10 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
     /**
      * @param Explorer $explorer
      * @param Conventions $conventions
-     * @return IStateModel
+     * @return StateModel
      * @throws NotImplementedException
      */
-    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
+    public function refresh(Explorer $explorer, Conventions $conventions): StateModel {
         throw new NotImplementedException();
     }
 }

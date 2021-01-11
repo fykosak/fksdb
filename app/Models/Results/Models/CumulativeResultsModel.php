@@ -69,15 +69,12 @@ class CumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return array|mixed
-     */
     public function getSeries(): array {
         return $this->series;
     }
 
     /**
-     * @param mixed $series
+     * @param array $series
      */
     public function setSeries($series): void {
         $this->series = $series;

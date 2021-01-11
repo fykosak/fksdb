@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Controls\Chart\Chart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\DI\Container;
@@ -11,7 +11,7 @@ use Nette\DI\Container;
  * Class AbstractContestantsPerSeriesChart
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractContestantsPerSeriesChart extends ReactComponent implements IChart {
+abstract class AbstractContestantsPerSeriesChart extends ReactComponent implements Chart {
 
     protected ModelContest $contest;
 

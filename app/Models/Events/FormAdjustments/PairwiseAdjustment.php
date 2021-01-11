@@ -13,7 +13,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
+abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
 
     /** @var mixed */
     private $rules;

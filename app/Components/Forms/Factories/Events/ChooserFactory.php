@@ -22,9 +22,9 @@ class ChooserFactory extends AbstractFactory {
 
     private string $prompt;
 
-    private IOptionsProvider $optionsProvider;
+    private OptionsProvider $optionsProvider;
 
-    public function __construct(string $prompt, IOptionsProvider $optionsProvider) {
+    public function __construct(string $prompt, OptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }

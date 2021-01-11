@@ -52,13 +52,13 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     }
 
     /**
-     * @param string $id
+     * @param string|null $id
      * @return ModelLogin
      * @throws InactiveLoginException
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function findLogin($id): ModelLogin {
+    public function findLogin(string $id): ModelLogin {
         /** @var ModelPerson $person */
         $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
@@ -88,8 +88,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @param ModelLogin|object $login
      * @return string
      */
-    public static function calculateHash($password, $login): string {
+    public static function calculateHash(string $password, $login): string {
         return sha1($login->login_id . md5($password));
     }
-
 }

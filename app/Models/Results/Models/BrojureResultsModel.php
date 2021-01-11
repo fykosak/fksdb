@@ -14,16 +14,13 @@ use Nette\InvalidStateException;
 class BrojureResultsModel extends AbstractResultsModel {
 
     public const COL_SERIES_PREFIX = 's';
-
     /** @var int[] */
     protected array $series;
-
     /**
      * Number of (single) series that is listed in detail
      * @var int
      */
-    protected $listedSeries;
-
+    protected int $listedSeries;
     /**
      * Cache
      * @var array
@@ -98,18 +95,11 @@ class BrojureResultsModel extends AbstractResultsModel {
         $this->dataColumns = [];
     }
 
-    /**
-     * @return int
-     */
-    public function getListedSeries() {
+    public function getListedSeries(): int {
         return $this->listedSeries;
     }
 
-    /**
-     * @param array $listedSeries
-     * @return void
-     */
-    public function setListedSeries($listedSeries): void {
+    public function setListedSeries(int $listedSeries): void {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];

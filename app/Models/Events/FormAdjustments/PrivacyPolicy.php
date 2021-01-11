@@ -7,9 +7,9 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Processing\IProcessing;
+use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -22,7 +22,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PrivacyPolicy implements IProcessing, IFormAdjustment {
+class PrivacyPolicy implements Processing, FormAdjustment {
 
     use SmartObject;
 
@@ -62,11 +62,11 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param Form|null $form
      * @return void
      */
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null) {
         $this->trySetAgreed($values);
     }
 

@@ -12,7 +12,7 @@ use Nette\Forms\Form;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractFactory implements IFieldFactory {
+abstract class AbstractFactory implements FieldFactory {
 
     public function setFieldDefaultValue(IComponent $component, Field $field): void {
         if (!$field->isModifiable()) {
@@ -44,12 +44,7 @@ abstract class AbstractFactory implements IFieldFactory {
         }
     }
 
-    /**
-     * @param Field $field
-     * @param DataValidator $validator
-     * @return mixed|bool|void TODO what is the return type?
-     */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }

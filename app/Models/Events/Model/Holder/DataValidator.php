@@ -10,6 +10,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DataValidator {
+
     use SmartObject;
 
     private array $validationErrors;
@@ -20,11 +21,8 @@ class DataValidator {
         $this->validateFields($baseHolder);
     }
 
-    /**
-     * @return bool|string[]
-     */
-    public function getValidationResult() {
-        return count($this->validationErrors) ? $this->validationErrors : true;
+    public function getValidationResult(): ?array {
+        return count($this->validationErrors) ? $this->validationErrors : null;
     }
 
     private function validateFields(BaseHolder $baseHolder): void {
@@ -33,10 +31,7 @@ class DataValidator {
         }
     }
 
-    /**
-     * @param string $error
-     */
-    public function addError($error): void {
+    public function addError(string $error): void {
         $this->validationErrors[] = $error;
     }
 }

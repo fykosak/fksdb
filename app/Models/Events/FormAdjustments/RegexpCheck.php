@@ -13,7 +13,7 @@ use Nette\Utils\Strings;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
+class RegexpCheck extends AbstractAdjustment implements FormAdjustment {
 
     private string $field;
     private string $message;

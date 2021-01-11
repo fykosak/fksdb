@@ -25,7 +25,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Models\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
 
 /**
@@ -52,7 +52,7 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
+class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter {
 
     /**
      * @persistent

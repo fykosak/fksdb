@@ -75,6 +75,7 @@ abstract class DatabaseTestCase extends TestCase {
             $this->insert(DbNames::TAB_LOGIN, $loginData);
 
             if (isset($loginData['hash'])) {
+                // TODO
                 $pseudoLogin = (object)$loginData;
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
                 $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $personId);

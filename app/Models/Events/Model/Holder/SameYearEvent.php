@@ -11,7 +11,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SameYearEvent implements IEventRelation {
+class SameYearEvent implements EventRelation {
 
     private int $eventTypeId;
 

@@ -5,7 +5,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
@@ -19,7 +19,7 @@ use Nette\Forms\IControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BornCheck extends AbstractAdjustment implements IFormAdjustment {
+class BornCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServiceSchool $serviceSchool;
     private ServicePersonHistory $servicePersonHistory;

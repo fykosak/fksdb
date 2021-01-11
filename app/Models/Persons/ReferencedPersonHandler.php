@@ -30,7 +30,7 @@ use FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonHandler implements IReferencedHandler {
+class ReferencedPersonHandler implements ReferencedHandler {
     use SmartObject;
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';

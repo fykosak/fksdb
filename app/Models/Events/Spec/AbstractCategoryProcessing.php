@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec;
 
-use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -17,7 +17,7 @@ use FKSDB\Models\YearCalculator;
  * Class AbstractCategoryProcessing
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractCategoryProcessing extends AbstractProcessing implements IOptionsProvider {
+abstract class AbstractCategoryProcessing extends AbstractProcessing implements OptionsProvider {
     protected YearCalculator $yearCalculator;
     protected ServiceSchool $serviceSchool;
 
