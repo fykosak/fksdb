@@ -19,7 +19,7 @@ class ModelContainer extends ContainerWithOptions {
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
+    public function setValues($values, bool $erase = false): self {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
         }

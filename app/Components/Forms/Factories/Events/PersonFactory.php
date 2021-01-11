@@ -26,15 +26,15 @@ use FKSDB\Models\Persons\SelfResolver;
 class PersonFactory extends AbstractFactory {
 
     private const VALUE_LOGIN = 'fromLogin';
-    /** @var mixed */
+    /** @var callable */
     private $fieldsDefinition;
-    /** @var mixed */
+    /** @var callable */
     private $searchType;
-    /** @var mixed */
+    /** @var callable */
     private $allowClear;
-    /** @var mixed */
+    /** @var callable */
     private $modifiable;
-    /** @var mixed */
+    /** @var callable */
     private $visible;
     private ReferencedPersonFactory $referencedPersonFactory;
     private SelfResolver $selfResolver;
@@ -45,11 +45,11 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * PersonFactory constructor.
-     * @param array $fieldsDefinition
-     * @param string $searchType
-     * @param bool $allowClear
-     * @param bool $modifiable
-     * @param bool $visible
+     * @param callable|array $fieldsDefinition
+     * @param callable|string $searchType
+     * @param callable|bool $allowClear
+     * @param callable|bool $modifiable
+     * @param callable|bool $visible
      * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
@@ -169,10 +169,10 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @return array|mixed
+     * @return array
      * @throws \ReflectionException
      */
-    private function evaluateFieldsDefinition(Field $field): iterable {
+    private function evaluateFieldsDefinition(Field $field): array {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 

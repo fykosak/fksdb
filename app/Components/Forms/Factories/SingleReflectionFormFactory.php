@@ -36,7 +36,7 @@ class SingleReflectionFormFactory {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws BadTypeException
      * @throws OmittedControlException

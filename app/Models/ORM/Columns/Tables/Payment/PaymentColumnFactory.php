@@ -27,7 +27,7 @@ class PaymentColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws AbstractColumnException
      */

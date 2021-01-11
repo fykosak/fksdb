@@ -92,10 +92,10 @@ abstract class AbstractResultsModel {
 
     /**
      * @note Work only with numeric types.
-     * @param mixed $conditions
+     * @param iterable $conditions
      * @return string
      */
-    protected function conditionsToWhere($conditions): string {
+    protected function conditionsToWhere(iterable $conditions): string {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {

@@ -204,15 +204,14 @@ class Holder {
     /*
      * Joined data manipulation
      */
-    /** @var mixed */
-    private $groupedHolders;
+    private array $groupedHolders;
 
     /**
      * Group secondary by service
      * @return BaseHolder[][]|array[] items: joinOn, service, holders
      */
     public function getGroupedSecondaryHolders(): array {
-        if ($this->groupedHolders == null) {
+        if (!isset($this->groupedHolders)) {
             $this->groupedHolders = [];
 
             foreach ($this->secondaryBaseHolders as $baseHolder) {

@@ -339,8 +339,8 @@ class BaseHolder {
     }
 
     /**
-     * @param string|int|int[]|string[] $name
-     * @param null $default
+     * @param string|int $name
+     * @param mixed $default
      * @return mixed
      */
     public function getParameter($name, $default = null) {

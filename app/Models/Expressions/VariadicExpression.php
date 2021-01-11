@@ -16,7 +16,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return mixed
      */
     final public function __invoke(...$args) {
@@ -24,7 +24,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     /**
-     * @param mixed $args
+     * @param ...$args
      * @return mixed
      */
     abstract protected function evaluate(...$args);

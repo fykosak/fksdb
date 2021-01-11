@@ -304,7 +304,7 @@ class WebServiceModel {
 
     /**
      * @param string $serviceName
-     * @param mixed ...$args
+     * @param ...$args
      * @throws SoapFault
      */
     private function checkAuthentication(string $serviceName, ...$args): void {

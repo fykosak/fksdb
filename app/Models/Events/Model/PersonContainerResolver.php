@@ -21,7 +21,7 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
 
     private Field $field;
 
-    /** @var mixed */
+    /** @var callable */
     private $condition;
 
     private SelfResolver $selfResolver;
@@ -31,7 +31,7 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
     /**
      * PersonContainerResolver constructor.
      * @param Field $field
-     * @param mixed $condition
+     * @param callable|bool $condition
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */

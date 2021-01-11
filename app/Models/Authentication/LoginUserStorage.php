@@ -25,6 +25,7 @@ use Nette\Security\IIdentity;
  * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
+
     /** @const HTTP GET parameter holding control information for the SSO */
 
     public const PARAM_SSO = ModelAuthToken::TYPE_SSO;
@@ -76,11 +77,7 @@ class LoginUserStorage extends UserStorage {
         $this->presenter = $presenter;
     }
 
-    /**
-     * @param mixed $state
-     * @return static
-     */
-    public function setAuthenticated($state): self {
+    public function setAuthenticated(bool $state): self {
         parent::setAuthenticated($state);
         if ($state) {
             $uid = parent::getIdentity()->getId();

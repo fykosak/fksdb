@@ -17,16 +17,14 @@ use Nette\Forms\IControl;
  */
 class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
 
-    /** @var mixed */
+    /** @var callable|int */
     private $schoolsInTeam;
-
     private int $schoolsInTeamValue;
-
     private ExpressionEvaluator $evaluator;
 
     /**
      * SchoolsInTeam constructor.
-     * @param mixed $schoolsInTeam
+     * @param callable|int $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
      * @param ServicePersonHistory $servicePersonHistory
      */
@@ -44,7 +42,7 @@ class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
     }
 
     /**
-     * @param mixed $schoolsInTeam
+     * @param callable|int $schoolsInTeam
      * @return void
      */
     public function setSchoolsInTeam($schoolsInTeam): void {
@@ -67,13 +65,13 @@ class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
                 return true;
             }, $msgMixture);
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) : void {
-            if ($form->isValid()) { // it means that all schools may have been disabled
-                $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMixture($schools)) {
-                    $form->addError($msgMixture);
-                }
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture): void {
+            //if ($form->isValid()) { // it means that all schools may have been disabled
+            $schools = $this->getSchools($schoolControls, $personControls);
+            if (!$this->checkMixture($schools)) {
+                $form->addError($msgMixture);
             }
+            // }
         };
     }
 

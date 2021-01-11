@@ -56,12 +56,7 @@ class TableMerger {
         }
     }
 
-    /**
-     *
-     * @param mixed $column
-     * @return bool
-     */
-    private function tryColumnMerge($column): bool {
+    private function tryColumnMerge(string $column): bool {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
             $values = [
                 $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
@@ -96,7 +91,6 @@ class TableMerger {
      * @param null $mergedParent
      */
     public function merge($mergedParent = null): void {
-
         /*
          * We merge child-rows (referencing rows) of the merged rows.
          * We get the list of possible referencing tables from the database reflection.
@@ -124,12 +118,10 @@ class TableMerger {
                     /** @var ActiveRow|null $refMerged */
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
-                        $backTrunk = $referencingMerger->trunkRow;
-                        $backMerged = $referencingMerger->mergedRow;
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
-                        if ($backTrunk) {
-                            $referencingMerger->setMergedPair($backTrunk, $backMerged);
+                        if ($referencingMerger->trunkRow) {
+                            $referencingMerger->setMergedPair($referencingMerger->trunkRow, $referencingMerger->mergedRow);
                         }
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);

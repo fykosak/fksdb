@@ -87,7 +87,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param mixed $series
+     * @param int[] $series
      */
     public function setSeries($series): void {
         $this->series = $series;

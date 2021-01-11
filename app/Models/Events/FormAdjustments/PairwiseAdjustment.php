@@ -15,14 +15,9 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
 
-    /** @var mixed */
-    private $rules;
+    private iterable $rules;
 
-    /**
-     * PairwiseAdjustment constructor.
-     * @param mixed $rules
-     */
-    public function __construct($rules) {
+    public function __construct(iterable $rules) {
         $this->rules = $rules;
     }
 

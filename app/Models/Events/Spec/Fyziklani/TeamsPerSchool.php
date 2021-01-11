@@ -21,12 +21,9 @@ use Nette\Forms\IControl;
 class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private Explorer $explorer;
-
-    /** @var mixed */
+    /** @var callable|int */
     private $teamsPerSchool;
-
     private int $teamsPerSchoolValue;
-
     private ExpressionEvaluator $evaluator;
 
     /**
@@ -73,17 +70,16 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
             $first = false;
         }
         $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti): void {
-            if ($form->isValid()) { // it means that all schools may have been disabled
-                $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, null, $schools)) {
-                    $form->addError($msgMulti);
-                }
+            // if ($form->isValid()) { // it means that all schools may have been disabled
+            $schools = $this->getSchools($schoolControls, $personControls);
+            if (!$this->checkMulti(true, null, $schools)) {
+                $form->addError($msgMulti);
             }
+            // }
         };
     }
 
-    /** @var mixed */
-    private $cache;
+    private array $cache;
 
     private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
@@ -94,7 +90,7 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
         /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
-        if (!$this->cache || $first) {
+        if (!isset($this->cache) || $first) {
             /*
              * This may not be optimal.
              */
@@ -123,5 +119,4 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
         }
         return count($this->cache) == 0;
     }
-
 }

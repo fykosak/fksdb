@@ -243,12 +243,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
 
     private bool $outerTransaction = false;
 
-    /**
-     * @param mixed $models
-     * @param ArrayHash $values
-     * @return array
-     */
-    private function getConflicts($models, ArrayHash $values): array {
+    private function getConflicts(array $models, ArrayHash $values): array {
         $conflicts = [];
         foreach ($values as $key => $value) {
             if ($key === 'person_has_flag') {

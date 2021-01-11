@@ -50,7 +50,7 @@ class AddressContainer extends ModelContainer {
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
+    public function setValues($values, bool $erase = false): self {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();

@@ -37,7 +37,7 @@ abstract class AbstractProcessing implements Processing {
      * @param Holder $holder
      * @param Logger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null) {
         $this->states = $states;

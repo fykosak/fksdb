@@ -14,7 +14,7 @@ abstract class EvaluatedExpression {
 
     /**
      * @param mixed $evaluated
-     * @param mixed $args
+     * @param ...$args
      * @return mixed
      */
     final protected function evaluateArgument($evaluated, ...$args) {

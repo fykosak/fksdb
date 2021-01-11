@@ -18,6 +18,7 @@ use FKSDB\Models\YearCalculator;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractCategoryProcessing extends AbstractProcessing implements OptionsProvider {
+
     protected YearCalculator $yearCalculator;
     protected ServiceSchool $serviceSchool;
 
@@ -62,11 +63,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return $person->getHistory($acYear);
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    protected function getSchoolValue(string $name) {
+    protected function getSchoolValue(string $name): ?int {
         $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
         $schoolControl = reset($schoolControls);
         if ($schoolControl) {
@@ -76,11 +73,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return null;
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function getStudyYearValue(string $name) {
+    public function getStudyYearValue(string $name): ?int {
         $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
         $studyYearControl = reset($studyYearControls);
         if ($studyYearControl) {

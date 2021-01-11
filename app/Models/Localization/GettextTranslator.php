@@ -54,7 +54,7 @@ class GettextTranslator implements Translator {
 
     /**
      * @param string $message
-     * @param mixed ...$parameters
+     * @param ...$parameters
      * @return string
      */
     public function translate($message, ...$parameters): string {

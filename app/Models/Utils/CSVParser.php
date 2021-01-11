@@ -24,8 +24,7 @@ class CSVParser implements Iterator {
     private int $indexType;
     private ?int $rowNumber = null;
     private ?array $currentRow = null;
-    /** @var mixed */
-    private $header;
+    private ?array $header;
 
     public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
