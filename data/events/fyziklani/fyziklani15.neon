@@ -32,7 +32,7 @@ events:
             notifyBcc:
                 default: fyziklani@fykos.cz
             notifyFrom:
-                default: FYKOSí Fyziklání <fyziklani@fykos.cz>
+                default: Fyziklani 2021 <fyziklani@fykos.cz>
             schoolsInTeam:
                 default: 2
 
@@ -52,12 +52,10 @@ events:
                         condition: %events.fyziklani15.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2020/participant,.secondary)
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2021/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
@@ -130,8 +128,6 @@ events:
                         condition: %events.fyziklani15.appCond%
                         visible: false
                         label: _('Přidat člena')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(member,self)
                     applied->participated:
                         condition: role('admin')
                         visible: false
