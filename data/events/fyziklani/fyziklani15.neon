@@ -15,8 +15,6 @@ parameters:
                 person_info:
                     email:
                         required: true
-                    id_number:
-                        required: false
                 person_history:
                     school_id:
                         required: true
