@@ -86,5 +86,6 @@ trait WriteOnlyTrait {
     private function writeOnlyDisable(): void {
         $this->actuallyDisabled = $this->isDisabled();
         $this->setDisabled();
+        $this->setOmitted(false);
     }
 }

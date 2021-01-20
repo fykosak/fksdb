@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\YearCalculator;
+use Tracy\Debugger;
 
 /**
  * Class AbstractCategoryProcessing
@@ -52,7 +53,6 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
                 'study_year' => $studyYearValue,
             ];
         }
-
         return $participants;
     }
 
@@ -85,6 +85,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         $studyYearControl = reset($studyYearControls);
         if ($studyYearControl) {
             $studyYearControl->loadHttpData();
+            Debugger::barDump($studyYearControl->getValue());
             return $studyYearControl->getValue();
         }
         return null;

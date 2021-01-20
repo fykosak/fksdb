@@ -33,6 +33,7 @@ class ModelContainer extends ContainerWithOptions {
         /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
+            $component->setOmitted(false);
         }
     }
 }

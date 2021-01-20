@@ -4,8 +4,8 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ValuePrinters\StringPrinter;
 use FKSDB\Models\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;

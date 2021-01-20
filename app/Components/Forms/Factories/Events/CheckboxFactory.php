@@ -3,11 +3,8 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Models\Events\Model\Holder\Field;
-use Nette\ComponentModel\Component;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Forms\IControl;
 
 class CheckboxFactory extends AbstractFactory {
 
@@ -17,28 +14,12 @@ class CheckboxFactory extends AbstractFactory {
         return $component;
     }
 
-    /**
-     * @param BaseControl|IComponent $component
-     * @param Field $field
-     * @return void
-     */
-    protected function setDefaultValue(IComponent $component, Field $field): void {
-        $component->setDefaultValue($field->getValue());
+    protected function setDefaultValue(BaseControl $control, Field $field): void {
+        $control->setDefaultValue($field->getValue());
     }
 
-    /**
-     * @param BaseControl|IComponent $component
-     * @return void
-     */
-    protected function setDisabled(IComponent $component): void {
+    protected function setDisabled(BaseControl $component): void {
         $component->setDisabled();
-    }
-
-    /**
-     * @param Component|IComponent $component
-     * @return Component|IControl
-     */
-    public function getMainControl(IComponent $component): IControl {
-        return $component;
+        $component->setOmitted(false);
     }
 }

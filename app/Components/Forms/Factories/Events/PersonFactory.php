@@ -3,20 +3,18 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Events\EventsExtension;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use Nette\ComponentModel\Component;
-use Nette\ComponentModel\IComponent;
-use Nette\DI\Container as DIContainer;
-use Nette\Forms\IControl;
-use Nette\Security\User;
 use FKSDB\Models\Persons\SelfResolver;
+use Nette\DI\Container as DIContainer;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -52,11 +50,11 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * PersonFactory constructor.
-     * @param array $fieldsDefinition
-     * @param string $searchType
-     * @param bool $allowClear
-     * @param bool $modifiable
-     * @param bool $visible
+     * @param callable|array $fieldsDefinition
+     * @param callable|string $searchType
+     * @param callable|bool $allowClear
+     * @param callable|bool $modifiable
+     * @param callable|bool $visible
      * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
@@ -110,11 +108,7 @@ class PersonFactory extends AbstractFactory {
         return $referencedId;
     }
 
-    /**
-     * @param ReferencedId|IComponent $component
-     * @param Field $field
-     */
-    protected function setDefaultValue(IComponent $component, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -123,32 +117,21 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-        $component->setDefaultValue($default);
+        $control->setDefaultValue($default);
     }
 
-    /**
-     * @param ReferencedId|IComponent $component
-     * @return void
-     */
-    protected function setDisabled(IComponent $component): void {
-        $component->setDisabled();
-    }
-
-    /**
-     * @param ReferencedId|IComponent $component
-     * @return Component|IControl
-     */
-    public function getMainControl(IComponent $component): IControl {
-        return $component;
+    protected function setDisabled(BaseControl $control): void {
+        $control->setDisabled();
+        $control->setOmitted(false);
     }
 
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool|void
+     * @return void
      * @throws \ReflectionException
      */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         // check person ID itself
         parent::validate($field, $validator);
 
@@ -179,7 +162,7 @@ class PersonFactory extends AbstractFactory {
      * @return array|mixed
      * @throws \ReflectionException
      */
-    private function evaluateFieldsDefinition(Field $field) {
+    private function evaluateFieldsDefinition(Field $field): iterable {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 

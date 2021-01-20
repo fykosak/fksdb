@@ -40,6 +40,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
         $personInput->setDisabled(isset($this->model));
+        $personInput->setOmitted(false);
         $container->addComponent($personInput, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);

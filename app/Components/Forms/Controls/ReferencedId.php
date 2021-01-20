@@ -222,7 +222,7 @@ class ReferencedId extends HiddenField {
         }
     }
 
-    protected function setModel(?IModel $model, string $mode = self::MODE_NORMAL): void {
+    protected function setModel(?IModel $model, string $mode): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

@@ -4,18 +4,19 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\OmittedControlException;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
+use Nette\ComponentModel\IContainer;
+use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\DI\Container as DIContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -66,6 +67,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
+            $control->setOmitted(false);
         }
     }
 
@@ -82,12 +84,8 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    /**
-     * @param iterable $conflicts
-     * @param null $container
-     */
-    public function setConflicts(iterable $conflicts, $container = null): void {
-        $container = $container ?: $this;
+    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void {
+        $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
             if ($component instanceof Container) {
@@ -134,10 +132,5 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      */
     abstract protected function configure(): void;
 
-    /**
-     * @param IModel|null $model
-     * @param string $mode
-     * @return void
-     */
-    abstract public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void;
+    abstract public function setModel(?IModel $model, string $mode): void;
 }

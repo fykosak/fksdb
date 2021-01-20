@@ -86,6 +86,7 @@ class SingleReflectionFormFactory {
                 continue;
             }
             $control->setDisabled(!$canWrite);
+            $control->setOmitted(false);
 
             $this->appendMetadata($control, $metadata);
             $container->addComponent($control, $field);

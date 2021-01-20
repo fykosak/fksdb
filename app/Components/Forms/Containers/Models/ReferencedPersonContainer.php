@@ -2,9 +2,8 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -15,7 +14,11 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\Persons\IModifiabilityResolver;
+use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
@@ -24,9 +27,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
-use FKSDB\Models\Persons\ReferencedPersonHandler;
 
 /**
  * Class ReferencedPersonContainer
@@ -153,7 +153,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $mode
      * @return void
      */
-    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
+    public function setModel(?IModel $model, string $mode): void {
 
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -194,6 +194,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
+                    $component->setOmitted(false);
                     $component->setValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
@@ -209,7 +210,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $component->setDefaultValue($value);
                     }
                     if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
-                        $component->setDisabled(); // could not store different value anyway
+                        // $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }
