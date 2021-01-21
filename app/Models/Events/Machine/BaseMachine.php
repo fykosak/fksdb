@@ -111,7 +111,7 @@ class BaseMachine {
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
-            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState)); //TODO may this be anytime useful?
+            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState));
         } else {
             return reset($candidates);
         }

@@ -5,6 +5,7 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\IService;
 use Nette\Database\Table\GroupedSelection;
@@ -20,27 +21,15 @@ use Nette\Forms\IControl;
 class ResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
-    private $fields;
+    private array $fields;
 
     /** @var string Name of event parameter that hold overall capacity. */
-    private $paramCapacity;
-    /** @var array|string */
-    private $includeStates;
-    /** @var array|string|string[] */
-    private $excludeStates;
-    /** @var string */
-    private $message;
-
-    /**
-     * @param array|string $fields
-     * @return void
-     */
-    private function setFields($fields): void {
-        if (!is_array($fields)) {
-            $fields = [$fields];
-        }
-        $this->fields = $fields;
-    }
+    private string $paramCapacity;
+    /** @var string[] */
+    private array $includeStates;
+    /** @var string[] */
+    private array $excludeStates;
+    private string $message;
 
     /**
      *
@@ -50,8 +39,8 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
-        $this->setFields($fields);
+    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [BaseMachine::STATE_ANY], array $excludeStates = ['cancelled']) {
+        $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
         $this->includeStates = $includeStates;
@@ -100,7 +89,7 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[]|BaseHolder[][] $serviceData */
+        /** @var IService[]|BaseHolder[][]|Field[] $serviceData */
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);

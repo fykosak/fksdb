@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
@@ -10,11 +9,12 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Forms\Form;
 use Nette\Database\Connection;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
@@ -204,15 +204,14 @@ class Holder {
     /*
      * Joined data manipulation
      */
-    /** @var mixed */
-    private $groupedHolders;
+    private array $groupedHolders;
 
     /**
      * Group secondary by service
      * @return BaseHolder[][]|array[] items: joinOn, service, holders
      */
     public function getGroupedSecondaryHolders(): array {
-        if ($this->groupedHolders == null) {
+        if (!isset($this->groupedHolders)) {
             $this->groupedHolders = [];
 
             foreach ($this->secondaryBaseHolders as $baseHolder) {

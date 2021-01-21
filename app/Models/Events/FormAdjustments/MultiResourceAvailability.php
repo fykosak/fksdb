@@ -23,29 +23,16 @@ use Nette\Utils\Html;
 class MultiResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
-    private $fields;
+    private array $fields;
 
     /** @var string Name of event parameter that hold overall capacity. */
-    private $paramCapacity;
-    /** @var array|string */
+    private string $paramCapacity;
+    /** @var string[] */
     private $includeStates;
-    /** @var array|string|string[] */
+    /** @var string[] */
     private $excludeStates;
-    /** @var string */
-    private $message;
-
+    private string $message;
     private Explorer $database;
-
-    /**
-     * @param array|string $fields
-     * @return void
-     */
-    private function setFields($fields): void {
-        if (!is_array($fields)) {
-            $fields = [$fields];
-        }
-        $this->fields = $fields;
-    }
 
     /**
      *
@@ -56,8 +43,8 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, Explorer $explorer, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
-        $this->setFields($fields);
+    public function __construct(string $fields, string $paramCapacity, string $message, Explorer $explorer, array $includeStates = [BaseMachine::STATE_ANY], array $excludeStates = ['cancelled']) {
+        $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -189,5 +176,4 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         };
     }
-
 }

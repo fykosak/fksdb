@@ -208,13 +208,8 @@ class MailSender {
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return \DateTimeInterface
-     * TODO extension point
-     */
     private function getUntil(ModelEvent $event): \DateTimeInterface {
-        return $event->registration_end ?: $event->end;
+        return $event->registration_end ?? $event->end;
     }
 
     private function hasBcc(): bool {

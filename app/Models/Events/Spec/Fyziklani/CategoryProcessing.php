@@ -6,7 +6,6 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -69,7 +68,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         } elseif ($categoryHandle <= 4) {
             $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
-            throw new SubmitProcessingException(_('Cannot determine category.'));
+            // throw new SubmitProcessingException(_('Cannot determine category.'));
+            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled
         }
         return $result;
     }

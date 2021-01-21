@@ -10,7 +10,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class CompareStrategy implements IMergeStrategy {
+class CompareStrategy implements MergeStrategy {
 
     private int $sign;
 
