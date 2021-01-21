@@ -20,6 +20,7 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractProcessing implements Processing {
+
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -94,7 +95,8 @@ abstract class AbstractProcessing implements Processing {
      * @param string $name
      * @return bool
      */
-    final protected function isBaseReallyEmpty(string $name): bool {
+    protected function isBaseReallyEmpty(string $name): bool {
+
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since beginning
