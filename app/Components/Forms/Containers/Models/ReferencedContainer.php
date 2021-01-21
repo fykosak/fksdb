@@ -67,7 +67,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
-            $control->setOmitted(false);
         }
     }
 

@@ -15,7 +15,7 @@ use Nette\Forms\Controls\BaseControl;
 class ModelContainer extends ContainerWithOptions {
 
     /**
-     * @param mixed|iterable $values
+     * @param ActiveRow|iterable $values
      * @param bool $erase
      * @return static
      */
@@ -33,7 +33,6 @@ class ModelContainer extends ContainerWithOptions {
         /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
-            $component->setOmitted(false);
         }
     }
 }

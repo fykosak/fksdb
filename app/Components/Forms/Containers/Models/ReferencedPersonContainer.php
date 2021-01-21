@@ -191,9 +191,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled(false);
                 } elseif ($controlVisible && !$controlModifiable) {
                     $component->setDisabled();
-                    $component->setOmitted(false);
+                    // $component->setOmitted(false);
                     $component->setValue($value);
-                    $component->setDefaultValue($value);
+                    // $component->setDefaultValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);

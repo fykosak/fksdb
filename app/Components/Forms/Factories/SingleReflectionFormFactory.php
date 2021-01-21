@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -86,7 +86,6 @@ class SingleReflectionFormFactory {
                 continue;
             }
             $control->setDisabled(!$canWrite);
-            $control->setOmitted(false);
 
             $this->appendMetadata($control, $metadata);
             $container->addComponent($control, $field);

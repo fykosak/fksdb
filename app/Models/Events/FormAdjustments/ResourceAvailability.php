@@ -138,7 +138,6 @@ class ResourceAvailability extends AbstractAdjustment {
         if ($capacity <= $usage) {
             foreach ($controls as $control) {
                 $control->setDisabled();
-                $control->setOmitted(false);
             }
         }
 
