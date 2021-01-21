@@ -31,12 +31,12 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
         }
-
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        // TODO hack if all study year fields are disabled
+        /*$original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
-        }
+        }*/
     }
 
     protected function getCategory(array $participants): string {
