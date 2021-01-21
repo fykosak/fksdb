@@ -4,7 +4,7 @@ namespace FKSDB\Models\Events\Spec\Dsef;
 
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use Nette\SmartObject;
@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
  *
  * @author michal
  */
-class GroupOptions implements IOptionsProvider {
+class GroupOptions implements OptionsProvider {
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;

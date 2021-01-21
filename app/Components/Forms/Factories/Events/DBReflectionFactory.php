@@ -98,11 +98,6 @@ class DBReflectionFactory extends AbstractFactory {
         $control->setDefaultValue($default);
     }
 
-    protected function setDisabled(BaseControl $control): void {
-        $control->setDisabled();
-        $control->setOmitted(false);
-    }
-
     private function resolveColumn(Field $field): ?array {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();

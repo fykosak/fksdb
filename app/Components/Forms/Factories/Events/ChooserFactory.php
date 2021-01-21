@@ -19,9 +19,9 @@ class ChooserFactory extends AbstractFactory {
 
     private string $prompt;
 
-    private IOptionsProvider $optionsProvider;
+    private OptionsProvider $optionsProvider;
 
-    public function __construct(string $prompt, IOptionsProvider $optionsProvider) {
+    public function __construct(string $prompt, OptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
@@ -46,14 +46,5 @@ class ChooserFactory extends AbstractFactory {
         $component->setItems($opts);
 
         return $component;
-    }
-
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
-        $control->setDefaultValue($field->getValue());
-    }
-
-    protected function setDisabled(BaseControl $control): void {
-        $control->setDisabled();
-        $control->setOmitted(false);
     }
 }

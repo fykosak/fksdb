@@ -23,9 +23,4 @@ class PasswordFactory extends AbstractFactory {
     protected function setDefaultValue(BaseControl $control, Field $field): void {
         $control->setDefaultValue('');
     }
-
-    protected function setDisabled(BaseControl $control): void {
-        $control->setDisabled();
-        $control->setOmitted(false);
-    }
 }

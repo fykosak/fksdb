@@ -13,13 +13,4 @@ class CheckboxFactory extends AbstractFactory {
         $component->setOption('description', $field->getDescription());
         return $component;
     }
-
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
-        $control->setDefaultValue($field->getValue());
-    }
-
-    protected function setDisabled(BaseControl $component): void {
-        $component->setDisabled();
-        $component->setOmitted(false);
-    }
 }

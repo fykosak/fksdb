@@ -120,11 +120,6 @@ class PersonFactory extends AbstractFactory {
         $control->setDefaultValue($default);
     }
 
-    protected function setDisabled(BaseControl $control): void {
-        $control->setDisabled();
-        $control->setOmitted(false);
-    }
-
     /**
      * @param Field $field
      * @param DataValidator $validator
@@ -159,10 +154,10 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @return array|mixed
+     * @return array
      * @throws \ReflectionException
      */
-    private function evaluateFieldsDefinition(Field $field): iterable {
+    private function evaluateFieldsDefinition(Field $field): array {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
+use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use Nette\ComponentModel\IComponent;
@@ -28,7 +28,7 @@ class Field {
 
     private ExpressionEvaluator $evaluator;
 
-    private IFieldFactory $factory;
+    private FieldFactory $factory;
 
     /** @var mixed */
     private $default;
@@ -96,7 +96,7 @@ class Field {
         $this->evaluator = $evaluator;
     }
 
-    public function setFactory(IFieldFactory $factory): void {
+    public function setFactory(FieldFactory $factory): void {
         $this->factory = $factory;
     }
 
@@ -147,8 +147,8 @@ class Field {
         $this->visible = $visible;
     }
 
-    public function validate(DataValidator $validator): bool {
-        return (bool)$this->factory->validate($this, $validator);
+    public function validate(DataValidator $validator): void {
+        $this->factory->validate($this, $validator);
     }
 
     /**

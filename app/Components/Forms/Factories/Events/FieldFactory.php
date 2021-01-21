@@ -11,7 +11,7 @@ use Nette\Forms\Controls\BaseControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IFieldFactory {
+interface FieldFactory {
 
     /**
      * @param Field $field field for which it's created

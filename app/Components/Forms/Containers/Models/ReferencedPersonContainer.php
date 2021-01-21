@@ -76,7 +76,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         $this->acYear = $acYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
-        $this->monitor(IContainer::class, function () {
+        $this->monitor(IContainer::class, function (): void {
             if (!$this->configured) {
                 $this->configure();
             }
@@ -158,8 +158,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
-        $submittedBySearch = $this->getReferencedId()->getSearchContainer()->isSearchSubmitted();
-        $force = ($mode === ReferencedId::MODE_FORCE);
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
@@ -186,7 +184,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
                 $value = $this->getPersonValue($model, $sub, $fieldName, $options | self::EXTRAPOLATE);
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
-
                 if (!$controlVisible && !$controlModifiable) {
                     $this[$sub]->removeComponent($component);
                 } elseif (!$controlVisible && $controlModifiable) {
@@ -196,6 +193,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled();
                     $component->setOmitted(false);
                     $component->setValue($value);
+                    $component->setDefaultValue($value);
                 } elseif ($controlVisible && $controlModifiable) {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
@@ -204,13 +202,14 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
-                    if ($submittedBySearch || $force) {
+                    if ($this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
+                        || ($mode === ReferencedId::MODE_FORCE)) {
                         $component->setValue($value);
                     } else {
                         $component->setDefaultValue($value);
                     }
                     if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
-                        // $component->setDisabled(); // could not store different value anyway
+                        $component->setDisabled(); // could not store different value anyway
                     }
                 }
             }
@@ -221,7 +220,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $sub
      * @param string $fieldName
      * @param array $metadata
-     * @return IComponent
+     * @return IComponent|BaseControl
      * @throws BadTypeException
      * @throws NotImplementedException
      * @throws OmittedControlException

@@ -19,7 +19,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractProcessing implements IProcessing {
+abstract class AbstractProcessing implements Processing {
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -30,21 +30,13 @@ abstract class AbstractProcessing implements IProcessing {
     private array $states;
     private Holder $holder;
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return mixed|void
-     */
-    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): ?array {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
         $this->innerProcess($states, $values, $machine, $holder, $logger, $form);
+        return null;
     }
 
     abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;

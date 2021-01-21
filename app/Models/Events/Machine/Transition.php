@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Events\Machine;
 
+use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Logging\ILogger;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -207,11 +207,11 @@ class Transition {
     /**
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return bool|array
+     * @return null|array
      */
-    private function validateTarget(Holder $holder, array $inducedTransitions) {
+    private function validateTarget(Holder $holder, array $inducedTransitions): ?array {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
+            if (($result = $inducedTransition->validateTarget($holder, []))) { // intentionally =
                 return $result;
             }
         }
@@ -257,7 +257,7 @@ class Transition {
         $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
         $validationResult = $this->validateTarget($holder, $inducedTransitions);
-        if ($validationResult !== true) {
+        if ($validationResult) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 

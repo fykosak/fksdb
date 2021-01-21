@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
-use FKSDB\Models\Events\Processing\IProcessing;
+use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -30,7 +30,7 @@ class Holder {
     /** @var IFormAdjustment[] */
     private array $formAdjustments = [];
 
-    /** @var IProcessing[] */
+    /** @var Processing[] */
     private array $processings = [];
 
     /** @var BaseHolder[] */
@@ -80,7 +80,7 @@ class Holder {
         $this->formAdjustments[] = $formAdjusment;
     }
 
-    public function addProcessing(IProcessing $processing): void {
+    public function addProcessing(Processing $processing): void {
         $this->processings[] = $processing;
     }
 
