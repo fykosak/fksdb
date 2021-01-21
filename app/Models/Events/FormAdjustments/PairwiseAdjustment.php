@@ -16,14 +16,13 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
 
-    /** @var mixed */
-    private $rules;
+    private iterable $rules;
 
     /**
      * PairwiseAdjustment constructor.
-     * @param mixed $rules
+     * @param iterable $rules
      */
-    public function __construct($rules) {
+    public function __construct(iterable $rules) {
         $this->rules = $rules;
     }
 

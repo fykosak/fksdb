@@ -12,7 +12,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
@@ -22,6 +21,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 
@@ -45,11 +45,9 @@ class MailSender {
     public const ADDR_ALL = '*';
     public const BCC_PREFIX = '.';
 
-    /** @var string */
-    private $filename;
+    private string $filename;
 
     /**
-     *
      * @var array|string
      */
     private $addressees;
@@ -75,7 +73,7 @@ class MailSender {
      * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
-        $filename,
+        string $filename,
         $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
@@ -128,12 +126,11 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $this->createMessage($this->filename, $login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
+            $this->createMessage($login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
         }
     }
 
     /**
-     * @param string $filename
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
@@ -142,7 +139,7 @@ class MailSender {
      * @throws UnsupportedLanguageException
      * @throws ModelException
      */
-    private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
+    private function createMessage(ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->getHolder();
@@ -173,7 +170,7 @@ class MailSender {
                 ],
             ],
         ];
-        $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
+        $template = $this->mailTemplateFactory->createWithParameters($this->filename, null, $templateParams);
 
         $data = [];
         $data['text'] = (string)$template;
