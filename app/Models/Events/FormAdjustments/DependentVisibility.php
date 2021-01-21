@@ -12,12 +12,8 @@ use Nette\Forms\IControl;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DependentVisibility extends PairwiseAdjustment {
-    /**
-     * @param IControl|BaseControl $target
-     * @param IControl $prerequisite
-     * @return void
-     */
-    protected function processPair(IControl $target, IControl $prerequisite): void {
+
+    protected function processPair(BaseControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->toggle($target->getHtmlId() . '-pair');
     }
 }

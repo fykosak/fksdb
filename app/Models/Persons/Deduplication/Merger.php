@@ -22,31 +22,24 @@ class Merger {
 
     private array $conflicts = [];
 
-    /** @var ActiveRow */
-    private $trunkRow;
+    private ActiveRow $trunkRow;
 
-    /** @var ActiveRow */
-    private $mergedRow;
+    private ActiveRow $mergedRow;
 
     private Explorer $explorer;
 
-    /** @var array */
-    private $configuration;
+    private array $configuration;
 
     private ILogger $logger;
 
-    /**
-     *
-     * @var TableMerger[]
-     */
-    private $tableMergers = [];
+    private array $tableMergers = [];
 
     /**
      * Merger constructor.
      * @param mixed $configuration
      * @param Explorer $explorer
      */
-    public function __construct($configuration, Explorer $explorer) {
+    public function __construct(array $configuration, Explorer $explorer) {
         $this->configuration = $configuration;
         $this->explorer = $explorer;
         $this->logger = new DevNullLogger();
@@ -72,9 +65,9 @@ class Merger {
     /**
      * Form values with proper resoluted values.
      *
-     * @param mixed $rawValues
+     * @param iterable $rawValues
      */
-    public function setConflictResolution($rawValues): void {
+    public function setConflictResolution(iterable $rawValues): void {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
                 $data = &$this->getPairDataById($table, $pairId);
@@ -172,7 +165,7 @@ class Merger {
      * @param mixed $column
      * @internal Friend of Merger class.
      */
-    public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, $column): void {
+    public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void {
         $data = &$this->getPairData($trunkRow, $mergedRow);
         $data[self::IDX_TRUNK][$column] = $trunkRow[$column];
         $data[self::IDX_MERGED][$column] = $mergedRow[$column];
@@ -185,7 +178,7 @@ class Merger {
      * @return bool
      * @internal Friend of Merger class.
      */
-    public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column): bool {
+    public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): bool {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return array_key_exists(self::IDX_RESOLUTION, $data) && array_key_exists($column, $data[self::IDX_RESOLUTION]);
     }
@@ -197,7 +190,7 @@ class Merger {
      * @return mixed
      * @internal Friend of Merger class.
      */
-    public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
+    public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column) {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return $data[self::IDX_RESOLUTION][$column];
     }
@@ -220,10 +213,10 @@ class Merger {
 
     /**
      * @param string $table
-     * @param int $pairId
+     * @param string $pairId
      * @return mixed
      */
-    private function & getPairDataById($table, $pairId) {
+    private function & getPairDataById(string $table, string $pairId) {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];
         }
@@ -234,5 +227,4 @@ class Merger {
 
         return $this->conflicts[$table][$pairId];
     }
-
 }

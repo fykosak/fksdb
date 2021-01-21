@@ -2,17 +2,16 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
-
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -32,7 +31,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
         }
-
+        // TODO hack if all study year fields are disabled
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
@@ -70,6 +69,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
             throw new SubmitProcessingException(_('Cannot determine category.'));
+            //$result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled
         }
         return $result;
     }

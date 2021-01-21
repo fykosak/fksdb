@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\Events\Processing;
 
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Logging\ILogger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
@@ -21,7 +21,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GenKillProcessing implements IProcessing {
+class GenKillProcessing implements Processing {
     use SmartObject;
 
     public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): array {
