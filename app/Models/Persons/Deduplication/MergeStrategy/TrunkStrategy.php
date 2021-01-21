@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class TrunkStrategy implements IMergeStrategy {
+class TrunkStrategy implements MergeStrategy {
 
     /**
      * @param mixed $trunk

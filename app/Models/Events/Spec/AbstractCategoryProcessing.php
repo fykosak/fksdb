@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec;
 
-use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -12,12 +12,13 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\YearCalculator;
+use Tracy\Debugger;
 
 /**
  * Class AbstractCategoryProcessing
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractCategoryProcessing extends AbstractProcessing implements IOptionsProvider {
+abstract class AbstractCategoryProcessing extends AbstractProcessing implements OptionsProvider {
     protected YearCalculator $yearCalculator;
     protected ServiceSchool $serviceSchool;
 
@@ -52,7 +53,6 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
                 'study_year' => $studyYearValue,
             ];
         }
-
         return $participants;
     }
 
@@ -62,11 +62,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return $person->getHistory($acYear);
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    protected function getSchoolValue(string $name) {
+    protected function getSchoolValue(string $name): ?int {
         $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
         $schoolControl = reset($schoolControls);
         if ($schoolControl) {
@@ -76,15 +72,12 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return null;
     }
 
-    /**
-     * @param string $name
-     * @return mixed|null
-     */
-    public function getStudyYearValue(string $name) {
+    public function getStudyYearValue(string $name): ?int {
         $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
         $studyYearControl = reset($studyYearControls);
         if ($studyYearControl) {
             $studyYearControl->loadHttpData();
+            Debugger::barDump($studyYearControl->getValue());
             return $studyYearControl->getValue();
         }
         return null;

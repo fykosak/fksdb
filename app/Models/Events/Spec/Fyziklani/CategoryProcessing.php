@@ -6,7 +6,6 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -32,12 +31,12 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
         }
-
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        // TODO hack if all study year fields are disabled
+        /*$original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
-        }
+        }*/
     }
 
     protected function getCategory(array $participants): string {
@@ -69,7 +68,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         } elseif ($categoryHandle <= 4) {
             $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
-            throw new SubmitProcessingException(_('Cannot determine category.'));
+            // throw new SubmitProcessingException(_('Cannot determine category.'));
+            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled
         }
         return $result;
     }

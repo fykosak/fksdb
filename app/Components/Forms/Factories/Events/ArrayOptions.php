@@ -10,7 +10,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ArrayOptions implements IOptionsProvider {
+class ArrayOptions implements OptionsProvider {
 
     use SmartObject;
 
