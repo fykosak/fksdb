@@ -5,7 +5,6 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\IService;
 use Nette\Database\Table\GroupedSelection;
@@ -25,21 +24,21 @@ class ResourceAvailability extends AbstractAdjustment {
 
     /** @var string Name of event parameter that hold overall capacity. */
     private string $paramCapacity;
-    /** @var string[] */
-    private array $includeStates;
+    /** @var array|string */
+    private $includeStates;
     /** @var string[] */
     private array $excludeStates;
     private string $message;
 
     /**
      *
-     * @param array|string $fields Fields that contain amount of the resource
+     * @param array $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param string|array $includeStates any state or array of state
-     * @param string|array $excludeStates any state or array of state
+     * @param string $includeStates any state or array of state
+     * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [BaseMachine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -89,7 +88,7 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[]|BaseHolder[][]|Field[] $serviceData */
+        /** @var IService[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);

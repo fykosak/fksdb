@@ -25,25 +25,26 @@ class MultiResourceAvailability extends AbstractAdjustment {
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
 
-    /** @var string Name of event parameter that hold overall capacity. */
-    private string $paramCapacity;
-    /** @var string[] */
+    /** @var string|array Name of event parameter that hold overall capacity. */
+    private $paramCapacity;
+    /** @var array|string */
     private $includeStates;
     /** @var string[] */
-    private $excludeStates;
+    private array $excludeStates;
     private string $message;
+
     private Explorer $database;
 
     /**
      *
      * @param array|string $fields Fields that contain amount of the resource
-     * @param string $paramCapacity Name of the parameter with overall capacity.
+     * @param string|array $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
      * @param Explorer $explorer
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct(string $fields, string $paramCapacity, string $message, Explorer $explorer, array $includeStates = [BaseMachine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
