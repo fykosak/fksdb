@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\Events\Processing;
 
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\SmartObject;

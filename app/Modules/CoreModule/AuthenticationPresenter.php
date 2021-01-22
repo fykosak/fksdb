@@ -244,7 +244,6 @@ final class AuthenticationPresenter extends BasePresenter {
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
         try {
-            // TODO use form->getValues()
             $this->getUser()->login($values['id'], $values['password']);
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();

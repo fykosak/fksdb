@@ -76,6 +76,6 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     private function isStudent(?int $studyYear): bool {
-        return ($studyYear === null) ? false : true;
+        return !is_null($studyYear);
     }
 }

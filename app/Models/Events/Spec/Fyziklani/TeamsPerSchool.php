@@ -28,7 +28,7 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     /**
      * TeamsPerSchool constructor.
-     * @param int $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
      * @param Explorer $explorer
      * @param ServicePersonHistory $servicePersonHistory
@@ -48,7 +48,7 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
     }
 
     /**
-     * @param int|callable $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool): void {

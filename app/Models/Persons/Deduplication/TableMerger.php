@@ -4,12 +4,12 @@ namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
+use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
-use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -87,10 +87,10 @@ class TableMerger {
         return $this->merger;
     }
 
-    /**
-     * @param null $mergedParent
-     */
-    public function merge($mergedParent = null): void {
+    public function merge(?array $mergedParent = null): void {
+        $this->trunkRow->getTable()->accessColumn(null); // stupid touch
+        $this->mergedRow->getTable()->accessColumn(null); // stupid touch
+
         /*
          * We merge child-rows (referencing rows) of the merged rows.
          * We get the list of possible referencing tables from the database reflection.
@@ -249,14 +249,10 @@ class TableMerger {
         return $this->columns;
     }
 
-    /**
-     * @var mixed
-     * TODO?!
-     */
-    private $primaryKey;
+    private string $primaryKey;
 
     private function isPrimaryKey(string $column): bool {
-        if ($this->primaryKey === null) {
+        if (!isset($this->primaryKey)) {
             $this->primaryKey = $this->explorer->getConventions()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Events\Machine;
 
+use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Logging\Logger;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;

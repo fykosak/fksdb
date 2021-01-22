@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
@@ -10,6 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -57,17 +57,9 @@ class PrivacyPolicy implements Processing, FormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param Logger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null) {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
         $this->trySetAgreed($values);
+        return null;
     }
 
     private function trySetAgreed(ArrayHash $values): void {

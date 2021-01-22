@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
@@ -46,12 +46,12 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * @param iterable|mixed $values
+     * @param ActiveRow|mixed $values
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, bool $erase = false): self {
-        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
+    public function setValues($values, $erase = false): self {
+        if ($values instanceof ActiveRow) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();
             } else {

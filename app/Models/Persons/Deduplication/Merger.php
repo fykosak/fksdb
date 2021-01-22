@@ -22,6 +22,7 @@ class Merger {
     private array $conflicts = [];
     private ActiveRow $trunkRow;
     private ActiveRow $mergedRow;
+
     private Explorer $explorer;
     private array $configuration;
     private Logger $logger;

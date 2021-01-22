@@ -22,8 +22,7 @@ class DuplicateFinder {
 
     private ServicePerson $servicePerson;
 
-    /** @var array */
-    private $parameters;
+    private array $parameters;
 
     public function __construct(ServicePerson $servicePerson, Container $container) {
         $this->servicePerson = $servicePerson;

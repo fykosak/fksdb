@@ -13,16 +13,19 @@ class DataValidator {
 
     use SmartObject;
 
+    /** @var string[] */
     private array $validationErrors;
 
     public function validate(BaseHolder $baseHolder): void {
         // validate
-        $this->validationErrors = [];
         $this->validateFields($baseHolder);
     }
 
+    /**
+     * @return null|string[]
+     */
     public function getValidationResult(): ?array {
-        return count($this->validationErrors) ? $this->validationErrors : null;
+        return $this->validationErrors ?? null;
     }
 
     private function validateFields(BaseHolder $baseHolder): void {
@@ -32,6 +35,9 @@ class DataValidator {
     }
 
     public function addError(string $error): void {
+        if (!isset($this->validationErrors)) {
+            $this->validationErrors = [];
+        }
         $this->validationErrors[] = $error;
     }
 }

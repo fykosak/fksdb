@@ -2,17 +2,17 @@
 
 namespace FKSDB\Models\Events\Spec\Dsef;
 
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
-use Nette\SmartObject;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use Nette\SmartObject;
 
 /**
  *
- * @author michal
+ * @author Michal Koutný <michal@fykos.cz>
  */
 class GroupOptions implements OptionsProvider {
 
@@ -21,12 +21,12 @@ class GroupOptions implements OptionsProvider {
     private ServiceMDsefParticipant $serviceMParticipant;
 
     private ServiceDsefGroup $serviceDsefGroup;
-    /** @var array|string */
+    /** @var string|string[] */
     private $includeStates;
-    /** @var array|string|string[] */
+    /** @var string|string[] */
     private $excludeStates;
 
-    /** @var array  eventId => groups cache */
+    /** @var array[]  eventId => groups cache */
     private array $groups = [];
 
     /**

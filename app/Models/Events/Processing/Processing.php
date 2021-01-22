@@ -23,5 +23,5 @@ interface Processing {
      * @param Form|null $form
      * @return array|void
      */
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null);
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array;
 }

@@ -144,7 +144,7 @@ abstract class AbstractResultsModel {
      * @param int[]|int $series
      * TODO int[] OR int
      */
-    abstract public function setSeries($series);
+    abstract public function setSeries($series): void;
 
     /**
      * @return int[]|int (see setSeries)

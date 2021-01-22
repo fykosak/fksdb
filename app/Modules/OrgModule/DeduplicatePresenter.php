@@ -114,7 +114,7 @@ class DeduplicatePresenter extends BasePresenter {
         $conflicts = $this->merger->getConflicts();
         foreach ($conflicts as $table => $pairs) {
             $form->addGroup($table);
-            $tableContainer = new ContainerWithOptions();
+            $tableContainer = new ContainerWithOptions($this->getContext());
 
             $form->addComponent($tableContainer, $table);
 
@@ -126,7 +126,7 @@ class DeduplicatePresenter extends BasePresenter {
                 if (count($pairs) > 1) {
                     $pairSuffix = " ($pairId)";
                 }
-                $pairContainer = new ContainerWithOptions();
+                $pairContainer = new ContainerWithOptions($this->getContext());
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {

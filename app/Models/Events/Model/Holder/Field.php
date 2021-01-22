@@ -2,11 +2,10 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
+use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Components\Forms\Factories\Events\FieldFactory;
-use Nette\ComponentModel\IComponent;
-use Nette\Forms\IControl;
+use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,6 +21,7 @@ class Field {
     private BaseHolder $baseHolder;
     private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
+
     /** @var mixed */
     private $default;
     /** @var bool|callable */
@@ -92,16 +92,12 @@ class Field {
     /*
      * Forms
      */
-    public function createFormComponent(): IComponent {
+    public function createFormComponent(): BaseControl {
         return $this->factory->createComponent($this);
     }
 
-    public function setFieldDefaultValue(IComponent $component): void {
-        $this->factory->setFieldDefaultValue($component, $this);
-    }
-
-    public function getMainControl(IComponent $component): IControl {
-        return $this->factory->getMainControl($component);
+    public function setFieldDefaultValue(BaseControl $control): void {
+        $this->factory->setFieldDefaultValue($control, $this);
     }
 
     /* ********* "Runtime" operations *********     */

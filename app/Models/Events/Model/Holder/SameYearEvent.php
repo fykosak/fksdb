@@ -27,7 +27,7 @@ class SameYearEvent implements EventRelation {
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        /** @var ModelEvent|false $event */
+        /** @var ModelEvent|null $event */
         $event = $result->fetch();
         if ($event === null) {
             throw new InvalidArgumentException('No event with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.');
