@@ -21,17 +21,14 @@ use Nette\Forms\IControl;
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private Explorer $explorer;
-
-    /** @var mixed */
+    /** @var callable|int */
     private $teamsPerSchool;
-
     private int $teamsPerSchoolValue;
-
     private ExpressionEvaluator $evaluator;
 
     /**
      * TeamsPerSchool constructor.
-     * @param int $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
      * @param Explorer $explorer
      * @param ServicePersonHistory $servicePersonHistory
@@ -51,7 +48,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param int $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool): void {
@@ -66,27 +63,25 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('A school cannot have more than %d teams in the contest.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls) : bool {
+            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 return $this->checkMulti($first, $control, $schools);
             }, $msgMulti);
             $first = false;
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) : void {
-            if ($form->isValid()) { // it means that all schools may have been disabled
-                $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, null, $schools)) {
-                    $form->addError($msgMulti);
-                }
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti): void {
+            // if ($form->isValid()) { // it means that all schools may have been disabled
+            $schools = $this->getSchools($schoolControls, $personControls);
+            if (!$this->checkMulti(true, null, $schools)) {
+                $form->addError($msgMulti);
             }
+            // }
         };
     }
 
-    /** @var mixed */
-    private $cache;
+    private array $cache;
 
     private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
-
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
@@ -95,7 +90,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
-        if (!$this->cache || $first) {
+        if (!isset($this->cache) || $first) {
             /*
              * This may not be optimal.
              */
@@ -124,5 +119,4 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         }
         return count($this->cache) == 0;
     }
-
 }

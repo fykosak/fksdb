@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IEventRelation {
+interface EventRelation {
 
     public function getEvent(ModelEvent $event): ModelEvent;
 }
