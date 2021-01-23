@@ -46,6 +46,6 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     }
 
     public function getDescription(): ?string {
-        return _('Graf zobrazuje vývoj počtu osôb vo FKSDB a priradené person_id v daný čas.');
+        return _('Graph shows the progress in the number of people in FKSDB and the number of assigned person_id.');
     }
 }
