@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-23 18:31+0100\n"
+"POT-Creation-Date: 2021-01-26 17:54+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -491,14 +491,12 @@ msgid "Error while recounting."
 msgstr ""
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:147
-#, fuzzy
-msgid "Body kvízových úloh spočteny."
-msgstr "Points stored."
+msgid "Calculate quiz points."
+msgstr ""
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:149
-#, fuzzy
-msgid "Chyba při výpočtu."
-msgstr "Error while recounting."
+msgid "Error during calculation."
+msgstr ""
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:56
 msgid "Find person"
@@ -901,6 +899,7 @@ msgstr ""
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:206
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:209
+#: ../app/Components/Forms/Factories/LoginFactory.php:39
 #: ../app/config/orm.neon.neon2php:290 ../app/config/orm.neon.neon2php:823
 msgid "Password"
 msgstr ""
@@ -961,7 +960,7 @@ msgid "Authentication"
 msgstr ""
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:116
-msgid "Špatně zadané staré heslo."
+msgid "Incorrect old password."
 msgstr ""
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:148
@@ -1057,24 +1056,18 @@ msgid "Select currency"
 msgstr ""
 
 #: ../app/Components/Forms/Controls/PersonFlag.php:30
-msgid "Ano"
-msgstr "Yes"
+#: ../app/Components/Forms/Controls/CaptchaBox.php:21
+msgid "Yes"
+msgstr ""
 
 #: ../app/Components/Forms/Controls/PersonFlag.php:31
-msgid "Ne"
-msgstr "No"
+#: ../app/Components/Forms/Controls/CaptchaBox.php:20
+msgid "No"
+msgstr ""
 
 #: ../app/Components/Forms/Controls/CaptchaBox.php:19
-msgid "Jsi robot?"
-msgstr "Are you a robot?"
-
-#: ../app/Components/Forms/Controls/CaptchaBox.php:20
-msgid "ne"
-msgstr "no"
-
-#: ../app/Components/Forms/Controls/CaptchaBox.php:21
-msgid "ano"
-msgstr "yes"
+msgid "Are you a robot?"
+msgstr ""
 
 #: ../app/Components/Forms/Controls/CaptchaBox.php:26
 msgid "This form is for people only."
@@ -1110,13 +1103,14 @@ msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:83
 #, php-format
-msgid "Položka \"%s\" má už vygenerovanú platu, teda nejde zmazať."
+msgid ""
+"The item \"%s\" has already a payment generated, so it cannot be deleted."
 msgstr ""
-"Item \"%s\" has already generated payment, therefore it cannot be deleted."
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:99
 #, php-format
-msgid "Osobu %s nepodarilo ptihlásiť na \"%s\", z dôvodu plnej kapacity."
+msgid ""
+"The person %s could not be registered for \"%s\" because of full capacity."
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:145
@@ -1125,8 +1119,8 @@ msgid "Field %s requires JavaScript enabled."
 msgstr ""
 
 #: ../app/Components/Forms/OptimisticForm.php:69
-msgid "Od zobrazení formuláře byla změněna jeho data."
-msgstr "The data have been modified since last form load."
+msgid "There has been a change in the data of this form since it was shown."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:63
 msgid "Remove parameter"
@@ -1150,8 +1144,8 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:84
 msgid ""
-"Název parametru může být jen z malých písmen anglické abecedy, číslic nebo "
-"podtržítka."
+"The name of the parameter can only contain lowercase letters of the english "
+"alphabet, numbers, and an underscore."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:86
@@ -1217,8 +1211,8 @@ msgid "City is required."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:96
-msgid "PSČ"
-msgstr "Postal code"
+msgid "postal code"
+msgstr ""
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:98
 msgid "Without spaces. For the Czech Republic or Slovakia only."
@@ -1261,8 +1255,9 @@ msgid "Chosen country does not match provided postal code."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/DBReflectionFactory.php:67
-msgid "%label musí být celé číslo."
-msgstr "%label must be an integer."
+#, fuzzy
+msgid "%label must be an integer."
+msgstr "%label is required."
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:42
 #, php-format
@@ -1276,53 +1271,49 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/PersonFactory.php:149
 #, php-format
-msgid "%s: %s je povinná položka."
-msgstr "%s: %s is reqiured field."
+msgid "%s: %s is a required field."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/FlagFactory.php:24
-msgid "Pole %label je povinné."
-msgstr "Field %label is required."
+msgid "The field %label is required."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/FlagFactory.php:38
-msgid "Přeji si dostávat informace o dění na MFF a akcích, které pořádáme"
-msgstr "I would like to get information about events organised by the Faculty"
+msgid "I wish to receive information about MFF and the events they organize."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:28
-msgid "Přihlašovací jméno"
-msgstr "Login"
+msgid "Username"
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:32
-msgid "Daný login již někdo používá."
-msgstr "Login is already used."
+msgid "This username is already taken."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:37
-msgid "Staré heslo"
-msgstr "Old password"
-
-#: ../app/Components/Forms/Factories/LoginFactory.php:39
-msgid "Heslo"
-msgstr "Password"
+msgid "Old password"
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:41
 #, php-format
-msgid "Heslo musí mít alespoň %d znaků."
-msgstr "Password must be at least %d characters long."
+msgid "The password must have at least %d characters."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:45
-msgid "Je třeba nastavit nové heslo."
-msgstr "New password is required."
+msgid "It is necessary to set a new password."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:47
-msgid "Heslo nemůže být prázdné."
-msgstr "Password cannot be empty."
+msgid "Password cannot be empty."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:51
-msgid "Heslo (ověření)"
-msgstr "Password (confirmation)"
+msgid "Password (verification)"
+msgstr ""
 
 #: ../app/Components/Forms/Factories/LoginFactory.php:52
-msgid "Zadaná hesla se neshodují."
-msgstr "Passwords don't match."
+msgid "The submitted passwords do not match."
+msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:27
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:3
@@ -1356,7 +1347,8 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:37
 #, php-format
-msgid "Délka zkráceného názvu je omezena na %d znaků."
+msgid ""
+"The length of the abbreviated name is restricted to a maximum %d characters."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:38
@@ -1487,19 +1479,19 @@ msgid "Only CSV files are accepted."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:55
-msgid "Chování při chybě"
+msgid "Error mode"
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:57
-msgid "Zastavit import a rollbackovat."
+msgid "Stop import and rollback."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:58
-msgid "Přeskočit přihlášku a pokračovat."
+msgid "Skip the application and continue."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:62
-msgid "Přihlášky bez uvedeného stavu"
+msgid "Stateless applications."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:64
@@ -1507,17 +1499,17 @@ msgid "Ignore."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:65
-msgid "Ponechat původní stav."
+msgid "Keep original state."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:108
 #, php-format
-msgid "Import úspěšně proběhl (%.2f s)."
+msgid "Import succesfull (%.2f s)."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:110
 #, php-format
-msgid "Import proběhl s chybami (%.2f s)."
+msgid "Import ran with errors (%.2f s)."
 msgstr ""
 
 #: ../app/Components/Controls/Events/MassTransitionsControl.php:69
@@ -2072,12 +2064,12 @@ msgid "Unknown account."
 msgstr ""
 
 #: ../app/Models/Authentication/Exceptions/RecoveryExistsException.php:8
-msgid "Obnova účtu již probíhá."
-msgstr "Account recovery in progress."
+msgid "Account recovery is already in process."
+msgstr ""
 
 #: ../app/Models/Authentication/Exceptions/InactiveLoginException.php:15
-msgid "Neaktivní účet."
-msgstr "Inactive account."
+msgid "Inactive account."
+msgstr ""
 
 #: ../app/Models/Authentication/Exceptions/InvalidCredentialsException.php:15
 msgid "Neplatné přihlašovací údaje."
@@ -5202,6 +5194,85 @@ msgstr ""
 msgid "for free"
 msgstr ""
 
+#~ msgid "Neaktivní účet."
+#~ msgstr "Inactive account."
+
+#~ msgid "Obnova účtu již probíhá."
+#~ msgstr "Account recovery in progress."
+
+#~ msgid "Heslo musí mít alespoň %d znaků."
+#~ msgstr "Password must be at least %d characters long."
+
+#~ msgid "Daný login již někdo používá."
+#~ msgstr "Login is already used."
+
+#~ msgid "Přihlašovací jméno"
+#~ msgstr "Login"
+
+#~ msgid "Staré heslo"
+#~ msgstr "Old password"
+
+#~ msgid "Heslo"
+#~ msgstr "Password"
+
+#~ msgid "Je třeba nastavit nové heslo."
+#~ msgstr "New password is required."
+
+#~ msgid "Heslo nemůže být prázdné."
+#~ msgstr "Password cannot be empty."
+
+#~ msgid "Heslo (ověření)"
+#~ msgstr "Password (confirmation)"
+
+#~ msgid "Zadaná hesla se neshodují."
+#~ msgstr "Passwords don't match."
+
+#~ msgid "Přeji si dostávat informace o dění na MFF a akcích, které pořádáme"
+#~ msgstr ""
+#~ "I would like to get information about events organised by the Faculty"
+
+#~ msgid "Pole %label je povinné."
+#~ msgstr "Field %label is required."
+
+#~ msgid "%s: %s je povinná položka."
+#~ msgstr "%s: %s is reqiured field."
+
+#~ msgid "%label musí být celé číslo."
+#~ msgstr "%label must be an integer."
+
+#~ msgid "PSČ"
+#~ msgstr "Postal code"
+
+#~ msgid "Od zobrazení formuláře byla změněna jeho data."
+#~ msgstr "The data have been modified since last form load."
+
+#~ msgid "Položka \"%s\" má už vygenerovanú platu, teda nejde zmazať."
+#~ msgstr ""
+#~ "Item \"%s\" has already generated payment, therefore it cannot be deleted."
+
+#~ msgid "Ano"
+#~ msgstr "Yes"
+
+#~ msgid "Ne"
+#~ msgstr "No"
+
+#~ msgid "Jsi robot?"
+#~ msgstr "Are you a robot?"
+
+#~ msgid "ne"
+#~ msgstr "no"
+
+#~ msgid "ano"
+#~ msgstr "yes"
+
+#, fuzzy
+#~ msgid "Body kvízových úloh spočteny."
+#~ msgstr "Points stored."
+
+#, fuzzy
+#~ msgid "Chyba při výpočtu."
+#~ msgstr "Error while recounting."
+
 #~ msgid "Vyhledat"
 #~ msgstr "Search"
 
@@ -6617,9 +6688,6 @@ msgstr ""
 
 #~ msgid "doručovací (odlišná od trvalé)"
 #~ msgstr "delivery (if differs from permanent)"
-
-#~ msgid "%label musí být vyplněn."
-#~ msgstr "%label is required."
 
 #~ msgid "Seminář"
 #~ msgstr "Contest"

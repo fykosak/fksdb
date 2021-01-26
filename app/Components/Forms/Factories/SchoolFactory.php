@@ -34,7 +34,7 @@ class SchoolFactory {
             ->setOption('description', _('Envelope name.'));
 
         $container->addText('name_abbrev', _('Abbreviated name'))
-            ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
+            ->addRule(Form::MAX_LENGTH, _('The length of the abbreviated name is restricted to a maximum %d characters.'), 32)
             ->addRule(Form::FILLED, _('Short name is required.'))
             ->setOption('description', _('Very short name.'));
 

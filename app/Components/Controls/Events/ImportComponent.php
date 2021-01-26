@@ -52,17 +52,17 @@ class ImportComponent extends BaseComponent {
             ->addRule(Form::FILLED)
             ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 
-        $form->addRadioList('errorMode', _('Chování při chybě'))
+        $form->addRadioList('errorMode', _('Error mode'))
             ->setItems([
-                ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
-                ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
+                ApplicationHandler::ERROR_ROLLBACK => _('Stop import and rollback.'),
+                ApplicationHandler::ERROR_SKIP => _('Skip the application and continue.'),
             ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
-        $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
+        $form->addRadioList('stateless', _('Stateless applications.'))
             ->setItems([
                 ImportHandler::STATELESS_IGNORE => _('Ignore.'),
-                ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
+                ImportHandler::STATELESS_KEEP => _('Keep original state.'),
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
@@ -105,9 +105,9 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
             }
 
             $this->redirect('this');

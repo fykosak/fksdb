@@ -80,7 +80,7 @@ class Handler {
                 } catch (PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
-                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                            _('The item "%s" has already a payment generated, so it cannot be deleted.'),
                             $modelPersonSchedule->getLabel()));
                     } else {
                         throw $exception;
@@ -96,7 +96,7 @@ class Handler {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
                 throw new FullCapacityException(\sprintf(
-                    _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
+                    _('The person %s could not be registered for "%s" because of full capacity.'),
                     $person->getFullName(),
                     $modelScheduleItem->getLabel()
                 ));
