@@ -15,13 +15,13 @@
                 <span class="text d-xs-inline-block d-md-block">{$contestant['title']}</span>
             </a>
         {/foreach}
-        <a href="{plink :Event:Dispatch:default}"
+        <a href="{plink :Core:MyApplications:default}"
                 {var $className = 'navigation-item-fykos mb-3 d-block navigation-item p-2'}
-           class="{$className}">
+                             class="{$className}">
             <div class="icon d-sm-inline-block d-md-block mx-2">
-                <img n:attr="src => '/images/contests/event.gif'" alt="" class="w-100"/>
+                <img n:attr="src => '/images/contests/applications.svg'" alt="" class="w-100"/>
             </div>
-            <span class="text d-xs-inline-block d-md-block">{_'Events'}</span>
+            <span class="text d-xs-inline-block d-md-block">{_'My applications'}</span>
         </a>
     </nav>
     <hr/>
@@ -39,6 +39,14 @@
                     <span class="text d-xs-inline-block d-md-block">{$org['title']}</span>
                 </a>
             {/foreach}
+            <a href="{plink :Event:Dispatch:default}"
+                    {var $className = 'navigation-item-fykos mb-3 d-block navigation-item p-2'}
+               class="{$className}">
+                <div class="icon d-sm-inline-block d-md-block mx-2">
+                    <img n:attr="src => '/images/contests/event.gif'" alt="" class="w-100"/>
+                </div>
+                <span class="text d-xs-inline-block d-md-block">{_'Events'}</span>
+            </a>
         </nav>
         <hr/>
         {*control navigationChooser:board 'Core.Dispatch.default' *}{*for relevant activites*}
