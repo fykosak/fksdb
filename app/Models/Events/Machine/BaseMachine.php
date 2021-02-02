@@ -98,20 +98,20 @@ class BaseMachine {
      * @return Transition[]
      */
     public function getAvailableTransitions(Holder $holder, string $sourceState, int $mode = self::EXECUTABLE): array {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) {
+        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) : bool {
             return
                 (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
         });
     }
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
-        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
+        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState): bool {
             return $transition->getTarget() == $targetState;
         });
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
-            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState)); //TODO may this be anytime useful?
+            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState));
         } else {
             return reset($candidates);
         }
@@ -122,7 +122,7 @@ class BaseMachine {
      * @return Transition[]
      */
     private function getMatchingTransitions(string $sourceStateMask): array {
-        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask) {
+        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask): bool {
             return $transition->matches($sourceStateMask);
         });
     }

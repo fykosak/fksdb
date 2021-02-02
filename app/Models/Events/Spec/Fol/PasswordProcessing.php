@@ -34,5 +34,4 @@ class PasswordProcessing extends AbstractProcessing {
     private function hash(?string $string): string {
         return sha1($string);
     }
-
 }

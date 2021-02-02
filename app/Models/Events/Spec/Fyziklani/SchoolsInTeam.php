@@ -17,14 +17,14 @@ use Nette\Forms\IControl;
  */
 class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
-    /** @var mixed */
+    /** @var callable|int */
     private $schoolsInTeam;
     private int $schoolsInTeamValue;
     private ExpressionEvaluator $evaluator;
 
     /**
      * SchoolsInTeam constructor.
-     * @param mixed $schoolsInTeam
+     * @param callable|int $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
      * @param ServicePersonHistory $servicePersonHistory
      */
@@ -42,7 +42,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param mixed $schoolsInTeam
+     * @param callable|int $schoolsInTeam
      * @return void
      */
     public function setSchoolsInTeam($schoolsInTeam): void {
