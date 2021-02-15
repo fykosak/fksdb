@@ -182,7 +182,7 @@ class Handler {
         ]);
         $this->logEvent($submit, 'checked');
 
-        $logger->log(new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
@@ -203,7 +203,7 @@ class Handler {
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 
-        $logger->log(new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,

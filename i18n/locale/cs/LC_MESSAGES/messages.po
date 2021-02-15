@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 17:54+0100\n"
+"POT-Creation-Date: 2021-02-08 16:23+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -69,11 +69,11 @@ msgstr "Konečné výsledky"
 
 #: ../app/Modules/EventModule/Fyziklani/DiplomasPresenter.php:31
 msgid "Calculate ranking"
-msgstr ""
+msgstr "Spočíst výsledky"
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:41
 msgid "Scoring"
-msgstr ""
+msgstr "Bodování"
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:49
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedControl.php:38
@@ -82,7 +82,7 @@ msgstr "Odevzdané"
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:57
 msgid "Change of scoring"
-msgstr ""
+msgstr "Změna bodování"
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:68
 #, fuzzy, php-format
@@ -2296,16 +2296,16 @@ msgstr "Odevzdání bylo smazáno."
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:185
 #, php-format
-msgid "Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr ""
+msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
+msgstr " Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:206
 #, php-format
-msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr ""
+msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
+msgstr "Bodování bylo ověřené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
 #: ../app/Models/Fyziklani/Submit/ClosedSubmittingException.php:16
-#, fuzzy, php-format
+#, php-format
 msgid "Team %s has closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 

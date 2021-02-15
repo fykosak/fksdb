@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 17:54+0100\n"
+"POT-Creation-Date: 2021-02-08 16:21+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -2218,14 +2218,13 @@ msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:185
 #, php-format
-msgid "Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr ""
-"Points have been checked. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:206
-#, php-format
-msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
+#, fuzzy, php-format
+msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
+msgstr "Points have been edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #: ../app/Models/Fyziklani/Submit/ClosedSubmittingException.php:16
 #, php-format
@@ -5193,6 +5192,14 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#~ msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+#~ msgstr ""
+#~ "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
+
+#~ msgid "Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+#~ msgstr ""
+#~ "Points have been checked. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #~ msgid "Neaktivní účet."
 #~ msgstr "Inactive account."

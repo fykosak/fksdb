@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-26 17:54+0100\n"
+"POT-Creation-Date: 2021-02-08 16:21+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2245,12 +2245,12 @@ msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:185
 #, php-format
-msgid "Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:206
 #, php-format
-msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/ClosedSubmittingException.php:16
