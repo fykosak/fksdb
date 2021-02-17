@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Role extends StalkingControl {
+
     public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
@@ -22,7 +23,7 @@ class Role extends StalkingControl {
         if ($login) {
             /** @var ModelGrant $grant */
             foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                $roles[] = new Grant($grant->contest_id, $grant->role->name);
             }
         }
         $this->template->roles = $roles;

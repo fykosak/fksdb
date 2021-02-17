@@ -17,7 +17,7 @@ class ServicePerson extends OldAbstractServiceSingle {
         if (!$email) {
             return null;
         }
-        /** @var ModelPerson|false $result */
+        /** @var ModelPerson|null $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
         return $result ?: null;
     }

@@ -31,13 +31,8 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
      * @return ModelLogin|null
      */
     public function getLogin(): ?ModelLogin {
-        $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
-        $logins->rewind();
-        if (!$logins->valid()) {
-            return null;
-        }
-
-        return ModelLogin::createFromActiveRow($logins->current());
+        $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        return $login ? ModelLogin::createFromActiveRow($login) : null;
     }
 
     public function getPreferredLang(): ?string {
@@ -45,28 +40,23 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     public function getInfo(): ?ModelPersonInfo {
-        $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
-        $infos->rewind();
-        if (!$infos->valid()) {
-            return null;
-        }
-
-        return ModelPersonInfo::createFromActiveRow($infos->current());
+        $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
     }
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
-            ->where('ac_year', $acYear)->fetch();
+            ->where('ac_year', $acYear)
+            ->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }
-        if ($extrapolated) {
-            $lastHistory = $this->getLastHistory();
-            if ($lastHistory) {
-                return $lastHistory->extrapolate($acYear);
-            } else {
-                return null;
-            }
+        if (!$extrapolated) {
+            return null;
+        }
+        $lastHistory = $this->getLastHistory();
+        if ($lastHistory) {
+            return $lastHistory->extrapolate($acYear);
         } else {
             return null;
         }
@@ -102,26 +92,9 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
-    /**
-     * @return ModelPersonHasFlag[]
-     */
-    public function getPersonHasFlags(): array {
-        $personFlags = $this->getFlags();
-        $result = [];
-        foreach ($personFlags as $row) {
-            $result[] = ModelPersonHasFlag::createFromActiveRow($row);
-        }
-        return $result;
-    }
-
-    public function getPersonHasFlag(string $fid): ?ModelPersonHasFlag {
-        $flags = $this->getPersonHasFlags();
-        foreach ($flags as $flag) {
-            if ($flag->getFlag()->fid === $fid) {
-                return $flag;
-            }
-        }
-        return null;
+    public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag {
+        $row = $this->getFlags()->where('fid', $flagType)->fetch();
+        return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
     }
 
     public function getPostContacts(): GroupedSelection {
@@ -134,7 +107,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
      */
     public function getMPostContacts(?string $type = null): array {
         $postContacts = $this->getPostContacts();
-        if ($postContacts && $type !== null) {
+        if ($type !== null) {
             $postContacts->where(['type' => $type]);
         }
 
@@ -144,9 +117,8 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
 
         $result = [];
         foreach ($postContacts as $postContact) {
-            $address = $postContact->ref(DbNames::TAB_ADDRESS, 'address_id');
             $result[] = ModelMPostContact::createFromExistingModels(
-                ModelAddress::createFromActiveRow($address), ModelPostContact::createFromActiveRow($postContact)
+                ModelAddress::createFromActiveRow($postContact->address), ModelPostContact::createFromActiveRow($postContact)
             );
         }
         return $result;
@@ -191,7 +163,6 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     public function getEventParticipants(): GroupedSelection {
-        //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
@@ -204,7 +175,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);
         }
-        return ($tmp->count() > 0);
+        return (bool)$tmp->fetch();
     }
 
     public function getEventOrgs(): GroupedSelection {

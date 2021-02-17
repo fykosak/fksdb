@@ -119,7 +119,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
                 $grant = ModelGrant::createFromActiveRow($row);
-                $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                $this->roles[] = new Grant($grant->contest_id, $grant->role->name);
             }
             // roles from other tables
             $person = $this->getPerson();

@@ -33,6 +33,7 @@ use Nette\Security\IResource;
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
+ * @property-read ActiveRow person
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
@@ -56,11 +57,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, IN
     }
 
     public function getTeacher(): ?ModelPerson {
-        $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
-        if ($row) {
-            return ModelPerson::createFromActiveRow($row);
-        }
-        return null;
+        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
     public function getEvent(): ModelEvent {

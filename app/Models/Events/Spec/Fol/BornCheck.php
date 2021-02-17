@@ -85,10 +85,11 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelPersonHistory|false $personHistory */
+        /** @var ModelPersonHistory|null $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())
+            ->fetch();
         return $personHistory ? $personHistory->study_year : null;
     }
 
@@ -97,7 +98,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
             return $schoolControl->getValue();
         }
         $personId = $personControl->getValue();
-        /** @var ModelSchool|false $school */
+        /** @var ModelSchool|null $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();

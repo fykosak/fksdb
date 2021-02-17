@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
@@ -18,6 +19,7 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read \DateTimeInterface agreed
  * @property-read \DateTimeInterface born
  * @property-read int person_id
+ * @property-read ActiveRow person
  * @property-read string id_number
  * @property-read string im
  * @property-read string note
@@ -39,6 +41,6 @@ use FKSDB\Models\ORM\DbNames;
 class ModelPersonInfo extends OldAbstractModelSingle {
 
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->person);
     }
 }

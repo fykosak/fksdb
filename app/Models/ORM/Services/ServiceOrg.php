@@ -18,7 +18,7 @@ class ServiceOrg extends AbstractServiceSingle {
         if (!$signature) {
             return null;
         }
-        /** @var ModelOrg|false $result */
+        /** @var ModelOrg|null $result */
         $result = $this->getTable()->where('tex_signature', $signature)
             ->where('contest_id', $contestId)->fetch();
         return $result ?: null;

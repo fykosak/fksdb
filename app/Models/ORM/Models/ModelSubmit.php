@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
 /**
@@ -15,7 +16,9 @@ use Nette\Security\IResource;
  * @property-read int raw_points
  * @property-read int points
  * @property-read int ct_id
+ * @property-read ActiveRow contestant_base
  * @property-read int task_id
+ * @property-read ActiveRow task
  * @property-read bool corrected
  */
 class ModelSubmit extends AbstractModelSingle implements IResource {
@@ -29,11 +32,11 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
     }
 
     public function getTask(): ModelTask {
-        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
+        return ModelTask::createFromActiveRow($this->task);
     }
 
     public function getContestant(): ModelContestant {
-        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ModelContestant::createFromActiveRow($this->contestant_base);
     }
 
     public function getResourceId(): string {
