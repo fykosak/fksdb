@@ -16,5 +16,4 @@ class FailStrategy implements MergeStrategy {
     public function mergeValues($trunk, $merged) {
         throw new CannotMergeException();
     }
-
 }

@@ -8,7 +8,7 @@ namespace FKSDB\Components\Forms\Controls\WriteOnly;
  * @note This interface may be later used for Containers.
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IWriteOnly {
+interface WriteOnly {
 
     public const VALUE_ORIGINAL = '__original';
 

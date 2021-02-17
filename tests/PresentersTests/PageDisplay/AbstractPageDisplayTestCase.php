@@ -16,6 +16,7 @@ use Tester\Assert;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
     protected int $personId;
@@ -55,7 +56,6 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * @dataProvider getPages
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void {
-
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $this->authenticate($this->loginId, $fixture);
@@ -77,10 +77,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM global_session');
-        $this->connection->query('DELETE FROM `grant`');
-        $this->connection->query('DELETE FROM login');
-        $this->connection->query('DELETE FROM person');
+        $this->truncateTables([DbNames::TAB_GLOBAL_SESSION, DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
         parent::tearDown();
     }
 }

@@ -9,7 +9,7 @@ use Nette\Database\Explorer;
  * Interface IStateModel
  * @author Michal Červeňák <miso@fykos.cz>
  */
-interface IStateModel {
+interface StateModel {
 
     public function updateState(string $newState): void;
 

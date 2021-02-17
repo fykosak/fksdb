@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 
 /**
  * Trait ContestPresenterTrait
@@ -16,11 +17,9 @@ use Nette\Application\BadRequestException;
 trait ContestPresenterTrait {
 
     /**
-     * @var int
      * @persistent
      */
-    public $contestId;
-
+    public ?int $contestId = null;
     private ?ModelContest $contest;
 
     public function injectServiceContest(ServiceContest $serviceContest): void {
@@ -103,4 +102,6 @@ trait ContestPresenterTrait {
     }
 
     abstract protected function getRole(): string;
+
+    abstract protected function getContext(): Container;
 }

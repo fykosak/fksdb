@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IFilteredDataProvider extends IDataProvider {
+interface FilteredDataProvider extends DataProvider {
 
     /**
      * @param string|null $search

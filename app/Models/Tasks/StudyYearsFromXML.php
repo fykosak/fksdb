@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
@@ -79,7 +79,7 @@ class StudyYearsFromXML extends Stage {
                 $hasYears = true;
 
                 if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), ILogger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), Logger::INFO));
                     continue;
                 }
 
@@ -89,7 +89,7 @@ class StudyYearsFromXML extends Stage {
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'), ILogger::INFO));
+                $this->log(new Message(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'), Logger::INFO));
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
         }

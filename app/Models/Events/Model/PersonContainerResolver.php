@@ -5,8 +5,8 @@ namespace FKSDB\Models\Events\Model;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\SelfResolver;
 
@@ -15,13 +15,13 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonContainerResolver implements IVisibilityResolver, IModifiabilityResolver {
+class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver {
 
     use SmartObject;
 
     private Field $field;
 
-    /** @var mixed */
+    /** @var callable */
     private $condition;
 
     private SelfResolver $selfResolver;
@@ -31,7 +31,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     /**
      * PersonContainerResolver constructor.
      * @param Field $field
-     * @param mixed $condition
+     * @param callable|bool $condition
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */

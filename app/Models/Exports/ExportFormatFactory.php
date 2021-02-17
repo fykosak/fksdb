@@ -49,7 +49,7 @@ class ExportFormatFactory {
         ];
     }
 
-    public function createFormat(string $name, StoredQuery $storedQuery): IExportFormat {
+    public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat {
         switch (strtolower($name)) {
             case self::AESOP:
                 return $this->createAesop($name, $storedQuery);

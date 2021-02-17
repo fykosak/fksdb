@@ -2,15 +2,15 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
@@ -27,7 +27,7 @@ use Nette\Utils\ArrayHash;
  */
 class Holder {
 
-    /** @var IFormAdjustment[] */
+    /** @var FormAdjustment[] */
     private array $formAdjustments = [];
 
     /** @var Processing[] */
@@ -76,7 +76,7 @@ class Holder {
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    public function addFormAdjustment(IFormAdjustment $formAdjusment): void {
+    public function addFormAdjustment(FormAdjustment $formAdjusment): void {
         $this->formAdjustments[] = $formAdjusment;
     }
 
@@ -165,11 +165,11 @@ class Holder {
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Transition[] $transitions
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param Form|null $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, ILogger $logger, ?Form $form): array {
+    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();

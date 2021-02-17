@@ -11,7 +11,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IReferencedHandler {
+interface ReferencedHandler {
 
     public const RESOLUTION_OVERWRITE = 'overwrite';
     public const RESOLUTION_KEEP = 'keep';

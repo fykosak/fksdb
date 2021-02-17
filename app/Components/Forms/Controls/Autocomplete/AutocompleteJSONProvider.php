@@ -9,7 +9,7 @@ use Nette\Application\IPresenter;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IAutocompleteJSONProvider extends IPresenter {
+interface AutocompleteJSONProvider extends IPresenter {
 
     public function handleAutocomplete(string $acName): void;
 }

@@ -5,6 +5,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
@@ -13,7 +14,7 @@ use Tester\Assert;
 class AnonymousMatchTest extends DsefTestCase {
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
+         $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
         parent::tearDown();
     }
 

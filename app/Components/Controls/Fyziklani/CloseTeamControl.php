@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\DI\Container;
 
@@ -17,24 +16,16 @@ use Nette\DI\Container;
  */
 class CloseTeamControl extends BaseComponent {
 
-    private ModelEvent $event;
-
-    /** @var ModelFyziklaniTeam */
-    private $team;
-
+    private ModelFyziklaniTeam $team;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelFyziklaniTeam $team) {
         parent::__construct($container);
-        $this->event = $event;
+        $this->team = $team;
     }
 
     final public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
-    public function setTeam(ModelFyziklaniTeam $team): void {
-        $this->team = $team;
     }
 
     public function handleClose(): void {
@@ -65,9 +56,9 @@ class CloseTeamControl extends BaseComponent {
      */
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());
-        $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
+        $tasksOnBoard = $this->team->getEvent()->getFyziklaniGameSetup()->tasks_on_board;
         /** @var ModelFyziklaniTask|null $nextTask */
-        $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->serviceFyziklaniTask->findAll($this->team->getEvent())->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 }

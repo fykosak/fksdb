@@ -15,7 +15,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAdjustment implements IFormAdjustment {
+abstract class AbstractAdjustment implements FormAdjustment {
 
     use SmartObject;
 

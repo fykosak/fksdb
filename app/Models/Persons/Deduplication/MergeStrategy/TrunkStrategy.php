@@ -17,5 +17,4 @@ class TrunkStrategy implements MergeStrategy {
     public function mergeValues($trunk, $merged) {
         return $trunk;
     }
-
 }

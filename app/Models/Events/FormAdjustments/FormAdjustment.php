@@ -12,7 +12,7 @@ use Nette\Forms\Form;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IFormAdjustment {
+interface FormAdjustment {
 
     public function adjust(Form $form, Machine $machine, Holder $holder): void;
 }

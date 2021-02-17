@@ -67,7 +67,7 @@ class StalkingComponent extends StalkingControl {
     }
 
     /**
-     * @param mixed[]|AbstractModelSingle[] $definition
+     * @param array|AbstractModelSingle[] $definition
      * @param ModelPerson $person
      * @return void
      */

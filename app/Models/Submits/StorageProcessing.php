@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IStorageProcessing {
+interface StorageProcessing {
 
     public function setInputFile(string $filename): void;
 

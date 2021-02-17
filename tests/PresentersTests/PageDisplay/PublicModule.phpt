@@ -11,6 +11,7 @@ $container = require '../../Bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PublicModule extends AbstractPageDisplayTestCase {
+
     protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->personId, 'contest_id' => 1, 'year' => 1]);
@@ -32,7 +33,7 @@ class PublicModule extends AbstractPageDisplayTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM contestant_base');
+        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
         parent::tearDown();
     }
 }

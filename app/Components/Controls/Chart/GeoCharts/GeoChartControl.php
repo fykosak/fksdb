@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Controls\Chart\Chart;
 use FKSDB\Components\React\ReactComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 
-abstract class GeoChartControl extends ReactComponent implements IChart {
+abstract class GeoChartControl extends ReactComponent implements Chart {
     protected const SCALE_LINEAR = 'linear';
     protected const SCALE_LOG = 'log';
 
