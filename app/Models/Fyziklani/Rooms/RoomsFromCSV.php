@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Fyziklani\Rooms;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -54,7 +54,7 @@ class RoomsFromCSV extends Stage {
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(new Message(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), ILogger::WARNING));
+                $this->getPipeline()->log(new Message(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), Logger::WARNING));
                 continue;
             }
             $team = $teams[$teamId];
@@ -70,7 +70,7 @@ class RoomsFromCSV extends Stage {
         $this->serviceTeam->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(new Message(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), ILogger::WARNING));
+            $this->getPipeline()->log(new Message(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), Logger::WARNING));
         }
     }
 

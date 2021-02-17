@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
+class WriteOnlyDatePicker extends DateInput implements WriteOnly {
 
     use WriteOnlyTrait;
 

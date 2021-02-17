@@ -6,20 +6,19 @@ use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\Container;
 
 /**
  * Trait YearPresenterTrait
  * @property YearCalculator $yearCalculator
  */
 trait YearPresenterTrait {
+
     use ContestPresenterTrait;
 
     /**
-     * @var int
      * @persistent
      */
-    public $year;
+    public ?int $year = null;
 
     /**
      * @return void
@@ -64,9 +63,4 @@ trait YearPresenterTrait {
     protected function createComponentYearChooser(): YearChooser {
         return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
     }
-
-    /**
-     * @return Container
-     */
-    abstract protected function getContext();
 }

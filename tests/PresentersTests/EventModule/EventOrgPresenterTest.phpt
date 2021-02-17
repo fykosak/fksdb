@@ -90,7 +90,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
             'id' => (string)$this->eventOrgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->connection->query('SELECT * FROM event_org where e_org_id=?', $this->eventOrgId)->fetch();
+        $org = $this->explorer->query('SELECT * FROM event_org where e_org_id=?', $this->eventOrgId)->fetch();
         Assert::equal('note-edited', $org->note);
     }
 
@@ -118,13 +118,12 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event_org');
-        $this->connection->query('DELETE FROM event');
+         $this->truncateTables([DbNames::TAB_EVENT_ORG,DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
     private function countEventOrgs(): int {
-        return $this->connection->query('SELECT * FROM event_org where person_id=?', $this->personId)->getRowCount();
+        return $this->explorer->query('SELECT * FROM event_org where person_id=?', $this->personId)->getRowCount();
     }
 }
 

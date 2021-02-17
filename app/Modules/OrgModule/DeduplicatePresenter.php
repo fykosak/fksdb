@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -101,7 +101,7 @@ class DeduplicatePresenter extends BasePresenter {
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), Logger::SUCCESS);
         $this->backLinkRedirect(true);
     }
 

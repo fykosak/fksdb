@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
@@ -34,7 +34,7 @@ class TaskCodeInput extends AjaxComponent {
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
         });
     }

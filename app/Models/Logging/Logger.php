@@ -11,7 +11,7 @@ use FKSDB\Models\Messages\Message;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface ILogger {
+interface Logger {
 
     public const ERROR = 'danger';
     public const WARNING = 'warning';

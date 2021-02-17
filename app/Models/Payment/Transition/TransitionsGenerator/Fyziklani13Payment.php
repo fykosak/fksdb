@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\AbstractTransitionsGenerator;
-use FKSDB\Models\Transitions\IStateModel;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween;
@@ -92,9 +92,9 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
         $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
         /**
-         * @param IStateModel|ModelPayment|null $model
+         * @param StateModel|ModelPayment|null $model
          */
-        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+        $transition->afterExecuteCallbacks[] = function (StateModel $model = null) {
             $data = $this->emailData;
             $data['subject'] = \sprintf(_('Payment #%s was created'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;
@@ -141,9 +141,9 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             }
         };
         /**
-         * @param IStateModel|ModelPayment|null $model
+         * @param StateModel|ModelPayment|null $model
          */
-        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+        $transition->afterExecuteCallbacks[] = function (StateModel $model = null) {
             $data = $this->emailData;
             $data['subject'] = \sprintf(_('We are receive payment #%s'), $model->getPaymentId());
             $data['recipient'] = $model->getPerson()->getInfo()->email;

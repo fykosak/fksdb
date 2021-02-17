@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
@@ -76,7 +76,7 @@ class ContributionsFromXML extends Stage {
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {
-                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), ILogger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));
                     continue;
                 }
                 $contributors[] = $org;

@@ -4,8 +4,8 @@ namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\Submits\IStorageProcessing;
-use FKSDB\Models\Submits\ISubmitStorage;
+use FKSDB\Models\Submits\StorageProcessing;
+use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use UnexpectedValueException;
@@ -15,7 +15,7 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class CorrectedStorage implements ISubmitStorage {
+class CorrectedStorage implements SubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
 
@@ -47,10 +47,10 @@ class CorrectedStorage implements ISubmitStorage {
     }
 
     /**
-     * @param IStorageProcessing $processing
+     * @param StorageProcessing $processing
      * @throws NotImplementedException
      */
-    public function addProcessing(IStorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void {
         throw new NotImplementedException();
     }
 

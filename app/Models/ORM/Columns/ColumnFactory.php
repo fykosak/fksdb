@@ -52,7 +52,7 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws OmittedControlException
      */
@@ -113,7 +113,7 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws OmittedControlException
      */

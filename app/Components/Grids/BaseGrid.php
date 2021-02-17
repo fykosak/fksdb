@@ -39,8 +39,9 @@ use PePa\CSVResponse;
 abstract class BaseGrid extends Grid {
 
     /** @persistent string */
-    public $searchTerm;
+    public ?string $searchTerm = null;
     protected ORMFactory $tableReflectionFactory;
+
     private Container $container;
 
     public function __construct(Container $container) {

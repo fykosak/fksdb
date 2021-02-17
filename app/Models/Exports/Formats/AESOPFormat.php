@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Exports\Formats;
 
 use FKSDB\Models\StoredQuery\StoredQuery;
-use FKSDB\Models\WebService\IXMLNodeSerializer;
+use FKSDB\Models\WebService\XMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -14,7 +14,7 @@ class AESOPFormat extends XSLFormat {
 
     public const ID_SCOPE = 'fksdb.person_id';
 
-    public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, string $xslFile, XMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 
         $this->setParameters([

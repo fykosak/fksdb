@@ -10,11 +10,7 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  */
 class ServiceStoredQueryTag extends AbstractServiceSingle {
 
-    /**
-     * @param int|null $tagTypeId
-     * @return TypedTableSelection|null
-     */
-    public function findByTagTypeId($tagTypeId): ?TypedTableSelection {
+    public function findByTagTypeId(?int $tagTypeId): ?TypedTableSelection {
         if (!$tagTypeId) {
             return null;
         }

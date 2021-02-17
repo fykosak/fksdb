@@ -54,7 +54,7 @@ class NavigationChooser extends Chooser {
     }
 
     /**
-     * @param mixed $item
+     * @param array $item
      * @return bool
      */
     public function isItemActive($item): bool {
@@ -73,7 +73,7 @@ class NavigationChooser extends Chooser {
     }
 
     /**
-     * @param mixed $item
+     * @param array $item
      * @return Title
      * @throws BadRequestException
      * @throws BadTypeException
@@ -89,7 +89,7 @@ class NavigationChooser extends Chooser {
     }
 
     /**
-     * @param mixed $item
+     * @param array $item
      * @return string
      * @throws BadRequestException
      * @throws BadTypeException
@@ -104,7 +104,7 @@ class NavigationChooser extends Chooser {
     }
 
     /**
-     * @param mixed $item
+     * @param array $item
      * @return bool
      * @throws BadRequestException
      * @throws BadTypeException

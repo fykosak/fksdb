@@ -10,7 +10,7 @@ use DOMNode;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IXMLNodeSerializer {
+interface XMLNodeSerializer {
 
     public const EXPORT_FORMAT_1 = 1;
     public const EXPORT_FORMAT_2 = 2;
@@ -19,8 +19,8 @@ interface IXMLNodeSerializer {
      * @param mixed $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param int $formatVersionVersion
+     * @param int $formatVersion
      * @return void
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersionVersion): void;
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void;
 }

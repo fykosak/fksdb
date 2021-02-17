@@ -3,7 +3,7 @@
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
@@ -17,7 +17,7 @@ class GenderFromBornNumberTest extends PersonTest {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(ILogger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {

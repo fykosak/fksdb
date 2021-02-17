@@ -9,13 +9,7 @@ use FKSDB\Models\ORM\Models\ModelFlag;
  */
 class ServiceFlag extends AbstractServiceSingle {
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $fid
-     * @return ModelFlag|null
-     */
-    public function findByFid($fid): ?ModelFlag {
+    public function findByFid(?string $fid): ?ModelFlag {
         if (!$fid) {
             return null;
         }

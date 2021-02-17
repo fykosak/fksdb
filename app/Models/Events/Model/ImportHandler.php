@@ -95,11 +95,11 @@ class ImportHandler {
     }
 
     /**
-     * @param mixed $row
+     * @param iterable $row
      * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues($row): array {
+    private function rowToValues(iterable $row): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = [];
         $fieldExists = false;

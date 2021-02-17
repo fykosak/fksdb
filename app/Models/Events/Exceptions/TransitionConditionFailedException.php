@@ -13,8 +13,4 @@ class TransitionConditionFailedException extends MachineExecutionException {
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
     }
-
-    public function getTransition(): Transition {
-        return $this->transition;
-    }
 }

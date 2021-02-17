@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Breadcrumbs;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
-use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\Utils;
 use Nette\Application\IPresenterFactory;
@@ -83,8 +83,8 @@ class Breadcrumbs extends BaseComponent {
      */
     public function setBackLink(AppRequest $request): void {
         $presenter = $this->getPresenter();
-        if (!$presenter instanceof INavigablePresenter) {
-            throw new BadTypeException(INavigablePresenter::class, $presenter);
+        if (!$presenter instanceof NavigablePresenter) {
+            throw new BadTypeException(NavigablePresenter::class, $presenter);
         }
 
         $requestKey = $this->getRequestKey($request);
@@ -276,7 +276,7 @@ class Breadcrumbs extends BaseComponent {
     }
 
     /**
-     * @param INavigablePresenter|Presenter $presenter
+     * @param NavigablePresenter|Presenter $presenter
      * @param AppRequest $request
      * @param string|null $backLink
      * @return Request
@@ -285,8 +285,8 @@ class Breadcrumbs extends BaseComponent {
      */
     protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
-        if (!$presenter instanceof INavigablePresenter) {
-            throw new BadTypeException(INavigablePresenter::class, $presenter);
+        if (!$presenter instanceof NavigablePresenter) {
+            throw new BadTypeException(NavigablePresenter::class, $presenter);
         }
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }

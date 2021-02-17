@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\AjaxSubmit;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -105,14 +105,14 @@ class AjaxSubmit extends AjaxComponent {
             }
 
             if (!$fileContainer->isOk()) {
-                $this->getLogger()->log(new Message(_('File is not Ok'), ILogger::ERROR));
+                $this->getLogger()->log(new Message(_('File is not Ok'), Logger::ERROR));
                 $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $this->getLogger()->log(new Message(_('Upload successful'), ILogger::SUCCESS));
+            $this->getLogger()->log(new Message(_('Upload successful'), Logger::SUCCESS));
             $this->sendAjaxResponse();
         }
     }
@@ -125,7 +125,7 @@ class AjaxSubmit extends AjaxComponent {
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
+            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING));
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException | ModelException$exception) {
