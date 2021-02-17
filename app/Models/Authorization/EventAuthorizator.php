@@ -23,14 +23,6 @@ class EventAuthorizator {
         $this->permission = $acl;
     }
 
-    public function getUser(): IUserStorage {
-        return $this->userStorage;
-    }
-
-    protected function getPermission(): Permission {
-        return $this->permission;
-    }
-
     /**
      * @param IResource|string|null $resource
      * @param string|null $privilege
@@ -59,7 +51,7 @@ class EventAuthorizator {
      * @return bool
      */
     public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             return false;
         }
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
@@ -75,7 +67,7 @@ class EventAuthorizator {
      * @return bool
      */
     public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             return false;
         }
         if (!$this->isEventOrg($resource, $privilege, $event)) {
@@ -92,7 +84,7 @@ class EventAuthorizator {
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
         /** @var ModelLogin $identity */
-        $identity = $this->getUser()->getIdentity();
+        $identity = $this->userStorage->getIdentity();
         $person = $identity ? $identity->getPerson() : null;
         if (!$person) {
             return false;

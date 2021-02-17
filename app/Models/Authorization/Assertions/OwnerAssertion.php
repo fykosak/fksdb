@@ -21,10 +21,10 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    private IUserStorage $user;
+    private IUserStorage $userStorage;
 
-    public function __construct(IUserStorage $user) {
-        $this->user = $user;
+    public function __construct(IUserStorage $userStorage) {
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -36,7 +36,7 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelSubmit $submit */
@@ -45,7 +45,7 @@ class OwnerAssertion {
         if (!$submit instanceof IResource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getIdentity()->getId();
+        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->userStorage->getIdentity()->getId();
     }
 
     /**
@@ -58,7 +58,7 @@ class OwnerAssertion {
      * @return bool
      */
     public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelContestant $contestant */
@@ -79,7 +79,7 @@ class OwnerAssertion {
      * @return bool
      */
     public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelPerson $person */
@@ -104,11 +104,11 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
-        $loggedPerson = $this->user->getIdentity()->getPerson();
+        $loggedPerson = $this->userStorage->getIdentity()->getPerson();
         $model = $acl->getQueriedResource();
         try {
             $contest = ReferencedFactory::accessModel($model, ModelContest::class);

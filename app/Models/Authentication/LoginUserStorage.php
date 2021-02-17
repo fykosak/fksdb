@@ -168,7 +168,6 @@ class LoginUserStorage extends UserStorage {
         if (!$login) {
             return null;
         }
-        $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;
     }
