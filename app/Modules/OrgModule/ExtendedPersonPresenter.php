@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use FKSDB\Models\Persons\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
@@ -33,7 +33,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param ModelContestant|null|AbstractModelSingle $model
-     * @param Form|IControl[][] $form
+     * @param Form|Control[][] $form
      */
     protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
         if (!$model) {

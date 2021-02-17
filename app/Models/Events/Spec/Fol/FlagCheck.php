@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -87,7 +87,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
+    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -100,7 +100,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory->study_year;
     }
 
-    private function getSchoolId(IControl $schoolControl, IControl $personControl): int {
+    private function getSchoolId(Control $schoolControl, Control $personControl): int {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
