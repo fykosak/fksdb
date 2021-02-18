@@ -111,6 +111,7 @@ class OwnerAssertion {
         $loggedPerson = $this->userStorage->getIdentity()->getPerson();
         $model = $acl->getQueriedResource();
         try {
+            /** @var ModelContest $contest */
             $contest = ReferencedFactory::accessModel($model, ModelContest::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContestId()) {
                 return false;

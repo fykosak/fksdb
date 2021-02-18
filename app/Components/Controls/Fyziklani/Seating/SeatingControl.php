@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Fyziklani\Seating;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
@@ -26,9 +27,9 @@ class SeatingControl extends BaseComponent {
         $this->render($event, 'all');
     }
 
-    public function renderTeam(ModelEvent $event, int $teamId, string $lang): void {
-        $this->template->teamId = $teamId;
-        $this->render($event, 'single', $lang);
+    public function renderTeam(ModelFyziklaniTeam $team, string $lang): void {
+        $this->template->team = $team;
+        $this->render($team->getEvent(), 'single', $lang);
     }
 
     public function renderDev(ModelEvent $event): void {

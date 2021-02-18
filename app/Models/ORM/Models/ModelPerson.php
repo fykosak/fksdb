@@ -55,7 +55,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);

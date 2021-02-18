@@ -13,7 +13,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;

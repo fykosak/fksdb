@@ -52,11 +52,11 @@ abstract class OldAbstractModelSingle extends AbstractModelSingle implements IMo
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $column
      * @param mixed $value
      */
-    public function __set($key, $value) {
-        $this->tmpData[$key] = $value;
+    public function __set($column, $value) {
+        $this->tmpData[$column] = $value;
     }
 
     /**
