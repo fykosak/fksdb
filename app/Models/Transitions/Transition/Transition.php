@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Transitions\Transition;
 
-use FKSDB\Models\Logging\ILogger;
-use FKSDB\Models\Transitions\IStateModel;
+use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 
 /**
@@ -11,10 +11,10 @@ use FKSDB\Models\Transitions\Machine\Machine;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 final class Transition {
-    public const TYPE_SUCCESS = ILogger::SUCCESS;
-    public const TYPE_WARNING = ILogger::WARNING;
-    public const TYPE_DANGER = ILogger::ERROR;
-    public const TYPE_PRIMARY = ILogger::PRIMARY;
+    public const TYPE_SUCCESS = Logger::SUCCESS;
+    public const TYPE_WARNING = Logger::WARNING;
+    public const TYPE_DANGER = Logger::ERROR;
+    public const TYPE_PRIMARY = Logger::PRIMARY;
 
     /** @var callable */
     private $condition;
@@ -70,17 +70,17 @@ final class Transition {
         return $this->fromState === Machine::STATE_INIT;
     }
 
-    public function canExecute(?IStateModel $model): bool {
+    public function canExecute(?StateModel $model): bool {
         return ($this->condition)($model);
     }
 
-    final public function beforeExecute(IStateModel &$model): void {
+    final public function beforeExecute(StateModel &$model): void {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 
-    final public function afterExecute(IStateModel &$model): void {
+    final public function afterExecute(StateModel &$model): void {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }

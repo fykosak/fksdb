@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IExtendedPersonPresenter {
+interface ExtendedPersonPresenter {
 
     public function getModel(): ?AbstractModelSingle;
 

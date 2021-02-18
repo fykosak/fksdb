@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IHolderSource {
+interface HolderSource {
     /**
      * @return Holder[]
      */

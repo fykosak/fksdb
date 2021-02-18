@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
@@ -47,19 +47,19 @@ class SubmitCheckComponent extends BaseComponent {
         foreach ($this->seriesTable->getSubmits() as $submit) {
             if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
+                $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), Logger::ERROR);
             }
 
             if ($submit->corrected && !$this->correctedStorage->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
+                $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), Logger::ERROR);
             }
             if (!$submit->corrected && $this->correctedStorage->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
+                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), Logger::ERROR);
             }
         }
-        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? ILogger::WARNING : ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? Logger::WARNING : Logger::SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 }

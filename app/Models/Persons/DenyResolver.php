@@ -10,7 +10,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class DenyResolver implements IVisibilityResolver, IModifiabilityResolver {
+class DenyResolver implements VisibilityResolver, ModifiabilityResolver {
     use SmartObject;
 
     public function isVisible(ModelPerson $person): bool {

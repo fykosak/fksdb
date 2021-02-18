@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use Nette\DI\Container;
 
-class ContestantsPerYearsChart extends ReactComponent implements IChart {
+class ContestantsPerYearsChart extends ReactComponent implements Chart {
 
     private ServiceSubmit $serviceSubmit;
     protected ModelContest $contest;

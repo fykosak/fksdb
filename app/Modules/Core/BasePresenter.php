@@ -8,18 +8,18 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
-use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\StylesheetCollector;
+use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\GettextTranslator;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
@@ -40,41 +40,35 @@ use FKSDB\Models\Utils\Utils;
  * Base presenter for all application presenters.
  * @property ITemplate $template
  */
-abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
+abstract class BasePresenter extends Presenter implements JavaScriptCollector, StylesheetCollector, AutocompleteJSONProvider, NavigablePresenter {
 
     use CollectorPresenterTrait;
 
-    public const FLASH_SUCCESS = ILogger::SUCCESS;
-    public const FLASH_INFO = ILogger::INFO;
-    public const FLASH_WARNING = ILogger::WARNING;
-    public const FLASH_ERROR = ILogger::ERROR;
-
+    public const FLASH_SUCCESS = Logger::SUCCESS;
+    public const FLASH_INFO = Logger::INFO;
+    public const FLASH_WARNING = Logger::WARNING;
+    public const FLASH_ERROR = Logger::ERROR;
     /** @persistent */
-    public $tld;
-
+    public ?string $tld = null;
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent
      */
-    public $bc;
-
+    public ?string $bc = null;
     /**
      * @persistent
      * @internal
      */
-    public $lang;
-
+    public ?string $lang = null;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
     protected BreadcrumbsFactory $breadcrumbsFactory;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
-
     private ?PageTitle $pageTitle;
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
-
 
     final public function injectBase(
         YearCalculator $yearCalculator,
@@ -124,7 +118,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider && $provider instanceof IFilteredDataProvider) {
+            if ($provider && $provider instanceof FilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
             $response = new JsonResponse($data);
@@ -147,11 +141,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return 'title' . $view;
     }
 
-    /**
-     * @param string $view
-     * @return static
-     */
-    public function setView($view): self {
+    public function setView(string $view): self {
         parent::setView($view);
         $this->pageTitle = null;
         return $this;

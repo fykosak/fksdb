@@ -9,6 +9,6 @@ use Nette\Application\IResponse;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IExportFormat {
+interface ExportFormat {
     public function getResponse(): IResponse;
 }

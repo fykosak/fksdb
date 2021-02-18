@@ -40,7 +40,7 @@ class EventRole extends ColumnFactory {
         } catch (CannotAccessModelException$exception) {
             $person = $this->userStorage->getIdentity()->getPerson();
         }
-
+        /** @var ModelEvent $event */
         $event = ReferencedFactory::accessModel($model, ModelEvent::class);
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }

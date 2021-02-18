@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -16,8 +16,8 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
@@ -39,9 +39,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
     public const EXTRAPOLATE = 0x4;
     public const HAS_DELIVERY = 0x8;
 
-    public IModifiabilityResolver $modifiabilityResolver;
+    public ModifiabilityResolver $modifiabilityResolver;
 
-    public IVisibilityResolver $visibilityResolver;
+    public VisibilityResolver $visibilityResolver;
 
     public int $acYear;
 
@@ -63,8 +63,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     public function __construct(
         Container $container,
-        IModifiabilityResolver $modifiabilityResolver,
-        IVisibilityResolver $visibilityResolver,
+        ModifiabilityResolver $modifiabilityResolver,
+        VisibilityResolver $visibilityResolver,
         int $acYear,
         array $fieldsDefinition,
         ?ModelEvent $event,
@@ -290,7 +290,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     protected function setWriteOnly(IComponent $component, bool $value): void {
-        if ($component instanceof IWriteOnly) {
+        if ($component instanceof WriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {
             foreach ($component->getComponents() as $subComponent) {
@@ -300,7 +300,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     protected function isWriteOnly(IComponent $component): bool {
-        if ($component instanceof IWriteOnly) {
+        if ($component instanceof WriteOnly) {
             return true;
         } elseif ($component instanceof IContainer) {
             foreach ($component->getComponents() as $subComponent) {

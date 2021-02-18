@@ -14,14 +14,10 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
+abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
 
     private iterable $rules;
 
-    /**
-     * PairwiseAdjustment constructor.
-     * @param iterable $rules
-     */
     public function __construct(iterable $rules) {
         $this->rules = $rules;
     }

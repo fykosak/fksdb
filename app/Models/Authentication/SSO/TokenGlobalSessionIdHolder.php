@@ -13,15 +13,12 @@ use Nette\Http\Session;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class TokenGSIDHolder implements IGSIDHolder {
+class TokenGlobalSessionIdHolder implements GlobalSessionIdHolder {
 
     public const SESSION_NS = 'sso';
     public const GSID_KEY = 'gsid';
-
     private Session $session;
-
     private ServiceAuthToken $serviceAuthToken;
-
     private Request $request;
 
     public function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
@@ -30,16 +27,13 @@ class TokenGSIDHolder implements IGSIDHolder {
         $this->request = $request;
     }
 
-    /**
-     * @return mixed|null|string
-     */
-    public function getGSID() {
+    public function getGlobalSessionId(): ?string {
         // try obtain GSID from auth token in URL
         $tokenData = $this->request->getQuery(TokenAuthenticator::PARAM_AUTH_TOKEN);
         $token = $tokenData ? $this->serviceAuthToken->verifyToken($tokenData) : null;
         if ($token && $token->type == ModelAuthToken::TYPE_SSO) {
             $gsid = $token->data;
-            $this->setGSID($gsid); // so later we know our GSID
+            $this->setGlobalSessionId($gsid); // so later we know our GSID
 
             return $gsid;
         }
@@ -53,13 +47,8 @@ class TokenGSIDHolder implements IGSIDHolder {
         }
     }
 
-    /**
-     * @param mixed $gsid
-     * @return void
-     */
-    public function setGSID($gsid): void {
+    public function setGlobalSessionId(?string $globalSessionId): void {
         $section = $this->session->getSection(self::SESSION_NS);
-        $section[self::GSID_KEY] = $gsid;
+        $section[self::GSID_KEY] = $globalSessionId;
     }
-
 }

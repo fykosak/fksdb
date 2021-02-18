@@ -9,9 +9,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IModifiabilityResolver {
+interface VisibilityResolver {
 
-    public function isModifiable(ModelPerson $person): bool;
-
-    public function getResolutionMode(ModelPerson $person): string;
+    public function isVisible(ModelPerson $person): bool;
 }

@@ -79,8 +79,7 @@ class OrgModule extends AbstractPageDisplayTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM person_info');
-        $this->connection->query('DELETE FROM org');
+        $this->truncateTables(['person_info', 'org']);
         parent::tearDown();
     }
 }

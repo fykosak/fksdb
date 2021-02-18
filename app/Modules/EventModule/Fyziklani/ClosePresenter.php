@@ -28,6 +28,7 @@ use Nette\Security\IResource;
  * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
@@ -85,7 +86,6 @@ class ClosePresenter extends BasePresenter {
     /* *********** ACTIONS **************** */
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -98,33 +98,18 @@ class ClosePresenter extends BasePresenter {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $this->actionHard();
     }
 
+    /* ********* COMPONENTS ************* */
     /**
-     * @return void
-     * @throws BadTypeException
+     * @return CloseTeamControl
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function actionHard(): void {
-        $control = $this->getComponent('closeTeamControl');
-        if (!$control instanceof CloseTeamControl) {
-            throw new BadTypeException(CloseTeamControl::class, $control);
-        }
-        $control->setTeam($this->getEntity());
-    }
-
-    /* ********* COMPONENTS ************* */
-
-    /**
-     * @return CloseTeamControl
-     * @throws EventNotFoundException
-     */
     protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getContext(), $this->getEvent());
+        return new CloseTeamControl($this->getContext(), $this->getEntity());
     }
 
     /**

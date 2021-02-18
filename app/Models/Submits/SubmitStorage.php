@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface ISubmitStorage {
+interface SubmitStorage {
 
     public const TYPE_ORIGINAL = 0;
     public const TYPE_PROCESSED = 1;
@@ -26,7 +26,7 @@ interface ISubmitStorage {
 
     public function rollback(): void;
 
-    public function addProcessing(IStorageProcessing $processing): void;
+    public function addProcessing(StorageProcessing $processing): void;
 
     /**
      * File is renamed/moved to own purposes.

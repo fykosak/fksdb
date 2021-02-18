@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -23,7 +23,7 @@ class ParticipantsDurationTest extends PersonTest {
         parent::__construct('participants_duration', _('Participate events'));
     }
 
-    public function run(ILogger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void {
         foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;

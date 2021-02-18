@@ -30,7 +30,7 @@ use FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedPersonHandler implements IReferencedHandler {
+class ReferencedPersonHandler implements ReferencedHandler {
     use SmartObject;
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
@@ -243,12 +243,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     private bool $outerTransaction = false;
 
-    /**
-     * @param mixed $models
-     * @param ArrayHash $values
-     * @return array
-     */
-    private function getConflicts($models, ArrayHash $values): array {
+    private function getConflicts(array $models, ArrayHash $values): array {
         $conflicts = [];
         foreach ($values as $key => $value) {
             if ($key === 'person_has_flag') {

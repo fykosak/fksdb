@@ -19,8 +19,6 @@ interface IService {
      */
     public function createNew(?iterable $data = null);
 
-    public function createNewModel(array $data);
-
     /**
      * @param mixed $key
      * @return IModel|null

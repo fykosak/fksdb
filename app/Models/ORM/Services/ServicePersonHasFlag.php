@@ -33,13 +33,7 @@ class ServicePersonHasFlag extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    /**
-     * @param IModel $model
-     * @param array $data
-     * @param bool $alive
-     * @return mixed|void
-     */
-    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
+    public function updateModel(IModel $model, ?iterable $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }

@@ -31,12 +31,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     private Holder $holder;
     protected ServiceEvent $serviceEvent;
     protected EventDispatchFactory $eventDispatchFactory;
-
     /**
-     * @var int
      * @persistent
      */
-    public $eventId;
+    public ?int $eventId = null;
 
     final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceEvent = $serviceEvent;

@@ -10,6 +10,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DataValidator {
+
     use SmartObject;
 
     /** @var string[] */

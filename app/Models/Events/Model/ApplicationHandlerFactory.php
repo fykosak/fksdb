@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
 use Nette\DI\Container;
@@ -27,7 +27,7 @@ class ApplicationHandlerFactory {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    public function create(ModelEvent $event, ILogger $logger): ApplicationHandler {
+    public function create(ModelEvent $event, Logger $logger): ApplicationHandler {
         return new ApplicationHandler($event, $logger, $this->connection, $this->container, $this->eventDispatchFactory);
     }
 }

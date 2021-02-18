@@ -9,7 +9,7 @@ use FKSDB\Models\Payment\Price;
  * Interface IPreprocess
  * @author Michal Červeňák <miso@fykos.cz>
  */
-interface IPreprocess {
+interface Preprocess {
 
     public static function calculate(ModelPayment $modelPayment): Price;
 

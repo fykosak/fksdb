@@ -1,8 +1,7 @@
 <?php
 
-
 namespace FKSDB\Models\Payment;
 
-interface IPaymentModel {
+interface PaymentModel {
     public function getPrice(): Price;
 }

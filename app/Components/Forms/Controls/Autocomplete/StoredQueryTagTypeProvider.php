@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Tables\TypedTableSelection;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class StoredQueryTagTypeProvider implements IFilteredDataProvider {
+class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
     private const DESCRIPTION = 'description';
 

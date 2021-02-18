@@ -9,15 +9,15 @@ use FKSDB\Models\Messages\Message;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class StackedLogger implements ILogger {
+abstract class StackedLogger implements Logger {
 
-    private ?ILogger $child = null;
+    private ?Logger $child = null;
 
-    public function getChild(): ?ILogger {
+    public function getChild(): ?Logger {
         return $this->child;
     }
 
-    public function setChild(ILogger $child): void {
+    public function setChild(Logger $child): void {
         $this->child = $child;
     }
 

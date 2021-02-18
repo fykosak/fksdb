@@ -7,7 +7,7 @@ namespace FKSDB\Components\Controls\Loaders;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-interface IStylesheetCollector {
+interface StylesheetCollector {
 
     /**
      * @param string $file path relative to webroot

@@ -7,6 +7,7 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\DevNullLogger;
@@ -47,7 +48,7 @@ class ApplicationHandlerTest extends EventTestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
+        $this->explorer->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         /** @var ServiceEvent $serviceEvent */
@@ -65,9 +66,7 @@ class ApplicationHandlerTest extends EventTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_fyziklani_participant');
-        $this->connection->query('DELETE FROM e_fyziklani_team');
-
+         $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT,DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
 
@@ -211,7 +210,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
         Assert::equal($teamName, $team->name);
 
-        $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
+        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
         Assert::equal(2, $count);
     }
 }
