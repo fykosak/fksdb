@@ -88,7 +88,8 @@ VALUES (1, 1, 'FYKOSí Fyziklání'),
        (11, 2, 'Jarní setkání řešitelů'),
        (12, 2, 'Podzimní setkání řešitelů'),
        (13, 2, 'Náboj Junior'),
-       (14, 1, 'Den s experimentální fyzikou 2');
+       (14, 1, 'Den s experimentální fyzikou 2'),
+       (15, 2, 'Výfučí Kyberkoncil');
 
 INSERT INTO `event_status` (`status`, `description`)
 VALUES ('applied', 'obecně přihlášen'),

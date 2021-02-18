@@ -507,6 +507,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'co studuje/kde pracuje',
   `homepage`               VARCHAR(255) NULL DEFAULT NULL
   COMMENT 'URL osobní homepage',
+  `discord_id`             VARCHAR(255) NULL DEFAULT NULL,
   `fb_id`                  VARCHAR(255) NULL DEFAULT NULL,
   `linkedin_id`            VARCHAR(255) NULL DEFAULT NULL,
   `phone_parent_d`         VARCHAR(32)  NULL DEFAULT NULL
