@@ -12,14 +12,14 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
-use FKSDB\Models\WebService\IXMLNodeSerializer;
+use FKSDB\Models\WebService\XMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQueryFactory implements IXMLNodeSerializer {
+class StoredQueryFactory implements XMLNodeSerializer {
 
     public const PARAM_CONTEST_ID = 'contest_id';
     public const PARAM_CONTEST = 'contest';

@@ -23,7 +23,7 @@ abstract class EventModuleTestCase extends AbstractPageDisplayTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event');
+        $this->truncateTables([DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 }

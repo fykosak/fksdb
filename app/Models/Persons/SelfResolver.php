@@ -12,7 +12,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
+class SelfResolver implements VisibilityResolver, ModifiabilityResolver {
     use SmartObject;
 
     private User $user;

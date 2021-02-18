@@ -12,7 +12,7 @@ use Nette\Utils\Html;
  */
 class ContestBadge extends Badge {
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return Html
      * @throws ContestNotFoundException
      */

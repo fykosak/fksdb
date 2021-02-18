@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ConstantStrategy implements IMergeStrategy {
+class ConstantStrategy implements MergeStrategy {
 
     /** @var mixed */
     private $constant;

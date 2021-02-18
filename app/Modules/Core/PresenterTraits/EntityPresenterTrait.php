@@ -23,9 +23,8 @@ trait EntityPresenterTrait {
 
     /**
      * @persistent
-     * @var int
      */
-    public $id;
+    public ?int $id = null;
     protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {

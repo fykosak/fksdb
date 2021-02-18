@@ -14,8 +14,8 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
 /**
@@ -59,8 +59,8 @@ class ReferencedPersonFactory {
         int $acYear,
         string $searchType,
         bool $allowClear,
-        IModifiabilityResolver $modifiabilityResolver,
-        IVisibilityResolver $visibilityResolver,
+        ModifiabilityResolver $modifiabilityResolver,
+        VisibilityResolver $visibilityResolver,
         ?ModelEvent $event = null
     ): ReferencedId {
 

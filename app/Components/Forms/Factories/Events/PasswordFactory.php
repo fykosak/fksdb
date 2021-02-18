@@ -3,10 +3,8 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Models\Events\Model\Holder\Field;
-use Nette\ComponentModel\Component;
-use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
-use Nette\Forms\IControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,27 +20,7 @@ class PasswordFactory extends AbstractFactory {
         return $element;
     }
 
-    /**
-     * @param TextInput|IComponent $component
-     * @param Field $field
-     */
-    protected function setDefaultValue(IComponent $component, Field $field): void {
-        $component->setDefaultValue('');
+    protected function setDefaultValue(BaseControl $control, Field $field): void {
+        $control->setDefaultValue('');
     }
-
-    /**
-     * @param TextInput|IComponent $component
-     */
-    protected function setDisabled(IComponent $component): void {
-        $component->setDisabled();
-    }
-
-    /**
-     * @param Component|IComponent $component
-     * @return Component|IControl
-     */
-    public function getMainControl(IComponent $component): IControl {
-        return $component;
-    }
-
 }

@@ -3,10 +3,10 @@
 namespace FKSDB\Models\Exports\Formats;
 
 use DOMDocument;
-use FKSDB\Models\Exports\IExportFormat;
+use FKSDB\Models\Exports\ExportFormat;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\SmartObject;
-use FKSDB\Models\WebService\IXMLNodeSerializer;
+use FKSDB\Models\WebService\XMLNodeSerializer;
 use XSLTProcessor;
 
 /**
@@ -14,7 +14,7 @@ use XSLTProcessor;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class XSLFormat implements IExportFormat {
+class XSLFormat implements ExportFormat {
     use SmartObject;
 
     private StoredQuery $storedQuery;
@@ -23,9 +23,9 @@ class XSLFormat implements IExportFormat {
 
     private string $xslFile;
 
-    private IXMLNodeSerializer $xmlSerializer;
+    private XMLNodeSerializer $xmlSerializer;
 
-    public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, string $xslFile, XMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
@@ -59,7 +59,7 @@ class XSLFormat implements IExportFormat {
         $doc = new DOMDocument();
         $export = $doc->createElement('export');
         $doc->appendChild($export);
-        $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
         return new PlainTextResponse($proc->transformToXml($doc));

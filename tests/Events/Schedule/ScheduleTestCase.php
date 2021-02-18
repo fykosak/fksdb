@@ -2,21 +2,19 @@
 
 namespace FKSDB\Tests\Events\Schedule;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase {
+
     /** @var int */
     protected $itemId;
-
     protected IPresenter $fixture;
-
     protected int $groupId;
-
     protected array $persons = [];
-
     protected int $eventId;
 
     protected function getEventId(): int {
@@ -130,11 +128,7 @@ EOT
     abstract public function getAccommodationCapacity(): int;
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        $this->connection->query('DELETE FROM e_dsef_group');
-        $this->connection->query('DELETE FROM person_schedule');
-        $this->connection->query('DELETE FROM schedule_item');
-        $this->connection->query('DELETE FROM schedule_group');
+        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']);
         parent::tearDown();
     }
 }
