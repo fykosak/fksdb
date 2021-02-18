@@ -587,6 +587,10 @@ orm:
                     type: string
                     title: Pizza
                     permission: RESTRICT
+                discord_id:
+                    type: string
+                    title: Discord ID
+                    permission: BASIC
         post_contact:
             serviceClassName: FKSDB\Models\ORM\Services\ServicePostContact
             modelClassName: FKSDB\Models\ORM\Models\ModelPostContact
