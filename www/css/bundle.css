@@ -669,12 +669,8 @@ body[data-style-id=login] .form-signin input.last {
   background-color: #e64100;
 }
 
-.bg-vyfuk-alt {
-  background-color: #ff4800;
-}
-
 .bg-vyfuk {
-  background-color: #9c3;
+  background-color: #ff4800;
 }
 
 .bg-fykos {
