@@ -2,8 +2,25 @@ Installation
 ============
 
   * install PHP74 + extension
+    * php7.4
+    * php7.4-cli
+    * php7.4-common
+    * php7.4-curl
+    * php7.4-json
+    * php7.4-mbstring
+    * php7.4-mysql
+    * php7.4-opcache
+    * php7.4-readline
+    * php7.4-soap
+    * php7.4-sqlite3
+    * php7.4-xdebug
+    * php7.4-xml
+    * php7.4-xmlrpc
   * install composer
   * install MySQL/mariaDB
+
+
+
 Initialization
 --------------
 
