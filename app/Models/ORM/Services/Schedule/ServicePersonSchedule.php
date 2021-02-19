@@ -10,5 +10,4 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
 
-
 }

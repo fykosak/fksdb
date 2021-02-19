@@ -67,9 +67,6 @@ class ServiceAuthToken extends AbstractServiceSingle {
         } else {
             $this->updateModel2($token, ['until' => $until]);
         }
-        //  $token->until = $until;
-
-        // $this->save($token);
         if (!$outerTransaction) {
             $this->context->getConnection()->commit();
         }
@@ -86,7 +83,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
         /** @var ModelAuthToken $token */
         $token = $tokens->fetch();
-        return $token ?: null;
+        return $token;
     }
 
     /**

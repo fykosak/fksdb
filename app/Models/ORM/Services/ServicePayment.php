@@ -11,5 +11,4 @@ use FKSDB\Models\ORM\Models\ModelPayment;
  */
 class ServicePayment extends AbstractServiceSingle {
 
-
 }

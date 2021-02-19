@@ -14,7 +14,7 @@ class Address extends StalkingControl {
 
     public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
-        $this->template->MAddress = $person->getMPostContacts();
+        $this->template->MAddress = $person->getPostContacts();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
         $this->template->render();
     }
