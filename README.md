@@ -1,12 +1,16 @@
 Installation
 ============
 
+  * install PHP74 + extension
+  * install composer
+  * install MySQL/mariaDB
 Initialization
 --------------
 
 0.1) Checkout branch 'dev'
 
 0.2) Run `git submodule init && git submodule update`
+0.3) Run `copmposer install`
 
 Environment
 -----------
@@ -19,8 +23,6 @@ Environment
 
 2) Configure virtual hosts in '/etc/apache/sites-enabled' with proper ServerName
    and ServerAlias (see domains above). (You need only virtual host for FKSDB.)
-
-3) Install missing PHP extensions (like php5-mysql, php5-curl).
 
 Database
 --------
