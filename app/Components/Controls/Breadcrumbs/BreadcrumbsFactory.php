@@ -20,7 +20,7 @@ class BreadcrumbsFactory {
         $this->container = $container;
     }
 
-    public function create(): Breadcrumbs {
-        return new Breadcrumbs($this->expiration, $this->container);
+    public function create(): BreadcrumbsComponent {
+        return new BreadcrumbsComponent($this->expiration, $this->container);
     }
 }

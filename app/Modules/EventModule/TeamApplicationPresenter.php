@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
+use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
@@ -56,8 +56,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->getContext());
+    protected function createComponentSeating(): SeatingComponent {
+        return new SeatingComponent($this->getContext());
     }
 
     /**
