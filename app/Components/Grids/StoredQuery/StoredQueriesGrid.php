@@ -17,6 +17,7 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class StoredQueriesGrid extends BaseGrid {
+
     /** @const No. of characters that are showed from query description. */
 
     public const DESCRIPTION_TRUNC = 80;
@@ -44,7 +45,7 @@ class StoredQueriesGrid extends BaseGrid {
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
-        if (!empty($this->activeTagIds)) {
+        if (isset($this->activeTagIds) && count($this->activeTagIds)) {
             $queries = $this->serviceStoredQuery->findByTagType($this->activeTagIds)->order('name');
             $this->setDataSource(new NDataSource($queries));
         } else {

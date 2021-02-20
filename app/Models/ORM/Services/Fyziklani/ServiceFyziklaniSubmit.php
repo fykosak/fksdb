@@ -21,7 +21,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
         ])->fetch();
-        return $row ?: null;
+        return $row;
     }
 
     public function findAll(ModelEvent $event): TypedTableSelection {

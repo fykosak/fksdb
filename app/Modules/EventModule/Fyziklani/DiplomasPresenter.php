@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Fyziklani\FinalResults;
+use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
@@ -89,10 +89,10 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     /**
-     * @return FinalResults
+     * @return FinalResultsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentResults(): FinalResults {
-        return new FinalResults($this->getContext(), $this->getEvent());
+    protected function createComponentResults(): FinalResultsComponent {
+        return new FinalResultsComponent($this->getContext(), $this->getEvent());
     }
 }
