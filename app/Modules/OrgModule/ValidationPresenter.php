@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\DataTesting\PersonTestControl;
+use FKSDB\Components\Controls\DataTesting\PersonTestComponent;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use FKSDB\Models\UI\PageTitle;
 
@@ -40,7 +40,7 @@ class ValidationPresenter extends BasePresenter {
         return new PersonsGrid($this->getContext());
     }
 
-    protected function createComponentValidationControl(): PersonTestControl {
-        return new PersonTestControl($this->getContext());
+    protected function createComponentValidationControl(): PersonTestComponent {
+        return new PersonTestComponent($this->getContext());
     }
 }

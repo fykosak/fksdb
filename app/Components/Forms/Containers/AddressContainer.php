@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Models\ORM\Models\ModelAddress;
+use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Services\ServiceRegion;
@@ -46,21 +47,21 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * @param ActiveRow|mixed $values
+     * @param ModelPostContact|mixed $values
      * @param bool $erase
      * @return static
      */
     public function setValues($values, $erase = false): self {
         if ($values instanceof ActiveRow) { //assert its from address table
-            if ($values instanceof AbstractModelMulti) {
-                $address = $values->getMainModel();
+            if ($values instanceof ModelPostContact) {
+                $address = $values->getAddress();
             } else {
                 $address = $values;
             }
             /** @var ModelAddress $address */
 
             $values = $address->toArray();
-            $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
+            $values['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
         } elseif (is_array($values) && isset($values['region_id'])) {
             $region = $this->serviceRegion->findByPrimary($values['region_id']);
             $values['country_iso'] = $region->country_iso;

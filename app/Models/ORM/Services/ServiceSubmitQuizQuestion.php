@@ -18,7 +18,7 @@ class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
             'ct_id' => $ctId,
             'question_id' => $questionId,
         ])->fetch();
-        return $result ?: null;
+        return $result;
     }
 
     public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, ?string $answer): void {

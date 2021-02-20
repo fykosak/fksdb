@@ -15,6 +15,6 @@ class ServiceFlag extends AbstractServiceSingle {
         }
         /** @var ModelFlag $result */
         $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result ?: null;
+        return $result;
     }
 }

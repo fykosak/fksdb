@@ -11,19 +11,19 @@ use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceFlag;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonHasFlag;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
-use FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -31,6 +31,7 @@ use FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonHandler implements ReferencedHandler {
+
     use SmartObject;
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
@@ -39,50 +40,48 @@ class ReferencedPersonHandler implements ReferencedHandler {
     private ServicePerson $servicePerson;
     private ServicePersonInfo $servicePersonInfo;
     private ServicePersonHistory $servicePersonHistory;
-    private ServiceMPostContact $serviceMPostContact;
     private ServicePersonHasFlag $servicePersonHasFlag;
     private int $acYear;
     private Handler $eventScheduleHandler;
     private ServiceFlag $serviceFlag;
+    private ServiceAddress $serviceAddress;
+    private ServicePostContact $servicePostContact;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var string */
-    private $resolution;
+    private string $resolution;
 
     /**
      * ReferencedPersonHandler constructor.
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param ServicePersonHistory $servicePersonHistory
-     * @param ServiceMPostContact $serviceMPostContact
-     * @param ServicePersonHasFlag $servicePersonHasFlag
-     * @param ServiceFlag $serviceFlag
-     * @param Handler $eventScheduleHandler
      * @param int $acYear
      * @param string $resolution
      */
     public function __construct(
+        int $acYear,
+        string $resolution
+    ) {
+        $this->acYear = $acYear;
+        $this->resolution = $resolution;
+    }
+
+    public function inject(
+        Handler $eventScheduleHandler,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
-        ServiceMPostContact $serviceMPostContact,
         ServicePersonHasFlag $servicePersonHasFlag,
-        ServiceFlag $serviceFlag,
-        Handler $eventScheduleHandler,
-        int $acYear,
-        $resolution
-    ) {
+        ServiceAddress $serviceAddress,
+        ServicePostContact $servicePostContact,
+        ServiceFlag $serviceFlag
+    ): void {
+        $this->eventScheduleHandler = $eventScheduleHandler;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
-        $this->serviceMPostContact = $serviceMPostContact;
         $this->servicePersonHasFlag = $servicePersonHasFlag;
+        $this->serviceAddress = $serviceAddress;
+        $this->servicePostContact = $servicePostContact;
         $this->serviceFlag = $serviceFlag;
-        $this->acYear = $acYear;
-        $this->resolution = $resolution;
-        $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
     public function getResolution(): string {
@@ -156,9 +155,9 @@ class ReferencedPersonHandler implements ReferencedHandler {
                 'person' => &$person,
                 'person_info' => $person->getInfo(),
                 'person_history' => $person->getHistory($this->acYear),
-                'person_schedule' => (($this->event && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
-                self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress(),
-                self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true),
+                'person_schedule' => ((isset($this->event) && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
+                self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
+                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
             ];
             $originalModels = \array_keys(iterator_to_array($data));
 
@@ -184,7 +183,9 @@ class ReferencedPersonHandler implements ReferencedHandler {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
                         if ($model) {
-                            $this->serviceMPostContact->dispose($model);
+                            /** @var ModelPostContact $model */
+                            $this->servicePostContact->dispose($model);
+                            $this->serviceAddress->dispose($model->getAddress());
                         }
                     }
                     continue;
@@ -230,14 +231,18 @@ class ReferencedPersonHandler implements ReferencedHandler {
         }
     }
 
-    private function storePostContact(ModelPerson $person, ?ModelMPostContact $model, array $data, string $type): void {
+    private function storePostContact(ModelPerson $person, ?ModelPostContact $model, array $data, string $type): void {
         if ($model) {
-            $this->serviceMPostContact->updateModel2($model, $data);
+            $this->serviceAddress->updateModel2($model->getAddress(), $data);
+            $this->servicePostContact->updateModel2($model, $data);
         } else {
-            $this->serviceMPostContact->createNewModel(array_merge((array)$data, [
+            $data = array_merge((array)$data, [
                 'person_id' => $person->person_id,
                 'type' => PersonFormComponent::mapAddressContainerNameToType($type),
-            ]));
+            ]);
+            $mainModel = $this->serviceAddress->createNewModel($data);
+            $data['address_id'] = $mainModel->address_id;
+            $this->servicePostContact->createNewModel($data);
         }
     }
 
@@ -293,15 +298,23 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ModelMPostContact[] $models
+     * @param ModelPostContact[] $models
      */
     private function preparePostContactModels(array &$models): void {
         if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
-            $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
+            $data = array_merge(
+                $models[self::POST_CONTACT_DELIVERY]->toArray(),
+                $models[self::POST_CONTACT_DELIVERY]->getAddress()->toArray()
+            );
+
             unset($data['post_contact_id']);
             unset($data['address_id']);
             unset($data['type']);
-            $models[self::POST_CONTACT_PERMANENT] = $this->serviceMPostContact->createNewModel(array_merge($data, ['type' => ModelPostContact::TYPE_PERMANENT]));
+
+            $addressModel = $this->serviceAddress->createNewModel($data);
+            $data['address_id'] = $addressModel->address_id;
+            $joinedModel = $this->servicePostContact->createNewModel($data);
+            $models[self::POST_CONTACT_PERMANENT] = $joinedModel;
         }
     }
 
