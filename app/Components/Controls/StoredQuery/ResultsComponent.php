@@ -16,7 +16,6 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use PDOException;
 
 /**
@@ -28,27 +27,17 @@ class ResultsComponent extends BaseComponent {
 
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
-
     /**
      * @persistent
-     * @var array
      */
-    public $parameters = [];
-
-    /** @var StoredQuery */
-    private $storedQuery;
-
+    public ?array $parameters = [];
+    private ?StoredQuery $storedQuery = null;
     private ContestAuthorizator $contestAuthorizator;
-
     private StoredQueryFactory $storedQueryFormFactory;
-
     private ExportFormatFactory $exportFormatFactory;
-
     /** @var null|bool|string */
     private $error;
-
-    /** @var bool */
-    private $showParametrizeForm = true;
+    private bool $showParametrizeForm = true;
 
     final public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory): void {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -86,7 +75,6 @@ class ResultsComponent extends BaseComponent {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws InvalidStateException
      */
     protected function createComponentParametrizeForm(): FormControl {
         $control = new FormControl($this->getContext());

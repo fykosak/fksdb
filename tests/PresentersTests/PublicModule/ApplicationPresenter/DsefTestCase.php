@@ -2,6 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -9,9 +10,7 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 abstract class DsefTestCase extends EventTestCase {
 
     protected ApplicationPresenter $fixture;
-
     protected int $personId;
-
     protected int $eventId;
 
     protected function getEventId(): int {
@@ -44,8 +43,7 @@ EOT
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        $this->connection->query('DELETE FROM e_dsef_group');
+        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, DbNames::TAB_E_DSEF_GROUP]);
         parent::tearDown();
     }
 }

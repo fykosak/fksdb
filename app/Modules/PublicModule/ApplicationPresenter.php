@@ -2,12 +2,11 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
@@ -15,6 +14,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\IModel;
@@ -30,7 +30,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -139,7 +138,6 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws NotFoundException
      * @throws ConfigurationNotFoundException
-     * @throws InvalidStateException
      * @throws CannotAccessModelException
      */
     public function actionDefault($eventId, $id): void {
@@ -237,21 +235,10 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getEventApplication(): ?IModel {
         if (!isset($this->eventApplication)) {
-            $id = null;
-            //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-            //   $data = $this->getTokenAuthenticator()->getTokenData();
-            //   if ($data) {
-            //    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-            //$eventId = $data['id']; // TODO $id?
-            //  }
-            // }
-            $id = $id ?: $this->getParameter('id');
+            $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
-            /* if ($row) {
-                 $this->eventApplication = ($service->getModelClassName())::createFromActiveRow($row);
-             }*/
         }
 
         return $this->eventApplication;

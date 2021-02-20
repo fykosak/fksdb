@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -19,7 +19,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -159,7 +158,6 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws MissingServiceException
-     * @throws InvalidStateException
      */
     private function getMachine(): PaymentMachine {
         if (!isset($this->machine)) {
@@ -186,21 +184,20 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsControl
+     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
+        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
     /**
      * @return EventPaymentGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): EventPaymentGrid {
         return new EventPaymentGrid($this->getEvent(), $this->getContext());
@@ -210,7 +207,6 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentCreateForm(): PaymentFormComponent {
         return new PaymentFormComponent(

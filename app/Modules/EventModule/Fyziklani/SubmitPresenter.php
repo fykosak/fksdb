@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
-use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInputComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -109,19 +108,17 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return AllSubmitsGrid
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AllSubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return TaskCodeInput
+     * @return TaskCodeInputComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentCreateForm(): TaskCodeInput {
-        return new TaskCodeInput($this->getContext(), $this->getEvent());
+    protected function createComponentCreateForm(): TaskCodeInputComponent {
+        return new TaskCodeInputComponent($this->getContext(), $this->getEvent());
     }
 
     /**

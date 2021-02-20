@@ -7,7 +7,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ArrayProvider implements IFilteredDataProvider {
+class ArrayProvider implements FilteredDataProvider {
 
     private array $data;
 

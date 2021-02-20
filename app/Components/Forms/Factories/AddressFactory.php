@@ -11,7 +11,6 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
-use Nette\InvalidStateException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -63,7 +62,6 @@ class AddressFactory {
      * @param AddressContainer $container
      * @param int $options
      * @param IControl|null $conditioningField
-     * @throws InvalidStateException
      */
     public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {

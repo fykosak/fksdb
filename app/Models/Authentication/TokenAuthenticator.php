@@ -35,7 +35,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @throws AuthenticationException
      * @throws \Exception
      */
-    public function authenticate($tokenData): ModelLogin {
+    public function authenticate(string $tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
             throw new AuthenticationException(_('Invalid authentication token.'));

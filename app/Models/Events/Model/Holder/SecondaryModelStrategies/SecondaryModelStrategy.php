@@ -19,7 +19,7 @@ abstract class SecondaryModelStrategy {
      * @param IModel[] $models
      * @return void
      */
-    public function setSecondaryModels(array $holders, $models): void {
+    public function setSecondaryModels(array $holders, iterable $models): void {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHolders]->setModel($secondaryModel);
@@ -40,7 +40,7 @@ abstract class SecondaryModelStrategy {
      * @param IModel|null $primaryModel
      * @return void
      */
-    public function loadSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, IModel $primaryModel = null): void {
+    public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?IModel $primaryModel = null): void {
         $table = $service->getTable();
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
@@ -63,7 +63,7 @@ abstract class SecondaryModelStrategy {
      * @param IModel $primaryModel
      * @return void
      */
-    public function updateSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, IModel $primaryModel): void {
+    public function updateSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, IModel $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];

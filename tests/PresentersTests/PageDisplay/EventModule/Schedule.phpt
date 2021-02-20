@@ -54,8 +54,7 @@ class Schedule extends EventModuleTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM schedule_group');
-        $this->connection->query('DELETE FROM event');
+         $this->truncateTables(['schedule_group',DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 }

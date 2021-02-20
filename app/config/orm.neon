@@ -1016,4 +1016,3 @@ services:
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
     event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
-    - FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact

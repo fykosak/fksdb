@@ -10,15 +10,11 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class CompareStrategy implements IMergeStrategy {
+class CompareStrategy implements MergeStrategy {
 
     private int $sign;
 
-    /**
-     *
-     * @param mixed $compare greater|less
-     */
-    public function __construct($compare) {
+    public function __construct(string $compare) {
         if ($compare == 'greater') {
             $this->sign = 1;
         } elseif ($compare == 'less') {

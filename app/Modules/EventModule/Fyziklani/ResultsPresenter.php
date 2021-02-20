@@ -2,10 +2,9 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
-use Nette\InvalidStateException;
 
 /**
  * Class ResultsPresenter
@@ -109,48 +108,43 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentTable(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
+    protected function createComponentTable(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentPresentation(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
+    protected function createComponentPresentation(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentTeamStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
+    protected function createComponentTeamStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentTaskStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
+    protected function createComponentTaskStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
-    protected function createComponentCorrelationStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
+    protected function createComponentCorrelationStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 
     protected function beforeRender(): void {

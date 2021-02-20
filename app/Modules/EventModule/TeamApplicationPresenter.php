@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
+use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
@@ -15,7 +15,6 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
-use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
@@ -57,14 +56,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->getContext());
+    protected function createComponentSeating(): SeatingComponent {
+        return new SeatingComponent($this->getContext());
     }
 
     /**
      * @return SchoolCheckComponent
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
         return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
@@ -74,7 +72,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
-     * @throws InvalidStateException
      */
     protected function createComponentGrid(): AbstractApplicationsGrid {
         return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());

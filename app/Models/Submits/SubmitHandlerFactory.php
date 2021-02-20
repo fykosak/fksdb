@@ -16,7 +16,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
-use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 
 /**
@@ -49,7 +48,6 @@ class SubmitHandlerFactory {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws StorageException
-     * @throws InvalidStateException
      */
     public function handleDownloadUploaded(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.uploaded');
@@ -71,7 +69,6 @@ class SubmitHandlerFactory {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws StorageException
-     * @throws InvalidStateException
      */
     public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.corrected');

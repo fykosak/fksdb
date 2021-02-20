@@ -12,7 +12,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
@@ -22,6 +21,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 
@@ -33,11 +33,11 @@ use Nette\Utils\Strings;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailSender {
+
     use SmartObject;
 
     public const BCC_PARAM = 'notifyBcc';
     public const FROM_PARAM = 'notifyFrom';
-
     // Adressee
     public const ADDR_SELF = 'self';
     public const ADDR_PRIMARY = 'primary';
@@ -45,23 +45,15 @@ class MailSender {
     public const ADDR_ALL = '*';
     public const BCC_PREFIX = '.';
 
-    /** @var string */
-    private $filename;
-
+    private string $filename;
     /**
-     *
      * @var array|string
      */
     private $addressees;
-
     private MailTemplateFactory $mailTemplateFactory;
-
     private AccountManager $accountManager;
-
     private ServiceAuthToken $serviceAuthToken;
-
     private ServicePerson $servicePerson;
-
     private ServiceEmailMessage $serviceEmailMessage;
 
     /**
@@ -75,7 +67,7 @@ class MailSender {
      * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
-        $filename,
+        string $filename,
         $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
@@ -128,12 +120,11 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $this->createMessage($this->filename, $login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
+            $this->createMessage($login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
         }
     }
 
     /**
-     * @param string $filename
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
@@ -142,7 +133,7 @@ class MailSender {
      * @throws UnsupportedLanguageException
      * @throws ModelException
      */
-    private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
+    private function createMessage(ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->getHolder();
@@ -173,7 +164,7 @@ class MailSender {
                 ],
             ],
         ];
-        $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
+        $template = $this->mailTemplateFactory->createWithParameters($this->filename, null, $templateParams);
 
         $data = [];
         $data['text'] = (string)$template;
@@ -186,7 +177,6 @@ class MailSender {
         $data['recipient'] = $email;
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         return $this->serviceEmailMessage->createNewModel($data);
-
     }
 
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
@@ -211,13 +201,8 @@ class MailSender {
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return \DateTimeInterface
-     * TODO extension point
-     */
     private function getUntil(ModelEvent $event): \DateTimeInterface {
-        return $event->registration_end ?: $event->end;
+        return $event->registration_end ?? $event->end;
     }
 
     private function hasBcc(): bool {

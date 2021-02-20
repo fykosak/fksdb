@@ -2,12 +2,13 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
+use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 
 /**
  * Trait ContestPresenterTrait
@@ -16,11 +17,9 @@ use Nette\Application\BadRequestException;
 trait ContestPresenterTrait {
 
     /**
-     * @var int
      * @persistent
      */
-    public $contestId;
-
+    public ?int $contestId = null;
     private ?ModelContest $contest;
 
     public function injectServiceContest(ServiceContest $serviceContest): void {
@@ -66,13 +65,13 @@ trait ContestPresenterTrait {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         switch ($this->getRole()) {
-            case YearChooser::ROLE_SELECTED:
+            case YearChooserComponent::ROLE_SELECTED:
                 $contestIds = [$this->contestId];
                 break;
-            case YearChooser::ROLE_ALL:
+            case YearChooserComponent::ROLE_ALL:
                 $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
                 break;
-            case YearChooser::ROLE_CONTESTANT:
+            case YearChooserComponent::ROLE_CONTESTANT:
                 if (!$login || !$login->getPerson()) {
                     break;
                 }
@@ -80,7 +79,7 @@ trait ContestPresenterTrait {
                 $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
 
                 break;
-            case YearChooser::ROLE_ORG:
+            case YearChooserComponent::ROLE_ORG:
                 $contestIds = array_keys($login->getActiveOrgs($this->yearCalculator));
                 break;
         }
@@ -98,9 +97,11 @@ trait ContestPresenterTrait {
         return $this->contest;
     }
 
-    protected function createComponentContestChooser(): ContestChooser {
-        return new ContestChooser($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
+    protected function createComponentContestChooser(): ContestChooserComponent {
+        return new ContestChooserComponent($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
     }
 
     abstract protected function getRole(): string;
+
+    abstract protected function getContext(): Container;
 }

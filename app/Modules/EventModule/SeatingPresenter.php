@@ -2,13 +2,12 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
+use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
-use Nette\InvalidStateException;
 
 /**
  *
@@ -120,7 +119,6 @@ class SeatingPresenter extends BasePresenter {
     /**
      * @return void
      * @throws EventNotFoundException
-     * @throws InvalidStateException
      */
     public function renderList(): void {
         $this->template->event = $this->getEvent();
@@ -142,7 +140,7 @@ class SeatingPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    protected function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->getContext());
+    protected function createComponentSeating(): SeatingComponent {
+        return new SeatingComponent($this->getContext());
     }
 }

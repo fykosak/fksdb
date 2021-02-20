@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Controls\Chart\Chart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\DI\Container;
 
-class ParticipantsInTimeGeoChartControl extends ReactComponent implements IChart {
+class ParticipantsInTimeGeoChartControl extends ReactComponent implements Chart {
 
     protected ModelEvent $event;
     protected ServiceEventParticipant $serviceEventParticipant;

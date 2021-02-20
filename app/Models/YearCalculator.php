@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -160,13 +160,13 @@ class YearCalculator {
 
     public function getAvailableYears(string $role, ModelContest $contest, User $user): array {
         switch ($role) {
-            case YearChooser::ROLE_ORG:
-            case YearChooser::ROLE_ALL:
-            case YearChooser::ROLE_SELECTED:
+            case YearChooserComponent::ROLE_ORG:
+            case YearChooserComponent::ROLE_ALL:
+            case YearChooserComponent::ROLE_SELECTED:
                 $min = $this->getFirstYear($contest);
                 $max = $this->getLastYear($contest);
                 return array_reverse(range($min, $max));
-            case YearChooser::ROLE_CONTESTANT:
+            case YearChooserComponent::ROLE_CONTESTANT:
                 /** @var ModelLogin $login */
                 $login = $user->getIdentity();
                 $currentYear = $this->getCurrentYear($contest);

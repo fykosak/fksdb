@@ -13,7 +13,7 @@ use FKSDB\Models\YearCalculator;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonProvider implements IFilteredDataProvider {
+class PersonProvider implements FilteredDataProvider {
 
     private const PLACE = 'place';
 
