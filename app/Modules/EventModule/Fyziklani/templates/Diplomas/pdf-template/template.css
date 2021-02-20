@@ -2,32 +2,59 @@ html {
     width: 297mm;
     height: 210mm;
     margin: auto;
+    font-family: "CustomFont";
+    /*font-family: "CustomFont";*/
 }
+
+@font-face {
+    font-family: "CustomFont";
+    src: url("font-inter/Inter-Regular.woff") format("woff");
+}
+
 
 #top {
     height: 20%;
     width: auto;
+    display: flex;
 }
 
 #top_left {
-    float: left;
+    flex: 0 0 65%;
     font-weight: bold;
     font-size: 19pt;
+    font-family: "CustomFont";
 }
 
 #top_right {
-    float: right;    
+    flex: 1; 
 }
 
 #center {
-    float:none;
+    margin: auto;
+    width: 100%;
+    text-align: center;
 }
 
 #footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     text-align: justify;
     font-size: 8pt;
+}
+
+#signatures {
+    display: flex;
+}
+
+#signatures_left {
+    flex: 0 0 65%;
+}
+
+#signatures_center {
+}
+
+
+#signatures_right {
+    flex: 1;
 }
