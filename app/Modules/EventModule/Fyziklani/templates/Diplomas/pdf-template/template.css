@@ -1,3 +1,33 @@
-body {
-    background-image: ;
+html {
+    width: 297mm;
+    height: 210mm;
+    margin: auto;
+}
+
+#top {
+    height: 20%;
+    width: auto;
+}
+
+#top_left {
+    float: left;
+    font-weight: bold;
+    font-size: 19pt;
+}
+
+#top_right {
+    float: right;    
+}
+
+#center {
+    float:none;
+}
+
+#footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: justify;
+    font-size: 8pt;
 }
