@@ -59,7 +59,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
 
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $stateContainer = new ContainerWithOptions();
+        $stateContainer = new ContainerWithOptions($this->getContext());
         $stateContainer->setOption('label', _('States'));
         foreach ($states as $state) {
             $label = Html::el('span')

@@ -17,7 +17,7 @@ use Nette\Utils\Html;
 class FullNameColumnFactory extends ColumnFactory {
 
     /**
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws AbstractColumnException
      */

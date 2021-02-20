@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Messages;
 
 use FKSDB\Models\ArrayAble;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\SmartObject;
 
 /**
@@ -13,10 +13,10 @@ use Nette\SmartObject;
 class Message implements ArrayAble {
     use SmartObject;
 
-    public const LVL_DANGER = ILogger::ERROR;
-    public const LVL_SUCCESS = ILogger::SUCCESS;
-    public const LVL_WARNING = ILogger::WARNING;
-    public const LVL_INFO = ILogger::INFO;
+    public const LVL_DANGER = Logger::ERROR;
+    public const LVL_SUCCESS = Logger::SUCCESS;
+    public const LVL_WARNING = Logger::WARNING;
+    public const LVL_INFO = Logger::INFO;
 
     public string $text;
 

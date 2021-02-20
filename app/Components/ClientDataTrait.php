@@ -9,8 +9,7 @@ namespace FKSDB\Components;
  */
 trait ClientDataTrait {
 
-    /** @var array */
-    private $clientData = [];
+    private array $clientData = [];
 
     /**
      * @param string|int $key
@@ -29,15 +28,14 @@ trait ClientDataTrait {
     }
 
     /**
-     * @param null $key
+     * @param string|int|null $key
      * @return array|null
      */
-    public function getClientData($key = null) {
+    public function getClientData($key = null): ?array {
         if ($key === null) {
             return $this->clientData;
         } else {
             return isset($this->clientData[$key]) ? $this->clientData[$key] : null;
         }
     }
-
 }

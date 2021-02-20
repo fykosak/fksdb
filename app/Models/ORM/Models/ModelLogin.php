@@ -98,9 +98,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     // ----- IIdentity implementation ----------
 
-    /**
-     * @return int|mixed
-     */
     public function getId(): int {
         return $this->login_id;
     }

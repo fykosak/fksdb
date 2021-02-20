@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -41,7 +41,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
         $model = $this->serviceScheduleGroup->store($this->model ?? null, $data);
-        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

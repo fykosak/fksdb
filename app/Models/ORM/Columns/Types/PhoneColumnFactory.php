@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
@@ -55,7 +55,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         return $control;
     }
 
-    final public function runTest(ILogger $logger, AbstractModelSingle $model): void {
+    final public function runTest(Logger $logger, AbstractModelSingle $model): void {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

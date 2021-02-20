@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 
 /**
@@ -11,5 +11,5 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  */
 interface TestedColumnFactory {
 
-    public function runTest(ILogger $logger, AbstractModelSingle $model): void;
+    public function runTest(Logger $logger, AbstractModelSingle $model): void;
 }

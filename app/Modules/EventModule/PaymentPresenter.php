@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -184,15 +184,15 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsControl
+     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
+        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
     /**

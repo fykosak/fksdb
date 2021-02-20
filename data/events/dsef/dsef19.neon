@@ -74,7 +74,7 @@ events:
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - FKSDB\Models\Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - FKSDB\Models\Events\FormAdjustments\ResourceAvailability(['participant.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
 

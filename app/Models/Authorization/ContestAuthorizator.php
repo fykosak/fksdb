@@ -87,7 +87,7 @@ class ContestAuthorizator {
      * @param ModelContest|int $contest
      * @return bool
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
+    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 

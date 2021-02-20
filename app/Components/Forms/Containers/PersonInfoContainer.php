@@ -15,7 +15,7 @@ class PersonInfoContainer extends ModelContainer {
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
+    public function setValues($values, bool $erase = false): self {
         if ($values instanceof ActiveRow) { //assert its from person info table
             $values['agreed'] = (bool)$values['agreed'];
         }

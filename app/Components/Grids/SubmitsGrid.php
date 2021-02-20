@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -107,7 +107,7 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING);
+            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING);
         } catch (ForbiddenRequestException|NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (StorageException|ModelException$exception) {
