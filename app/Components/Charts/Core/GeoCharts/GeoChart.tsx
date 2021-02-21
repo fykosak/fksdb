@@ -10,7 +10,7 @@ interface OwnProps {
 
 export const SCALE_LINEAR = 'linear';
 export const SCALE_LOG = 'log';
-export default abstract class GeoChartComponent extends React.Component<OwnProps, { active?: string }> {
+export default abstract class GeoChart extends React.Component<OwnProps, { active?: string }> {
 
     private countryData = [];
 

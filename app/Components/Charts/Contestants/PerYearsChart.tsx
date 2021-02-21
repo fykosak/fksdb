@@ -14,7 +14,7 @@ export interface OwnProps {
     data: YearsData;
 }
 
-export default class PerYearsChartComponent extends React.Component<OwnProps, {}> {
+export default class PerYearsChart extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data} = this.props;

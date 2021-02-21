@@ -5,7 +5,7 @@ namespace FKSDB\Components\Charts\Event\Applications;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
-class ApplicationRationGeoChart extends ApplicationsPerCountryChartComponent {
+class ApplicationRationGeoChart extends ApplicationsPerCountryChart {
 
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, $event, 'chart.events.application-ratio.geo');

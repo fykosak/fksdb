@@ -1,11 +1,11 @@
-import PerSeriesChartComponent from 'FKSDB/Components/Charts/Contestants/PerSeriesChartComponent';
-import PerYearsChartComponent from 'FKSDB/Components/Charts/Contestants/PerYearsChartComponent';
+import PerSeriesChart from 'FKSDB/Components/Charts/Contestants/PerSeriesChart';
+import PerYearsChart from 'FKSDB/Components/Charts/Contestants/PerYearsChart';
 import ApplicationRationGeoChart from 'FKSDB/Components/Charts/Event/Applications/ApplicationRationGeoChart';
 import ParticipantsTimeGeoChart from 'FKSDB/Components/Charts/Event/Applications/ParticipantsTimeGeoChart';
 import TeamsGeoChart from 'FKSDB/Components/Charts/Event/Applications/TeamsGeoChart';
-import CommonChartComponent from 'FKSDB/Components/Charts/Event/ApplicationsTimeProgress/CommonChartComponent';
+import CommonChart from 'FKSDB/Components/Charts/Event/ApplicationsTimeProgress/CommonChart';
 import ParticipantAcquaintanceChart from 'FKSDB/Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart';
-import TotalPersonsChartComponent from 'FKSDB/Components/Charts/TotalPersonsChartComponent';
+import TotalPersonsChart from 'FKSDB/Components/Charts/TotalPersonsChart';
 import AjaxSubmitComponent from 'FKSDB/Components/Controls/AjaxSubmit/AjaxSubmitComponent';
 import ResultsPresentationComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/ResultsPresentationComponent';
 import ResultsTableComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
@@ -27,18 +27,18 @@ appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlat
 appsLoader.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
 appsLoader.hashMapLoader.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChartComponent);
+appsLoader.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
 appsLoader.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChartComponent);
-appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChartComponent);
+appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart);
+appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChartComponent, {accessKey: 'participants'});
+appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {accessKey: 'participants'});
 appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart);
 appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart);
 
 appsLoader.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart);
-appsLoader.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChartComponent, {accessKey: 'teams'});
+appsLoader.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {accessKey: 'teams'});
 appsLoader.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart);
 
 appsLoader.hashMapLoader.registerComponent('attendance.qr-code', Attendance);

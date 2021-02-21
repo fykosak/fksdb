@@ -8,7 +8,7 @@ use Nette\Database\Explorer;
  * Class ContestantsPerSeries
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class AggregatedSeriesChartComponent extends AbstractPerSeriesChart {
+class AggregatedSeriesChart extends AbstractPerSeriesChart {
 
     private Explorer $explorer;
 

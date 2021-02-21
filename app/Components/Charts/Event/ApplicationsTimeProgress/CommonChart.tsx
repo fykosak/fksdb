@@ -31,7 +31,7 @@ interface OwnProps {
     accessKey: 'participants' | 'teams';
 }
 
-export default class CommonChartComponent extends React.Component<OwnProps, {}> {
+export default class CommonChart extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data, accessKey} = this.props;

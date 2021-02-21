@@ -1,5 +1,5 @@
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import GeoChartComponent, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChartComponent';
+import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChart';
 import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geoChartHelper';
 import * as React from 'react';
 
@@ -11,7 +11,7 @@ export default class ApplicationRationGeoChart extends React.Component<OwnProps,
 
     public render() {
         return <ChartContainer
-            chart={GeoChartComponent}
+            chart={GeoChart}
             chartProps={{data: this.props.data, scaleType: SCALE_LOG}}
             containerClassName="rating-geo-chart"
         />;

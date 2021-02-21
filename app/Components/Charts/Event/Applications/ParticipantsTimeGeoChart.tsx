@@ -1,5 +1,5 @@
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
-import GeoChartComponent, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChartComponent';
+import GeoChart, { SCALE_LOG } from 'FKSDB/Components/Charts/Core/GeoCharts/GeoChart';
 import { GeoData } from 'FKSDB/Components/Charts/Core/GeoCharts/geoChartHelper';
 import * as React from 'react';
 
@@ -43,7 +43,7 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
                        value={value}/>
                 <small className="form-text text-muted">{(new Date(value)).toISOString()}</small>
             </div>
-            <ChartContainer chart={GeoChartComponent} chartProps={{data: geoData, scaleType: SCALE_LOG}}/>
+            <ChartContainer chart={GeoChart} chartProps={{data: geoData, scaleType: SCALE_LOG}}/>
         </div>;
     }
 }

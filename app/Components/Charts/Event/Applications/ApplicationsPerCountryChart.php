@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Charts\Event\Applications;
 
-use FKSDB\Components\Charts\Core\GeoCharts\GeoChartComponent;
+use FKSDB\Components\Charts\Core\GeoCharts\GeoChart;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-abstract class ApplicationsPerCountryChartComponent extends GeoChartComponent {
+abstract class ApplicationsPerCountryChart extends GeoChart {
 
     protected ModelEvent $event;
     protected ServiceEventParticipant $serviceEventParticipant;

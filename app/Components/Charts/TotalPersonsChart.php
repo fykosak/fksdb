@@ -12,7 +12,7 @@ use Nette\DI\Container;
  * Class TotalPersonsChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TotalPersonsChartComponent extends ReactComponent implements Chart {
+class TotalPersonsChart extends ReactComponent implements Chart {
 
     private ServicePerson $servicePerson;
 
