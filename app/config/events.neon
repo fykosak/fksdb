@@ -41,7 +41,7 @@ baseMachine:
     transitions:
     fields:
     service:
-        default: @FKSDB\Models\ORM\Services\ServiceEventParticipant
+        default: FKSDB\Models\ORM\Services\ServiceEventParticipant
     # When used as secondary model, specify column that is FK to the primary model.
     joinOn:
         default: null

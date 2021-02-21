@@ -49,8 +49,8 @@ class ResultsComponent extends BaseComponent {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    public function setStoredQuery(StoredQuery $query): void {
-        $this->storedQuery = $query;
+    public function setStoredQuery(StoredQuery $storedQuery): void {
+        $this->storedQuery = $storedQuery;
     }
 
     private function hasStoredQuery(): bool {

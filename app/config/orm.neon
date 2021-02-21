@@ -157,11 +157,11 @@ orm:
                     omitInputField: true
                 event_type:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
                     title: _('Event type')
                 event_type_id:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
                     title: _('Event type')
                 event_link:
                     type: class
@@ -199,7 +199,7 @@ orm:
              columnFactories:
                 team:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TeamRow
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TeamColumnFactory
                     title: _('Team')
                 status:
                     type: state
@@ -213,7 +213,7 @@ orm:
                     title: _(Swimmer)
                 price:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\PriceRow
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\PriceColumnFactory
                     title: _('Price')
                 diet:
                     type: text
@@ -229,11 +229,11 @@ orm:
                     title: _(Note)
                 tshirt_color:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtColorRow
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtColorColumnFactory
                     title: _('T-shirt color')
                 tshirt_size:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtSizeRow
+                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtSizeColumnFactory
                     title: _('T-shirt size')
                 arrival_ticket:
                     type: logic
@@ -285,7 +285,7 @@ orm:
                     title: _(login Id)
                 hash:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Login\HashRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Login\HashColumnFactory
                     permissions: RESTRICT
                     title: _('Password')
                     omitInputField: true
@@ -305,24 +305,24 @@ orm:
                     title: _(Org Id)
                 since:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\SinceRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory
                     title: _('Since')
                 until:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\UntilRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\UntilColumnFactory
                     title: _('Until')
                 order:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\OrderRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
                     description: _('Pro řazení v seznamu organizátorů')
                     title: _('Order')
                 tex_signature:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\TexSignatureRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\TexSignatureColumnFactory
                     title: _('Tex signature')
                 domain_alias:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\DomainAliasRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Org\DomainAliasColumnFactory
                     title: _('Domain alias')
                 contribution:
                     type: string
@@ -354,7 +354,7 @@ orm:
                     title: _('Payment')
                  payment_uid:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Payment\UIdRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Payment\UIdColumnFactory
                     title: _('Payment UId')
                  bank_account:
                     type: string
@@ -382,7 +382,7 @@ orm:
                     title: _(Recipient)
                  price:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Payment\PriceRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Payment\PriceColumnFactory
                     title: _('Price')
                  #currency:
                  state:
@@ -406,11 +406,11 @@ orm:
              columnFactories:
                 person_link:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Person\PersonLinkColumnFactory
                     title: _('Person')
                 full_name:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Person\FullNameColumnFactory
                     title: _('Person')
                 person_id:
                     type: primaryKey
@@ -418,7 +418,7 @@ orm:
                     permission: BASIC
                 gender:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Person\GenderRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Person\GenderColumnFactory
                     permission: FULL
                     title: _('Gender')
                 created:
@@ -451,7 +451,7 @@ orm:
              columnFactories:
                 school_id:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdColumnFactory
                     title: _(School)
                 ac_year:
                     type: string
@@ -459,7 +459,7 @@ orm:
                     omitInputField: true
                 study_year:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearColumnFactory
                     description: _('Kvůli zařazení do kategorie.')
                     title: _('Study year')
                 class:
@@ -472,17 +472,17 @@ orm:
              columnFactories:
                 email:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\EmailRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\EmailColumnFactory
                     permision: RESTRICT
                     title:  _('E-mail')
                 health_insurance:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HealthInsuranceRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HealthInsuranceColumnFactory
                     permisson: FULL
                     title: _('Health insurance')
                 citizenship:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipColumnFactory
                     permission: FULL
                     title: _('Státní příslušnost')
                 account:
@@ -493,7 +493,7 @@ orm:
                         write: FULL
                 homepage:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HomepageRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\HomepageColumnFactory
                     title: _('Homepage')
                 phone:
                     type: phone
@@ -520,18 +520,18 @@ orm:
                     permission: RESTRICT
                 id_number:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
                     description: _('U cizinců číslo pasu.')
                     title: _('Číslo OP')
                     permission: FULL
                 born:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornColumnFactory
                     permission: FULL
                     title: _('Datum narození')
                 born_id:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory
                     title: _('Rodné číslo')
                     description: _('U cizinců prázdné.')
                     permission: FULL
@@ -548,12 +548,12 @@ orm:
                     description: _(Zobrazeno v seznamu organizátorů)
                 im:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImColumnFactory
                     permission: RESTRICT
                     title: _('ICQ, Jabber, apod.')
                 agreed:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\AgreedRow
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\AgreedColumnFactory
                     title: _('I agree with the privacy policy')
                 uk_login:
                     type: string
@@ -633,7 +633,7 @@ orm:
              columnFactories:
                  fq_name:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Task\FQNameRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Task\FQNameColumnFactory
                     title: _('Task')
                  series:
                     type: string
@@ -668,16 +668,18 @@ orm:
              modelClassName: FKSDB\Models\ORM\Models\ModelTeacher
              columnFactories:
                  state:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Teacher\StateRow
+                    type: state
+                    states:
+                        proposal: [badge: 'badge badge-info', label: 'Proposal']
+                        cooperate: [badge: 'badge badge-success', label: 'Cooperate']
+                        ended: [badge: 'badge badge-dark',  label: 'Ended']
+                        undefined: [badge: 'badge badge-secondary',  label: 'Undefined']
                     title: _('Cooperation status')
                  since:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Teacher\SinceRow
+                    type: date
                     title: _('Teaches since')
                  until:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Teacher\UntilRow
+                    type: date
                     title: _('Teaches until')
                  number_brochures:
                     type: int
@@ -728,7 +730,7 @@ orm:
                     format: 'H:m:s d-M-Y'
                 points:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
                     title: _('Points')
         fyziklani_task:
              serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
@@ -771,7 +773,7 @@ orm:
                     title: _(Hard display)
                 available_points:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
         e_fyziklani_team:
              serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
@@ -819,19 +821,19 @@ orm:
                     title: _(Force A)
                 password:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
                     title: _('Password')
                 name:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
                     title: _('Team name')
                 name_n_id:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameNIdRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameNIdColumnFactory
                     title: _('Team')
                 opened_submitting:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                     title: _('Submit opened?')
              linkFactories:
                 detail:
@@ -849,26 +851,33 @@ orm:
              serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
              modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
-                schedule_group_id:
+                 schedule_group_id:
                     type: primaryKey
                     title: _(Schedule group Id)
-                schedule_group_type:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\ScheduleGroupTypeRow
-                    title: _(Type)
-                start:
+                 schedule_group_type:
+                     type: state
+                     title: _(Type)
+                     states:
+                         accommodation: [badge: 'badge badge-1', label: 'Accommodation']
+                         accommodation_gender: [badge: 'badge badge-2', label: 'Accommodation gender']
+                         accommodation_teacher: [badge: 'badge badge-3', label: 'Accommodation teacher']
+                         teacher_present: [badge: 'badge badge-4', label: 'Schedule during compotition']
+                         weekend: [badge: 'badge badge-5', label: 'Weekend']
+                         weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
+                         visa: [badge: 'badge badge-7', label: 'Visa']
+                 start:
                     type: dateTime
                     title: _(Schedule start)
-                end:
+                 end:
                     type: dateTime
                     title: _(Schedule end)
-                name_cs:
+                 name_cs:
                     type: string
                     title: _(Name cs)
-                name_en:
+                 name_en:
                     type: string
                     title: _(Name en)
-                name:
+                 name:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
                     title: _(Group name)
@@ -884,11 +893,11 @@ orm:
                     title: _(Require Id number)
                 price_czk:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceCZKRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceCZKColumnFactory
                     title: _(Price CZK)
                 price_eur:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
                     title: _(Price EUR)
                 name_en:
                     type: string
@@ -913,11 +922,11 @@ orm:
                     nullValueFormat: infinite
                 free_capacity:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\FreeCapacityRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
                     title: _(Free capacity)
                 used_capacity:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityRow
+                    class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                     title: _(Used capacity)
         schedule_payment:
             serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment
@@ -929,11 +938,11 @@ orm:
             columnFactories:
                 qid:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\QIDRow
+                    class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\QIDColumnFactory
                     title: _('QID')
                 tags:
                     type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\TagsRow
+                    class: FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery\TagsColumnFactory
                     title: _('Tags')
                 sql:
                     type: class

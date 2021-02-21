@@ -115,10 +115,7 @@ trait EntityPresenterTrait {
     public function getEntity(bool $throw = true): ?AbstractModelSingle {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
-        if (
-            (isset($this->model) && $id !== $this->model->getPrimary())
-            || !isset($this->model)
-        ) {
+        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
             $this->model = $this->loadModel($throw);
         }
         return $this->model;
