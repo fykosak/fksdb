@@ -3,7 +3,6 @@ html {
     height: 210mm;
     margin: auto;
     font-family: "CustomFont";
-    /*font-family: "CustomFont";*/
 }
 
 img {
@@ -75,7 +74,7 @@ a, a:hover, a:visited, a:active {
     font-size: 45px;
 }
 
-#font_team {
+#team, font_place_cat {
     font-size: 27px;
     font-weight: bold;
 }
