@@ -10,7 +10,7 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -102,14 +102,14 @@ class ClosePresenter extends BasePresenter {
 
     /* ********* COMPONENTS ************* */
     /**
-     * @return CloseTeamControl
+     * @return CloseTeamComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getContext(), $this->getEntity());
+    protected function createComponentCloseTeamControl(): CloseTeamComponent {
+        return new CloseTeamComponent($this->getContext(), $this->getEntity());
     }
 
     /**

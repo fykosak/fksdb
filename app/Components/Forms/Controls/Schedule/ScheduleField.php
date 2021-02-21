@@ -18,11 +18,8 @@ use Nette\Forms\Controls\TextInput;
 class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
-
     private ModelEvent $event;
-
     private string $type;
-
     private ServiceScheduleItem $serviceScheduleItem;
 
     /**
