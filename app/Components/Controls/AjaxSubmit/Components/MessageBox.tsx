@@ -11,9 +11,11 @@ interface StateProps {
 class MessageBox extends React.Component<StateProps, {}> {
     public render() {
         const {messages} = this.props;
-        return <>{messages.map((message, index) => {
-            return (<div key={index} className={'react-message alert alert-' + message.level}> {message.text}</div>);
-        })}</>;
+        return <>
+            {messages.map((message, index) => {
+                return <div key={index} className={'react-message alert alert-' + message.level}> {message.text}</div>;
+            })}
+        </>;
     }
 }
 
