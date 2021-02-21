@@ -37,6 +37,7 @@ class PersonTestComponent extends BaseComponent {
      * @persistent
      */
     public ?array $levels = [];
+
     private ServicePerson $servicePerson;
     private DataTestingFactory $dataTestingFactory;
 

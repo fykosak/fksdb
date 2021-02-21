@@ -848,16 +848,16 @@ orm:
             serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
         schedule_group:
-            serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
-            modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
-            columnFactories:
-                schedule_group_id:
+             serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
+             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
+             columnFactories:
+                 schedule_group_id:
                     type: primaryKey
                     title: _(Schedule group Id)
-                schedule_group_type:
-                    type: state
-                    title: _(Type)
-                    states:
+                 schedule_group_type:
+                     type: state
+                     title: _(Type)
+                     states:
                          accommodation: [badge: 'badge badge-1', label: 'Accommodation']
                          accommodation_gender: [badge: 'badge badge-2', label: 'Accommodation gender']
                          accommodation_teacher: [badge: 'badge badge-3', label: 'Accommodation teacher']
@@ -865,19 +865,19 @@ orm:
                          weekend: [badge: 'badge badge-5', label: 'Weekend']
                          weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
                          visa: [badge: 'badge badge-7', label: 'Visa']
-                start:
+                 start:
                     type: dateTime
                     title: _(Schedule start)
-                end:
+                 end:
                     type: dateTime
                     title: _(Schedule end)
-                name_cs:
+                 name_cs:
                     type: string
                     title: _(Name cs)
-                name_en:
+                 name_en:
                     type: string
                     title: _(Name en)
-                name:
+                 name:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
                     title: _(Group name)

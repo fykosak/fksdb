@@ -50,6 +50,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     public const FLASH_ERROR = Logger::ERROR;
     /** @persistent */
     public ?string $tld = null;
+
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent
