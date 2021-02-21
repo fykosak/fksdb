@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Forms\Controls\SelectBox;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
