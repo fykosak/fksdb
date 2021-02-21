@@ -11,6 +11,6 @@ use FKSDB\Models\UI\PageTitle;
 class DashboardPresenter extends BasePresenter {
 
     protected function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Warehouse'), 'fa fa-truck'));
+        $this->setPageTitle(new PageTitle(_('Warehouse'), 'fa fa-warehouse'));
     }
 }

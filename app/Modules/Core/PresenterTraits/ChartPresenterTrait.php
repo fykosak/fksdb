@@ -16,11 +16,11 @@ trait ChartPresenterTrait {
     private array $chartComponents;
 
     public function titleChart(): void {
-        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
     }
 
     public function renderChart(): void {

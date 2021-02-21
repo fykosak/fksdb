@@ -35,7 +35,6 @@ class OrgModule extends AbstractPageDisplayTestCase {
 
             ['Org:Contestant', 'list'],
 
-            ['Org:Inbox', 'default'],
             ['Org:Inbox', 'handout'],
             ['Org:Inbox', 'inbox'],
             ['Org:Inbox', 'list'],

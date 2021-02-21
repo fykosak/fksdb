@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Fyziklani game app'), 'fa fa-dashboard'));
+        $this->setPageTitle(new PageTitle(_('Fyziklani game app'), 'fas fa-chalkboard-teacher'));
     }
 
     /**

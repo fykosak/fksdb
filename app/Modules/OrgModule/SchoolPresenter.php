@@ -41,7 +41,7 @@ class SchoolPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen'));
     }
 
     /**

@@ -10,14 +10,7 @@ use Nette\Security\IResource;
  * Class BasePresenter
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class BasePresenter extends AuthenticatedPresenter {
-
-    use ContestPresenterTrait;
-
-    protected function startup(): void {
-        $this->contestTraitStartup();
-        parent::startup();
-    }
+abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter {
 
     /**
      * @param IResource|string|null $resource
@@ -39,5 +32,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
             $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
+    }
+
+    protected function getNavRoots(): array {
+        $roots = parent::getNavRoots();
+        $roots[] = 'Warehouse.Dashboard.default';
+        return $roots;
     }
 }

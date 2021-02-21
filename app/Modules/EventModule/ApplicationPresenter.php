@@ -27,7 +27,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ForbiddenRequestException
      */
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Application import'), 'fas fa-upload'));
     }
 
     /**

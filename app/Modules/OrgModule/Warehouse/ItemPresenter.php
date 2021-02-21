@@ -24,15 +24,15 @@ class ItemPresenter extends BasePresenter {
     }
 
     protected function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-truck'));
+        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-boxes'));
     }
 
     protected function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit item'), 'fa fa-truck'));
+        $this->setPageTitle(new PageTitle(_('Edit item'), 'fa fa-box-open'));
     }
 
     protected function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-truck'));
+        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-box-open'));
     }
 
     protected function createComponentCreateForm(): Control {

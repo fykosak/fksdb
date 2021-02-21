@@ -5,12 +5,12 @@ import * as React from 'react';
 import { Submit } from './middleware';
 import { app } from './reducers';
 
-interface IProps {
+interface OwnProps {
     data: Submit;
     actions: NetteActions;
 }
 
-export default class Index extends React.Component<IProps, {}> {
+export default class Index extends React.Component<OwnProps, {}> {
 
     public render() {
         return <ActionsStoreCreator
