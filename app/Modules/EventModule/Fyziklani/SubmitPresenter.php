@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
-use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInputComponent;
+use FKSDB\Components\Controls\Fyziklani\Submit\PointsEntryComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -114,11 +114,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return TaskCodeInputComponent
+     * @return PointsEntryComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): TaskCodeInputComponent {
-        return new TaskCodeInputComponent($this->getContext(), $this->getEvent());
+    protected function createComponentCreateForm(): PointsEntryComponent {
+        return new PointsEntryComponent($this->getContext(), $this->getEvent());
     }
 
     /**

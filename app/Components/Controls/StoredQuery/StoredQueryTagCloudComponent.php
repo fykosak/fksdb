@@ -20,7 +20,7 @@ class StoredQueryTagCloudComponent extends BaseComponent {
     /**
      * @persistent
      */
-    public ?array $activeTagIds = [];
+    public array $activeTagIds = [];
 
     final public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
