@@ -2,14 +2,14 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Chart\Event\Applications\ApplicationRationGeoChart;
-use FKSDB\Components\Controls\Chart\Event\Applications\ParticipantsTimeGeoChart;
-use FKSDB\Components\Controls\Chart\Event\Applications\TeamsGeoChart;
-use FKSDB\Components\Controls\Chart\Event\ApplicationsTimeProgress\SingleComponent;
-use FKSDB\Components\Controls\Chart\Event\ApplicationsTimeProgress\TeamComponent;
+use FKSDB\Components\Charts\Event\Applications\ApplicationRationGeoChart;
+use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
+use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
+use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
+use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
-use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
+use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 
 /**
  * Class ChartPresenter

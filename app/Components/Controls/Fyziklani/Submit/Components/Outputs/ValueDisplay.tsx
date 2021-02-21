@@ -1,3 +1,4 @@
+import { translator } from '@translator/translator';
 import {
     getFullCode,
     getTask,
@@ -5,7 +6,6 @@ import {
 } from 'FKSDB/Components/Controls/Fyziklani/Submit/middleware';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
-import { translator } from '@translator/translator';
 import * as React from 'react';
 
 interface OwnProps {

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Chart\Contestants\Core\Chart;
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 

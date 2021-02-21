@@ -1,7 +1,7 @@
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
-import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
+import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';

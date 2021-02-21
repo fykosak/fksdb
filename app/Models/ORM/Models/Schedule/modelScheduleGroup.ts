@@ -1,5 +1,5 @@
-import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 import { LocalizedString } from '@translator/translator';
+import { ModelScheduleItem } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleItem';
 
 export interface ModelScheduleGroup {
     items: ModelScheduleItem[];

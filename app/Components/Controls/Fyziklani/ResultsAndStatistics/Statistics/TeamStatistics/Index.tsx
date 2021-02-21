@@ -1,6 +1,6 @@
-import ChartContainer from 'FKSDB/Components/Controls/Chart/Core/ChartContainer';
-import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import { translator } from '@translator/translator';
+import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
+import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {

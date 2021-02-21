@@ -1,7 +1,7 @@
+import { translator } from '@translator/translator';
 import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
 import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import Card from 'FKSDB/Models/UI/Card';
-import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import MessageBox from './MessageBox';

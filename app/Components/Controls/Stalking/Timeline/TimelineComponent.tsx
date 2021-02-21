@@ -1,8 +1,8 @@
-import ChartComponent from 'FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { axisBottom } from 'd3-axis';
 import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
+import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
 import * as React from 'react';
 import './style.scss';
 

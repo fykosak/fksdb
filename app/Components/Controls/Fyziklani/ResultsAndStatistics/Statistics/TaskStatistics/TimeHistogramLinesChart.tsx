@@ -1,11 +1,11 @@
-import LineChart from 'FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
-import { LineChartData } from 'FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import {
     scaleLinear,
     scaleTime,
 } from 'd3-scale';
 import { curveMonotoneX } from 'd3-shape';
+import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
+import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
+import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';

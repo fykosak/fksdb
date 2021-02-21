@@ -1,5 +1,5 @@
-import { Price } from 'FKSDB/Models/Payment/price';
 import { translator } from '@translator/translator';
+import { Price } from 'FKSDB/Models/Payment/price';
 import * as React from 'react';
 
 interface OwnProps {
