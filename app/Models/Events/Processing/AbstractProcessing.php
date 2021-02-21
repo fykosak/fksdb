@@ -5,7 +5,7 @@ namespace FKSDB\Models\Events\Processing;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Controls\BaseControl;
@@ -19,7 +19,8 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractProcessing implements IProcessing {
+abstract class AbstractProcessing implements Processing {
+
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -30,24 +31,16 @@ abstract class AbstractProcessing implements IProcessing {
     private array $states;
     private Holder $holder;
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return mixed|void
-     */
-    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
         $this->innerProcess($states, $values, $machine, $holder, $logger, $form);
+        return null;
     }
 
-    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
+    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILD_CART) !== false;
@@ -102,7 +95,8 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $name
      * @return bool
      */
-    final protected function isBaseReallyEmpty(string $name): bool {
+    protected function isBaseReallyEmpty(string $name): bool {
+
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since beginning

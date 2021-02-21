@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -18,17 +18,17 @@ use Nette\Forms\IControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
+class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private Explorer $explorer;
-    /** @var mixed */
+    /** @var callable|int */
     private $teamsPerSchool;
     private int $teamsPerSchoolValue;
     private ExpressionEvaluator $evaluator;
 
     /**
      * TeamsPerSchool constructor.
-     * @param int $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
      * @param Explorer $explorer
      * @param ServicePersonHistory $servicePersonHistory
@@ -48,7 +48,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param int $teamsPerSchool
+     * @param callable|int $teamsPerSchool
      * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool): void {
@@ -79,8 +79,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
-    /** @var mixed */
-    private $cache;
+    private array $cache;
 
     private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
@@ -91,7 +90,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         /** @var BaseHolder $baseHolder */
         $baseHolder = reset($baseHolders);
 
-        if (!$this->cache || $first) {
+        if (!isset($this->cache) || $first) {
             /*
              * This may not be optimal.
              */

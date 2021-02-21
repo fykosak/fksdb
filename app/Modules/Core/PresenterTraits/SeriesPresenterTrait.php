@@ -2,11 +2,10 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\SeriesChooser;
+use FKSDB\Components\Controls\Choosers\SeriesChooserComponent;
 use FKSDB\Models\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\DI\Container;
 
 /**
  * Class SeriesPresenter
@@ -62,12 +61,7 @@ trait SeriesPresenterTrait {
         return $this->series;
     }
 
-    protected function createComponentSeriesChooser(): SeriesChooser {
-        return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
+    protected function createComponentSeriesChooser(): SeriesChooserComponent {
+        return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
-
-    /**
-     * @return Container
-     */
-    abstract protected function getContext();
 }

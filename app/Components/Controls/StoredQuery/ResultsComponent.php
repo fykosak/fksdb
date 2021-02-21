@@ -30,7 +30,7 @@ class ResultsComponent extends BaseComponent {
     /**
      * @persistent
      */
-    public array $parameters = [];
+    public ?array $parameters = [];
     private ?StoredQuery $storedQuery = null;
     private ContestAuthorizator $contestAuthorizator;
     private StoredQueryFactory $storedQueryFormFactory;

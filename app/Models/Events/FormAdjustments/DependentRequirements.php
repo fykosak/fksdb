@@ -13,12 +13,7 @@ use Nette\Forms\IControl;
  */
 class DependentRequirements extends PairwiseAdjustment {
 
-    /**
-     * @param IControl|BaseControl $target
-     * @param IControl $prerequisite
-     * @return void
-     */
-    protected function processPair(IControl $target, IControl $prerequisite): void {
+    protected function processPair(BaseControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->addRule(Form::FILLED, _('Field %label is required.'));
     }
 }

@@ -17,20 +17,16 @@ use Nette\Utils\DateTime;
 class GlobalSession implements IGlobalSession {
 
     private ServiceGlobalSession $serviceGlobalSession;
-
-    private IGSIDHolder $gsidHolder;
-
+    private GlobalSessionIdHolder $globalSessionIdHolder;
     private ?ModelGlobalSession $globalSession;
-
     /** @var string  expecting string like '+10 days' */
     private string $expiration;
-
     private bool $started = false;
 
-    public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
+    public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, GlobalSessionIdHolder $globalSessionIdHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
-        $this->gsidHolder = $gsidHolder;
+        $this->globalSessionIdHolder = $globalSessionIdHolder;
     }
 
     /**
@@ -38,7 +34,7 @@ class GlobalSession implements IGlobalSession {
      * @throws \Exception
      */
     public function start($sessionId = null): void {
-        $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
+        $sessionId = $sessionId ?: $this->globalSessionIdHolder->getGlobalSessionId();
         if ($sessionId) {
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($sessionId);
 
@@ -81,7 +77,7 @@ class GlobalSession implements IGlobalSession {
             $this->globalSession = null;
         }
         $this->started = false;
-        $this->gsidHolder->setGSID(null);
+        $this->globalSessionIdHolder->setGlobalSessionId(null);
     }
 
     /**
@@ -93,7 +89,7 @@ class GlobalSession implements IGlobalSession {
             throw new InvalidStateException('Global session not started.');
         }
         if ($offset == self::UID) {
-            return (bool)($this->globalSession ?? false);
+            return isset($this->globalSession);
         }
         return false;
     }
@@ -137,7 +133,7 @@ class GlobalSession implements IGlobalSession {
         if (!isset($this->globalSession)) {
             $until = DateTime::from($this->expiration);
             $this->globalSession = $this->serviceGlobalSession->createSession($value, $until);
-            $this->gsidHolder->setGSID($this->globalSession->session_id);
+            $this->globalSessionIdHolder->setGlobalSessionId($this->globalSession->session_id);
         }
     }
 
@@ -160,5 +156,4 @@ class GlobalSession implements IGlobalSession {
             $this->globalSession = null;
         }
     }
-
 }

@@ -18,7 +18,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
             'label' => $label,
             'event_id' => $event->event_id,
         ])->fetch();
-        return $result ?: null;
+        return $result;
     }
 
     public function findAll(ModelEvent $event): TypedTableSelection {

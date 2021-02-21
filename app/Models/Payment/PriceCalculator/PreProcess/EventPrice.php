@@ -10,7 +10,7 @@ use FKSDB\Models\Payment\Price;
  * Class EventPrice
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventPrice implements IPreprocess {
+class EventPrice implements Preprocess {
 
     private ServiceEventParticipant $serviceEventParticipant;
 

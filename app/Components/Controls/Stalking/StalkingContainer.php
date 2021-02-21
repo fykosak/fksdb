@@ -65,24 +65,24 @@ class StalkingContainer extends BaseComponent {
         return new StalkingComponent($this->getContext());
     }
 
-    protected function createComponentAddress(): Components\Address {
-        return new Components\Address($this->getContext());
+    protected function createComponentAddress(): Components\AddressComponent {
+        return new Components\AddressComponent($this->getContext());
     }
 
-    protected function createComponentRole(): Components\Role {
-        return new Components\Role($this->getContext());
+    protected function createComponentRole(): Components\RoleComponent {
+        return new Components\RoleComponent($this->getContext());
     }
 
-    protected function createComponentFlag(): Components\Flag {
-        return new Components\Flag($this->getContext());
+    protected function createComponentFlag(): Components\FlagComponent {
+        return new Components\FlagComponent($this->getContext());
     }
 
-    protected function createComponentSchedule(): Components\Schedule {
-        return new Components\Schedule($this->getContext());
+    protected function createComponentSchedule(): Components\ScheduleComponent {
+        return new Components\ScheduleComponent($this->getContext());
     }
 
-    protected function createComponentValidation(): Components\Validation {
-        return new Components\Validation($this->getContext());
+    protected function createComponentValidation(): Components\ValidationComponent {
+        return new Components\ValidationComponent($this->getContext());
     }
 
     protected function createComponentTimeline(): TimelineComponent {

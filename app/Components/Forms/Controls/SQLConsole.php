@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
@@ -26,14 +26,14 @@ class SQLConsole extends TextArea {
      */
     public function __construct($label = null) {
         parent::__construct($label);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
                 //$collector->registerJSFile('js/codemirror.min.js');
                 //$collector->registerJSFile('js/sqlconsole.js');
             }
         });
-        $this->monitor(IStylesheetCollector::class, function (IStylesheetCollector $collector) {
+        $this->monitor(StylesheetCollector::class, function (StylesheetCollector $collector) {
             if (!$this->attachedCSS) {
                 $this->attachedCSS = true;
                 $collector->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);

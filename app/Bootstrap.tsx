@@ -1,4 +1,4 @@
-import AjaxSubmit from 'FKSDB/Components/Controls/AjaxSubmit/AjaxSubmit';
+import AjaxSubmitComponent from 'FKSDB/Components/Controls/AjaxSubmit/AjaxSubmitComponent';
 import PerSeriesChartComponent from 'FKSDB/Components/Controls/Chart/Contestants/PerSeriesChartComponent';
 import PerYearsChartComponent from 'FKSDB/Components/Controls/Chart/Contestants/PerYearsChartComponent';
 import ApplicationRationGeoChart from 'FKSDB/Components/Controls/Chart/Event/Applications/ApplicationRationGeoChart';
@@ -19,7 +19,7 @@ import * as React from 'react';
 
 appsLoader.register(eventSchedule);
 
-appsLoader.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmit);
+appsLoader.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
 appsLoader.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
 appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
 appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});

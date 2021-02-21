@@ -21,36 +21,25 @@ class ResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
+
     /** @var string Name of event parameter that hold overall capacity. */
-    private $paramCapacity;
+    private string $paramCapacity;
     /** @var array|string */
     private $includeStates;
-    /** @var array|string|string[] */
-    private $excludeStates;
-    /** @var string */
-    private $message;
-
-    /**
-     * @param array|string $fields
-     * @return void
-     */
-    private function setFields($fields): void {
-        if (!is_array($fields)) {
-            $fields = [$fields];
-        }
-        $this->fields = $fields;
-    }
+    /** @var string[] */
+    private array $excludeStates;
+    private string $message;
 
     /**
      *
-     * @param array|string $fields Fields that contain amount of the resource
+     * @param array $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param string|array $includeStates any state or array of state
-     * @param string|array $excludeStates any state or array of state
+     * @param string $includeStates any state or array of state
+     * @param array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
-        $this->setFields($fields);
+    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
+        $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
         $this->includeStates = $includeStates;

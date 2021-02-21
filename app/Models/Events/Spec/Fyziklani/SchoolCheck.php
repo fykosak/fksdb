@@ -2,11 +2,12 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
 
@@ -15,7 +16,7 @@ use Nette\Forms\IControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
+abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServicePersonHistory $servicePersonHistory;
     private Holder $holder;
@@ -34,7 +35,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
 
     /**
      * @param IControl[] $schoolControls
-     * @param IControl[] $personControls
+     * @param IControl[]|ReferencedId[] $personControls
      * @return array
      */
     final protected function getSchools(array $schoolControls, array $personControls): array {

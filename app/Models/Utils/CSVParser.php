@@ -22,11 +22,9 @@ class CSVParser implements Iterator {
     private $file;
     private string $delimiter;
     private int $indexType;
-    private int $rowNumber;
-    /** @var mixed */
-    private $currentRow;
-    /** @var mixed */
-    private $header;
+    private ?int $rowNumber = null;
+    private ?array $currentRow = null;
+    private ?array $header;
 
     public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
@@ -37,17 +35,11 @@ class CSVParser implements Iterator {
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function current() {
+    public function current(): array {
         return $this->currentRow;
     }
 
-    /**
-     * @return mixed
-     */
-    public function key() {
+    public function key(): ?int {
         return $this->rowNumber;
     }
 

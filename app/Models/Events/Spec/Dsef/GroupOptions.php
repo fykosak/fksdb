@@ -2,30 +2,31 @@
 
 namespace FKSDB\Models\Events\Spec\Dsef;
 
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
-use Nette\SmartObject;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use Nette\SmartObject;
 
 /**
  *
- * @author michal
+ * @author Michal Koutný <michal@fykos.cz>
  */
-class GroupOptions implements IOptionsProvider {
+class GroupOptions implements OptionsProvider {
+
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
 
     private ServiceDsefGroup $serviceDsefGroup;
-    /** @var array|string */
+    /** @var string|string[] */
     private $includeStates;
-    /** @var array|string|string[] */
+    /** @var string|string[] */
     private $excludeStates;
 
-    /** @var array  eventId => groups cache */
+    /** @var array[]  eventId => groups cache */
     private array $groups = [];
 
     /**
@@ -36,7 +37,12 @@ class GroupOptions implements IOptionsProvider {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct(
+        ServiceMDsefParticipant $serviceMParticipant,
+        ServiceDsefGroup $serviceDsefGroup,
+        $includeStates = BaseMachine::STATE_ANY,
+        $excludeStates = ['cancelled']
+    ) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;
@@ -54,11 +60,7 @@ class GroupOptions implements IOptionsProvider {
         return $result;
     }
 
-    /**
-     * @param int $eventId
-     * @return mixed
-     */
-    private function getGroups($eventId) {
+    private function getGroups(int $eventId): array {
         if (!isset($this->groups[$eventId])) {
             $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
                 ->select('*')

@@ -87,7 +87,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param mixed $series
+     * @param int[] $series
      */
     public function setSeries($series): void {
         $this->series = $series;
@@ -95,18 +95,11 @@ class BrojureResultsModel extends AbstractResultsModel {
         $this->dataColumns = [];
     }
 
-    /**
-     * @return int
-     */
-    public function getListedSeries() {
+    public function getListedSeries(): int {
         return $this->listedSeries;
     }
 
-    /**
-     * @param array $listedSeries
-     * @return void
-     */
-    public function setListedSeries($listedSeries): void {
+    public function setListedSeries(int $listedSeries): void {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];

@@ -4,7 +4,7 @@ const allowedTypes = [
     'application/pdf',
 ];
 
-export const handleFileUpload = (data: FileList, setError: (error) => void): FormData => {
+export const handleFileUpload = (data: FileList, setError: (error) => void): FormData | null | void => {
 
     if (data.length > 1) {
         console.log('max 1 file');

@@ -18,15 +18,14 @@ class DataValidator {
 
     public function validate(BaseHolder $baseHolder): void {
         // validate
-        $this->validationErrors = [];
         $this->validateFields($baseHolder);
     }
 
     /**
-     * @return bool|string[]
+     * @return null|string[]
      */
-    public function getValidationResult() {
-        return count($this->validationErrors) ? $this->validationErrors : true;
+    public function getValidationResult(): ?array {
+        return $this->validationErrors ?? null;
     }
 
     private function validateFields(BaseHolder $baseHolder): void {
@@ -35,10 +34,10 @@ class DataValidator {
         }
     }
 
-    /**
-     * @param string $error
-     */
-    public function addError($error): void {
+    public function addError(string $error): void {
+        if (!isset($this->validationErrors)) {
+            $this->validationErrors = [];
+        }
         $this->validationErrors[] = $error;
     }
 }
