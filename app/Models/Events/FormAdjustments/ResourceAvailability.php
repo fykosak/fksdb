@@ -105,7 +105,6 @@ class ResourceAvailability extends AbstractAdjustment {
                 $table->where('1=0');
             }
 
-
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
             }, $serviceData['holders']);

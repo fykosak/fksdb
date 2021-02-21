@@ -26,7 +26,6 @@ class MailTemplateFactory {
     private $application;
 
     private Translator $translator;
-
     private IRequest $request;
 
     public function __construct(string $templateDir, Application $application, Translator $translator, IRequest $request) {
