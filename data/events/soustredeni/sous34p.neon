@@ -125,7 +125,7 @@ events:
                         label: _('Return to DB as Invited')
                     out_of_db->invited1:
                         condition: role('admin')
-                        label: _('Return to DB as Invited as Invited, first call.')
+                        label: _('Return to DB as Invited, first call.')
                     out_of_db->invited2:
                         condition: role('admin')
                         label: _('Return to DB as Invited, second call')
@@ -137,7 +137,7 @@ events:
                         label: _('Return to DB as Invited (auto)')
                     out_of_db->spare:
                         condition: role('admin')
-                        label: _('Return to DB as Invited as Alternate')
+                        label: _('Return to DB as Alternate')
                     out_of_db->spare1:
                         condition: role('admin')
                         label: _('Return to DB as Alternate, first call')
