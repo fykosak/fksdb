@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:51+0100\n"
+"POT-Creation-Date: 2021-02-22 18:00+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -5027,61 +5027,60 @@ msgstr ""
 #: ../data/events/soustredeni/sous34p.neon.neon2php:140
 #, fuzzy
 msgid "Return to DB as Alternate"
-msgstr "Vrátit do db jako Pozvaný"
+msgstr "Vrátit do db jako Náhradník"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:143
 msgid "Return to DB as Alternate, first call"
-msgstr ""
+msgstr "Vrátit do db jako Náhradník, I. upomínka"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:146
 msgid "Return to DB as Alternate, second call"
-msgstr ""
+msgstr "Vrátit do db jako Náhradník, II. upomínka"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:149
 msgid "Return to DB as Alternate, last call"
-msgstr ""
+msgstr "Vrátit do db jako Náhradník, poslední upomínka"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:152
 msgid "Return to DB as Alternate (auto)"
-msgstr ""
+msgstr "Vrátit do db jako Náhradník (auto)"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:155
 msgid "Return to DB as Participating"
-msgstr ""
+msgstr "Vrátit do db jako účastní se."
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:158
 msgid "Return to DB as Wants to go"
-msgstr ""
+msgstr "Ǘrátit do DB jako Chce jet"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:161
 msgid "Return to DB as Participated"
-msgstr ""
+msgstr "Vrátit do db jako Zúčastil se"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:164
 msgid "Return to DB as Declined"
-msgstr ""
+msgstr "Vrátit do DB jako odmítnuů"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:167
 msgid "Return to DB as Has not arrived"
-msgstr ""
+msgstr "Vrátit do DB jako Nepřijel"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:170
 msgid "Return to DB as Cancelled"
-msgstr ""
+msgstr "Vrátit do DB jako Zrušen"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:174
-#, fuzzy
 msgid "Delete application"
-msgstr "Přihlášky týmů"
+msgstr "Smazat přihlášku"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:184
 msgid "Food"
-msgstr ""
+msgstr "Jídlo"
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:194
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
-msgid "Cena soustředění (CZK)"
-msgstr ""
+#, fuzzy
+msgid "Price of camp (CZK)"
+msgstr "Cena soustředění (CZK)"
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:106
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:111
@@ -5164,6 +5163,10 @@ msgstr ""
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:213
 msgid "Vrátit zpět do DB jako Zrušen"
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
+msgid "Cena soustředění (CZK)"
 msgstr ""
 
 #: ../typescript/src/apps/ajaxSubmit/components/states/file.tsx.tsx2php:29

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:51+0100\n"
+"POT-Creation-Date: 2021-02-22 18:00+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -5006,9 +5006,9 @@ msgid "Food"
 msgstr ""
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:194
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
-msgid "Cena soustředění (CZK)"
-msgstr ""
+#, fuzzy
+msgid "Price of camp (CZK)"
+msgstr "Cena v Kč"
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:106
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:111
@@ -5091,6 +5091,10 @@ msgstr ""
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:213
 msgid "Vrátit zpět do DB jako Zrušen"
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
+msgid "Cena soustředění (CZK)"
 msgstr ""
 
 #: ../typescript/src/apps/ajaxSubmit/components/states/file.tsx.tsx2php:29

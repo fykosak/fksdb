@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-22 17:51+0100\n"
+"POT-Creation-Date: 2021-02-22 18:00+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -4978,8 +4978,7 @@ msgid "Food"
 msgstr ""
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:194
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
-msgid "Cena soustředění (CZK)"
+msgid "Price of camp (CZK)"
 msgstr ""
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:106
@@ -5064,6 +5063,10 @@ msgstr ""
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:213
 msgid "Vrátit zpět do DB jako Zrušen"
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
+msgid "Cena soustředění (CZK)"
 msgstr ""
 
 #: ../typescript/src/apps/ajaxSubmit/components/states/file.tsx.tsx2php:29

@@ -191,9 +191,9 @@ events:
                         required: %events.soustredeni.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.soustredeni.tshirt%))
                     price:
-                        label: _('Cena soustředění (CZK)')
+                        label: _('Price of camp (CZK)')
                         modifiable: false
-                        description: "Cena v spočtená dle pravidel (http://fykos.cz/sous_cena)."
+                        description: "Price calculated according to the rules on our website.)."
 
 
         #
