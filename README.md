@@ -1,3 +1,6 @@
+![Lines of code](https://img.shields.io/tokei/lines/github/fykosak/fksdb) ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/fykosak/fksdb) \
+![GitHub issues](https://img.shields.io/github/issues/fykosak/fksdb) ![GitHub pull requests](https://img.shields.io/github/issues-pr/fykosak/fksdb)  <img src="https://img.shields.io/badge/coverage-39%25-yellow" /> ![GitHub branch checks state](https://img.shields.io/github/checks-status/fykosak/fksdb/web)
+
 Installation
 ============
 
@@ -24,35 +27,38 @@ Installation
 Initialization
 --------------
 
-0.1) Checkout branch 'dev'
+0.1) Checkout branch `master`
 
 0.2) Run `git submodule init && git submodule update`
+
 0.3) Run `copmposer install`
 
 Environment
 -----------
 
-1) Create /etc/hosts entries for addresses 'db.fykos.local' and 'auth.fykos.local'.
+1) Create `/etc/hosts` entries for addresses `db.fykos.local` and `auth.fykos.local`.
 
+```
 127.0.0.1   fykos.local fykos.localen 
 127.0.0.1   db.fykos.local db.fykos.localen
 127.0.0.1   auth.fykos.local
+```
 
-2) Configure virtual hosts in '/etc/apache/sites-enabled' with proper ServerName
+2) Configure virtual hosts in `/etc/apache/sites-enabled` with proper ServerName
    and ServerAlias (see domains above). (You need only virtual host for FKSDB.)
 
 Database
 --------
 
-4) Run 'sql/schema.sql' and 'sql/initval.sql' in your MySQL database.
+4) Run `sql/schema.sql` and `sql/initval.sql` in your MySQL database.
 
-5) Run 'sql/views.sql' in your MySQL database. May require two times execution
+5) Run `sql/views.sql` in your MySQL database. May require two times execution
    due to bad sorting.
 
 Configuration
 -------------
 
-6) Copy 'app/config/config.local.neon.sample' to 'app/config/config.local.neon'
+6) Copy `app/config/config.local.neon.sample` to `app/config/config.local.neon`
    and fill it with proper values (don't forget to add domain settings like:
     domain:
         cz: fykos.local
@@ -66,5 +72,3 @@ Run
 ===
 
 1) Register yourself and then add superuser role to the created login.
-
-<img src="https://img.shields.io/badge/coverage-39%25-yellow" />
