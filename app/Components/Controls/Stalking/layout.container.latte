@@ -1,4 +1,6 @@
 {layout '../@layout.latte'}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType int $userPermissions}
 {define person}
     <div class="card-columns mt-3">
         {control stalkingComponent "base_info", $person, $userPermissions}
@@ -43,9 +45,8 @@
     {control eventOrgsGrid}
     <h3>{_'Event teachers'}</h3>
     {control eventTeachersGrid}
-    <div class="card-columns mt-3">
-        {control schedule $person, $userPermissions}
-    </div>
+    <h3>{_'Schedule'}</h3>
+    {control eventScheduleGrid}
 
 {/define}
 

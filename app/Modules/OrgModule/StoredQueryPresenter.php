@@ -40,7 +40,7 @@ class StoredQueryPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
+        return new PageTitle(sprintf(_('Create query')), 'fas fa-pen');
     }
 
     /**

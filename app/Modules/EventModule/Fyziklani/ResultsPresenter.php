@@ -16,7 +16,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleCorrelationStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie'));
     }
 
     /**
@@ -24,7 +24,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fas fa-chart-area'));
     }
 
     /**
@@ -32,7 +32,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTable(): void {
-        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-trophy'));
     }
 
     /**
@@ -40,7 +40,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titlePresentation(): void {
-        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fa fa-table'));
+        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fas fa-chalkboard'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTeamStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fa fa-line-chart'));
+        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fas fa-chart-line'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTaskStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar'));
     }
 
     /**

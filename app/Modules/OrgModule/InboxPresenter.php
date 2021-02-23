@@ -27,10 +27,6 @@ class InboxPresenter extends BasePresenter {
 
     /* ***************** AUTH ***********************/
 
-    public function authorizedDefault(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
-    }
-
     public function authorizedInbox(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
@@ -53,16 +49,12 @@ class InboxPresenter extends BasePresenter {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
-    }
-
     public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
+        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download-alt'));
     }
 
     public function titleCorrected(): void {

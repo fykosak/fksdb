@@ -16,7 +16,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-chalkboard-teacher'));
     }
 
     /**
