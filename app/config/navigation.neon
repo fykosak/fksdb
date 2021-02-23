@@ -12,10 +12,10 @@ navigation:
             Org.Tasks.import: []
 
             Org.Person.search: []
-            Org.Person.pizza: []
             Org.Contestant.list: []
             Org.Org.list: []
             Org.Teacher.list: []
+            Org.Person.pizza: []
 
             Org.Event.list: []
             Org.School.list: []

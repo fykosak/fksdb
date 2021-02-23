@@ -1,6 +1,9 @@
 {layout '../@layout.latte'}
 {block content}
+    {varType Nette\Database\Table\GroupedSelection $postContacts}
     {if count($postContacts)}
+        {varType Nette\Database\Table\ActiveRow $row}
+        {varType FKSDB\Models\ORM\Models\ModelPostContact $postContact}
         {foreach $postContacts as $row}
             {var $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
             {var $address = $postContact->getAddress()}
@@ -12,7 +15,6 @@
                 {/if}
             </h3>
             <div class="card-body">
-                {dump $address}
                 {if !is_null($address->first_row)}
                     <div>{$address->first_row}</div>
                 {/if}
