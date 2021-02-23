@@ -5,9 +5,9 @@ import Card from 'FKSDB/Models/UI/Card';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import MessageBox from './MessageBox';
-import File from './Stetes/FileState';
-import Form from './Stetes/FormState';
-import LoadingState from './Stetes/LoadingState';
+import File from './States/FileState';
+import Form from './States/FormState';
+import LoadingState from './States/LoadingState';
 
 interface StateProps {
     submitting: boolean;

@@ -43,7 +43,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-users'));
     }
 
     /**

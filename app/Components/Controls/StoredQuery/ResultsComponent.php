@@ -127,6 +127,7 @@ class ResultsComponent extends BaseComponent {
         }
         $this->template->error = $this->isAuthorized() ? $this->getSqlError() : _('Permission denied');
         $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
+        $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];

@@ -85,7 +85,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
+        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
     }
 
     /* *********** AUTH ***************/

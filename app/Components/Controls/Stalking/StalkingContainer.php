@@ -61,6 +61,10 @@ class StalkingContainer extends BaseComponent {
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
     }
 
+    protected function createComponentEventScheduleGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());
+    }
+
     protected function createComponentStalkingComponent(): StalkingComponent {
         return new StalkingComponent($this->getContext());
     }
@@ -75,10 +79,6 @@ class StalkingContainer extends BaseComponent {
 
     protected function createComponentFlag(): Components\FlagComponent {
         return new Components\FlagComponent($this->getContext());
-    }
-
-    protected function createComponentSchedule(): Components\ScheduleComponent {
-        return new Components\ScheduleComponent($this->getContext());
     }
 
     protected function createComponentValidation(): Components\ValidationComponent {

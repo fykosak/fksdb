@@ -67,7 +67,7 @@ class ExportPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
     }
 
     /**
