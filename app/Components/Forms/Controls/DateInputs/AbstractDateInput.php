@@ -15,16 +15,9 @@ abstract class AbstractDateInput extends TextInput {
 
     protected string $format;
 
-    /**
-     * AbstractDateInput constructor.
-     * @param string $type
-     * @param string $format
-     * @param null $label
-     * @param null $maxLength
-     */
-    public function __construct(string $type, string $format, $label = null, $maxLength = null) {
+    public function __construct(string $type, string $format, ?string $label = null) {
         $this->format = $format;
-        parent::__construct($label, $maxLength);
+        parent::__construct($label);
         $this->setHtmlType($type);
     }
 

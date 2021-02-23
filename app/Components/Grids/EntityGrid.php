@@ -5,6 +5,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use Nette\Application\IPresenter;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -31,6 +32,10 @@ abstract class EntityGrid extends BaseGrid {
 
     protected function getData(): IDataSource {
         $source = $this->service->getTable()->where($this->queryParams);
+        return $this->createDataSource($source);
+    }
+
+    protected function createDataSource(Selection $source): IDataSource {
         return new NDataSource($source);
     }
 

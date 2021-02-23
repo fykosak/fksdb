@@ -7,12 +7,8 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DateInput extends AbstractDateInput {
-    /**
-     * DateInput constructor.
-     * @param null $label
-     * @param null $maxLength
-     */
-    public function __construct($label = null, $maxLength = null) {
-        parent::__construct('date', 'Y-m-d', $label, $maxLength);
+
+    public function __construct(?string $label = null) {
+        parent::__construct('date', 'Y-m-d', $label);
     }
 }

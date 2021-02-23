@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -17,17 +18,18 @@ use FKSDB\Models\SQL\SearchableDataSource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class SchoolsGrid extends BaseGrid {
+class SchoolsGrid extends EntityGrid {
 
-    private ServiceSchool $serviceSchool;
+    public function __construct(Container $container) {
+        parent::__construct($container, ServiceSchool::class, [], []);
+    }
 
-    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
-        $this->serviceSchool = $serviceSchool;
+    protected function createDataSource(Selection $source): IDataSource {
+        return new SearchableDataSource($source);
     }
 
     protected function getData(): IDataSource {
-        $schools = $this->serviceSchool->getSchools();
-        $dataSource = new SearchableDataSource($schools);
+        $dataSource = parent::getData();
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
             foreach ($tokens as $token) {
@@ -47,17 +49,15 @@ class SchoolsGrid extends BaseGrid {
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
-        //
-        // columns
-        //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'));
+        $this->addColumn('city', _('City'))->setRenderer(function (ModelSchool $modelSchool) {
+            return $modelSchool->getAddress()->city;
+        });
         $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row): Html {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
         $this->addLink('school.edit');
         $this->addLink('school.detail');
-
     }
 }

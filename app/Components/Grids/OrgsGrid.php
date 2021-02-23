@@ -17,26 +17,24 @@ use FKSDB\Models\SQL\SearchableDataSource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class OrgsGrid extends BaseGrid {
-
-    private ServiceOrg $serviceOrg;
-
-    private ModelContest $contest;
+class OrgsGrid extends EntityGrid {
 
     public function __construct(Container $container, ModelContest $contest) {
-        parent::__construct($container);
-        $this->contest = $contest;
+        parent::__construct($container, ServiceOrg::class, ['person.full_name',
+            'org.since',
+            'org.until',
+            'org.role',
+        ], [
+            'contest_id' => $contest->contest_id,
+        ]);
     }
 
-    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
-        $this->serviceOrg = $serviceOrg;
+    protected function createDataSource(Selection $source): IDataSource {
+        return new SearchableDataSource($source);
     }
 
     protected function getData(): IDataSource {
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
-            ->select('org.*, person.family_name AS display_name');
-
-        $dataSource = new SearchableDataSource($orgs);
+        $dataSource = parent::getData();
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
             foreach ($tokens as $token) {
@@ -58,13 +56,6 @@ class OrgsGrid extends BaseGrid {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');
-
-        $this->addColumns([
-            'person.full_name',
-            'org.since',
-            'org.until',
-            'org.role',
-        ]);
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);

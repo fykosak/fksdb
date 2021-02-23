@@ -19,7 +19,8 @@ class ContestantsFromSchoolGrid extends EntityGrid {
     public function __construct(ModelSchool $school, Container $container) {
         parent::__construct($container, ServiceContestant::class, [
             'person.full_name',
-            'contestant_base.year', /*'person_history.study_year',*/
+            'contestant_base.year',
+            'person_history.study_year',
             'contest.contest',
         ], [
             'person:person_history.school_id' => $school->school_id,

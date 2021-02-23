@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -19,24 +20,25 @@ use NiftyGrid\DuplicateColumnException;
  *
  * @author Michal Červeňák
  * @author Lukáš Timko
+ * @property ServiceFyziklaniTeam $service
  */
-class CloseTeamsGrid extends BaseGrid {
-
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+class CloseTeamsGrid extends EntityGrid {
 
     private ModelEvent $event;
 
     public function __construct(ModelEvent $event, Container $container) {
-        parent::__construct($container);
+        parent::__construct($container,ServiceFyziklaniTeam::class,[
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.points',
+            'e_fyziklani_team.category',
+            'e_fyziklani_team.opened_submitting',
+        ],[]);
         $this->event = $event;
     }
 
-    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
     protected function getData(): IDataSource {
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
+        $teams = $this->service->findParticipating($this->event);//->where('points',NULL);
         return new NDataSource($teams);
     }
 
@@ -52,13 +54,6 @@ class CloseTeamsGrid extends BaseGrid {
 
         $this->paginate = false;
 
-        $this->addColumns([
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.points',
-            'e_fyziklani_team.category',
-            'e_fyziklani_team.opened_submitting',
-        ]);
         $this->addColumn('room', _('Room'))->setRenderer(function (ModelFyziklaniTeam $row) {
             $position = $row->getPosition();
             if (is_null($position)) {

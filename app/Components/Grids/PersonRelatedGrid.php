@@ -18,7 +18,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * Class StalkingGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonRelatedGrid extends BaseGrid {
+final class PersonRelatedGrid extends BaseGrid {
 
     protected ModelPerson $person;
 
