@@ -1,5 +1,8 @@
+![alt text](https://github.com/fykosak/fksdb/blob/web/www/images/logo/blue.svg?raw=true)
+
 ![Lines of code](https://img.shields.io/tokei/lines/github/fykosak/fksdb) ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/fykosak/fksdb) \
 ![GitHub issues](https://img.shields.io/github/issues/fykosak/fksdb) ![GitHub pull requests](https://img.shields.io/github/issues-pr/fykosak/fksdb)  <img src="https://img.shields.io/badge/coverage-43%25-yellow" /> ![GitHub branch checks state](https://img.shields.io/github/checks-status/fykosak/fksdb/web)
+
 
 Installation
 ============
