@@ -15,9 +15,9 @@ class BinaryPrinter extends AbstractValuePrinter {
      */
     protected function getHtml($value): Html {
         if ($value) {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
+            return Html::el('span')->addAttributes(['class' => 'fas fa-check text-success']);
         } else {
-            return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);
+            return Html::el('span')->addAttributes(['class' => 'fas fa-times text-danger']);
         }
     }
 }

@@ -94,7 +94,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     public function titleEmail(): void {
-        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
+        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name));
     }
 
     public function titleContestant(): void {

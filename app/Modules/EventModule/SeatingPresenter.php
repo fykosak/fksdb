@@ -26,7 +26,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows'));
+        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows-alt'));
     }
 
     /**
@@ -34,7 +34,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fas fa-pen'));
     }
 
     /**

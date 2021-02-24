@@ -9,10 +9,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
+    <link rel="icon" href="{$basePath}/images/favicon.png" type="image/png" sizes="16x16">
     {control cssLoader
+    'css/fontawesome/css/all.css'=> [all],
     '//stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css' => [all],
-    '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'=>[all],
-    '//fonts.googleapis.com/css?family=Source+Sans+Pro'=>[all],
     '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [all],
     'css/bundle.css'=>[all]
     }
@@ -28,7 +28,8 @@
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand" href="{$basePath}/"><i class="fa fa-home mr-2" aria-hidden="true"></i>{_'FKSDB'}
+            <a class="navbar-brand" href="{$basePath}/">
+                <img src="{$basePath}/images/logo/white.svg" height="30" class="d-inline-block align-top" alt=""/>
             </a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -48,16 +49,16 @@
                         {var $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                <span class="fa fa-user"></span>
+                                <span class="fas fa-user"></span>
                                 {if $login->getPerson()}
                                     <b>{$login->getPerson()->getFullname()}</b>
                                 {else}
                                 {_'User'} <b>{$login->login}</b>
                                 {/if}</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" n:href=":Core:Settings:">{_'Settings'}</a>
-                                <a class="dropdown-item" n:href=":Core:MyPayments:default">{_'My payments'}</a>
-                                <a class="dropdown-item" n:href=":Core:MyApplications:default">{_'My applications'}</a>
+                                <a class="dropdown-item" n:href=":Core:Settings:"><i class="fas fa-cog mr-3"/>{_'Settings'}</a>
+                                <a class="dropdown-item" n:href=":Core:MyPayments:default"><i class="fas fa-credit-card mr-3"/>{_'My payments'}</a>
+                                <a class="dropdown-item" n:href=":Core:MyApplications:default"><i class="fas fa-calendar-check mr-3"/>{_'My applications'}</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" n:href=":Core:Authentication:logout">{_'Log out'}</a>
                             </div>
@@ -75,7 +76,7 @@
             {control breadcrumbs}
         {/block}
         {block titleBody}
-            <h1 class="page-header">{$pageTitle->toHtml()}</h1>
+            <h1 class="page-header">{$pageTitle->toHtml(true)}</h1>
         {/block}
         {block flashes}
             {foreach $flashes as $flash}

@@ -1456,6 +1456,61 @@ CREATE TABLE IF NOT EXISTS `submit_quiz` (
 )
 	ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `warehouse_producer`
+(
+    `producer_id` INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`        VARCHAR(256) NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `warehouse_product`
+(
+    `product_id`     INT(11)                                                 NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `producer_id`    INT(11)                                                 NULL DEFAULT NULL,
+    `category`       ENUM ('apparel','game','game-extension','book','other') NOT NULL, # TODO,
+    `name_cs`        VARCHAR(256)                                            NOT NULL,
+    `name_en`        VARCHAR(256)                                            NOT NULL,
+    `description_cs` TEXT                                                    NULL DEFAULT NULL,
+    `description_en` TEXT                                                    NULL DEFAULT NULL,
+    `note`           TEXT                                                    NULL DEFAULT NULL COMMENT 'neverejná poznámka',
+    `url`            VARCHAR(256)                                            NULL DEFAULT NULL COMMENT 'URL k objednaniu produktu',
+    CONSTRAINT `warehouse_product_producer_fk_1`
+        FOREIGN KEY (`producer_id`)
+            REFERENCES `warehouse_producer` (`producer_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `warehouse_item`
+(
+    `item_id`           INT(11)                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `product_id`        INT(11)                                  NOT NULL,
+    `contest_id`        INT(11)                                  NOT NULL,
+    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,
+    `description_cs`    VARCHAR(256)                             NULL     DEFAULT NULL,
+    `description_en`    VARCHAR(256)                             NULL     DEFAULT NULL,
+    `data`              VARCHAR(256)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
+    `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
+    `purchase_currency` ENUM ('czk','eur')                       NOT NULL DEFAULT 'czk' COMMENT 'pořizovací měna',
+    `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
+    `available`         BOOLEAN                                  NOT NULL DEFAULT FALSE COMMENT 'available in online store',
+    `placement`         VARCHAR(256)                             NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
+    `price`             DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'price in FYKOS Coins',
+    `note`              TEXT(1024)                               NULL     DEFAULT NULL COMMENT 'neverejná poznámka',
+    INDEX `idx_finger_print` (`contest_id`, `state`, `description_cs`, `description_en`, `price`, `shipped`, `data`),
+    INDEX `idx_shipped` (`shipped`),
+    CONSTRAINT `warehouse_item_product_1`
+        FOREIGN KEY (`product_id`)
+            REFERENCES `warehouse_product` (`product_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT,
+    CONSTRAINT `warehouse_product_contest_fk_1`
+        FOREIGN KEY (`contest_id`)
+            REFERENCES `contest` (`contest_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
+) ENGINE = InnoDB;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;

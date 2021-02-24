@@ -29,8 +29,8 @@ class SQLConsole extends TextArea {
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
-                //$collector->registerJSFile('js/codemirror.min.js');
-                //$collector->registerJSFile('js/sqlconsole.js');
+                $collector->registerJSFile('js/codemirror.min.js');
+                $collector->registerJSFile('js/sqlconsole.js');
             }
         });
         $this->monitor(StylesheetCollector::class, function (StylesheetCollector $collector) {
