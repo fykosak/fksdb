@@ -17,6 +17,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SpamPresenter extends BasePresenter {
+
     use EntityPresenterTrait;
 
     private ServiceEmailMessage $serviceEmailMessage;
@@ -27,15 +28,15 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fas fa-envelope-open'));
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('List of emails'), 'fa fa-envelope');
+        return new PageTitle(_('List of emails'), 'fas fa-mail-bulk');
     }
 
     public function authorizedDetail(): void {

@@ -4,11 +4,13 @@
     <main class="{$pageStyleContainer->mainContainerClassName}">
         <div class="login-form-container card">
             <div class="row mx-3" style="height:7rem">
-                <img class="col-6" src="/images/contests/fykos-gray.svg" alt="fykos"/>
-                <img class="col-6" src="/images/contests/vyfuk-gray.svg" alt="vyfuk"/>
+                <img class="col-6" src="{$basePath}/images/contests/fykos-gray.svg" alt="fykos"/>
+                <img class="col-6" src="{$basePath}/images/contests/vyfuk-gray.svg" alt="vyfuk"/>
             </div>
             <div class="card-body pt-0">
-                <h2 class="card-title text-center text-muted">{_'FKSDB'}</h2>
+                <div class="text-center">
+                    <img src="{$basePath}/images/logo/gray.svg" width="75%" alt="FKSDB"/>
+                </div>
                 {block flashes}
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}

@@ -13,10 +13,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class ResultsCategoryGrid
- * *
- */
 class ResultsCategoryGrid extends BaseGrid {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

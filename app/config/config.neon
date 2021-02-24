@@ -187,17 +187,19 @@ database:
 application:
     errorPresenter: Core:Error
     mapping:
+        Fyziklani: FKSDB\Modules\EventModule\Fyziklani\*Presenter
+        Warehouse: FKSDB\Modules\OrgModule\Warehouse\*Presenter
         *: FKSDB\Modules\*Module\*Presenter
 session:
    expiration: 14 days
    autoStart: true
 extensions:
-    fksrouter: FKSDB\Config\Extensions\RouterExtension
+    fksrouter: FKSDB\Models\Router\RouterExtension
     acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
     payment: FKSDB\Models\Payment\PaymentExtension
-    DBReflection: FKSDB\Models\DBReflection\DBReflectionExtension
+    orm: FKSDB\Models\ORM\ORMExtension
 
 includes:
     - router.neon
@@ -209,4 +211,3 @@ includes:
     - exports.neon
     - stalking.neon
     - payment.neon
-    - DBReflection.neon

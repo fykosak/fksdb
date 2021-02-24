@@ -3,10 +3,9 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -42,7 +41,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
         $model = $this->serviceScheduleGroup->store($this->model ?? null, $data);
-        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
@@ -62,20 +61,10 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void {
-        $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end']);
-        $container->addSelect('schedule_group_type', _('Schedule group type'), [
-            'accommodation' => _('Accommodation'),
-            'weekend' => _('Weekend'),
-            'visa' => _('Visa'),
-            'accommodation_gender' => _('Accommodation gender'),
-            'accommodation_teacher' => _('Accommodation teacher'),
-            'teacher_present' => _('Schedule during compotition'),
-            'weekend_info' => _('Weekend info'),
-        ]);
+        $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']);
         $form->addComponent($container, self::CONTAINER);
     }
 }

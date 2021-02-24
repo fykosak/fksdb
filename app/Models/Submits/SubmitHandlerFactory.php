@@ -3,6 +3,7 @@
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -10,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
@@ -45,9 +45,9 @@ class SubmitHandlerFactory {
      * @param Presenter $presenter
      * @param ModelSubmit $submit
      * @return void
-     * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws StorageException
      */
     public function handleDownloadUploaded(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.uploaded');
@@ -66,9 +66,9 @@ class SubmitHandlerFactory {
      * @param Presenter $presenter
      * @param ModelSubmit $submit
      * @return void
-     * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws StorageException
      */
     public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.corrected');
@@ -87,6 +87,8 @@ class SubmitHandlerFactory {
      * @param ModelSubmit $submit
      * @return void
      * @throws ForbiddenRequestException
+     * @throws StorageException
+     * @throws ModelException
      */
     public function handleRevoke(ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'revoke');

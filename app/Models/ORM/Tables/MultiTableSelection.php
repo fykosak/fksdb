@@ -4,8 +4,8 @@ namespace FKSDB\Models\ORM\Tables;
 
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
 /**
@@ -15,8 +15,8 @@ class MultiTableSelection extends Selection {
 
     private AbstractServiceMulti $service;
 
-    public function __construct(AbstractServiceMulti $service, string $table, Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, $table);
+    public function __construct(AbstractServiceMulti $service, string $table, Explorer $explorer, Conventions $conventions) {
+        parent::__construct($explorer, $conventions, $table);
         $this->service = $service;
     }
 

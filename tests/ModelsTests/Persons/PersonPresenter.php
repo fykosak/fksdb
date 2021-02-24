@@ -2,13 +2,13 @@
 
 namespace FKSDB\Tests\ModelsTests\Persons;
 
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\ExtendedPersonPresenter;
 
-class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
+class PersonPresenter extends BasePresenter implements ExtendedPersonPresenter {
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModelSingle {
         return null;
     }
 

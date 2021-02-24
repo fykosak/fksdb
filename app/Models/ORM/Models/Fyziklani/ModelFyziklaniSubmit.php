@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\IEventReferencedModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
@@ -26,7 +25,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
+class ModelFyziklaniSubmit extends AbstractModelSingle implements IResource {
     public const STATE_NOT_CHECKED = 'not_checked';
     public const STATE_CHECKED = 'checked';
 

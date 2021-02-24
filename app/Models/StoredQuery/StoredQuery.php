@@ -18,47 +18,25 @@ use NiftyGrid\DataSource\IDataSource;
 class StoredQuery implements IDataSource, IResource {
 
     private const INNER_QUERY = 'sub';
-
     private ?ModelStoredQuery $queryPattern = null;
-
     private ?string $qid = null;
-
     private ?StoredQueryPostProcessing $postProcessing = null;
-
     private string $sql;
-
     private ?string $name = null;
-
     private array $queryParameters = [];
-
     private Connection $connection;
-
     /** from Presenter     */
     private array $implicitParameterValues = [];
-
     /** User set parameters     */
     private array $parameterValues = [];
-
     /** default parameter of ModelStoredQueryParameter     */
     private array $parameterDefaultValues = [];
-
-    /** @var int|null */
-    private ?int $count;
-
-    /** @var iterable|null */
-    private $data;
-
-    /** @var int|null */
-    private $limit;
-
-    /** @var int|null */
-    private $offset;
-
-    /** @var array */
-    private $orders = [];
-
-    /** @var array */
-    private $columnNames;
+    private ?int $count = null;
+    private ?iterable $data = null;
+    private ?int $limit = null;
+    private ?int $offset = null;
+    private array $orders = [];
+    private ?array $columnNames = null;
 
     private function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -187,7 +165,7 @@ class StoredQuery implements IDataSource, IResource {
         if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
-            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
+            $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . '';
 
             $statement = $this->bindParams($sql);
             $statement->execute();
@@ -265,10 +243,11 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param string $column
+     * @throws \PDOException
      * @return int|null
      */
     public function getCount($column = '*'): ?int {
-        if ($this->count === null) {
+        if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
@@ -285,9 +264,10 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @return mixed|\PDOStatement|null
+     * @throws \PDOException
      */
     public function getData() {
-        if ($this->data === null) {
+        if (!isset($this->data)) {
             $innerSql = $this->getSQL();
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
                 $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;

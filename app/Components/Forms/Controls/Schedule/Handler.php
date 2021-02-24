@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -20,9 +21,7 @@ use PDOException;
 class Handler {
 
     private ServiceScheduleGroup $serviceScheduleGroup;
-
     private ServicePersonSchedule $servicePersonSchedule;
-
     private ServiceScheduleItem $serviceScheduleItem;
 
     public function __construct(
@@ -59,6 +58,8 @@ class Handler {
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
+     * @throws PDOException
+     * @throws ModelException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
         $oldRows = $this->servicePersonSchedule->getTable()

@@ -2,18 +2,17 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
 abstract class FolTestCase extends EventTestCase {
 
     protected IPresenter $fixture;
-
     protected int $personId;
-
     protected int $eventId;
 
     protected function getEventId(): int {
@@ -41,15 +40,13 @@ EOT
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_fyziklani_participant');
-        $this->connection->query('DELETE FROM e_fyziklani_team');
+        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
 
-    protected function assertTeamApplication(int $eventId, string $teamName): IRow {
-        $application = $this->connection->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
+    protected function assertTeamApplication(int $eventId, string $teamName): Row {
+        $application = $this->explorer->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
         Assert::notEqual(null, $application);
         return $application;
     }
-
 }

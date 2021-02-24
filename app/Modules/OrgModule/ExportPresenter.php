@@ -9,8 +9,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
-use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -25,17 +24,11 @@ use Nette\Utils\Strings;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+class ExportPresenter extends BasePresenter {
 
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-
-    /**
-     * @persistent
-     */
-    public $qid;
-
     private ServiceStoredQuery $serviceStoredQuery;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
@@ -74,7 +67,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
     }
 
     /**
@@ -150,8 +143,8 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $control;
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud($this->getContext());
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+        return new StoredQueryTagCloudComponent($this->getContext());
     }
 
     protected function createComponentCreateForm(): Control {

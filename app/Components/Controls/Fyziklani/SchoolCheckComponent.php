@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -73,8 +73,8 @@ group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($cu
         return $schools;
     }
 
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+        return new ColumnPrinterComponent($this->getContext());
     }
 }
 // there are very nice nette workaround, but very slow

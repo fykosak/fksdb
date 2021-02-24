@@ -10,12 +10,13 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
 /**
@@ -24,6 +25,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonFactory {
+
     use SmartObject;
 
     protected ServicePerson $servicePerson;
@@ -59,11 +61,10 @@ class ReferencedPersonFactory {
         int $acYear,
         string $searchType,
         bool $allowClear,
-        IModifiabilityResolver $modifiabilityResolver,
-        IVisibilityResolver $visibilityResolver,
+        ModifiabilityResolver $modifiabilityResolver,
+        VisibilityResolver $visibilityResolver,
         ?ModelEvent $event = null
     ): ReferencedId {
-
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event);
         return new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
@@ -106,12 +107,12 @@ class ReferencedPersonFactory {
             case 'person_history':
                 return ($history = $person->getHistory($acYear, (bool)($options & ReferencedPersonContainer::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
-                return $person->getDeliveryAddress();
+                return $person->getDeliveryPostContact();
             case 'post_contact_p':
                 if (($options & ReferencedPersonContainer::TARGET_VALIDATION) || !($options & ReferencedPersonContainer::HAS_DELIVERY)) {
-                    return $person->getPermanentAddress();
+                    return $person->getPermanentPostContact();
                 }
-                return $person->getPermanentAddress(true);
+                return $person->getPermanentPostContact(true);
             case 'person_has_flag':
                 return ($flag = $person->getPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:

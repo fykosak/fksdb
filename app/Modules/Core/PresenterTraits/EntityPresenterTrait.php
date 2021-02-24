@@ -20,12 +20,11 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
+
     /**
      * @persistent
-     * @var int
      */
-    public $id;
-
+    public ?int $id = null;
     protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {
@@ -116,10 +115,7 @@ trait EntityPresenterTrait {
     public function getEntity(bool $throw = true): ?AbstractModelSingle {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
-        if (
-            (isset($this->model) && $id !== $this->model->getPrimary())
-            || !isset($this->model)
-        ) {
+        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
             $this->model = $this->loadModel($throw);
         }
         return $this->model;
@@ -144,6 +140,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
+     * @throws Exceptions\ModelException
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void {
@@ -179,7 +176,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

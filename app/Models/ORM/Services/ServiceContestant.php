@@ -2,27 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceContestant extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
 
     protected string $viewName = DbNames::VIEW_CONTESTANT;
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_CONTESTANT_BASE, ModelContestant::class);
-    }
-
 
     /**
      * @note Read-only (loads data from view).
@@ -30,6 +19,7 @@ class ServiceContestant extends AbstractServiceSingle {
      * @param ModelContest $contest
      * @param int $year
      * @return Selection
+     * TODO
      */
     public function getCurrentContestants(ModelContest $contest, int $year): Selection {
         $contestants = $this->getContext()->table($this->viewName)

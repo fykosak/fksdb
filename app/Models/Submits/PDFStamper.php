@@ -11,7 +11,7 @@ use Nette\Utils\Strings;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PDFStamper implements IStorageProcessing {
+class PDFStamper implements StorageProcessing {
 
     private string $inputFile;
 
@@ -57,7 +57,6 @@ class PDFStamper implements IStorageProcessing {
     /**
      * @param ModelSubmit $submit
      * @throws ProcessingException
-     * @throws InvalidStateException
      */
     public function process(ModelSubmit $submit): void {
         if (!$this->getInputFile()) {

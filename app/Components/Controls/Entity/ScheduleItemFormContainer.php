@@ -3,10 +3,9 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
@@ -43,7 +42,7 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
         $model = $this->serviceScheduleItem->store($this->model ?? null, $data);
-        $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);
     }
 
@@ -63,7 +62,6 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
      * @param Form $form
      * @return void
      * @throws BadTypeException
-     * @throws AbstractColumnException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void {

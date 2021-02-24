@@ -7,7 +7,7 @@ use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Database\IRow;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
@@ -21,15 +21,10 @@ abstract class SubmitTestCase extends DatabaseTestCase {
 
     public const TOKEN = 'foo';
     public const FILE_01 = 'file01.pdf';
-
     protected int $taskAll;
-
     protected int $taskRestricted;
-
     protected int $personId;
-
     protected int $contestantId;
-
     protected IPresenter $fixture;
 
     /**
@@ -96,9 +91,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM submit');
-        $this->connection->query('DELETE FROM task');
-        $this->connection->query('DELETE FROM contestant_base');
+        $this->truncateTables(['submit', 'task', 'contestant_base']);
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
         /** @var \SplFileInfo $f */
@@ -155,15 +148,14 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): IRow {
-        $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+    protected function assertSubmit(int $contestantId, int $taskId): Row {
+        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::notEqual(null, $submit);
         return $submit;
     }
 
     protected function assertNotSubmit(int $contestantId, int $taskId): void {
-        $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::equal(null, $submit);
     }
-
 }

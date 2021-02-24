@@ -19,6 +19,7 @@ use Nette\Security\IResource;
  * @method ModelEvent getEntity()
  */
 class EventPresenter extends BasePresenter {
+
     use EntityPresenterTrait;
 
     private ServiceEvent $serviceEvent;
@@ -28,11 +29,11 @@ class EventPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Events'), 'fa fa-calendar-check-o');
+        return new PageTitle(_('Events'), 'fa fa-calendar');
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Add event'), 'fa fa-calendar-plus-o');
+        return new PageTitle(_('Add event'), 'fa fa-calendar');
     }
 
     /**

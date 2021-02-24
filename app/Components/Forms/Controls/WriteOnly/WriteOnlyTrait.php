@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -34,7 +34,7 @@ trait WriteOnlyTrait {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {
                 $form->onValidate = $form->onValidate ?: [];
-                array_unshift($form->onValidate, function (Form $form) {
+                array_unshift($form->onValidate, function (Form $form): void {
                     if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
                         $this->writeOnlyDisable();
                     }
@@ -42,7 +42,7 @@ trait WriteOnlyTrait {
                 $this->writeOnlyAttachedOnValidate = true;
             }
         });
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->writeOnlyAttachedJS) {
                 $this->writeOnlyAttachedJS = true;
                 $collector->registerJSFile('js/writeOnlyInput.js');

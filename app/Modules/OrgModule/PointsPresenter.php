@@ -3,9 +3,8 @@
 namespace FKSDB\Modules\OrgModule;
 
 use Exception;
-use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
-use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
+use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -20,17 +19,13 @@ use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
-/**
- * Class PointsPresenter
- *
- */
-class PointsPresenter extends BasePresenter implements ISeriesPresenter {
+class PointsPresenter extends BasePresenter {
+
     /**
      * Show all tasks?
      * @persistent
      */
     public $all;
-
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
     private ServiceTask $serviceTask;
@@ -56,11 +51,11 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     public function titleEntry(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-trophy'));
     }
 
     public function titlePreview(): void {
-        $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Points list'), 'fas fa-inbox'));
     }
 
     public function authorizedEntry(): void {
@@ -84,14 +79,14 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         }
     }
 
-    protected function createComponentPointsForm(): PointsFormControl {
-        return new PointsFormControl(function () {
+    protected function createComponentPointsForm(): PointsFormComponent {
+        return new PointsFormComponent(function () {
             $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
         }, $this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentPointsTableControl(): PointsPreviewControl {
-        return new PointsPreviewControl($this->getContext(), $this->seriesTable);
+    protected function createComponentPointsTableControl(): PointsPreviewComponent {
+        return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
     /**

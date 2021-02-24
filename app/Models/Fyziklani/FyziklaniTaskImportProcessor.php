@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\Fyziklani;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\Utils\CSVParser;
-use FKSDB\Modules\FyziklaniModule\TaskPresenter;
+use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -28,12 +28,7 @@ class FyziklaniTaskImportProcessor {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    /**
-     * @param ArrayHash $values
-     * @param ILogger $logger
-     * @return void
-     */
-    public function process($values, ILogger $logger): void {
+    public function process(ArrayHash $values, Logger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
@@ -60,7 +55,7 @@ class FyziklaniTaskImportProcessor {
                     $logger->log(new Message(sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {
                     $logger->log(new Message(
-                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), ILogger::WARNING));
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), Logger::WARNING));
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('Vyskytla se chyba'), BasePresenter::FLASH_ERROR));

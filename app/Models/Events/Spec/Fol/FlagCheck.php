@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
@@ -19,7 +19,7 @@ use Nette\Forms\IControl;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
+class FlagCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServiceSchool $serviceSchool;
     private ServicePersonHistory $servicePersonHistory;
@@ -41,7 +41,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
-        $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
+        $studyYearControls = $this->getControl('p*.person_id.person_history.study_year');
         $personControls = $this->getControl('p*.person_id');
         $spamControls = $this->getControl('p*.person_id.person_has_flag.spam_mff');
 

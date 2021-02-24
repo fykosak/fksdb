@@ -30,7 +30,7 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     #auth
-    - FKSDB\Models\Authentication\SSO\TokenGSIDHolder
+    - FKSDB\Models\Authentication\SSO\TokenGlobalSessionIdHolder
     - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
@@ -45,8 +45,8 @@ services:
     #datatesting
     - FKSDB\Models\DataTesting\DataTestingFactory
     #DBreflection
-    - FKSDB\Models\DBReflection\MetaDataFactory
-    - FKSDB\Models\DBReflection\DBReflectionFactory
+    - FKSDB\Models\ORM\MetaDataFactory
+    - FKSDB\Models\ORM\ORMFactory
     # Events
     events.dataValidator: FKSDB\Models\Events\Model\Holder\DataValidator
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator

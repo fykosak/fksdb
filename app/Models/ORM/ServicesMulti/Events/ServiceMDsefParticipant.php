@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti\Events;
 
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
@@ -21,8 +22,9 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
     /**
      * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
+     * @throws ModelException
      */
-    public function dispose(IModel $model): void {
+    public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }

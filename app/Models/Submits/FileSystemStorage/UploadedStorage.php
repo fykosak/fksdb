@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\Submits\IStorageProcessing;
-use FKSDB\Models\Submits\ISubmitStorage;
+use FKSDB\Models\Submits\StorageProcessing;
+use FKSDB\Models\Submits\SubmitStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use Tracy\Debugger;
@@ -18,32 +18,26 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class UploadedStorage implements ISubmitStorage {
+class UploadedStorage implements SubmitStorage {
+
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
-
     /** @const File extension that marks original untouched file. */
     public const ORIGINAL_EXT = '.bak';
-
     /** @const File extension that marks temporary working file. */
     public const TEMPORARY_EXT = '.tmp';
-
     /** @const File extension that marks final file extension.
      *         It's a bit dangerous that only supported filetype is hard-coded in this class
      */
     public const FINAL_EXT = '.pdf';
-
     private ?array $todo = null;
-
     /** @var string  Absolute path to (existing) directory of the storage. */
     private string $root;
-
     /**
      * Sprintf string for arguments (in order): contestName, year, series, label
      * @var string
      */
     private string $directoryMask;
-
     /**
      * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
      * File extension + metadata will be added to the name.
@@ -51,11 +45,9 @@ class UploadedStorage implements ISubmitStorage {
      * @var string
      */
     private string $filenameMask;
-
     /** @var array   contestId => contest name */
     private array $contestMap;
-
-    /** @var IStorageProcessing[] */
+    /** @var StorageProcessing[] */
     private array $processings = [];
 
     public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
@@ -65,7 +57,7 @@ class UploadedStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
-    public function addProcessing(IStorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
@@ -125,10 +117,6 @@ class UploadedStorage implements ISubmitStorage {
         $this->todo = null;
     }
 
-    /**
-     *
-     * @throws InvalidStateException
-     */
     public function rollback(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
@@ -231,5 +219,4 @@ class UploadedStorage implements ISubmitStorage {
         // append metadata
         return $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;
     }
-
 }

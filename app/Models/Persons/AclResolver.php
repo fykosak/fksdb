@@ -13,7 +13,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
+class AclResolver implements VisibilityResolver, ModifiabilityResolver {
     use SmartObject;
 
     private ContestAuthorizator $contestAuthorizator;

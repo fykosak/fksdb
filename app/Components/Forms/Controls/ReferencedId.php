@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Models\Persons\IReferencedHandler;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
@@ -30,30 +30,19 @@ class ReferencedId extends HiddenField {
     public const MODE_NORMAL = 'MODE_NORMAL';
     public const MODE_FORCE = 'MODE_FORCE';
     public const MODE_ROLLBACK = 'MODE_ROLLBACK';
-
     public const VALUE_PROMISE = '__promise';
-
     private const JSON_DATA = 'referencedContainer';
-
     private ReferencedContainer $referencedContainer;
-
     private SearchContainer $searchContainer;
-
     private IService $service;
-
-    private IReferencedHandler $handler;
-
+    private ReferencedHandler $handler;
     private ?Promise $promise = null;
-
     private bool $modelCreated = false;
-    /** @var IModel */
-    private $model;
-
+    private ?IModel $model = null;
     private bool $attachedOnValidate = false;
-
     private bool $attachedSearch = false;
 
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, ReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -101,7 +90,7 @@ class ReferencedId extends HiddenField {
         return $this->service;
     }
 
-    public function getHandler(): IReferencedHandler {
+    public function getHandler(): ReferencedHandler {
         return $this->handler;
     }
 
@@ -113,10 +102,7 @@ class ReferencedId extends HiddenField {
         $this->modelCreated = $modelCreated;
     }
 
-    /**
-     * @return IModel
-     */
-    public function getModel() {
+    public function getModel(): ?IModel {
         return $this->model;
     }
 
@@ -126,7 +112,6 @@ class ReferencedId extends HiddenField {
      * @return static
      */
     public function setValue($pValue, bool $force = false): self {
-
         if ($pValue instanceof IModel) {
             $personModel = $pValue;
         } elseif ($pValue === self::VALUE_PROMISE) {
@@ -183,13 +168,11 @@ class ReferencedId extends HiddenField {
     }
 
     private function createPromise(): void {
-
         $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-
                     $model = $this->handler->createFromValues($values);
                     $this->setValue($model, self::MODE_FORCE);
                     $this->setModelCreated(true);
@@ -235,7 +218,7 @@ class ReferencedId extends HiddenField {
         }
     }
 
-    protected function setModel(?IModel $model, string $mode = self::MODE_NORMAL): void {
+    protected function setModel(?IModel $model, string $mode): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

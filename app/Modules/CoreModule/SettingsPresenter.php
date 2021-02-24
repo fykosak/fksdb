@@ -9,12 +9,12 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -93,8 +93,6 @@ class SettingsPresenter extends BasePresenter {
             $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Authentication'));
-        $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
-        $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
@@ -103,7 +101,9 @@ class SettingsPresenter extends BasePresenter {
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
+        $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($login): bool {
+            return $this->uniqueEmailFactory->create($login->getPerson())($baseControl) && $this->uniqueLoginFactory->create($login)($baseControl);
+        });
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */
         $oldPasswordControl = $loginContainer->getComponent('old_password', false);
@@ -128,7 +128,7 @@ class SettingsPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
+     * @throws ModelException
      */
     private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -147,7 +147,7 @@ class SettingsPresenter extends BasePresenter {
 
         $this->flashMessage(_('User information has been saved.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
+            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS);
             $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');

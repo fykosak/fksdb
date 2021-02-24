@@ -7,7 +7,6 @@ use Nette\Security\IResource;
 
 /**
  * Class ModelEmailMessage
- * *
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read string sender

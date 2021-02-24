@@ -2,23 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */
-class ServicePerson extends AbstractServiceSingle {
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_PERSON, ModelPerson::class);
-    }
+class ServicePerson extends OldAbstractServiceSingle {
 
     public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
@@ -26,12 +19,13 @@ class ServicePerson extends AbstractServiceSingle {
         }
         /** @var ModelPerson|false $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
-        return $result ?: null;
+        return $result;
     }
 
     /**
      * @param IModel|ModelPerson $model
      * @return void
+     * @throws ModelException
      */
     public function save(IModel &$model): void {
         if (is_null($model->gender)) {

@@ -3,11 +3,8 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -17,10 +14,6 @@ use Nette\Utils\Random;
 class ServiceAuthToken extends AbstractServiceSingle {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_AUTH_TOKEN, ModelAuthToken::class);
-    }
 
     /**
      *
@@ -74,9 +67,6 @@ class ServiceAuthToken extends AbstractServiceSingle {
         } else {
             $this->updateModel2($token, ['until' => $until]);
         }
-        //  $token->until = $until;
-
-        // $this->save($token);
         if (!$outerTransaction) {
             $this->context->getConnection()->commit();
         }
@@ -84,13 +74,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         return $token;
     }
 
-    /**
-     *
-     * @param string $tokenData
-     * @param bool $strict
-     * @return ModelAuthToken|null
-     */
-    public function verifyToken($tokenData, $strict = true): ?ModelAuthToken {
+    public function verifyToken(string $tokenData, bool $strict = true): ?ModelAuthToken {
         $tokens = $this->getTable()
             ->where('token', $tokenData);
         if ($strict) {
@@ -99,7 +83,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
         /** @var ModelAuthToken $token */
         $token = $tokens->fetch();
-        return $token ?: null;
+        return $token;
     }
 
     /**
@@ -115,11 +99,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param int $eventId
-     * @return array
-     */
-    public function findTokensByEventId($eventId): array {
+    public function findTokensByEventId(int $eventId): array {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')

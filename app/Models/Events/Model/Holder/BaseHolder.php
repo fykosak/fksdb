@@ -3,10 +3,10 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Config\NeonScheme;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -25,13 +25,12 @@ class BaseHolder {
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
-
     private string $name;
     private ?string $description;
     private ExpressionEvaluator $evaluator;
     private DataValidator $validator;
     /** Relation to the primary holder's event.     */
-    private ?IEventRelation $eventRelation;
+    private ?EventRelation $eventRelation;
     private ModelEvent $event;
     private string $label;
     private IService $service;
@@ -45,10 +44,8 @@ class BaseHolder {
     private ?IModel $model = null;
     private array $paramScheme;
     private array $parameters;
-
     /** @var bool|callable */
     private $modifiable;
-
     /** @var bool|callable */
     private $visible;
 
@@ -93,7 +90,7 @@ class BaseHolder {
         $this->visible = $visible;
     }
 
-    public function setEventRelation(?IEventRelation $eventRelation): void {
+    public function setEventRelation(?EventRelation $eventRelation): void {
         $this->eventRelation = $eventRelation;
     }
 
@@ -115,7 +112,7 @@ class BaseHolder {
      * @throws NeonSchemaException
      */
     public function inferEvent(ModelEvent $event): void {
-        if ($this->eventRelation instanceof IEventRelation) {
+        if ($this->eventRelation instanceof EventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
         } else {
             $this->setEvent($event);
@@ -280,11 +277,7 @@ class BaseHolder {
         return $column;
     }
 
-    /**
-     * @param string $column
-     * @return bool|mixed|string
-     */
-    public static function getBareColumn($column) {
+    public static function getBareColumn(string $column): ?string {
         $column = str_replace(':', '.', $column);
         $pos = strrpos($column, '.');
         return $pos === false ? $column : substr($column, $pos + 1);
@@ -346,16 +339,15 @@ class BaseHolder {
     }
 
     /**
-     * @param string|int|int[]|string[] $name
-     * @param null $default
+     * @param string|int $name
+     * @param mixed $default
      * @return mixed
      */
     public function getParameter($name, $default = null) {
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
+            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . '.', null, $exception);
         }
     }
-
 }

@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
@@ -23,42 +23,30 @@ use Nette\Utils\Html;
 class MultiResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
-    private $fields;
+    private array $fields;
 
-    /** @var string Name of event parameter that hold overall capacity. */
+    /** @var string|array Name of event parameter that hold overall capacity. */
     private $paramCapacity;
     /** @var array|string */
     private $includeStates;
-    /** @var array|string|string[] */
-    private $excludeStates;
-    /** @var string */
-    private $message;
+    /** @var string[] */
+    private array $excludeStates;
+    private string $message;
 
-    private Context $database;
-
-    /**
-     * @param array|string $fields
-     * @return void
-     */
-    private function setFields($fields): void {
-        if (!is_array($fields)) {
-            $fields = [$fields];
-        }
-        $this->fields = $fields;
-    }
+    private Explorer $database;
 
     /**
      *
      * @param array|string $fields Fields that contain amount of the resource
-     * @param string $paramCapacity Name of the parameter with overall capacity.
+     * @param string|array $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Context $database
+     * @param Explorer $explorer
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
-        $this->setFields($fields);
-        $this->database = $database;
+    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
+        $this->fields = $fields;
+        $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
         $this->includeStates = $includeStates;
@@ -189,5 +177,4 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         };
     }
-
 }

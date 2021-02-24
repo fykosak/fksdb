@@ -12,10 +12,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
-/**
- * Class OrgPresenter
- *
- */
 class OrgPresenter extends BasePresenter {
     use EntityPresenterTrait {
         getEntity as traitGetEntity;

@@ -2,15 +2,14 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Processing\IProcessing;
+use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
@@ -23,7 +22,7 @@ use Nette\Utils\ArrayHash;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PrivacyPolicy implements IProcessing, IFormAdjustment {
+class PrivacyPolicy implements Processing, FormAdjustment {
 
     use SmartObject;
 
@@ -43,9 +42,8 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Machine $machine
      * @param Holder $holder
      * @return void
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
@@ -59,17 +57,9 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
         $this->trySetAgreed($values);
+        return null;
     }
 
     private function trySetAgreed(ArrayHash $values): void {

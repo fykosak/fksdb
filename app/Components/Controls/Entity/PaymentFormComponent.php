@@ -7,7 +7,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPayment;
@@ -17,7 +19,6 @@ use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -79,10 +80,11 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
+     * @throws ModelException
+     * @throws StorageException
      */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();

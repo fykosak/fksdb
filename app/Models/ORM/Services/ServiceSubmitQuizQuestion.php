@@ -2,13 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelSubmitQuizQuestion;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
 
 /**
@@ -16,17 +12,13 @@ use Nette\Utils\DateTime;
  */
 class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT_QUIZ, ModelSubmitQuizQuestion::class);
-    }
-
     public function findByContestant(int $ctId, int $questionId): ?ModelSubmitQuizQuestion {
         /** @var ModelSubmitQuizQuestion $result */
         $result = $this->getTable()->where([
             'ct_id' => $ctId,
             'question_id' => $questionId,
         ])->fetch();
-        return $result ?: null;
+        return $result;
     }
 
     public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, ?string $answer): void {

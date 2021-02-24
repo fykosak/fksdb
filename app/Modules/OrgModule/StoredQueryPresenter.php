@@ -3,12 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
-use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
@@ -21,7 +20,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
+class StoredQueryPresenter extends BasePresenter {
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 
@@ -41,7 +40,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
+        return new PageTitle(sprintf(_('Create query')), 'fas fa-pen');
     }
 
     /**
@@ -96,13 +95,13 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentGrid(): BaseGrid {
-        /** @var StoredQueryTagCloud $cloud */
+        /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');
         return new StoredQueriesGrid($this->getContext(), $cloud->activeTagIds);
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud($this->getContext());
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+        return new StoredQueryTagCloudComponent($this->getContext());
     }
 
     protected function getORMService(): ServiceStoredQuery {

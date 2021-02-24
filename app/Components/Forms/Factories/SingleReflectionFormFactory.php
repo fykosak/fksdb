@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\ColumnFactories\IColumnFactory;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\DBReflection\DBReflectionFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\OmittedControlException;
+use FKSDB\Models\ORM\ORMFactory;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -18,30 +17,29 @@ use Nette\Forms\Controls\BaseControl;
  */
 class SingleReflectionFormFactory {
 
-    protected DBReflectionFactory $tableReflectionFactory;
+    protected ORMFactory $tableReflectionFactory;
 
-    public function __construct(DBReflectionFactory $tableReflectionFactory) {
+    public function __construct(ORMFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @return IColumnFactory
+     * @return ColumnFactory
      * @throws BadTypeException
      */
-    protected function loadFactory(string $tableName, string $fieldName): IColumnFactory {
-        return $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $fieldName);
+    protected function loadFactory(string $tableName, string $fieldName): ColumnFactory {
+        return $this->tableReflectionFactory->loadColumnFactory($tableName, $fieldName);
     }
 
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
     public function createField(string $tableName, string $fieldName, ...$args): BaseControl {
         return $this->loadFactory($tableName, $fieldName)->createField(...$args);
@@ -52,7 +50,6 @@ class SingleReflectionFormFactory {
      * @param array $fields
      * @param array $args
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -71,7 +68,6 @@ class SingleReflectionFormFactory {
      * @param array $fields
      * @param FieldLevelPermission $userPermissions
      * @return ModelContainer
-     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -82,7 +78,7 @@ class SingleReflectionFormFactory {
             $control = $factory->createField();
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
-            if ($control instanceof IWriteOnly) {
+            if ($control instanceof WriteOnly) {
                 $control->setWriteOnly(!$canRead);
             } elseif ($canRead) {
 // do nothing

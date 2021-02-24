@@ -5,9 +5,9 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
+use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
@@ -33,23 +33,23 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendars'));
     }
 
     /**
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendar'));
     }
 
     /**
@@ -57,15 +57,15 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fas fa-calendar'));
     }
 
     /**
      *
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     public function renderDetail(): void {
         $this->template->model = $this->getEntity();
@@ -81,10 +81,10 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return ScheduleItemFormContainer
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): ScheduleItemFormContainer {
         return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), $this->getEntity());
@@ -92,10 +92,10 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return PersonsGrid
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws EventNotFoundException
-     * @throws BadTypeException
+     * @throws CannotAccessModelException
      */
     protected function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext(), $this->getEntity());

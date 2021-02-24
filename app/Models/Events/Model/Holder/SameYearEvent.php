@@ -11,7 +11,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SameYearEvent implements IEventRelation {
+class SameYearEvent implements EventRelation {
 
     private int $eventTypeId;
 
@@ -27,12 +27,12 @@ class SameYearEvent implements IEventRelation {
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        /** @var ModelEvent|false $event */
+        /** @var ModelEvent|null $event */
         $event = $result->fetch();
         if ($event === null) {
-            throw new InvalidArgumentException("No event with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
+            throw new InvalidArgumentException('No event with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.');
         } elseif ($result->fetch() !== null) {
-            throw new InvalidArgumentException("Ambiguous events with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
+            throw new InvalidArgumentException('Ambiguous events with event_type_id ' . $this->eventTypeId . ' for the year ' . $event->year . '.');
         } else {
             return $event;
         }

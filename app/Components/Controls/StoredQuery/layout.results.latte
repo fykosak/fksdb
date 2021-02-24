@@ -1,5 +1,11 @@
 {layout ../@layout.latte}
 {block content}
+    {varType bool $hasParameters}
+    {varType bool $hasStoredQuery}
+    {varType bool $error}
+    {varType array $formats}
+    {varType FKSDB\Models\StoredQuery\StoredQuery $storedQuery}
+    {varType bool $showParametrizeForm}
     {if $hasParameters}
         {control parametrizeForm}
     {/if}
@@ -9,9 +15,11 @@
                 {$error}
             </div>
         {else}
-            {foreach $formats as $formatName => $label}
-                <a class="btn btn-secondary btn-sm" href="{link 'format!', 'format' => $formatName}">{$label}</a>
-            {/foreach}
+            {if $showParametrizeForm}
+                {foreach $formats as $formatName => $label}
+                    <a class="btn btn-secondary btn-sm" href="{link 'format!', 'format' => $formatName}">{$label}</a>
+                {/foreach}
+            {/if}
             {if $storedQuery}
                 {if $storedQuery->hasQueryPattern()}
                     <a class="btn btn-secondary btn-sm"

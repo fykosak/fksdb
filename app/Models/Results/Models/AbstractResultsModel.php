@@ -9,7 +9,6 @@ use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
 use Nette\Database\Row;
-use Nette\InvalidStateException;
 
 /**
  * General results sheet with contestants and their ranks.
@@ -24,31 +23,23 @@ abstract class AbstractResultsModel {
     public const DATA_SCHOOL = 'school';
     public const DATA_RANK_FROM = 'from';
     public const DATA_RANK_TO = 'to';
-
     public const LABEL_SUM = 'sum';
     public const ALIAS_SUM = 'sum';
     public const LABEL_PERCENTAGE = 'percent';
     public const ALIAS_PERCENTAGE = 'percent';
     public const LABEL_TOTAL_PERCENTAGE = 'total-percent';
     public const ALIAS_TOTAL_PERCENTAGE = 'total-percent';
-
     /* for use in School Results */
     public const LABEL_UNWEIGHTED_SUM = 'unweighted-sum';
     public const ALIAS_UNWEIGHTED_SUM = 'unweighted-sum';
     public const LABEL_CONTESTANTS_COUNT = 'contestants-count';
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
-
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-
     protected int $year;
-
     protected ModelContest $contest;
-
     protected ServiceTask $serviceTask;
-
     protected Connection $connection;
-
     protected EvaluationStrategy $evaluationStrategy;
 
     public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
@@ -62,6 +53,7 @@ abstract class AbstractResultsModel {
     /**
      * @param ModelCategory $category
      * @return Row[]
+     * @throws \PDOException
      */
     public function getData(ModelCategory $category): array {
         $sql = $this->composeQuery($category);
@@ -100,10 +92,10 @@ abstract class AbstractResultsModel {
 
     /**
      * @note Work only with numeric types.
-     * @param mixed $conditions
+     * @param iterable $conditions
      * @return string
      */
-    protected function conditionsToWhere($conditions): string {
+    protected function conditionsToWhere(iterable $conditions): string {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
@@ -116,7 +108,7 @@ abstract class AbstractResultsModel {
                         $set[] = $subValue;
                     }
                 }
-                $inClause = "$col IN (" . implode(',', $set) . ")";
+                $inClause = "$col IN (" . implode(',', $set) . ')';
                 if ($hasNull) {
                     $where[] = "$inClause OR $col IS NULL";
                 } else {
@@ -128,7 +120,7 @@ abstract class AbstractResultsModel {
                 $where[] = "$col = $value";
             }
         }
-        return "(" . implode(') and (', $where) . ")";
+        return '(' . implode(') and (', $where) . ')';
     }
 
     protected function getTasks(int $series): TypedTableSelection {
@@ -152,17 +144,12 @@ abstract class AbstractResultsModel {
      * @param int[]|int $series
      * TODO int[] OR int
      */
-    abstract public function setSeries($series);
+    abstract public function setSeries($series): void;
 
     /**
      * @return int[]|int (see setSeries)
      */
     abstract public function getSeries();
 
-    /**
-     * @param ModelCategory $category
-     * @return array
-     * @throws InvalidStateException
-     */
     abstract public function getDataColumns(ModelCategory $category): array;
 }

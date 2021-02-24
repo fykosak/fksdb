@@ -2,13 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -17,11 +13,6 @@ use Nette\Database\Table\ActiveRow;
  * @method ModelEmailMessage createNewModel(array $data)
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_EMAIL_MESSAGE, ModelEmailMessage::class);
-    }
 
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
@@ -29,10 +20,10 @@ class ServiceEmailMessage extends AbstractServiceSingle {
 
     /**
      * @param array $data
-     * @param int $priority
      * @return ModelEmailMessage|ActiveRow
+     * @throws ModelException
      */
-    public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
+    public function addMessageToSend(array $data): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];

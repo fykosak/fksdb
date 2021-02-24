@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\Events\Machine;
 
+use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -19,37 +19,26 @@ use Nette\SmartObject;
  * @property array onExecuted
  */
 class Transition {
+
     use SmartObject;
 
-    public const TYPE_SUCCESS = ILogger::SUCCESS;
-    public const TYPE_WARNING = ILogger::WARNING;
-    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_SUCCESS = Logger::SUCCESS;
+    public const TYPE_WARNING = Logger::WARNING;
+    public const TYPE_DANGEROUS = Logger::ERROR;
     public const TYPE_DEFAULT = 'secondary';
-
     private BaseMachine $baseMachine;
-
     private array $inducedTransitions = [];
-
     private string $mask;
-
     private string $name;
-
     private string $target;
-
     private string $source;
-
     private ?string $label;
-
     /** @var bool|callable */
     private $condition;
-
     /** @var bool|callable */
     private $visible;
-
     private ExpressionEvaluator $evaluator;
-
     public array $onExecuted = [];
-
     private string $type;
 
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
@@ -162,11 +151,11 @@ class Transition {
 
     public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
-            throw new InvalidArgumentException("Cannot induce transition in the same machine.");
+            throw new InvalidArgumentException('Cannot induce transition in the same machine.');
         }
         $targetName = $targetMachine->getName();
         if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . ".");
+            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . '.');
         }
         $this->inducedTransitions[$targetName] = $targetState;
     }
@@ -207,11 +196,12 @@ class Transition {
     /**
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return bool|array
+     * @return null|array
      */
-    private function validateTarget(Holder $holder, array $inducedTransitions) {
+    private function validateTarget(Holder $holder, array $inducedTransitions): ?array {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
+            $result = $inducedTransition->validateTarget($holder, []);
+            if (!is_null($result)) {
                 return $result;
             }
         }
@@ -238,6 +228,8 @@ class Transition {
      *
      * @param Holder $holder
      * @return array
+     * @throws TransitionConditionFailedException
+     * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
      */
     final public function execute(Holder $holder): array {
@@ -255,7 +247,7 @@ class Transition {
         $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
         $validationResult = $this->validateTarget($holder, $inducedTransitions);
-        if ($validationResult !== true) {
+        if (!is_null($validationResult)) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 
@@ -267,6 +259,7 @@ class Transition {
      *
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
+     * @throws TransitionOnExecutedException
      */
     final public function executed(Holder $holder, array $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {

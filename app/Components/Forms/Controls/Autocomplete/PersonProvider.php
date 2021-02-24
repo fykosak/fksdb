@@ -13,7 +13,7 @@ use FKSDB\Models\YearCalculator;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonProvider implements IFilteredDataProvider {
+class PersonProvider implements FilteredDataProvider {
 
     private const PLACE = 'place';
 
@@ -75,9 +75,9 @@ class PersonProvider implements IFilteredDataProvider {
 
     private function getItem(ModelPerson $person): array {
         $place = null;
-        $address = $person->getDeliveryAddress();
+        $address = $person->getDeliveryAddress2();
         if ($address) {
-            $place = $address->getAddress()->city;
+            $place = $address->city;
         }
         return [
             self::LABEL => $person->getFullName(),

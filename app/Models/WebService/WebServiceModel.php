@@ -81,7 +81,7 @@ class WebServiceModel {
 
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
-            $this->log("Successfully authenticated for web service request.");
+            $this->log('Successfully authenticated for web service request.');
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
             throw new SoapFault('Sender', 'Invalid credentials.');
@@ -256,7 +256,7 @@ class WebServiceModel {
     public function getExport(stdClass $args): SoapVar {
         // parse arguments
         $qid = $args->qid;
-        $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
+        $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : XMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = [];
 
         $this->checkAuthentication(__FUNCTION__, $qid);
@@ -304,7 +304,7 @@ class WebServiceModel {
 
     /**
      * @param string $serviceName
-     * @param mixed ...$args
+     * @param ...$args
      * @throws SoapFault
      */
     private function checkAuthentication(string $serviceName, ...$args): void {
@@ -326,9 +326,9 @@ class WebServiceModel {
 
     private function log(string $msg): void {
         if (!$this->authenticatedLogin) {
-            $message = "unauthenticated@";
+            $message = 'unauthenticated@';
         } else {
-            $message = $this->authenticatedLogin->__toString() . "@";
+            $message = $this->authenticatedLogin->__toString() . '@';
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);
@@ -345,7 +345,7 @@ class WebServiceModel {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
-        $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
     }
 
@@ -360,7 +360,7 @@ class WebServiceModel {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
-        $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        $this->resultsModelFactory->fillNode($resultsModel, $cumulativeNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $cumulativeNode;
     }
 
@@ -375,7 +375,7 @@ class WebServiceModel {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
-        $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        $this->resultsModelFactory->fillNode($resultsModel, $schoolNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $schoolNode;
     }
 
@@ -391,7 +391,7 @@ class WebServiceModel {
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
 
-        $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
+        $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
     }
 
