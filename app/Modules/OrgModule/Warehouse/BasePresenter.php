@@ -2,8 +2,6 @@
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Modules\Core\PresenterTraits\ContestPresenterTrait;
 use Nette\Security\IResource;
 
 /**

@@ -3,13 +3,6 @@
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceFlag;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHasFlag;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServicePostContact;
 use Nette\DI\Container;
 use Nette\SmartObject;
 

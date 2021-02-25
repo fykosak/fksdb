@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
@@ -89,7 +88,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
-    protected function setDefaultValue(IComponent $control, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void {
         if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];

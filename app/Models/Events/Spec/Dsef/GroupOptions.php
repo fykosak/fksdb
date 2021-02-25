@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\SmartObject;
 use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**

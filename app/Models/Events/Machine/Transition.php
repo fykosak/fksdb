@@ -7,7 +7,6 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\Logger;
 use Nette\InvalidArgumentException;
 
 /**
@@ -26,7 +25,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     /** @var bool|callable */
     private $visible;
     public array $onExecuted = [];
-    private string $type;
 
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);

@@ -7,7 +7,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 
 /**

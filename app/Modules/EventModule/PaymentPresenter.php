@@ -65,6 +65,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws ForbiddenRequestException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));

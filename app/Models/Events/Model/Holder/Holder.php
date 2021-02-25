@@ -4,7 +4,6 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;

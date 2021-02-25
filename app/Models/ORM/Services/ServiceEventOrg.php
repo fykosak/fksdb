@@ -4,10 +4,8 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
 /**
  * Class ServiceEventOrg
