@@ -10,6 +10,7 @@ use FKSDB\Models\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
@@ -76,7 +77,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
+     * @throws AbortException
      * @throws ForbiddenRequestException
      * @throws Exception
      */
@@ -105,6 +106,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws AbortException
+     */
     private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
@@ -112,6 +116,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->loginRedirect();
     }
 
+    /**
+     * @throws AbortException
+     */
     final protected function loginRedirect(): void {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;

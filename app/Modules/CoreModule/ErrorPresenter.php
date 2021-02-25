@@ -5,6 +5,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Models\UI\PageTitle;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
@@ -31,7 +32,7 @@ class ErrorPresenter extends BasePresenter {
     /**
      * @param Exception
      * @return void
-     *
+     * @throws AbortException
      */
     public function renderDefault($exception): void {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.

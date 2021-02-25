@@ -17,6 +17,7 @@ use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
+use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -87,7 +88,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @param int $trunkId
      * @param int $mergedId
      * @return void
-     *
+     * @throws AbortException
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -204,7 +205,7 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     *
+     * @throws AbortException
      * @throws \ReflectionException
      * @throws BadTypeException
      */

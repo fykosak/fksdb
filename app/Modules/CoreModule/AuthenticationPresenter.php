@@ -24,6 +24,7 @@ use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
@@ -86,7 +87,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @throws AbortException
      * @throws InvalidLinkException
      * @throws Exception
      */
@@ -127,7 +128,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @throws AbortException
      * @throws BadTypeException
      * @throws Exception
      */
@@ -165,6 +166,9 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws AbortException
+     */
     public function actionRecover(): void {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
@@ -234,7 +238,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     *
+     * @throws AbortException
      * @throws Exception
      */
     private function loginFormSubmitted(Form $form): void {
@@ -344,7 +348,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @throws AbortException
      * @throws Exception
      */
     public function handleGoogle(): void {
@@ -353,6 +357,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirectUrl($url);
     }
 
+    /**
+     * @throws AbortException
+     */
     private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);

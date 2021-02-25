@@ -26,6 +26,7 @@ use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -87,7 +88,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /**
      * @return void
      * @throws UnsupportedLanguageException
-     *
+     * @throws AbortException
      */
     protected function startup(): void {
         parent::startup();
@@ -105,6 +106,11 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /*	 * ******************************
      * IJSONProvider
      * ****************************** */
+    /**
+     * @param string $acName
+     * @return void
+     * @throws AbortException
+     */
     public function handleAutocomplete(string $acName): void {
         ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         $component = $this->getComponent($acName);
@@ -241,7 +247,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /**
      * @return string
      * @throws UnsupportedLanguageException
-     *
+     * @throws AbortException
      */
     public function getLang(): string {
         /** @var LanguageChooserComponent $control */
@@ -251,7 +257,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
 
     /**
      * @param bool $need
-     *
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ReflectionException
      */

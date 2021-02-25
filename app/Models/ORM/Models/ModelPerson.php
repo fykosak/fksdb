@@ -127,14 +127,26 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
+    public function getDeliveryAddress2(): ?ModelAddress {
+        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
+    }
+
+    public function getPermanentAddress2(): ?ModelAddress {
+        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+    }
+
+    public function getAddress2(string $type): ?ModelAddress {
+        $postContact = $this->getPostContact($type);
+        return $postContact ? $postContact->getAddress() : null;
+    }
+
     public function getPostContact(string $type): ?ModelPostContact {
         $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
         return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
     }
 
-    public function getAddress2(string $type): ?ModelAddress {
-        $postContact = $this->getPostContact($type);
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+    public function getDeliveryPostContact(): ?ModelPostContact {
+       return  $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
     }
 
     public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
@@ -147,21 +159,6 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
             return null;
         }
     }
-
-    public function getDeliveryPostContact(): ?ModelPostContact {
-        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
-    }
-
-    public function getDeliveryAddress(): ?ModelAddress {
-        $postContact = $this->getPermanentPostContact();
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
-    }
-
-    public function getPermanentAddress(bool $noFallback = false): ?ModelAddress {
-        $postContact = $this->getPermanentPostContact($noFallback);
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
-    }
-
 
     public function getEventParticipants(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);

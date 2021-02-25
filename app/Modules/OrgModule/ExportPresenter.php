@@ -63,7 +63,6 @@ class ExportPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */

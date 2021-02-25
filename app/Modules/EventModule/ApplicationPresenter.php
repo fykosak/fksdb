@@ -22,7 +22,6 @@ use Nette\Application\ForbiddenRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
-
     /**
      * @return void
      * @throws ForbiddenRequestException

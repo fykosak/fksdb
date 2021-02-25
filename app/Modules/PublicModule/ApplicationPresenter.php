@@ -280,7 +280,6 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException
