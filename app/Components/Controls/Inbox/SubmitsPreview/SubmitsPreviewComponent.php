@@ -7,6 +7,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -30,7 +31,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
     /**
      * @param int $id
      * @return void
-     *
+     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
@@ -44,7 +45,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
 
     /**
      * @param int $id
-     *
+     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {

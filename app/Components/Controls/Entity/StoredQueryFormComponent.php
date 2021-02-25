@@ -18,6 +18,7 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
+use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -55,7 +56,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     *
+     * @throws AbortException
      * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void {

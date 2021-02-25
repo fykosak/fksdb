@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;

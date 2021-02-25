@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
@@ -120,6 +121,10 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
     }
 
+    /**
+     * @param int $id
+     * @throws AbortException
+     */
     public function handleDelete(int $id): void {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);

@@ -11,6 +11,7 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\Utils\FormUtils;
+use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
 /**
@@ -51,6 +52,11 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
+    /**
+     * @param Form $form
+     * @return void
+     * @throws AbortException
+     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         $this->serviceTeacher->store($this->model ?? null, $data);

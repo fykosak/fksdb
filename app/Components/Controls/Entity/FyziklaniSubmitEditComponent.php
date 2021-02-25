@@ -11,6 +11,7 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
@@ -56,6 +57,10 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
         }
     }
 
+    /**
+     * @param Form $form
+     * @throws AbortException
+     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         try {

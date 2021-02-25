@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\YearCalculator;
+use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
 use Nette\Http\Request;
@@ -87,6 +88,10 @@ class LoginUserStorage extends UserStorage {
         return $this;
     }
 
+    /**
+     * @return bool
+     * @throws AbortException
+     */
     public function isAuthenticated(): bool {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;

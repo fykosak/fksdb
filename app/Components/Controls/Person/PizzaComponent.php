@@ -7,15 +7,12 @@ use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Form;
 
 class PizzaComponent extends BaseComponent {
 
-    /** @var ModelPerson[] */
     private array $persons = [];
 
     private ServicePerson $servicePerson;

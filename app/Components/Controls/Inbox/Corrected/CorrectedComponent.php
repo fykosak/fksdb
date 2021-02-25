@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
+use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 
 /**
@@ -42,6 +43,10 @@ class CorrectedComponent extends SeriesTableComponent {
         return $control;
     }
 
+    /**
+     * @param Form $form
+     * @throws AbortException
+     */
     private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
