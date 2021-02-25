@@ -2,12 +2,11 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
+use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
@@ -15,6 +14,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\IModel;
@@ -104,9 +104,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault(): void {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o'));
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-alt'));
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fa fa-calendar-check-o'));
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-alt'));
         }
     }
 
@@ -235,21 +235,10 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getEventApplication(): ?IModel {
         if (!isset($this->eventApplication)) {
-            $id = null;
-            //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-            //   $data = $this->getTokenAuthenticator()->getTokenData();
-            //   if ($data) {
-            //    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-            //$eventId = $data['id']; // TODO $id?
-            //  }
-            // }
-            $id = $id ?: $this->getParameter('id');
+            $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
-            /* if ($row) {
-                 $this->eventApplication = ($service->getModelClassName())::createFromActiveRow($row);
-             }*/
         }
 
         return $this->eventApplication;

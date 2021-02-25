@@ -4,9 +4,9 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\IPaymentModel;
+use FKSDB\Models\Payment\PaymentModel;
 use FKSDB\Models\Payment\Price;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -42,7 +42,10 @@ use Nette\Security\IResource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends OldAbstractModelSingle implements IResource, INodeCreator {
+class ModelEventParticipant extends OldAbstractModelSingle implements
+    PaymentModel,
+    IResource,
+    NodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';

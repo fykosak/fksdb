@@ -71,11 +71,11 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
      * Updates values in model from given data.
      *
      * @param IModel $model
-     * @param iterable $data
+     * @param iterable|null $data
      * @param bool $alive
      * @deprecated
      */
-    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
+    public function updateModel(IModel $model, ?iterable $data, bool $alive = true): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));

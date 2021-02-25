@@ -7,7 +7,7 @@ use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Price;
-use FKSDB\Models\Payment\PriceCalculator\PreProcess\IPreprocess;
+use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 
 /**
  * Class PriceCalculator
@@ -16,14 +16,14 @@ use FKSDB\Models\Payment\PriceCalculator\PreProcess\IPreprocess;
 class PriceCalculator implements TransitionCallback {
 
     private ServicePayment $servicePayment;
-    /** @var IPreprocess[] */
+    /** @var Preprocess[] */
     private array $preProcess = [];
 
     public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
-    public function addPreProcess(IPreprocess $preProcess): void {
+    public function addPreProcess(Preprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
     }
 

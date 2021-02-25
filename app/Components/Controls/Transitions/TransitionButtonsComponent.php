@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Transitions;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\ForbiddenRequestException;

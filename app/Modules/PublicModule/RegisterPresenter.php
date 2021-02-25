@@ -24,7 +24,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Models\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
 
 /**
@@ -51,23 +51,20 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
+class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter {
 
     /**
-     * @var int
      * @persistent
      */
-    public $contestId;
+    public ?int $contestId = null;
     /**
-     * @var int
      * @persistent
      */
-    public $year;
+    public ?int $year = null;
     /**
-     * @var int
      * @persistent
      */
-    public $personId;
+    public ?int $personId = null;
     private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
@@ -96,7 +93,7 @@ class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPres
     }
 
     public function titleEmail(): void {
-        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
+        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name));
     }
 
     public function titleContestant(): void {

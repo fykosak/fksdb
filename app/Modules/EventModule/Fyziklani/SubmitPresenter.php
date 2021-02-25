@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
-use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Controls\Fyziklani\Submit\PointsEntryComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -38,7 +38,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Scoring'), 'fa fa-pencil-square-o'));
+        $this->setPageTitle(new PageTitle(_('Scoring'), 'fas fa-pen'));
     }
 
     /**
@@ -54,7 +54,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fas fa-pen'));
     }
 
     /**
@@ -65,7 +65,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fas fa-pen'));
     }
 
     /* ***** Authorized methods *****/
@@ -114,11 +114,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return TaskCodeInput
+     * @return PointsEntryComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): TaskCodeInput {
-        return new TaskCodeInput($this->getContext(), $this->getEvent());
+    protected function createComponentCreateForm(): PointsEntryComponent {
+        return new PointsEntryComponent($this->getContext(), $this->getEvent());
     }
 
     /**

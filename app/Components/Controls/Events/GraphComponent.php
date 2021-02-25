@@ -3,8 +3,7 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
@@ -22,7 +21,7 @@ class GraphComponent extends BaseComponent {
 
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
                 $collector->registerJSFile('js/graph/raphael.js');

@@ -10,8 +10,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
 
-
-
     /**
      * Find question from quiz by task
      * @param ModelTask $task

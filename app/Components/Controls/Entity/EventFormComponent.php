@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
@@ -75,7 +75,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $data['year'] = $this->year;
         $model = $this->serviceEvent->store($this->model ?? null, $data);
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

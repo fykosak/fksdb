@@ -19,10 +19,9 @@ abstract class OldAbstractModelSingle extends AbstractModelSingle implements IMo
     }
 
     /**
-     * @var bool
      * @deprecated
      */
-    protected $stored = true;
+    protected bool $stored = true;
 
     /**
      * @return bool
@@ -45,10 +44,7 @@ abstract class OldAbstractModelSingle extends AbstractModelSingle implements IMo
      * @return static
      */
     public static function createFromActiveRow(ActiveRow $row): self {
-        if ($row instanceof static) {
-            return $row;
-        }
-        $model = new static($row->toArray(), $row->getTable());
+        $model = parent::createFromActiveRow($row);
         if ($model->getPrimary(false)) {
             $model->setNew(false);
         }

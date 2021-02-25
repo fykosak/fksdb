@@ -2,11 +2,12 @@
 
 namespace FKSDB\Models\Events\Machine;
 
+use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
 use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
+use FKSDB\Models\Logging\Logger;
 use Nette\InvalidArgumentException;
 
 /**
@@ -14,6 +15,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
+
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     private BaseMachine $baseMachine;
@@ -138,11 +140,12 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     /**
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return bool|array
+     * @return null|array
      */
-    private function validateTarget(Holder $holder, array $inducedTransitions) {
+    private function validateTarget(Holder $holder, array $inducedTransitions): ?array {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
+            $result = $inducedTransition->validateTarget($holder, []);
+            if (!is_null($result)) {
                 return $result;
             }
         }
@@ -188,7 +191,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
         $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
         $validationResult = $this->validateTarget($holder, $inducedTransitions);
-        if ($validationResult !== true) {
+        if (!is_null($validationResult)) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
 

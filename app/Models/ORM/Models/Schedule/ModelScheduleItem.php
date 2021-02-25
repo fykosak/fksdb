@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
@@ -28,7 +28,7 @@ use Nette\Security\IResource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements IResource, INodeCreator {
+class ModelScheduleItem extends AbstractModelSingle implements IResource, NodeCreator {
 
     public const RESOURCE_ID = 'event.scheduleItem';
 

@@ -1,8 +1,12 @@
 {layout '../@layout.latte'}
 {block content}
+    {varType Nette\Database\Table\GroupedSelection $postContacts}
     {if count($postContacts)}
-        {foreach $postContacts as $postContact}
-            {var $adrress = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($postContact)->getAddress()}
+        {varType Nette\Database\Table\ActiveRow $row}
+        {varType FKSDB\Models\ORM\Models\ModelPostContact $postContact}
+        {foreach $postContacts as $row}
+            {var $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
+            {var $address = $postContact->getAddress()}
             <h3 class="card-header">
                 {if $postContact->type == 'P'}
                     {_'Permanent address'}
@@ -30,7 +34,7 @@
                     <div>{$address->postal_code}</div>
                 {/if}
                 {if !is_null($address->region_id)}
-                    <div>{$address->getAddress()->region->name}</div>
+                    <div>{$address->getRegion()->name}</div>
                 {/if}
             </div>
 

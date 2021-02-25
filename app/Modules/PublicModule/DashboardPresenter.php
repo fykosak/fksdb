@@ -39,7 +39,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Dashboard'), 'fa fa-dashboard'));
+        $this->setPageTitle(new PageTitle(_('Dashboard'), 'fas fa-chalkboard-teacher'));
     }
 
     /**

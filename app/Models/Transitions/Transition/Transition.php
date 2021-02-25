@@ -6,7 +6,8 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Machine\Machine;
 
 /**
@@ -17,10 +18,10 @@ class Transition {
 
     use SmartObject;
 
-    public const TYPE_SUCCESS = ILogger::SUCCESS;
-    public const TYPE_WARNING = ILogger::WARNING;
-    public const TYPE_DANGEROUS = ILogger::ERROR;
-    public const TYPE_PRIMARY = ILogger::PRIMARY;
+    public const TYPE_SUCCESS = Logger::SUCCESS;
+    public const TYPE_WARNING = Logger::WARNING;
+    public const TYPE_DANGEROUS = Logger::ERROR;
+    public const TYPE_PRIMARY = Logger::PRIMARY;
     public const TYPE_DEFAULT = 'secondary';
 
     protected const AVAILABLE_BEHAVIOR_TYPE = [

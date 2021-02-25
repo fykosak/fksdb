@@ -11,7 +11,7 @@ use Nette\Utils\Html;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class WriteOnlyInput extends TextInput implements IWriteOnly {
+class WriteOnlyInput extends TextInput implements WriteOnly {
 
     use WriteOnlyTrait;
 

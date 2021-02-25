@@ -35,7 +35,6 @@ class OrgModule extends AbstractPageDisplayTestCase {
 
             ['Org:Contestant', 'list'],
 
-            ['Org:Inbox', 'default'],
             ['Org:Inbox', 'handout'],
             ['Org:Inbox', 'inbox'],
             ['Org:Inbox', 'list'],
@@ -75,12 +74,20 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Validation', 'default'],
             ['Org:Validation', 'list'],
             ['Org:Validation', 'preview'],
+
+            ['Warehouse:Dashboard', 'default'],
+
+            //['Warehouse:Item', 'create'],
+            ['Warehouse:Item', 'list'],
+
+            ['Warehouse:Producer', 'list'],
+
+            ['Warehouse:Product', 'list'],
         ];
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM person_info');
-        $this->connection->query('DELETE FROM org');
+        $this->truncateTables(['person_info', 'org']);
         parent::tearDown();
     }
 }

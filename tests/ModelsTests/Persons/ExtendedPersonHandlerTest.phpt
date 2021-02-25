@@ -7,6 +7,7 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
@@ -19,10 +20,10 @@ use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
     private ExtendedPersonHandler $fixture;
-
     private ReferencedPersonFactory $referencedPersonFactory;
 
     /**
@@ -46,15 +47,12 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM contestant_base');
-        $this->connection->query('DELETE FROM auth_token');
-        $this->connection->query('DELETE FROM login');
+        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE, DbNames::TAB_AUTH_TOKEN, DbNames::TAB_LOGIN]);
 
         parent::tearDown();
     }
 
     public function testNewPerson(): void {
-
         $presenter = new PersonPresenter();
         // Define a form
 

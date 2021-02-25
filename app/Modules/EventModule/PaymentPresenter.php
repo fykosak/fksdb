@@ -37,7 +37,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* titles *****************/
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
@@ -65,7 +65,6 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));

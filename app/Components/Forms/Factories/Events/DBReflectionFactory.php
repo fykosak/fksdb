@@ -16,7 +16,6 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -36,7 +35,7 @@ class DBReflectionFactory extends AbstractFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function createComponent(Field $field): IComponent {
+    public function createComponent(Field $field): BaseControl {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -90,35 +89,14 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
-    /**
-     * @param IComponent|BaseControl $component
-     * @param Field $field
-     * @return void
-     */
-    protected function setDefaultValue(IComponent $component, Field $field): void {
+    protected function setDefaultValue(IComponent $control, Field $field): void {
         if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
             $default = $field->getValue();
         }
-        $component->setDefaultValue($default);
-    }
-
-    /**
-     * @param IComponent|BaseControl $component
-     * @return void
-     */
-    protected function setDisabled(IComponent $component): void {
-        $component->setDisabled();
-    }
-
-    /**
-     * @param Component|IComponent $component
-     * @return Component|IControl
-     */
-    public function getMainControl(IComponent $component): IControl {
-        return $component;
+        $control->setDefaultValue($default);
     }
 
     private function resolveColumn(Field $field): ?array {

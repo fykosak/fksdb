@@ -6,6 +6,7 @@ use Exception;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;

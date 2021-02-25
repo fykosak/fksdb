@@ -15,45 +15,33 @@ use Nette\SmartObject;
  * @see http://addons.nette.org/cs/csvresponse
  * @see http://tools.ietf.org/html/rfc4180 (not fully implemented)
  *
- * @property-read array $data
- * @property-read string $name
- * @property-read bool $addHeading
- * @property-read string $glue
- * @property-read string $contentType
  * @package Nette\Application\Responses
  */
 class CSVResponse implements IResponse {
+
     use SmartObject;
-    /** @var array */
-    private $data;
 
-    /** @var string */
-    private $name;
+    private iterable $data;
 
-    /** @var bool */
-    private $addHeading = true;
+    private ?string $name;
 
-    /** @var string */
-    private $glue = ';';
+    private bool $addHeading = true;
 
-    /** @var string */
-    private $charset;
+    private string $glue = ';';
 
-    /** @var string */
-    private $contentType;
+    private ?string $charset;
+
+    private string $contentType;
+
+    private bool $quotes;
 
     /**
-     * @var bool
+     * @param iterable  data (array of arrays - rows/columns)
+     * @param string|null  imposed file name
+     * @param string|null  glue between columns (comma or a semi-colon)
+     * @param string|null  MIME content type
      */
-    private $quotes;
-
-    /**
-     * @param  string  data (array of arrays - rows/columns)
-     * @param  string  imposed file name
-     * @param  string  glue between columns (comma or a semi-colon)
-     * @param  string  MIME content type
-     */
-    public function __construct($data, $name = NULL, $charset = NULL, $contentType = NULL) {
+    public function __construct(iterable $data, ?string $name = null, ?string $charset = null, ?string $contentType = null) {
         // ----------------------------------------------------
         $this->data = $data;
         $this->name = $name;
@@ -66,7 +54,7 @@ class CSVResponse implements IResponse {
      * Returns the file name.
      * @return string
      */
-    final public function getName() {
+    final public function getName(): ?string {
         // ----------------------------------------------------
         return $this->name;
     }
@@ -75,40 +63,42 @@ class CSVResponse implements IResponse {
      * Returns the MIME content type of a downloaded content.
      * @return string
      */
-    final public function getContentType() {
+    final public function getContentType(): string {
         // ----------------------------------------------------
         return $this->contentType;
     }
 
-    public function getGlue() {
+    public function getGlue(): string {
         return $this->glue;
     }
 
-    public function setGlue($glue) {
+    public function setGlue(string $glue): void {
         $this->glue = $glue;
     }
 
-    public function getQuotes() {
+    public function getQuotes(): bool {
         return $this->quotes;
     }
 
-    public function setQuotes($quotes) {
+    public function setQuotes(bool $quotes): void {
         $this->quotes = $quotes;
     }
 
-    public function getAddHeading() {
+    public function getAddHeading(): bool {
         return $this->addHeading;
     }
 
-    public function setAddHeading($addHeading) {
+    public function setAddHeading(bool $addHeading): void {
         $this->addHeading = $addHeading;
     }
 
     /**
      * Sends response to output.
+     * @param IRequest $httpRequest
+     * @param IHttpResponse $httpResponse
      * @return void
      */
-    public function send(IRequest $httpRequest, IHttpResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IHttpResponse $httpResponse): void {
         // ----------------------------------------------------
         $httpResponse->setContentType($this->contentType, $this->charset);
 
@@ -124,7 +114,7 @@ class CSVResponse implements IResponse {
         print $data;
     }
 
-    public function formatCsv() {
+    public function formatCsv(): string {
         // ----------------------------------------------------
         if (empty($this->data)) {
             return '';
@@ -135,7 +125,7 @@ class CSVResponse implements IResponse {
             $q = '';
         }
 
-        $csv = array();
+        $csv = [];
 
         if (!is_array($this->data)) {
             $this->data = iterator_to_array($this->data);
@@ -155,7 +145,7 @@ class CSVResponse implements IResponse {
             if (!is_array($row)) {
                 $row = iterator_to_array($row);
             }
-            $escapedRow = array();
+            $escapedRow = [];
             foreach ($row as $key => $value) {
                 $value = preg_replace('/[\r\n]+/', ' ', $value);  // remove line endings
                 if ($q) {
@@ -168,5 +158,4 @@ class CSVResponse implements IResponse {
 
         return join("\r\n", $csv);
     }
-
 }

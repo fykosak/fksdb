@@ -5,7 +5,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
@@ -25,7 +25,7 @@ class FlagProcessing extends AbstractProcessing {
         $this->serviceSchool = $serviceSchool;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -75,11 +75,7 @@ class FlagProcessing extends AbstractProcessing {
         }
     }
 
-    /**
-     * @param int|null $studyYear
-     * @return bool
-     */
-    private function isStudent($studyYear): bool {
-        return ($studyYear === null) ? false : true;
+    private function isStudent(?int $studyYear): bool {
+        return !is_null($studyYear);
     }
 }

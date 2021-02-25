@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\Messages\Message;
 use Nette\Application\BadRequestException;
@@ -48,7 +48,7 @@ trait ReactComponentTrait {
     }
 
     private function registerMonitor(): void {
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;
                 $collector->registerJSFile('js/bundle.min.js');
@@ -56,7 +56,7 @@ trait ReactComponentTrait {
         });
     }
 
-    protected function getLogger(): ILogger {
+    protected function getLogger(): Logger {
         return $this->logger;
     }
 

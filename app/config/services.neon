@@ -30,7 +30,7 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     #auth
-    - FKSDB\Models\Authentication\SSO\TokenGSIDHolder
+    - FKSDB\Models\Authentication\SSO\TokenGlobalSessionIdHolder
     - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator

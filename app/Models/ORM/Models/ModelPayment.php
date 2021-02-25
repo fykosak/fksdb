@@ -7,6 +7,8 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use FKSDB\Models\Payment\Price;
+use FKSDB\Models\Payment\PaymentModel;
+use FKSDB\Models\Transitions\StateModel;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
@@ -90,5 +92,15 @@ class ModelPayment extends AbstractModelSingle implements IResource {
 
     public function getState(): ?string {
         return $this->state;
+    }
+
+    /**
+     * @param Explorer $explorer
+     * @param Conventions $conventions
+     * @return static
+     */
+    public function refresh(Explorer $explorer, Conventions $conventions): StateModel {
+        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $explorer, $conventions);
+        return $query->get($this->getPrimary());
     }
 }

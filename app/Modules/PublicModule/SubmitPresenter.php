@@ -70,11 +70,11 @@ class SubmitPresenter extends BasePresenter {
 
     /* ********************** TITLE **********************/
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Submit a solution'), 'fa fa-cloud-upload'));
+        $this->setPageTitle(new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Submitted solutions'), 'fa fa-cloud-upload'));
+        $this->setPageTitle(new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt'));
     }
 
     public function titleAjax(): void {

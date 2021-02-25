@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -100,7 +100,7 @@ class DeduplicatePresenter extends BasePresenter {
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), Logger::SUCCESS);
         $this->backLinkRedirect(true);
     }
 
@@ -113,7 +113,7 @@ class DeduplicatePresenter extends BasePresenter {
         $conflicts = $this->merger->getConflicts();
         foreach ($conflicts as $table => $pairs) {
             $form->addGroup($table);
-            $tableContainer = new ContainerWithOptions();
+            $tableContainer = new ContainerWithOptions($this->getContext());
 
             $form->addComponent($tableContainer, $table);
 
@@ -125,7 +125,7 @@ class DeduplicatePresenter extends BasePresenter {
                 if (count($pairs) > 1) {
                     $pairSuffix = " ($pairId)";
                 }
-                $pairContainer = new ContainerWithOptions();
+                $pairContainer = new ContainerWithOptions($this->getContext());
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {

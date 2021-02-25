@@ -2,11 +2,12 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
+use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
+use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
@@ -20,7 +21,7 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractCategoryProcessing {
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -30,12 +31,11 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
         }
-
-        $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
+        // TODO hack if all study year fields are disabled
         $original = $holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Logger::INFO));
         }
     }
 
@@ -69,6 +69,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
             throw new SubmitProcessingException(_('Cannot determine category.'));
+            //$result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled
         }
         return $result;
     }

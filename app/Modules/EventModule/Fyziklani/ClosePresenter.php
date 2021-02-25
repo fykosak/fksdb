@@ -10,7 +10,7 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -28,11 +28,12 @@ use Nette\Security\IResource;
  * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Sealing of the scoring'), 'fa fa-check');
+        return new PageTitle(_('Sealing of the scoring'), 'fas fa-check');
     }
 
     /**
@@ -43,7 +44,7 @@ class ClosePresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-check'));
     }
 
     /**
@@ -85,7 +86,6 @@ class ClosePresenter extends BasePresenter {
     /* *********** ACTIONS **************** */
     /**
      * @return void
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -98,33 +98,18 @@ class ClosePresenter extends BasePresenter {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $this->actionHard();
     }
 
+    /* ********* COMPONENTS ************* */
     /**
-     * @return void
-     * @throws BadTypeException
+     * @return CloseTeamComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function actionHard(): void {
-        $control = $this->getComponent('closeTeamControl');
-        if (!$control instanceof CloseTeamControl) {
-            throw new BadTypeException(CloseTeamControl::class, $control);
-        }
-        $control->setTeam($this->getEntity());
-    }
-
-    /* ********* COMPONENTS ************* */
-
-    /**
-     * @return CloseTeamControl
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getContext(), $this->getEvent());
+    protected function createComponentCloseTeamControl(): CloseTeamComponent {
+        return new CloseTeamComponent($this->getContext(), $this->getEntity());
     }
 
     /**

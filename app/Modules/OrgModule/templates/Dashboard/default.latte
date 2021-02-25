@@ -1,3 +1,10 @@
 {block content}
-    {control navigationChooser:board 'Org.Dashboard.default'}
+    <h2>{_'Series'}</h2>
+    {control navigationChooser:board 'Org.Dashboard.inbox'}
+    <h2>{_'Persons'}</h2>
+    {control navigationChooser:board 'Org.Dashboard.person'}
+    <h2>{_'Entities'}</h2>
+    {control navigationChooser:board 'Org.Dashboard.entity'}
+    <h2>{_'Others'}</h2>
+    {control navigationChooser:board 'Org.Dashboard.others'}
 {/block}

@@ -119,21 +119,6 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
-    /**
-     * TODO typesafe
-     * @param mixed[]|\DateTimeInterface[][] $data
-     * @return mixed
-     */
-    private function formatDate(iterable $data): iterable {
-        foreach ($data as $row) {
-            if ($row[self::SPAM_DATE]) {
-                $row[self::SPAM_DATE] = $row[self::SPAM_DATE]->format('Y-m-d');
-            }
-        }
-
-        return $data;
-    }
-
     private function studyYearToGraduation(int $studyYear, int $acYear): ?int {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);

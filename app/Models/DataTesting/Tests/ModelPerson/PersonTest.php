@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
 /**
@@ -20,5 +20,5 @@ abstract class PersonTest {
         $this->title = $title;
     }
 
-    abstract public function run(ILogger $logger, ModelPerson $person): void;
+    abstract public function run(Logger $logger, ModelPerson $person): void;
 }

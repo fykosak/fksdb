@@ -10,7 +10,6 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\SSO\IGlobalSession;
-use FKSDB\Models\Authentication\SSO\ServiceSide\Authentication;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -46,15 +45,15 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @const Various modes of authentication. */
     public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    public const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
+    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
     /** @const Only check of authentication with subsequent backlink redirect. */
     public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
     /** @persistent */
-    public $backlink = '';
+    public ?string $backlink = '';
     /** @persistent */
-    public $flag;
+    public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
@@ -241,7 +240,6 @@ final class AuthenticationPresenter extends BasePresenter {
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
         try {
-            // TODO use form->getValues()
             $this->getUser()->login($values['id'], $values['password']);
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();

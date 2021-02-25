@@ -3,11 +3,11 @@
 namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\Persons\IModifiabilityResolver;
-use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 
-class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
+class TestResolver implements VisibilityResolver, ModifiabilityResolver {
 
     public function getResolutionMode(ModelPerson $person): string {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
