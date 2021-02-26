@@ -28,7 +28,7 @@ class OrderRow extends ColumnFactory {
             6 => '6 - ' . _('Deputy head organiser'),
             7 => '7 - ' . _('Head organiser'),
             8 => '8 - ',
-            9 => '9 - ' . _('vedoucí semináře'),
+            9 => '9 - ' . _('Head of the seminar'),
         ];
     }
 

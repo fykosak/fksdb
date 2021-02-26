@@ -68,13 +68,13 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      */
     private function findPerson(array $fbUser): ?ModelPerson {
         if (!$fbUser['email']) {
-            throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
+            throw new AuthenticationException(_('Email not found in the facebook account.'));
         }
 
         // try both e-mail and FB ID
         $result = $this->servicePerson->getTable()->where(':person_info.email = ? OR person_info.fb_id = ?', $fbUser['email'], $fbUser['id']);
         if (count($result) > 1) {
-            throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
+            throw new AuthenticationException(_('Multiple persons correspond to the Facebook profile.'));
         } elseif (count($result) == 0) {
             return null;
         } else {

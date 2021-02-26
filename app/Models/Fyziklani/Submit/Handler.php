@@ -78,7 +78,7 @@ class Handler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Task given and validated.')));
         }
     }
 

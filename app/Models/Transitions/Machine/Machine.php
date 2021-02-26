@@ -118,7 +118,7 @@ abstract class Machine {
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
         if (!$this->canExecute($transition, $model)) {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+            throw new ForbiddenRequestException(_('Transition uavailable'));
         }
         return $this->execute($transition, $model);
     }
@@ -188,7 +188,7 @@ abstract class Machine {
     public function createNewModel(array $data, AbstractServiceSingle $service): IStateModel {
         $transition = $this->getCreatingTransition();
         if (!$this->canExecute($transition)) {
-            throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
+            throw new ForbiddenRequestException(_('Model cannot be created'));
         }
         /** @var IStateModel|ActiveRow $model */
         $model = $service->createNewModel($data);

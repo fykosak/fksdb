@@ -48,7 +48,7 @@ class ImportComponent extends BaseComponent {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $form->addUpload('file', _('Soubor s přihláškami'))
+        $form->addUpload('file', _('File with applications'))
             ->addRule(Form::FILLED)
             ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 

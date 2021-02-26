@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
 class ModelQuizQuestion extends AbstractModelSingle {
 
     public function getFQName(): string {
-        return sprintf(_('%s. otázka'), $this->question_nr);
+        return sprintf(_('%s. question'), $this->question_nr);
     }
 
     public function getTask(): ModelTask {

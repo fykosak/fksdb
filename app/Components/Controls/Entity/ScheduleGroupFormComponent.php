@@ -71,7 +71,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
             'visa' => _('Visa'),
             'accommodation_gender' => _('Accommodation gender'),
             'accommodation_teacher' => _('Accommodation teacher'),
-            'teacher_present' => _('Schedule during compotition'),
+            'teacher_present' => _('Schedule during competition'),
             'weekend_info' => _('Weekend info'),
         ]);
         $form->addComponent($container, self::CONTAINER);

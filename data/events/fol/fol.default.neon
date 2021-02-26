@@ -5,25 +5,25 @@ parameters:
                 baseMachines:
                     team:
                         bmName: TEAM
-                        label: _('Tým')
+                        label: _('Team')
                         required: true # default false, it's conjuction with fields requirement
                         primary: true # base machine states are propagated to the machine
                     p1:
                         bmName: PARTICIPANT
-                        label: _('1. člen')
+                        label: _('1. member')
                         required: true
                     p2:
                         bmName: PARTICIPANT
-                        label: _('2. člen')
+                        label: _('2. member')
                     p3:
                         bmName: PARTICIPANT
-                        label: _('3. člen')
+                        label: _('3. member')
                     p4:
                         bmName: PARTICIPANT
-                        label: _('4. člen')
+                        label: _('4. member')
                     p5:
                         bmName: PARTICIPANT
-                        label: _('5. člen')
+                        label: _('5. member')
 events:
     folDefault:
         event_type_id: 9

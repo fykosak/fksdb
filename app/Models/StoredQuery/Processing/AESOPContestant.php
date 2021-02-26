@@ -22,7 +22,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     public const SPAM_DATE = 'spam-date';
 
     public function getDescription(): string {
-        return _('Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.');
+        return _('Filters to only the category given in "category" and calculates rank within it.');
     }
 
     public function keepsCount(): bool {

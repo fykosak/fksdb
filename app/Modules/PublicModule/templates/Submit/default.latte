@@ -1,5 +1,5 @@
 {block content}
-    <a class="btn btn-success" href="{plink ajax}">{_'Nový systém odovzdávaní'}</a>
+    <a class="btn btn-success" href="{plink ajax}">{_'New submit system'}</a>
     <a class="btn btn-info" href="{plink list}">{_'Submitted solutions'}</a>
     <hr/>
     {if $hasTasks}
@@ -10,7 +10,7 @@
         </p>
         {if $canRegister}
             <p>
-                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Registrovat se do dalšího ročníku'}</a>
+                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Register for the next year'}</a>
             </p>
         {elseif $hasForward}
             <p>

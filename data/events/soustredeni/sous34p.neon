@@ -33,22 +33,22 @@ events:
                 transitions:
                     __init->invited:
                         condition: role('admin')
-                        label: _('Invite contestant')
+                        label: _('Invite participant')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
-                        label: _('Invite contestant')
+                        label: _('Invite participant')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
                     __init->spare:
                         condition: role('admin')
-                        label: _('Invite alternate')
+                        label: _('Invite Spare')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
-                        label: _('Invite alternate')
+                        label: _('Invite Spare')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
                     invited|invited1|invited2|invited3->applied:
@@ -112,7 +112,7 @@ events:
                         label: _('Participated')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: _('Has not arrived')
+                        label: _('Missed')
 
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
@@ -125,7 +125,7 @@ events:
                         label: _('Return to DB as Invited')
                     out_of_db->invited1:
                         condition: role('admin')
-                        label: _('Return to DB as Invited, first call.')
+                        label: _('Return to DB as Invited, first call')
                     out_of_db->invited2:
                         condition: role('admin')
                         label: _('Return to DB as Invited, second call')
@@ -137,34 +137,34 @@ events:
                         label: _('Return to DB as Invited (auto)')
                     out_of_db->spare:
                         condition: role('admin')
-                        label: _('Return to DB as Alternate')
+                        label: _('Return to DB as Spare')
                     out_of_db->spare1:
                         condition: role('admin')
-                        label: _('Return to DB as Alternate, first call')
+                        label: _('Return to DB as Spare, first call')
                     out_of_db->spare2:
                         condition: role('admin')
-                        label: _('Return to DB as Alternate, second call')
+                        label: _('Return to DB as Spare, second call')
                     out_of_db->spare3:
                         condition: role('admin')
-                        label: _('Return to DB as Alternate, last call')
+                        label: _('Return to DB as Spare, last call')
                     out_of_db->auto.spare:
                         condition: role('admin')
-                        label: _('Return to DB as Alternate (auto)')
+                        label: _('Return to DB as Spare (auto)')
                     out_of_db->applied:
                         condition: role('admin')
-                        label: _('Return to DB as Participating')
+                        label: _('Return to DB as Applied')
                     out_of_db->interested:
                         condition: role('admin')
-                        label: _('Return to DB as Wants to go')
+                        label: _('Return to DB as Interested')
                     out_of_db->participated:
                         condition: role('admin')
                         label: _('Return to DB as Participated')
                     out_of_db->rejected:
                         condition: role('admin')
-                        label: _('Return to DB as Declined')
+                        label: _('Return to DB as Rejected')
                     out_of_db->missed:
                         condition: role('admin')
-                        label: _('Return to DB as Has not arrived')
+                        label: _('Return to DB as Missed')
                     out_of_db->cancelled:
                         condition: role('admin')
                         label: _('Return to DB as Cancelled')
@@ -185,7 +185,7 @@ events:
                         description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
                     health_restrictions:
                         label: _('Health restrictions')
-                        description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+                        description: "Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?"
                     tshirt_size:
                         label: _('Jaké triko nosíš?')
                         required: %events.soustredeni.requiredCond%
@@ -204,12 +204,12 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT
-                    label: _('Účastník')
+                    label: _('Participant')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy
 
             processings:

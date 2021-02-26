@@ -26,7 +26,7 @@ class ScheduleGroupTypeRow extends ColumnFactory {
                 $container->addAttributes(['class' => 'badge badge-3'])->addText(_('Accommodation teacher'));
                 break;
             case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
-                $container->addAttributes(['class' => 'badge badge-4'])->addText(_('Schedule during compotition'));
+                $container->addAttributes(['class' => 'badge badge-4'])->addText(_('Schedule during competition'));
                 break;
             case ModelScheduleGroup::TYPE_VISA:
                 $container->addAttributes(['class' => 'badge badge-5'])->addText(_('Visa'));

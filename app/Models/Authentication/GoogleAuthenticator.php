@@ -64,7 +64,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      */
     private function findPerson(array $user): ?ModelPerson {
         if (!$user['email']) {
-            throw new AuthenticationException(_('V profilu Google nebyl nalezen e-mail.'));
+            throw new AuthenticationException(_('Email not found in the google account.'));
         }
         return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
     }

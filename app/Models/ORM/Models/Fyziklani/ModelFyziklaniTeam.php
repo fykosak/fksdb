@@ -206,13 +206,13 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, IN
     public static function mapCategoryToName(string $category): string {
         switch ($category) {
             case self::CATEGORY_HIGH_SCHOOL_A :
-                return _('Středoškoláci A');
+                return _('High-school students A');
             case self::CATEGORY_HIGH_SCHOOL_B :
-                return _('Středoškoláci B');
+                return _('High-school students B');
             case self::CATEGORY_HIGH_SCHOOL_C :
-                return _('Středoškoláci C');
+                return _('High-school students C');
             case self::CATEGORY_ABROAD :
-                return _('Zahraniční SŠ');
+                return _('Abroad high-school students');
             case self::CATEGORY_OPEN :
                 return _('Open');
             default:

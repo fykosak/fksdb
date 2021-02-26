@@ -45,7 +45,7 @@ class HealthInsuranceRow extends ColumnFactory {
     protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems(self::ID_MAPPING);
-        $control->setPrompt(_('Vybete zdravotní pojišťovnu'));
+        $control->setPrompt(_('Choose the insurance company'));
         return $control;
     }
 }

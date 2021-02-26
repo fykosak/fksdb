@@ -54,7 +54,7 @@ class RoomsFromCSV extends Stage {
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(new Message(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), ILogger::WARNING));
+                $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), ILogger::WARNING));
                 continue;
             }
             $team = $teams[$teamId];
@@ -70,7 +70,7 @@ class RoomsFromCSV extends Stage {
         $this->serviceTeam->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(new Message(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), ILogger::WARNING));
+            $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), ILogger::WARNING));
         }
     }
 
@@ -82,3 +82,4 @@ class RoomsFromCSV extends Stage {
     }
 
 }
+
