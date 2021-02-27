@@ -2,9 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Modules\Core\PresenterTraits\ContestPresenterTrait;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class BasePresenter
@@ -13,7 +11,7 @@ use Nette\Security\IResource;
 abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter {
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

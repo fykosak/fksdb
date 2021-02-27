@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ModelProduct
@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string note neverejná poznámka
  * @property-read string url URL k objednaniu produktu
  */
-class ModelProduct extends AbstractModelSingle implements IResource {
+class ModelProduct extends AbstractModelSingle implements Resource {
 
     public const CATEGORY_APPAREL = 'apparel';
     public const CATEGORY_GAME = 'game';
