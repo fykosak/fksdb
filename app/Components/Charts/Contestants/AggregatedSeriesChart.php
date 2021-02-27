@@ -31,6 +31,7 @@ where contest_id = ?
 group by year, series', $this->contest->contest_id);
         $data = [];
         foreach ($query as $row) {
+            /** @var int $year */
             $year = $row->year;
             $series = $row->series;
             $data[$year] = $data[$year] ?? [];

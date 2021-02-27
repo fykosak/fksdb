@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProducer;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ProducerPresenter
@@ -28,15 +28,15 @@ class ProducerPresenter extends BasePresenter {
         $this->serviceProducer = $serviceProducer;
     }
 
-    protected function titleList(): void {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-industry'));
     }
 
-    protected function titleEdit(): void {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-industry'));
     }
 
-    protected function titleCreate(): void {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create producer'), 'fas fa-industry'));
     }
 
@@ -73,7 +73,7 @@ class ProducerPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

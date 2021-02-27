@@ -32,7 +32,9 @@ parameters:
 
     # Pipe-separated list of contest names
     contests: fykos|vyfuk
-
+routing:
+    routes:
+        abc: :Core:Dashboard:default
 fksrouter:
     routes:
         # PHP-like scripts compatibility
