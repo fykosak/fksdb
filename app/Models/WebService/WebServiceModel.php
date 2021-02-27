@@ -18,7 +18,6 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use InvalidArgumentException;
 use Nette\Application\BadRequestException;
 use Nette\Security\AuthenticationException;
-use Nette\Security\Authenticator;
 use SoapFault;
 use SoapVar;
 use stdClass;

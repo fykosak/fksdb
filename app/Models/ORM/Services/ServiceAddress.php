@@ -6,7 +6,6 @@ use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
-use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\Database\Table\ActiveRow;
