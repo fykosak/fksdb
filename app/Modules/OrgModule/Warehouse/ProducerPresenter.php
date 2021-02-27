@@ -28,15 +28,15 @@ class ProducerPresenter extends BasePresenter {
         $this->serviceProducer = $serviceProducer;
     }
 
-    protected function titleList(): void {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-industry'));
     }
 
-    protected function titleEdit(): void {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-industry'));
     }
 
-    protected function titleCreate(): void {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create producer'), 'fas fa-industry'));
     }
 
