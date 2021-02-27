@@ -15,8 +15,8 @@ use Nette\Application\IPresenter;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
-use Nette\Security\Identity;
 use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 
 /**
  *
@@ -98,7 +98,7 @@ class LoginUserStorage extends UserStorage {
 
         if ($global) {
             // update identity
-            $identity = new Identity($global);
+            $identity = new SimpleIdentity($global);
             parent::setIdentity($identity);
 
             /* As we return true, we must ensure local login will be properly set,
@@ -139,7 +139,7 @@ class LoginUserStorage extends UserStorage {
     public function setIdentity(?IIdentity $identity = null): self {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
-            $identity = new Identity($identity->getId());
+            $identity = new SimpleIdentity($identity->getId());
         }
         return parent::setIdentity($identity);
     }

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends OldAbstractModelSingle implements IResource {
+class ModelPerson extends OldAbstractModelSingle implements Resource {
 
     public const RESOURCE_ID = 'person';
 

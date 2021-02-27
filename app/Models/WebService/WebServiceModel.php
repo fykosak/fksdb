@@ -18,7 +18,7 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use InvalidArgumentException;
 use Nette\Application\BadRequestException;
 use Nette\Security\AuthenticationException;
-use Nette\Security\IAuthenticator;
+use Nette\Security\Authenticator;
 use SoapFault;
 use SoapVar;
 use stdClass;
@@ -74,13 +74,8 @@ class WebServiceModel {
             throw new SoapFault('Sender', 'Missing credentials.');
         }
 
-        $credentials = [
-            IAuthenticator::USERNAME => $args->username,
-            IAuthenticator::PASSWORD => $args->password,
-        ];
-
         try {
-            $this->authenticatedLogin = $this->authenticator->authenticate($credentials);
+            $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
             $this->log('Successfully authenticated for web service request.');
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');

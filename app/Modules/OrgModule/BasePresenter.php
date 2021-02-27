@@ -6,7 +6,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 abstract class BasePresenter extends AuthenticatedPresenter {
     use SeriesPresenterTrait;
@@ -40,7 +40,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

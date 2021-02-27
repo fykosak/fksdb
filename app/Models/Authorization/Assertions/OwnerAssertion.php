@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\ReferencedFactory;
 use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 
@@ -42,7 +42,7 @@ class OwnerAssertion {
         /** @var ModelSubmit $submit */
         $submit = $acl->getQueriedResource();
 
-        if (!$submit instanceof IResource) {
+        if (!$submit instanceof Resource) {
             return false;
         }
         return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->userStorage->getIdentity()->getId();

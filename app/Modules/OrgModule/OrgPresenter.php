@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 class OrgPresenter extends BasePresenter {
     use EntityPresenterTrait {
@@ -99,7 +99,7 @@ class OrgPresenter extends BasePresenter {
 
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

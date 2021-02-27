@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ScheduleItemPresenter
@@ -106,7 +106,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param string|IResource $resource
+     * @param string|Resource $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException

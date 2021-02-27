@@ -4,7 +4,7 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -24,7 +24,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -35,7 +35,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -45,7 +45,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -61,7 +61,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -77,7 +77,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool

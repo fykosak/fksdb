@@ -18,7 +18,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -119,7 +119,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* **************** ACL *********************** */
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Standard ACL from acl.neon
@@ -130,7 +130,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Check if is contest and event org
@@ -142,7 +142,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Check if has contest permission or is Event org
