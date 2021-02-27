@@ -13,7 +13,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
     /**
      * @param array $ids
-     * @return ModelFyziklaniRoom[]
+     * @return array[]
      */
     public function getRoomsByIds(array $ids): array {
         $rooms = [];

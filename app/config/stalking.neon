@@ -184,3 +184,17 @@ parameters:
                 - e_fyziklani_team.name
                 - event.event
                 - e_fyziklani_team.status
+        schedule_item:
+            layout: grid
+            minimalPermission: 16
+            table: person_schedule
+            model: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
+            links: []
+            rows:
+                - schedule_item.name
+                - event.name
+                - schedule_group.schedule_group_type
+                - schedule_group.start
+                - schedule_group.end
+                - schedule_item.price_czk
+                - schedule_item.price_eur

@@ -4,7 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Person\PizzaControl;
+use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -85,7 +85,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
+        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
     }
 
     /* *********** AUTH ***************/
@@ -165,8 +165,8 @@ class PersonPresenter extends BasePresenter {
         return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
     }
 
-    protected function createComponentPizzaSelect(): PizzaControl {
-        return new PizzaControl($this->getContext());
+    protected function createComponentPizzaSelect(): PizzaComponent {
+        return new PizzaComponent($this->getContext());
     }
 
     /**

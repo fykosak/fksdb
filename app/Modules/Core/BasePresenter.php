@@ -2,16 +2,16 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
+use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\Choosers\LanguageChooser;
-use FKSDB\Components\Controls\Choosers\ThemeChooser;
+use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
+use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use FKSDB\Components\Controls\Navigation\NavigablePresenter;
-use FKSDB\Components\Controls\Navigation\NavigationChooser;
+use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
@@ -50,6 +50,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     public const FLASH_ERROR = Logger::ERROR;
     /** @persistent */
     public ?string $tld = null;
+
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent
@@ -91,7 +92,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
      */
     protected function startup(): void {
         parent::startup();
-        /** @var LanguageChooser $control */
+        /** @var LanguageChooserComponent $control */
         $control = $this->getComponent('languageChooser');
         $control->init();
     }
@@ -214,33 +215,33 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
      * @throws BadTypeException
      */
     protected function putIntoBreadcrumbs(): void {
-        /** @var Breadcrumbs $component */
+        /** @var BreadcrumbsComponent $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
     }
 
-    protected function createComponentBreadcrumbs(): Breadcrumbs {
+    protected function createComponentBreadcrumbs(): BreadcrumbsComponent {
         return $this->breadcrumbsFactory->create();
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooser {
-        return new NavigationChooser($this->getContext());
+    protected function createComponentNavigationChooser(): NavigationChooserComponent {
+        return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentThemeChooser(): ThemeChooser {
-        return new ThemeChooser($this->getContext());
+    protected function createComponentThemeChooser(): ThemeChooserComponent {
+        return new ThemeChooserComponent($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinter {
-        return new ColumnPrinter($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+        return new ColumnPrinterComponent($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
         return new LinkPrinterComponent($this->getContext());
     }
 
-    final protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->getContext(), $this->lang);
+    final protected function createComponentLanguageChooser(): LanguageChooserComponent {
+        return new LanguageChooserComponent($this->getContext(), $this->lang);
     }
 
     /**
@@ -249,7 +250,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
      * @throws AbortException
      */
     public function getLang(): string {
-        /** @var LanguageChooser $control */
+        /** @var LanguageChooserComponent $control */
         $control = $this->getComponent('languageChooser');
         return $control->getLang();
     }
@@ -262,7 +263,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
      */
     final public function backLinkRedirect(bool $need = false): void {
         $this->putIntoBreadcrumbs();
-        /** @var Breadcrumbs $component */
+        /** @var BreadcrumbsComponent $component */
         $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {

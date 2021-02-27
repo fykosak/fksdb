@@ -10,7 +10,7 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
+use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -32,7 +32,7 @@ class ClosePresenter extends BasePresenter {
 
     /* ******* TITLE ***********/
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Sealing of the scoring'), 'fa fa-check');
+        return new PageTitle(_('Sealing of the scoring'), 'fas fa-check');
     }
 
     /**
@@ -43,7 +43,7 @@ class ClosePresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-check'));
     }
 
     /**
@@ -101,14 +101,14 @@ class ClosePresenter extends BasePresenter {
 
     /* ********* COMPONENTS ************* */
     /**
-     * @return CloseTeamControl
+     * @return CloseTeamComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentCloseTeamControl(): CloseTeamControl {
-        return new CloseTeamControl($this->getContext(), $this->getEntity());
+    protected function createComponentCloseTeamControl(): CloseTeamComponent {
+        return new CloseTeamComponent($this->getContext(), $this->getEntity());
     }
 
     /**

@@ -27,10 +27,6 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }
 
-    public function findByEvent(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('event_id', $event->event_id);
-    }
-
     public function store(?ModelEventOrg $model, array $data): ModelEventOrg {
         if (is_null($model)) {
             return $this->createNewModel($data);

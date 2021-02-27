@@ -471,7 +471,7 @@ class Replicator extends Container
 
 		SubmitButton::extensionMethod('addRemoveOnClick', function (SubmitButton $_this, $callback = NULL) {
 			$replicator = $_this->lookup(__NAMESPACE__ . '\Replicator');
-			$_this->setValidationScope(FALSE);
+			$_this->setValidationScope(null);
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
 				/** @var Replicator $replicator */
 				if (is_callable($callback)) {

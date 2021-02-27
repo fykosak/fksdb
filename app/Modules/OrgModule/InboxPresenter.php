@@ -2,11 +2,11 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Inbox\Corrected\CorrectedControl;
-use FKSDB\Components\Controls\Inbox\HandoutForm;
-use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
+use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
+use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
+use FKSDB\Components\Controls\Inbox\Inbox\InboxFormComponent;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
-use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
+use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -26,10 +26,6 @@ class InboxPresenter extends BasePresenter {
     }
 
     /* ***************** AUTH ***********************/
-
-    public function authorizedDefault(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
-    }
 
     public function authorizedInbox(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
@@ -53,16 +49,12 @@ class InboxPresenter extends BasePresenter {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
-    }
-
     public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
+        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download-alt'));
     }
 
     public function titleCorrected(): void {
@@ -86,7 +78,7 @@ class InboxPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     public function actionHandout(): void {
-        /** @var HandoutForm $control */
+        /** @var HandoutFormComponent $control */
         $control = $this->getComponent('handoutForm');
         $control->setDefaults();
 
@@ -98,24 +90,24 @@ class InboxPresenter extends BasePresenter {
 
     /* ******************* COMPONENTS ******************/
 
-    protected function createComponentInboxForm(): InboxControl {
-        return new InboxControl($this->getContext(), $this->seriesTable);
+    protected function createComponentInboxForm(): InboxFormComponent {
+        return new InboxFormComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentHandoutForm(): HandoutForm {
-        return new HandoutForm($this->getContext(), $this->seriesTable);
+    protected function createComponentHandoutForm(): HandoutFormComponent {
+        return new HandoutFormComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentCorrectedFormControl(): CorrectedControl {
-        return new CorrectedControl($this->getContext(), $this->seriesTable);
+    protected function createComponentCorrectedFormControl(): CorrectedComponent {
+        return new CorrectedComponent($this->getContext(), $this->seriesTable);
     }
 
     protected function createComponentCheckControl(): SubmitCheckComponent {
         return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentSubmitsTableControl(): SubmitsPreviewControl {
-        return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
+    protected function createComponentSubmitsTableControl(): SubmitsPreviewComponent {
+        return new SubmitsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
     protected function beforeRender(): void {

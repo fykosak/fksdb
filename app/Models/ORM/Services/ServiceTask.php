@@ -18,6 +18,6 @@ class ServiceTask extends AbstractServiceSingle {
             'series' => $series,
             'tasknr' => $tasknr,
         ])->fetch();
-        return $result ?: null;
+        return $result;
     }
 }

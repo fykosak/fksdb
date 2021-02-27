@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -60,7 +60,7 @@ trait YearPresenterTrait {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    protected function createComponentYearChooser(): YearChooser {
-        return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
+    protected function createComponentYearChooser(): YearChooserComponent {
+        return new YearChooserComponent($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
@@ -16,7 +16,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleCorrelationStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie'));
     }
 
     /**
@@ -24,7 +24,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fas fa-chart-area'));
     }
 
     /**
@@ -32,7 +32,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTable(): void {
-        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-trophy'));
     }
 
     /**
@@ -40,7 +40,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titlePresentation(): void {
-        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fa fa-table'));
+        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fas fa-chalkboard'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTeamStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fa fa-line-chart'));
+        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fas fa-chart-line'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTaskStatistics(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar'));
     }
 
     /**
@@ -108,43 +108,43 @@ class ResultsPresenter extends BasePresenter {
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentTable(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
+    protected function createComponentTable(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentPresentation(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
+    protected function createComponentPresentation(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentTeamStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
+    protected function createComponentTeamStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentTaskStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
+    protected function createComponentTaskStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
     }
 
     /**
-     * @return ResultsAndStatistics
+     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCorrelationStatistics(): ResultsAndStatistics {
-        return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
+    protected function createComponentCorrelationStatistics(): ResultsAndStatisticsComponent {
+        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 
     protected function beforeRender(): void {

@@ -6,8 +6,10 @@ use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
+use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
+use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
 /**
@@ -50,6 +52,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
+        /** @var ActiveRow|ModelRegion $row */
         $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;

@@ -9,7 +9,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
-use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -67,7 +67,7 @@ class ExportPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
     }
 
     /**
@@ -143,8 +143,8 @@ class ExportPresenter extends BasePresenter {
         return $control;
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud($this->getContext());
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+        return new StoredQueryTagCloudComponent($this->getContext());
     }
 
     protected function createComponentCreateForm(): Control {
