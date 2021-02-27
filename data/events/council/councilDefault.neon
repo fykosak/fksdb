@@ -17,9 +17,6 @@ parameters:
                         required: true
                     born:
                         required: true
-                    discord_id:
-                        required: true
-                        description: "Jméno a ID tvého Discord účtu (např. StudentPilny#1234)."
                 person_schedule:
                     weekend:
                         required: true

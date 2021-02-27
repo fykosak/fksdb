@@ -51,6 +51,7 @@ events:
                         factory: RefPerson(%events.council.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     note:
                        label: _('Další poznámky')
+                       description: 'Součástí programu bude také „Výfučí přednášková noc“, a jako organizátoři bychom chtěli zjistit, co vás baví. Máš-li nějakého koníčka, nebo se o něco zajímáš, můžeš si na toto téma nachystat krátkou prezentaci/přednášku a představit ho ostatním účastníkům. Pokud si chceš takovou prezentaci připravit, napiš nám prosím do poznámek výše, téma tvého přednesu.'
 
         #
         #   MACHINE
