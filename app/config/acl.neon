@@ -70,6 +70,11 @@ acl:
     - addResource(event.scheduleGroup) # create, edit, list, detail, delete
     - addResource(event.scheduleItem) # create, edit, list, detail, delete
 
+    # warehouse
+    - addResource(warehouse.producer)
+    - addResource(warehouse.product)
+    - addResource(warehouse.item)
+
     ## ACL
     - allow(contestant, submit, upload)
     - allow(contestant, submit, download, [@ownerAssertion, 'isSubmitUploader'])
@@ -173,5 +178,10 @@ acl:
     - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))
+
+# warehouse
+    - allow(org, warehouse.producer, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, warehouse.product, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, warehouse.item, ::constant(Nette\Security\Permission::ALL))
 
     - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))

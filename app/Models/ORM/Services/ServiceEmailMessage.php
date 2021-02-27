@@ -20,11 +20,10 @@ class ServiceEmailMessage extends AbstractServiceSingle {
 
     /**
      * @param array $data
-     * @param int $priority
      * @return ModelEmailMessage|ActiveRow
      * @throws ModelException
      */
-    public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
+    public function addMessageToSend(array $data): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];

@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ScheduleItemPresenter
@@ -39,7 +39,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendars'));
     }
 
     /**
@@ -49,7 +49,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendar'));
     }
 
     /**
@@ -57,7 +57,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fas fa-calendar'));
     }
 
     /**
@@ -106,7 +106,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param string|IResource $resource
+     * @param string|Resource $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException

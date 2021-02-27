@@ -44,7 +44,6 @@ class MailSender {
     public const ADDR_SECONDARY = 'secondary';
     public const ADDR_ALL = '*';
     public const BCC_PREFIX = '.';
-
     private string $filename;
     /**
      * @var array|string

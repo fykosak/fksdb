@@ -27,12 +27,14 @@ parameters:
     rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
-    modules: org|public
+    modules: org|public|warehouse
     eventModules: event|fyziklani
 
     # Pipe-separated list of contest names
     contests: fykos|vyfuk
-
+routing:
+    routes:
+        abc: :Core:Dashboard:default
 fksrouter:
     routes:
         # PHP-like scripts compatibility

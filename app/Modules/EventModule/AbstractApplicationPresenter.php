@@ -10,7 +10,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\MassTransitionsControl;
+use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Logging\MemoryLogger;
@@ -22,7 +22,7 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class AbstractApplicationPresenter
@@ -43,7 +43,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-users'));
     }
 
     /**
@@ -66,7 +66,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
@@ -133,11 +133,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return MassTransitionsControl
+     * @return MassTransitionsComponent
      * @throws EventNotFoundException
      */
-    final protected function createComponentMassTransitions(): MassTransitionsControl {
-        return new MassTransitionsControl($this->getContext(), $this->getEvent());
+    final protected function createComponentMassTransitions(): MassTransitionsComponent {
+        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
     /**

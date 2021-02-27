@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 
 /**
  *
@@ -11,15 +11,17 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read int school_id
  * @property-read string class
  * @property-read int study_year
+ * @property-read ActiveRow school
+ * @property-read ActiveRow person
  */
 class ModelPersonHistory extends OldAbstractModelSingle {
 
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getSchool(): ModelSchool {
-        return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+    public function getSchool(): ?ModelSchool {
+        return $this->school ? ModelSchool::createFromActiveRow($this->school) : null;
     }
 
     public function extrapolate(int $acYear): ModelPersonHistory {

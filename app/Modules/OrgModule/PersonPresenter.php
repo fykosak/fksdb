@@ -4,7 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\Person\PizzaControl;
+use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -19,7 +19,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
@@ -85,7 +85,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
+        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
     }
 
     /* *********** AUTH ***************/
@@ -165,8 +165,8 @@ class PersonPresenter extends BasePresenter {
         return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
     }
 
-    protected function createComponentPizzaSelect(): PizzaControl {
-        return new PizzaControl($this->getContext());
+    protected function createComponentPizzaSelect(): PizzaComponent {
+        return new PizzaComponent($this->getContext());
     }
 
     /**
@@ -219,7 +219,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
      */

@@ -9,7 +9,7 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -26,7 +26,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModelSingle implements IResource, NodeCreator {
+class ModelEvent extends AbstractModelSingle implements Resource, NodeCreator {
 
     public const TEAM_EVENTS = [1, 9, 13];
 

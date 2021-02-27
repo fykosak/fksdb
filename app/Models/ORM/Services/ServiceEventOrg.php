@@ -4,10 +4,8 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
 /**
  * Class ServiceEventOrg
@@ -25,10 +23,6 @@ class ServiceEventOrg extends AbstractServiceSingle {
             }
             throw $exception;
         }
-    }
-
-    public function findByEvent(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('event_id', $event->event_id);
     }
 
     public function store(?ModelEventOrg $model, array $data): ModelEventOrg {

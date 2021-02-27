@@ -7,5 +7,4 @@ namespace FKSDB\Models\ORM\Services;
  */
 class ServicePostContact extends OldAbstractServiceSingle {
 
-
 }

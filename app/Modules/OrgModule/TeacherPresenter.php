@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class TeacherPresenter
@@ -32,15 +32,15 @@ class TeacherPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fas fa-pen'));
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Create new teacher'), 'fa fa-plus');
+        return new PageTitle(_('Create new teacher'), 'fas fa-plus');
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Teacher'), 'fa fa-graduation-cap');
+        return new PageTitle(_('Teacher'), 'fas fa-graduation-cap');
     }
 
     /**
@@ -48,7 +48,7 @@ class TeacherPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fa fa-graduation-cap'));
+        $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fas fa-graduation-cap'));
     }
 
     /**
@@ -76,7 +76,7 @@ class TeacherPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

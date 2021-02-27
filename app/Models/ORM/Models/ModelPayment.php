@@ -13,7 +13,7 @@ use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -37,7 +37,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, StateModel, PaymentModel {
+class ModelPayment extends AbstractModelSingle implements Resource, StateModel, PaymentModel {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received

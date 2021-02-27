@@ -107,17 +107,17 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
+     * @param string|int|IModel|AbstractModelSingle|ModelPerson $value
      * @param bool $force
      * @return static
      */
-    public function setValue($pValue, bool $force = false): self {
-        if ($pValue instanceof IModel) {
-            $personModel = $pValue;
-        } elseif ($pValue === self::VALUE_PROMISE) {
+    public function setValue($value, bool $force = false): self {
+        if ($value instanceof IModel) {
+            $personModel = $value;
+        } elseif ($value === self::VALUE_PROMISE) {
             $personModel = $this->service->createNew();
         } else {
-            $personModel = $this->service->findByPrimary($pValue);
+            $personModel = $this->service->findByPrimary($value);
         }
 
         if ($personModel && !$personModel->isNew()) {
@@ -125,12 +125,12 @@ class ReferencedId extends HiddenField {
         }
         $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($pValue instanceof IModel) {
-            $pValue = $personModel->getPrimary();
+        if ($value instanceof IModel) {
+            $value = $personModel->getPrimary();
         }
-        $this->getSearchContainer()->setOption('visible', !$pValue);
-        $this->getReferencedContainer()->setOption('visible', (bool)$pValue);
-        return parent::setValue($pValue);
+        $this->getSearchContainer()->setOption('visible', !$value);
+        $this->getReferencedContainer()->setOption('visible', (bool)$value);
+        return parent::setValue($value);
     }
 
     /**

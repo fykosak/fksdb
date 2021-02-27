@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooser;
+use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\ModelException;
@@ -52,7 +52,7 @@ class PreferredLangFormComponent extends FormComponent {
     protected function configureForm(Form $form): void {
         $items = [];
         foreach ($this->getTranslator()->getSupportedLanguages() as $lang) {
-            $items[$lang] = LanguageChooser::$languageNames[$lang];
+            $items[$lang] = LanguageChooserComponent::$languageNames[$lang];
         }
         $form->addRadioList('preferred_lang')->setItems($items);
     }
