@@ -1,0 +1,22 @@
+parameters:
+    events:
+        council:
+            appCond: or(regOpen(), role('admin'))
+            cancelable: neg(or(state('missed'),state('participated'),state('cancelled')))
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_history:
+                    school_id:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    born:
+                        required: true
+                person_schedule:
+                    weekend:
+                        required: true
