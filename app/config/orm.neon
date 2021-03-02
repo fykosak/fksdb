@@ -121,11 +121,11 @@ orm:
                 parameters:
                     type: text
                     title: _(Parameters)
-                    description: _('V Neon syntaxi, schéma je specifické pro definici akce.')
+                    description: _('In Neon syntax, the scheme is specific for each event.')
                 name:
                     type: string
                     title: _(Name)
-                    description: _('U soustředka místo.')
+                    description: _("For the camps, it is place.")
                     required: true
                 begin:
                     type: dateTime
@@ -135,7 +135,7 @@ orm:
                     type: dateTime
                     title: _(Event end)
                     required: false
-                    description: _('U jednodenních akcí shodný se začátkem.')
+                    description: _('For one-day events it is identical to the beginning.')
                 registration_begin:
                     type: dateTime
                     title:  _(Registration begin)
@@ -144,13 +144,13 @@ orm:
                     title: _(Registration end)
                 report:
                     type: text
-                    description: _(Shrnující text k akci.)
+                    description: _(Summary of the event.)
                     title: _(Report)
                 event_year:
                     type: int
                     title: _(Event year)
                     required: true
-                    description: _('Ročník akce musí být unikátní pro daný typ akce.')
+                    description: _('The year of an event must be unique for a given event type.')
                 year:
                     type: int
                     title: _(Contest year)
@@ -260,7 +260,7 @@ orm:
                     title:  _(Event participant Id)
                 lunch_count:
                     type: int
-                    title: _('Počet baget k obědu')
+                    title: _('Number of baguettes for lunch')
              linkFactories:
                    detail: FKSDB\Models\ORM\Links\ParticipantDetailLink
                    edit: FKSDB\Models\ORM\Links\ApplicationEditLink
@@ -314,7 +314,7 @@ orm:
                 order:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Org\OrderRow
-                    description: _('Pro řazení v seznamu organizátorů')
+                    description: _('For ordering in the organizers list')
                     title: _('Order')
                 tex_signature:
                     type: class
@@ -327,7 +327,7 @@ orm:
                 contribution:
                     type: string
                     title: _(Contribution)
-                    description: _('Zobrazeno v síni slávy')
+                    description: _('For the hall of fame')
                 role:
                     type: string
                     title: Role
@@ -427,12 +427,12 @@ orm:
                 born_family_name:
                     type: string
                     title: _(Born family name)
-                    description: _('Pouze pokud je odlišné od příjmení.')
+                    description: _('Only if different from surname.')
                     permission: FULL
                 display_name:
                     type: string
                     title: _(Display name)
-                    description: _('Pouze pokud je odlišné od "jméno příjmení".')
+                    description: _('Only if different from "Name Surname".')
                     permission: BASIC
                 family_name:
                     type: string

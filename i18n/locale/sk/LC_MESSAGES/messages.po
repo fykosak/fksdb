@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-26 11:28+0100\n"
+"POT-Creation-Date: 2021-03-02 16:52+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -1717,6 +1717,7 @@ msgid "SQL"
 msgstr ""
 
 #: ../app/Components/Controls/Entity/StoredQueryFormComponent.php:94
+#: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:12
 #: ../app/config/orm.neon.neon2php:123
 msgid "Parameters"
 msgstr ""
@@ -2918,11 +2919,12 @@ msgid "Payment recieved"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:24
-msgid "Informacie o platbe"
-msgstr ""
+#, fuzzy
+msgid "Payment info"
+msgstr "Nová platba"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:33
-msgid "Informace o platcovi"
+msgid "Person information"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:43
@@ -2942,7 +2944,7 @@ msgid "Price"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:60
-msgid "Spolu"
+msgid "Sum"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:67
@@ -3116,23 +3118,23 @@ msgid "Active"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:4
-msgid "Zobrazit všechny úlohy"
+msgid "Show all tasks"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:6
-msgid "Zobrazit jenom moje úlohy"
+msgid "Show only my tasks"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:8
-msgid "Invalidovat cache bodů"
+msgid "Invalidovate points cache"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:9
-msgid "Přepočítat všechny body"
+msgid "Recalculate all points"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Points/entry.latte.latte2php:11
-msgid "Spočítat body kvízových úloh"
+msgid "Calculate quiz points"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Person/detail.latte.latte2php:5
@@ -3152,10 +3154,6 @@ msgstr ""
 #: ../app/Modules/OrgModule/templates/Spam/detail.latte.latte2php:32
 #: ../app/config/orm.neon.neon2php:94
 msgid "Text"
-msgstr ""
-
-#: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:12
-msgid "Parametry"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:18
@@ -3207,8 +3205,8 @@ msgstr "Registrácia"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:14
 msgid ""
-"je třeba doplnit školní a korespondenční údaje, případně se přihlásit do "
-"nového ročníku"
+"It is necessary to fill in school and corespodence details and/or register "
+"for the new year"
 msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:16
@@ -3284,11 +3282,11 @@ msgstr ""
 #: ../app/Components/Controls/Fyziklani/layout.finalResults.latte.latte2php:25
 #: ../app/Components/Controls/Fyziklani/layout.finalResults.latte.latte2php:33
 #: ../app/Components/Controls/Fyziklani/layout.finalResults.latte.latte2php:41
-msgid "Kategoria nieje uzatvorená"
+msgid "Results for some category are not closed yet."
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/layout.finalResults.latte.latte2php:49
-msgid "Niesu uzatvorené všetky tímy"
+msgid "Results for some teams are not closed yet"
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/layout.schoolCheck.latte.latte2php:2
@@ -3481,23 +3479,26 @@ msgid "Event Id"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:124
-msgid "V Neon syntaxi, schéma je specifické pro definici akce."
+msgid "In Neon syntax, the scheme is specific for each event."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:128
-msgid "U soustředka místo."
-msgstr ""
+#, fuzzy
+msgid "For the camps, it is place."
+msgstr "Kapacita"
 
 #: ../app/config/orm.neon.neon2php:132
+#, fuzzy
 msgid "Event begin"
-msgstr ""
+msgstr "Detail platby #%s"
 
 #: ../app/config/orm.neon.neon2php:136
+#, fuzzy
 msgid "Event end"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:138
-msgid "U jednodenních akcí shodný se začátkem."
+msgid "For one-day events it is identical to the beginning."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:141
@@ -3511,7 +3512,7 @@ msgid "Registration end"
 msgstr "Registrácia"
 
 #: ../app/config/orm.neon.neon2php:147
-msgid "Shrnující text k akci."
+msgid "Summary of the event."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:148
@@ -3519,11 +3520,12 @@ msgid "Report"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:151
+#, fuzzy
 msgid "Event year"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:153
-msgid "Ročník akce musí být unikátní pro daný typ akce."
+msgid "The year of an event must be unique for a given event type."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:156
@@ -3536,8 +3538,9 @@ msgid "Event type"
 msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:179
+#, fuzzy
 msgid "Event org Id"
-msgstr ""
+msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:210
 msgid "Created event"
@@ -3593,11 +3596,12 @@ msgid "Departure ticket"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:260
+#, fuzzy
 msgid "Event participant Id"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/config/orm.neon.neon2php:263
-msgid "Počet baget k obědu"
+msgid "Number of baguettes for lunch"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:285
@@ -3621,7 +3625,7 @@ msgid "Until"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:317
-msgid "Pro řazení v seznamu organizátorů"
+msgid "For ordering in the organizers list"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:318
@@ -3641,7 +3645,7 @@ msgid "Contribution"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:330
-msgid "Zobrazeno v síni slávy"
+msgid "For the hall of fame"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:354
@@ -3668,7 +3672,7 @@ msgid "Born family name"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:430
-msgid "Pouze pokud je odlišné od příjmení."
+msgid "Only if different from surname."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:434
@@ -3676,7 +3680,7 @@ msgid "Display name"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:435
-msgid "Pouze pokud je odlišné od \"jméno příjmení\"."
+msgid "Only if different from \"Name Surname\"."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:439
@@ -3752,8 +3756,9 @@ msgid "U cizinců prázdné."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
+#, fuzzy
 msgid "Místo narození"
-msgstr ""
+msgstr "Dátum narodenia"
 
 #: ../app/config/orm.neon.neon2php:541
 msgid "Město a okres (kvůli diplomům)."
@@ -3812,16 +3817,18 @@ msgid "Number of brochures/propagation items, that he wants to send."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:714
+#, fuzzy
 msgid "Submit Id"
-msgstr ""
+msgstr "Časový vývoj prihlášiek"
 
 #: ../app/config/orm.neon.neon2php:755
 msgid "Game start"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:758
+#, fuzzy
 msgid "Game end"
-msgstr ""
+msgstr "Meno"
 
 #: ../app/config/orm.neon.neon2php:761
 msgid "Results display"
@@ -3868,8 +3875,9 @@ msgid "Team name"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:835
+#, fuzzy
 msgid "Submit opened?"
-msgstr ""
+msgstr "Časový vývoj prihlášiek"
 
 #: ../app/config/orm.neon.neon2php:861
 msgid "Schedule start"
@@ -3916,8 +3924,9 @@ msgid "Description en"
 msgstr "Registrácia"
 
 #: ../app/config/orm.neon.neon2php:909
+#, fuzzy
 msgid "Description cs"
-msgstr ""
+msgstr "Registrácia"
 
 #: ../app/config/orm.neon.neon2php:912
 #, fuzzy
@@ -5438,10 +5447,6 @@ msgstr ""
 
 #~ msgid "Vložit"
 #~ msgstr "Vložiť"
-
-#, fuzzy
-#~ msgid "Event detail"
-#~ msgstr "Detail platby #%s"
 
 #, fuzzy
 #~ msgid "Přihláška"
