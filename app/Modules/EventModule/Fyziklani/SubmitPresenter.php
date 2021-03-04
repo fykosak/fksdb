@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class SubmitPresenter
@@ -71,7 +71,7 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Authorized methods *****/
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException

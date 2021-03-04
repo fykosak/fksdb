@@ -39,7 +39,7 @@
     <hr/>
 
     <h2>{_'Teacher'}</h2>
-    {var $teacher = $model->getTeacher() }
+    {var $teacher = $model->getTeacher()}
     {if $teacher}
         {control valuePrinter:row 'person.person_link', $teacher}
         {include #personSchedule, person => $teacher,event=> $model->getEvent()}
@@ -51,8 +51,8 @@
     {var $counter = 0;}
     {foreach $model->getParticipants() as $row}
         {var $participant = FKSDB\Models\ORM\Models\ModelEventParticipant::createFromActiveRow($row->event_participant)}
-        {do $counter ++}
-        {var $history=$participant->getPerson()->getHistory($acYear)}
+        {do $counter++}
+        {var $history = $participant->getPerson()->getHistory($acYear)}
 
         <h3>{_'Parcipant'} {$counter}</h3>
 
@@ -70,5 +70,5 @@
     {include ../AbstractApplication/applicationControl.latte}
     <hr/>
     <h2>{_'Seating'}</h2>
-    {control seating:team $event,$model->getPrimary(),$model->game_lang?:'cs'}
+    {control seating:team $model,$model->game_lang??'cs'}
 {/block}

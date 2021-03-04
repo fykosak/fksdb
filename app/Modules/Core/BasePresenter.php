@@ -26,19 +26,18 @@ use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
+use Nette;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
 use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
- * @property ITemplate $template
  */
 abstract class BasePresenter extends Presenter implements JavaScriptCollector, StylesheetCollector, AutocompleteJSONProvider, NavigablePresenter {
 
@@ -70,8 +69,10 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
+    private Nette\DI\Container $diContainer;
 
     final public function injectBase(
+        Nette\DI\Container $diContainer,
         YearCalculator $yearCalculator,
         ServiceContest $serviceContest,
         BreadcrumbsFactory $breadcrumbsFactory,
@@ -83,6 +84,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         $this->breadcrumbsFactory = $breadcrumbsFactory;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
+        $this->diContainer = $diContainer;
     }
 
     /**
@@ -97,7 +99,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         $control->init();
     }
 
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Nette\Application\UI\Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -287,7 +289,6 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -348,5 +349,9 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
             }
         }
         return $this->authorizedCache[$key];
+    }
+
+    public function getContext(): Nette\DI\Container {
+        return $this->diContainer;
     }
 }

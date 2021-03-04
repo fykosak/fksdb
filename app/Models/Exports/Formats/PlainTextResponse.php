@@ -2,8 +2,9 @@
 
 namespace FKSDB\Models\Exports\Formats;
 
-use Nette\Application\IResponse;
+use Nette\Application\Response;
 use Nette\Http\IRequest;
+use Nette\Http\IResponse;
 use Nette\SmartObject;
 
 /**
@@ -11,7 +12,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PlainTextResponse implements IResponse {
+class PlainTextResponse implements Response {
     use SmartObject;
 
     private string $content;
@@ -30,7 +31,7 @@ class PlainTextResponse implements IResponse {
         $this->name = $name;
     }
 
-    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

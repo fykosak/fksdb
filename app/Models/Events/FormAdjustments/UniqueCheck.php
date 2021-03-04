@@ -7,7 +7,7 @@ use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,7 +36,7 @@ class UniqueCheck extends AbstractAdjustment {
         foreach ($controls as $name => $control) {
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function (IControl $control) use ($baseHolder) : bool {
+            $control->addRule(function (Control $control) use ($baseHolder) : bool {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {

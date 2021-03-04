@@ -10,7 +10,7 @@ use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -48,7 +48,7 @@ abstract class AbstractProcessing implements Processing {
     /**
      *
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getValue(string $mask): array {
         $keys = array_keys($this->valuesPathCache);
@@ -68,7 +68,7 @@ abstract class AbstractProcessing implements Processing {
     /**
      *
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->formPathCache);
@@ -132,7 +132,7 @@ abstract class AbstractProcessing implements Processing {
         }
         /** @var Control $control */
         // TODO not type safe
-        foreach ($form->getComponents(true, IControl::class) as $control) {
+        foreach ($form->getComponents(true, FormControl::class) as $control) {
             if ($control instanceof BaseControl) {
                 $control->loadHttpData();
             }

@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
@@ -15,7 +15,7 @@ use NiftyGrid\DataSource\IDataSource;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQuery implements IDataSource, IResource {
+class StoredQuery implements IDataSource, Resource {
 
     private const INNER_QUERY = 'sub';
     private ?ModelStoredQuery $queryPattern = null;

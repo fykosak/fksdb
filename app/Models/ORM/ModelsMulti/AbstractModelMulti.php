@@ -81,16 +81,16 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get($name) {
+    public function &__get(string $key) {
         // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
-        if ($this->getMainModel()->__isset($name)) {
-            return $this->getMainModel()->__get($name);
+        if ($this->getMainModel()->__isset($key)) {
+            return $this->getMainModel()->__get($key);
         }
-        if ($this->getJoinedModel()->__isset($name)) {
-            return $this->getJoinedModel()->__get($name);
+        if ($this->getJoinedModel()->__isset($key)) {
+            return $this->getJoinedModel()->__get($key);
         }
         // this reference isn't that important
         $null = null;
@@ -98,38 +98,38 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $name
      * @return bool
      */
-    public function __isset($key): bool {
-        return $this->getMainModel()->__isset($key) || $this->getJoinedModel()->__isset($key);
+    public function __isset($name): bool {
+        return $this->getMainModel()->__isset($name) || $this->getJoinedModel()->__isset($name);
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $column
      * @param mixed $value
      */
-    public function __set($name, $value): void {
+    public function __set($column, $value): void {
         throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $key
      */
-    public function __unset($name) {
+    public function __unset($key) {
         throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
-     * @param bool $need
+     * @param bool $throw
      * @return mixed
      */
-    public function getPrimary($need = true) {
-        return $this->getJoinedModel()->getPrimary($need);
+    public function getPrimary($throw = true) {
+        return $this->getJoinedModel()->getPrimary($throw);
     }
 
-    public function getSignature(bool $need = true): string {
-        return implode('|', (array)$this->getPrimary($need));
+    public function getSignature(bool $throw = true): string {
+        return implode('|', (array)$this->getPrimary($throw));
     }
 
     /**
@@ -141,33 +141,33 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param mixed $offset
+     * @param mixed $column
      * @return bool
      */
-    public function offsetExists($offset): bool {
-        return $this->__isset($offset);
+    public function offsetExists($column): bool {
+        return $this->__isset($column);
     }
 
     /**
-     * @param mixed $offset
+     * @param mixed $column
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &offsetGet($offset) {
-        return $this->__get($offset);
+    public function &offsetGet($column) {
+        return $this->__get($column);
     }
 
     /**
-     * @param mixed $offset
+     * @param mixed $column
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void {
+    public function offsetSet($column, $value): void {
         throw new LogicException('Cannot update multiModel directly.');
     }
 
     /**
-     * @param mixed $offset
+     * @param mixed $column
      */
-    public function offsetUnset($offset): void {
+    public function offsetUnset($column): void {
         throw new LogicException('Cannot update multiModel directly.');
     }
 }

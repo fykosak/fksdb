@@ -14,8 +14,7 @@ use Nette\Application\AbortException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Localization\Translator;
@@ -75,10 +74,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return ITemplate
+     * @return Template
      * @throws BadTypeException
      */
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Template {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);

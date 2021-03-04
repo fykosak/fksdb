@@ -18,6 +18,7 @@ use FKSDB\Models\Utils\CSVParser;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
 /**
@@ -87,6 +88,7 @@ class ImportComponent extends BaseComponent {
      * @throws MissingServiceException
      */
     private function handleFormImport(Form $form): void {
+        /** @var FileUpload[] $values */
         $values = $form->getValues();
         try {
             // process form values

@@ -11,7 +11,7 @@ use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -44,7 +44,7 @@ use Nette\Security\IResource;
  */
 class ModelEventParticipant extends OldAbstractModelSingle implements
     PaymentModel,
-    IResource,
+    Resource,
     NodeCreator {
 
     public const RESOURCE_ID = 'event.participant';

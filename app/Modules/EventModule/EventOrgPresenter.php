@@ -15,7 +15,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class EventOrgPresenter
@@ -51,7 +51,7 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException

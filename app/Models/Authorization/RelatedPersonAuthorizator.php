@@ -17,14 +17,10 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    private IUserStorage $user;
+    private IUserStorage $userStorage;
 
-    public function __construct(IUserStorage $user) {
-        $this->user = $user;
-    }
-
-    public function getUser(): IUserStorage {
-        return $this->user;
+    public function __construct(IUserStorage $userStorage) {
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -41,11 +37,11 @@ class RelatedPersonAuthorizator {
         }
 
         // further on only logged users can be related person
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             return false;
         }
 
-        $person = $this->getUser()->getIdentity()->getPerson();
+        $person = $this->userStorage->getIdentity()->getPerson();
         if (!$person) {
             return false;
         }

@@ -46,35 +46,35 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * @param ModelPostContact|mixed $values
+     * @param ModelPostContact|mixed $data
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
-        if ($values instanceof ActiveRow) { //assert its from address table
-            if ($values instanceof ModelPostContact) {
-                $address = $values->getAddress();
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow) { //assert its from address table
+            if ($data instanceof ModelPostContact) {
+                $address = $data->getAddress();
             } else {
-                $address = $values;
+                $address = $data;
             }
             /** @var ModelAddress $address */
-
-            $values = $address->toArray();
-            $values['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
-        } elseif (is_array($values) && isset($values['region_id'])) {
-            $region = $this->serviceRegion->findByPrimary($values['region_id']);
-            $values['country_iso'] = $region->country_iso;
+            $data = $address->toArray();
+            $data['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
+        } elseif (is_array($data) && isset($data['region_id'])) {
+            $region = $this->serviceRegion->findByPrimary($data['region_id']);
+            $data['country_iso'] = $region->country_iso;
         }
 
-        return parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
     /**
-     * @param bool $asArray
+     * @param null $returnType
+     * @param array|null $controls
      * @return array|ArrayHash
      */
-    public function getValues($asArray = false) {
-        $values = parent::getValues($asArray);
+    public function getValues($returnType = null, array $controls = null) {
+        $values = parent::getValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');

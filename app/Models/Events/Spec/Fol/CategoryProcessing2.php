@@ -39,15 +39,15 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param array $competitors
+     * @param array $participants
      * @return string
      */
-    protected function getCategory(array $competitors): string {
+    protected function getCategory(array $participants): string {
         // init stats
         $olds = 0;
         $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
-        foreach ($competitors as $competitor) {
+        foreach ($participants as $competitor) {
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             }

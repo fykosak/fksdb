@@ -72,6 +72,7 @@ class TasksFromXML extends Stage {
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
+                /** @var SimpleXMLElement[] $elements */
                 $elements = $XMLTask->{$name};
                 $csvalue = null;
 

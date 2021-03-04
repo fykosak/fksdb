@@ -11,7 +11,7 @@ use Nette\SmartObject;
  * Class ReactResponse
  * @author Michal Červeňák <miso@fykos.cz>
  */
-final class AjaxResponse implements Nette\Application\IResponse {
+final class AjaxResponse implements Nette\Application\Response {
 
     use SmartObject;
 

@@ -4,7 +4,8 @@
 
 services:
     ## extends nette
-    nette.userStorage: FKSDB\Models\Authentication\LoginUserStorage
+    security.legacyUserStorage: FKSDB\Models\Authentication\LoginUserStorage
+    security.userStorage: false
     nette.mailer:
         factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:

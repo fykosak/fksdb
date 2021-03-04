@@ -8,7 +8,7 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceItem;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ItemPresenter
@@ -23,15 +23,15 @@ class ItemPresenter extends BasePresenter {
         $this->serviceItem = $serviceItem;
     }
 
-    protected function titleList(): void {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-boxes'));
     }
 
-    protected function titleEdit(): void {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Edit item'), 'fa fa-box-open'));
     }
 
-    protected function titleCreate(): void {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-box-open'));
     }
 
@@ -52,7 +52,7 @@ class ItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

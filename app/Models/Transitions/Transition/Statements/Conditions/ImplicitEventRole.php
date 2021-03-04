@@ -7,7 +7,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedFactory;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ImplicitEventRole
@@ -23,8 +23,8 @@ class ImplicitEventRole extends EventRole {
      */
     protected function evaluate(...$args): bool {
         [$model] = $args;
-        if (!$model instanceof IResource) {
-            throw new BadTypeException(IResource::class, $model);
+        if (!$model instanceof Resource) {
+            throw new BadTypeException(Resource::class, $model);
         }
         /** @var ModelEvent $event */
         $event = ReferencedFactory::accessModel($model, ModelEvent::class);

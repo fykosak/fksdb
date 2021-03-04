@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Trait EntityTrait
@@ -176,7 +176,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends OldAbstractModelSingle implements IResource {
+class ModelPerson extends OldAbstractModelSingle implements Resource {
 
     public const RESOURCE_ID = 'person';
 
@@ -54,7 +54,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
