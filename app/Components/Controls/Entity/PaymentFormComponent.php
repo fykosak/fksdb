@@ -92,20 +92,23 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             'currency' => $values['currency'],
             'person_id' => $values['person_id'],
         ];
+
         if (isset($this->model)) {
             $this->servicePayment->updateModel2($this->model, $data);
             $model = $this->servicePayment->refresh($this->model);
         } else {
-            $model = $this->machine->initNewModel(array_merge($data, [
+            $holder = $this->machine->createHolder(null);
+            $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
-            ]), $this->servicePayment)->getModel();
+            ]));
+            $model = $holder->getModel();
         }
 
         $connection = $this->servicePayment->getConnection();
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
+            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model); // TODO
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);

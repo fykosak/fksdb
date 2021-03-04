@@ -34,7 +34,7 @@ class TransitionButtonsComponent extends BaseComponent {
 
     public function handleTransition(string $name): void {
         try {
-            $this->machine->executeTransition($name, $this->model);
+            $this->machine->executeTransitionById($name, $this->model);
         } catch (ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             return;

@@ -43,7 +43,7 @@ abstract class Machine {
     final public function setImplicitCondition(callable $implicitCondition): void {
         $this->implicitCondition = $implicitCondition;
     }
-
+    /* **************** Select transition ****************/
     /**
      * @return Transition[]
      */
@@ -52,31 +52,13 @@ abstract class Machine {
     }
 
     /**
-     * @param ModelHolder|null $holder
+     * @param ModelHolder $holder
      * @return Transition[]
      */
-    public function getAvailableTransitions(?ModelHolder $holder): array {
-        $state = $holder ? $holder->getState() : null;
-        if (\is_null($state)) {
-            $state = self::STATE_INIT;
-        }
-        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder, $state): bool {
-            return $transition->matchSource($state) && $this->canExecute($transition, $holder);
+    public function getAvailableTransitions(ModelHolder $holder): array {
+        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder): bool {
+            return $this->isAvailable($transition, $holder);
         });
-    }
-
-    /**
-     * @param string $id
-     * @param ModelHolder $holder
-     * @return Transition
-     * @throws UnavailableTransitionsException
-     */
-    public function getAvailableTransitionById(string $id, ModelHolder $holder): Transition {
-        $transitions = \array_filter($this->getAvailableTransitions($holder), function (Transition $transition) use ($id): bool {
-            return $transition->getId() === $id;
-        });
-
-        return $this->selectTransition($transitions);
     }
 
     /**
@@ -89,6 +71,10 @@ abstract class Machine {
             return $transition->getId() === $id;
         });
         return $this->selectTransition($transitions);
+    }
+
+    private function isAvailable(Transition $transition, ModelHolder $holder): bool {
+        return $transition->matchSource($holder->getState()) && $this->canExecute($transition, $holder);
     }
 
     /**
@@ -109,39 +95,64 @@ abstract class Machine {
         return \array_values($transitions)[0];
     }
 
-    /* ********** CONDITION ******** */
+    /* ********** execution ******** */
 
-    protected function canExecute(Transition $transition, ?ModelHolder $holder): bool {
+    /**
+     * @param string $id
+     * @param ModelHolder $holder
+     * @return void
+     * @throws UnavailableTransitionsException
+     * @throws Exception
+     */
+    final public function executeTransitionById(string $id, ModelHolder $holder): void {
+        $transition = $this->getTransitionById($id);
+        if (!$this->isAvailable($transition, $holder)) {
+            throw new UnavailableTransitionsException();
+        }
+        $this->execute($transition, $holder);
+    }
+
+    /**
+     * @param ModelHolder $holder
+     * @param array $data
+     * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionsException
+     * @throws Exception
+     */
+    final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void {
+        $transition = $this->selectTransition($this->getAvailableTransitions($holder));
+        $this->saveAndExecuteTransition($transition, $holder, $data);
+    }
+
+    /**
+     * @param Transition $transition
+     * @param ModelHolder $holder
+     * @param array $data
+     * @throws ForbiddenRequestException
+     */
+    final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void {
+        $holder->updateData($data);
+        $this->execute($transition, $holder);
+    }
+
+    protected function canExecute(Transition $transition, ModelHolder $holder): bool {
         if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
             return true;
         }
         return $transition->canExecute2($holder);
     }
-    /* ********** EXECUTION ******** */
-
-    /**
-     * @param string $id
-     * @param ModelHolder $holder
-     * @return ModelHolder
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionsException
-     * @throws Exception
-     */
-    final public function executeTransition(string $id, ModelHolder $holder): ModelHolder {
-        $transition = $this->getAvailableTransitionById($id, $holder);
-        if (!$this->canExecute($transition, $holder)) {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
-        }
-        return $this->execute($transition, $holder);
-    }
 
     /**
      * @param Transition $transition
      * @param ModelHolder|null $holder
-     * @return ModelHolder new Model holder after execution
+     * @return void
+     * @throws ForbiddenRequestException
      * @throws Exception
      */
-    private function execute(Transition $transition, ModelHolder $holder): ModelHolder {
+    private function execute(Transition $transition, ModelHolder $holder): void {
+        if (!$this->canExecute($transition, $holder)) {
+            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+        }
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             $this->explorer->getConnection()->beginTransaction();
         }
@@ -152,50 +163,9 @@ abstract class Machine {
             throw $exception;
         }
         $this->explorer->getConnection()->commit();
-        $newHolder = $holder->updateState($transition->getTargetState());
-        $transition->callAfterExecute($newHolder);
-        return $newHolder;
+        $holder->updateState($transition->getTargetState());
+        $transition->callAfterExecute($holder);
     }
 
-    /* ********** MODEL CREATING ******** */
-
-    abstract public function getCreatingState(): string;
-
-    /**
-     * @return Transition
-     * @throws UnavailableTransitionsException
-     */
-    final protected function getCreatingTransition(): Transition {
-        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) {
-            return $transition->getSourceState() === self::STATE_INIT && $transition->getTargetState() === $this->getCreatingState();
-        });
-        return $this->selectTransition($transitions);
-    }
-
-    /**
-     * @return bool
-     * @throws Exception
-     */
-    public function canCreate(): bool {
-        return $this->canExecute($this->getCreatingTransition(), null);
-    }
-
-    /**
-     * @param array $data
-     * @param AbstractServiceSingle $service
-     * @return ModelHolder
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionsException
-     * @throws Exception
-     */
-    public function initNewModel(array $data, AbstractServiceSingle $service): ModelHolder {
-        $transition = $this->getCreatingTransition();
-        if (!$this->canExecute($transition, null)) {
-            throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
-        }
-        $model = $service->createNewModel($data);
-        return $this->execute($transition, $this->createHolder($model));
-    }
-
-    abstract public function createHolder(AbstractModelSingle $model): ModelHolder;
+    abstract public function createHolder(?AbstractModelSingle $model): ModelHolder;
 }

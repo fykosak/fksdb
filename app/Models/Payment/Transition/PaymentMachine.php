@@ -65,7 +65,7 @@ class PaymentMachine extends Machine {
         return ModelPayment::STATE_NEW;
     }
 
-    public function createHolder(AbstractModelSingle $model): PaymentHolder {
+    public function createHolder(?AbstractModelSingle $model):PaymentHolder{
         return new PaymentHolder($model, $this->servicePayment);
     }
 }

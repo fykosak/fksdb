@@ -116,7 +116,7 @@ class Transition {
         return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
     }
 
-    public function canExecute2(?ModelHolder $model): bool {
+    public function canExecute2(ModelHolder $model): bool {
         return $this->isConditionFulfilled($model);
     }
 

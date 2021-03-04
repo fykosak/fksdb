@@ -108,7 +108,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function actionCreate(): void {
-        if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
+        if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Core:Dashboard:default');
