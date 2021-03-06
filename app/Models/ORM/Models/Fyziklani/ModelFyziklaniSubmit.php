@@ -7,7 +7,7 @@ use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -25,7 +25,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  */
-class ModelFyziklaniSubmit extends AbstractModelSingle implements IResource {
+class ModelFyziklaniSubmit extends AbstractModelSingle implements Resource {
     public const STATE_NOT_CHECKED = 'not_checked';
     public const STATE_CHECKED = 'checked';
 

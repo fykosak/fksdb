@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -13,7 +13,7 @@ use Nette\Security\IResource;
  * @property-read int school_id
  * @property-read bool|int active
  */
-class ModelSchool extends AbstractModelSingle implements IResource {
+class ModelSchool extends AbstractModelSingle implements Resource {
     public const RESOURCE_ID = 'school';
 
     public function getAddress(): ModelAddress {
