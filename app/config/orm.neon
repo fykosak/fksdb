@@ -484,7 +484,7 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipRow
                     permission: FULL
-                    title: _('Státní příslušnost')
+                    title: _('Nationality')
                 account:
                     type: string
                     title: _('Bank account')
@@ -522,13 +522,13 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberRow
                     description: _('U cizinců číslo pasu.')
-                    title: _('Číslo OP')
+                    title: _('Id Card number (for foreigners the passport Id)')
                     permission: FULL
                 born:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornRow
                     permission: FULL
-                    title: _('Datum narození')
+                    title: _('Date of birth')
                 born_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdRow
@@ -569,7 +569,7 @@ orm:
                     permission: FULL
                 origin:
                     type: string
-                    title: 'Jak jsi se o nás dozvěděl(a)?'
+                    title: 'How did you came to know about us?'
                     permission: BASIC
                 note:
                     type: string

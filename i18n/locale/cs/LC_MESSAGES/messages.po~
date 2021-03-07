@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 16:52+0100\n"
+"POT-Creation-Date: 2021-03-05 15:16+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3711,8 +3711,8 @@ msgstr "Zobrazované jméno"
 
 #: ../app/config/orm.neon.neon2php:435
 #, fuzzy
-msgid "Only if different from Name Surname\"."
-msgstr "Pouze pokud je odlišné od přijmení"
+msgid "Only if different from \"Name Surname\"."
+msgstr "Pouze pokud je odlišné od \"Jméno Přijmení\"."
 
 #: ../app/config/orm.neon.neon2php:439
 msgid "Family name"
@@ -3739,8 +3739,8 @@ msgid "Health insurance"
 msgstr "Zdravotní pojištění"
 
 #: ../app/config/orm.neon.neon2php:487
-msgid "Státní příslušnost"
-msgstr ""
+msgid "Nationality"
+msgstr "Státní příslušnost"
 
 #: ../app/config/orm.neon.neon2php:497
 msgid "Homepage"
@@ -3751,34 +3751,32 @@ msgid "Phone"
 msgstr "Telefon"
 
 #: ../app/config/orm.neon.neon2php:503
-#, fuzzy
 msgid "Phone number (mother)"
-msgstr "Telefonní číslo"
+msgstr "Telefonní číslo na matku"
 
 #: ../app/config/orm.neon.neon2php:509
-#, fuzzy
 msgid "Phone number (father)"
-msgstr "Telefonní číslo"
+msgstr "Telefonní číslo na otce"
 
 #: ../app/config/orm.neon.neon2php:515
 msgid "E-mail (mother)"
-msgstr ""
+msgstr "E-mail na matku"
 
 #: ../app/config/orm.neon.neon2php:519
 msgid "E-mail (father)"
-msgstr ""
+msgstr "E-mail na otce"
 
 #: ../app/config/orm.neon.neon2php:524
 msgid "U cizinců číslo pasu."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:525
-msgid "Číslo OP"
-msgstr ""
+msgid "Id Card number (for foreigners the passport Id)"
+msgstr "Číslo občanského průkazu"
 
 #: ../app/config/orm.neon.neon2php:531
-msgid "Datum narození"
-msgstr ""
+msgid "Date of birth"
+msgstr "Datum narození"
 
 #: ../app/config/orm.neon.neon2php:535
 msgid "Rodné číslo"

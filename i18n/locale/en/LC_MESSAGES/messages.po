@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 16:52+0100\n"
+"POT-Creation-Date: 2021-03-05 15:22+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -3664,8 +3664,8 @@ msgid "Health insurance"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:487
-msgid "Státní příslušnost"
-msgstr "Citizenship"
+msgid "Nationality"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:497
 msgid "Homepage"
@@ -3696,12 +3696,12 @@ msgid "U cizinců číslo pasu."
 msgstr "Passport no. for non-Czech, non-Slovak."
 
 #: ../app/config/orm.neon.neon2php:525
-msgid "Číslo OP"
-msgstr "ID number"
+msgid "Id Card number (for foreigners the passport Id)"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:531
-msgid "Datum narození"
-msgstr "Birthday"
+msgid "Date of birth"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:535
 msgid "Rodné číslo"
@@ -3925,8 +3925,8 @@ msgstr ""
 #: ../app/config/exports.neon.neon2php:32
 #: ../app/config/exports.neon.neon2php:34
 #: ../app/config/exports.neon.neon2php:36
-msgid "Uložit AESOP"
-msgstr "Save AESOP"
+msgid "Save AESOP"
+msgstr ""
 
 #: ../data/events/tsaf/tsaf7.neon.neon2php:75
 #: ../data/events/tsaf/tsaf7.neon.neon2php:80
@@ -5293,6 +5293,18 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#~ msgid "Uložit AESOP"
+#~ msgstr "Save AESOP"
+
+#~ msgid "Státní příslušnost"
+#~ msgstr "Citizenship"
+
+#~ msgid "Číslo OP"
+#~ msgstr "ID number"
+
+#~ msgid "Datum narození"
+#~ msgstr "Birthday"
 
 #~ msgid "Pouze pokud je odlišné od příjmení."
 #~ msgstr "Only if it differs from surname."

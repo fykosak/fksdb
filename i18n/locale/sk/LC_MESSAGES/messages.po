@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-02 16:52+0100\n"
+"POT-Creation-Date: 2021-03-05 15:22+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -3708,7 +3708,7 @@ msgid "Health insurance"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:487
-msgid "Státní příslušnost"
+msgid "Nationality"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:497
@@ -3740,12 +3740,12 @@ msgid "U cizinců číslo pasu."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:525
-msgid "Číslo OP"
+msgid "Id Card number (for foreigners the passport Id)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:531
-msgid "Datum narození"
-msgstr "Dátum narodenia"
+msgid "Date of birth"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:535
 msgid "Rodné číslo"
@@ -3982,7 +3982,7 @@ msgstr ""
 #: ../app/config/exports.neon.neon2php:32
 #: ../app/config/exports.neon.neon2php:34
 #: ../app/config/exports.neon.neon2php:36
-msgid "Uložit AESOP"
+msgid "Save AESOP"
 msgstr ""
 
 #: ../data/events/tsaf/tsaf7.neon.neon2php:75
@@ -5334,6 +5334,9 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#~ msgid "Datum narození"
+#~ msgstr "Dátum narodenia"
 
 #, fuzzy
 #~ msgid "vedoucí semináře"
