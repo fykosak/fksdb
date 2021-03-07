@@ -50,6 +50,27 @@ Environment
 2) Configure virtual hosts in `/etc/apache/sites-enabled` with proper ServerName
    and ServerAlias (see domains above). (You need only virtual host for FKSDB.)
 
+```apache
+<VirtualHost db.fykos.local auth.fykos.local>
+	ServerAdmin webmaster@localhost
+	DocumentRoot /absolute/path/to/fksdb/root/www/
+
+	ErrorLog ${APACHE_LOG_DIR}/error-fksdb.log
+        <Directory /absolute/path/to/fksdb/root/www/>
+            Options FollowSymLinks
+            AllowOverride All
+            Require all granted
+        </Directory>
+
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel notice
+
+        CustomLog ${APACHE_LOG_DIR}/access-fksdb.log combined
+</VirtualHost>
+```
+
 Database
 --------
 
