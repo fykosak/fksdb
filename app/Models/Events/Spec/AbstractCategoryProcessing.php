@@ -8,11 +8,9 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\YearCalculator;
 
 /**
  * Class AbstractCategoryProcessing
@@ -20,12 +18,10 @@ use FKSDB\Models\YearCalculator;
  */
 abstract class AbstractCategoryProcessing extends AbstractProcessing implements OptionsProvider {
 
-    protected YearCalculator $yearCalculator;
     protected ServiceSchool $serviceSchool;
     protected ServicePerson $servicePerson;
 
-    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
-        $this->yearCalculator = $yearCalculator;
+    public function __construct(ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePerson = $servicePerson;
     }
@@ -72,7 +68,6 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         $name = $baseHolder->getName();
         $personControls = $this->getControl("$name.person_id");
         $value = reset($personControls)->getValue();
-        /** @var ModelPerson $person */
         $person = $this->servicePerson->findByPrimary($value);
         return $person->getHistory($acYear);
     }
@@ -98,8 +93,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
     }
 
     protected function getAcYear(Holder $holder): int {
-        $event = $holder->getPrimaryHolder()->getEvent();
-        return $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
+        return $holder->getPrimaryHolder()->getEvent()->getAcYear();
     }
 
     public function getOptions(Field $field): array {

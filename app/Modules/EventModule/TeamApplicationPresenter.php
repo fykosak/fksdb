@@ -45,7 +45,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function renderDetail(): void {
         parent::renderDetail();
-        $this->template->acYear = $this->getAcYear();
+        $this->template->acYear = $this->getEvent()->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -65,7 +65,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
-        return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
+        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
     }
 
     /**

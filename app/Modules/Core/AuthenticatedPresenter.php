@@ -198,11 +198,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             return;
         }
         try {
-            $credentials = [
-                PasswordAuthenticator::USERNAME => $_SERVER['PHP_AUTH_USER'],
-                PasswordAuthenticator::PASSWORD => $_SERVER['PHP_AUTH_PW'],
-            ];
-            $login = $this->passwordAuthenticator->authenticate($credentials);
+            $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
             Debugger::log("$login signed in using HTTP authentication.");
 

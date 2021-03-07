@@ -9,19 +9,15 @@ use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class FlagProcessing extends AbstractProcessing {
 
-    private YearCalculator $yearCalculator;
-
     private ServiceSchool $serviceSchool;
 
-    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
-        $this->yearCalculator = $yearCalculator;
+    public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -30,7 +26,7 @@ class FlagProcessing extends AbstractProcessing {
             return;
         }
         $event = $holder->getPrimaryHolder()->getEvent();
-        $acYear = $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
+        $acYear = $event->getAcYear();
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {

@@ -44,7 +44,7 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllOrganisers(ModelLogin $login): array {
         $results = [];
-        foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
+        foreach ($login->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(':Org:Dashboard:default', [
                     'contestId' => $contestId,
@@ -82,7 +82,7 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllContestants(ModelPerson $person): array {
         $result = [];
-        foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
+        foreach ($person->getActiveContestants() as $contestId => $org) {
             $result[$contestId] = [
                 'link' => $this->link(':Public:Dashboard:default', [
                     'contestId' => $contestId,

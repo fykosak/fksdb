@@ -20,16 +20,13 @@ class SchoolCheckComponent extends BaseComponent {
 
     private ModelEvent $event;
 
-    private int $acYear;
-
     private ServiceSchool $serviceSchool;
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    public function __construct(ModelEvent $event, int $acYear, Container $container) {
+    public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->acYear = $acYear;
     }
 
     final public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
@@ -46,7 +43,7 @@ from event_participant ep
          JOIN e_fyziklani_participant efp USING (event_participant_id)
          JOIN e_fyziklani_team eft USING (e_fyziklani_team_id)
 WHERE ep.event_id = ?
-group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
+group by school_id', ...[$this->event->getAcYear(), array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
 
         foreach ($query as $row) {
             $schools[$row->school_id] = array_map(function ($teamId): ?ModelFyziklaniTeam {
@@ -67,7 +64,7 @@ group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($cu
         $schools = [];
         foreach ($team->getParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row->event_participant);
-            $history = $participant->getPerson()->getHistory($this->acYear);
+            $history = $participant->getPersonHistory();
             $schools[$history->school_id] = true;
         }
         return $schools;
