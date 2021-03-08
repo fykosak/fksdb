@@ -34,7 +34,7 @@ Initialization
 
 0.2) Run `git submodule init && git submodule update`
 
-0.3) Run `copmposer install`
+0.3) Run `composer install`
 
 Environment
 -----------
