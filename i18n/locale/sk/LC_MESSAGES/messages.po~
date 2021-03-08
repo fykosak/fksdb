@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-05 15:16+0100\n"
+"POT-Creation-Date: 2021-03-08 15:52+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -111,8 +111,9 @@ msgid "Select action"
 msgstr ""
 
 #: ../app/Modules/EventModule/Fyziklani/TaskPresenter.php:66
-msgid "Update tasks and add in case does not exists."
-msgstr ""
+#, fuzzy
+msgid "Update tasks and add in case does not exist."
+msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Modules/EventModule/Fyziklani/TaskPresenter.php:67
 msgid "Delete all tasks and insert new one."
@@ -848,7 +849,7 @@ msgid "Data validation"
 msgstr ""
 
 #: ../app/Modules/OrgModule/ValidationPresenter.php:19
-msgid "All test"
+msgid "All tests"
 msgstr ""
 
 #: ../app/Modules/OrgModule/ValidationPresenter.php:23
@@ -1578,7 +1579,7 @@ msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:59
 #, php-format
-msgid "Uploaded unregister corrected submit #%d"
+msgid "Uploaded unregistered corrected submit #%d"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:62
@@ -2241,7 +2242,7 @@ msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:127
 #, php-format
-msgid "Body byly upraveny. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
+msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:155
@@ -3696,7 +3697,7 @@ msgid "Academic year"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:463
-msgid "Kvůli zařazení do kategorie."
+msgid "For determinig the category."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:467
@@ -3736,7 +3737,7 @@ msgid "E-mail (father)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:524
-msgid "U cizinců číslo pasu."
+msgid "For foreigners passport ID."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:525
@@ -3748,7 +3749,7 @@ msgid "Date of birth"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:535
-msgid "Rodné číslo"
+msgid "Birth Id (for foreigners empty)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:536
@@ -3756,9 +3757,8 @@ msgid "U cizinců prázdné."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
-#, fuzzy
-msgid "Místo narození"
-msgstr "Dátum narodenia"
+msgid "Place of birth"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:541
 msgid "Město a okres (kvůli diplomům)."
@@ -3982,7 +3982,7 @@ msgstr ""
 #: ../app/config/exports.neon.neon2php:32
 #: ../app/config/exports.neon.neon2php:34
 #: ../app/config/exports.neon.neon2php:36
-msgid "Uložit AESOP"
+msgid "Save AESOP"
 msgstr ""
 
 #: ../data/events/tsaf/tsaf7.neon.neon2php:75
@@ -5334,6 +5334,10 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Místo narození"
+#~ msgstr "Dátum narodenia"
 
 #~ msgid "Datum narození"
 #~ msgstr "Dátum narodenia"

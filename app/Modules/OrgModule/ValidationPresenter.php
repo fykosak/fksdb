@@ -16,7 +16,7 @@ class ValidationPresenter extends BasePresenter {
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('All test'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('All tests'), 'fa fa-check'));
     }
 
     public function titlePreview(): void {

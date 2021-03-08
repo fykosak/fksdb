@@ -124,7 +124,7 @@ class Handler {
             'modified' => null,
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
-        $logger->log(new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,

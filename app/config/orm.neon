@@ -460,7 +460,7 @@ orm:
                 study_year:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearRow
-                    description: _('Kvůli zařazení do kategorie.')
+                    description: _('For determinig the category.')
                     title: _('Study year')
                 class:
                     type: string
@@ -521,7 +521,7 @@ orm:
                 id_number:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberRow
-                    description: _('U cizinců číslo pasu.')
+                    description: _('For foreigners passport ID.')
                     title: _('Id Card number (for foreigners the passport Id)')
                     permission: FULL
                 born:
@@ -532,25 +532,25 @@ orm:
                 born_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdRow
-                    title: _('Rodné číslo')
+                    title: _('Birth Id (for foreigners empty)')
                     description: _('U cizinců prázdné.')
                     permission: FULL
                 birthplace:
                     type: string
-                    title: _('Místo narození')
+                    title: _('Place of birth')
                     description: _('Město a okres (kvůli diplomům).')
                     permission:
                         read: FULL
                         write: FULL
                 career:
-                    title: _(Co právě dělá)
+                    title: _(Current role)
                     type: text
-                    description: _(Zobrazeno v seznamu organizátorů)
+                    description: _(Shown int the organizers' list)
                 im:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImRow
                     permission: RESTRICT
-                    title: _('ICQ, Jabber, apod.')
+                    title: _('ICQ, Jabber, etc.')
                 agreed:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\AgreedRow

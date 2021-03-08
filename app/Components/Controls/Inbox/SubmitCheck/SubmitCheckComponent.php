@@ -56,7 +56,7 @@ class SubmitCheckComponent extends BaseComponent {
             }
             if (!$submit->corrected && $this->correctedStorage->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
+                $this->flashMessage(sprintf(_('Uploaded unregistered corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
             }
         }
         $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? ILogger::WARNING : ILogger::SUCCESS);

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-05 15:22+0100\n"
+"POT-Creation-Date: 2021-03-08 15:54+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -111,8 +111,8 @@ msgid "Select action"
 msgstr "Vybrat měnu"
 
 #: ../app/Modules/EventModule/Fyziklani/TaskPresenter.php:66
-msgid "Update tasks and add in case does not exists."
-msgstr ""
+msgid "Update tasks and add in case does not exist."
+msgstr "Aktualizovat a přidat pokud neexistuje"
 
 #: ../app/Modules/EventModule/Fyziklani/TaskPresenter.php:67
 msgid "Delete all tasks and insert new one."
@@ -269,7 +269,7 @@ msgstr "Seznam akcí"
 
 #: ../app/Modules/Core/AuthenticatedPresenter.php:181
 msgid "Successful token authentication."
-msgstr ""
+msgstr "Úspěšné přihlášení přes token"
 
 #: ../app/Modules/Core/AuthenticatedPresenter.php:247
 msgid "Authentication failure."
@@ -329,7 +329,7 @@ msgid "An existing account found. To continue, please sign in."
 msgstr "Nalezen existující účet. Pro pokračování se prosím přihlaste."
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:142
-#, fuzzy, php-format
+#, php-format
 msgid "%s is already contestant in %s."
 msgstr "Upravit učitele %s"
 
@@ -405,7 +405,7 @@ msgstr "Registrace není otevřena"
 
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:173
 msgid "Application machine has no available transitions."
-msgstr ""
+msgstr "Žádné přechody nejsou dostupné"
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:73
 msgid "Submit a solution"
@@ -485,11 +485,11 @@ msgstr "Cyhba při invalidaci"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:127
 msgid "Points recounted."
-msgstr ""
+msgstr "Body přepočítány"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:129
 msgid "Error while recounting."
-msgstr ""
+msgstr "Chyba při přepočítávání"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:147
 msgid "Calculate quiz points."
@@ -745,7 +745,6 @@ msgid "XML file (new XML)"
 msgstr "XML soubor (nový formát XML s úlohami)"
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:70
-#: ../app/config/orm.neon.neon2php:640
 msgid "Series"
 msgstr "Série"
 
@@ -839,8 +838,9 @@ msgid "Data validation"
 msgstr "Validace údajů"
 
 #: ../app/Modules/OrgModule/ValidationPresenter.php:19
-msgid "All test"
-msgstr ""
+#, fuzzy
+msgid "All tests"
+msgstr "Všechny testy"
 
 #: ../app/Modules/OrgModule/ValidationPresenter.php:23
 msgid "Select test"
@@ -872,7 +872,7 @@ msgstr ""
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:83
 #: ../app/config/orm.neon.neon2php:297
 msgid "Login"
-msgstr ""
+msgstr "Přihlšovací jméno"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:87
 #: ../app/Models/Authentication/AccountManager.php:115
@@ -904,7 +904,7 @@ msgstr "Vložte přihlašovací jméno nebo emailovou adresu"
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:206
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:209
 #: ../app/Components/Forms/Factories/LoginFactory.php:39
-#: ../app/config/orm.neon.neon2php:290 ../app/config/orm.neon.neon2php:823
+#: ../app/config/orm.neon.neon2php:290
 msgid "Password"
 msgstr "Heslo"
 
@@ -1020,6 +1020,8 @@ msgid ""
 "There is (formally) different person with email %value. Probably it is a "
 "duplicate so it substituted original data in the form."
 msgstr ""
+"Existuje formálně odlišná osoba se stejným mailem %value. Pravděpodobněse "
+"jedná o duplicitu, do dotazníku byla vložena původní data."
 
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:273
 msgid "Confirmation is necessary to proceed."
@@ -1027,9 +1029,8 @@ msgstr "Schválení je nutné pro pokračování"
 
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:275
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:17
-#, fuzzy
 msgid "Field %label is required."
-msgstr "\"Adresa pro odpovědi\" je vyžadovaná"
+msgstr "Pole %label je vyžadováno"
 
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:49
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/EmailRow.php:27
@@ -1148,15 +1149,17 @@ msgid "Parameter name is too long."
 msgstr "Jméno parametru je příliš dlouhé."
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:84
+#, fuzzy
 msgid ""
 "The name of the parameter can only contain lowercase letters of the english "
 "alphabet, numbers, and an underscore."
-msgstr "Jméno parametru může obsahovat pouze malá písmena anglické abecedy, čísla a podrtžítko"
+msgstr ""
+"Jméno parametru může obsahovat pouze malá písmena anglické abecedy, čísla a "
+"podrtžítko"
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:86
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:60
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:16
-#: ../app/config/orm.neon.neon2php:951
 msgid "Description"
 msgstr "Popisek"
 
@@ -1171,7 +1174,7 @@ msgstr "Výchozí hodnota"
 
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:120
 msgid "Parameter %label is numeric."
-msgstr ""
+msgstr "Parametr %label je numerický"
 
 #: ../app/Components/Forms/Factories/AddressFactory.php:49
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:9
@@ -1334,7 +1337,7 @@ msgstr "Celý název školy"
 #: ../app/Components/Grids/SchoolsGrid.php:53
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:10
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:15
-#: ../app/config/orm.neon.neon2php:127 ../app/config/orm.neon.neon2php:742
+#: ../app/config/orm.neon.neon2php:127
 msgid "Name"
 msgstr "Název"
 
@@ -1397,14 +1400,13 @@ msgstr "Aktivní záznam"
 #: ../app/Components/Controls/Entity/EventOrgFormComponent.php:44
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:51
 #: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:229
-#: ../app/config/orm.neon.neon2php:688 ../app/config/orm.neon.neon2php:793
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:170
 msgid "Note"
 msgstr "Poznámka"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:60
 #: ../app/Components/Grids/ContestantsGrid.php:59
-#: ../app/config/orm.neon.neon2php:455 ../app/config/orm.neon.neon2php:608
+#: ../app/config/orm.neon.neon2php:455
 msgid "School"
 msgstr "Škola"
 
@@ -1563,8 +1565,8 @@ msgstr "Opravený submit #%d je rozbitý"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:59
 #, php-format
-msgid "Uploaded unregister corrected submit #%d"
-msgstr ""
+msgid "Uploaded unregistered corrected submit #%d"
+msgstr "Submit #%d je opravený a uploadovaný, ale opravení není registrováno"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:62
 #, php-format
@@ -1696,7 +1698,6 @@ msgstr "Dotaz upraven"
 
 #: ../app/Components/Controls/Entity/StoredQueryFormComponent.php:91
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:31
-#: ../app/config/orm.neon.neon2php:941
 msgid "SQL"
 msgstr ""
 
@@ -1730,7 +1731,6 @@ msgid "Item \"%s\" has been saved."
 msgstr "Položka \"%s\" uložena."
 
 #: ../app/Components/Controls/Entity/ScheduleItemFormContainer.php:84
-#: ../app/config/orm.neon.neon2php:854
 msgid "Schedule group Id"
 msgstr "Id skupiny programu."
 
@@ -1868,7 +1868,6 @@ msgid "Study year"
 msgstr "Studijní ročník"
 
 #: ../app/Components/Grids/Fyziklani/TaskGrid.php:52
-#: ../app/config/orm.neon.neon2php:649 ../app/config/orm.neon.neon2php:739
 msgid "Task Id"
 msgstr "ID úlohy"
 
@@ -1928,7 +1927,7 @@ msgstr "Odevzdání neexistuje."
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:173
 #: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:66
-#: ../app/config/orm.neon.neon2php:203 ../app/config/orm.neon.neon2php:831
+#: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
 #: ../typescript/src/apps/fyziklani/submitForm/components/outputs/valueDisplay.tsx.tsx2php:29
 msgid "Team"
@@ -1942,7 +1941,6 @@ msgstr "--vyber tým--"
 #: ../app/Components/Grids/Fyziklani/Submits/SubmitsGrid.php:29
 #: ../app/Components/Grids/SubmitsGrid.php:62
 #: ../app/Modules/EventModule/Fyziklani/templates/Submit/detail.latte.latte2php:7
-#: ../app/config/orm.neon.neon2php:637
 #: ../typescript/src/apps/fyziklaniResults/statistics/components/correlation/table.tsx.tsx2php:71
 #: ../typescript/src/apps/fyziklani/submitForm/components/outputs/valueDisplay.tsx.tsx2php:32
 msgid "Task"
@@ -1955,7 +1953,7 @@ msgstr "--vyber úlohu--"
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:175
 #: ../typescript/src/apps/fyziklani/submitForm/components/formSection.tsx.tsx2php:54
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:175
 #, fuzzy
@@ -1964,7 +1962,7 @@ msgstr "Název úlohy"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:176
 msgid "Only not revoked submits"
-msgstr ""
+msgstr "Pouze neodvolané submity"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:177
 #: ../app/Components/Grids/BaseGrid.php:154
@@ -1980,49 +1978,43 @@ msgid "Apply filter"
 msgstr "Filtrovat"
 
 #: ../app/Components/Grids/Application/Person/NewApplicationsGrid.php:54
-#, fuzzy
 msgid "Create application"
-msgstr "Přihlášky týmů"
+msgstr "Vytvořit přihlášku"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:47
-#, fuzzy
 msgid "Person A"
-msgstr "Osoba"
+msgstr "Osoba A"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:51
-#, fuzzy
 msgid "Person B"
-msgstr "Osoba"
+msgstr "Osoba B"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:55
 msgid "Similarity"
-msgstr ""
+msgstr "Podobnost"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:62
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:63
-#, fuzzy
 msgid "Merge A<-B"
 msgstr "Sloučit A<-B"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:77
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:78
-#, fuzzy
 msgid "Merge B<-A"
 msgstr "Sloučit B<-A"
 
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:91
 #: ../app/Components/Grids/Deduplicate/PersonsGrid.php:92
 msgid "It's not a duplicity"
-msgstr ""
+msgstr "Není to duplicita"
 
 #: ../app/Components/Grids/SubmitsGrid.php:66
-#, fuzzy
 msgid "Timestamp"
-msgstr "Časový histogram"
+msgstr "Časová známka"
 
 #: ../app/Components/Grids/SubmitsGrid.php:67
 msgid "Method of handing"
-msgstr ""
+msgstr "Metoda řešení"
 
 #: ../app/Components/Grids/SubmitsGrid.php:82
 #, php-format
@@ -2030,24 +2022,22 @@ msgid "Do you really want to take the solution of task %s back?"
 msgstr "Opravdu vzít zpět řešení úlohy %s ?"
 
 #: ../app/Components/Grids/SubmitsGrid.php:85
-#, fuzzy
 msgid "Download original"
 msgstr "Stáhnout originál"
 
 #: ../app/Components/Grids/SubmitsGrid.php:92
-#, fuzzy
 msgid "Download corrected"
-msgstr "Stáhnout umístění týmů do místností"
+msgstr "Stáhnout opravený"
 
 #: ../app/Components/Grids/SubmitsGrid.php:110
-#, fuzzy, php-format
+#, php-format
 msgid "Submitting of task %s cancelled."
 msgstr "Odevzdání úlohy %s zrušeno."
 
 #: ../app/Components/Grids/SubmitsGrid.php:115
-#, fuzzy, php-format
+#, php-format
 msgid "There was an error during the deletion of task %s."
-msgstr "Během mazání úlohy došlo k chybě."
+msgstr "Během mazání úlohy %s došlo k chybě."
 
 #: ../app/Components/Grids/Schedule/GroupsGrid.php:45
 msgid "Items count"
@@ -2070,9 +2060,9 @@ msgid "Link"
 msgstr "Odkaz"
 
 #: ../app/Models/Exceptions/BadTypeException.php:15
-#, fuzzy, php-format
+#, php-format
 msgid "Expected type %s, got %s."
-msgstr "Očekávaná třída %s, ale je %s"
+msgstr "Očekávaný typ %s, ale je %s"
 
 #: ../app/Models/Exceptions/ContestNotFoundException.php:12
 #, php-format
@@ -2109,7 +2099,7 @@ msgstr "Nepřipravený účet."
 
 #: ../app/Models/Authentication/TokenAuthenticator.php:41
 msgid "Invalid authentication token."
-msgstr ""
+msgstr "Neplatný autentizační token"
 
 #: ../app/Models/Authentication/GoogleAuthenticator.php:67
 msgid "Email not found in the google account."
@@ -2187,7 +2177,7 @@ msgstr "Úloha %s \"%s\" nebyla aktualizována"
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:66
 msgid "There was an error"
-msgstr ""
+msgstr "Vyskytla se chyba"
 
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:57
 #, php-format
@@ -2197,7 +2187,7 @@ msgstr "Přeskočeno neexistující ID týmu %d."
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:73
 #, php-format
 msgid "Team %s (%d, %s) does not have an assigned room."
-msgstr ""
+msgstr "Tým %s (%d, %s) neodpovídá žádnému registrovanému týmu"
 
 #: ../app/Models/Fyziklani/Submit/ControlMismatchException.php:14
 msgid "Wrong task number."
@@ -2205,7 +2195,7 @@ msgstr "Špatné číslo úlohy."
 
 #: ../app/Models/Fyziklani/Submit/PointsMismatchException.php:14
 msgid "Points mismatch"
-msgstr ""
+msgstr "Neshoda v bodech"
 
 #: ../app/Models/Fyziklani/Submit/AlreadyRevokedSubmitException.php:15
 msgid "Submit is already revoked"
@@ -2231,14 +2221,14 @@ msgid "Task given and validated."
 msgstr "Úloha zadána a ověřena."
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:127
-#, php-format
-msgid "Body byly upraveny. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-msgstr ""
+#, fuzzy, php-format
+msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
+msgstr "Bodování bylo upravené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:155
-#, fuzzy, php-format
+#, php-format
 msgid "Submit %d has been revoked."
-msgstr "Odevzdání bylo smazáno."
+msgstr "Odevzdání %d bylo smazáno."
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:185
 #, php-format
@@ -2256,9 +2246,9 @@ msgid "Team %s has closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 
 #: ../app/Models/Fyziklani/Closing/NotCheckedSubmitsException.php:16
-#, fuzzy, php-format
+#, php-format
 msgid "Team %s has non checked submits"
-msgstr "Tým %s má už uzavřené bodování"
+msgstr "Tým %s má nezkontrolovaná odevzdání"
 
 #: ../app/Models/Fyziklani/Closing/AlreadyClosedException.php:16
 #, php-format
@@ -2266,9 +2256,9 @@ msgid "Team %s has already closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 
 #: ../app/Models/Fyziklani/Ranking/NotClosedTeamException.php:16
-#, fuzzy, php-format
+#, php-format
 msgid "Team %s (%d) has not closed submitting"
-msgstr "Tým %s má už uzavřené bodování"
+msgstr "Tým %s (%d) nemá uzavřené bodování"
 
 #: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:66
 msgid "Rank"
@@ -2374,7 +2364,7 @@ msgstr "Osoba \"%s\" je již na akci přihlášena."
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:14
 #, php-format
 msgid "Person %s is already organiser"
-msgstr ""
+msgstr "Osoba %s již organizuje"
 
 #: ../app/Models/ORM/Services/Exceptions/InvalidPostalCode.php:13
 #, php-format
@@ -2448,7 +2438,7 @@ msgstr "Vyberte typ akce"
 
 #: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniSubmit/PointsRow.php:25
 msgid "revoked"
-msgstr ""
+msgstr "odvoláno"
 
 #: ../app/Models/ORM/Columns/Tables/Fyziklani/FyziklaniTeam/OpenedSubmittingRow.php:24
 msgid "Opened"
@@ -2563,7 +2553,7 @@ msgstr "https://fykos.cz/doc/souhlas.pdf"
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/CitizenshipRow.php:28
 msgid "Choose citizenship"
-msgstr ""
+msgstr "Vybrat státní příslušnost"
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/HealthInsuranceRow.php:48
 msgid "Choose the insurance company"
@@ -2598,23 +2588,20 @@ msgid ""
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/QIDRow.php:20
-#, fuzzy
 msgid "The query name is too long"
-msgstr "Jméno parametru je příliš dlouhé."
+msgstr "Jméno dotazu je příliš dlouhé."
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/QIDRow.php:21
 msgid "QID can contain only english letters, numbers and dots."
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/NameColumnFactory.php:18
-#, fuzzy
 msgid "The query name must be filled in."
-msgstr "Jméno parametru je příliš dlouhé."
+msgstr "Jméno dotazu je příliš dlouhé."
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/NameColumnFactory.php:19
-#, fuzzy
 msgid "The query name is too long."
-msgstr "Jméno parametru je příliš dlouhé."
+msgstr "Jméno dotazu je příliš dlouhé."
 
 #: ../app/Models/ORM/Columns/Types/PhoneColumnFactory.php:45
 msgid "+XXXXXXXXXXXX"
@@ -2625,7 +2612,6 @@ msgid "Use an international format, starting with \"+\""
 msgstr "Pište v mezinárodním formátu začínajícím \"+\"."
 
 #: ../app/Models/ORM/Columns/Types/PhoneColumnFactory.php:54
-#, fuzzy
 msgid "Phone number is not valid. Please insert a valid number."
 msgstr ""
 "Telefonní číslo není v požadovaném formátu. Prosíme, použij mezinárodní "
@@ -2646,14 +2632,13 @@ msgid "Nelze provést akci '%s' v automatu '%s'."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/EventNotFoundException.php:14
-#, fuzzy
 msgid "Event not found."
-msgstr "Organizátor akce"
+msgstr "Akce nenalezena"
 
 #: ../app/Models/Events/Exceptions/ConfigurationNotFoundException.php:12
 #, php-format
 msgid "Configuration for event %s (%d-%s) not found"
-msgstr ""
+msgstr "Nastavení akce %s (%d-%s) nenalezeno"
 
 #: ../app/Models/Events/FormAdjustments/PrivacyPolicy.php:54
 msgid "You have to agree with the privacy policy before submitting."
@@ -2682,7 +2667,7 @@ msgstr "Nastavit nové herní heslo"
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:28
 msgid "Not valid $rulesVersion."
-msgstr ""
+msgstr "Neplatné $rulesVersion"
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:43
 #: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:38
@@ -2804,7 +2789,7 @@ msgstr "%s(%s) nových hodnot: %s"
 #: ../app/Models/Persons/Deduplication/TableMerger.php:217
 #, php-format
 msgid "%s(%s) merged and deleted."
-msgstr ""
+msgstr "%s(%s) sjednoceno a smazáno"
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:221
 #, php-format
@@ -2861,7 +2846,7 @@ msgstr "Uložit CSV s uvozovkami"
 #: ../app/Models/Entity/CannotAccessModelException.php:15
 #, php-format
 msgid "Can not access model %s from %s"
-msgstr ""
+msgstr "Nelze získat přístup k modelu %s z %s"
 
 #: ../app/Models/Entity/ModelNotFoundException.php:14
 #, fuzzy
@@ -2877,7 +2862,7 @@ msgstr "Nepodporovaný formát"
 msgid ""
 "Filters to only the category given in \"category\" and calculates rank "
 "within it."
-msgstr ""
+msgstr "Filtruje poute na danou kategorii a vypočítá počadí v ní"
 
 #: ../libs/NiftyGrid/Grid.php:784 ../libs/NiftyGrid/Grid.php:786
 msgid "No row selected."
@@ -2980,7 +2965,7 @@ msgstr "Všechny týmy, obsahuje kategorii id pozice"
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:9
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:13
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:17
-#: ../app/config/orm.neon.neon2php:797 ../data/events/fol/fol1.neon.neon2php:88
+#: ../data/events/fol/fol1.neon.neon2php:88
 #: ../typescript/src/apps/fyziklaniResults/presentation/components/headline.tsx.tsx2php:20
 #: ../typescript/src/apps/fyziklaniResults/presentation/components/headline.tsx.tsx2php:26
 #: ../typescript/src/apps/fyziklaniResults/table/middleware/filters/filters.ts.ts2php:7
@@ -3067,7 +3052,7 @@ msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:55
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:62
 msgid "Log out"
@@ -3087,20 +3072,19 @@ msgstr "Správa"
 
 #: ../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:2
 msgid "Go to the old submit system"
-msgstr ""
+msgstr "Vrátit se ke starému systému nahrávání"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:2
 msgid "New submit system"
-msgstr ""
+msgstr "Nový systém nahrávání"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:9
 msgid "No tasks available to submit."
-msgstr ""
+msgstr "Žádné dostupné úlohy na nahrání"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:13
-#, fuzzy
 msgid "Register for the next year"
-msgstr "Tým zařazen do kategorie %s."
+msgstr "Zaregistrovat se do dalšího ročníku"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:17
 msgid "Next year"
@@ -3140,11 +3124,10 @@ msgstr "Takto vypadáš, když se pokoušíš hledat sám/sama sebe"
 
 #: ../app/Modules/OrgModule/templates/Spam/detail.latte.latte2php:15
 msgid "Sent"
-msgstr ""
+msgstr "Odeslané"
 
 #: ../app/Modules/OrgModule/templates/Spam/detail.latte.latte2php:23
-#: ../app/config/orm.neon.neon2php:426 ../app/config/orm.neon.neon2php:723
-#: ../app/config/orm.neon.neon2php:801
+#: ../app/config/orm.neon.neon2php:426
 msgid "Created"
 msgstr "Vytvořeno"
 
@@ -3154,27 +3137,24 @@ msgid "Text"
 msgstr "Text"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:18
-#: ../app/config/orm.neon.neon2php:662 ../app/config/orm.neon.neon2php:858
 msgid "Type"
 msgstr "Typ"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:37
 msgid "Execute query"
-msgstr ""
+msgstr "Spustot dotaz"
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:40
-#, fuzzy
 msgid "Edit query"
-msgstr "Upravit program"
+msgstr "Upravit dotaz"
 
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
-#, fuzzy
 msgid "Forgotten password"
-msgstr "Heslo"
+msgstr "Zapomenuté heslo"
 
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:11
 msgid "Login via Google account"
-msgstr ""
+msgstr "Přihlásit se pomocí Google účtu"
 
 #: ../app/Modules/CoreModule/templates/Settings/default.latte.latte2php:3
 msgid "Preferred language"
@@ -3182,53 +3162,49 @@ msgstr "Preferovaný jazyk"
 
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:4
 msgid "My applications as a teacher"
-msgstr ""
+msgstr "Moje přihlášky jakožto učitele"
 
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:6
 msgid "Events with open registration"
-msgstr ""
+msgstr "Akce s otevřenou registrací"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
 msgid "You are not authorized to view this page."
-msgstr ""
+msgstr "Nejste oprávněni ke zobrazení této stránky"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:11
-#, fuzzy
 msgid "Submitted solutions:"
-msgstr "Detail akce"
+msgstr "Odevzdaná řešení:"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:13
-#, fuzzy
 msgid "Register as a contestant"
-msgstr "Soutěžící"
+msgstr "Registrovat se jako soutěžící"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:14
 msgid ""
 "It is necessary to fill in school and corespodence details and/or register "
 "for the new year"
-msgstr ""
+msgstr "Je potřeba vyplnit školní a korespondenční údaje pro nový ročník"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:16
-#, fuzzy
 msgid "become an organiser"
-msgstr "Vytvořit nového učitele"
+msgstr "Stát se organizátorem"
 
 #: ../app/Modules/CoreModule/templates/Error/403.latte.latte2php:17
 msgid "ask for a role grant"
-msgstr ""
+msgstr "Požádat o udělení role"
 
 #: ../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
-#, fuzzy
 msgid "Chosen method is not supported."
-msgstr "Měna %s není podporována"
+msgstr "Vybraná metoda není podporována"
 
 #: ../app/Modules/CoreModule/templates/Error/410.latte.latte2php:8
 msgid "Gone!"
-msgstr ""
+msgstr "Fuč!"
 
 #: ../app/Modules/CoreModule/templates/Error/410.latte.latte2php:9
 msgid "This page is no longer available and will not be available again."
-msgstr ""
+msgstr "Tato stránka již není dostupná a už nikdy nebude"
 
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:2
 msgid "Contestant"
@@ -3241,23 +3217,23 @@ msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/Seating/@layout.latte.latte2php:125
 msgid "A sector"
-msgstr ""
+msgstr "Sektor A"
 
 #: ../app/Components/Controls/Fyziklani/Seating/@layout.latte.latte2php:126
 msgid "B sector"
-msgstr ""
+msgstr "Sektor B"
 
 #: ../app/Components/Controls/Fyziklani/Seating/@layout.latte.latte2php:127
 msgid "C sector"
-msgstr ""
+msgstr "Sektor C"
 
 #: ../app/Components/Controls/Fyziklani/Seating/@layout.latte.latte2php:128
 msgid "D sector"
-msgstr ""
+msgstr "Sektor D"
 
 #: ../app/Components/Controls/Fyziklani/Seating/@layout.latte.latte2php:129
 msgid "E sector"
-msgstr ""
+msgstr "Sektor E"
 
 #: ../app/Components/Controls/Fyziklani/RoutingDownload.latte.latte2php:2
 msgid "Rooms"
@@ -3304,7 +3280,6 @@ msgid "Contest"
 msgstr "Soutěž"
 
 #: ../app/Components/Controls/Stalking/Components/layout.flag.latte.latte2php:37
-#: ../app/config/orm.neon.neon2php:727
 msgid "Modified"
 msgstr "Změněno"
 
@@ -3432,7 +3407,7 @@ msgstr "Příjemce"
 msgid "Contestant Id"
 msgstr "Id soutěžícího"
 
-#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:655
+#: ../app/config/orm.neon.neon2php:55
 #: ../typescript/src/apps/chart/contestantsPerYears.tsx.tsx2php:33
 msgid "Year"
 msgstr "Rok"
@@ -3462,8 +3437,7 @@ msgid "Bcc"
 msgstr "Skrytá kopie"
 
 #: ../app/config/orm.neon.neon2php:97 ../app/config/orm.neon.neon2php:206
-#: ../app/config/orm.neon.neon2php:390 ../app/config/orm.neon.neon2php:717
-#: ../app/config/orm.neon.neon2php:785
+#: ../app/config/orm.neon.neon2php:390
 msgid "State"
 msgstr "Stav"
 
@@ -3477,7 +3451,7 @@ msgstr "ID akce"
 
 #: ../app/config/orm.neon.neon2php:124
 msgid "In Neon syntax, the scheme is specific for each event."
-msgstr ""
+msgstr "V Neon syntaxi, schéma je specifické pro každou akci"
 
 #: ../app/config/orm.neon.neon2php:128
 msgid "For the camps, it is place."
@@ -3614,7 +3588,7 @@ msgstr "Do"
 
 #: ../app/config/orm.neon.neon2php:317
 msgid "For ordering in the organizers list"
-msgstr ""
+msgstr "Pro řazení v seznamu organizátorů"
 
 #: ../app/config/orm.neon.neon2php:318
 msgid "Order"
@@ -3683,8 +3657,8 @@ msgid "Academic year"
 msgstr "Akademický rok"
 
 #: ../app/config/orm.neon.neon2php:463
-msgid "Kvůli zařazení do kategorie."
-msgstr ""
+msgid "For determinig the category."
+msgstr "Kvůli zařazení do kategorie"
 
 #: ../app/config/orm.neon.neon2php:467
 msgid "Class"
@@ -3702,7 +3676,7 @@ msgstr "Státní příslušnost"
 msgid "Homepage"
 msgstr "Webová stránka"
 
-#: ../app/config/orm.neon.neon2php:500 ../app/config/orm.neon.neon2php:789
+#: ../app/config/orm.neon.neon2php:500
 msgid "Phone"
 msgstr "Telefon"
 
@@ -3723,8 +3697,8 @@ msgid "E-mail (father)"
 msgstr "E-mail na otce"
 
 #: ../app/config/orm.neon.neon2php:524
-msgid "U cizinců číslo pasu."
-msgstr ""
+msgid "For foreigners passport ID."
+msgstr "U cizinců číslo pasu"
 
 #: ../app/config/orm.neon.neon2php:525
 msgid "Id Card number (for foreigners the passport Id)"
@@ -3735,220 +3709,31 @@ msgid "Date of birth"
 msgstr "Datum narození"
 
 #: ../app/config/orm.neon.neon2php:535
-msgid "Rodné číslo"
-msgstr ""
+msgid "Birth Id (for foreigners empty)"
+msgstr "Rodné číslo"
 
 #: ../app/config/orm.neon.neon2php:536
 msgid "U cizinců prázdné."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
-msgid "Místo narození"
-msgstr ""
+#, fuzzy
+msgid "Place of birth"
+msgstr "Datum narození"
 
 #: ../app/config/orm.neon.neon2php:541
 msgid "Město a okres (kvůli diplomům)."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:546
-msgid "Co právě dělá"
-msgstr ""
+#, fuzzy
+msgid "Current role"
+msgstr "Role vůči akci"
 
 #: ../app/config/orm.neon.neon2php:548
-msgid "Zobrazeno v seznamu organizátorů"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:553
-msgid "ICQ, Jabber, apod."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:557
-msgid "I agree with the privacy policy"
-msgstr "Souhlasím s podmínkami zpracování osobních údajů"
-
-#: ../app/config/orm.neon.neon2php:643 ../app/config/orm.neon.neon2php:745
-msgid "Label"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:646 ../app/config/orm.neon.neon2php:867
-#: ../app/config/orm.neon.neon2php:898
-msgid "Name cs"
-msgstr "Jméno česky"
-
-#: ../app/config/orm.neon.neon2php:652 ../app/config/orm.neon.neon2php:732
-#: ../app/config/orm.neon.neon2php:812
-msgid "Points"
-msgstr "Bodů"
-
-#: ../app/config/orm.neon.neon2php:673
-msgid "Cooperation status"
-msgstr "Korelační statistiky"
-
-#: ../app/config/orm.neon.neon2php:677
-msgid "Teaches since"
-msgstr "Učitelem od"
-
-#: ../app/config/orm.neon.neon2php:681
-msgid "Teaches until"
-msgstr "Učitelem do"
-
-#: ../app/config/orm.neon.neon2php:684
-msgid "Number of brochures"
-msgstr "# brožurek"
-
-#: ../app/config/orm.neon.neon2php:685
-msgid "Number of brochures/propagation items, that he wants to send."
-msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
-
-#: ../app/config/orm.neon.neon2php:714
 #, fuzzy
-msgid "Submit Id"
-msgstr "Odevzdané"
-
-#: ../app/config/orm.neon.neon2php:755
-msgid "Game start"
-msgstr "Začátek hry"
-
-#: ../app/config/orm.neon.neon2php:758
-msgid "Game end"
-msgstr "Konec hry"
-
-#: ../app/config/orm.neon.neon2php:761
-#, fuzzy
-msgid "Results display"
-msgstr "Zobrazení výsledků"
-
-#: ../app/config/orm.neon.neon2php:764
-#, fuzzy
-msgid "Results hide"
-msgstr "Skrytí výsledků"
-
-#: ../app/config/orm.neon.neon2php:767
-msgid "Refresh delay"
-msgstr "Obnovovací čas"
-
-#: ../app/config/orm.neon.neon2php:771
-msgid "Hard display"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:775
-msgid "Available points"
-msgstr "Dostupné body"
-
-#: ../app/config/orm.neon.neon2php:782
-msgid "Team Id"
-msgstr "ID týmu"
-
-#: ../app/config/orm.neon.neon2php:804
-msgid "Rank in category"
-msgstr "Pořadí v kategorii"
-
-#: ../app/config/orm.neon.neon2php:808
-msgid "Total rank"
-msgstr "Celkové pořadí"
-
-#: ../app/config/orm.neon.neon2php:816
-msgid "Game language"
-msgstr "Herní jazyk"
-
-#: ../app/config/orm.neon.neon2php:819
-msgid "Force A"
-msgstr "Chce kat. A"
-
-#: ../app/config/orm.neon.neon2php:827 ../data/events/fol/fol1.neon.neon2php:83
-msgid "Team name"
-msgstr "Jméno týmu"
-
-#: ../app/config/orm.neon.neon2php:835
-#, fuzzy
-msgid "Submit opened?"
-msgstr "Odevzdané"
-
-#: ../app/config/orm.neon.neon2php:861
-msgid "Schedule start"
-msgstr "Program začíná"
-
-#: ../app/config/orm.neon.neon2php:864
-msgid "Schedule end"
-msgstr "Program končí"
-
-#: ../app/config/orm.neon.neon2php:870 ../app/config/orm.neon.neon2php:895
-msgid "Name en"
-msgstr "Jméno anglicky"
-
-#: ../app/config/orm.neon.neon2php:874
-msgid "Group name"
-msgstr "Jméno skupiny"
-
-#: ../app/config/orm.neon.neon2php:881
-#, fuzzy
-msgid "Schedule item Id"
-msgstr "Položku programu  #%d"
-
-#: ../app/config/orm.neon.neon2php:884
-msgid "Require Id number"
-msgstr "Číslo občanského průkazu je vyžadováno"
-
-#: ../app/config/orm.neon.neon2php:888
-msgid "Price CZK"
-msgstr "Cena Kč"
-
-#: ../app/config/orm.neon.neon2php:892
-msgid "Price EUR"
-msgstr "Cena EUR"
-
-#: ../app/config/orm.neon.neon2php:902
-#, fuzzy
-msgid "Item name"
-msgstr "Jméno týmu"
-
-#: ../app/config/orm.neon.neon2php:906
-#, fuzzy
-msgid "Description en"
-msgstr "Konec registrace"
-
-#: ../app/config/orm.neon.neon2php:909
-#, fuzzy
-msgid "Description cs"
-msgstr "Popisek"
-
-#: ../app/config/orm.neon.neon2php:912
-msgid "Total capacity"
-msgstr "Celková kapacita"
-
-#: ../app/config/orm.neon.neon2php:917
-#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:22
-msgid "Free capacity"
-msgstr "Volná kapacita"
-
-#: ../app/config/orm.neon.neon2php:921
-#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:17
-msgid "Used capacity"
-msgstr "Již zabraná kapacita"
-
-#: ../app/config/orm.neon.neon2php:933
-msgid "QID"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:937
-msgid "Tags"
-msgstr "Tagy"
-
-#: ../app/config/orm.neon.neon2php:945
-msgid "Query name"
-msgstr "Název"
-
-#: ../app/config/orm.neon.neon2php:948
-msgid "Query Id"
-msgstr "ID"
-
-#: ../app/config/orm.neon.neon2php:954
-msgid "PHP post processing"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:955
-msgid "Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi."
-msgstr ""
+msgid "Shown int the organizers"
+msgstr "Pro řazení v seznamu organizátorů"
 
 #: ../app/config/exports.neon.neon2php:12
 #: ../app/config/exports.neon.neon2php:14
@@ -4825,6 +4610,10 @@ msgstr "Zrušit přihlášku"
 msgid "Delete the team."
 msgstr "vyber tým"
 
+#: ../data/events/fol/fol1.neon.neon2php:83
+msgid "Team name"
+msgstr "Jméno týmu"
+
 #: ../data/events/fol/fol1.neon.neon2php:93
 #, fuzzy
 msgid "Contact address"
@@ -4843,7 +4632,9 @@ msgstr "Herní heslo"
 msgid ""
 "For logging into the game system. An empty field will keep the original "
 "password."
-msgstr "Pro přihlášení do herního systému. Pokud je prázdné, ponechá se původní heslo."
+msgstr ""
+"Pro přihlášení do herního systému. Pokud je prázdné, ponechá se původní "
+"heslo."
 
 #: ../data/events/fol/fol1.neon.neon2php:123
 msgid "Add a member"
@@ -5313,6 +5104,14 @@ msgstr ""
 msgid "...reading code..."
 msgstr ""
 
+#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:17
+msgid "Used capacity"
+msgstr "Již zabraná kapacita"
+
+#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:22
+msgid "Free capacity"
+msgstr "Volná kapacita"
+
 #: ../typescript/src/apps/events/schedule/components/index.tsx.tsx2php:41
 #, fuzzy
 msgid "No items found."
@@ -5321,6 +5120,122 @@ msgstr "Počet položek"
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr "zdarma"
+
+#~ msgid "I agree with the privacy policy"
+#~ msgstr "Souhlasím s podmínkami zpracování osobních údajů"
+
+#~ msgid "Name cs"
+#~ msgstr "Jméno česky"
+
+#~ msgid "Points"
+#~ msgstr "Bodů"
+
+#~ msgid "Cooperation status"
+#~ msgstr "Korelační statistiky"
+
+#~ msgid "Teaches since"
+#~ msgstr "Učitelem od"
+
+#~ msgid "Teaches until"
+#~ msgstr "Učitelem do"
+
+#~ msgid "Number of brochures"
+#~ msgstr "# brožurek"
+
+#~ msgid "Number of brochures/propagation items, that he wants to send."
+#~ msgstr "Počet brožurek/propagačních předmětů, které chce zasílat."
+
+#, fuzzy
+#~ msgid "Submit Id"
+#~ msgstr "Odevzdané"
+
+#~ msgid "Game start"
+#~ msgstr "Začátek hry"
+
+#~ msgid "Game end"
+#~ msgstr "Konec hry"
+
+#, fuzzy
+#~ msgid "Results display"
+#~ msgstr "Zobrazení výsledků"
+
+#, fuzzy
+#~ msgid "Results hide"
+#~ msgstr "Skrytí výsledků"
+
+#~ msgid "Refresh delay"
+#~ msgstr "Obnovovací čas"
+
+#~ msgid "Available points"
+#~ msgstr "Dostupné body"
+
+#~ msgid "Team Id"
+#~ msgstr "ID týmu"
+
+#~ msgid "Rank in category"
+#~ msgstr "Pořadí v kategorii"
+
+#~ msgid "Total rank"
+#~ msgstr "Celkové pořadí"
+
+#~ msgid "Game language"
+#~ msgstr "Herní jazyk"
+
+#~ msgid "Force A"
+#~ msgstr "Chce kat. A"
+
+#, fuzzy
+#~ msgid "Submit opened?"
+#~ msgstr "Odevzdané"
+
+#~ msgid "Schedule start"
+#~ msgstr "Program začíná"
+
+#~ msgid "Schedule end"
+#~ msgstr "Program končí"
+
+#~ msgid "Name en"
+#~ msgstr "Jméno anglicky"
+
+#~ msgid "Group name"
+#~ msgstr "Jméno skupiny"
+
+#, fuzzy
+#~ msgid "Schedule item Id"
+#~ msgstr "Položku programu  #%d"
+
+#~ msgid "Require Id number"
+#~ msgstr "Číslo občanského průkazu je vyžadováno"
+
+#~ msgid "Price CZK"
+#~ msgstr "Cena Kč"
+
+#~ msgid "Price EUR"
+#~ msgstr "Cena EUR"
+
+#, fuzzy
+#~ msgid "Item name"
+#~ msgstr "Jméno týmu"
+
+#, fuzzy
+#~ msgid "Description en"
+#~ msgstr "Konec registrace"
+
+#, fuzzy
+#~ msgid "Description cs"
+#~ msgstr "Popisek"
+
+#~ msgid "Total capacity"
+#~ msgstr "Celková kapacita"
+
+#~ msgid "Tags"
+#~ msgstr "Tagy"
+
+#~ msgid "Query name"
+#~ msgstr "Název"
+
+#~ msgid "Query Id"
+#~ msgstr "ID"
 
 #~ msgid "Prechod sa nedá vykonať"
 #~ msgstr "Přechod není možné vykonat"

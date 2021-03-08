@@ -63,7 +63,7 @@ class TaskPresenter extends BasePresenter {
 
         $form->addUpload('csvfile')->setRequired();
         $form->addSelect('state', _('Select action'), [
-            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exists.'),
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exist.'),
             self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
             self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
         ]);
