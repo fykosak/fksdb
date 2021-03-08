@@ -8,8 +8,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
 
 /**
@@ -20,36 +18,23 @@ class SchoolCheckComponent extends BaseComponent {
 
     private ModelEvent $event;
 
-    private ServiceSchool $serviceSchool;
-
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
-        $this->serviceSchool = $serviceSchool;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
     public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
-        $query = $this->serviceSchool->getContext()->query(
-            'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id
-from event_participant ep
-         JOIN person_history ph ON ph.person_id = ep.person_id and ac_year = ? and school_id IN (?)
-         JOIN e_fyziklani_participant efp USING (event_participant_id)
-         JOIN e_fyziklani_team eft USING (e_fyziklani_team_id)
-WHERE ep.event_id = ?
-group by school_id', ...[$this->event->getAcYear(), array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
-
-        foreach ($query as $row) {
-            $schools[$row->school_id] = array_map(function ($teamId): ?ModelFyziklaniTeam {
-                return $this->serviceFyziklaniTeam->findByPrimary($teamId);
-            }, explode(',', $row->teams));
-            $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);
+        foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
+            $schools[$schoolId] = [
+                'school' => $school,
+            ];
+            $query = $this->event->getTeams()
+                ->where(':e_fyziklani_participant.event_participant.person:person_history.ac_year', $this->event->getAcYear())
+                ->where(':e_fyziklani_participant.event_participant.person:person_history.school_id', $schoolId);
+            foreach ($query as $team) {
+                $schools[$schoolId][] = ModelFyziklaniTeam::createFromActiveRow($team);
+            }
         }
         $this->template->schools = $schools;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
@@ -65,7 +50,7 @@ group by school_id', ...[$this->event->getAcYear(), array_keys($this->getSchools
         foreach ($team->getParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row->event_participant);
             $history = $participant->getPersonHistory();
-            $schools[$history->school_id] = true;
+            $schools[$history->school_id] = $history->getSchool();
         }
         return $schools;
     }
@@ -74,20 +59,3 @@ group by school_id', ...[$this->event->getAcYear(), array_keys($this->getSchools
         return new ColumnPrinterComponent($this->getContext());
     }
 }
-// there are very nice nette workaround, but very slow
-/* foreach ($this->event->getTeams() as $row) {
-      $team = ModelFyziklaniTeam::createFromActiveRow($row);
-      $teamSchools = $this->getSchoolsFromTeam($team);
-
-      foreach ($teamSchools as $schoolId => $school) {
-          if (!array_key_exists($schoolId, $currentTeamSchools)) {
-              continue;
-          }
-          if (!array_key_exists($schoolId, $schools)) {
-              $schools[$schoolId] = [
-                  'school' => $serviceSchool->findByPrimary($schoolId),
-              ];
-          }
-          $schools[$schoolId][] = $team;
-      }
- }*/

@@ -31,7 +31,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $connection = $this->context->getConnection();
+        $connection = $this->explorer->getConnection();
         $outerTransaction = false;
         if ($connection->getPdo()->inTransaction()) {
             $outerTransaction = true;
@@ -68,7 +68,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->updateModel2($token, ['until' => $until]);
         }
         if (!$outerTransaction) {
-            $this->context->getConnection()->commit();
+            $this->explorer->getConnection()->commit();
         }
 
         return $token;

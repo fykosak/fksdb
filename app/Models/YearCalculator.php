@@ -6,8 +6,6 @@ use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -28,15 +26,9 @@ class YearCalculator {
      */
     public const FIRST_AC_MONTH = 9;
 
-    private ServiceContestYear $serviceContestYear;
-
-    private ServiceContest $serviceContest;
-
     private Container $container;
 
-    public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, Container $container) {
-        $this->serviceContestYear = $serviceContestYear;
-        $this->serviceContest = $serviceContest;
+    public function __construct(Container $container) {
         $this->container = $container;
     }
 
@@ -73,12 +65,11 @@ class YearCalculator {
     public function getForwardShift(ModelContest $contest): int {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
-            $contestName = $this->container->getParameters()['contestMapping'][$contest->contest_id];
             $forwardYear = $contest->getCurrentYear() + self::FORWARD_SHIFT;
             $row = $contest->getContestYears()->where('year', $forwardYear)->fetch();
 
             /* Apply the forward shift only when the appropriate year is defined in the database */
-            if ($this->container->getParameters()[$contestName]['forwardRegistration'] && (bool)$row) {
+            if ($this->container->getParameters()[$contest->getContestSymbol()]['forwardRegistration'] && (bool)$row) {
                 return self::FORWARD_SHIFT;
             } else {
                 return 0;

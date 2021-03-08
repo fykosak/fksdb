@@ -45,7 +45,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     public function renderDetail(): void {
         parent::renderDetail();
-        $this->template->acYear = $this->getEvent()->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
             $rankVisible = $setup->result_hard_display;

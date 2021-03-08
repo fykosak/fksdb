@@ -2,11 +2,9 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Controls\BaseControl;
@@ -21,7 +19,7 @@ class FlagProcessing extends AbstractProcessing {
         $this->serviceSchool = $serviceSchool;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -49,9 +47,8 @@ class FlagProcessing extends AbstractProcessing {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
-                /** @var ModelPerson $person */
-                $person = $baseHolder->getModel()->getMainModel()->getPerson();
-                $history = $person->getHistory($acYear);
+
+                $history = $baseHolder->getModel()->getMainModel()->getPersonHistory();
                 $participantData = [
                     'school_id' => $history->school_id,
                     'study_year' => $history->study_year,

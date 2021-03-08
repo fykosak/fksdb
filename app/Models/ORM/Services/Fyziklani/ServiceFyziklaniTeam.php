@@ -17,15 +17,6 @@ class ServiceFyziklaniTeam extends OldAbstractServiceSingle {
         return $this->getTable()->where('status', 'participated')->where('event_id', $event->event_id);
     }
 
-    public function teamExist(int $teamId, ModelEvent $event): bool {
-        $row = $this->findByPrimary($teamId);
-        if (!$row) {
-            return false;
-        }
-        $team = ModelFyziklaniTeam::createFromActiveRow($row);
-        return $team && $team->event_id == $event->event_id;
-    }
-
     public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
     }

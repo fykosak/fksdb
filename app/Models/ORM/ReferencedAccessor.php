@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * Class ReferencedFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
-final class ReferencedFactory {
+final class ReferencedAccessor {
 
     /**
      * @param AbstractModelSingle $model

@@ -24,7 +24,7 @@ use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -149,7 +149,7 @@ class ApplicationPresenter extends BasePresenter {
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            $event = ReferencedFactory::accessModel($eventApplication, ModelEvent::class);
+            $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }

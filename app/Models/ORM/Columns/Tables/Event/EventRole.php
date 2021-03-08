@@ -6,7 +6,7 @@ use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -33,12 +33,12 @@ class EventRole extends ColumnFactory {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         try {
-            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
             $person = $this->userStorage->getIdentity()->getPerson();
         }
         /** @var ModelEvent $event */
-        $event = ReferencedFactory::accessModel($model, ModelEvent::class);
+        $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
         return (new EventRolePrinter())($person, $event);
     }
 

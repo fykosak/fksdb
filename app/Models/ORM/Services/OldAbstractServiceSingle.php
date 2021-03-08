@@ -20,6 +20,8 @@ use Tracy\Debugger;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
+ * @deprecated
+ * @use AbstractServiceSingle
  */
 abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements IService {
 
@@ -49,7 +51,7 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
     public function createFromArray(array $data): OldAbstractModelSingle {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);
-        return new $className($data, $this);
+        return new $className($data, $this->getTable());
     }
 
     /**
@@ -62,7 +64,7 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
     public function dispose($model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->context->getConnection()->getPdo()->errorCode();
+            $code = $this->explorer->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
         }
     }
@@ -115,8 +117,8 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
             throw new ModelException('Error when storing model.', null, $exception);
         }
         // because ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
-        if (!(int)$this->context->getConnection()->getPdo()->errorInfo()) {
-            $code = $this->context->getConnection()->getPdo()->errorCode();
+        if (!(int)$this->explorer->getConnection()->getPdo()->errorInfo()) {
+            $code = $this->explorer->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }
     }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use Nette\Application\UI\InvalidLinkException;
@@ -42,7 +42,7 @@ abstract class LinkFactory {
         if (!isset($this->modelClassName)) {
             return $modelSingle;
         }
-        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
+        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     /**
