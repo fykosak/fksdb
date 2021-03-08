@@ -2,8 +2,9 @@
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
+
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\IUserStorage;
 use Nette\SmartObject;
 
@@ -31,7 +32,7 @@ class RelatedPersonAuthorizator {
      */
     public function isRelatedPerson(Holder $holder): bool {
         // everyone is related
-        if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() == Machine::STATE_INIT) {
             return true;
         }
 

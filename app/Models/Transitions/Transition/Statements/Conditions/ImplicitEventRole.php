@@ -4,6 +4,7 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedFactory;
 use Nette\Security\Resource;
@@ -15,7 +16,7 @@ use Nette\Security\Resource;
 class ImplicitEventRole extends EventRole {
 
     /**
-     * @param array $args
+     * @param AbstractModelSingle[] $args
      * @return bool
      * @throws BadTypeException
      * @throws CannotAccessModelException
@@ -25,6 +26,7 @@ class ImplicitEventRole extends EventRole {
         if (!$model instanceof Resource) {
             throw new BadTypeException(Resource::class, $model);
         }
+        /** @var ModelEvent $event */
         $event = ReferencedFactory::accessModel($model, ModelEvent::class);
         return $this->eventAuthorizator->isContestOrgAllowed($model, $this->privilege, $event);
     }

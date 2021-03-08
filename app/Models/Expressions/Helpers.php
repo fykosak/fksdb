@@ -117,4 +117,14 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
+    /**
+     * @param $statement
+     * @return Statement|string
+     */
+    public static function translate($statement) {
+        if ($statement instanceof Statement && $statement->entity === '_') {
+            return _(...$statement->arguments);
+        }
+        return $statement;
+    }
 }

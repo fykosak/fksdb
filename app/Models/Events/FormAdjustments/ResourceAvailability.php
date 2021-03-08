@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
+
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -21,7 +21,6 @@ class ResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
-
     /** @var string Name of event parameter that hold overall capacity. */
     private string $paramCapacity;
     /** @var array|string */
@@ -38,7 +37,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -96,10 +95,10 @@ class ResourceAvailability extends AbstractAdjustment {
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+            if ($this->includeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+            if ($this->excludeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');

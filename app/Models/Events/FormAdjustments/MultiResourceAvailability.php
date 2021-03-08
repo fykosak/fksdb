@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
@@ -44,7 +43,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, $includeStates = \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
@@ -100,16 +99,16 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
+
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+            if ($this->includeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+            if ($this->excludeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');
             }
-
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
@@ -131,7 +130,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                     $usage[$k] = array_key_exists($k, $usage) ? ($usage[$k] + $row->count) : $row->count;
                 }
             }
-
             //$usage += $table->sum($column);
         }
         $capacities = [];
@@ -165,7 +163,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 if ($k) {
                     $controlsUsages[$k] = array_key_exists($k, $controlsUsages) ? ($controlsUsages[$k] + 1) : 1;
                 }
-
             }
             foreach ($controlsUsages as $k => $u) {
                 $us = (array_key_exists($k, $usage) ? $usage[$k] : 0) + $u;
@@ -174,7 +171,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                     $form->addError($message);
                 }
             }
-
         };
     }
 }
