@@ -143,7 +143,15 @@ $(function () {
             const renderMethod = this.element.data('ac-render-method');
             if (renderMethod) {
                 acEl.data('ui-autocomplete')._renderItem = (ul, item) => {
-                    return eval(renderMethod);
+                    switch (renderMethod) {
+                        case 'tags':
+                            return $("<li>")
+                                .append("<a>" + item.label + "<br>" + item.description + "</a>")
+                                .appendTo(ul);
+                        default:
+                            return eval(renderMethod);
+                    }
+
                 };
             }
         }

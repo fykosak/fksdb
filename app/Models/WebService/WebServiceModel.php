@@ -7,7 +7,9 @@ use DOMElement;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
@@ -100,6 +102,41 @@ class WebServiceModel {
     public function getEventsList(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         return $this->eventSoapFactory->handleGetEventsList($args);
+    }
+
+    /**
+     * @param \stdClass $args
+     * @return SoapVar
+     * @throws \SoapFault
+     */
+    public function getSignatures(\stdClass $args): SoapVar {
+        if (!isset($args->contestId)) {
+            throw new \SoapFault('Sender', 'Unknown contest.');
+        }
+        $contest = $this->serviceContest->findByPrimary($args->contestId);
+
+        $doc = new \DOMDocument();
+
+        $rootNode = $doc->createElement('signatures');
+        $orgs = $contest->related(DbNames::TAB_ORG);
+        foreach ($orgs as $row) {
+            $org = ModelOrg::createFromActiveRow($row);
+            $orgNode = $doc->createElement('org');
+            XMLHelper::fillArrayToNode([
+                'name' => $org->getPerson()->getFullName(),
+                'texSignature' => $org->tex_signature,
+                'domainAlias' => $org->domain_alias,
+            ], $doc, $orgNode);
+            $rootNode->appendChild($orgNode);
+        }
+        $doc->appendChild($rootNode);
+        $doc->formatOutput = true;
+
+        $nodeString = '';
+        foreach ($doc->childNodes as $node) {
+            $nodeString .= $doc->saveXML($node);
+        }
+        return new SoapVar($nodeString, XSD_ANYXML);
     }
 
     /**

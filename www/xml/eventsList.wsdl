@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- root element wsdl:definitions defines set of related services -->
+<wsdl:definitions
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd1="http://fykos.cz/xml/ws/schema"
+        xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
+    <wsdl:import namespace="http://fykos.cz/xml/ws/definitions" location="http://db.fykos.local/xml/signatures.wsdl"/>
+    <!-- wsdl:types encapsulates schema definitions of communication types -->
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
+            <!-- types for web service only -->
+            <xsd:complexType name="GetEventsListRequestType">
+                <xsd:sequence>
+                    <xsd:element name="eventTypeIds" type="xsd:nonNegativeInteger" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="GetEventsListRequest">
+        <wsdl:part name="GetEventsListRequest" type="xsd1:GetEventsListRequestType"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetEventsListResponse">
+        <wsdl:part name="GetEventsListResponse"/>
+    </wsdl:message>
+</wsdl:definitions>

@@ -73,11 +73,11 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
             $model = $this->serviceStoredQuery->createNewModel($data);
         }
 
-        $this->saveTags($values[self::CONT_MAIN]['tags'], $model->query_id);
-        $this->saveParameters($values[self::CONT_PARAMS], $model->query_id);
+        $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
+        $this->saveParameters($values[self::CONT_PARAMS], $model);
 
         $connection->commit();
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Query has been edited') : _('Query has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
@@ -107,26 +107,25 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         };
     }
 
-    private function saveTags(array $tags, int $queryId): void {
+    private function saveTags(array $tags, ModelStoredQuery $query): void {
         $this->serviceStoredQueryTag->getTable()->where([
-            'query_id' => $queryId,
+            'query_id' => $query->query_id,
         ])->delete();
-        foreach ($tags['tags'] as $tagTypeId) {
-            $data = [
-                'query_id' => $queryId,
+        foreach ($tags as $tagTypeId) {
+            $this->serviceStoredQueryTag->createNewModel([
+                'query_id' => $query->query_id,
                 'tag_type_id' => $tagTypeId,
-            ];
-            $this->serviceStoredQueryTag->createNewModel($data);
+            ]);
         }
     }
 
-    private function saveParameters(array $parameters, int $queryId): void {
+    private function saveParameters(array $parameters, ModelStoredQuery $query): void {
         $this->serviceStoredQueryParameter->getTable()
-            ->where(['query_id' => $queryId])->delete();
+            ->where(['query_id' => $query->query_id])->delete();
 
         foreach ($parameters as $paramMetaData) {
             $data = (array)$paramMetaData;
-            $data['query_id'] = $queryId;
+            $data['query_id'] = $query->query_id;
             $data = array_merge($data, ModelStoredQueryParameter::setInferDefaultValue($data['type'], $paramMetaData['default']));
             $this->serviceStoredQueryParameter->createNewModel($data);
         }
