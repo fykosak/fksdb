@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\Events\Spec\Dsef;
 
-use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
-use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\SmartObject;
+use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *
@@ -19,7 +19,6 @@ class GroupOptions implements OptionsProvider {
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
-
     private ServiceDsefGroup $serviceDsefGroup;
     /** @var string|string[] */
     private $includeStates;
@@ -40,7 +39,7 @@ class GroupOptions implements OptionsProvider {
     public function __construct(
         ServiceMDsefParticipant $serviceMParticipant,
         ServiceDsefGroup $serviceDsefGroup,
-        $includeStates = BaseMachine::STATE_ANY,
+        $includeStates = Machine::STATE_ANY,
         $excludeStates = ['cancelled']
     ) {
         $this->includeStates = $includeStates;
@@ -81,10 +80,10 @@ class GroupOptions implements OptionsProvider {
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)
             ->where('NOT event_participant.event_participant_id', $application->getPrimary(false));
-        if ($this->includeStates !== BaseMachine::STATE_ANY) {
+        if ($this->includeStates !== Machine::STATE_ANY) {
             $selection->where('event_participant.status', $this->includeStates);
         }
-        if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+        if ($this->excludeStates !== Machine::STATE_ANY) {
             $selection->where('NOT event_participant.status', $this->excludeStates);
         } else {
             $selection->where('1=0');

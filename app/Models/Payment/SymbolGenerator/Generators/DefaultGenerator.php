@@ -51,11 +51,12 @@ class DefaultGenerator extends AbstractSymbolGenerator {
 
     /**
      * @param ModelPayment $modelPayment
+     * @param mixed ...$args
      * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    protected function create(ModelPayment $modelPayment): array {
+    protected function create(ModelPayment $modelPayment, ...$args): array {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));

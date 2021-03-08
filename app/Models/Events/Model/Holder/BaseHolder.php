@@ -3,15 +3,15 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -172,9 +172,9 @@ class BaseHolder {
     }
 
     public function saveModel(): void {
-        if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
+        if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
-        } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
+        } elseif ($this->getModelState() != Machine::STATE_INIT) {
             $this->service->save($this->getModel());
         }
     }
@@ -182,7 +182,7 @@ class BaseHolder {
     public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
-            return BaseMachine::STATE_INIT;
+            return Machine::STATE_INIT;
         } else {
             return $model[self::STATE_COLUMN];
         }
@@ -335,6 +335,9 @@ class BaseHolder {
     private function cacheParameters(): void {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
+        if (is_string($parameters)) {
+            throw new NeonSchemaException('Parameters must be an array string given');
+        }
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
     }
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Processing;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
+
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\Logger;
@@ -25,7 +25,6 @@ abstract class AbstractProcessing implements Processing {
 
     public const DELIMITER = '.';
     public const WILD_CART = '*';
-
     private array $valuesPathCache;
     private array $formPathCache;
     private array $states;
@@ -98,10 +97,10 @@ abstract class AbstractProcessing implements Processing {
     protected function isBaseReallyEmpty(string $name): bool {
 
         $baseHolder = $this->holder->getBaseHolder($name);
-        if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
+        if ($baseHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return true; // it was empty since beginning
         }
-        if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
+        if (isset($this->states[$name]) && $this->states[$name] == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
             return true; // it has been deleted by user
         }
         return false;
@@ -143,5 +142,4 @@ abstract class AbstractProcessing implements Processing {
             $this->formPathCache[$path] = $control;
         }
     }
-
 }

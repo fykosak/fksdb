@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Factories\Events\FieldFactory;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -21,7 +21,6 @@ class Field {
     private BaseHolder $baseHolder;
     private ExpressionEvaluator $evaluator;
     private FieldFactory $factory;
-
     /** @var mixed */
     private $default;
     /** @var bool|callable */
@@ -148,7 +147,7 @@ class Field {
         if (isset($model[$this->name])) {
             return $model[$this->name];
         }
-        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+        if ($this->getBaseHolder()->getModelState() == Machine::STATE_INIT) {
             return $this->getDefault();
         }
         return null;

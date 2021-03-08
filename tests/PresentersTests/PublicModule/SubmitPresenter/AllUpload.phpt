@@ -13,6 +13,7 @@ class AllUpload extends SubmitTestCase {
 
     public function testSubmit(): void {
         $this->innerTestSubmit();
+
         $this->assertSubmit($this->contestantId, $this->taskRestricted);
     }
 }
