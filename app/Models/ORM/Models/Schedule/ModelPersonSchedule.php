@@ -8,9 +8,6 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\Transitions\StateModel;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -22,7 +19,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements StateModel {
+class ModelPersonSchedule extends AbstractModelSingle {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -53,7 +50,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements StateModel {
         if (!$payment) {
             return false;
         }
-        if ($payment->getState() == ModelPayment::STATE_CANCELED) {
+        if ($payment->state == ModelPayment::STATE_CANCELED) {
             return false;
         }
         return true;
@@ -78,23 +75,5 @@ class ModelPersonSchedule extends AbstractModelSingle implements StateModel {
             default:
                 throw new NotImplementedException();
         }
-    }
-
-    public function updateState(?string $newState): void {
-        $this->update(['state' => $newState]);
-    }
-
-    public function getState(): ?string {
-        return $this->state;
-    }
-
-    /**
-     * @param Explorer $explorer
-     * @param Conventions $conventions
-     * @return StateModel
-     * @throws NotImplementedException
-     */
-    public function refresh(Explorer $explorer, Conventions $conventions): StateModel {
-        throw new NotImplementedException();
     }
 }

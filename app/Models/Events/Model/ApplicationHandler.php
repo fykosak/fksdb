@@ -2,19 +2,18 @@
 
 namespace FKSDB\Models\Events\Model;
 
+use Exception;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use Exception;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Logging\Logger;
@@ -39,19 +38,14 @@ class ApplicationHandler {
     public const ERROR_SKIP = 'skip';
     public const STATE_TRANSITION = 'transition';
     public const STATE_OVERWRITE = 'overwrite';
-
     private ModelEvent $event;
 
     private Logger $logger;
 
     private string $errorMode = self::ERROR_ROLLBACK;
-
     private Connection $connection;
-
     private Container $container;
-
     private Machine $machine;
-
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ModelEvent $event, Logger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
@@ -221,7 +215,7 @@ class ApplicationHandler {
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($state == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $newState == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)) {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }

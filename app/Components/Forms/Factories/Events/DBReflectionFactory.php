@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
+use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -88,8 +89,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     protected function setDefaultValue(BaseControl $control, Field $field): void {
-
-        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {

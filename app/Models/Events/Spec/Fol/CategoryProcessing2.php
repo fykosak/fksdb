@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
+
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
@@ -27,7 +27,7 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
 
         $result = $values['team']['category'] = $this->getCategory($participants);
 
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }

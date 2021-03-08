@@ -6,10 +6,14 @@ use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPersonHistory;
+use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceFlag;
@@ -20,7 +24,6 @@ use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Models\Exceptions\ModelException;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -40,12 +43,14 @@ class ReferencedPersonHandler implements ReferencedHandler {
     private ServicePerson $servicePerson;
     private ServicePersonInfo $servicePersonInfo;
     private ServicePersonHistory $servicePersonHistory;
+
+    private ServiceAddress $serviceAddress;
+    private ServicePostContact $servicePostContact;
+
     private ServicePersonHasFlag $servicePersonHasFlag;
     private int $acYear;
     private Handler $eventScheduleHandler;
     private ServiceFlag $serviceFlag;
-    private ServiceAddress $serviceAddress;
-    private ServicePostContact $servicePostContact;
 
     private ModelEvent $event;
 
@@ -178,10 +183,12 @@ class ReferencedPersonHandler implements ReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
+            /** @var ModelPostContact|ModelPerson|AbstractModelSingle|ModelPersonInfo|ModelPersonHistory $model */
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
+
                         if ($model) {
                             /** @var ModelPostContact $model */
                             $this->servicePostContact->dispose($model);
@@ -205,7 +212,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         continue 2;
                     case self::POST_CONTACT_PERMANENT:
                     case self::POST_CONTACT_DELIVERY:
-                        $this->storePostContact($person, $models[$t], (array)$data[$t], $t);
+                        $this->storePostContact($person, $model, (array)$data[$t], $t);
                         continue 2;
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
@@ -214,8 +221,8 @@ class ReferencedPersonHandler implements ReferencedHandler {
                                 'value' => $flagValue,
                                 'flag_id' => $flag->flag_id,
                             ];
-                            if ($models[$t][$flagId]) {
-                                $this->servicePersonHasFlag->updateModel2($models[$t][$flagId], (array)$flagData);
+                            if ($model[$flagId]) {
+                                $this->servicePersonHasFlag->updateModel2($model[$flagId], (array)$flagData);
                             } else {
                                 $flagData['person_id'] = $person->person_id;
                                 $this->servicePersonHasFlag->createNewModel((array)$flagData);

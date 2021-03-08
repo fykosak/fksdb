@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Models\Events\Machine\BaseMachine;
+
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Utils\FormUtils;
@@ -21,7 +21,6 @@ class Captcha implements FormAdjustment {
     use SmartObject;
 
     protected const CONTROL_NAME = 'c_a_p_t_cha';
-
     private User $user;
 
     public function __construct(User $user) {
@@ -29,7 +28,7 @@ class Captcha implements FormAdjustment {
     }
 
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
-        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
         $control = new CaptchaBox();
