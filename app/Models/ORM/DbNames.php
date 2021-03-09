@@ -44,7 +44,6 @@ class DbNames {
     public const TAB_TASK_CONTRIBUTION = 'task_contribution';
     public const TAB_TASK_STUDY_YEAR = 'task_study_year';
     public const TAB_TEACHER = 'teacher';
-    public const VIEW_CONTESTANT = 'v_contestant';
     /* payment */
     public const TAB_PAYMENT = 'payment';
 

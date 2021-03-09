@@ -106,9 +106,9 @@ class SubmitHandlerFactory {
         return $submit;
     }
 
-    public function getUserStudyYear(ModelContestant $contestant, int $academicYear): ?int {
+    public function getUserStudyYear(ModelContestant $contestant): ?int {
         // TODO AC_year from contestant
-        $personHistory = $contestant->getPerson()->getHistory($academicYear);
+        $personHistory = $contestant->getPersonHistory();
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 

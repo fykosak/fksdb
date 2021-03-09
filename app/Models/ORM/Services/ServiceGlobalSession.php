@@ -27,7 +27,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $this->context->getConnection()->beginTransaction();
+        $this->explorer->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');

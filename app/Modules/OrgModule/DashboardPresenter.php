@@ -10,7 +10,7 @@ class DashboardPresenter extends BasePresenter {
     public function authorizedDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $access = $login ? $login->isOrg($this->yearCalculator) : false;
+        $access = $login ? $login->isOrg() : false;
         $this->setAuthorized($access);
     }
 

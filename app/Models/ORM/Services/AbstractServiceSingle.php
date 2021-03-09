@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use Nette\Database\Connection;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
-use Nette\Database\Table\Selection;
+use Nette\SmartObject;
 use PDOException;
 
 /**
@@ -22,15 +22,20 @@ use PDOException;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
  */
-abstract class AbstractServiceSingle extends Selection {
+abstract class AbstractServiceSingle {
+
+    use SmartObject;
 
     private string $modelClassName;
     private string $tableName;
+    protected Explorer $explorer;
+    protected Conventions $conventions;
 
     public function __construct(string $tableName, string $modelClassName, Explorer $explorer, Conventions $conventions) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
-        parent::__construct($explorer, $conventions, $tableName);
+        $this->explorer = $explorer;
+        $this->conventions = $conventions;
     }
 
     /**
@@ -110,15 +115,15 @@ abstract class AbstractServiceSingle extends Selection {
     }
 
     public function getTable(): TypedTableSelection {
-        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
+        return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->explorer, $this->conventions);
     }
 
     public function getConnection(): Connection {
-        return $this->context->getConnection();
+        return $this->explorer->getConnection();
     }
 
     public function getContext(): Explorer {
-        return $this->context;
+        return $this->explorer;
     }
 
     public function getConventions(): Conventions {
@@ -178,7 +183,7 @@ abstract class AbstractServiceSingle extends Selection {
 
     private function getColumnMetadata(): array {
         if (!isset($this->columns)) {
-            $this->columns = $this->context->getConnection()->getDriver()->getColumns($this->getTableName());
+            $this->columns = $this->explorer->getConnection()->getDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
     }

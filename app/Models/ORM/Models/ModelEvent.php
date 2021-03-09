@@ -41,7 +41,11 @@ class ModelEvent extends AbstractModelSingle implements Resource, NodeCreator {
     }
 
     public function getAcYear(): int {
-        return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
+        return $this->getContestYear()->ac_year;
+    }
+
+    public function getContestYear(): ModelContestYear {
+        return ModelContestYear::createFromActiveRow($this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch());
     }
 
     public function getResourceId(): string {

@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
@@ -92,7 +93,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                     'required' => true,
                 ],
             ],
-        ], 2000);
+        ], YearCalculator::getCurrentAcademicYear());
 
         // Fill user data
         $form->setValues([

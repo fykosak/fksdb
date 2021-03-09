@@ -1,4 +1,6 @@
 {layout ./layout.chooser.latte}
+{varType bool $modifiable}
+{varType string $currentLanguageName}
 {block content}
     {if $modifiable}
         {include #parent}

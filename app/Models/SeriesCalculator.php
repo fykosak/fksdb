@@ -13,21 +13,18 @@ class SeriesCalculator {
 
     private ServiceTask $serviceTask;
 
-    private YearCalculator $yearCalculator;
-
-    public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
+    public function __construct(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
-        $this->yearCalculator = $yearCalculator;
     }
 
     public function getCurrentSeries(ModelContest $contest): int {
-        $year = $this->yearCalculator->getCurrentYear($contest);
+        $year = $contest->getCurrentYear();
         $currentSeries = $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
             '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime(),
         ])->max('series');
-        return ($currentSeries === null) ? 1 : $currentSeries;
+        return $currentSeries ?? 1;
     }
 
     public function getLastSeries(ModelContest $contest, int $year): int {

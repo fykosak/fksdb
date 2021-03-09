@@ -189,9 +189,9 @@ class Holder {
         return $newStates;
     }
 
-    public function adjustForm(Form $form, Machine $machine): void {
+    public function adjustForm(Form $form): void {
         foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $machine, $this);
+            $adjustment->adjust($form, $this);
         }
     }
 

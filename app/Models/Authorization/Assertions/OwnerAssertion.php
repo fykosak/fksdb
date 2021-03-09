@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 use Nette\Security\IUserStorage;
@@ -112,7 +112,7 @@ class OwnerAssertion {
         $model = $acl->getQueriedResource();
         try {
             /** @var ModelContest $contest */
-            $contest = ReferencedFactory::accessModel($model, ModelContest::class);
+            $contest = ReferencedAccessor::accessModel($model, ModelContest::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContestId()) {
                 return false;
             }
@@ -121,7 +121,7 @@ class OwnerAssertion {
 
         $person = null;
         try {
-            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException $exception) {
         }
 

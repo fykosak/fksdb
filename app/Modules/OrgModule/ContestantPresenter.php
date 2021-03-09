@@ -51,7 +51,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
+        return $model->getContestYear()->ac_year;
     }
 
     public function messageCreate(): string {

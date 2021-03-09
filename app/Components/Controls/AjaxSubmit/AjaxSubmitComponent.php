@@ -32,13 +32,11 @@ class AjaxSubmitComponent extends AjaxComponent {
     private ModelTask $task;
     private ModelContestant $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private int $academicYear;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
+    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant) {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
-        $this->academicYear = $academicYear;
     }
 
     final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
@@ -86,7 +84,7 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @throws NotFoundException
      */
     protected function getData(): array {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
         return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
