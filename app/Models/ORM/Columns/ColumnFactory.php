@@ -8,7 +8,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
@@ -148,7 +148,7 @@ abstract class ColumnFactory {
      * @throws CannotAccessModelException
      */
     protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {
-        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
+        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     final public function hasReadPermissions(int $userValue): bool {

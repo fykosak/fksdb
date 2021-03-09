@@ -2,13 +2,15 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
+use FKSDB\Models\YearCalculator;
+
 $container = require '../../../Bootstrap.php';
 
 class RestrictedUpload extends SubmitTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->createPersonHistory($this->personId, 2000, 1, 9);
+        $this->createPersonHistory($this->personId, YearCalculator::getCurrentAcademicYear(), 1, 9);
     }
 
     public function testSubmit(): void {

@@ -46,7 +46,7 @@
                     {control languageChooser}
                     {*control themeChooser*}
                     {if $user->isLoggedIn()}
-                        {var $login = $user->getIdentity()}
+                        {var FKSDB\Models\ORM\Models\ModelLogin $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 <span class="fas fa-user"></span>

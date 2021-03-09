@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
@@ -25,8 +24,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     private ServicePersonInfo $servicePersonInfo;
     private AccountManager $accountManager;
 
-    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin) {
+        parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->accountManager = $accountManager;

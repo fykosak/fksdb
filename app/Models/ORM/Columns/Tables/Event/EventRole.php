@@ -6,11 +6,10 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\YearCalculator;
 use Nette\Security\IUserStorage;
 use Nette\Utils\Html;
 
@@ -21,12 +20,10 @@ use Nette\Utils\Html;
 class EventRole extends ColumnFactory {
 
     private IUserStorage $userStorage;
-    private YearCalculator $yearCalculator;
 
-    public function __construct(IUserStorage $userStorage, YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
+    public function __construct(IUserStorage $userStorage, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->userStorage = $userStorage;
-        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -36,13 +33,13 @@ class EventRole extends ColumnFactory {
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         try {
-            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
             $person = $this->userStorage->getIdentity()->getPerson();
         }
         /** @var ModelEvent $event */
-        $event = ReferencedFactory::accessModel($model, ModelEvent::class);
-        return (new EventRolePrinter($this->yearCalculator))($person, $event);
+        $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
+        return (new EventRolePrinter())($person, $event);
     }
 
     protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {

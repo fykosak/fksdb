@@ -7,7 +7,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
@@ -61,7 +61,7 @@ class MailCallback implements TransitionCallback {
      * @throws CannotAccessModelException
      */
     public function invoke(ModelHolder $holder, ...$args): void {
-        $person = ReferencedFactory::accessModel($holder->getModel(), ModelPerson::class);
+        $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
         if (is_null($person)) {
             throw new BadTypeException(ModelPerson::class, $person);
         }

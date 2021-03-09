@@ -96,12 +96,12 @@ class SubmitPresenter extends BasePresenter {
         if (!$this->template->hasTasks) {
             /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+            $currentYear = $this->getSelectedContest()->getCurrentYear();
             $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->yearCalculator->getCurrentYear($this->getSelectedContest())) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedYear() == $this->getSelectedContest()->getCurrentYear()) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
@@ -197,7 +197,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     protected function createComponentSubmitContainer(): SubmitContainer {
-        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
+        return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 
     /**
@@ -218,7 +218,6 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);

@@ -35,11 +35,11 @@ abstract class AbstractProcessing implements Processing {
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->innerProcess($states, $values, $machine, $holder, $logger, $form);
+        $this->innerProcess($states, $values, $holder, $logger, $form);
         return null;
     }
 
-    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void;
+    abstract protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILD_CART) !== false;

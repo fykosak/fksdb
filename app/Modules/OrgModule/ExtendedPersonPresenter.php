@@ -76,12 +76,14 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $fieldsDefinition = $this->getFieldsDefinition();
-        $acYear = $this->getAcYearFromModel() ? $this->getAcYearFromModel() : $this->getSelectedAcademicYear();
-        $searchType = PersonSearchContainer::SEARCH_ID;
-        $allowClear = $create;
-        $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getFieldsDefinition(),
+            $this->getAcYearFromModel() ?? $this->getSelectedAcademicYear(),
+            PersonSearchContainer::SEARCH_ID,
+            $create,
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
+        );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 

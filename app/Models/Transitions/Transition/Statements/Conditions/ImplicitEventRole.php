@@ -6,7 +6,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Security\Resource;
 
 /**
@@ -27,7 +27,7 @@ class ImplicitEventRole extends EventRole {
             throw new BadTypeException(Resource::class, $model);
         }
         /** @var ModelEvent $event */
-        $event = ReferencedFactory::accessModel($model, ModelEvent::class);
+        $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
         return $this->eventAuthorizator->isContestOrgAllowed($model, $this->privilege, $event);
     }
 }

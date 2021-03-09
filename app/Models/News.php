@@ -6,9 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-/**
- * Class News
- */
 class News {
     use SmartObject;
 

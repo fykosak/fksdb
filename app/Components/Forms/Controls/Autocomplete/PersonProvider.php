@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteORM\TypedTableSelection;
-use FKSDB\Models\YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,16 +28,14 @@ class PersonProvider implements FilteredDataProvider {
     /**
      * Syntactic sugar, should be solved more generally.
      * @param ModelContest $contest
-     * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
+    public function filterOrgs(ModelContest $contest): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
-            ])
-            ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
-            ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
-
+                ':org.since <= ?' => $contest->getCurrentYear(),
+                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentYear(),
+            ]);
     }
 
     /**
@@ -63,7 +60,6 @@ class PersonProvider implements FilteredDataProvider {
     public function getItems(): array {
         $persons = $this->searchTable
             ->order('family_name, other_name');
-
 
         $result = [];
         /** @var ModelPerson $person */

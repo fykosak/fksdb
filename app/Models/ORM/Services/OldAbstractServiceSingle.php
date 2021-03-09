@@ -21,6 +21,8 @@ use Tracy\Debugger;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
+ * @deprecated
+ * @use AbstractServiceSingle
  */
 abstract class OldAbstractServiceSingle extends AbstractService implements IService {
 

@@ -90,14 +90,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return int
-     * @throws EventNotFoundException
-     */
-    protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
-    }
-
-    /**
      * @return ModelContest
      * @throws EventNotFoundException
      */

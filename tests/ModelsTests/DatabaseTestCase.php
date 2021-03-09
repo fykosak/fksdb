@@ -4,6 +4,7 @@ namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\YearCalculator;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;
@@ -38,8 +39,8 @@ abstract class DatabaseTestCase extends TestCase {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->explorer->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
         $this->explorer->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
-        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, 2000)");
-        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
+        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, ?)", YearCalculator::getCurrentAcademicYear());
+        $this->explorer->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, ?)", YearCalculator::getCurrentAcademicYear());
     }
 
     protected function tearDown(): void {

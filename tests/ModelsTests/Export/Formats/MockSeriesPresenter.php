@@ -4,6 +4,7 @@ namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\DI\Container;
 
@@ -17,7 +18,7 @@ class MockSeriesPresenter extends BasePresenter {
     }
 
     public function getSelectedAcademicYear(): int {
-        return 2000;
+        return YearCalculator::getCurrentAcademicYear();
     }
 
     /**

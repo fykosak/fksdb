@@ -10,6 +10,8 @@ use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\InvalidArgumentException;
@@ -151,6 +153,9 @@ class BaseHolder {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
+    /**
+     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
+     */
     public function &getModel(): IModel {
         if (!$this->model) {
             $this->model = $this->getService()->createNew(); // TODO!!!

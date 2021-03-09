@@ -9,7 +9,7 @@ use Fykosak\NetteORM\AbstractModel;
  * Class ReferencedFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
-final class ReferencedFactory {
+final class ReferencedAccessor {
 
     /**
      * @param AbstractModel $model

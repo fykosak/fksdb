@@ -21,15 +21,9 @@ class TimelineComponent extends ReactComponent {
 
     private ModelPerson $person;
 
-    private YearCalculator $yearCalculator;
-
     public function __construct(Container $container, ModelPerson $person) {
         parent::__construct($container, 'person.detail.timeline');
         $this->person = $person;
-    }
-
-    final public function injectYearCalculator(YearCalculator $yearCalculator): void {
-        $this->yearCalculator = $yearCalculator;
     }
 
     private function eventToArray(ModelEvent $event): array {
@@ -47,7 +41,6 @@ class TimelineComponent extends ReactComponent {
      * @throws \Exception
      */
     private function calculateData(): array {
-
         $dates = [
             'since' => [],
             'until' => [],
@@ -55,10 +48,10 @@ class TimelineComponent extends ReactComponent {
         $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
-            $since = new \DateTime($this->yearCalculator->getAcademicYear($org->getContest(), $org->since) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+            $since = new \DateTime($org->getContest()->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
             $until = new \DateTime();
             if ($org->until) {
-                $until = new \DateTime($this->yearCalculator->getAcademicYear($org->getContest(), $org->until) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+                $until = new \DateTime($org->getContest()->getContestYear($org->until)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
@@ -70,7 +63,7 @@ class TimelineComponent extends ReactComponent {
         $contestants = [];
         foreach ($this->person->getContestants() as $row) {
             $contestant = ModelContestant::createFromActiveRow($row);
-            $year = $this->yearCalculator->getAcademicYear($contestant->getContest(), $contestant->year);
+            $year = $contestant->getContest()->getContestYear($contestant->year)->ac_year;
 
             $since = new \DateTime($year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
             $until = new \DateTime(($year + 1) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
@@ -109,7 +102,6 @@ class TimelineComponent extends ReactComponent {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();
-
         }
         return [$events, [
             'eventOrgs' => $eventOrganisers,

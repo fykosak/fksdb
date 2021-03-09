@@ -73,11 +73,11 @@ final class TaskCodePreprocessor {
         $fullCode = self::createFullCode($code);
 
         $teamId = self::extractTeamId($fullCode);
-
-        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        if (!$team || ($team->event_id !== $this->event->event_id)) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
-        return $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        return $team;
     }
 
     /**
