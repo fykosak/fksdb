@@ -6,15 +6,15 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -37,7 +37,7 @@ class ExtendedPersonHandler {
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-    protected AbstractServiceSingle $service;
+    protected AbstractService $service;
     protected ServicePerson $servicePerson;
     private Connection $connection;
     private AccountManager $accountManager;
@@ -47,7 +47,7 @@ class ExtendedPersonHandler {
     private ?ModelPerson $person = null;
 
     public function __construct(
-        AbstractServiceSingle $service,
+        AbstractService $service,
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
@@ -82,7 +82,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @return ModelPerson|null|AbstractModelSingle
+     * @return ModelPerson|null|AbstractModel
      */
     final protected function getReferencedPerson(Form $form) {
         /** @var ReferencedId $input */

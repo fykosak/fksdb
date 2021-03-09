@@ -27,9 +27,9 @@ class SeatingComponent extends BaseComponent {
         $this->render($event, 'all');
     }
 
-    public function renderTeam(ModelFyziklaniTeam $team, string $lang): void {
+    public function renderTeam(ModelFyziklaniTeam $team): void {
         $this->template->team = $team;
-        $this->render($team->getEvent(), 'single', $lang);
+        $this->render($team->getEvent(), 'single', $team->game_lang ?? 'cs');
     }
 
     public function renderDev(ModelEvent $event): void {

@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  * Class ValuePrinterComponent
@@ -23,13 +23,13 @@ class ColumnPrinterComponent extends BaseComponent {
 
     /**
      * @param string $field
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    public function render(string $field, AbstractModelSingle $model, int $userPermission): void {
+    public function render(string $field, AbstractModel $model, int $userPermission): void {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
@@ -39,39 +39,39 @@ class ColumnPrinterComponent extends BaseComponent {
 
     /**
      * @param string $field
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+    public function renderRow(string $field, AbstractModel $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
         $this->render($field, $model, $userPermission);
     }
 
     /**
      * @param string $field
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+    public function renderListItem(string $field, AbstractModel $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
         $this->render($field, $model, $userPermission);
     }
 
     /**
      * @param string $field
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+    public function renderOnlyValue(string $field, AbstractModel $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');
         $this->render($field, $model, $userPermission);
     }

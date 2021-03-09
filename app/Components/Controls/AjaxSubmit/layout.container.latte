@@ -1,9 +1,10 @@
 {layout ../@layout.latte}
 {block content}
+    {varType iterable $availableTasks}
     <div class="row">
         {foreach $availableTasks as $task}
             <div class="col-xl-4 col-md-6 col-sm-12 my-3">
-                {control 'task_'.$task->task_id}
+                {control 'task_' . $task->task_id}
             </div>
         {/foreach}
     </div>

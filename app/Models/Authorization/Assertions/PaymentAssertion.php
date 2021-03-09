@@ -24,6 +24,6 @@ class PaymentAssertion {
     public function isPaymentEditable(Permission $acl, $role, $resourceId, $privilege): bool {
         /** @var ModelPayment $payment */
         $payment = $acl->getQueriedResource();
-        return \in_array($payment->getState(), [Machine\Machine::STATE_INIT, ModelPayment::STATE_NEW]);
+        return \in_array($payment->state, [Machine\Machine::STATE_INIT, ModelPayment::STATE_NEW]);
     }
 }

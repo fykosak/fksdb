@@ -2,7 +2,7 @@
 {block content}
     <div class="btn-group">
         {foreach $buttons as $button}
-            <a href="{link transition! $button->getId()}" n:class="'btn btn-'.$button->getType()">
+            <a href="{link transition! $button->getId()}" n:class="'btn btn-'.$button->getBehaviorType()">
                 {$button->getLabel()}
             </a>
         {/foreach}

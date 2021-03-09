@@ -3,14 +3,14 @@
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * Class ServiceFyziklaniTeamPosition
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
+class ServiceFyziklaniTeamPosition extends AbstractService {
 
 
 

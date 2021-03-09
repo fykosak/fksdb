@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
@@ -28,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements Resource, NodeCreator {
+class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'event.scheduleItem';
 

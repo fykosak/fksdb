@@ -86,9 +86,8 @@ services:
     #stats
     - FKSDB\Models\Stats\StatsModelFactory
     #tasks
+
     - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    #transitions
-    - FKSDB\Models\Transitions\Transition\TransitionsFactory
 
     #webservice
     - FKSDB\Models\WebService\EventSoapFactory
@@ -100,7 +99,6 @@ services:
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
     - FKSDB\Components\Controls\Events\ExpressionPrinter
-    - FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
 
     ## forms
     #provider

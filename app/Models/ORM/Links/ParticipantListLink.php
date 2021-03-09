@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 
 /**
@@ -16,10 +16,10 @@ class ParticipantListLink extends LinkFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
+     * @param AbstractModel|ModelEvent $model
      * @return string
      */
-    protected function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModel $model): string {
         if ($model->isTeamEvent()) {
             return ':Event:TeamApplication:list';
         } else {
@@ -28,10 +28,10 @@ class ParticipantListLink extends LinkFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
+     * @param AbstractModel|ModelEvent $model
      * @return array
      */
-    protected function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModel $model): array {
         return [
             'eventId' => $model->event_id,
         ];

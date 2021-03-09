@@ -6,7 +6,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\Html;
 
 /**
@@ -33,7 +33,7 @@ class RankingStrategy {
      * @internal
      */
     public function close(?string $category = null): Html {
-        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection = $this->serviceFyziklaniTeam->getExplorer()->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);

@@ -26,7 +26,7 @@
         </tr>
         </thead>
         <tbody>
-        {foreach FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice::getGridItems($model) as $item}
+        {foreach FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice::getGridItems($model) as $item}
             <tr>
                 <td>{$item['label']}</td>
                 <td>{$item['price']}</td>

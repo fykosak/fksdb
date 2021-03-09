@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -107,7 +107,7 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param string|int|IModel|AbstractModelSingle|ModelPerson $value
+     * @param string|int|IModel|AbstractModel|ModelPerson $value
      * @param bool $force
      * @return static
      */

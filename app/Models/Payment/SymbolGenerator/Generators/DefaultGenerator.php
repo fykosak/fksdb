@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
@@ -51,16 +52,17 @@ class DefaultGenerator extends AbstractSymbolGenerator {
 
     /**
      * @param ModelPayment $modelPayment
+     * @param mixed ...$args
      * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    protected function create(ModelPayment $modelPayment): array {
+    protected function create(ModelPayment $modelPayment, ...$args): array {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
-        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)
+        $maxVariableSymbol = $modelPayment->getEvent()->related(DbNames::TAB_PAYMENT)
             ->where('variable_symbol>=?', $this->getVariableSymbolStart())
             ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
             ->max('variable_symbol');

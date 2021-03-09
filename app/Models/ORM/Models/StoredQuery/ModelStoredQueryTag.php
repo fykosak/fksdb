@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int color
  * @property-read ActiveRow tag_type
  */
-class ModelStoredQueryTag extends AbstractModelSingle {
+class ModelStoredQueryTag extends AbstractModel {
 
     public function getTagType(): ModelStoredQueryTagType {
         return ModelStoredQueryTagType::createFromActiveRow($this->tag_type);

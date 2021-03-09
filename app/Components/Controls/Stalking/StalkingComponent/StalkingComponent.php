@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
@@ -67,7 +67,7 @@ class StalkingComponent extends BaseStalkingComponent {
     }
 
     /**
-     * @param array|AbstractModelSingle[] $definition
+     * @param array|AbstractModel[] $definition
      * @param ModelPerson $person
      * @return void
      */

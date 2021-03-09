@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -33,10 +33,10 @@ class AgreedColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModel|ModelPersonInfo $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return (new DatePrinter())($model->agreed);
     }
 }

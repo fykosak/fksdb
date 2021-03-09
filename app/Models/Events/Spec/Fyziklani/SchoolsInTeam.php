@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
@@ -49,7 +48,7 @@ class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');

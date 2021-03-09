@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read double x_coordinate
  * @property-read double y_coordinate
  */
-class ModelFyziklaniTeamPosition extends AbstractModelSingle {
+class ModelFyziklaniTeamPosition extends AbstractModel {
 
     public function getRoom(): ModelFyziklaniRoom {
         return ModelFyziklaniRoom::createFromActiveRow($this->room);

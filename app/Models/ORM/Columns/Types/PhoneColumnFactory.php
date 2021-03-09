@@ -9,7 +9,7 @@ use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -55,7 +55,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         return $control;
     }
 
-    final public function runTest(Logger $logger, AbstractModelSingle $model): void {
+    final public function runTest(Logger $logger, AbstractModel $model): void {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
@@ -68,7 +68,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         }
     }
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();

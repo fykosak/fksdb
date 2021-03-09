@@ -6,7 +6,7 @@ use DOMDocument;
 use DOMNode;
 use Exception;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
@@ -143,7 +143,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
      */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
         if (!$dataSource instanceof AbstractResultsModel) {
-            throw new BadTypeException(AbstractModelSingle::class, $dataSource);
+            throw new BadTypeException(AbstractModel::class, $dataSource);
         }
 
         if ($formatVersion !== self::EXPORT_FORMAT_1) {
