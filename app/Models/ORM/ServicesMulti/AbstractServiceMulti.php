@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
@@ -65,7 +65,7 @@ abstract class AbstractServiceMulti implements IService {
         return $this->composeModel($mainModel, $joinedModel);
     }
 
-    public function composeModel(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel): AbstractModelMulti {
+    public function composeModel(AbstractModel $mainModel, AbstractModel $joinedModel): AbstractModelMulti {
         $className = $this->getModelClassName();
         return new $className($this, $mainModel, $joinedModel);
     }
@@ -147,11 +147,14 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     public function getConnection(): Connection {
-        return $this->mainService->getConnection();
+        return $this->mainService->getExplorer()->getConnection();
     }
 
     public function getContext(): Explorer {
-        return $this->mainService->getContext();
+        return $this->mainService->getExplorer();
+    }
+    public function getExplorer(): Explorer {
+        return $this->mainService->getExplorer();
     }
 
     public function getConventions(): Conventions {
@@ -168,7 +171,7 @@ abstract class AbstractServiceMulti implements IService {
         if (!$joinedModel) {
             return null;
         }
-        /** @var AbstractModelSingle $mainModel */
+        /** @var AbstractModel $mainModel */
         $mainModel = $this->getMainService()
             ->getTable()
             ->where($this->getJoiningColumn(), $joinedModel->{$this->getJoiningColumn()})
@@ -180,7 +183,7 @@ abstract class AbstractServiceMulti implements IService {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getContext(), $this->getJoinedService()->getConventions());
+        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getExplorer(), $this->getJoinedService()->getConventions());
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 

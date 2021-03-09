@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Transitions\Holder;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 interface ModelHolder {
 
@@ -10,7 +10,7 @@ interface ModelHolder {
 
     public function getState(): string;
 
-    public function getModel(): ?AbstractModelSingle;
+    public function getModel(): ?AbstractModel;
 
     public function updateData(array $data): void;
 }

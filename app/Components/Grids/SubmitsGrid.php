@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;

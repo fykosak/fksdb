@@ -8,11 +8,12 @@ use Nette\Database\Explorer;
 use Nette\Http\Request;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceGlobalSession extends AbstractServiceSingle {
+class ServiceGlobalSession extends AbstractService {
 
     private const SESSION_ID_LENGTH = 32;
     private Request $request;
@@ -27,7 +28,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $this->explorer->getConnection()->beginTransaction();
+        $this->getExplorer()->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
@@ -41,7 +42,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
         // $this->save($session);
-        $this->getConnection()->commit();
+        $this->getExplorer()->getConnection()->commit();
 
         return $session;
     }

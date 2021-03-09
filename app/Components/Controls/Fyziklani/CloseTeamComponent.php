@@ -29,7 +29,7 @@ class CloseTeamComponent extends BaseComponent {
     }
 
     public function handleClose(): void {
-        $connection = $this->serviceFyziklaniTask->getConnection();
+        $connection = $this->serviceFyziklaniTask->getExplorer()->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
         $this->team->update([

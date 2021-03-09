@@ -8,7 +8,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Database\Table\Selection;

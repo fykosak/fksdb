@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -296,7 +296,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    public function getModel(): ?AbstractModelSingle {
+    public function getModel(): ?AbstractModel {
         return null; //we always create new contestant
     }
 

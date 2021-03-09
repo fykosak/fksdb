@@ -2,10 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use InvalidArgumentException;
 use PDOException;
@@ -23,7 +24,7 @@ use Tracy\Debugger;
  * @deprecated
  * @use AbstractServiceSingle
  */
-abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements IService {
+abstract class OldAbstractServiceSingle extends AbstractService implements IService {
 
     /**
      * Use this method to create new models!
@@ -58,13 +59,13 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param IModel|AbstractModelSingle $model
+     * @param IModel|AbstractModel $model
      * @throws ModelException
      */
     public function dispose($model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->explorer->getConnection()->getPdo()->errorCode();
+            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
         }
     }
@@ -117,8 +118,8 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
             throw new ModelException('Error when storing model.', null, $exception);
         }
         // because ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
-        if (!(int)$this->explorer->getConnection()->getPdo()->errorInfo()) {
-            $code = $this->explorer->getConnection()->getPdo()->errorCode();
+        if (!(int)$this->getExplorer()->getConnection()->getPdo()->errorInfo()) {
+            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }
     }

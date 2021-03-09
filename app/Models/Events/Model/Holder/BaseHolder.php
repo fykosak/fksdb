@@ -9,9 +9,9 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\InvalidArgumentException;
@@ -207,7 +207,7 @@ class BaseHolder {
     }
 
     /**
-     * @return IService|AbstractServiceSingle|AbstractServiceMulti
+     * @return IService|AbstractService|AbstractServiceMulti
      */
     public function getService(): IService {
         return $this->service;

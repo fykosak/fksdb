@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
@@ -15,7 +15,7 @@ use FKSDB\Models\Submits\StorageException;
  * Class ServiceSchedulePayment
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceSchedulePayment extends AbstractServiceSingle {
+class ServiceSchedulePayment extends AbstractService {
 
     /**
      * @param array $data
@@ -28,7 +28,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
      * @throws ModelException
      */
     public function store(array $data, ModelPayment $payment): void {
-        if (!$this->getConnection()->getPdo()->inTransaction()) {
+        if (!$this->getExplorer()->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
 

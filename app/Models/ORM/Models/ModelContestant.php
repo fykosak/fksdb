@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
@@ -16,8 +17,7 @@ use Nette\Security\Resource;
  * @property-read int contest_id
  * @property-read int year
  */
-class ModelContestant extends AbstractModelSingle implements Resource {
-
+class ModelContestant extends AbstractModel implements Resource {
     public const RESOURCE_ID = 'contestant';
 
     public function getPerson(): ModelPerson {

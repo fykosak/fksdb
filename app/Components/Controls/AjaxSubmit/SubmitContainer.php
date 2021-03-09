@@ -7,7 +7,7 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 

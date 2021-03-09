@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services\Warehouse;
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * Class ServiceItem
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceItem extends AbstractServiceSingle {
+class ServiceItem extends AbstractService {
 }

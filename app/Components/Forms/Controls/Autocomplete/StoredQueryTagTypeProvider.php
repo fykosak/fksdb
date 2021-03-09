@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

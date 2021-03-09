@@ -6,11 +6,12 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelSubmitQuizQuestion;
 use Nette\Utils\DateTime;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
-class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
+class ServiceSubmitQuizQuestion extends AbstractService {
 
     public function findByContestant(int $ctId, int $questionId): ?ModelSubmitQuizQuestion {
         /** @var ModelSubmitQuizQuestion $result */

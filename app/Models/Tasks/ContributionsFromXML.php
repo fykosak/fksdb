@@ -56,7 +56,7 @@ class ContributionsFromXML extends Stage {
         $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
-        $this->taskContributionService->getConnection()->beginTransaction();
+        $this->taskContributionService->getExplorer()->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
             [$parent, $child] = explode('/', $xmlElement);
@@ -97,7 +97,7 @@ class ContributionsFromXML extends Stage {
             }
         }
 
-        $this->taskContributionService->getConnection()->commit();
+        $this->taskContributionService->getExplorer()->getConnection()->commit();
     }
 
 }

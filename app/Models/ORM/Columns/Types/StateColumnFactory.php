@@ -5,7 +5,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Forms\Controls\SelectBox;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
 /**
@@ -16,7 +16,7 @@ class StateColumnFactory extends ColumnFactory {
 
     protected array $states = [];
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $state = $model->{$this->getModelAccessKey()};
         if (is_null($state)) {
             return NotSetBadge::getHtml();

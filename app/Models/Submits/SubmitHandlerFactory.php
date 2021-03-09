@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;

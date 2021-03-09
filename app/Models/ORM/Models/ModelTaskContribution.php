@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -14,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow person
  * @property-read ActiveRow task
  */
-class ModelTaskContribution extends AbstractModelSingle {
+class ModelTaskContribution extends AbstractModel {
 
     public const TYPE_AUTHOR = 'author';
     public const TYPE_SOLUTION = 'solution';

@@ -4,7 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -18,7 +18,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -230,7 +230,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
+     * @return AbstractModelMulti|AbstractModel|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
     private function getEventApplication(): ?IModel {

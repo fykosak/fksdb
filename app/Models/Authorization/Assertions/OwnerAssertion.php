@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;

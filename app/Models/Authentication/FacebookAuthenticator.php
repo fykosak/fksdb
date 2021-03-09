@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
@@ -33,7 +33,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return AbstractModelSingle|ModelLogin
+     * @return AbstractModel|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
@@ -82,16 +82,16 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     private function registerFromFB(array $fbUser): ModelLogin {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
         $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
         $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
         $login = $this->accountManager->createLogin($person);
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->getExplorer()->getConnection()->commit();
         return $login;
     }
 
     private function updateFromFB(ModelPerson $person, array $fbUser): void {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
         unset($personData['family_name']);
@@ -113,7 +113,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
         $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
 
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->getExplorer()->getConnection()->commit();
     }
 
     private function getPersonData(array $fbUser): array {

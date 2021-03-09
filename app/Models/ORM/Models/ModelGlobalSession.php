@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -11,7 +13,7 @@ namespace FKSDB\Models\ORM\Models;
  * @property-read string session_id
  * @property-read string remote_ip
  */
-class ModelGlobalSession extends AbstractModelSingle {
+class ModelGlobalSession extends AbstractModel {
 
     public function isValid(): bool {
         $now = time();

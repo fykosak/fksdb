@@ -3,18 +3,19 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
- * @method ModelSubmit refresh(AbstractModelSingle $model)
+ * @method ModelSubmit refresh(AbstractModel $model)
  */
-class ServiceSubmit extends AbstractServiceSingle {
+class ServiceSubmit extends AbstractService {
 
     private array $submitCache = [];
 

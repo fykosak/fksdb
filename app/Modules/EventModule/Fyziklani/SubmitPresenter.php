@@ -5,7 +5,7 @@ namespace FKSDB\Modules\EventModule\Fyziklani;
 use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\PointsEntryComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;

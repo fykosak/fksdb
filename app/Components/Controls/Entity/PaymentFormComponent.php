@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -104,7 +104,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $model = $holder->getModel();
         }
 
-        $connection = $this->servicePayment->getConnection();
+        $connection = $this->servicePayment->getExplorer()->getConnection();
         $connection->beginTransaction();
 
         try {

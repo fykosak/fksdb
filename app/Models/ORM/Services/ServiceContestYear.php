@@ -2,8 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use Fykosak\NetteORM\AbstractService;
+
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceContestYear extends AbstractServiceSingle {
+class ServiceContestYear extends AbstractService {
+
 }
