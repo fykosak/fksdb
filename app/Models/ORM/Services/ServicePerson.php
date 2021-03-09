@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 

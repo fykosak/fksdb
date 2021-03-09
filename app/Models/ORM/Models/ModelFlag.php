@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -9,6 +10,6 @@ namespace FKSDB\Models\ORM\Models;
  * @property-read string fid
  * @property-read int flag_id
  */
-class ModelFlag extends AbstractModelSingle {
+class ModelFlag extends AbstractModel {
 
 }

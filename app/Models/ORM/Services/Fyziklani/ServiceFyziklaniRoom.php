@@ -3,13 +3,13 @@
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * Class ServiceFyziklaniRoom
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceFyziklaniRoom extends AbstractServiceSingle {
+class ServiceFyziklaniRoom extends AbstractService {
 
     /**
      * @param array $ids

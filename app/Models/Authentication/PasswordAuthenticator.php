@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\YearCalculator;
 use Nette\Security\Authenticator;
 use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
@@ -25,8 +24,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     private ServicePerson $servicePerson;
     private GlobalSession $globalSession;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson, GlobalSession $globalSession) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson, GlobalSession $globalSession) {
+        parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
         $this->globalSession = $globalSession;
     }
@@ -50,8 +49,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         }
 
         $this->logAuthentication($login);
-
-        $login->injectYearCalculator($this->yearCalculator);
 
         return $login;
     }
@@ -122,7 +119,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         if (!$login) {
             return null;
         }
-        $login->injectYearCalculator($this->yearCalculator);
         return $login;
     }
 }

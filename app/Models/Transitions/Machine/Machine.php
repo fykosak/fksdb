@@ -3,9 +3,9 @@
 namespace FKSDB\Models\Transitions\Machine;
 
 use Exception;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;
@@ -24,14 +24,14 @@ abstract class Machine {
     /** @var Transition[] */
     private array $transitions = [];
     protected Explorer $explorer;
-    private AbstractServiceSingle $service;
+    private AbstractService $service;
     /**
      * @var callable|null
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $implicitCondition = null;
 
-    public function __construct(Explorer $explorer, AbstractServiceSingle $service) {
+    public function __construct(Explorer $explorer, AbstractService $service) {
         $this->explorer = $explorer;
         $this->service = $service;
     }
@@ -167,5 +167,5 @@ abstract class Machine {
         $transition->callAfterExecute($holder);
     }
 
-    abstract public function createHolder(?AbstractModelSingle $model): ModelHolder;
+    abstract public function createHolder(?AbstractModel $model): ModelHolder;
 }

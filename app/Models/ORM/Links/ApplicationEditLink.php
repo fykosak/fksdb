@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 
@@ -17,19 +17,19 @@ class ApplicationEditLink extends LinkFactory {
     }
 
     /**
-     * @param ModelEventParticipant|AbstractModelSingle $model
+     * @param ModelEventParticipant|AbstractModel $model
      * @return string
      */
-    protected function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModel $model): string {
         return ':Public:Application:default';
     }
 
     /**
-     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @param AbstractModel|ModelEventParticipant $model
      * @return array
      * @throws BadRequestException
      */
-    protected function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModel $model): array {
         if ($model->getEvent()->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,

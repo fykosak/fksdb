@@ -5,7 +5,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;

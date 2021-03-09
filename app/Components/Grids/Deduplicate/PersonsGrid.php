@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;

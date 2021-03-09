@@ -3,9 +3,9 @@
 namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use Nette\Utils\ArrayHash;
 
@@ -28,7 +28,7 @@ class ServicePersonHasFlag extends OldAbstractServiceSingle {
         return parent::createNew($data);
     }
 
-    public function createNewModel(array $data): AbstractModelSingle {
+    public function createNewModel(array $data): AbstractModel {
         $data['modified'] = new DateTime();
         return parent::createNewModel($data);
     }
@@ -41,7 +41,7 @@ class ServicePersonHasFlag extends OldAbstractServiceSingle {
         parent::updateModel($model, $data);
     }
 
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(AbstractModel $model, array $data): bool {
         $data['modified'] = new DateTime();
         return parent::updateModel2($model, $data);
     }

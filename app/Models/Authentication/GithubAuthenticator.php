@@ -6,7 +6,6 @@ use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Models\Github\Events\Event;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -26,8 +25,8 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     private Container $container;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceLogin $serviceLogin, Container $container) {
+        parent::__construct($serviceLogin);
         $this->container = $container;
     }
 

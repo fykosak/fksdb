@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\InvalidStateException;
 use PDO;
 
@@ -16,7 +16,7 @@ use PDO;
  * @property-read string name
  * @property-read string description
  */
-class ModelStoredQueryParameter extends AbstractModelSingle {
+class ModelStoredQueryParameter extends AbstractModel {
 
     public const TYPE_INT = 'integer';
     public const TYPE_STRING = 'string';

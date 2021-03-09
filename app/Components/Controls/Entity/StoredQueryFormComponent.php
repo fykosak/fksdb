@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use FKSDB\Modules\OrgModule\StoredQueryPresenter;
@@ -61,7 +61,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      */
     protected function handleFormSuccess(Form $form): void {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
-        $connection = $this->serviceStoredQuery->getConnection();
+        $connection = $this->serviceStoredQuery->getExplorer()->getConnection();
         $connection->beginTransaction();
 
         $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);

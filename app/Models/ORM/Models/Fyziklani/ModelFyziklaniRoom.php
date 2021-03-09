@@ -1,7 +1,7 @@
 <?php
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  * @property-read int room_id
@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int rows
  * @property-read int columns
  */
-class ModelFyziklaniRoom extends AbstractModelSingle {
+class ModelFyziklaniRoom extends AbstractModel {
 
     public function __toArray(): array {
         return [

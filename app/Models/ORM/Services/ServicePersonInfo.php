@@ -3,17 +3,18 @@
 namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
-use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelPersonInfo refresh(AbstractModelSingle $model)
+ * @method ModelPersonInfo refresh(AbstractModel $model)
  * @method ModelPersonInfo findByPrimary($key)
  */
-class ServicePersonInfo extends AbstractServiceSingle {
+class ServicePersonInfo extends AbstractService {
 
     public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
@@ -23,12 +24,12 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModel|ModelPersonInfo $model
      * @param array $data
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(AbstractModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

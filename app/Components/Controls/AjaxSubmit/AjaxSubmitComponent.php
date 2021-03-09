@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
@@ -32,13 +32,11 @@ class AjaxSubmitComponent extends AjaxComponent {
     private ModelTask $task;
     private ModelContestant $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private int $academicYear;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
+    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant) {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
-        $this->academicYear = $academicYear;
     }
 
     final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
@@ -86,7 +84,7 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @throws NotFoundException
      */
     protected function getData(): array {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
         return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
@@ -98,7 +96,7 @@ class AjaxSubmitComponent extends AjaxComponent {
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
-            $this->serviceSubmit->getConnection()->beginTransaction();
+            $this->serviceSubmit->getExplorer()->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
@@ -111,7 +109,7 @@ class AjaxSubmitComponent extends AjaxComponent {
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->serviceSubmit->getConnection()->commit();
+            $this->serviceSubmit->getExplorer()->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), Logger::SUCCESS));
             $this->sendAjaxResponse();
         }

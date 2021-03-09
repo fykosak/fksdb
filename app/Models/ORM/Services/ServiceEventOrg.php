@@ -2,17 +2,17 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
-
+use Fykosak\NetteORM\AbstractService;
 /**
  * Class ServiceEventOrg
  * @author Michal Červeňák <miso@fykos.cz>
- * @method ModelEventOrg refresh(AbstractModelSingle $model)
+ * @method ModelEventOrg refresh(AbstractModel $model)
  */
-class ServiceEventOrg extends AbstractServiceSingle {
+class ServiceEventOrg extends AbstractService {
 
     public function createNewModel(array $data): ModelEventOrg {
         try {

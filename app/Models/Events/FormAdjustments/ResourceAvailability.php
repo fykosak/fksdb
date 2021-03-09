@@ -2,11 +2,10 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\IService;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -23,8 +22,7 @@ class ResourceAvailability extends AbstractAdjustment {
     private array $fields;
     /** @var string Name of event parameter that hold overall capacity. */
     private string $paramCapacity;
-    /** @var array|string */
-    private $includeStates;
+    private array $includeStates;
     /** @var string[] */
     private array $excludeStates;
     private string $message;
@@ -34,10 +32,10 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param string $includeStates any state or array of state
+     * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -45,7 +43,7 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -95,10 +93,10 @@ class ResourceAvailability extends AbstractAdjustment {
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if ($this->includeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
+            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if ($this->excludeStates !== \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY) {
+            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');

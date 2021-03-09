@@ -4,12 +4,12 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\ReferencedFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\ReferencedAccessor;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
@@ -121,17 +121,17 @@ abstract class ColumnFactory {
         throw new OmittedControlException();
     }
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param int $userPermissionsLevel
      * @return Html
      * @throws CannotAccessModelException
      */
-    final public function render(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+    final public function render(AbstractModel $model, int $userPermissionsLevel): Html {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
@@ -143,12 +143,12 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle $modelSingle
-     * @return AbstractModelSingle|null
+     * @param AbstractModel $modelSingle
+     * @return AbstractModel|null
      * @throws CannotAccessModelException
      */
-    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
-        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
+    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {
+        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     final public function hasReadPermissions(int $userValue): bool {

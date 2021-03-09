@@ -9,6 +9,7 @@ use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -32,7 +33,7 @@ use Nette\Security\Resource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements Resource {
+class ModelPayment extends AbstractModel implements Resource {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received

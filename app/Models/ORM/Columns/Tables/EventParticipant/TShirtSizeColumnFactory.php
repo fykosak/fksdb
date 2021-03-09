@@ -5,7 +5,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
 /**
@@ -23,10 +23,10 @@ class TShirtSizeColumnFactory extends ColumnFactory {
     ];
 
     /**
-     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @param AbstractModel|ModelEventParticipant $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return (new StringPrinter())($model->tshirt_size);
     }
 }

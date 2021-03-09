@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
@@ -14,10 +14,10 @@ use Nette\Utils\Html;
  */
 class TShirtColorColumnFactory extends ColumnFactory {
     /**
-     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @param AbstractModel|ModelEventParticipant $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $value = $model->tshirt_color;
         if (\is_null($value)) {
             return NotSetBadge::getHtml();

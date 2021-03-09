@@ -2,15 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelOrg;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelOrg createNewModel(array $data)
- * @method ModelOrg refresh(AbstractModelSingle $model)
+ * @method ModelOrg refresh(AbstractModel $model)
  */
-class ServiceOrg extends AbstractServiceSingle {
+class ServiceOrg extends AbstractService {
 
     public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
         if (!$signature) {

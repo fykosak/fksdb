@@ -152,7 +152,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form, $this->getMachine());
+        $this->holder->adjustForm($form);
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';

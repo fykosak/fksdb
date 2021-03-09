@@ -5,7 +5,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Org;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
@@ -20,11 +20,11 @@ use Nette\Utils\Html;
 class DomainAliasColumnFactory extends ColumnFactory {
 
     /**
-     * @param AbstractModelSingle|ModelOrg $model
+     * @param AbstractModel|ModelOrg $model
      * @return Html
      * @throws ContestNotFoundException
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         switch ($model->contest_id) {
             case ModelContest::ID_FYKOS:
                 return (new EmailPrinter())($model->domain_alias . '@fykos.cz');

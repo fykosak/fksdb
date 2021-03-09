@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -21,7 +21,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
 use Nette\Security\Resource;
 
 /**
@@ -29,6 +28,7 @@ use Nette\Security\Resource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     protected ApplicationHandlerFactory $applicationHandlerFactory;
@@ -106,12 +106,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**
@@ -124,12 +119,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**

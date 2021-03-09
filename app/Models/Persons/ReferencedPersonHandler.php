@@ -6,10 +6,10 @@ use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
@@ -183,7 +183,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-            /** @var ModelPostContact|ModelPerson|AbstractModelSingle|ModelPersonInfo|ModelPersonHistory $model */
+            /** @var ModelPostContact|ModelPerson|AbstractModel|ModelPersonInfo|ModelPersonHistory $model */
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
@@ -368,7 +368,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function beginTransaction(): void {
-        $connection = $this->servicePerson->getConnection();
+        $connection = $this->servicePerson->getExplorer()->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
@@ -377,14 +377,14 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function commit(): void {
-        $connection = $this->servicePerson->getConnection();
+        $connection = $this->servicePerson->getExplorer()->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
     }
 
     private function rollback(): void {
-        $connection = $this->servicePerson->getConnection();
+        $connection = $this->servicePerson->getExplorer()->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();
         }

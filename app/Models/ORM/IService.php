@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\Database\Table\Selection;
 
@@ -43,7 +43,7 @@ interface IService {
     public function updateModel(IModel $model, iterable $data): void;
 
     /**
-     * @return string|AbstractModelSingle|AbstractModelMulti
+     * @return string|AbstractModel|AbstractModelMulti
      */
     public function getModelClassName(): string;
 }
