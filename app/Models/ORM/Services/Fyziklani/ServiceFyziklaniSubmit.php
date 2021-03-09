@@ -6,14 +6,14 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
-class ServiceFyziklaniSubmit extends AbstractServiceSingle {
+class ServiceFyziklaniSubmit extends AbstractService {
 
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */

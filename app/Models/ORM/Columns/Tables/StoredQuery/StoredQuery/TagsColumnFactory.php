@@ -6,7 +6,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
@@ -27,10 +27,10 @@ class TagsColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelStoredQuery $model
+     * @param AbstractModel|ModelStoredQuery $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type

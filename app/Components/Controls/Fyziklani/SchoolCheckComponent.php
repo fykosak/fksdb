@@ -39,7 +39,7 @@ class SchoolCheckComponent extends BaseComponent {
 
     public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
-        $query = $this->serviceSchool->getContext()->query(
+        $query = $this->serviceSchool->getExplorer()->query(
             'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id
 from event_participant ep
          JOIN person_history ph ON ph.person_id = ep.person_id and ac_year = ? and school_id IN (?)

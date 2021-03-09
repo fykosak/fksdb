@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Strings;
 
 /**
@@ -10,7 +11,7 @@ use Nette\Utils\Strings;
  * @property-read int $contest_id
  * @property-read string $name
  */
-class ModelContest extends AbstractModelSingle {
+class ModelContest extends AbstractModel {
 
     public const ID_FYKOS = 1;
     public const ID_VYFUK = 2;

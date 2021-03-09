@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\YearCalculator;
 
 /**

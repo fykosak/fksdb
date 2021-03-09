@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Utils\Html;
 
@@ -14,10 +14,10 @@ use Nette\Utils\Html;
 class PointsColumnFactory extends ColumnFactory {
 
     /**
-     * @param AbstractModelSingle|ModelFyziklaniSubmit $model
+     * @param AbstractModel|ModelFyziklaniSubmit $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $el = Html::el('span');
         if (!\is_null($model->points)) {
             return $el->addText($model->points);

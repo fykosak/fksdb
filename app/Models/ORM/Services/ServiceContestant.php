@@ -5,11 +5,12 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Database\Table\Selection;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceContestant extends AbstractServiceSingle {
+class ServiceContestant extends AbstractService {
 
     protected string $viewName = DbNames::VIEW_CONTESTANT;
 
@@ -22,7 +23,7 @@ class ServiceContestant extends AbstractServiceSingle {
      * TODO
      */
     public function getCurrentContestants(ModelContest $contest, int $year): Selection {
-        $contestants = $this->getContext()->table($this->viewName)
+        $contestants = $this->getExplorer()->table($this->viewName)
             ->select('*');
 
         $contestants->where([

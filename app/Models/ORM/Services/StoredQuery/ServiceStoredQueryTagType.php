@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class ServiceStoredQueryTagType extends AbstractServiceSingle {
+class ServiceStoredQueryTagType extends AbstractService {
 
 }

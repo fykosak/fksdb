@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;

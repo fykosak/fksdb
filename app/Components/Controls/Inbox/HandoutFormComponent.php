@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Models\ModelTaskContribution;
@@ -74,7 +74,7 @@ class HandoutFormComponent extends BaseComponent {
     public function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
 
-        $connection = $this->serviceTaskContribution->getConnection();
+        $connection = $this->serviceTaskContribution->getExplorer()->getConnection();
 
         $connection->beginTransaction();
         /** @var ModelTask $task */

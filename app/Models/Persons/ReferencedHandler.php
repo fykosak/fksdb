@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\IModel;
 use Nette\Utils\ArrayHash;
 
@@ -23,9 +23,9 @@ interface ReferencedHandler {
 
     public function update(IModel $model, ArrayHash $values): void;
 
-    public function createFromValues(ArrayHash $values): AbstractModelSingle;
+    public function createFromValues(ArrayHash $values): AbstractModel;
 
     public function isSecondaryKey(string $field): bool;
 
-    public function findBySecondaryKey(string $field, string $key): ?AbstractModelSingle;
+    public function findBySecondaryKey(string $field, string $key): ?AbstractModel;
 }

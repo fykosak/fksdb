@@ -61,7 +61,7 @@ class StudyYearsFromXML extends Stage {
         $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
-        $this->serviceTaskStudyYear->getConnection()->beginTransaction();
+        $this->serviceTaskStudyYear->getExplorer()->getConnection()->beginTransaction();
 
         // parse contributors
         $studyYears = [];

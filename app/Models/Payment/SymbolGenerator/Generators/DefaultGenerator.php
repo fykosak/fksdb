@@ -61,7 +61,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
         }
-        $maxVariableSymbol = $this->servicePayment->where('event_id', $modelPayment->event_id)
+        $maxVariableSymbol = $this->servicePayment->getTable()->where('event_id', $modelPayment->event_id)
             ->where('variable_symbol>=?', $this->getVariableSymbolStart())
             ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
             ->max('variable_symbol');

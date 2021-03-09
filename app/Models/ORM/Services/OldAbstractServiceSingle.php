@@ -2,10 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use InvalidArgumentException;
 use PDOException;
@@ -21,7 +22,7 @@ use Tracy\Debugger;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
  */
-abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements IService {
+abstract class OldAbstractServiceSingle extends AbstractService implements IService {
 
     /**
      * Use this method to create new models!
@@ -49,20 +50,20 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
     public function createFromArray(array $data): OldAbstractModelSingle {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);
-        return new $className($data, $this);
+        return new $className($data, $this->getTable());
     }
 
     /**
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param IModel|AbstractModelSingle $model
+     * @param IModel|AbstractModel $model
      * @throws ModelException
      */
     public function dispose($model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->context->getConnection()->getPdo()->errorCode();
+            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when deleting a model.");
         }
     }
@@ -115,8 +116,8 @@ abstract class OldAbstractServiceSingle extends AbstractServiceSingle implements
             throw new ModelException('Error when storing model.', null, $exception);
         }
         // because ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
-        if (!(int)$this->context->getConnection()->getPdo()->errorInfo()) {
-            $code = $this->context->getConnection()->getPdo()->errorCode();
+        if (!(int)$this->getExplorer()->getConnection()->getPdo()->errorInfo()) {
+            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
             throw new ModelException("$code: Error when storing a model.");
         }
     }

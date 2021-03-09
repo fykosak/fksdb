@@ -146,8 +146,8 @@ class YearCalculator {
             throw new InvalidStateException('FKSDB\YearCalculator cannot be initialized, table contest_year is probably empty.');
         }
 
-        $pk = $this->serviceContest->getPrimary();
-        $contests = $this->serviceContest->fetchPairs($pk, $pk);
+        $pk = $this->serviceContest->getTable()->getPrimary();
+        $contests = $this->serviceContest->getTable()->fetchPairs($pk, $pk);
         foreach ($contests as $contestId) {
             if (!array_key_exists($contestId, $this->revCache)) {
                 throw new InvalidStateException(sprintf('Table contest_year does not specify any years at all for contest %s.', $contestId));

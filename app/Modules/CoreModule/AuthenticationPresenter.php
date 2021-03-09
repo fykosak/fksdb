@@ -261,7 +261,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form): void {
-        $connection = $this->serviceAuthToken->getConnection();
+        $connection = $this->serviceAuthToken->getExplorer()->getConnection();
         try {
             $values = $form->getValues();
 

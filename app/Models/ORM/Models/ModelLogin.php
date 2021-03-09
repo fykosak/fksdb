@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
@@ -20,7 +21,7 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModelSingle implements IIdentity {
+class ModelLogin extends AbstractModel implements IIdentity {
 
     private YearCalculator $yearCalculator;
 

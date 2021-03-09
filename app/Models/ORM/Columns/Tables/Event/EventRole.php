@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\ReferencedFactory;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\YearCalculator;
 use Nette\Security\IUserStorage;
@@ -30,11 +30,11 @@ class EventRole extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @return Html
      * @throws CannotAccessModelException
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         try {
             $person = ReferencedFactory::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
@@ -45,7 +45,7 @@ class EventRole extends ColumnFactory {
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }
 
-    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
+    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {
         return $modelSingle; // need to be original model because of referenced access
     }
 }

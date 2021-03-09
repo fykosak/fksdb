@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Security\Resource;
 
 /**
@@ -11,7 +11,7 @@ use Nette\Security\Resource;
  * @property-read int producer_id
  * @property-read string name
  */
-class ModelProducer extends AbstractModelSingle implements Resource {
+class ModelProducer extends AbstractModel implements Resource {
     public const RESOURCE_ID = 'warehouse.producer';
 
     public function getResourceId(): string {
