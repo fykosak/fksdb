@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  * Class ModelFyziklaniGameSetup
@@ -16,7 +16,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
-class ModelFyziklaniGameSetup extends AbstractModelSingle {
+class ModelFyziklaniGameSetup extends AbstractModel {
     /**
      * @return int[]
      */

@@ -4,13 +4,13 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class ServiceFyziklaniTask extends AbstractServiceSingle {
+class ServiceFyziklaniTask extends AbstractService {
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
         /** @var ModelFyziklaniTask $result */

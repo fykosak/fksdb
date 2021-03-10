@@ -3,19 +3,20 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelEvent createNewModel(array $data)
  * @method ModelEvent|null findByPrimary($key)
- * @method ModelEvent refresh(AbstractModelSingle $model)
+ * @method ModelEvent refresh(AbstractModel $model)
  */
-class ServiceEvent extends AbstractServiceSingle {
+class ServiceEvent extends AbstractService {
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
         return $this->getTable()

@@ -3,7 +3,7 @@
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -28,10 +28,10 @@ class HealthInsuranceColumnFactory extends ColumnFactory {
     ];
 
     /**
-     * @param AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModel|ModelPersonInfo $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return Html::el('span')->addText(self::ID_MAPPING[$model->health_insurance]);
         }

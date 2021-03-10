@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\Columns\Types\{
     DateTime\TimeColumnFactory,
 };
 use FKSDB\Models\ORM\Links\Link;
-use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\DI\Definitions\Statement;
@@ -24,7 +23,7 @@ use Nette\DI\Definitions\Statement;
 /**
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ORMExtension extends CompilerExtension {
+class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
 
     /**
      * @throws NotImplementedException

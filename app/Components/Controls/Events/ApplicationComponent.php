@@ -14,10 +14,9 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
-use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
@@ -137,7 +136,7 @@ class ApplicationComponent extends BaseComponent {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
         }
 
         /*
@@ -153,7 +152,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Custom adjustments
          */
-        $this->holder->adjustForm($form, $this->getMachine());
+        $this->holder->adjustForm($form);
         $form->getElementPrototype()->data['submit-on'] = 'enter';
         if ($saveSubmit) {
             $saveSubmit->getControlPrototype()->data['submit-on'] = 'this';
@@ -164,11 +163,6 @@ class ApplicationComponent extends BaseComponent {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     * @param string|null $explicitTransitionName
-     * @throws AbortException
-     */
     public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void {
         try {
             $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
@@ -188,7 +182,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     private function canEdit(): bool {
-        return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void {

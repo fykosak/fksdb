@@ -2,18 +2,18 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * Class ServiceScheduleGroup
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleGroup|null findByPrimary($key)
  * @method ModelScheduleGroup createNewModel(array $data)
- * @method ModelScheduleGroup refresh(AbstractModelSingle $model)
+ * @method ModelScheduleGroup refresh(AbstractModel $model)
  */
-class ServiceScheduleGroup extends AbstractServiceSingle {
+class ServiceScheduleGroup extends AbstractService {
 
     public function store(?ModelScheduleGroup $group, array $data): ModelScheduleGroup {
         if (is_null($group)) {

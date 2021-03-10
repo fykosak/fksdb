@@ -3,15 +3,15 @@
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceStoredQuery extends AbstractServiceSingle {
+class ServiceStoredQuery extends AbstractService {
 
     private ServiceStoredQueryTag $serviceStoredQueryTag;
 

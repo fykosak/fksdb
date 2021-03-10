@@ -6,7 +6,6 @@ use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -68,7 +67,6 @@ trait MockApplicationTrait {
         $storage->setAuthenticated(true);
 
         if ($presenter) {
-            $login->injectYearCalculator($this->getContainer()->getByType(YearCalculator::class));
             $presenter->getUser()->login($login);
         }
     }

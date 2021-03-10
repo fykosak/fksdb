@@ -4,12 +4,13 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelRegion;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceSchool extends AbstractServiceSingle {
+class ServiceSchool extends AbstractService {
 
     public function getSchools(): TypedTableSelection {
         return $this->getTable()

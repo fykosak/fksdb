@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\ORM\Models\Events;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ModelDsefGroup extends AbstractModelSingle {
+class ModelDsefGroup extends AbstractModel {
 
 }

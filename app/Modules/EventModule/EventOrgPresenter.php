@@ -4,7 +4,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Messages\Message;

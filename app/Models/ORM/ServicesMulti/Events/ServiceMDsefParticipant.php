@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti\Events;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;

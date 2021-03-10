@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;

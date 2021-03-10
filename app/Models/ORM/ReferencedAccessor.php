@@ -2,17 +2,17 @@
 
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  * Class ReferencedFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
-final class ReferencedFactory {
+final class ReferencedAccessor {
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @param string $modelClassName
      * @return IModel|null
      * @throws CannotAccessModelException

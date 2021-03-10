@@ -2,23 +2,22 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 class PasswordProcessing extends AbstractProcessing {
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
 
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
 
         if (!isset($values['team']['password']) || !$values['team']['password']) {
             $result = $values['team']['password'] = $original;

@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
@@ -203,15 +202,14 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
      */
-    public function getActiveOrgs(YearCalculator $yearCalculator): array {
+    public function getActiveOrgs(): array {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
             $org = ModelOrg::createFromActiveRow($org);
-            $year = $yearCalculator->getCurrentYear($org->getContest());
+            $year = $org->getContest()->getCurrentYear();
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
             }
@@ -219,8 +217,8 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
         return $result;
     }
 
-    public function getActiveOrgsAsQuery(YearCalculator $yearCalculator, ModelContest $contest): GroupedSelection {
-        $year = $yearCalculator->getCurrentYear($contest);
+    public function getActiveOrgsAsQuery(ModelContest $contest): GroupedSelection {
+        $year = $contest->getCurrentYear();
         return $this->related(DbNames::TAB_ORG, 'person_id')
             ->where('contest_id', $contest->contest_id)
             ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
@@ -229,14 +227,13 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param YearCalculator $yearCalculator
      * @return ModelContestant[] indexed by contest_id
      */
-    public function getActiveContestants(YearCalculator $yearCalculator): array {
+    public function getActiveContestants(): array {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromActiveRow($contestant);
-            $currentYear = $yearCalculator->getCurrentYear($contestant->getContest());
+            $currentYear = $contestant->getContest()->getCurrentYear();
             if ($contestant->year >= $currentYear) { // forward contestant
                 if (isset($result[$contestant->contest_id])) {
                     if ($contestant->year > $result[$contestant->contest_id]->year) {
@@ -349,10 +346,9 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
 
     /**
      * @param ModelEvent $event
-     * @param YearCalculator $yearCalculator
      * @return array[]
      */
-    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
+    public function getRolesForEvent(ModelEvent $event): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeachers()->where('event_id', $eventId);
@@ -379,7 +375,7 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
                 'participant' => $participant,
             ];
         }
-        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
+        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs())) {
             $roles[] = [
                 'type' => 'contest_org',
             ];

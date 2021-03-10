@@ -37,7 +37,7 @@ trait YearPresenterTrait {
      * @throws ForbiddenRequestException
      */
     private function selectYear(): int {
-        $candidate = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+        $candidate = $this->getSelectedContest()->getCurrentYear();
         if (!$this->isValidYear($candidate)) {
             throw new ForbiddenRequestException();
         }
@@ -57,7 +57,7 @@ trait YearPresenterTrait {
     }
 
     public function getSelectedAcademicYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->getSelectedContest()->getContestYear($this->getSelectedYear())->ac_year;
     }
 
     protected function createComponentYearChooser(): YearChooserComponent {

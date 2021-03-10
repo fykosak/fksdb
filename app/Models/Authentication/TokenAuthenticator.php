@@ -7,7 +7,6 @@ use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
@@ -23,8 +22,8 @@ class TokenAuthenticator extends AbstractAuthenticator {
     private ServiceAuthToken $authTokenService;
     private Session $session;
 
-    public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin) {
+        parent::__construct($serviceLogin);
         $this->authTokenService = $authTokenService;
         $this->session = $session;
     }

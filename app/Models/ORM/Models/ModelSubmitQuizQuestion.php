@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -13,7 +14,7 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read \DateTimeInterface submitted_on
  * @property-read string answer
  */
-class ModelSubmitQuizQuestion extends AbstractModelSingle {
+class ModelSubmitQuizQuestion extends AbstractModel {
 
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));

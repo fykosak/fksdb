@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\Logging\Logger;
@@ -12,7 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\YearCalculator;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -21,8 +19,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
 
     private int $rulesVersion;
 
-    public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
-        parent::__construct($yearCalculator, $serviceSchool, $servicePerson);
+    public function __construct(int $rulesVersion, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
+        parent::__construct($serviceSchool, $servicePerson);
 
         if (!in_array($rulesVersion, [1, 2])) {
             throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
@@ -30,7 +28,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $this->rulesVersion = $rulesVersion;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -38,7 +36,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
 
         $result = $values['team']['category'] = $this->getCategory($participants);
 
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }
