@@ -8,9 +8,9 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -32,10 +32,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|null|AbstractModelSingle $model
+     * @param ModelContestant|null|AbstractModel $model
      * @param Form|Control[][] $form
      */
-    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
+    protected function setDefaults(?AbstractModel $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -57,7 +57,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): AbstractServiceSingle;
+    abstract protected function getORMService(): AbstractService;
 
     protected function getAcYearFromModel(): ?int {
         return null;
@@ -76,12 +76,14 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $fieldsDefinition = $this->getFieldsDefinition();
-        $acYear = $this->getAcYearFromModel() ? $this->getAcYearFromModel() : $this->getSelectedAcademicYear();
-        $searchType = PersonSearchContainer::SEARCH_ID;
-        $allowClear = $create;
-        $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getFieldsDefinition(),
+            $this->getAcYearFromModel() ?? $this->getSelectedAcademicYear(),
+            PersonSearchContainer::SEARCH_ID,
+            $create,
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
+        );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
@@ -123,7 +125,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         return $this->createComponentFormControl(false);
     }
 
-    protected function loadModel(int $id): ?AbstractModelSingle {
+    protected function loadModel(int $id): ?AbstractModel {
         return $this->getORMService()->findByPrimary($id);
     }
 }

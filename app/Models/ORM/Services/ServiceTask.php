@@ -4,11 +4,12 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelTask;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceTask extends AbstractServiceSingle {
+class ServiceTask extends AbstractService {
 
     public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr): ?ModelTask {
         /** @var ModelTask $result */

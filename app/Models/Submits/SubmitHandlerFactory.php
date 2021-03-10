@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -106,9 +106,9 @@ class SubmitHandlerFactory {
         return $submit;
     }
 
-    public function getUserStudyYear(ModelContestant $contestant, int $academicYear): ?int {
+    public function getUserStudyYear(ModelContestant $contestant): ?int {
         // TODO AC_year from contestant
-        $personHistory = $contestant->getPerson()->getHistory($academicYear);
+        $personHistory = $contestant->getPersonHistory();
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 

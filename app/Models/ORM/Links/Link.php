@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  * Class Link
@@ -26,11 +26,11 @@ class Link extends LinkFactory {
         return _($this->title);
     }
 
-    protected function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModel $model): string {
         return $this->destination;
     }
 
-    protected function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModel $model): array {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

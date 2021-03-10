@@ -99,7 +99,6 @@ services:
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
     - FKSDB\Components\Controls\Events\ExpressionPrinter
-    - FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
 
     ## forms
     #provider

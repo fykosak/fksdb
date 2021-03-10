@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Services\ServiceContestant;
@@ -9,10 +10,10 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use FKSDB\Models\SQL\ViewDataSource;
 
 /**
  *
@@ -37,8 +38,11 @@ class ContestantsGrid extends BaseGrid {
     }
 
     protected function getData(): IDataSource {
-        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
-        return new ViewDataSource('ct_id', $contestants);
+        $contestants = $this->serviceContestant->getTable()->where([
+            'contest_id' => $this->contest,
+            'year' => $this->year,
+        ]);
+        return new NDataSource($contestants);
     }
 
     /**
@@ -48,15 +52,19 @@ class ContestantsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws BadTypeException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
-        $this->setDefaultOrder('name_lex ASC');
-
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Study year'));
-        $this->addColumn('school_name', _('School'));
+        $this->setDefaultOrder('person.other_name ASC');
+        $this->addColumns([
+            'person.full_name',
+            'person_history.study_year',
+        ]);
+        $this->addColumn('school_name', _('School'))->setRenderer(function (ModelContestant $contestant) {
+            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
+        });
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);

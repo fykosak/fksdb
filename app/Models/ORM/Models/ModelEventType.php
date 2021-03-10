@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -11,7 +12,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int contest_id
  * @property-read int event_type_id
  */
-class ModelEventType extends AbstractModelSingle {
+class ModelEventType extends AbstractModel {
 
     public const FYZIKLANI = 1;
 

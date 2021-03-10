@@ -36,13 +36,12 @@ class PrivacyPolicy implements Processing, FormAdjustment {
 
     /**
      * @param Form $form
-     * @param Machine $machine
      * @param Holder $holder
      * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function adjust(Form $form, Machine $machine, Holder $holder): void {
+    public function adjust(Form $form, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return;
         }

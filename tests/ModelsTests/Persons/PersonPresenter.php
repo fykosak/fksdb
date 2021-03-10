@@ -2,13 +2,13 @@
 
 namespace FKSDB\Tests\ModelsTests\Persons;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
+use Fykosak\NetteORM\AbstractModel;
 
 class PersonPresenter extends BasePresenter implements ExtendedPersonPresenter {
 
-    public function getModel(): ?AbstractModelSingle {
+    public function getModel(): ?AbstractModel {
         return null;
     }
 

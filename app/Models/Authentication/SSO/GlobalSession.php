@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Authentication\SSO;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
 use FKSDB\Models\ORM\Services\ServiceGlobalSession;
 use Nette\InvalidArgumentException;

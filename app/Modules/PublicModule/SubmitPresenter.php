@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
@@ -18,7 +18,7 @@ use FKSDB\Models\ORM\Services\ServiceQuizQuestion;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\ORM\Services\ServiceSubmitQuizQuestion;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
@@ -96,12 +96,12 @@ class SubmitPresenter extends BasePresenter {
         if (!$this->template->hasTasks) {
             /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+            $currentYear = $this->getSelectedContest()->getCurrentYear();
             $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->yearCalculator->getCurrentYear($this->getSelectedContest())) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedYear() == $this->getSelectedContest()->getCurrentYear()) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
@@ -197,7 +197,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     protected function createComponentSubmitContainer(): SubmitContainer {
-        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
+        return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 
     /**
@@ -214,11 +214,10 @@ class SubmitPresenter extends BasePresenter {
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
         try {
-            $this->submitService->getConnection()->beginTransaction();
+            $this->submitService->getExplorer()->getConnection()->beginTransaction();
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);
@@ -254,11 +253,11 @@ class SubmitPresenter extends BasePresenter {
             }
 
             $this->uploadedSubmitStorage->commit();
-            $this->submitService->getConnection()->commit();
+            $this->submitService->getExplorer()->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException | ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
-            $this->submitService->getConnection()->rollBack();
+            $this->submitService->getExplorer()->getConnection()->rollBack();
             Debugger::log($exception);
             $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         }

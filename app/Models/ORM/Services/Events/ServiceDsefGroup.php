@@ -2,10 +2,10 @@
 
 namespace FKSDB\Models\ORM\Services\Events;
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceDsefGroup extends AbstractServiceSingle {
+class ServiceDsefGroup extends AbstractService {
 }

@@ -8,6 +8,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\DevNullLogger;
@@ -66,7 +67,7 @@ class ApplicationHandlerTest extends EventTestCase {
     }
 
     protected function tearDown(): void {
-         $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT,DbNames::TAB_E_FYZIKLANI_TEAM]);
+        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
 
@@ -78,9 +79,9 @@ class ApplicationHandlerTest extends EventTestCase {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
-        $this->createPersonHistory($id2, 2000, 1, 1);
+        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), 1, 1);
         $id3 = $this->createPerson('Kristína', 'Nešporová', ['email' => 'kiki@fykos.cz']);
-        $this->createPersonHistory($id3, 2000, 1, 1);
+        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), 1, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 

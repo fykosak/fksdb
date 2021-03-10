@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
+
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -9,6 +11,6 @@ namespace FKSDB\Models\ORM\Models;
  * @property-read int ac_year
  * @property-read int year
  */
-class ModelContestYear extends AbstractModelSingle {
+class ModelContestYear extends AbstractModel {
 
 }

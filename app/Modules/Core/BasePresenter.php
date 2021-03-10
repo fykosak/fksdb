@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
-use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
@@ -61,7 +60,6 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     public ?string $lang = null;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
-    protected BreadcrumbsFactory $breadcrumbsFactory;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     private ?PageTitle $pageTitle;
@@ -74,13 +72,11 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         Nette\DI\Container $diContainer,
         YearCalculator $yearCalculator,
         ServiceContest $serviceContest,
-        BreadcrumbsFactory $breadcrumbsFactory,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator
     ): void {
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
-        $this->breadcrumbsFactory = $breadcrumbsFactory;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
         $this->diContainer = $diContainer;
@@ -222,7 +218,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     }
 
     protected function createComponentBreadcrumbs(): BreadcrumbsComponent {
-        return $this->breadcrumbsFactory->create();
+        return new BreadcrumbsComponent($this->getContext());
     }
 
     protected function createComponentNavigationChooser(): NavigationChooserComponent {
