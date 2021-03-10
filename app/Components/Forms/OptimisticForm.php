@@ -35,12 +35,12 @@ class OptimisticForm extends Form {
     }
 
     /**
-     * @param null $values Must be always null! Defaults callback is used to produce the values.
+     * @param null $data Must be always null! Defaults callback is used to produce the values.
      * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($values = null, $erase = false): self {
-        if ($values !== null) {
+    public function setDefaults($data = null, $erase = false): self {
+        if ($data !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
 

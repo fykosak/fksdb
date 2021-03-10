@@ -21,9 +21,7 @@ use PDOException;
 class Handler {
 
     private ServiceScheduleGroup $serviceScheduleGroup;
-
     private ServicePersonSchedule $servicePersonSchedule;
-
     private ServiceScheduleItem $serviceScheduleItem;
 
     public function __construct(

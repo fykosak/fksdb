@@ -6,7 +6,7 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
@@ -30,7 +30,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $this->rulesVersion = $rulesVersion;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -40,7 +40,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }
     }
 
@@ -51,13 +51,13 @@ class CategoryProcessing extends AbstractCategoryProcessing {
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      */
-    protected function getCategory(array $competitors): string {
+    protected function getCategory(array $participants): string {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         $abroad = 0;
         // calculate stats
-        foreach ($competitors as $competitor) {
+        foreach ($participants as $competitor) {
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {

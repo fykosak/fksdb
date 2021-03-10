@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Trait EntityTrait
@@ -23,9 +23,8 @@ trait EntityPresenterTrait {
 
     /**
      * @persistent
-     * @var int
      */
-    public $id;
+    public ?int $id = null;
     protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {
@@ -116,10 +115,7 @@ trait EntityPresenterTrait {
     public function getEntity(bool $throw = true): ?AbstractModelSingle {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
-        if (
-            (isset($this->model) && $id !== $this->model->getPrimary())
-            || !isset($this->model)
-        ) {
+        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
             $this->model = $this->loadModel($throw);
         }
         return $this->model;
@@ -180,7 +176,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

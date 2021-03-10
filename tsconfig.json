@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "/dist",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "target": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "FKSDB/*": [
+        "./app/*"
+      ],
+      "@translator/*": [
+        "./app/Models/Localization/*"
+      ]
+    }
+  },
+  "include": [
+    "./app/**/*",
+    "./vendor/fykosak/**/*"
+  ]
+}

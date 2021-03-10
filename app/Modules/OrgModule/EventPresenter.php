@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -29,11 +29,11 @@ class EventPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Events'), 'fa fa-calendar-check-o');
+        return new PageTitle(_('Events'), 'fa fa-calendar');
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Add event'), 'fa fa-calendar-plus-o');
+        return new PageTitle(_('Add event'), 'fa fa-calendar');
     }
 
     /**
@@ -73,7 +73,7 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

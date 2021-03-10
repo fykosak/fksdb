@@ -33,7 +33,7 @@ class SubmitContainer extends BaseComponent {
 
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $this->addComponent(new AjaxSubmit($this->getContext(), $task, $contestant, $acYear), 'task_' . $task->task_id);
+            $this->addComponent(new AjaxSubmitComponent($this->getContext(), $task, $contestant, $acYear), 'task_' . $task->task_id);
         }
     }
 

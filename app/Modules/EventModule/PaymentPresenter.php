@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
-use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -19,7 +19,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class PaymentPresenter
@@ -79,7 +79,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Authorization *****************/
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
@@ -184,15 +184,15 @@ class PaymentPresenter extends BasePresenter {
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsControl
+     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
+        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
     /**

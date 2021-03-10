@@ -11,7 +11,7 @@ use Nette\Utils\Strings;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PDFStamper implements IStorageProcessing {
+class PDFStamper implements StorageProcessing {
 
     private string $inputFile;
 
@@ -34,16 +34,16 @@ class PDFStamper implements IStorageProcessing {
         return $this->inputFile;
     }
 
-    public function setInputFile(string $inputFile): void {
-        $this->inputFile = $inputFile;
+    public function setInputFile(string $filename): void {
+        $this->inputFile = $filename;
     }
 
     public function getOutputFile(): string {
         return $this->outputFile;
     }
 
-    public function setOutputFile(string $outputFile): void {
-        $this->outputFile = $outputFile;
+    public function setOutputFile(string $filename): void {
+        $this->outputFile = $filename;
     }
 
     public function getFontSize(): int {

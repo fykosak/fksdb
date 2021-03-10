@@ -11,11 +11,11 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * @property-read string category
@@ -38,7 +38,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, INodeCreator {
+class ModelFyziklaniTeam extends OldAbstractModelSingle implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';

@@ -5,7 +5,7 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use Nette\Utils\Strings;
 
 /**
@@ -13,7 +13,7 @@ use Nette\Utils\Strings;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
+class RegexpCheck extends AbstractAdjustment implements FormAdjustment {
 
     private string $field;
     private string $message;
@@ -31,7 +31,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
             return;
         }
         foreach ($controls as $control) {
-            $control->addRule(function (IControl $control): bool {
+            $control->addRule(function (Control $control): bool {
                 return (bool)Strings::match($control->getValue(), $this->pattern);
             }, $this->message);
         }

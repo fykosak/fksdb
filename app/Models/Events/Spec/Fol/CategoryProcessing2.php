@@ -6,7 +6,7 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing2 extends AbstractCategoryProcessing {
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -29,7 +29,11 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
+<<<<<<< HEAD
             $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
+=======
+            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
+>>>>>>> master
         }
     }
 
@@ -39,15 +43,15 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param array $competitors
+     * @param array $participants
      * @return string
      */
-    protected function getCategory(array $competitors): string {
+    protected function getCategory(array $participants): string {
         // init stats
         $olds = 0;
         $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         // calculate stats
-        foreach ($competitors as $competitor) {
+        foreach ($participants as $competitor) {
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             }

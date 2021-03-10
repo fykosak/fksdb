@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\IService;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -105,7 +105,6 @@ class ResourceAvailability extends AbstractAdjustment {
                 $table->where('1=0');
             }
 
-
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
             }, $serviceData['holders']);
@@ -131,7 +130,7 @@ class ResourceAvailability extends AbstractAdjustment {
 
         $form->onValidate[] = function (Form $form) use ($capacity, $usage, $controls) {
             $controlsUsage = 0;
-            /** @var IControl $control */
+            /** @var Control $control */
             foreach ($controls as $control) {
                 $controlsUsage += (int)$control->getValue();
             }

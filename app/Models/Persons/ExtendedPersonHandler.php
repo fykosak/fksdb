@@ -44,8 +44,7 @@ class ExtendedPersonHandler {
     private ModelContest $contest;
     private int $year;
     private string $invitationLang;
-    /** @var ModelPerson */
-    private $person;
+    private ?ModelPerson $person = null;
 
     public function __construct(
         AbstractServiceSingle $service,
@@ -93,13 +92,13 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @param IExtendedPersonPresenter $presenter
+     * @param ExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
+    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int {
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -153,12 +152,7 @@ class ExtendedPersonHandler {
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param iterable $values
-     * @param IExtendedPersonPresenter $presenter
-     */
-    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter): void {
+    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }

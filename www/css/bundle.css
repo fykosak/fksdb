@@ -669,12 +669,8 @@ body[data-style-id=login] .form-signin input.last {
   background-color: #e64100;
 }
 
-.bg-vyfuk-alt {
-  background-color: #ff4800;
-}
-
 .bg-vyfuk {
-  background-color: #9c3;
+  background-color: #ff4800;
 }
 
 .bg-fykos {
@@ -1103,7 +1099,7 @@ h1 .small {
 }
 
 html, body {
-  font-family: "Inter", "Source Sans Pro", sans-serif;
+  font-family: "Inter", sans-serif;
   height: 100%;
   /* The html and body elements cannot have any padding or margin. */
 }

@@ -5,11 +5,11 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  *
@@ -26,7 +26,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModelSingle implements IResource, INodeCreator {
+class ModelEvent extends AbstractModelSingle implements Resource, NodeCreator {
 
     public const TEAM_EVENTS = [1, 9, 13];
 

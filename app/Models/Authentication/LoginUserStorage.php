@@ -15,8 +15,8 @@ use Nette\Application\IPresenter;
 use Nette\Http\Request;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
-use Nette\Security\Identity;
 use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 
 /**
  *
@@ -25,6 +25,7 @@ use Nette\Security\IIdentity;
  * @property IIdentity $identity
  */
 class LoginUserStorage extends UserStorage {
+
     /** @const HTTP GET parameter holding control information for the SSO */
 
     public const PARAM_SSO = ModelAuthToken::TYPE_SSO;
@@ -39,9 +40,7 @@ class LoginUserStorage extends UserStorage {
     private YearCalculator $yearCalculator;
     private GlobalSession $globalSession;
     private Application $application;
-
-    /** @var IPresenter */
-    private $presenter;
+    private IPresenter $presenter;
 
     private Request $request;
 
@@ -78,11 +77,7 @@ class LoginUserStorage extends UserStorage {
         $this->presenter = $presenter;
     }
 
-    /**
-     * @param mixed $state
-     * @return static
-     */
-    public function setAuthenticated($state): self {
+    public function setAuthenticated(bool $state): self {
         parent::setAuthenticated($state);
         if ($state) {
             $uid = parent::getIdentity()->getId();
@@ -103,7 +98,7 @@ class LoginUserStorage extends UserStorage {
 
         if ($global) {
             // update identity
-            $identity = new Identity($global);
+            $identity = new SimpleIdentity($global);
             parent::setIdentity($identity);
 
             /* As we return true, we must ensure local login will be properly set,
@@ -144,7 +139,7 @@ class LoginUserStorage extends UserStorage {
     public function setIdentity(?IIdentity $identity = null): self {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
-            $identity = new Identity($identity->getId());
+            $identity = new SimpleIdentity($identity->getId());
         }
         return parent::setIdentity($identity);
     }
@@ -168,7 +163,6 @@ class LoginUserStorage extends UserStorage {
         if (!$login) {
             return null;
         }
-        $login->person_id; // stupid... touch the field in order to have it loaded via ActiveRow
         $login->injectYearCalculator($this->yearCalculator);
         return $login;
     }

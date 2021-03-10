@@ -5,7 +5,7 @@ namespace FKSDB\Models\Persons;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\SmartObject;
 
 /**
@@ -13,7 +13,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
+class AclResolver implements VisibilityResolver, ModifiabilityResolver {
     use SmartObject;
 
     private ContestAuthorizator $contestAuthorizator;
@@ -39,7 +39,7 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     /**
      * @param ModelPerson $person
-     * @param string|IResource $privilege
+     * @param string|Resource $privilege
      * @return bool
      */
     private function isAllowed(ModelPerson $person, $privilege): bool {

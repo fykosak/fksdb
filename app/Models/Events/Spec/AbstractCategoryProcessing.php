@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\YearCalculator;
-use Tracy\Debugger;
 
 /**
  * Class AbstractCategoryProcessing

@@ -28,7 +28,7 @@ class TaskPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks'), 'fa fa-tasks'));
+        $this->setPageTitle(new PageTitle(_('Tasks'), 'fas fa-tasks'));
     }
 
     /**
@@ -36,7 +36,7 @@ class TaskPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-upload'));
     }
 
     /**

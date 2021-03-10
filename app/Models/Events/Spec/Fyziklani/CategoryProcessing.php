@@ -7,7 +7,7 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
@@ -21,7 +21,7 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractCategoryProcessing {
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -35,7 +35,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Logger::INFO));
         }
     }
 

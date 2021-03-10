@@ -17,7 +17,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Captcha implements IFormAdjustment {
+class Captcha implements FormAdjustment {
     use SmartObject;
 
     protected const CONTROL_NAME = 'c_a_p_t_cha';

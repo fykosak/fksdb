@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
@@ -15,50 +15,28 @@ use NiftyGrid\DataSource\IDataSource;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQuery implements IDataSource, IResource {
+class StoredQuery implements IDataSource, Resource {
 
     private const INNER_QUERY = 'sub';
-
     private ?ModelStoredQuery $queryPattern = null;
-
     private ?string $qid = null;
-
     private ?StoredQueryPostProcessing $postProcessing = null;
-
     private string $sql;
-
     private ?string $name = null;
-
     private array $queryParameters = [];
-
     private Connection $connection;
-
     /** from Presenter     */
     private array $implicitParameterValues = [];
-
     /** User set parameters     */
     private array $parameterValues = [];
-
     /** default parameter of ModelStoredQueryParameter     */
     private array $parameterDefaultValues = [];
-
-    /** @var int|null */
-    private ?int $count;
-
-    /** @var iterable|null */
-    private $data;
-
-    /** @var int|null */
-    private $limit;
-
-    /** @var int|null */
-    private $offset;
-
-    /** @var array */
-    private $orders = [];
-
-    /** @var array */
-    private $columnNames;
+    private ?int $count = null;
+    private ?iterable $data = null;
+    private ?int $limit = null;
+    private ?int $offset = null;
+    private array $orders = [];
+    private ?array $columnNames = null;
 
     private function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -269,7 +247,7 @@ class StoredQuery implements IDataSource, IResource {
      * @return int|null
      */
     public function getCount($column = '*'): ?int {
-        if ($this->count === null) {
+        if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
@@ -289,7 +267,7 @@ class StoredQuery implements IDataSource, IResource {
      * @throws \PDOException
      */
     public function getData() {
-        if ($this->data === null) {
+        if (!isset($this->data)) {
             $innerSql = $this->getSQL();
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
                 $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY;

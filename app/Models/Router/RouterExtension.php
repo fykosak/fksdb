@@ -3,6 +3,7 @@
 namespace FKSDB\Models\Router;
 
 use Nette\DI\CompilerExtension;
+use Nette\DI\Definitions\ServiceDefinition;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,6 +17,7 @@ class RouterExtension extends CompilerExtension {
 
         $container = $this->getContainerBuilder();
         $config = $this->getConfig();
+        /** @var ServiceDefinition $router */
         $router = $container->getDefinition('router');
 
         foreach ($config['routes'] as $action) {
@@ -33,7 +35,7 @@ class RouterExtension extends CompilerExtension {
                 }
                 unset($action['flags']);
             }
-            $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?, ?);', [$mask, $action, $flagsBin]);
+            $router->addSetup('addRoute', [$mask, $action, $flagsBin]);
         }
     }
 }

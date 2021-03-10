@@ -12,6 +12,7 @@ $container = require '../../Bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniModule extends EventModuleTestCase {
+
     protected function getEventData(): array {
         return [
             'event_type_id' => 1,
@@ -59,7 +60,7 @@ class FyziklaniModule extends EventModuleTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM fyziklani_game_setup');
+        $this->truncateTables([DbNames::TAB_FYZIKLANI_GAME_SETUP]);
         parent::tearDown();
     }
 }

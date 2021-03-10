@@ -36,13 +36,13 @@ class TestLog extends Message {
     public function mapLevelToIcon(): string {
         switch ($this->level) {
             case self::LVL_DANGER:
-                return 'fa fa-close';
+                return 'fas fa-times';
             case self::LVL_WARNING:
                 return 'fa fa-warning';
             case self::LVL_INFO:
-                return 'fa fa-info';
+                return 'fas fa-info';
             case self::LVL_SUCCESS:
-                return 'fa fa-check';
+                return 'fas fa-check';
             default:
                 throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->level));
         }

@@ -15,6 +15,7 @@ use FKSDB\Models\Tasks\SeriesData;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use SimpleXMLElement;
 use Tracy\Debugger;
@@ -48,7 +49,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Task import'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Task import'), 'fas fa-upload'));
     }
 
     /**
@@ -92,6 +93,7 @@ class TasksPresenter extends BasePresenter {
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void {
+        /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $file = null;

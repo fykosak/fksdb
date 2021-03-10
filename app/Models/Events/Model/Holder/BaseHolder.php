@@ -277,11 +277,7 @@ class BaseHolder {
         return $column;
     }
 
-    /**
-     * @param string $column
-     * @return bool|mixed|string
-     */
-    public static function getBareColumn($column) {
+    public static function getBareColumn(string $column): ?string {
         $column = str_replace(':', '.', $column);
         $pos = strrpos($column, '.');
         return $pos === false ? $column : substr($column, $pos + 1);
@@ -343,8 +339,8 @@ class BaseHolder {
     }
 
     /**
-     * @param string|int|int[]|string[] $name
-     * @param null $default
+     * @param string|int $name
+     * @param mixed $default
      * @return mixed
      */
     public function getParameter($name, $default = null) {

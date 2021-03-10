@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Authentication\Exceptions;
 
 use Nette\Security\AuthenticationException;
-use Nette\Security\IAuthenticator;
+use Nette\Security\Authenticator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,6 +12,6 @@ use Nette\Security\IAuthenticator;
  */
 class UnknownLoginException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-        parent::__construct(_('Unknown account.'), IAuthenticator::IDENTITY_NOT_FOUND, $previous);
+        parent::__construct(_('Unknown account.'), Authenticator::IDENTITY_NOT_FOUND, $previous);
     }
 }

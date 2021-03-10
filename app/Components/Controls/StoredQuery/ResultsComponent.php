@@ -27,27 +27,17 @@ class ResultsComponent extends BaseComponent {
 
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
-
     /**
      * @persistent
-     * @var array
      */
-    public $parameters = [];
-
-    /** @var StoredQuery */
-    private $storedQuery;
-
+    public ?array $parameters = [];
+    private ?StoredQuery $storedQuery = null;
     private ContestAuthorizator $contestAuthorizator;
-
     private StoredQueryFactory $storedQueryFormFactory;
-
     private ExportFormatFactory $exportFormatFactory;
-
     /** @var null|bool|string */
     private $error;
-
-    /** @var bool */
-    private $showParametrizeForm = true;
+    private bool $showParametrizeForm = true;
 
     final public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory): void {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -59,8 +49,8 @@ class ResultsComponent extends BaseComponent {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    public function setStoredQuery(StoredQuery $query): void {
-        $this->storedQuery = $query;
+    public function setStoredQuery(StoredQuery $storedQuery): void {
+        $this->storedQuery = $storedQuery;
     }
 
     private function hasStoredQuery(): bool {
@@ -137,6 +127,7 @@ class ResultsComponent extends BaseComponent {
         }
         $this->template->error = $this->isAuthorized() ? $this->getSqlError() : _('Permission denied');
         $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
+        $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];

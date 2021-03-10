@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -11,14 +11,14 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
+class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private Explorer $explorer;
     /** @var callable|int */
@@ -63,7 +63,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('A school cannot have more than %d teams in the contest.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls): bool {
+            $control->addRule(function (Control $control) use ($first, $schoolControls, $personControls): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 return $this->checkMulti($first, $control, $schools);
             }, $msgMulti);
@@ -81,7 +81,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private array $cache;
 
-    private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
+    private function checkMulti(bool $first, ?Control $control, array $schools): bool {
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();

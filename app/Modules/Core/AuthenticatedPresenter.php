@@ -14,9 +14,9 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
+use Nette\Security\IUserStorage;
 use ReflectionClass;
 use Tracy\Debugger;
-use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
 
 /**
@@ -120,7 +120,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     final protected function loginRedirect(): void {
-        if ($this->user->logoutReason === UserStorage::INACTIVITY) {
+        if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;

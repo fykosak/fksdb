@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\Submits\IStorageProcessing;
-use FKSDB\Models\Submits\ISubmitStorage;
+use FKSDB\Models\Submits\StorageProcessing;
+use FKSDB\Models\Submits\SubmitStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use Tracy\Debugger;
@@ -18,7 +18,7 @@ use UnexpectedValueException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class UploadedStorage implements ISubmitStorage {
+class UploadedStorage implements SubmitStorage {
 
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
@@ -47,7 +47,7 @@ class UploadedStorage implements ISubmitStorage {
     private string $filenameMask;
     /** @var array   contestId => contest name */
     private array $contestMap;
-    /** @var IStorageProcessing[] */
+    /** @var StorageProcessing[] */
     private array $processings = [];
 
     public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
@@ -57,7 +57,7 @@ class UploadedStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
-    public function addProcessing(IStorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 

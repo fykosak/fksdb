@@ -12,7 +12,7 @@ use Nette\InvalidStateException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SchoolProvider implements IFilteredDataProvider {
+class SchoolProvider implements FilteredDataProvider {
 
     private const LIMIT = 50;
 

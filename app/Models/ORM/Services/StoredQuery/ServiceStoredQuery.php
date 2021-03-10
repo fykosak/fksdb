@@ -21,23 +21,12 @@ class ServiceStoredQuery extends AbstractServiceSingle {
     }
 
     public function findByQid(string $qid): ?ModelStoredQuery {
-        if (!$qid) {
-            return null;
-        }
         /** @var ModelStoredQuery $result */
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ?: null;
+        return $result;
     }
 
-    /**
-     * @param int|array|null $tagTypeId
-     * @return TypedTableSelection
-     */
-    public function findByTagType($tagTypeId): ?TypedTableSelection {
-        if (!$tagTypeId) {
-            return null;
-        }
-        $queryIds = $this->serviceStoredQueryTag->findByTagTypeId($tagTypeId)->fetchPairs('query_id', 'query_id');
-        return $this->getTable()->where('query_id', $queryIds);
+    public function findByTagType(array $tagTypeIds): ?TypedTableSelection {
+        return $this->getTable()->where(':stored_query_tag.tag_type_id', $tagTypeIds);
     }
 }

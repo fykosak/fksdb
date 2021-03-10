@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
-use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class StoredQueryPresenter
@@ -40,7 +40,7 @@ class StoredQueryPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
+        return new PageTitle(sprintf(_('Create query')), 'fas fa-pen');
     }
 
     /**
@@ -95,13 +95,13 @@ class StoredQueryPresenter extends BasePresenter {
     }
 
     protected function createComponentGrid(): BaseGrid {
-        /** @var StoredQueryTagCloud $cloud */
+        /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');
         return new StoredQueriesGrid($this->getContext(), $cloud->activeTagIds);
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud($this->getContext());
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+        return new StoredQueryTagCloudComponent($this->getContext());
     }
 
     protected function getORMService(): ServiceStoredQuery {
@@ -109,7 +109,7 @@ class StoredQueryPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

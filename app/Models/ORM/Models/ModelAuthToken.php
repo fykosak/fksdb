@@ -9,6 +9,7 @@ use Nette\Database\Table\ActiveRow;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string token
  * @property-read ActiveRow login
+ * @property-read int login_id
  * @property-read string data
  * @property-read string type
  * @property-read \DateTimeInterface until

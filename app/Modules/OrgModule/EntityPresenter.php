@@ -21,10 +21,9 @@ abstract class EntityPresenter extends BasePresenter {
     public const COMP_EDIT_FORM = 'editComponent';
     public const COMP_CREATE_FORM = 'createComponent';
     /**
-     * @var int
      * @persistent
      */
-    public $id;
+    public ?int $id = null;
     private ?AbstractModelSingle $model;
 
     public function authorizedCreate(): void {
@@ -85,11 +84,7 @@ abstract class EntityPresenter extends BasePresenter {
         $form->setDefaults($model->toArray());
     }
 
-    /**
-     * @param int $id
-     * @return AbstractModelSingle
-     */
-    abstract protected function loadModel($id): ?AbstractModelSingle;
+    abstract protected function loadModel(int $id): ?AbstractModelSingle;
 
     abstract protected function createComponentEditComponent(): FormControl;
 

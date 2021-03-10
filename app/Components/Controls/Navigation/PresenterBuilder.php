@@ -26,20 +26,18 @@ class PresenterBuilder {
      *
      * @param string $presenterName
      * @param string $action
-     * @param array|string $params
-     * @param array $baseParams
+     * @param array|null $params
+     * @param array|null $baseParams
      * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
      * @throws BadRequestException
      */
-    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false): Presenter {
+    public function preparePresenter(string $presenterName, string $action, ?array $params = [], ?array $baseParams = [], bool $newInstance = false): Presenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
             $presenter = $this->getCachePresenter($presenterName);
         }
-
-        $params = $params ?: [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {

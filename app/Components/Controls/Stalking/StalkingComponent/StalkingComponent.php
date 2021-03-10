@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
-use FKSDB\Components\Controls\Stalking\StalkingControl;
+use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -12,7 +12,7 @@ use Nette\InvalidStateException;
  * Class StalkingComponent
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StalkingComponent extends StalkingControl {
+class StalkingComponent extends BaseStalkingComponent {
 
     /**
      * @param string $section
@@ -67,7 +67,7 @@ class StalkingComponent extends StalkingControl {
     }
 
     /**
-     * @param mixed[]|AbstractModelSingle[] $definition
+     * @param array|AbstractModelSingle[] $definition
      * @param ModelPerson $person
      * @return void
      */

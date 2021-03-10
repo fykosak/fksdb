@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -44,7 +44,7 @@ class Handler {
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param string $code
      * @param int $points
      * @return void
@@ -52,13 +52,13 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    public function preProcess(ILogger $logger, string $code, int $points): void {
+    public function preProcess(Logger $logger, string $code, int $points): void {
         $this->checkTaskCode($code);
         $this->savePoints($logger, $code, $points);
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param string $code
      * @param int $points
      * @return void
@@ -66,7 +66,7 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    private function savePoints(ILogger $logger, string $code, int $points): void {
+    private function savePoints(Logger $logger, string $code, int $points): void {
         $task = $this->taskCodePreprocessor->getTask($code);
         $team = $this->taskCodePreprocessor->getTeam($code);
 
@@ -103,14 +103,14 @@ class Handler {
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @param int $points
      * @return void
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function changePoints(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
+    public function changePoints(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
@@ -129,18 +129,18 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @return void
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function revokeSubmit(ILogger $logger, ModelFyziklaniSubmit $submit): void {
+    public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
             $this->serviceFyziklaniSubmit->updateModel2($submit, [
                 'points' => null,
@@ -152,12 +152,12 @@ class Handler {
                 'modified' => null,
             ]);
             $this->logEvent($submit, 'revoked');
-            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS));
+            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Logger::SUCCESS));
         }
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @param int $points
      * @return void
@@ -165,7 +165,7 @@ class Handler {
      * @throws PointsMismatchException
      * @throws ModelException
      */
-    public function checkSubmit(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
+    public function checkSubmit(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
@@ -187,10 +187,10 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
     }
 
-    public function createSubmit(ILogger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
+    public function createSubmit(Logger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
         $submit = $this->serviceFyziklaniSubmit->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
@@ -208,7 +208,7 @@ class Handler {
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name), ILogger::SUCCESS));
+            $task->name), Logger::SUCCESS));
     }
 
     private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void {

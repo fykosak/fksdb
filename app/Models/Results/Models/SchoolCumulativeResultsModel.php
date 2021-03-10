@@ -18,14 +18,11 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /** @var int */
-    protected $series;
-
+    protected array $series;
     /**
      * Cache
      */
     private array $dataColumns = [];
-
     private CumulativeResultsModel $cumulativeResultsModel;
 
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
@@ -77,15 +74,12 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return int|mixed
-     */
-    public function getSeries() {
+    public function getSeries(): array {
         return $this->series;
     }
 
     /**
-     * @param mixed $series
+     * @param array $series
      */
     public function setSeries($series): void {
         $this->series = $series;
@@ -211,5 +205,4 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         }
         return $resultRow;
     }
-
 }

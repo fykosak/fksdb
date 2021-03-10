@@ -19,8 +19,6 @@ class ServiceEvent extends AbstractServiceSingle {
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
         return $this->getTable()
-            ->select(DbNames::TAB_EVENT . '.*')
-            ->select(DbNames::TAB_EVENT_TYPE . '.name AS `type_name`')
             ->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contest->contest_id)
             ->where(DbNames::TAB_EVENT . '.year', $year);
     }
@@ -28,7 +26,7 @@ class ServiceEvent extends AbstractServiceSingle {
     public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ?ModelEvent {
         /** @var ModelEvent $event */
         $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
-        return $event ?: null;
+        return $event;
     }
 
     public function getEventsByType(ModelEventType $eventType): TypedTableSelection {

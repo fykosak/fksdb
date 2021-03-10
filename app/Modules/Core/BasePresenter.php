@@ -2,81 +2,77 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
+use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
-use FKSDB\Components\Controls\Choosers\LanguageChooser;
-use FKSDB\Components\Controls\Choosers\ThemeChooser;
+use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
+use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinter;
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
-use FKSDB\Components\Controls\Navigation\INavigablePresenter;
-use FKSDB\Components\Controls\Navigation\NavigationChooser;
+use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\StylesheetCollector;
+use FKSDB\Components\Controls\Navigation\NavigablePresenter;
+use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\GettextTranslator;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
+use Nette;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
 use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
- * @property ITemplate $template
  */
-abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
+abstract class BasePresenter extends Presenter implements JavaScriptCollector, StylesheetCollector, AutocompleteJSONProvider, NavigablePresenter {
 
     use CollectorPresenterTrait;
 
-    public const FLASH_SUCCESS = ILogger::SUCCESS;
-    public const FLASH_INFO = ILogger::INFO;
-    public const FLASH_WARNING = ILogger::WARNING;
-    public const FLASH_ERROR = ILogger::ERROR;
-
+    public const FLASH_SUCCESS = Logger::SUCCESS;
+    public const FLASH_INFO = Logger::INFO;
+    public const FLASH_WARNING = Logger::WARNING;
+    public const FLASH_ERROR = Logger::ERROR;
     /** @persistent */
-    public $tld;
+    public ?string $tld = null;
 
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent
      */
-    public $bc;
-
+    public ?string $bc = null;
     /**
      * @persistent
      * @internal
      */
-    public $lang;
-
+    public ?string $lang = null;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
     protected BreadcrumbsFactory $breadcrumbsFactory;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
-
     private ?PageTitle $pageTitle;
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
-
+    private Nette\DI\Container $diContainer;
 
     final public function injectBase(
+        Nette\DI\Container $diContainer,
         YearCalculator $yearCalculator,
         ServiceContest $serviceContest,
         BreadcrumbsFactory $breadcrumbsFactory,
@@ -88,6 +84,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->breadcrumbsFactory = $breadcrumbsFactory;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
+        $this->diContainer = $diContainer;
     }
 
     /**
@@ -97,12 +94,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected function startup(): void {
         parent::startup();
-        /** @var LanguageChooser $control */
+        /** @var LanguageChooserComponent $control */
         $control = $this->getComponent('languageChooser');
         $control->init();
     }
 
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Nette\Application\UI\Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -124,7 +121,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider && $provider instanceof IFilteredDataProvider) {
+            if ($provider && $provider instanceof FilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
             $response = new JsonResponse($data);
@@ -147,11 +144,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return 'title' . $view;
     }
 
-    /**
-     * @param string $view
-     * @return static
-     */
-    public function setView($view): self {
+    public function setView(string $view): self {
         parent::setView($view);
         $this->pageTitle = null;
         return $this;
@@ -224,33 +217,33 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadTypeException
      */
     protected function putIntoBreadcrumbs(): void {
-        /** @var Breadcrumbs $component */
+        /** @var BreadcrumbsComponent $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
     }
 
-    protected function createComponentBreadcrumbs(): Breadcrumbs {
+    protected function createComponentBreadcrumbs(): BreadcrumbsComponent {
         return $this->breadcrumbsFactory->create();
     }
 
-    protected function createComponentNavigationChooser(): NavigationChooser {
-        return new NavigationChooser($this->getContext());
+    protected function createComponentNavigationChooser(): NavigationChooserComponent {
+        return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentThemeChooser(): ThemeChooser {
-        return new ThemeChooser($this->getContext());
+    protected function createComponentThemeChooser(): ThemeChooserComponent {
+        return new ThemeChooserComponent($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinter {
-        return new ColumnPrinter($this->getContext());
+    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+        return new ColumnPrinterComponent($this->getContext());
     }
 
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
         return new LinkPrinterComponent($this->getContext());
     }
 
-    final protected function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->getContext(), $this->lang);
+    final protected function createComponentLanguageChooser(): LanguageChooserComponent {
+        return new LanguageChooserComponent($this->getContext(), $this->lang);
     }
 
     /**
@@ -259,7 +252,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws AbortException
      */
     public function getLang(): string {
-        /** @var LanguageChooser $control */
+        /** @var LanguageChooserComponent $control */
         $control = $this->getComponent('languageChooser');
         return $control->getLang();
     }
@@ -272,7 +265,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     final public function backLinkRedirect(bool $need = false): void {
         $this->putIntoBreadcrumbs();
-        /** @var Breadcrumbs $component */
+        /** @var BreadcrumbsComponent $component */
         $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
@@ -296,7 +289,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -357,5 +349,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             }
         }
         return $this->authorizedCache[$key];
+    }
+
+    public function getContext(): Nette\DI\Container {
+        return $this->diContainer;
     }
 }

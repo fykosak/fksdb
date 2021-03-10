@@ -8,7 +8,6 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -27,27 +26,21 @@ use Nette\SmartObject;
  * @method SingleEventSource count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
-class SingleEventSource implements IHolderSource {
+class SingleEventSource implements HolderSource {
+
     use SmartObject;
 
     private ModelEvent $event;
-
     private Container $container;
-
     private EventDispatchFactory $eventDispatchFactory;
-    /** @var MultiTableSelection|TypedTableSelection|Selection */
-    private $primarySelection;
-
+    private Selection $primarySelection;
     private Holder $dummyHolder;
-
     /** @var IModel[] */
-    private $primaryModels = null;
-
+    private ?array $primaryModels = null;
     /** @var IModel[][] */
-    private $secondaryModels = null;
-
+    private ?array $secondaryModels = null;
     /** @var Holder[] */
-    private $holders = [];
+    private ?array $holders = [];
 
     /**
      * SingleEventSource constructor.
@@ -144,7 +137,7 @@ class SingleEventSource implements IHolderSource {
      * @staticvar array $delegated
      * @param string $name
      * @param array $args
-     * @return SingleEventSource
+     * @return SingleEventSource|int
      */
     public function __call($name, $args) {
         static $delegated = [

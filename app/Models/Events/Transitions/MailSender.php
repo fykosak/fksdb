@@ -33,33 +33,26 @@ use Nette\Utils\Strings;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MailSender {
+
     use SmartObject;
 
     public const BCC_PARAM = 'notifyBcc';
     public const FROM_PARAM = 'notifyFrom';
-
     // Adressee
     public const ADDR_SELF = 'self';
     public const ADDR_PRIMARY = 'primary';
     public const ADDR_SECONDARY = 'secondary';
     public const ADDR_ALL = '*';
     public const BCC_PREFIX = '.';
-
     private string $filename;
-
     /**
      * @var array|string
      */
     private $addressees;
-
     private MailTemplateFactory $mailTemplateFactory;
-
     private AccountManager $accountManager;
-
     private ServiceAuthToken $serviceAuthToken;
-
     private ServicePerson $servicePerson;
-
     private ServiceEmailMessage $serviceEmailMessage;
 
     /**
@@ -183,7 +176,6 @@ class MailSender {
         $data['recipient'] = $email;
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         return $this->serviceEmailMessage->createNewModel($data);
-
     }
 
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {

@@ -10,7 +10,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -35,7 +35,7 @@ class AddressFactory {
         $this->container = $container;
     }
 
-    public function createAddress(int $options = 0, ?IControl $conditioningField = null): AddressContainer {
+    public function createAddress(int $options = 0, ?Control $conditioningField = null): AddressContainer {
         $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
@@ -61,9 +61,9 @@ class AddressFactory {
      *
      * @param AddressContainer $container
      * @param int $options
-     * @param IControl|null $conditioningField
+     * @param Control|null $conditioningField
      */
-    public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
+    public function buildAddress(AddressContainer $container, int $options = 0, ?Control $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));

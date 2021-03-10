@@ -6,19 +6,18 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Models\Persons\ReferencedHandler;
+use FKSDB\Models\Persons\ModelDataConflictException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\Persons\IReferencedHandler;
-use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Utils\Promise;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -36,15 +35,14 @@ class ReferencedId extends HiddenField {
     private ReferencedContainer $referencedContainer;
     private SearchContainer $searchContainer;
     private IService $service;
-    private IReferencedHandler $handler;
+    private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
-    /** @var IModel */
-    private $model;
+    private ?IModel $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, ReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -92,7 +90,7 @@ class ReferencedId extends HiddenField {
         return $this->service;
     }
 
-    public function getHandler(): IReferencedHandler {
+    public function getHandler(): ReferencedHandler {
         return $this->handler;
     }
 
@@ -104,25 +102,22 @@ class ReferencedId extends HiddenField {
         $this->modelCreated = $modelCreated;
     }
 
-    /**
-     * @return IModel|AbstractModelSingle
-     */
-    public function getModel() {
+    public function getModel(): ?IModel {
         return $this->model;
     }
 
     /**
-     * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
+     * @param string|int|IModel|AbstractModelSingle|ModelPerson $value
      * @param bool $force
      * @return static
      */
-    public function setValue($pValue, bool $force = false): self {
-        if ($pValue instanceof IModel) {
-            $personModel = $pValue;
-        } elseif ($pValue === self::VALUE_PROMISE) {
+    public function setValue($value, bool $force = false): self {
+        if ($value instanceof IModel) {
+            $personModel = $value;
+        } elseif ($value === self::VALUE_PROMISE) {
             $personModel = $this->service->createNew();
         } else {
-            $personModel = $this->service->findByPrimary($pValue);
+            $personModel = $this->service->findByPrimary($value);
         }
 
         if ($personModel && !$personModel->isNew()) {
@@ -130,12 +125,12 @@ class ReferencedId extends HiddenField {
         }
         $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($pValue instanceof IModel) {
-            $pValue = $personModel->getPrimary();
+        if ($value instanceof IModel) {
+            $value = $personModel->getPrimary();
         }
-        $this->getSearchContainer()->setOption('visible', !$pValue);
-        $this->getReferencedContainer()->setOption('visible', (bool)$pValue);
-        return parent::setValue($pValue);
+        $this->getSearchContainer()->setOption('visible', !$value);
+        $this->getReferencedContainer()->setOption('visible', (bool)$value);
+        return parent::setValue($value);
     }
 
     /**

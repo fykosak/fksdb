@@ -15,6 +15,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class GroupOptions implements OptionsProvider {
+
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
@@ -36,7 +37,12 @@ class GroupOptions implements OptionsProvider {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct(
+        ServiceMDsefParticipant $serviceMParticipant,
+        ServiceDsefGroup $serviceDsefGroup,
+        $includeStates = BaseMachine::STATE_ANY,
+        $excludeStates = ['cancelled']
+    ) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;

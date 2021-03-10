@@ -24,28 +24,21 @@ use Nette\Security\User;
 class PersonFactory extends AbstractFactory {
 
     private const VALUE_LOGIN = 'fromLogin';
-
-    /** @var mixed */
+    /** @var callable */
     private $fieldsDefinition;
-    /** @var mixed */
+    /** @var callable */
     private $searchType;
-    /** @var mixed */
+    /** @var callable */
     private $allowClear;
-    /** @var mixed */
+    /** @var callable */
     private $modifiable;
-    /** @var mixed */
+    /** @var callable */
     private $visible;
-
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private SelfResolver $selfResolver;
-
     private ExpressionEvaluator $evaluator;
-
     private User $user;
-
     private ServicePerson $servicePerson;
-
     private DIContainer $container;
 
     /**

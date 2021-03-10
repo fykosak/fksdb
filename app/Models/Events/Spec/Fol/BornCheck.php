@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
@@ -12,14 +12,14 @@ use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BornCheck extends AbstractAdjustment implements IFormAdjustment {
+class BornCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServiceSchool $serviceSchool;
     private ServicePersonHistory $servicePersonHistory;
@@ -79,7 +79,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
+    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -92,7 +92,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory ? $personHistory->study_year : null;
     }
 
-    private function getSchoolId(IControl $schoolControl, IControl $personControl): int {
+    private function getSchoolId(Control $schoolControl, Control $personControl): int {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }

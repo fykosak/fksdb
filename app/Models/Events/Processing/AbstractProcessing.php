@@ -5,12 +5,12 @@ namespace FKSDB\Models\Events\Processing;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
@@ -31,7 +31,7 @@ abstract class AbstractProcessing implements Processing {
     private array $states;
     private Holder $holder;
 
-    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): ?array {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
@@ -40,7 +40,7 @@ abstract class AbstractProcessing implements Processing {
         return null;
     }
 
-    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
+    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILD_CART) !== false;
@@ -49,7 +49,7 @@ abstract class AbstractProcessing implements Processing {
     /**
      *
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getValue(string $mask): array {
         $keys = array_keys($this->valuesPathCache);
@@ -69,7 +69,7 @@ abstract class AbstractProcessing implements Processing {
     /**
      *
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->formPathCache);
@@ -133,7 +133,7 @@ abstract class AbstractProcessing implements Processing {
         }
         /** @var Control $control */
         // TODO not type safe
-        foreach ($form->getComponents(true, IControl::class) as $control) {
+        foreach ($form->getComponents(true, FormControl::class) as $control) {
             if ($control instanceof BaseControl) {
                 $control->loadHttpData();
             }

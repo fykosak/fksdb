@@ -15,15 +15,15 @@ use Nette\Forms\Controls\BaseControl;
 class ModelContainer extends ContainerWithOptions {
 
     /**
-     * @param ActiveRow|iterable $values
+     * @param ActiveRow|iterable $data
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
-        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
-            $values = $values->toArray();
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow || $data instanceof AbstractModelMulti) {
+            $data = $data->toArray();
         }
-        return parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
     /**

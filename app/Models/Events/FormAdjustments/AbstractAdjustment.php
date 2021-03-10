@@ -7,7 +7,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 
 /**
@@ -15,7 +15,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class AbstractAdjustment implements IFormAdjustment {
+abstract class AbstractAdjustment implements FormAdjustment {
 
     use SmartObject;
 
@@ -37,7 +37,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     /**
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->pathCache);
@@ -63,7 +63,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe
-        foreach ($form->getComponents(true, IControl::class) as $control) {
+        foreach ($form->getComponents(true, FormControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
