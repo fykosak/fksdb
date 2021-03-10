@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-08 15:54+0100\n"
+"POT-Creation-Date: 2021-03-10 17:40+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -2607,8 +2607,8 @@ msgid "__date_time"
 msgstr "jS \\of M Y H:i:s"
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:12
-#, php-format
-msgid "Nelze provést akci '%s' v automatu '%s'."
+#, fuzzy, php-format
+msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr "Cannot execute action '%s' in the machine '%s'."
 
 #: ../app/Models/Events/Exceptions/EventNotFoundException.php:14
@@ -3033,11 +3033,13 @@ msgid "Log out"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:92
-msgid "Fyzikální korespondenční seminář MFF UK"
+msgid "Physics correspondence seminar of MFF UK"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:95
-msgid "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií"
+msgid ""
+"Physics correspondence seminar of MFF UK for the students of elementary "
+"schools."
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:100
@@ -3697,16 +3699,16 @@ msgid "Birth Id (for foreigners empty)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:536
-msgid "U cizinců prázdné."
-msgstr "Empty for non-Czech, non-Slovak."
+msgid "For foreigners empty."
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
 msgid "Place of birth"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:541
-msgid "Město a okres (kvůli diplomům)."
-msgstr "Town/city (due to certificates)."
+msgid "City and region (for diplomas)."
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:546
 msgid "Current role"
@@ -3714,7 +3716,7 @@ msgstr ""
 
 #: ../app/config/orm.neon.neon2php:548
 #, fuzzy
-msgid "Shown int the organizers"
+msgid "Shown in the organizers"
 msgstr "Still organises"
 
 #: ../app/config/exports.neon.neon2php:12
@@ -5110,6 +5112,12 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#~ msgid "U cizinců prázdné."
+#~ msgstr "Empty for non-Czech, non-Slovak."
+
+#~ msgid "Město a okres (kvůli diplomům)."
+#~ msgstr "Town/city (due to certificates)."
 
 #~ msgid "Co právě dělá"
 #~ msgstr "What does (s)he do"

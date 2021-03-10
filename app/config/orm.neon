@@ -533,19 +533,19 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdRow
                     title: _('Birth Id (for foreigners empty)')
-                    description: _('U cizinců prázdné.')
+                    description: _('For foreigners empty.')
                     permission: FULL
                 birthplace:
                     type: string
                     title: _('Place of birth')
-                    description: _('Město a okres (kvůli diplomům).')
+                    description: _('City and region (for diplomas).')
                     permission:
                         read: FULL
                         write: FULL
                 career:
                     title: _(Current role)
                     type: text
-                    description: _(Shown int the organizers' list)
+                    description: _(Shown in the organizers' list)
                 im:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImRow

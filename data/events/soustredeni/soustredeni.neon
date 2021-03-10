@@ -12,19 +12,19 @@ parameters:
                 person_info:
                     born_id:
                         required: %events.soustredeni.requiredCond%
-                        description: "Kvůli pojišťovně."
+                        description: "For the insurance company."
                     birthplace:
                         required: state('participated')
                     phone:
                         required: %events.soustredeni.requiredCond%
-                        description: "Telefon (i s předvolbou státu), jenž budeš mít s sebou."
+                        description: "Telephone number (including state prefix), that you will carry with you."
                 post_contact_p:
                     address:
                         required: %events.soustredeni.requiredCond%
                 person_history:
                     school_id:
                         required: state('participated')
-                        description: "Pokud nelze školu nalézt, napiš správci."
+                        description: "If you cannto find your school, email the webmaster."
             tshirt:
                 M_S: S pánské
                 M_M: M pánské

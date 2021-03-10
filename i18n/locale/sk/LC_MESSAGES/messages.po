@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-08 15:54+0100\n"
+"POT-Creation-Date: 2021-03-10 17:40+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2641,7 +2641,7 @@ msgstr ""
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:12
 #, php-format
-msgid "Nelze provést akci '%s' v automatu '%s'."
+msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/EventNotFoundException.php:14
@@ -3071,11 +3071,13 @@ msgid "Log out"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:92
-msgid "Fyzikální korespondenční seminář MFF UK"
+msgid "Physics correspondence seminar of MFF UK"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:95
-msgid "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií"
+msgid ""
+"Physics correspondence seminar of MFF UK for the students of elementary "
+"schools."
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:100
@@ -3742,7 +3744,7 @@ msgid "Birth Id (for foreigners empty)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:536
-msgid "U cizinců prázdné."
+msgid "For foreigners empty."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
@@ -3750,7 +3752,7 @@ msgid "Place of birth"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:541
-msgid "Město a okres (kvůli diplomům)."
+msgid "City and region (for diplomas)."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:546
@@ -3759,7 +3761,7 @@ msgid "Current role"
 msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:548
-msgid "Shown int the organizers"
+msgid "Shown in the organizers"
 msgstr ""
 
 #: ../app/config/exports.neon.neon2php:12

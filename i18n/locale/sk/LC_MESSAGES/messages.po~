@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-08 15:52+0100\n"
+"POT-Creation-Date: 2021-03-10 17:40+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -754,7 +754,6 @@ msgid "XML file (new XML)"
 msgstr ""
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:70
-#: ../app/config/orm.neon.neon2php:640
 msgid "Series"
 msgstr ""
 
@@ -914,7 +913,7 @@ msgstr ""
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:206
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:209
 #: ../app/Components/Forms/Factories/LoginFactory.php:39
-#: ../app/config/orm.neon.neon2php:290 ../app/config/orm.neon.neon2php:823
+#: ../app/config/orm.neon.neon2php:290
 msgid "Password"
 msgstr ""
 
@@ -1169,7 +1168,6 @@ msgstr ""
 #: ../app/Components/Forms/Factories/StoredQueryFactory.php:86
 #: ../app/Components/Grids/StoredQuery/StoredQueriesGrid.php:60
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:16
-#: ../app/config/orm.neon.neon2php:951
 msgid "Description"
 msgstr ""
 
@@ -1347,7 +1345,7 @@ msgstr ""
 #: ../app/Components/Grids/SchoolsGrid.php:53
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:10
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:15
-#: ../app/config/orm.neon.neon2php:127 ../app/config/orm.neon.neon2php:742
+#: ../app/config/orm.neon.neon2php:127
 msgid "Name"
 msgstr "Meno"
 
@@ -1410,14 +1408,13 @@ msgstr ""
 #: ../app/Components/Controls/Entity/EventOrgFormComponent.php:44
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:51
 #: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:229
-#: ../app/config/orm.neon.neon2php:688 ../app/config/orm.neon.neon2php:793
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:170
 msgid "Note"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:60
 #: ../app/Components/Grids/ContestantsGrid.php:59
-#: ../app/config/orm.neon.neon2php:455 ../app/config/orm.neon.neon2php:608
+#: ../app/config/orm.neon.neon2php:455
 msgid "School"
 msgstr ""
 
@@ -1713,7 +1710,6 @@ msgstr ""
 
 #: ../app/Components/Controls/Entity/StoredQueryFormComponent.php:91
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:31
-#: ../app/config/orm.neon.neon2php:941
 msgid "SQL"
 msgstr ""
 
@@ -1745,7 +1741,6 @@ msgid "Item \"%s\" has been saved."
 msgstr ""
 
 #: ../app/Components/Controls/Entity/ScheduleItemFormContainer.php:84
-#: ../app/config/orm.neon.neon2php:854
 msgid "Schedule group Id"
 msgstr ""
 
@@ -1886,7 +1881,6 @@ msgid "Study year"
 msgstr ""
 
 #: ../app/Components/Grids/Fyziklani/TaskGrid.php:52
-#: ../app/config/orm.neon.neon2php:649 ../app/config/orm.neon.neon2php:739
 msgid "Task Id"
 msgstr ""
 
@@ -1945,7 +1939,7 @@ msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:173
 #: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:66
-#: ../app/config/orm.neon.neon2php:203 ../app/config/orm.neon.neon2php:831
+#: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
 #: ../typescript/src/apps/fyziklani/submitForm/components/outputs/valueDisplay.tsx.tsx2php:29
 msgid "Team"
@@ -1959,7 +1953,6 @@ msgstr ""
 #: ../app/Components/Grids/Fyziklani/Submits/SubmitsGrid.php:29
 #: ../app/Components/Grids/SubmitsGrid.php:62
 #: ../app/Modules/EventModule/Fyziklani/templates/Submit/detail.latte.latte2php:7
-#: ../app/config/orm.neon.neon2php:637
 #: ../typescript/src/apps/fyziklaniResults/statistics/components/correlation/table.tsx.tsx2php:71
 #: ../typescript/src/apps/fyziklani/submitForm/components/outputs/valueDisplay.tsx.tsx2php:32
 msgid "Task"
@@ -2648,7 +2641,7 @@ msgstr ""
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:12
 #, php-format
-msgid "Nelze provést akci '%s' v automatu '%s'."
+msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/EventNotFoundException.php:14
@@ -2987,7 +2980,7 @@ msgstr ""
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:9
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:13
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:17
-#: ../app/config/orm.neon.neon2php:797 ../data/events/fol/fol1.neon.neon2php:88
+#: ../data/events/fol/fol1.neon.neon2php:88
 #: ../typescript/src/apps/fyziklaniResults/presentation/components/headline.tsx.tsx2php:20
 #: ../typescript/src/apps/fyziklaniResults/presentation/components/headline.tsx.tsx2php:26
 #: ../typescript/src/apps/fyziklaniResults/table/middleware/filters/filters.ts.ts2php:7
@@ -3078,11 +3071,13 @@ msgid "Log out"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:92
-msgid "Fyzikální korespondenční seminář MFF UK"
+msgid "Physics correspondence seminar of MFF UK"
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:95
-msgid "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií"
+msgid ""
+"Physics correspondence seminar of MFF UK for the students of elementary "
+"schools."
 msgstr ""
 
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:100
@@ -3147,8 +3142,7 @@ msgid "Sent"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Spam/detail.latte.latte2php:23
-#: ../app/config/orm.neon.neon2php:426 ../app/config/orm.neon.neon2php:723
-#: ../app/config/orm.neon.neon2php:801
+#: ../app/config/orm.neon.neon2php:426
 msgid "Created"
 msgstr ""
 
@@ -3158,7 +3152,6 @@ msgid "Text"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:18
-#: ../app/config/orm.neon.neon2php:662 ../app/config/orm.neon.neon2php:858
 msgid "Type"
 msgstr ""
 
@@ -3304,7 +3297,6 @@ msgid "Contest"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/Components/layout.flag.latte.latte2php:37
-#: ../app/config/orm.neon.neon2php:727
 msgid "Modified"
 msgstr ""
 
@@ -3435,7 +3427,7 @@ msgstr ""
 msgid "Contestant Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:55 ../app/config/orm.neon.neon2php:655
+#: ../app/config/orm.neon.neon2php:55
 #: ../typescript/src/apps/chart/contestantsPerYears.tsx.tsx2php:33
 msgid "Year"
 msgstr ""
@@ -3465,8 +3457,7 @@ msgid "Bcc"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:97 ../app/config/orm.neon.neon2php:206
-#: ../app/config/orm.neon.neon2php:390 ../app/config/orm.neon.neon2php:717
-#: ../app/config/orm.neon.neon2php:785
+#: ../app/config/orm.neon.neon2php:390
 msgid "State"
 msgstr ""
 
@@ -3716,7 +3707,7 @@ msgstr ""
 msgid "Homepage"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:500 ../app/config/orm.neon.neon2php:789
+#: ../app/config/orm.neon.neon2php:500
 msgid "Phone"
 msgstr ""
 
@@ -3753,7 +3744,7 @@ msgid "Birth Id (for foreigners empty)"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:536
-msgid "U cizinců prázdné."
+msgid "For foreigners empty."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:540
@@ -3761,212 +3752,16 @@ msgid "Place of birth"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:541
-msgid "Město a okres (kvůli diplomům)."
+msgid "City and region (for diplomas)."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:546
-msgid "Co právě dělá"
-msgstr ""
+#, fuzzy
+msgid "Current role"
+msgstr "Zvoliť typ"
 
 #: ../app/config/orm.neon.neon2php:548
-msgid "Zobrazeno v seznamu organizátorů"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:553
-msgid "ICQ, Jabber, apod."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:557
-msgid "I agree with the privacy policy"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:643 ../app/config/orm.neon.neon2php:745
-msgid "Label"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:646 ../app/config/orm.neon.neon2php:867
-#: ../app/config/orm.neon.neon2php:898
-#, fuzzy
-msgid "Name cs"
-msgstr "Meno"
-
-#: ../app/config/orm.neon.neon2php:652 ../app/config/orm.neon.neon2php:732
-#: ../app/config/orm.neon.neon2php:812
-msgid "Points"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:673
-msgid "Cooperation status"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:677
-msgid "Teaches since"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:681
-msgid "Teaches until"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:684
-#, fuzzy
-msgid "Number of brochures"
-msgstr "Zoznam akcií"
-
-#: ../app/config/orm.neon.neon2php:685
-msgid "Number of brochures/propagation items, that he wants to send."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:714
-#, fuzzy
-msgid "Submit Id"
-msgstr "Časový vývoj prihlášiek"
-
-#: ../app/config/orm.neon.neon2php:755
-msgid "Game start"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:758
-#, fuzzy
-msgid "Game end"
-msgstr "Meno"
-
-#: ../app/config/orm.neon.neon2php:761
-msgid "Results display"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:764
-msgid "Results hide"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:767
-msgid "Refresh delay"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:771
-msgid "Hard display"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:775
-msgid "Available points"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:782
-msgid "Team Id"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:804
-msgid "Rank in category"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:808
-msgid "Total rank"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:816
-msgid "Game language"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:819
-msgid "Force A"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:827 ../data/events/fol/fol1.neon.neon2php:83
-msgid "Team name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:835
-#, fuzzy
-msgid "Submit opened?"
-msgstr "Časový vývoj prihlášiek"
-
-#: ../app/config/orm.neon.neon2php:861
-msgid "Schedule start"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:864
-msgid "Schedule end"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:870 ../app/config/orm.neon.neon2php:895
-#, fuzzy
-msgid "Name en"
-msgstr "Meno"
-
-#: ../app/config/orm.neon.neon2php:874
-msgid "Group name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:881
-msgid "Schedule item Id"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:884
-msgid "Require Id number"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:888
-#, fuzzy
-msgid "Price CZK"
-msgstr "Cena v Kč"
-
-#: ../app/config/orm.neon.neon2php:892
-#, fuzzy
-msgid "Price EUR"
-msgstr "Cena v Kč"
-
-#: ../app/config/orm.neon.neon2php:902
-msgid "Item name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:906
-#, fuzzy
-msgid "Description en"
-msgstr "Registrácia"
-
-#: ../app/config/orm.neon.neon2php:909
-#, fuzzy
-msgid "Description cs"
-msgstr "Registrácia"
-
-#: ../app/config/orm.neon.neon2php:912
-#, fuzzy
-msgid "Total capacity"
-msgstr "Kapacita"
-
-#: ../app/config/orm.neon.neon2php:917
-#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:22
-#, fuzzy
-msgid "Free capacity"
-msgstr "Kapacita"
-
-#: ../app/config/orm.neon.neon2php:921
-#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:17
-#, fuzzy
-msgid "Used capacity"
-msgstr "Kapacita"
-
-#: ../app/config/orm.neon.neon2php:933
-msgid "QID"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:937
-msgid "Tags"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:945
-msgid "Query name"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:948
-msgid "Query Id"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:954
-msgid "PHP post processing"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:955
-msgid "Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi."
+msgid "Shown int the organizers"
 msgstr ""
 
 #: ../app/config/exports.neon.neon2php:12
@@ -4850,6 +4645,10 @@ msgstr "Zoznam platieb"
 msgid "Delete the team."
 msgstr ""
 
+#: ../data/events/fol/fol1.neon.neon2php:83
+msgid "Team name"
+msgstr ""
+
 #: ../data/events/fol/fol1.neon.neon2php:93
 msgid "Contact address"
 msgstr ""
@@ -5327,6 +5126,16 @@ msgstr ""
 msgid "...reading code..."
 msgstr ""
 
+#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:17
+#, fuzzy
+msgid "Used capacity"
+msgstr "Kapacita"
+
+#: ../typescript/src/apps/events/schedule/components/parts/capacityLabel.tsx.tsx2php:22
+#, fuzzy
+msgid "Free capacity"
+msgstr "Kapacita"
+
 #: ../typescript/src/apps/events/schedule/components/index.tsx.tsx2php:41
 msgid "No items found."
 msgstr ""
@@ -5334,6 +5143,50 @@ msgstr ""
 #: ../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Name cs"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Number of brochures"
+#~ msgstr "Zoznam akcií"
+
+#, fuzzy
+#~ msgid "Submit Id"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Game end"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Submit opened?"
+#~ msgstr "Časový vývoj prihlášiek"
+
+#, fuzzy
+#~ msgid "Name en"
+#~ msgstr "Meno"
+
+#, fuzzy
+#~ msgid "Price CZK"
+#~ msgstr "Cena v Kč"
+
+#, fuzzy
+#~ msgid "Price EUR"
+#~ msgstr "Cena v Kč"
+
+#, fuzzy
+#~ msgid "Description en"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Description cs"
+#~ msgstr "Registrácia"
+
+#, fuzzy
+#~ msgid "Total capacity"
+#~ msgstr "Kapacita"
 
 #, fuzzy
 #~ msgid "Místo narození"
