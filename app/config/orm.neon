@@ -461,13 +461,8 @@ orm:
                     omitInputField: true
                 study_year:
                     type: class
-<<<<<<< HEAD
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearRow
-                    description: _('For determinig the category.')
-=======
                     class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearColumnFactory
-                    description: _('Kvůli zařazení do kategorie.')
->>>>>>> master
+                    description: _('For determinig the category.')
                     title: _('Study year')
                 class:
                     type: string
@@ -527,15 +522,9 @@ orm:
                     permission: RESTRICT
                 id_number:
                     type: class
-<<<<<<< HEAD
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberRow
-                    description: _('For foreigners passport ID.')
-                    title: _('Id Card number (for foreigners the passport Id)')
-=======
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
-                    description: _('U cizinců číslo pasu.')
-                    title: _('Číslo OP')
->>>>>>> master
+                    description: _('For foreigners passport ID.')
+                    title: _('Passport Id')
                     permission: FULL
                 born:
                     type: class
@@ -544,15 +533,9 @@ orm:
                     title: _('Date of birth')
                 born_id:
                     type: class
-<<<<<<< HEAD
-                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdRow
-                    title: _('Birth Id (for foreigners empty)')
-                    description: _('For foreigners empty.')
-=======
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory
-                    title: _('Rodné číslo')
-                    description: _('U cizinců prázdné.')
->>>>>>> master
+                    title: _('Birth Id')
+                    description: _('For foreigners empty.')
                     permission: FULL
                 birthplace:
                     type: string

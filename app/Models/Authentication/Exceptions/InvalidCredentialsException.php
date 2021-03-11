@@ -12,10 +12,7 @@ use Nette\Security\Authenticator;
  */
 class InvalidCredentialsException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-<<<<<<< HEAD
-        parent::__construct(_('Invalid credentials'), IAuthenticator::INVALID_CREDENTIAL, $previous);
-=======
         parent::__construct(_('Invalid credentials.'), Authenticator::INVALID_CREDENTIAL, $previous);
->>>>>>> master
+
     }
 }

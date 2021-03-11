@@ -55,11 +55,7 @@ class FyziklaniTaskImportProcessor {
                     $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {
                     $logger->log(new Message(
-<<<<<<< HEAD
-                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), ILogger::WARNING));
-=======
-                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), Logger::WARNING));
->>>>>>> master
+                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Logger::WARNING));
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));

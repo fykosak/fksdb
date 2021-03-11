@@ -12,10 +12,7 @@ use Nette\Security\Authenticator;
  */
 class NoLoginException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-<<<<<<< HEAD
-        parent::__construct(_('Account not prepred.'), IAuthenticator::NOT_APPROVED, $previous);
-=======
         parent::__construct(_('Account not ready.'), Authenticator::NOT_APPROVED, $previous);
->>>>>>> master
+
     }
 }

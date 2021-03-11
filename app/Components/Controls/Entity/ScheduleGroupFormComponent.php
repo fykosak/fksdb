@@ -64,20 +64,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form): void {
-<<<<<<< HEAD
-        $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end']);
-        $container->addSelect('schedule_group_type', _('Schedule group type'), [
-            'accommodation' => _('Accommodation'),
-            'weekend' => _('Weekend'),
-            'visa' => _('Visa'),
-            'accommodation_gender' => _('Accommodation gender'),
-            'accommodation_teacher' => _('Accommodation teacher'),
-            'teacher_present' => _('Schedule during competition'),
-            'weekend_info' => _('Weekend info'),
-        ]);
-=======
         $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']);
->>>>>>> master
         $form->addComponent($container, self::CONTAINER);
     }
 }

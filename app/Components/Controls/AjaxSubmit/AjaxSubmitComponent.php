@@ -125,11 +125,7 @@ class AjaxSubmitComponent extends AjaxComponent {
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-<<<<<<< HEAD:app/Components/Controls/AjaxSubmit/AjaxSubmit.php
-            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), ILogger::WARNING));
-=======
-            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING));
->>>>>>> master:app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php
+            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING));
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException | ModelException$exception) {

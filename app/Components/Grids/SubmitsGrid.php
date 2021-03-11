@@ -107,11 +107,8 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
-<<<<<<< HEAD
-            $this->flashMessage(sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()), ILogger::WARNING);
-=======
-            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING);
->>>>>>> master
+            $this->flashMessage(sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING);
+
         } catch (ForbiddenRequestException|NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (StorageException|ModelException$exception) {
