@@ -313,13 +313,10 @@ orm:
                     title: _('Until')
                 order:
                     type: class
-<<<<<<< HEAD
-                    class: FKSDB\Models\ORM\Columns\Tables\Org\OrderRow
-                    description: _('For ordering in the organizers list')
-=======
+                    
                     class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
                     description: _('Pro řazení v seznamu organizátorů')
->>>>>>> master
+
                     title: _('Order')
                 tex_signature:
                     type: class
