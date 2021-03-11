@@ -47,8 +47,8 @@ Environment
 127.0.0.1   auth.fykos.local
 ```
 
-2) Configure virtual hosts in `/etc/apache/sites-enabled` with proper ServerName
-   and ServerAlias (see domains above). (You need only virtual host for FKSDB.)
+2) Configure virtual hosts in `/etc/apache/sites-available` with proper ServerName
+   and ServerAlias (see domains above). Create a symlink to that file in `/etc/apache/sites-enabled` (You need only virtual host for FKSDB.)
 
 ```apache
 <VirtualHost db.fykos.local auth.fykos.local>
@@ -96,3 +96,8 @@ Run
 ===
 
 1) Register yourself and then add superuser role to the created login.
+
+Troubleshooting
+---------------
+- make sure the `path` has the `+x` property, i.e. `sudo chmod +x /home`, `sudo chmod +x /home/user`, `sudo chmod +x /home/user/fksdb_path`
+
