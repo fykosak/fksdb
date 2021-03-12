@@ -143,7 +143,7 @@ class Field {
      * @return mixed
      */
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel2();
+        $model = $this->getBaseHolder()->getModel2(false);
         if (isset($model) && isset($model[$this->name])) {
             return $model[$this->name];
         }

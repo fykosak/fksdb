@@ -6,7 +6,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 

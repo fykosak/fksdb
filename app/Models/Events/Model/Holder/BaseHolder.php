@@ -170,7 +170,7 @@ class BaseHolder {
      * @param bool $newAsNull
      * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
-    public function getModel2(bool $newAsNull = false): ?IModel {
+    public function getModel2(bool $newAsNull = true): ?IModel {
         if ($newAsNull) {
             return ($this->model && !$this->model->isNew()) ? $this->model : null;
         }
@@ -182,6 +182,7 @@ class BaseHolder {
     }
 
     public function saveModel(): void {
+
         if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } elseif ($this->getModelState() != Machine::STATE_INIT) {
@@ -190,7 +191,7 @@ class BaseHolder {
     }
 
     public function getModelState(): string {
-        $model = $this->getModel2();
+        $model = $this->getModel2(false);
         if (!$model || (!$model[self::STATE_COLUMN])) {
             return Machine::STATE_INIT;
         } else {
@@ -303,7 +304,7 @@ class BaseHolder {
     public function getPerson(): ?ModelPerson {
         /** @var ModelPerson $model */
         try {
-            $model = ReferencedAccessor::accessModel($this->getModel2(), ModelPerson::class);
+            $model = ReferencedAccessor::accessModel($this->getModel2(false), ModelPerson::class);
         } catch (CannotAccessModelException $exception) {
             return null;
         }

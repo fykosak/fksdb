@@ -34,7 +34,7 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
      * @throws ModelException
      * @deprecated use createNewModel
      */
-    public function createNew(iterable $data = null): OldAbstractModelSingle {
+    public function createNew(?iterable $data = null): OldAbstractModelSingle {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
@@ -64,9 +64,13 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
      */
     public function dispose($model): void {
         $this->checkType($model);
-        if (!$model->isNew() && $model->delete() === false) {
-            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
-            throw new ModelException("$code: Error when deleting a model.");
+        if (!$model->isNew()) {
+            try {
+                $model->delete();
+            } catch (PDOException $exception) {
+                $code = $exception->getCode();
+                throw new ModelException("$code: Error when deleting a model.");
+            }
         }
     }
 
@@ -98,20 +102,15 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
      * @deprecated
      */
     public function save(IModel &$model): void {
-        $modelClassName = $this->getModelClassName();
         /** @var OldAbstractModelSingle $model */
-        if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
-        }
+        $this->checkType($model);
         try {
             if ($model->isNew()) {
-                $result = $this->getTable()->insert($model->getTmpData());
-                if ($result !== false) {
-                    $model = $modelClassName::createFromActiveRow($result);
-                    $model->setNew(false);
-                }
+                $model = $this->createNewModel($model->getTmpData());
+                $model->setNew(false);
             } else {
-                $model->update($model->getTmpData());
+                $this->updateModel2($model, $model->getTmpData());
+                $model = $this->refresh($model);
             }
         } catch (PDOException $exception) {
             Debugger::log($exception);

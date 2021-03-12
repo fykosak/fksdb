@@ -46,12 +46,12 @@ class UniqueCheck extends AbstractAdjustment {
                 } else {
                     $value = $control->getValue();
                 }
-                $model = $baseHolder->getModel2(true);
+                $model = $baseHolder->getModel2();
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
                 $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
-                if ($model && !$model->isNew()) {
+                if ($model) {
                     $table->where("NOT $pk = ?", $model->getPrimary());
                 }
                 return count($table) == 0;
