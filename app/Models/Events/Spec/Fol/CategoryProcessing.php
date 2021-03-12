@@ -35,8 +35,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
-
-        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }

@@ -46,7 +46,7 @@ class UniqueCheck extends AbstractAdjustment {
                 } else {
                     $value = $control->getValue();
                 }
-                $model = $baseHolder->getModel();
+                $model = $baseHolder->getModel2();
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);

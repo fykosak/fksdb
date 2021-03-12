@@ -31,7 +31,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             $values['team']['category'] = $this->getCategory($participants);
         }
         // TODO hack if all study year fields are disabled
-        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Logger::INFO));

@@ -79,7 +79,6 @@ class ApplicationComponent extends BaseComponent {
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
-        $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->render();
     }
@@ -187,7 +186,8 @@ class ApplicationComponent extends BaseComponent {
 
     private function finalRedirect(): void {
         if ($this->redirectCallback) {
-            $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
+            $model = $this->holder->getPrimaryHolder()->getModel2();
+            $id = $model ? $model->getPrimary(false) : null;
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');

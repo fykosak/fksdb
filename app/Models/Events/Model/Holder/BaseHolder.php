@@ -164,16 +164,14 @@ class BaseHolder {
     }
 
     /**
-     * @param int|IModel $model
+     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
      */
-    public function setModel($model): void {
-        if ($model instanceof IModel) {
-            $this->model = $model;
-        } elseif ($model) {
-            $this->model = $this->service->findByPrimary($model);
-        } else {
-            $this->model = null;
-        }
+    public function getModel2(): ?IModel {
+        return $this->model;
+    }
+
+    public function setModel(?IModel $model): void {
+        $this->model = $model;
     }
 
     public function saveModel(): void {

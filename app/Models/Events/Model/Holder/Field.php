@@ -140,14 +140,14 @@ class Field {
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel();
-        if (isset($model[$this->name])) {
+        $model = $this->getBaseHolder()->getModel2();
+        if (isset($model) && isset($model[$this->name])) {
             return $model[$this->name];
         }
-        if ($this->getBaseHolder()->getModelState() == Machine::STATE_INIT) {
+        if (!isset($model)) {
             return $this->getDefault();
         }
         return null;
