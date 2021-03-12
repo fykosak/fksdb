@@ -18,6 +18,7 @@ use Nette\Forms\Controls\TextInput;
 class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
+
     private ModelEvent $event;
     private string $type;
     private ServiceScheduleItem $serviceScheduleItem;
@@ -27,11 +28,12 @@ class ScheduleField extends TextInput {
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @param string|null $label
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
-        parent::__construct($this->getLabelByType($type));
+    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label) {
+        parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
@@ -44,7 +46,7 @@ class ScheduleField extends TextInput {
      * @return string
      * @throws NotImplementedException
      */
-    private function getLabelByType(string $type): string {
+    private function getDefaultLabel(string $type): string {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
