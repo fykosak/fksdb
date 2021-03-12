@@ -211,7 +211,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
         Assert::equal($teamName, $team->name);
 
-        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2()->getPrimary());
+        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2(true)->getPrimary());
         Assert::equal(2, $count);
     }
 }

@@ -123,7 +123,7 @@ class ReferencedId extends HiddenField {
         if ($personModel && !$personModel->isNew()) {
             $this->model = $personModel;
         }
-        $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
+        $this->setModel(($personModel && !$personModel->isNew()) ? $personModel : null, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
         if ($value instanceof IModel) {
             $value = $personModel->getPrimary();
@@ -219,6 +219,6 @@ class ReferencedId extends HiddenField {
     }
 
     protected function setModel(?IModel $model, string $mode): void {
-        $this->getReferencedContainer()->setModel(($model && !$model->isNew()) ? $model : null, $mode);
+        $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

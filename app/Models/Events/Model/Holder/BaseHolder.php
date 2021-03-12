@@ -167,9 +167,13 @@ class BaseHolder {
     }
 
     /**
+     * @param bool $newAsNull
      * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
-    public function getModel2(): ?IModel {
+    public function getModel2(bool $newAsNull = false): ?IModel {
+        if ($newAsNull) {
+            return ($this->model && !$this->model->isNew()) ? $this->model : null;
+        }
         return $this->model;
     }
 

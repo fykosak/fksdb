@@ -186,7 +186,7 @@ class ApplicationComponent extends BaseComponent {
 
     private function finalRedirect(): void {
         if ($this->redirectCallback) {
-            $model = $this->holder->getPrimaryHolder()->getModel2();
+            $model = $this->holder->getPrimaryHolder()->getModel2(true);
             $id = $model ? $model->getPrimary(false) : null;
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
