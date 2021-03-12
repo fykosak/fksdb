@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM\ModelsMulti\Events;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\InvalidStateException;
 
@@ -23,5 +24,9 @@ class ModelMDsefParticipant extends AbstractModelMulti {
 
     public function getEvent(): ModelEvent {
         return $this->getMainModel()->getEvent();
+    }
+
+    public function getPerson(): ModelPerson {
+        return $this->getMainModel()->getPerson();
     }
 }

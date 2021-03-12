@@ -41,10 +41,9 @@ abstract class SecondaryModelStrategy {
      * @return void
      */
     public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?IModel $primaryModel = null): void {
-        $table = $service->getTable();
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $table->where($joinOn, $joinValue);
+            $secondary =  $service->getTable()->where($joinOn, $joinValue);
             if ($joinTo) {
                 $event = reset($holders)->getEvent();
                 $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());

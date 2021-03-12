@@ -242,9 +242,9 @@ class MailSender {
 
         $persons = [];
         foreach ($names as $name) {
-            $personId = $holder->getBaseHolder($name)->getPersonId();
-            if ($personId) {
-                $persons[] = $personId;
+            $person = $holder->getBaseHolder($name)->getPerson();
+            if ($person) {
+                $persons[] = $person->person_id;
             }
         }
         return $persons;

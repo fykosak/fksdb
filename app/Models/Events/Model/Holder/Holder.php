@@ -215,7 +215,6 @@ class Holder {
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
-                        'personIds' => $baseHolder->getPersonIdColumns(),
                         'holders' => [],
                     ];
                 }

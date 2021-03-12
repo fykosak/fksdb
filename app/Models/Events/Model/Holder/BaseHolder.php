@@ -9,13 +9,16 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Neon\Neon;
 
 /**
@@ -38,7 +41,6 @@ class BaseHolder {
     private IService $service;
     private ?string $joinOn = null;
     private ?string $joinTo = null;
-    private array $personIdColumns;
     private string $eventIdColumn;
     private Holder $holder;
     /** @var Field[] */
@@ -155,6 +157,7 @@ class BaseHolder {
 
     /**
      * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
+     * @deprecated
      */
     public function &getModel(): IModel {
         if (!$this->model) {
@@ -164,7 +167,7 @@ class BaseHolder {
     }
 
     /**
-     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
+     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
     public function getModel2(): ?IModel {
         return $this->model;
@@ -183,8 +186,8 @@ class BaseHolder {
     }
 
     public function getModelState(): string {
-        $model = $this->getModel();
-        if ($model->isNew() && !$model[self::STATE_COLUMN]) {
+        $model = $this->getModel2();
+        if (!$model || (!$model[self::STATE_COLUMN])) {
             return Machine::STATE_INIT;
         } else {
             return $model[self::STATE_COLUMN];
@@ -247,24 +250,6 @@ class BaseHolder {
         $this->joinTo = $joinTo;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getPersonIdColumns(): array {
-        return $this->personIdColumns;
-    }
-
-    public function setPersonIdColumns(array $personIds): void {
-        if (!$this->getService()) {
-            throw new InvalidStateException('Call setService prior setting person IDs.');
-        }
-
-        $this->personIdColumns = [];
-        foreach ($personIds as $personId) {
-            $this->personIdColumns[] = $this->resolveColumnJoins($personId);
-        }
-    }
-
     public function getEventIdColumn(): string {
         return $this->eventIdColumn;
     }
@@ -311,18 +296,14 @@ class BaseHolder {
         return $container;
     }
 
-    /**
-     * @return int|null  ID of a person associated with the application
-     */
-    public function getPersonId(): ?int {
-        $personColumns = $this->getPersonIdColumns();
-        if (!$personColumns) {
+    public function getPerson(): ?ModelPerson {
+        /** @var ModelPerson $model */
+        try {
+            $model = ReferencedAccessor::accessModel($this->getModel2(), ModelPerson::class);
+        } catch (CannotAccessModelException $exception) {
             return null;
         }
-        $personColumn = reset($personColumns); //TODO we support only single person per model, so far
-        $personColumn = self::getBareColumn($personColumn);
-        $model = $this->getModel();
-        return $model[$personColumn];
+        return $model;
     }
 
     public function __toString(): string {

@@ -4,6 +4,8 @@ namespace FKSDB\Models\Events\Spec\Dsef;
 
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\SmartObject;
@@ -13,6 +15,7 @@ use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated
  */
 class GroupOptions implements OptionsProvider {
 
@@ -25,7 +28,6 @@ class GroupOptions implements OptionsProvider {
     /** @var string|string[] */
     private $excludeStates;
 
-    /** @var array[]  eventId => groups cache */
     private array $groups = [];
 
     /**
@@ -59,14 +61,12 @@ class GroupOptions implements OptionsProvider {
         return $result;
     }
 
-    private function getGroups(int $eventId): array {
-        if (!isset($this->groups[$eventId])) {
-            $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
-                ->select('*')
-                ->where('event_id', $eventId)
-                ->fetchPairs('e_dsef_group_id');
-        }
-        return $this->groups[$eventId];
+    /**
+     * @param ModelEvent $event
+     * @return ModelDsefGroup[]
+     */
+    private function getGroups(ModelEvent $event): array {
+        return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }
 
     public function getOptions(Field $field): array {
@@ -74,7 +74,7 @@ class GroupOptions implements OptionsProvider {
         $event = $baseHolder->getEvent();
         $application = $baseHolder->getModel();
         $model = $baseHolder->getModel2();
-        $groups = $this->getGroups($event->getPrimary());
+        $groups = $this->getGroups($event);
 
         $selection = $this->serviceMParticipant->getMainService()->getExplorer()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
