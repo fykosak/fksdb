@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-10 18:34+0100\n"
+"POT-Creation-Date: 2021-03-11 16:48+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -347,7 +347,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:218
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:47
-#: ../app/config/orm.neon.neon2php:484
+#: ../app/config/orm.neon.neon2php:479
 msgid "E-mail"
 msgstr ""
 
@@ -889,6 +889,16 @@ msgstr ""
 #: ../app/Modules/OrgModule/ValidationPresenter.php:15
 msgid "Data validation"
 msgstr ""
+
+#: ../app/Modules/OrgModule/ValidationPresenter.php:19
+#, fuzzy
+msgid "All tests"
+msgstr "Zvoliť typ"
+
+#: ../app/Modules/OrgModule/ValidationPresenter.php:23
+#, fuzzy
+msgid "Select test"
+msgstr "Zvoliť typ"
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:30
 msgid "Schools"
@@ -1651,6 +1661,16 @@ msgstr ""
 msgid "Corrected submit #%d is broken"
 msgstr ""
 
+#: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:59
+#, php-format
+msgid "Uploaded unregister corrected submit #%d"
+msgstr ""
+
+#: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:63
+#, php-format
+msgid "Test done, found %d errors"
+msgstr ""
+
 #: ../app/Components/Controls/Person/PizzaComponent.php:34
 #: ../app/Modules/EventModule/templates/ScheduleItem/detail.latte.latte2php:27
 #: ../app/Modules/OrgModule/templates/Dashboard/default.latte.latte2php:4
@@ -1677,6 +1697,15 @@ msgstr ""
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:115
 msgid "Upload successful"
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:128
+#, php-format
+msgid "Uploading of task %s cancelled."
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:133
+msgid "There was an error duting the task deletion."
 msgstr ""
 
 #: ../app/Components/Controls/AjaxSubmit/SubmitContainer.php:43
@@ -1857,7 +1886,7 @@ msgid "Permission denied"
 msgstr "Registrácia"
 
 #: ../app/Components/Grids/ContestantsGrid.php:58
-#: ../app/config/orm.neon.neon2php:471
+#: ../app/config/orm.neon.neon2php:466
 msgid "Study year"
 msgstr ""
 
@@ -2018,6 +2047,16 @@ msgstr ""
 msgid "Download corrected"
 msgstr ""
 
+#: ../app/Components/Grids/SubmitsGrid.php:110
+#, php-format
+msgid "Submitting of task %s cancelled."
+msgstr ""
+
+#: ../app/Components/Grids/SubmitsGrid.php:116
+#, php-format
+msgid "There was an error during the deletion of task %s."
+msgstr ""
+
 #: ../app/Components/Grids/Schedule/GroupsGrid.php:45
 msgid "Items count"
 msgstr ""
@@ -2054,6 +2093,27 @@ msgstr ""
 
 #: ../app/Models/Authentication/Exceptions/UnknownLoginException.php:15
 msgid "Unknown account."
+msgstr ""
+
+#: ../app/Models/Authentication/Exceptions/RecoveryExistsException.php:8
+msgid "Account recovery in progress."
+msgstr ""
+
+#: ../app/Models/Authentication/Exceptions/InactiveLoginException.php:15
+msgid "Inactive account."
+msgstr ""
+
+#: ../app/Models/Authentication/Exceptions/InvalidCredentialsException.php:15
+msgid "Invalid credentials."
+msgstr ""
+
+#: ../app/Models/Authentication/Exceptions/RecoveryNotImplementedException.php:7
+#, fuzzy
+msgid "Account cannot be recovered."
+msgstr "Časový vývoj prihlášiek"
+
+#: ../app/Models/Authentication/Exceptions/NoLoginException.php:15
+msgid "Account not ready."
 msgstr ""
 
 #: ../app/Models/Authentication/TokenAuthenticator.php:41
@@ -2128,6 +2188,25 @@ msgstr ""
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:55
 #, php-format
 msgid "Task %s \"%s\" updated"
+msgstr ""
+
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:58
+#, fuzzy, php-format
+msgid "Task %s \"%s\" not updated"
+msgstr "Ubytnovanie neexistuje"
+
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:61
+msgid "There was an error"
+msgstr ""
+
+#: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:58
+#, php-format
+msgid "Nonexistent team ID %d skipped"
+msgstr ""
+
+#: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:75
+#, php-format
+msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/ControlMismatchException.php:14
@@ -2278,6 +2357,10 @@ msgstr ""
 #: ../app/Models/Tasks/StudyYearsFromXML.php:82
 #, php-format
 msgid "Unknown year \"%s\"."
+msgstr ""
+
+#: ../app/Models/Tasks/StudyYearsFromXML.php:92
+msgid "Filling in default study years despite incorrect specification."
 msgstr ""
 
 #: ../app/Models/Tasks/ContributionsFromXML.php:79
@@ -2578,6 +2661,11 @@ msgstr ""
 #: ../app/Models/Events/Transitions/MailSender.php:197
 msgid "Camp invitation"
 msgstr ""
+
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:32
+#, fuzzy, php-format
+msgid "Team registered for the category %s."
+msgstr "Registrácia"
 
 #: ../app/Models/Events/Spec/Fol/FlagCheck.php:48
 msgid "This option is only available to Czech and Slovak students."
@@ -3294,7 +3382,7 @@ msgstr ""
 
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:22
-#: ../app/config/orm.neon.neon2php:363 ../app/config/orm.neon.neon2php:497
+#: ../app/config/orm.neon.neon2php:363 ../app/config/orm.neon.neon2php:492
 msgid "Bank account"
 msgstr ""
 
@@ -3582,100 +3670,80 @@ msgstr ""
 msgid "Academic year"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:466
+#: ../app/config/orm.neon.neon2php:465
 msgid "For determinig the category."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:469
-msgid "Kvůli zařazení do kategorie."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:474
 msgid "Class"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:489
+#: ../app/config/orm.neon.neon2php:484
 msgid "Health insurance"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:494
+#: ../app/config/orm.neon.neon2php:489
 msgid "Nationality"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:504
+#: ../app/config/orm.neon.neon2php:499
 msgid "Homepage"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:507
+#: ../app/config/orm.neon.neon2php:502
 msgid "Phone"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:510
+#: ../app/config/orm.neon.neon2php:505
 msgid "Phone number (mother)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:516
+#: ../app/config/orm.neon.neon2php:511
 msgid "Phone number (father)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:522
+#: ../app/config/orm.neon.neon2php:517
 msgid "E-mail (mother)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:526
+#: ../app/config/orm.neon.neon2php:521
 msgid "E-mail (father)"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:532
+#: ../app/config/orm.neon.neon2php:526
 msgid "For foreigners passport ID."
 msgstr ""
 
+#: ../app/config/orm.neon.neon2php:527
+msgid "Passport Id"
+msgstr ""
+
 #: ../app/config/orm.neon.neon2php:533
-msgid "Id Card number (for foreigners the passport Id)"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:536
-msgid "U cizinců číslo pasu."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:537
-msgid "Číslo OP"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:544
 msgid "Date of birth"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:549
-msgid "Birth Id (for foreigners empty)"
+#: ../app/config/orm.neon.neon2php:537
+msgid "Birth Id"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:550
+#: ../app/config/orm.neon.neon2php:538
 msgid "For foreigners empty."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:553
-msgid "Rodné číslo"
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:554
-msgid "U cizinců prázdné."
-msgstr ""
-
-#: ../app/config/orm.neon.neon2php:559
+#: ../app/config/orm.neon.neon2php:542
 msgid "Place of birth"
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:560
+#: ../app/config/orm.neon.neon2php:543
 msgid "City and region (for diplomas)."
 msgstr ""
 
-#: ../app/config/orm.neon.neon2php:565
+#: ../app/config/orm.neon.neon2php:548
 #, fuzzy
 msgid "Current role"
 msgstr "Zvoliť typ"
 
-#: ../app/config/orm.neon.neon2php:567
+#: ../app/config/orm.neon.neon2php:550
 msgid "Shown in the organizers"
 msgstr ""
 
@@ -4840,10 +4908,6 @@ msgstr ""
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:233
 msgid "What size of T-shirt do you wear?"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Task %s \"%s\" not updated"
-#~ msgstr "Ubytnovanie neexistuje"
 
 #~ msgid "All"
 #~ msgstr "Všetky"
