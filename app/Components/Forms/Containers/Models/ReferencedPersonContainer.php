@@ -130,7 +130,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName) : bool {
+                        ->addRule(function (BaseControl $control) use ($fullFieldName): bool {
                             $personId = $this->getReferencedId()->getValue(false);
 
                             $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
@@ -154,10 +154,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      */
     public function setModel(?IModel $model, string $mode): void {
-
-        $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
-        $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
+        $modifiable = $this->modifiabilityResolver->isModifiable($model);
+        $resolution = $this->modifiabilityResolver->getResolutionMode($model);
+        $visible = $this->visibilityResolver->isVisible($model);
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
