@@ -19,6 +19,7 @@ parameters:
                         required: true
                 person_schedule:
                     weekend:
+                        label: _('Program akce')
                         required: false
 
 events:
