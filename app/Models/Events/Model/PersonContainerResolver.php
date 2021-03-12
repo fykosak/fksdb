@@ -44,9 +44,9 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
 
     public function getResolutionMode(?ModelPerson $person): string {
         if (!$person) {
-            return ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
-        return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        return ($this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(?ModelPerson $person): bool {

@@ -154,9 +154,10 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      */
     public function setModel(?IModel $model, string $mode): void {
-        $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
+        $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $visible = $this->visibilityResolver->isVisible($model);
+
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
@@ -309,11 +310,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
             }
         }
         return false;
-    }
-
-    final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
-        $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
-        return !($value === null || $value === '');
     }
 
     /**

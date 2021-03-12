@@ -23,18 +23,18 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver {
     }
 
     public function isVisible(?ModelPerson $person): bool {
-        return !$person || $person->isNew() || $this->isSelf($person);
+        return !$person || $this->isSelf($person);
     }
 
     public function getResolutionMode(?ModelPerson $person): string {
         if (!$person) {
-            return ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
         return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(?ModelPerson $person): bool {
-        return !$person || $person->isNew() || $this->isSelf($person);
+        return !$person || $this->isSelf($person);
     }
 
     protected function isSelf(ModelPerson $person): bool {

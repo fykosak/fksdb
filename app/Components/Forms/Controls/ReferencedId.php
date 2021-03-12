@@ -115,7 +115,7 @@ class ReferencedId extends HiddenField {
         if ($value instanceof IModel) {
             $personModel = $value;
         } elseif ($value === self::VALUE_PROMISE) {
-            $personModel = $this->service->createNew();
+            $personModel = null;
         } else {
             $personModel = $this->service->findByPrimary($value);
         }
@@ -219,6 +219,6 @@ class ReferencedId extends HiddenField {
     }
 
     protected function setModel(?IModel $model, string $mode): void {
-        $this->getReferencedContainer()->setModel($model, $mode);
+        $this->getReferencedContainer()->setModel(($model && !$model->isNew()) ? $model : null, $mode);
     }
 }

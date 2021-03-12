@@ -20,6 +20,4 @@ class TestResolver implements VisibilityResolver, ModifiabilityResolver {
     public function isVisible(?ModelPerson $person): bool {
         return true;
     }
-
 }
-

@@ -27,18 +27,18 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver {
     }
 
     public function isVisible(?ModelPerson $person): bool {
-        return !$person || $person->isNew() || $this->isAllowed($person, 'edit');
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
     public function getResolutionMode(?ModelPerson $person): string {
         if (!$person) {
-            return ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
         return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(?ModelPerson $person): bool {
-        return !$person || $person->isNew() || $this->isAllowed($person, 'edit');
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
     /**
