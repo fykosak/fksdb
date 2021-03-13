@@ -175,17 +175,6 @@ class Holder {
             }
         }
 
-        foreach ($this->baseHolders as $name => $baseHolder) {
-            $stateExist = isset($newStates[$name]);
-            if ($stateExist) {
-                $alive = ($newStates[$name] != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED);
-            } else {
-                $alive = true;
-            }
-            if (isset($values[$name])) {
-                $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
-            }
-        }
         return $newStates;
     }
 

@@ -39,7 +39,7 @@ class TransitionButtonsComponent extends BaseComponent {
     }
 
     public function render(): void {
-        $this->template->transitions = $this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
+        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
         $this->template->holder = $this->holder;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
@@ -58,9 +58,5 @@ class TransitionButtonsComponent extends BaseComponent {
             /* handled elsewhere, here it's to just prevent redirect */
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
         }
-    }
-
-    private function getMachine(): Machine {
-        return $this->handler->getMachine();
     }
 }

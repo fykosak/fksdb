@@ -204,6 +204,11 @@ class BaseHolder {
 
     public function updateModel(iterable $values, bool $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
+        /*  if ($this->model) {
+              $this->getService()->updateModel2($this->model, (array)$values);
+          } else {
+              $this->model = $this->getService()->createNewModel((array)$values);
+          }*/
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 

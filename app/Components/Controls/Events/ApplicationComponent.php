@@ -79,7 +79,7 @@ class ApplicationComponent extends BaseComponent {
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
+        $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $this->template->render();
     }
 
@@ -116,7 +116,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->getMachine()->getPrimaryMachine();
+        $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
 
         foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
@@ -174,10 +174,6 @@ class ApplicationComponent extends BaseComponent {
                 $this->finalRedirect();
             }
         }
-    }
-
-    private function getMachine(): Machine {
-        return $this->handler->getMachine();
     }
 
     private function canEdit(): bool {

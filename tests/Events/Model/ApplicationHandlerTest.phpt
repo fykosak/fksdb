@@ -6,7 +6,6 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
@@ -55,13 +54,12 @@ class ApplicationHandlerTest extends EventTestCase {
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 
-        $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
         /** @var ModelEvent $event */
         $event = $serviceEvent->findByPrimary(1);
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
         $this->holder = $factory->getDummyHolder($event);
-        $this->fixture = $handlerFactory->create($event, new DevNullLogger());
+        $this->fixture = new ApplicationHandler($event, new DevNullLogger(), $this->getContainer());
 
         $this->mockApplication();
     }

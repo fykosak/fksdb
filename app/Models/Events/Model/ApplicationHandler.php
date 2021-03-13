@@ -48,12 +48,16 @@ class ApplicationHandler {
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
+    public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->connection = $connection;
         $this->container = $container;
+        $container->callInjects($this);
+    }
+
+    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->connection = $connection;
     }
 
     public function getErrorMode(): string {
@@ -209,6 +213,7 @@ class ApplicationHandler {
         }
         // Find out transitions
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
+
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
                 $state = $holder->getBaseHolder($name)->getModelState();
@@ -219,6 +224,12 @@ class ApplicationHandler {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
+            }
+        }
+
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
+            if (isset($values[$name])) {
+                $baseHolder->updateModel($values[$name], isset($newStates[$name]) && ($newStates[$name] != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)); // terminated models may not be correctly updated
             }
         }
 

@@ -53,7 +53,6 @@ services:
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
-    - FKSDB\Models\Events\Model\ApplicationHandlerFactory
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
     #fyziklani
