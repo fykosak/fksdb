@@ -154,6 +154,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      */
     public function setModel(?IModel $model, string $mode): void {
+
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $visible = $this->visibilityResolver->isVisible($model);
@@ -245,7 +246,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
-                $control = $this->personScheduleFactory->createField($fieldName, $this->event);
+                $control = $this->personScheduleFactory->createField($fieldName, $this->event, $metadata['label'] ?? null);
                 break;
             case 'person':
             case 'person_info':
