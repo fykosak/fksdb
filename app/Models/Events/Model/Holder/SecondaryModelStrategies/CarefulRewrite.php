@@ -24,7 +24,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
 
-        $currentModel = $holder->getModel();
+        $currentModel = $holder->getModel2(false);
         $foundModel = reset($secondaries);
         $conflicts = $this->getConflicts($currentModel, $foundModel, $joinData, $holder->getService());
 

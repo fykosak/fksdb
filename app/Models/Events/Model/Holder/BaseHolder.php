@@ -182,7 +182,6 @@ class BaseHolder {
     }
 
     public function saveModel(): void {
-
         if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } elseif ($this->getModelState() != Machine::STATE_INIT) {

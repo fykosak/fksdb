@@ -43,7 +43,7 @@ abstract class SecondaryModelStrategy {
     public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?IModel $primaryModel = null): void {
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary =  $service->getTable()->where($joinOn, $joinValue);
+            $secondary = $service->getTable()->where($joinOn, $joinValue);
             if ($joinTo) {
                 $event = reset($holders)->getEvent();
                 $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
@@ -69,8 +69,9 @@ abstract class SecondaryModelStrategy {
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
                 $conflicts = [];
+                $baseModel = $baseHolder->getModel2(false);
                 foreach ($existing as $secondaryModel) {
-                    if ($baseHolder->getModel()->getPrimary(false) !== $secondaryModel->getPrimary()) {
+                    if ($baseModel && ($baseModel->getPrimary(false) !== $secondaryModel->getPrimary())) {
                         $conflicts[] = $secondaryModel;
                     }
                 }

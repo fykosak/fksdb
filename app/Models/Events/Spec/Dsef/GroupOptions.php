@@ -72,7 +72,7 @@ class GroupOptions implements OptionsProvider {
     public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
-        $application = $baseHolder->getModel();
+        $application = $baseHolder->getModel2(false);
         $model = $baseHolder->getModel2();
         $groups = $this->getGroups($event);
 

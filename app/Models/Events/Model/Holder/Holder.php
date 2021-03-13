@@ -141,7 +141,7 @@ class Holder {
              * When creating/updating primary model, propagate its PK to referencing secondary models.
              */
             $this->primaryHolder->saveModel();
-            $primaryModel = $this->primaryHolder->getModel();
+            $primaryModel = $this->primaryHolder->getModel2();
 
             foreach ($this->getGroupedSecondaryHolders() as $group) {
                 $this->secondaryModelStrategy->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);

@@ -221,6 +221,7 @@ class ApplicationHandler {
                 }
             }
         }
+
         return $transitions;
     }
 
