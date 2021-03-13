@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Services;
 use DateTime;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Fykosak\NetteORM\AbstractService;
 
@@ -38,15 +37,5 @@ class ServicePersonInfo extends AbstractService {
             }
         }
         return parent::updateModel2($model, $data);
-    }
-
-    public function store(ModelPerson $person, ?ModelPersonInfo $info, array $data): ModelPersonInfo {
-        if ($info) {
-            $this->updateModel2($info, $data);
-            return $this->refresh($info);
-        } else {
-            $data['person_id'] = $person->person_id;
-            return $this->createNewModel($data);
-        }
     }
 }

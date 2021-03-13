@@ -14,13 +14,4 @@ use Fykosak\NetteORM\AbstractService;
  * @method ModelScheduleGroup refresh(AbstractModel $model)
  */
 class ServiceScheduleGroup extends AbstractService {
-
-    public function store(?ModelScheduleGroup $group, array $data): ModelScheduleGroup {
-        if (is_null($group)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($group, $data);
-            return $this->refresh($group);
-        }
-    }
 }

@@ -10,7 +10,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use InvalidArgumentException;
 use PDOException;
-use Tracy\Debugger;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -104,22 +103,7 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
     public function save(IModel &$model): void {
         /** @var OldAbstractModelSingle $model */
         $this->checkType($model);
-        try {
-            if ($model->isNew()) {
-                $model = $this->createNewModel($model->getTmpData());
-                $model->setNew(false);
-            } else {
-                $this->updateModel2($model, $model->getTmpData());
-                $model = $this->refresh($model);
-            }
-        } catch (PDOException $exception) {
-            Debugger::log($exception);
-            throw new ModelException('Error when storing model.', null, $exception);
-        }
-        // because ActiveRow return false when 0 rows where effected https://stackoverflow.com/questions/11813911/php-pdo-error-number-00000-when-query-is-correct
-        if (!(int)$this->getExplorer()->getConnection()->getPdo()->errorInfo()) {
-            $code = $this->getExplorer()->getConnection()->getPdo()->errorCode();
-            throw new ModelException("$code: Error when storing a model.");
-        }
+        $model = $this->store($model->isNew() ? null : $model, $model->getTmpData());
+        $model->setNew(false);
     }
 }

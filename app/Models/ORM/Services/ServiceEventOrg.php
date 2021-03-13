@@ -24,13 +24,4 @@ class ServiceEventOrg extends AbstractService {
             throw $exception;
         }
     }
-
-    public function store(?ModelEventOrg $model, array $data): ModelEventOrg {
-        if (is_null($model)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($model, $data);
-            return $this->refresh($model);
-        }
-    }
 }

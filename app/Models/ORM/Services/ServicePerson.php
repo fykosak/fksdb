@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
+ * @method ModelPerson store(?ModelPerson $model, array $data)
  */
 class ServicePerson extends OldAbstractServiceSingle {
 
@@ -32,14 +33,5 @@ class ServicePerson extends OldAbstractServiceSingle {
             $model->inferGender();
         }
         parent::save($model);
-    }
-
-    public function store(?ModelPerson $person, array $data): ModelPerson {
-        if ($person) {
-            $this->updateModel2($person, $data);
-            return $person;
-        } else {
-            return $this->createNewModel($data);
-        }
     }
 }

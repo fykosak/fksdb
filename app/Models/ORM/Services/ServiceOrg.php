@@ -22,13 +22,4 @@ class ServiceOrg extends AbstractService {
             ->where('contest_id', $contestId)->fetch();
         return $result;
     }
-
-    public function store(?ModelOrg $model, array $data): ModelOrg {
-        if (is_null($model)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($model, $data);
-            return $this->refresh($model);
-        }
-    }
 }

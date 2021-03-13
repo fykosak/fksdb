@@ -49,15 +49,6 @@ class ServiceSubmit extends AbstractService {
             ->select(DbNames::TAB_TASK . '.*');
     }
 
-    public function store(?ModelSubmit $submit, array $data): ModelSubmit {
-        if (is_null($submit)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($submit, $data);
-            return $this->refresh($submit);
-        }
-    }
-
     public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,

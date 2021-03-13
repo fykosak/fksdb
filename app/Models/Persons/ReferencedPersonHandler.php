@@ -202,10 +202,13 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->store($person, $model, (array)$data['person_info']);
+                        $this->servicePersonInfo->store($model, array_merge((array)$data['person_info'], ['person_id' => $person->person_id]));
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
+                        $this->servicePersonHistory->store($model, array_merge((array)$data['person_history'], [
+                            'ac_year' => $this->acYear,
+                            'person_id' => $person->person_id,
+                        ]));
                         continue 2;
                     case 'person_schedule':
                         $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);

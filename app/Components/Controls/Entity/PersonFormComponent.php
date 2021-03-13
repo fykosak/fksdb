@@ -97,7 +97,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
                     break;
                 default:
                     throw new InvalidArgumentException();
-
             }
             $form->addComponent($control, $table);
         }
@@ -115,7 +114,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $connection->beginTransaction();
         $this->logger->clear();
         $person = $this->servicePerson->store($this->model ?? null, $data[self::PERSON_CONTAINER]);
-        $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
+        $this->servicePersonInfo->store($person->getInfo(), array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]));
         $this->storeAddresses($person, $data);
 
         $connection->commit();
