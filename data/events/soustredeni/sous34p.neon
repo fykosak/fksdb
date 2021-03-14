@@ -185,15 +185,15 @@ events:
                         description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
                     health_restrictions:
                         label: _('Health restrictions')
-                        description: "Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?"
+                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
                     tshirt_size:
-                        label: _('Jaké triko nosíš?')
+                        label: _('What t-shirt size do you wear?')
                         required: %events.soustredeni.requiredCond%
-                        factory: Chooser("Zvolit velikost", Options(%events.soustredeni.tshirt%))
+                        factory: Chooser("Choose size", Options(%events.soustredeni.tshirt%))
                     price:
                         label: _('Price of camp (CZK)')
                         modifiable: false
-                        description: "Price calculated according to the rules on our website.)."
+                        description: _("Price calculated according to the rules on our website.")
 
 
         #

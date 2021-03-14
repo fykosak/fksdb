@@ -26,15 +26,15 @@ parameters:
                         required: state('participated')
                         description: "If you cannto find your school, email the webmaster."
             tshirt:
-                M_S: S pánské
-                M_M: M pánské
-                M_L: L pánské
-                M_XL: XL pánské
-                M_XXL: XXL pánské
-                F_S: S dámské
-                F_M: M dámské
-                F_L: L dámské
-                F_XL: XL dámské
+                M_S: _('S men')
+                M_M: _('M men')
+                M_L: _('L men')
+                M_XL: _('XL men')
+                M_XXL: _('XXL men')
+                F_S: _('S women')
+                F_M: _('M women')
+                F_L: _('L women')
+                F_XL: _('XL women')
 
 
 events:
@@ -225,10 +225,10 @@ events:
                         factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
                     diet:
                         label: _('Food')
-                        description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
+                        description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
                     health_restrictions:
-                        label: _('Zdravotní omezení')
-                        description: "Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?"
+                        label: _('Health restrictions')
+                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
                     tshirt_size:
                         label: _('What size of T-shirt do you wear?')
                         required: %events.soustredeni.requiredCond%
@@ -236,7 +236,7 @@ events:
                     price:
                         label: _('Price of camp (CZK)')
                         modifiable: false
-                        description: "Price calculated according to the rules on our website.)."
+                        description: _("Price calculated according to the rules on our website.")
 
 
         #

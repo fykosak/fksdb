@@ -10,20 +10,20 @@ parameters:
                         primary: true # base machine states are propagated to the machine
                     p1:
                         bmName: PARTICIPANT
-                        label: _('1. member')
+                        label: _('1st member')
                         required: true
                     p2:
                         bmName: PARTICIPANT
-                        label: _('2. member')
+                        label: _('2nd member')
                     p3:
                         bmName: PARTICIPANT
-                        label: _('3. member')
+                        label: _('3rd member')
                     p4:
                         bmName: PARTICIPANT
-                        label: _('4. member')
+                        label: _('4th member')
                     p5:
                         bmName: PARTICIPANT
-                        label: _('5. member')
+                        label: _('5th member')
 events:
     folDefault:
         event_type_id: 9
