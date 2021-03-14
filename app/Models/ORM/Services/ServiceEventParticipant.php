@@ -3,12 +3,11 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

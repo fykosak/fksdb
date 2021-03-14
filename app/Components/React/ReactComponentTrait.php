@@ -30,6 +30,7 @@ trait ReactComponentTrait {
 
     /**
      * @throws BadRequestException
+     * @note Can be used only with BaseControl
      */
     protected function appendProperty(): void {
         if (!$this instanceof BaseControl) {

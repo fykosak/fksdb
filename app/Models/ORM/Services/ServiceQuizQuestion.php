@@ -4,11 +4,12 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelTask;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
-class ServiceQuizQuestion extends AbstractServiceSingle {
+class ServiceQuizQuestion extends AbstractService {
 
     /**
      * Find question from quiz by task

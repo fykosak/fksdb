@@ -184,7 +184,10 @@ class EventsExtension extends CompilerExtension {
             }
         }
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        foreach ($definition['onExecuted'] as $cb) {
+            $factory->addSetup('addAfterExecute', [$cb]);
+        }
+
         return $factory;
     }
 

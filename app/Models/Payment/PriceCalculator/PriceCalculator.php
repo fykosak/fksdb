@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Price;
@@ -11,7 +13,7 @@ use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
  * Class PriceCalculator
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceCalculator {
+class PriceCalculator implements TransitionCallback {
 
     private ServicePayment $servicePayment;
     /** @var Preprocess[] */
@@ -25,13 +27,13 @@ class PriceCalculator {
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(ModelPayment $modelPayment): void {
-        $price = new Price(0, $modelPayment->currency);
+    final public function __invoke(ModelHolder $holder, ...$args): void {
+        $price = new Price(0, $holder->getModel()->currency);
         foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($modelPayment);
+            $subPrice = $preProcess->calculate($holder->getModel());
             $price->add($subPrice);
         }
-        $this->servicePayment->updateModel2($modelPayment, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**
@@ -44,5 +46,9 @@ class PriceCalculator {
             $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
+    }
+
+    public function invoke(ModelHolder $model, ...$args): void {
+        $this->__invoke($model, ...$args);
     }
 }

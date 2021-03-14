@@ -1,47 +1,9 @@
 events:
-    council1:
+    council:
         event_type_id: [15]
-        eventYears: [1] # specify for which years this machine is valid, by default all years
-        formLayout: council.form
-        paramScheme:
-            notifyBcc:
-                default: vyfuk@vyfuk.mff.cuni.cz
-            notifyFrom:
-                default: Výfučí Cyberkoncil <vyfuk@vyfuk.mff.cuni.cz>
-            capacity:
-                default: 0
-
+        eventYears: [1]
         baseMachines:
             PARTICIPANT:
-                service: @orm.event_participant.service
-
-                states:
-                    - applied
-                    - participated
-                    - missed
-                    - cancelled
-
-                transitions:
-                    __init->applied:
-                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
-                        label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
-                    applied->participated:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Prezentovat')
-                    applied->missed:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Nepřijel')
-                        behaviorType: danger
-                    applied->cancelled:
-                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
-                        label: _('Zrušit přihlášku')
-                        behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
-
                 fields:
                     person_id:
                         label: _('Person')
@@ -51,23 +13,4 @@ events:
                         factory: RefPerson(%events.council.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     note:
                        label: _('Další poznámky')
-                       description: 'Součástí programu bude také „Výfučí přednášková noc“, a jako organizátoři bychom chtěli zjistit, co vás baví. Máš-li nějakého koníčka, nebo se o něco zajímáš, můžeš si na toto téma nachystat krátkou prezentaci/přednášku a představit ho ostatním účastníkům. Pokud si chceš takovou prezentaci připravit, napiš nám prosím do poznámek výše, téma tvého přednesu.'
-
-        #
-        #   MACHINE
-        #   explanation: machine consists of several instances of base machines
-        #
-        machine:
-            baseMachines:
-                participant:
-                    bmName: PARTICIPANT
-                    label: _('Účastník')
-                    required: true
-                    primary: true
-            formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - @events.privacyPolicy
-                - @events.captcha
-
-            processings:
-                - @events.privacyPolicy
+                       description: 'Součástí programu bude také „Výfučí přednášková noc“, a jako organizátoři bychom chtěli zjistit, co vás baví. Máš-li nějakého koníčka, nebo se o něco zajímáš, můžeš si na toto téma nachystat krátkou prezentaci/přednášku a představit ho ostatním účastníkům. Pokud si chceš takovou prezentaci připravit, napiš nám prosím do poznámek výše téma tvého přednesu.'

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -58,7 +59,7 @@ class NewApplicationsGrid extends BaseGrid {
             ->setShow(function (ModelEvent $modelEvent): bool {
                 $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
                 $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
-                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions($holder, BaseMachine::STATE_INIT, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
+                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions($holder, Machine::STATE_INIT, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
                 return (bool)count($transitions);
             });
     }

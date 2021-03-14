@@ -10,6 +10,7 @@ use FKSDB\Models\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -26,7 +27,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModelSingle implements Resource, NodeCreator {
+class ModelEvent extends AbstractModel implements Resource, NodeCreator {
 
     public const TEAM_EVENTS = [1, 9, 13];
 
@@ -41,7 +42,11 @@ class ModelEvent extends AbstractModelSingle implements Resource, NodeCreator {
     }
 
     public function getAcYear(): int {
-        return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
+        return $this->getContestYear()->ac_year;
+    }
+
+    public function getContestYear(): ModelContestYear {
+        return ModelContestYear::createFromActiveRow($this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch());
     }
 
     public function getResourceId(): string {

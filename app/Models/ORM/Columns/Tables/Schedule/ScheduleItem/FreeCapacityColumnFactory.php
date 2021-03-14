@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\NumberPrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Utils\Html;
 
@@ -15,10 +15,10 @@ use Nette\Utils\Html;
 class FreeCapacityColumnFactory extends ColumnFactory {
 
     /**
-     * @param AbstractModelSingle|ModelScheduleItem $model
+     * @param AbstractModel|ModelScheduleItem $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $capacity = null;
         try {
             $capacity = $model->getAvailableCapacity();

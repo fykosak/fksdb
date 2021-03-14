@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\YearCalculator;
 use Nette\Security\AuthenticationException;
 
 /**
@@ -24,8 +23,8 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     private AccountManager $accountManager;
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
+        parent::__construct($serviceLogin);
         $this->serviceOrg = $serviceOrg;
         $this->accountManager = $accountManager;
         $this->servicePerson = $servicePerson;

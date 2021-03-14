@@ -7,7 +7,6 @@
 
 parameters:
     tester:
-        acYear: 2000
         dbInstances: 8
     ro-database:
         dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'

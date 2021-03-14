@@ -5,7 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\SeriesCalculator;

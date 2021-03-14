@@ -8,7 +8,6 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
@@ -37,7 +36,6 @@ class LoginUserStorage extends UserStorage {
     public const SSO_UNAUTHENTICATED = 'ua';
 
     private ServiceLogin $serviceLogin;
-    private YearCalculator $yearCalculator;
     private GlobalSession $globalSession;
     private Application $application;
     private IPresenter $presenter;
@@ -47,14 +45,12 @@ class LoginUserStorage extends UserStorage {
     public function __construct(
         Session $sessionHandler,
         ServiceLogin $loginService,
-        YearCalculator $yearCalculator,
         GlobalSession $globalSession,
         Application $application,
         Request $request
     ) {
         parent::__construct($sessionHandler);
         $this->serviceLogin = $loginService;
-        $this->yearCalculator = $yearCalculator;
         $this->globalSession = $globalSession;
         $this->application = $application;
         $this->request = $request;
@@ -163,7 +159,6 @@ class LoginUserStorage extends UserStorage {
         if (!$login) {
             return null;
         }
-        $login->injectYearCalculator($this->yearCalculator);
         return $login;
     }
 

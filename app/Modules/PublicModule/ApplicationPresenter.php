@@ -4,7 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -18,13 +18,13 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -149,7 +149,7 @@ class ApplicationPresenter extends BasePresenter {
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            $event = ReferencedFactory::accessModel($eventApplication, ModelEvent::class);
+            $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }
@@ -230,7 +230,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
+     * @return AbstractModelMulti|AbstractModel|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
     private function getEventApplication(): ?IModel {

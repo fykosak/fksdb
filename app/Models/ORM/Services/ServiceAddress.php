@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
@@ -30,7 +30,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(AbstractModel $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
@@ -52,7 +52,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
             throw new InvalidPostalCode($postalCode);
         }
         /** @var ActiveRow|ModelRegion $row */
-        $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->getExplorer()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {

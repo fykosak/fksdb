@@ -4,7 +4,6 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
@@ -32,17 +31,12 @@ class Holder {
 
     /** @var Processing[] */
     private array $processings = [];
-
     /** @var BaseHolder[] */
     private array $baseHolders = [];
-
     /** @var BaseHolder[] */
     private array $secondaryBaseHolders = [];
-
     private BaseHolder $primaryHolder;
-
     private Connection $connection;
-
     private SecondaryModelStrategy $secondaryModelStrategy;
 
     public function __construct(Connection $connection) {
@@ -137,7 +131,7 @@ class Holder {
         /*
          * When deleting, first delete children, then parent.
          */
-        if ($this->primaryHolder->getModelState() == BaseMachine::STATE_TERMINATED) {
+        if ($this->primaryHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
                 $baseHolder->saveModel();
             }
@@ -172,7 +166,7 @@ class Holder {
     public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->getTarget();
+            $newStates[$name] = $transition->getTargetState();
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
@@ -184,7 +178,7 @@ class Holder {
         foreach ($this->baseHolders as $name => $baseHolder) {
             $stateExist = isset($newStates[$name]);
             if ($stateExist) {
-                $alive = ($newStates[$name] != BaseMachine::STATE_TERMINATED);
+                $alive = ($newStates[$name] != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED);
             } else {
                 $alive = true;
             }
@@ -195,9 +189,9 @@ class Holder {
         return $newStates;
     }
 
-    public function adjustForm(Form $form, Machine $machine): void {
+    public function adjustForm(Form $form): void {
         foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $machine, $this);
+            $adjustment->adjust($form, $this);
         }
     }
 

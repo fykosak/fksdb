@@ -3,13 +3,12 @@
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
@@ -25,8 +24,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     private ServicePersonInfo $servicePersonInfo;
     private AccountManager $accountManager;
 
-    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin) {
+        parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->accountManager = $accountManager;
@@ -34,7 +33,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return AbstractModelSingle|ModelLogin
+     * @return AbstractModel|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
@@ -83,16 +82,16 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     private function registerFromFB(array $fbUser): ModelLogin {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
         $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
         $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
         $login = $this->accountManager->createLogin($person);
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->getExplorer()->getConnection()->commit();
         return $login;
     }
 
     private function updateFromFB(ModelPerson $person, array $fbUser): void {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
         unset($personData['family_name']);
@@ -114,7 +113,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
         $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
 
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->getExplorer()->getConnection()->commit();
     }
 
     private function getPersonData(array $fbUser): array {

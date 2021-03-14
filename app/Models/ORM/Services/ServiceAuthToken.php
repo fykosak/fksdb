@@ -2,16 +2,17 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceAuthToken extends AbstractServiceSingle {
+class ServiceAuthToken extends AbstractService {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
@@ -31,7 +32,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $since = new DateTime();
         }
 
-        $connection = $this->context->getConnection();
+        $connection = $this->getExplorer()->getConnection();
         $outerTransaction = false;
         if ($connection->getPdo()->inTransaction()) {
             $outerTransaction = true;
@@ -68,7 +69,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
             $this->updateModel2($token, ['until' => $until]);
         }
         if (!$outerTransaction) {
-            $this->context->getConnection()->commit();
+            $this->getExplorer()->getConnection()->commit();
         }
 
         return $token;

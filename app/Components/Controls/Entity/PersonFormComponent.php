@@ -109,7 +109,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form): void {
-        $connection = $this->servicePerson->getConnection();
+        $connection = $this->servicePerson->getExplorer()->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();

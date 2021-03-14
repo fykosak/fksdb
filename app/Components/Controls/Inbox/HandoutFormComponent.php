@@ -7,14 +7,13 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Submits\SeriesTable;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -22,8 +21,6 @@ class HandoutFormComponent extends BaseComponent {
     public const TASK_PREFIX = 'task';
 
     private ServicePerson $servicePerson;
-
-    private YearCalculator $yearCalculator;
 
     private SeriesTable $seriesTable;
 
@@ -36,10 +33,9 @@ class HandoutFormComponent extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
+    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, ServiceTaskContribution $serviceTaskContribution): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
-        $this->yearCalculator = $yearCalculator;
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
@@ -51,7 +47,7 @@ class HandoutFormComponent extends BaseComponent {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->seriesTable->getContest(), $this->yearCalculator);
+        $orgProvider->filterOrgs($this->seriesTable->getContest());
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
@@ -74,7 +70,7 @@ class HandoutFormComponent extends BaseComponent {
     public function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
 
-        $connection = $this->serviceTaskContribution->getConnection();
+        $connection = $this->serviceTaskContribution->getExplorer()->getConnection();
 
         $connection->beginTransaction();
         /** @var ModelTask $task */

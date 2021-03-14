@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -131,7 +131,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
 
         if ($this->getSelectedContest() && $person) {
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants();
             $contest = $this->getSelectedContest();
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
@@ -155,13 +155,13 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
             $years = [
-                $this->yearCalculator->getCurrentYear($contest),
-                $this->yearCalculator->getCurrentYear($contest) + $forward,
+                $contest->getCurrentYear(),
+                $contest->getCurrentYear() + $forward,
             ];
 
             $this->template->years = $years;
         } else {
-            $this->redirect('email', ['year' => $this->yearCalculator->getCurrentYear($contest),]);
+            $this->redirect('email', ['year' => $contest->getCurrentYear(),]);
         }
     }
 
@@ -194,7 +194,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException(_('Cannot get academic year without selected contest.'));
         }
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->getSelectedContest()->getContestYear($this->getSelectedYear())->ac_year;
     }
 
     private function getPerson(): ?ModelPerson {
@@ -296,7 +296,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    public function getModel(): ?AbstractModelSingle {
+    public function getModel(): ?AbstractModel {
         return null; //we always create new contestant
     }
 

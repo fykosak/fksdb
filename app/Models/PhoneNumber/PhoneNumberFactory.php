@@ -4,7 +4,7 @@ namespace FKSDB\Models\PhoneNumber;
 
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServiceRegion;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\Html;
 
 /**

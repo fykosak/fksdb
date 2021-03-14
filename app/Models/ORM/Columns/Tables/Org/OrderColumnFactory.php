@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -33,10 +33,10 @@ class OrderColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelOrg $model
+     * @param AbstractModel|ModelOrg $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         if (\array_key_exists($model->order, $this->getOrderMapping())) {
             return (new StringPrinter())($this->getOrderMapping()[$model->order]);
         }

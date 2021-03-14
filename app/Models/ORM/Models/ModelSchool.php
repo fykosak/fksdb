@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -13,7 +14,8 @@ use Nette\Security\Resource;
  * @property-read int school_id
  * @property-read bool|int active
  */
-class ModelSchool extends AbstractModelSingle implements Resource {
+class ModelSchool extends AbstractModel implements Resource {
+
     public const RESOURCE_ID = 'school';
 
     public function getAddress(): ModelAddress {

@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
 use Nette\Application\IPresenter;
@@ -202,7 +202,7 @@ abstract class BaseGrid extends Grid {
     private function addReflectionColumn(string $field, int $userPermission): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission): Html {
-            if (!$model instanceof AbstractModelSingle) {
+            if (!$model instanceof AbstractModel) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
             return $factory->render($model, $userPermission);
@@ -225,7 +225,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string|AbstractModelSingle
+     * @return string|AbstractModel
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
@@ -265,14 +265,14 @@ abstract class BaseGrid extends Grid {
         $button = $this->addButton($id, $label)
             ->setText($label)
             ->setLink(function ($model) use ($destination, $paramMapCallback): string {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
@@ -293,14 +293,14 @@ abstract class BaseGrid extends Grid {
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $factory->create($this->getPresenter(), $model);
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($factory) {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized(...$factory->createLinkParameters($model));
