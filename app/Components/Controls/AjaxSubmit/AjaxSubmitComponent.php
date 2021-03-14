@@ -128,7 +128,7 @@ class AjaxSubmitComponent extends AjaxComponent {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('There was an error duting the task deletion.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), Message::LVL_DANGER));
         }
 
         $this->sendAjaxResponse();
