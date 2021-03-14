@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-11 16:30+0100\n"
+"POT-Creation-Date: 2021-03-13 16:02+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -4845,6 +4845,10 @@ msgstr "Vrátit do DB jako Zrušen"
 msgid "What size of T-shirt do you wear?"
 msgstr "Jakou velikost trička nosíš?"
 
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
+msgid "Used capacity"
+msgstr "Již zabraná kapacita"
+
 #~ msgid "Id Card number (for foreigners the passport Id)"
 #~ msgstr "Číslo občanského průkazu"
 
@@ -5012,9 +5016,6 @@ msgstr "Jakou velikost trička nosíš?"
 
 #~ msgid "...reading code..."
 #~ msgstr "...čtu kód..."
-
-#~ msgid "Used capacity"
-#~ msgstr "Již zabraná kapacita"
 
 #~ msgid "Free capacity"
 #~ msgstr "Volná kapacita"
