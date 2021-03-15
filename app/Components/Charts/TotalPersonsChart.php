@@ -47,6 +47,6 @@ class TotalPersonsChart extends ReactComponent implements Chart {
     }
 
     public function getDescription(): ?string {
-        return _('Graph shows the progress in the number of people in FKSDB and the number of assigned person_id.');
+        return _('Graph shows the progress in the number of people in FKSDB and the number of assigned person_ids.');
     }
 }
