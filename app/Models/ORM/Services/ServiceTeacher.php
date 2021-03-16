@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelTeacher;
 use Fykosak\NetteORM\AbstractService;
 
 /**

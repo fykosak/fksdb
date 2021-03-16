@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\ServicesMulti;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
@@ -13,6 +12,7 @@ use InvalidArgumentException;
 use Nette\Database\Connection;
 use Nette\Database\Conventions;
 use Nette\Database\Explorer;
+use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
 /**
@@ -45,7 +45,7 @@ abstract class AbstractServiceMulti implements IService {
      * @throws ModelException
      * @deprecated
      */
-    public function createNew(?iterable $data = null): IModel {
+    public function createNew(?iterable $data = null): ActiveRow {
         $mainModel = $this->getMainService()->createNew($data);
         $joinedModel = $this->getJoinedService()->createNew($data);
         return $this->composeModel($mainModel, $joinedModel);
@@ -71,32 +71,32 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     /**
-     * @param IModel|AbstractModelMulti $model
+     * @param ActiveRow|AbstractModelMulti $model
      * @param iterable $data
      * @param bool $alive
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
+    public function updateModel(ActiveRow $model, iterable $data, bool $alive = true): void {
         $this->checkType($model);
         $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
         $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
     }
 
     /**
-     * @param IModel|AbstractModelMulti $model
+     * @param ActiveRow|AbstractModelMulti $model
      * @param array $data
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(ActiveRow $model, array $data): bool {
         $this->checkType($model);
         $this->getMainService()->updateModel2($model->getMainModel(), $data);
         return $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
     }
 
     /**
-     * @param AbstractModelMulti|IModel $model
+     * @param AbstractModelMulti|ActiveRow $model
      * @throws InvalidArgumentException
      */
     private function checkType(AbstractModelMulti $model): void {
@@ -109,11 +109,11 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to store a model!
      *
-     * @param IModel|AbstractModelMulti $model
+     * @param ActiveRow|AbstractModelMulti $model
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel &$model): void {
+    public function save(ActiveRow &$model): void {
         $this->checkType($model);
 
         $mainModel = $model->getMainModel();
@@ -129,7 +129,7 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to delete a model!
      *
-     * @param IModel|AbstractModelMulti $model
+     * @param ActiveRow|AbstractModelMulti $model
      * @throws InvalidArgumentException
      */
     public function dispose(AbstractModelMulti $model): void {

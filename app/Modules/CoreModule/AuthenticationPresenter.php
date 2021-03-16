@@ -157,11 +157,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->getParameter('login');
             if ($login) {
                 $formControl->getForm()->setDefaults(['id' => $login]);
-                /** @var TextInput $input */
-                $input = $formControl->getForm()->getComponent('id');
-                /* $input->setDisabled()
-                     ->setOmitted(false)
-                     ->setDefaultValue($login);*/
+                $formControl->getForm()->getComponent('id');
             }
         }
     }

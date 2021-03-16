@@ -6,11 +6,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
@@ -18,6 +19,7 @@ use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
@@ -45,7 +47,8 @@ class BaseHolder {
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    private ?IModel $model;
+    /** @var ActiveRow|null|OldAbstractModelSingle|AbstractModelMulti  */
+    private ?ActiveRow $model;
     private array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
@@ -156,10 +159,10 @@ class BaseHolder {
     }
 
     /**
-     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
+     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant
      * @deprecated
      */
-    public function &getModel(): IModel {
+    public function &getModel(): ActiveRow {
         if (!isset($this->model)) {
             $this->model = $this->getService()->createNew(); // TODO!!!
         }
@@ -168,9 +171,9 @@ class BaseHolder {
 
     /**
      * @param bool $newAsNull
-     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
+     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
-    public function getModel2(bool $newAsNull = true): ?IModel {
+    public function getModel2(bool $newAsNull = true): ?ActiveRow {
         if (!isset($this->model)) {
             return null;
         }
@@ -180,7 +183,7 @@ class BaseHolder {
         return $this->model;
     }
 
-    public function setModel(?IModel $model): void {
+    public function setModel(?ActiveRow $model): void {
         $this->model = $model;
     }
 

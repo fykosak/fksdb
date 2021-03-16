@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,7 +36,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $holder->setModel($foundModel); // "swap" models
     }
 
-    private function getConflicts(IModel $currentModel, IModel $foundModel, array $joinData, IService $service): array {
+    private function getConflicts(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): array {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
         $result = [];
@@ -55,7 +55,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    private function updateFoundModel(IModel $currentModel, IModel $foundModel, array $joinData, IService $service): void {
+    private function updateFoundModel(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): void {
         $currentArray = $currentModel->toArray();
         $data = [];
         foreach ($currentArray as $key => $value) {
@@ -66,5 +66,4 @@ class CarefulRewrite extends SecondaryModelStrategy {
         }
         $service->updateModel($foundModel, $data);
     }
-
 }

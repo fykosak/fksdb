@@ -23,8 +23,6 @@ class FlagProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
-        $event = $holder->getPrimaryHolder()->getEvent();
-        $acYear = $event->getAcYear();
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {

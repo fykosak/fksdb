@@ -7,7 +7,6 @@ use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 

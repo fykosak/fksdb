@@ -17,7 +17,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\ORM\IModel;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -29,6 +28,7 @@ use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 /**
@@ -40,7 +40,7 @@ class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
     private ?ModelEvent $event;
-    private ?IModel $eventApplication = null;
+    private ?ActiveRow $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
     private ServiceEvent $serviceEvent;
@@ -227,10 +227,10 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModel|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
+     * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?IModel {
+    private function getEventApplication(): ?ActiveRow {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();

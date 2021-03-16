@@ -3,8 +3,8 @@
 namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -18,17 +18,17 @@ class ServicePerson extends OldAbstractServiceSingle {
         if (!$email) {
             return null;
         }
-        /** @var ModelPerson|false $result */
+        /** @var ModelPerson|null $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
         return $result;
     }
 
     /**
-     * @param IModel|ModelPerson $model
+     * @param ActiveRow|ModelPerson $model
      * @return void
      * @throws ModelException
      */
-    public function save(IModel &$model): void {
+    public function save(ActiveRow &$model): void {
         if (is_null($model->gender)) {
             $model->inferGender();
         }

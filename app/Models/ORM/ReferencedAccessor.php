@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ReferencedFactory
@@ -14,7 +15,7 @@ final class ReferencedAccessor {
     /**
      * @param AbstractModel $model
      * @param string $modelClassName
-     * @return IModel|null
+     * @return ActiveRow|null
      * @throws CannotAccessModelException
      */
     public static function accessModel($model, string $modelClassName) {

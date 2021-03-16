@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\IModel;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -24,6 +23,7 @@ use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -116,7 +116,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param IModel $model
+     * @param ActiveRow $model
      * @param ArrayHash $values
      * @return void
      * @throws ExistingPaymentException
@@ -126,7 +126,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function update(IModel $model, ArrayHash $values): void {
+    public function update(ActiveRow $model, ArrayHash $values): void {
         /** @var ModelPerson $model */
         $this->store($model, $values);
     }
@@ -265,7 +265,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                 continue;
             }
             if (isset($models[$key])) {
-                if ($models[$key] instanceof IModel) {
+                if ($models[$key] instanceof ActiveRow) {
                     $subConflicts = $this->getModelConflicts($models[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
@@ -279,7 +279,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
         return $conflicts;
     }
 
-    private function getModelConflicts(IModel $model, array $values): array {
+    private function getModelConflicts(ActiveRow $model, array $values): array {
         $conflicts = [];
         foreach ($values as $key => $value) {
             if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
@@ -401,7 +401,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     /**
      * @param string $field
      * @param mixed $key
-     * @return ModelPerson|null|IModel
+     * @return ModelPerson|null|ActiveRow
      */
     public function findBySecondaryKey(string $field, string $key): ?ModelPerson {
         if (!$this->isSecondaryKey($field)) {

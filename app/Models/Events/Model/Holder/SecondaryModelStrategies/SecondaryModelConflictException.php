@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IModel;
 use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
@@ -23,7 +22,7 @@ class SecondaryModelConflictException extends RuntimeException {
         $this->conflicts = $conflicts;
     }
 
-    private function createMessage(?IModel $model, iterable $conflicts): string {
+    private function createMessage(?ActiveRow $model, iterable $conflicts): string {
         $ids = null;
         /** @var ActiveRow $conflict */
         foreach ($conflicts as $conflict) {

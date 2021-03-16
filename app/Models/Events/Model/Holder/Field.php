@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
 

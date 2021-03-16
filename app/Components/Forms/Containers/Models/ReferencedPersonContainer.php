@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -22,6 +21,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -149,11 +149,11 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param IModel|ModelPerson|null $model
+     * @param ActiveRow|ModelPerson|null $model
      * @param string $mode
      * @return void
      */
-    public function setModel(?IModel $model, string $mode): void {
+    public function setModel(?ActiveRow $model, string $mode): void {
 
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);

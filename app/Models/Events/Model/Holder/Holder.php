@@ -10,9 +10,9 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStra
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -112,7 +112,7 @@ class Holder {
         return $this;
     }
 
-    public function setModel(?IModel $primaryModel = null, ?array $secondaryModels = null): void {
+    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);

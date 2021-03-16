@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\ModelsMulti;
 
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use LogicException;
@@ -14,7 +13,7 @@ use Nette\SmartObject;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelMulti extends ActiveRow implements IModel {
+abstract class AbstractModelMulti extends ActiveRow {
 
     use SmartObject;
 

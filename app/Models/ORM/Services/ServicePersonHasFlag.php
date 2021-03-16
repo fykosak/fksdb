@@ -4,9 +4,9 @@ namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\IModel;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -33,7 +33,7 @@ class ServicePersonHasFlag extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel(IModel $model, ?iterable $data, bool $alive = true): void {
+    public function updateModel(ActiveRow $model, ?iterable $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }
