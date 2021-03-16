@@ -45,7 +45,7 @@ class BaseHolder {
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    private ?IModel $model = null;
+    private ?IModel $model;
     private array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
@@ -160,7 +160,7 @@ class BaseHolder {
      * @deprecated
      */
     public function &getModel(): IModel {
-        if (!$this->model) {
+        if (!isset($this->model)) {
             $this->model = $this->getService()->createNew(); // TODO!!!
         }
         return $this->model;
@@ -171,8 +171,11 @@ class BaseHolder {
      * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
     public function getModel2(bool $newAsNull = true): ?IModel {
+        if (!isset($this->model)) {
+            return null;
+        }
         if ($newAsNull) {
-            return ($this->model && !$this->model->isNew()) ? $this->model : null;
+            return (!$this->model->isNew()) ? $this->model : null;
         }
         return $this->model;
     }

@@ -144,11 +144,9 @@ class ApplicationHandler {
                 $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
-            if ($data || $form) {
-                $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
-            }
+            $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
 
-            if ($execute == self::STATE_OVERWRITE) {
+            if ($execute === self::STATE_OVERWRITE) {
                 foreach ($holder->getBaseHolders() as $name => $baseHolder) {
                     if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
                         $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);

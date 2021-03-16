@@ -70,8 +70,8 @@ class Holder {
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    public function addFormAdjustment(FormAdjustment $formAdjusment): void {
-        $this->formAdjustments[] = $formAdjusment;
+    public function addFormAdjustment(FormAdjustment $formAdjustment): void {
+        $this->formAdjustments[] = $formAdjustment;
     }
 
     public function addProcessing(Processing $processing): void {
@@ -79,7 +79,7 @@ class Holder {
     }
 
     public function getBaseHolder(string $name): BaseHolder {
-        if (!array_key_exists($name, $this->baseHolders)) {
+        if (!isset($this->baseHolders[$name])) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
         return $this->baseHolders[$name];
@@ -94,10 +94,6 @@ class Holder {
 
     public function hasBaseHolder(string $name): bool {
         return isset($this->baseHolders[$name]);
-    }
-
-    public function getSecondaryModelStrategy(): SecondaryModelStrategy {
-        return $this->secondaryModelStrategy;
     }
 
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void {
