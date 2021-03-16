@@ -22,7 +22,7 @@
         {if $that->isClosedCategory('A')}
             {control resultsCategoryAGrid}
         {else}
-            <p class="alert-warning alert">{_'Kategoria nieje uzatvorená'}</p>
+            <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
         {/if}
     </div>
     <div class="tab-pane fade" id="categoryB" role="tabpanel" aria-labelledby="profile-tab">
@@ -30,7 +30,7 @@
         {if $that->isClosedCategory('B')}
             {control resultsCategoryBGrid}
         {else}
-            <p class="alert-warning alert">{_'Kategoria nieje uzatvorená'}</p>
+            <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
         {/if}
     </div>
     <div class="tab-pane fade" id="categoryC" role="tabpanel" aria-labelledby="contact-tab">
@@ -38,7 +38,7 @@
         {if $that->isClosedCategory('C')}
             {control resultsCategoryCGrid}
         {else}
-            <p class="alert-warning alert">{_'Kategoria nieje uzatvorená'}</p>
+            <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
         {/if}
     </div>
     <div class="tab-pane fade" id="total" role="tabpanel" aria-labelledby="contact-tab">
@@ -46,7 +46,7 @@
         {if $that->isClosedTotal()}
             {control resultsTotalGrid}
         {else}
-            <p class="alert-warning alert">{_'Niesu uzatvorené všetky tímy'}</p>
+            <p class="alert-warning alert">{_'Results for some teams are not closed yet'}</p>
         {/if}
     </div>
 </div>

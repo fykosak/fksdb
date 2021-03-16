@@ -119,6 +119,7 @@ abstract class Machine {
      * @throws UnavailableTransitionsException
      * @throws Exception
      */
+
     final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void {
         $transition = $this->selectTransition($this->getAvailableTransitions($holder));
         $this->saveAndExecuteTransition($transition, $holder, $data);

@@ -81,7 +81,7 @@ class StoredQueryFactory {
         $container->addText('name', _('Parameter name'))
             ->addRule(Form::FILLED, _('Parameter name is required.'))
             ->addRule(Form::MAX_LENGTH, _('Parameter name is too long.'), 16)
-            ->addRule(Form::PATTERN, _('Název parametru může být jen z malých písmen anglické abecedy, číslic nebo podtržítka.'), '[a-z][a-z0-9_]*');
+            ->addRule(Form::PATTERN, _('The name of the parameter can only contain lowercase letters of the english alphabet, numbers, and an underscore.'), '[a-z][a-z0-9_]*');
 
         $container->addText('description', _('Description'));
 

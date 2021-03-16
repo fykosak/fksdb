@@ -53,10 +53,10 @@ class SubmitHandlerFactory {
         $this->checkPrivilege($submit, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
-            throw new StorageException(_('Lze stahovat jen uploadovaná řešení.'));
+            throw new StorageException(_('Only uploaded solutions can be downloaded.'));
         }
         if (!$filename) {
-            throw new StorageException(_('Poškozený soubor submitu'));
+            throw new StorageException(_('Damaged submit file'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $presenter->sendResponse($response);
@@ -73,11 +73,11 @@ class SubmitHandlerFactory {
     public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.corrected');
         if (!$submit->corrected) {
-            throw new StorageException(_('Opravené riešenie nieje nahrané'));
+            throw new StorageException(_('Corrected solution is not uploaded'));
         }
         $filename = $this->correctedStorage->retrieveFile($submit);
         if (!$filename) {
-            throw new StorageException(_('Poškozený soubor submitu'));
+            throw new StorageException(_('Damaged submit file'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
         $presenter->sendResponse($response);
@@ -93,7 +93,7 @@ class SubmitHandlerFactory {
     public function handleRevoke(ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'revoke');
         if (!$submit->canRevoke()) {
-            throw new StorageException(_('Nelze zrušit submit.'));
+            throw new StorageException(_('Submit cannot be revoked.'));
         }
         $this->uploadedStorage->deleteFile($submit);
         $this->serviceSubmit->dispose($submit);

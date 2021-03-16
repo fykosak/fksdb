@@ -21,7 +21,7 @@ class BornIdColumnFactory extends ColumnFactory {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->addCondition(Form::FILLED)
-            ->addRule(new BornNumber(), _('Rodné číslo nemá platný formát.'));
+            ->addRule(new BornNumber(), _('Invalid bornID format'));
         return $control;
     }
 }
