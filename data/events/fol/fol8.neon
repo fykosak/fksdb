@@ -60,7 +60,7 @@ events:
                 transitions:
                     __init->applied:
                         condition: %events.fol8.appCond%
-                        label: _('Přihlásit tým')
+                        label: _('Register team')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     applied->participated:
