@@ -16,9 +16,9 @@ class CaptchaBox extends SelectBox {
     private const VALUE_NO = 'pqrt';
 
     public function __construct() {
-        parent::__construct(_('Jsi robot?'), [
-            self::VALUE_NO => _('ne'),
-            self::VALUE_YES => _('ano'),
+        parent::__construct(_('Are you a robot?'), [
+            self::VALUE_NO => _('No'),
+            self::VALUE_YES => _('Yes'),
         ]);
 
         $this->addRule(function (BaseControl $control): bool {

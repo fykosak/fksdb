@@ -27,8 +27,8 @@ class PersonFlag extends SelectBox {
      */
     public function __construct($label = null) {
         $items = [
-            self::FLAG_YES => _('Ano'),
-            self::FLAG_NO => _('Ne'),
+            self::FLAG_YES => _('Yes'),
+            self::FLAG_NO => _('No'),
         ];
         parent::__construct($label, $items);
         $this->setPrompt('–');

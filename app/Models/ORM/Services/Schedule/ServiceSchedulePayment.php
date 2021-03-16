@@ -34,7 +34,7 @@ class ServiceSchedulePayment extends AbstractService {
 
         $newScheduleIds = $this->filerData($data);
         if (count($newScheduleIds) == 0) {
-            throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
+            throw new EmptyDataException(_('No item selected.'));
         }
 
         $this->getTable()->where('payment_id', $payment->payment_id)->delete();

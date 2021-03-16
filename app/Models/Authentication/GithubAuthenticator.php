@@ -43,12 +43,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
         $secret = $this->container->getParameters()['github']['secret'];
 
         if (!$request->getHeader(Event::HTTP_HEADER)) {
-            throw new InvalidArgumentException(_('Očekávána hlavička X-Github-Event'));
+            throw new InvalidArgumentException(_('Expected header X-Github-Event'));
         }
 
         $signature = $request->getHeader(self::HTTP_AUTH_HEADER);
         if (!$signature) {
-            throw new AuthenticationException(_('Očekávána hlavička X-Hub-Signature.'));
+            throw new AuthenticationException(_('Expected header X-Hub-Signature.'));
         }
 
         $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getRawBody(), $secret, false);

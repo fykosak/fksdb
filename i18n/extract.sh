@@ -4,7 +4,7 @@
 PHP_FILES="app libs"
 LATTE_FILES="app libs data"
 NEON_FILES="app/config data/events"
-TSX_FILES="typescript/src"
+TSX_FILES="app"
 
 
 # Output

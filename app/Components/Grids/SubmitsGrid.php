@@ -79,7 +79,7 @@ class SubmitsGrid extends BaseGrid {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function (ModelSubmit $row): string {
-                return \sprintf(_('Do you really want to tak solution of task %s back?'), $row->getTask()->getFQName());
+                return \sprintf(_('Do you really want to take the solution of task %s back?'), $row->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ModelSubmit $row): string {
@@ -107,12 +107,13 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING);
+            $this->flashMessage(sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING);
+
         } catch (ForbiddenRequestException|NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (StorageException|ModelException$exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
+            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_DANGER);
         }
     }
 

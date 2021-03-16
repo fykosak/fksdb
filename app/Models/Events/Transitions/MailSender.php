@@ -194,7 +194,7 @@ class MailSender {
      */
     private function getSubject(ModelEvent $event, IModel $application, Holder $holder, Machine $machine): string {
         if (in_array($event->event_type_id, [4, 5])) {
-            return _('Pozvánka na soustředění');
+            return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));

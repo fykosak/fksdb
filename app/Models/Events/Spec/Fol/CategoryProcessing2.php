@@ -28,7 +28,7 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
         $model = $holder->getPrimaryHolder()->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
+            $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }
     }
 

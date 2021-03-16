@@ -15,8 +15,8 @@ class NameColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
-        $control->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
+        $control->addRule(Form::FILLED, _('The query name must be filled in.'))
+            ->addRule(Form::MAX_LENGTH, _('The query name is too long.'), 32);
         return $control;
     }
 }

@@ -66,7 +66,7 @@ class OptimisticForm extends Form {
         $currentFingerprint = ($this->fingerprintCallback)();
 
         if ($receivedFingerprint != $currentFingerprint) {
-            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.'));
+            $this->addError(_('There has been a change in the data of this form since it was shown.'));
             $this->setFingerprint($currentFingerprint);
             parent::setValues(($this->defaultsCallback)());
             return false;

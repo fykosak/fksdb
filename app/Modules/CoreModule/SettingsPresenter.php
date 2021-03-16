@@ -113,7 +113,7 @@ class SettingsPresenter extends BasePresenter {
                 ->addRule(function (BaseControl $control) use ($login): bool {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                     return $hash == $login->hash;
-                }, _('Špatně zadané staré heslo.'));
+                }, _('Incorrect old password.'));
         }
 
         $form->setCurrentGroup();

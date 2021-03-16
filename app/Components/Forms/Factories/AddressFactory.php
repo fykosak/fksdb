@@ -93,7 +93,7 @@ class AddressFactory {
             $city->setWriteOnly(false);
         }
 
-        $postalCode = $container->addText('postal_code', _('PSČ'))
+        $postalCode = $container->addText('postal_code', _('postal code'))
             ->addRule(Form::MAX_LENGTH, null, 5)
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
 

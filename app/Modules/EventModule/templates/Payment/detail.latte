@@ -21,7 +21,7 @@
     </div>
     <hr/>
     {if $model->hasGeneratedSymbols()}
-        <h2>{_'Informacie o platbe'}</h2>
+        <h2>{_'Payment info'}</h2>
         {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price'] as $field}
             {if $model->{$field}}
                 {control valuePrinter:row 'payment.'.$field, $model}
@@ -30,7 +30,7 @@
         <hr/>
     {/if}
 
-    <h2>{_'Informace o platcovi'}</h2>
+    <h2>{_'Person information'}</h2>
     <div>
         {if $isOrg}
             {control valuePrinter:row 'person.person_link', $model}
@@ -57,7 +57,7 @@
         {/foreach}
         {if !is_null($model->price)}
             <tr class="table-primary">
-                <td>{_'Spolu'}</td>
+                <td>{_'Sum'}</td>
                 <td>{$model->getPrice()->__toString()}</td>
             </tr>
         {/if}

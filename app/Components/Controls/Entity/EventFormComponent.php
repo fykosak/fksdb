@@ -116,7 +116,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
                     $control->addError($exception->getMessage());
                     return false;
                 }
-            }, _('Parameters does not fulfill the Neon scheme'));
+            }, _('Parameters do not fulfill the Neon scheme'));
         }
     }
 
