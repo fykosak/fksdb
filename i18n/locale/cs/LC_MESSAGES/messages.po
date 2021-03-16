@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-14 14:42+0100\n"
+"POT-Creation-Date: 2021-03-16 16:02+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -1078,9 +1078,10 @@ msgid "Total persons in FKSDB"
 msgstr "Celkový počet osob ve FKSDB"
 
 #: ../app/Components/Charts/TotalPersonsChart.php:50
+#, fuzzy
 msgid ""
 "Graph shows the progress in the number of people in FKSDB and the number of "
-"assigned person_id."
+"assigned person_ids."
 msgstr ""
 "Graf zobrazuje vývoj v počtu lidí ve FKSDB a počtu přiřazených person_id."
 
@@ -1164,7 +1165,6 @@ msgid "This form is for people only."
 msgstr "Tento formulář je pouze pro lidi."
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:52
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:20
 msgid "Accommodation"
 msgstr "Ubytování"
 
@@ -1173,7 +1173,6 @@ msgid "Accommodation with same gender"
 msgstr "Ubytování s osobami stejného pohlaví"
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:56
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:32
 msgid "Visa"
 msgstr "Víza"
 
@@ -1681,7 +1680,8 @@ msgid "Uploading of task %s cancelled."
 msgstr "Odevzdání úlohy %s zrušeno."
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:131
-msgid "There was an error duting the task deletion."
+#, fuzzy
+msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
 #: ../app/Components/Controls/AjaxSubmit/SubmitContainer.php:35
@@ -2518,26 +2518,6 @@ msgstr "střední škola"
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:61
 msgid "primary school"
 msgstr "základní škola"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:23
-msgid "Accommodation gender"
-msgstr "Ubytování s osobami stejného pohlaví"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:26
-msgid "Accommodation teacher"
-msgstr "Cena ubytování"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:29
-msgid "Schedule during competition"
-msgstr "Program v průběhu akce"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:35
-msgid "Weekend"
-msgstr "Víkend"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:38
-msgid "Weekend info"
-msgstr "Info o víkendu"
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/NameColumnFactory.php:18
 msgid "The query name must be filled in."
@@ -4218,9 +4198,8 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
-#: ../data/events/fol/fol8.neon.neon2php:63
-msgid "Přihlásit tým"
-msgstr ""
+msgid "Register team"
+msgstr "Přihlásit tým"
 
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:115
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:58
@@ -4621,6 +4600,10 @@ msgstr ""
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 
+#: ../data/events/fol/fol8.neon.neon2php:63
+msgid "Přihlásit tým"
+msgstr ""
+
 #: ../data/events/fol/fol8.neon.neon2php:71
 msgid "Nezúčastnil se"
 msgstr ""
@@ -4899,7 +4882,8 @@ msgid ""
 "Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If "
 "so, do you want us to get you the special diet or will you bring your own "
 "food?"
-msgstr "Máš nějakou speciální dietu – vegetariánství, veganství, ketogenickou apod.? "
+msgstr ""
+"Máš nějakou speciální dietu – vegetariánství, veganství, ketogenickou apod.? "
 "Pokud ano, chceš, abychom ti ji zajistili my, nebo si přivezeš vlastní jídlo?"
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:233
@@ -4909,6 +4893,21 @@ msgstr "Jakou velikost trička nosíš?"
 #: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
 msgid "Used capacity"
 msgstr "Již zabraná kapacita"
+
+#~ msgid "Accommodation gender"
+#~ msgstr "Ubytování s osobami stejného pohlaví"
+
+#~ msgid "Accommodation teacher"
+#~ msgstr "Cena ubytování"
+
+#~ msgid "Schedule during competition"
+#~ msgstr "Program v průběhu akce"
+
+#~ msgid "Weekend"
+#~ msgstr "Víkend"
+
+#~ msgid "Weekend info"
+#~ msgstr "Info o víkendu"
 
 #~ msgid "Payment #%s was created"
 #~ msgstr "Platba #%s byla vytvořena"

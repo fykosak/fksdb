@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-14 14:42+0100\n"
+"POT-Creation-Date: 2021-03-16 16:02+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -1102,7 +1102,7 @@ msgstr ""
 #: ../app/Components/Charts/TotalPersonsChart.php:50
 msgid ""
 "Graph shows the progress in the number of people in FKSDB and the number of "
-"assigned person_id."
+"assigned person_ids."
 msgstr ""
 
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:112
@@ -1183,7 +1183,6 @@ msgid "This form is for people only."
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:52
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:20
 msgid "Accommodation"
 msgstr ""
 
@@ -1193,7 +1192,6 @@ msgid "Accommodation with same gender"
 msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:56
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:32
 msgid "Visa"
 msgstr ""
 
@@ -1705,7 +1703,7 @@ msgid "Uploading of task %s cancelled."
 msgstr ""
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:131
-msgid "There was an error duting the task deletion."
+msgid "There was an error during the task deletion."
 msgstr ""
 
 #: ../app/Components/Controls/AjaxSubmit/SubmitContainer.php:35
@@ -2544,28 +2542,6 @@ msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:61
 msgid "primary school"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:23
-#, fuzzy
-msgid "Accommodation gender"
-msgstr "Ubytnovanie neexistuje"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:26
-#, fuzzy
-msgid "Accommodation teacher"
-msgstr "Ubytnovanie neexistuje"
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:29
-msgid "Schedule during competition"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:35
-msgid "Weekend"
-msgstr ""
-
-#: ../app/Models/ORM/Columns/Tables/Schedule/ScheduleGroup/ScheduleGroupTypeRow.php:38
-msgid "Weekend info"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/NameColumnFactory.php:18
@@ -4276,9 +4252,9 @@ msgstr "Stránka požaduje prihlásenie."
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
-#: ../data/events/fol/fol8.neon.neon2php:63
-msgid "Přihlásit tým"
-msgstr ""
+#, fuzzy
+msgid "Register team"
+msgstr "Registrácia"
 
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:115
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:58
@@ -4674,6 +4650,10 @@ msgstr "Pokial nelze školu naist, pisajte na schola.novum () fykos.cz."
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 
+#: ../data/events/fol/fol8.neon.neon2php:63
+msgid "Přihlásit tým"
+msgstr ""
+
 #: ../data/events/fol/fol8.neon.neon2php:71
 msgid "Nezúčastnil se"
 msgstr ""
@@ -4962,6 +4942,14 @@ msgstr ""
 #, fuzzy
 msgid "Used capacity"
 msgstr "Kapacita"
+
+#, fuzzy
+#~ msgid "Accommodation gender"
+#~ msgstr "Ubytnovanie neexistuje"
+
+#, fuzzy
+#~ msgid "Accommodation teacher"
+#~ msgstr "Ubytnovanie neexistuje"
 
 #, fuzzy
 #~ msgid "We are receive payment #%s"
