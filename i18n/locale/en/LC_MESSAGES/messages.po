@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-16 16:02+0100\n"
+"POT-Creation-Date: 2021-03-16 16:36+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -4214,6 +4214,7 @@ msgstr "Chosen person is already registered to the event."
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
+#: ../data/events/fol/fol8.neon.neon2php:63
 #, fuzzy
 msgid "Register team"
 msgstr "Register"
@@ -4547,8 +4548,9 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:63
-msgid "Confirm as applied."
-msgstr ""
+#, fuzzy
+msgid "Register team."
+msgstr "Register"
 
 #: ../data/events/fol/fol1.neon.neon2php:68
 msgid "Confirm as Participated"
@@ -4622,10 +4624,6 @@ msgstr ""
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 "To calculate category. Leave empty if you are not a high school student."
-
-#: ../data/events/fol/fol8.neon.neon2php:63
-msgid "Přihlásit tým"
-msgstr "Register team"
 
 #: ../data/events/fol/fol8.neon.neon2php:71
 msgid "Nezúčastnil se"
@@ -4910,6 +4908,9 @@ msgstr ""
 #: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
 msgid "Used capacity"
 msgstr ""
+
+#~ msgid "Přihlásit tým"
+#~ msgstr "Register team"
 
 #~ msgid "Kvůli zařazení do kategorie."
 #~ msgstr "To calculate category."

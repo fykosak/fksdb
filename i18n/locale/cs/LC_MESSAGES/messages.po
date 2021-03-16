@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-16 16:02+0100\n"
+"POT-Creation-Date: 2021-03-16 16:36+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -4198,6 +4198,7 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
+#: ../data/events/fol/fol8.neon.neon2php:63
 msgid "Register team"
 msgstr "Přihlásit tým"
 
@@ -4526,8 +4527,9 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:63
-msgid "Confirm as applied."
-msgstr "Potvrdit jako Účastní se"
+#, fuzzy
+msgid "Register team."
+msgstr "Přihlásit tým"
 
 #: ../data/events/fol/fol1.neon.neon2php:68
 msgid "Confirm as Participated"
@@ -4598,10 +4600,6 @@ msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:25
 msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
-msgstr ""
-
-#: ../data/events/fol/fol8.neon.neon2php:63
-msgid "Přihlásit tým"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:71
@@ -4893,6 +4891,9 @@ msgstr "Jakou velikost trička nosíš?"
 #: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
 msgid "Used capacity"
 msgstr "Již zabraná kapacita"
+
+#~ msgid "Confirm as applied."
+#~ msgstr "Potvrdit jako Účastní se"
 
 #~ msgid "Accommodation gender"
 #~ msgstr "Ubytování s osobami stejného pohlaví"
