@@ -84,7 +84,7 @@ events:
                 transitions:
                     __init->pending:
                         condition: %events.fyziklani12.appCond%
-                        label: _('Přihlásit tým')
+                        label: _('Register team')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(team, .*)
                     pending->approved:
