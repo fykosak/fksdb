@@ -1,6 +1,6 @@
 parameters:
     events:
-        tabor9:
+        tabor10:
             arrival:
                 destination:
                     OWN: "Vlastní doprava"
@@ -11,7 +11,7 @@ parameters:
 
 
 events:
-    tabor9:
+    tabor10:
         event_type_id: [10]
         eventYears: [10] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor7.form
@@ -138,13 +138,13 @@ events:
                     arrival_destination:
                         label: _('Mám zájem o svoz cestou na tábor')
                         description: "Místo, ze kterého chci cestovat"
-                        factory: Chooser("Zvolit místo", Options(%events.tabor8.arrival.destination%))
+                        factory: Chooser("Zvolit místo", Options(%events.tabor10.arrival.destination%))
                     arrival_ticket:
                         label: _('Mám zájem o společnou jízdenku cestou na tábor')
                     departure_destination:
                         label: _('Mám zájem o svozy z tábora')
                         description: "Místo, na které chci cestovat"
-                        factory: Chooser("Zvolit místo", Options(%events.tabor8.arrival.destination%))
+                        factory: Chooser("Zvolit místo", Options(%events.tabor10.arrival.destination%))
                     departure_ticket:
                           label: _('Mám zájem o společnou jízdenku z tábora')
                     swimmer:
