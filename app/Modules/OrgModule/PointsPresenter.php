@@ -144,9 +144,9 @@ class PointsPresenter extends BasePresenter {
             $series = $this->getSelectedSeries();
 
             $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
-            $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
+            $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
         } catch (Exception $exception) {
-            $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
     }

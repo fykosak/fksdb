@@ -124,7 +124,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $person = $this->servicePerson->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {
-                    $this->flashMessage(_('Byl nalezen existující účet, pro pokračování se přihlaste.'));
+                    $this->flashMessage(_('An existing account found. To continue, please sign in.'));
                     $this->redirect(':Core:Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }

@@ -83,7 +83,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
             })->setConfirmationDialog(function (): string {
-                return _('Opravdu vzít submit úlohy zpět?');
+                return _('Really take back the task submit?');
             })->setText(_('Delete'))
             ->setShow(function (ModelFyziklaniSubmit $row): bool {
                 return $row->canRevoke();

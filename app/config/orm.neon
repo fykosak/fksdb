@@ -121,11 +121,11 @@ orm:
                 parameters:
                     type: text
                     title: _(Parameters)
-                    description: _('V Neon syntaxi, schéma je specifické pro definici akce.')
+                    description: _('In Neon syntax, the scheme is specific for each event.')
                 name:
                     type: string
                     title: _(Name)
-                    description: _('U soustředka místo.')
+                    description: _("For the camps, it is place.")
                     required: true
                 begin:
                     type: dateTime
@@ -135,7 +135,7 @@ orm:
                     type: dateTime
                     title: _(Event end)
                     required: false
-                    description: _('U jednodenních akcí shodný se začátkem.')
+                    description: _('For one-day events it is identical to the beginning.')
                 registration_begin:
                     type: dateTime
                     title:  _(Registration begin)
@@ -144,13 +144,13 @@ orm:
                     title: _(Registration end)
                 report:
                     type: text
-                    description: _(Shrnující text k akci.)
+                    description: _(Summary of the event.)
                     title: _(Report)
                 event_year:
                     type: int
                     title: _(Event year)
                     required: true
-                    description: _('Ročník akce musí být unikátní pro daný typ akce.')
+                    description: _('The year of an event must be unique for a given event type.')
                 year:
                     type: int
                     title: _(Contest year)
@@ -260,7 +260,7 @@ orm:
                     title:  _(Event participant Id)
                 lunch_count:
                     type: int
-                    title: _('Počet baget k obědu')
+                    title: _('Number of baguettes for lunch')
              linkFactories:
                    detail: FKSDB\Models\ORM\Links\ParticipantDetailLink
                    edit: FKSDB\Models\ORM\Links\ApplicationEditLink
@@ -313,8 +313,10 @@ orm:
                     title: _('Until')
                 order:
                     type: class
+                    
                     class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
                     description: _('Pro řazení v seznamu organizátorů')
+
                     title: _('Order')
                 tex_signature:
                     type: class
@@ -327,7 +329,7 @@ orm:
                 contribution:
                     type: string
                     title: _(Contribution)
-                    description: _('Zobrazeno v síni slávy')
+                    description: _('For the hall of fame')
                 role:
                     type: string
                     title: Role
@@ -427,12 +429,12 @@ orm:
                 born_family_name:
                     type: string
                     title: _(Born family name)
-                    description: _('Pouze pokud je odlišné od příjmení.')
+                    description: _('Only if different from surname.')
                     permission: FULL
                 display_name:
                     type: string
                     title: _(Display name)
-                    description: _('Pouze pokud je odlišné od "jméno příjmení".')
+                    description: _('Only if different from "Name Surname".')
                     permission: BASIC
                 family_name:
                     type: string
@@ -460,7 +462,7 @@ orm:
                 study_year:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\StudyYearColumnFactory
-                    description: _('Kvůli zařazení do kategorie.')
+                    description: _('For determinig the category.')
                     title: _('Study year')
                 class:
                     type: string
@@ -484,7 +486,7 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\CitizenshipColumnFactory
                     permission: FULL
-                    title: _('Státní příslušnost')
+                    title: _('Nationality')
                 account:
                     type: string
                     title: _('Bank account')
@@ -521,36 +523,36 @@ orm:
                 id_number:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
-                    description: _('U cizinců číslo pasu.')
-                    title: _('Číslo OP')
+                    description: _('For foreigners passport ID.')
+                    title: _('Passport Id')
                     permission: FULL
                 born:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornColumnFactory
                     permission: FULL
-                    title: _('Datum narození')
+                    title: _('Date of birth')
                 born_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\BornIdColumnFactory
-                    title: _('Rodné číslo')
-                    description: _('U cizinců prázdné.')
+                    title: _('Birth Id')
+                    description: _('For foreigners empty.')
                     permission: FULL
                 birthplace:
                     type: string
-                    title: _('Místo narození')
-                    description: _('Město a okres (kvůli diplomům).')
+                    title: _('Place of birth')
+                    description: _('City and region (for diplomas).')
                     permission:
                         read: FULL
                         write: FULL
                 career:
-                    title: _(Co právě dělá)
+                    title: _(Current role)
                     type: text
-                    description: _(Zobrazeno v seznamu organizátorů)
+                    description: _(Shown in the organizers' list)
                 im:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImColumnFactory
                     permission: RESTRICT
-                    title: _('ICQ, Jabber, apod.')
+                    title: _('ICQ, Jabber, etc.')
                 agreed:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\AgreedColumnFactory
@@ -569,7 +571,7 @@ orm:
                     permission: FULL
                 origin:
                     type: string
-                    title: 'Jak jsi se o nás dozvěděl(a)?'
+                    title: 'How did you came to know about us?'
                     permission: BASIC
                 note:
                     type: string

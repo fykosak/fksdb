@@ -43,7 +43,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment 
             try {
                 return $control->getValue();
             } catch (ModelDataConflictException $exception) {
-                $control->addError(sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $control->getLabel()));
+                $control->addError(sprintf(_('Some fields of the group "%s" do not match an existing record.'), $control->getLabel()));
             }
         }, $personControls));
 
