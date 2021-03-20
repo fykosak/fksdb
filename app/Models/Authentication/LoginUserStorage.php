@@ -25,16 +25,6 @@ use Nette\Security\SimpleIdentity;
  */
 class LoginUserStorage extends UserStorage {
 
-    /** @const HTTP GET parameter holding control information for the SSO */
-
-    public const PARAM_SSO = ModelAuthToken::TYPE_SSO;
-
-    /** @const Value meaning the user is not centally authneticated. */
-    public const SSO_AUTHENTICATED = 'a';
-
-    /** @const Value meaning the user is not centally authneticated. */
-    public const SSO_UNAUTHENTICATED = 'ua';
-
     private ServiceLogin $serviceLogin;
     private GlobalSession $globalSession;
     private Application $application;
@@ -114,7 +104,7 @@ class LoginUserStorage extends UserStorage {
             //parent::setAuthenticated(false);
             /** @var AuthenticatedPresenter $presenter */
             $presenter = $this->getPresenter();
-            $ssoData = $presenter->getParameter(self::PARAM_SSO);
+            $ssoData = $presenter->getParameter(ModelAuthToken::TYPE_SSO);
 
             /* If this is the first try, we redirect to the central login page,
              * otherwise we avoid redirection loop by checking PARAM_SSO and
@@ -166,5 +156,4 @@ class LoginUserStorage extends UserStorage {
         }
         return $login;
     }
-
 }

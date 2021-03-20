@@ -5,7 +5,6 @@ namespace FKSDB\Modules\CoreModule;
 use Exception;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
-use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
@@ -37,6 +36,11 @@ use Nette\Utils\DateTime;
  * Class AuthenticationPresenter
  */
 final class AuthenticationPresenter extends BasePresenter {
+    /** @const Value meaning the user is not centally authneticated. */
+    public const SSO_AUTHENTICATED = 'a';
+
+    /** @const Value meaning the user is not centally authneticated. */
+    public const SSO_UNAUTHENTICATED = 'ua';
 
     public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
@@ -303,12 +307,12 @@ final class AuthenticationPresenter extends BasePresenter {
                 $until = DateTime::from($expiration);
                 $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
                 $url->appendQuery([
-                    LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_AUTHENTICATED,
+                    ModelAuthToken::TYPE_SSO => self::SSO_AUTHENTICATED,
                     TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token,
                 ]);
             } else {
                 $url->appendQuery([
-                    LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_UNAUTHENTICATED,
+                    ModelAuthToken::TYPE_SSO => self::SSO_UNAUTHENTICATED,
                 ]);
             }
         }

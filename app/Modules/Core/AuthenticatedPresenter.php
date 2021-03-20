@@ -14,7 +14,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
-use Nette\Security\IUserStorage;
+use Nette\Security\UserStorage;
 use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
@@ -120,7 +120,27 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     final protected function loginRedirect(): void {
-        if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
+        $ssoData = $this->getParameter(ModelAuthToken::TYPE_SSO);
+
+        /* If this is the first try, we redirect to the central login page,
+         * otherwise we avoid redirection loop by checking PARAM_SSO and
+         * redirection to the login page will be done in the startup method.
+         */
+        if (!$ssoData) {
+            $allowedNonLogin = ($this->getAllowedAuthMethods() &
+                (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
+            if ($this->requiresLogin() && !$allowedNonLogin) {
+                $params = [
+                    'backlink' => (string)$this->getHttpRequest()->getUrl(),
+                    AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
+                    AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
+                ];
+
+                $this->redirect(':Core:Authentication:login', $params);
+            }
+        }
+
+        if ($this->user->logoutReason === UserStorage::LOGOUT_INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;
