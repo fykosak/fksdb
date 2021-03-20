@@ -88,7 +88,7 @@ class AccountManager {
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
+    public function sendRecovery(ModelLogin $login, string $lang): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {

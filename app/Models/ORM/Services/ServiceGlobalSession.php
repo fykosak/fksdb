@@ -16,14 +16,8 @@ use Fykosak\NetteORM\AbstractService;
 class ServiceGlobalSession extends AbstractService {
 
     private const SESSION_ID_LENGTH = 32;
-    private Request $request;
 
-    public function __construct(string $tableName, string $modelClassName, Request $request, Explorer $explorer, Conventions $conventions) {
-        parent::__construct($tableName, $modelClassName, $explorer, $conventions);
-        $this->request = $request;
-    }
-
-    public function createSession(int $loginId, ?DateTime $until = null, ?DateTime $since = null): ModelGlobalSession {
+    public function createSession(int $loginId,Request $request, ?DateTime $until = null, ?DateTime $since = null): ModelGlobalSession {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -39,7 +33,7 @@ class ServiceGlobalSession extends AbstractService {
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
-            'remote_ip' => $this->request->getRemoteAddress(),
+            'remote_ip' => $request->getRemoteAddress(),
         ]);
         // $this->save($session);
         $this->getExplorer()->getConnection()->commit();
