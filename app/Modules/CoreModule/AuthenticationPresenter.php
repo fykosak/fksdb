@@ -9,7 +9,7 @@ use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
-use FKSDB\Models\Authentication\SSO\IGlobalSession;
+use FKSDB\Models\Authentication\SSO\GlobalSession;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -56,7 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
-    private IGlobalSession $globalSession;
+    private GlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
     private Google $googleProvider;
@@ -64,7 +64,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     final public function injectTernary(
         ServiceAuthToken $serviceAuthToken,
-        IGlobalSession $globalSession,
+        GlobalSession $globalSession,
         PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
@@ -183,7 +183,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @return bool
      */
     private function isLoggedIn(): bool {
-        return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);
+        return $this->getUser()->isLoggedIn() || $this->globalSession->getUIdSession();
     }
 
     /*     * ******************* components ****************************** */

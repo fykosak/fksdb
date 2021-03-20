@@ -73,13 +73,18 @@ class LoginUserStorage extends UserStorage {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @param bool $state
+     * @return $this
+     * @throws \Exception
+     */
     public function setAuthenticated(bool $state): self {
         parent::setAuthenticated($state);
         if ($state) {
             $uid = parent::getIdentity()->getId();
-            $this->globalSession[GlobalSession::UID] = $uid;
+            $this->globalSession->setUIdSession($uid);
         } else {
-            unset($this->globalSession[GlobalSession::UID]);
+            $this->globalSession->unsetUIdSession();
         }
         return $this;
     }
@@ -90,7 +95,7 @@ class LoginUserStorage extends UserStorage {
      */
     public function isAuthenticated(): bool {
         $local = parent::isAuthenticated();
-        $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
+        $global = $this->globalSession->getUIdSession() ? $this->globalSession->getUIdSession()->login_id : null;
 
         if ($global) {
             // update identity
@@ -142,7 +147,7 @@ class LoginUserStorage extends UserStorage {
 
     public function getIdentity(): ?ModelLogin {
         $local = parent::getIdentity();
-        $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
+        $global = $this->globalSession->getUIdSession();
         /*
          * Note that case when $global == true && $local != true should be resolved,
          * i.e. update local session from global. However, this is already done

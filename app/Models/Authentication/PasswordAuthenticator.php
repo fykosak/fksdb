@@ -102,14 +102,10 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     public function wakeupIdentity(IIdentity $identity): ?IIdentity {
-        $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
-        /*
-         * Note that case when $global == true && $local != true should be resolved,
-         * i.e. update local session from global. However, this is already done
-         * int isAuthenticated method. Thus we can omit this case here.
-         */
-        if (!$identity || !$global) {
-            return null;
+        $global = $this->globalSession->getUIdSession();
+        if ($global) {
+            // update identity
+            return $global->getLogin();
         }
 
         // Find login

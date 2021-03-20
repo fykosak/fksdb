@@ -5,7 +5,6 @@ namespace FKSDB\Models\Authentication\SSO;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
 use FKSDB\Models\ORM\Services\ServiceGlobalSession;
-use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 
@@ -14,7 +13,7 @@ use Nette\Utils\DateTime;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class GlobalSession implements IGlobalSession {
+class GlobalSession {
 
     private ServiceGlobalSession $serviceGlobalSession;
     private GlobalSessionIdHolder $globalSessionIdHolder;
@@ -80,50 +79,21 @@ class GlobalSession implements IGlobalSession {
         $this->globalSessionIdHolder->setGlobalSessionId(null);
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset): bool {
+    public function getUIdSession(): ?ModelGlobalSession {
         if (!$this->started) {
             throw new InvalidStateException('Global session not started.');
         }
-        if ($offset == self::UID) {
-            return isset($this->globalSession);
-        }
-        return false;
+        return $this->globalSession ?? null;
     }
 
     /**
-     * @param mixed $offset
-     * @return bool|int|mixed
-     */
-    public function offsetGet($offset) {
-        if (!$this->started) {
-            throw new InvalidStateException('Global session not started.');
-        }
-        if ($offset != self::UID) {
-            throw new InvalidArgumentException("Cannot get offset '$offset' from global session.");
-        }
-        if (isset($this->globalSession)) {
-            return $this->globalSession->login_id;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @param mixed $offset
      * @param mixed $value
      * @return void
      * @throws \Exception
      */
-    public function offsetSet($offset, $value) {
+    public function setUIdSession($value) {
         if (!$this->started) {
             throw new InvalidStateException('Global session not started.');
-        }
-        if ($offset != self::UID) {
-            throw new InvalidArgumentException("Cannot set offset '$offset' in global session.");
         }
         if (isset($this->globalSession) && $value != $this->globalSession->login_id) {
             $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
@@ -138,16 +108,12 @@ class GlobalSession implements IGlobalSession {
     }
 
     /**
-     * @param mixed $offset
      * @return void
      * @throws ModelException
      */
-    public function offsetUnset($offset): void {
+    public function unsetUIdSession(): void {
         if (!$this->started) {
             throw new InvalidStateException('Global session not started.');
-        }
-        if ($offset != self::UID) {
-            throw new InvalidArgumentException("Cannot unset offset '$offset' in global session.");
         }
 
         // unsetting UID currently means destroying whole global session
