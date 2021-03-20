@@ -57,10 +57,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements Resource, Nod
 
     public function getTeacher(): ?ModelPerson {
         $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
-        if ($row) {
-            return ModelPerson::createFromActiveRow($row);
-        }
-        return null;
+        return $row ? ModelPerson::createFromActiveRow($row) : null;
     }
 
     public function getEvent(): ModelEvent {
@@ -73,10 +70,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements Resource, Nod
 
     public function getPosition(): ?ModelFyziklaniTeamPosition {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
-        }
-        return null;
+        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
     }
 
     /* ******************** SUBMITS ******************************* */
@@ -98,7 +92,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements Resource, Nod
     }
 
     public function hasOpenSubmitting(): bool {
-        return !is_numeric($this->points);
+        return !isset($this->points);
     }
 
     /**

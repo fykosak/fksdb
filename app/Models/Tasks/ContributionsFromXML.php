@@ -73,7 +73,7 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
+                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest());
 
                 if (!$org) {
                     $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));

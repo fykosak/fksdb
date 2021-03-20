@@ -105,7 +105,6 @@ services:
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-    - FKSDB\Components\Forms\Factories\StoredQueryFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\AddressFactory
@@ -114,9 +113,6 @@ services:
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     - FKSDB\Components\Forms\Factories\PersonScheduleFactory
-    #checks
-    - FKSDB\Components\Forms\Rules\UniqueEmailFactory
-    - FKSDB\Components\Forms\Rules\UniqueLoginFactory
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 

@@ -9,6 +9,7 @@ use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Models\Authentication\SSO\GlobalSession;
 use FKSDB\Models\Authentication\SSO\IGlobalSession;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
@@ -27,7 +28,6 @@ use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
@@ -56,6 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
+    /** @var GlobalSession  */
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;

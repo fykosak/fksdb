@@ -41,6 +41,7 @@ class ServiceAuthToken extends AbstractService {
         }
 
         if ($refresh) {
+            // TODO to related
             /** @var ModelAuthToken $token */
             $token = $this->getTable()
                 ->where('login_id', $login->login_id)

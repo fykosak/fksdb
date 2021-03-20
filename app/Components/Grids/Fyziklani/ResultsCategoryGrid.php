@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -14,8 +13,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 class ResultsCategoryGrid extends BaseGrid {
-
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
     private ModelEvent $event;
 
@@ -27,12 +24,8 @@ class ResultsCategoryGrid extends BaseGrid {
         $this->category = $category;
     }
 
-    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
     protected function getData(): IDataSource {
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+        $teams = $this->event->getParticipatingTeams()
             ->where('category', $this->category)
             ->order('name');
         return new NDataSource($teams);

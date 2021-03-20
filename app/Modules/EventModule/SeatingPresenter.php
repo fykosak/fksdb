@@ -15,12 +15,6 @@ use Nette\DeprecatedException;
  */
 class SeatingPresenter extends BasePresenter {
 
-    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
-
-    final public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
     /**
      * @return void
      * @throws EventNotFoundException

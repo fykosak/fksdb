@@ -3,10 +3,8 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -57,13 +55,5 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
                 $person->removeScheduleForEvent($model->event_id);
             }
         }
-    }
-
-    public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
-        return $this->findByEvent($event)->where('status', ['participated', 'approved', 'spare', 'applied']);
-    }
-
-    public function findByEvent(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('event_id', $event->event_id);
     }
 }

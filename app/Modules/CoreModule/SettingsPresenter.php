@@ -3,12 +3,13 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\PreferredLangFormComponent;
+use FKSDB\Components\Forms\Rules\UniqueEmail;
+use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
-use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
-use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -30,19 +31,16 @@ class SettingsPresenter extends BasePresenter {
 
     private LoginFactory $loginFactory;
     private ServiceLogin $loginService;
-    private UniqueEmailFactory $uniqueEmailFactory;
-    private UniqueLoginFactory $uniqueLoginFactory;
+    private ServicePersonInfo $servicePersonInfo;
 
     final public function injectQuarterly(
         LoginFactory $loginFactory,
         ServiceLogin $loginService,
-        UniqueEmailFactory $uniqueEmailFactory,
-        UniqueLoginFactory $uniqueLoginFactory
+        ServicePersonInfo $servicePersonInfo
     ): void {
         $this->loginFactory = $loginFactory;
         $this->loginService = $loginService;
-        $this->uniqueEmailFactory = $uniqueEmailFactory;
-        $this->uniqueLoginFactory = $uniqueLoginFactory;
+        $this->servicePersonInfo = $servicePersonInfo;
     }
 
     public function titleDefault(): void {
@@ -102,7 +100,13 @@ class SettingsPresenter extends BasePresenter {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
         $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($login): bool {
-            return $this->uniqueEmailFactory->create($login->getPerson())($baseControl) && $this->uniqueLoginFactory->create($login)($baseControl);
+            $uniqueLogin = new UniqueLogin($this->loginService);
+            $uniqueLogin->setIgnoredLogin($login);
+
+            $uniqueEmail = new UniqueEmail($this->servicePersonInfo);
+            $uniqueEmail->setIgnoredPerson($login->getPerson());
+
+            return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
         });
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */

@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
-use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -18,7 +19,10 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
+use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\AbortException;
+use Nette\Forms\Container;
+use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -33,24 +37,24 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
     private const CONT_MAIN = 'main';
-    private StoredQueryFormFactory $storedQueryFormFactory;
     private ServiceStoredQuery $serviceStoredQuery;
     private ServiceStoredQueryTag $serviceStoredQueryTag;
     private ServiceStoredQueryParameter $serviceStoredQueryParameter;
     private StoredQueryFactory $storedQueryFactory;
+    private SingleReflectionFormFactory $reflectionFormFactory;
 
     final public function injectPrimary(
-        StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,
         ServiceStoredQueryParameter $serviceStoredQueryParameter,
-        StoredQueryFactory $storedQueryFactory
+        StoredQueryFactory $storedQueryFactory,
+        SingleReflectionFormFactory $reflectionFormFactory
     ): void {
-        $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
         $this->storedQueryFactory = $storedQueryFactory;
+        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     /**
@@ -89,13 +93,13 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      */
     protected function configureForm(Form $form): void {
         $group = $form->addGroup(_('SQL'));
-        $form->addComponent($this->storedQueryFormFactory->createConsole($group), self::CONT_SQL);
+        $form->addComponent($this->createConsole($group), self::CONT_SQL);
 
         $group = $form->addGroup(_('Parameters'));
-        $form->addComponent($this->storedQueryFormFactory->createParametersMetadata($group), self::CONT_PARAMS);
+        $form->addComponent($this->createParametersMetadata($group), self::CONT_PARAMS);
 
         $group = $form->addGroup(_('Metadata'));
-        $form->addComponent($this->storedQueryFormFactory->createMetadata($group), self::CONT_MAIN);
+        $form->addComponent($this->createMetadata($group), self::CONT_MAIN);
 
         $form->setCurrentGroup();
 
@@ -105,6 +109,35 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $submit->onClick[] = function (SubmitButton $button) {
             $this->handleComposeExecute($button->getForm());
         };
+    }
+
+    /**
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    private function createMetadata(?ControlGroup $group = null): ModelContainer {
+        $container = $this->reflectionFormFactory->createContainer('stored_query', ['name', 'qid', 'tags', 'description']);
+        $container->setCurrentGroup($group);
+
+        $control = $this->reflectionFormFactory->createField('stored_query', 'php_post_proc')->setDisabled(true);
+        $container->addComponent($control, 'php_post_proc');
+        return $container;
+    }
+
+    /**
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    private function createConsole(?ControlGroup $group = null): ModelContainer {
+        $container = new ModelContainer();
+        $container->setCurrentGroup($group);
+        $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
+        $container->addComponent($control, 'sql');
+        return $container;
     }
 
     private function saveTags(array $tags, int $queryId): void {
@@ -118,6 +151,45 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
             ];
             $this->serviceStoredQueryTag->createNewModel($data);
         }
+    }
+
+    private function createParametersMetadata(?ControlGroup $group = null): Replicator {
+        $replicator = new Replicator(function (Container $replContainer) use ($group) {
+            $this->buildParameterMetadata($replContainer, $group);
+
+            $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-danger btn-sm']);
+            $submit->addRemoveOnClick();
+        }, 0, true);
+        $replicator->containerClass = ModelContainer::class;
+        $replicator->setCurrentGroup($group);
+        $submit = $replicator->addSubmit('addParam', _('Add parameter'));
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
+
+        $submit->setValidationScope(null)
+            ->addCreateOnClick();
+
+        return $replicator;
+    }
+
+    private function buildParameterMetadata(Container $container, ControlGroup $group): void {
+        $container->setCurrentGroup($group);
+
+        $container->addText('name', _('Parameter name'))
+            ->addRule(\Nette\Application\UI\Form::FILLED, _('Parameter name is required.'))
+            ->addRule(Form::MAX_LENGTH, _('Parameter name is too long.'), 16)
+            ->addRule(Form::PATTERN, _('The name of the parameter can only contain lowercase letters of the english alphabet, numbers, and an underscore.'), '[a-z][a-z0-9_]*');
+
+        $container->addText('description', _('Description'));
+
+        $container->addSelect('type', _('Data type'))
+            ->setItems([
+                ModelStoredQueryParameter::TYPE_INT => 'integer',
+                ModelStoredQueryParameter::TYPE_STRING => 'string',
+                ModelStoredQueryParameter::TYPE_BOOL => 'bool',
+            ]);
+
+        $container->addText('default', _('Default value'));
     }
 
     private function saveParameters(array $parameters, int $queryId): void {

@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventType;
 use Fykosak\NetteORM\TypedTableSelection;
 use Fykosak\NetteORM\AbstractService;
 
@@ -19,6 +18,7 @@ use Fykosak\NetteORM\AbstractService;
 class ServiceEvent extends AbstractService {
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
+        // TODO to related
         return $this->getTable()
             ->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contest->contest_id)
             ->where(DbNames::TAB_EVENT . '.year', $year);
@@ -28,9 +28,5 @@ class ServiceEvent extends AbstractService {
         /** @var ModelEvent $event */
         $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
         return $event;
-    }
-
-    public function getEventsByType(ModelEventType $eventType): TypedTableSelection {
-        return $this->getTable()->where('event_type_id', $eventType->event_type_id);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContest;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use Fykosak\NetteORM\AbstractService;
@@ -13,13 +15,11 @@ use Fykosak\NetteORM\AbstractService;
  */
 class ServiceOrg extends AbstractService {
 
-    public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
+    public function findByTeXSignature(string $signature, ModelContest $contest): ?ModelOrg {
         if (!$signature) {
             return null;
         }
-        /** @var ModelOrg|null $result */
-        $result = $this->getTable()->where('tex_signature', $signature)
-            ->where('contest_id', $contestId)->fetch();
-        return $result;
+        $result = $contest->related(DbNames::TAB_ORG)->where('tex_signature', $signature)->fetch();
+        return $result ? ModelOrg::createFromActiveRow($result) : null;
     }
 }
