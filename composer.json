@@ -1,4 +1,6 @@
 {
+  "description": "",
+  "name": "fykosak/fksdb",
   "require": {
     "php": ">=7.4.0",
     "nette/utils": "^3.2.0",

@@ -22,8 +22,6 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $this->fixture = $presenterFactory->createPresenter('Public:Register');
         $this->fixture->autoCanonicalize = false;
-
-      //  $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
     public function testDispatch(): void {

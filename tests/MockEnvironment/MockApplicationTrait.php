@@ -36,7 +36,6 @@ trait MockApplicationTrait {
     protected function mockApplication(): void {
         $mockPresenter = new MockPresenter();
         $application = new MockApplication($mockPresenter);
-
         $this->container->callInjects($mockPresenter);
         $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
@@ -63,11 +62,8 @@ trait MockApplicationTrait {
             Assert::type(ModelLogin::class, $login);
         }
         /** @var UserStorage $storage */
-        $storage= $container->getByType(UserStorage::class);
+        $storage = $container->getByType(UserStorage::class);
         $storage->saveAuthentication($login);
-      /*  $storage = $container->getByType(LoginUserStorage::class);
-        $storage->setIdentity($login);
-        $storage->setAuthenticated(true);*/
 
         if ($presenter) {
             $presenter->getUser()->login($login);
@@ -79,8 +75,6 @@ trait MockApplicationTrait {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
-
-      //  $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
         return $presenter;
     }
 
