@@ -62,7 +62,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @param mixed $element
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -120,27 +119,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     final protected function loginRedirect(): void {
-        $ssoData = $this->getParameter(ModelAuthToken::TYPE_SSO);
-
-        /* If this is the first try, we redirect to the central login page,
-         * otherwise we avoid redirection loop by checking PARAM_SSO and
-         * redirection to the login page will be done in the startup method.
-         */
-        if (!$ssoData) {
-            $allowedNonLogin = ($this->getAllowedAuthMethods() &
-                (AuthenticatedPresenter::AUTH_ALLOW_HTTP | AuthenticatedPresenter::AUTH_ALLOW_GITHUB));
-            if ($this->requiresLogin() && !$allowedNonLogin) {
-                $params = [
-                    'backlink' => (string)$this->getHttpRequest()->getUrl(),
-                    AuthenticationPresenter::PARAM_FLAG => AuthenticationPresenter::FLAG_SSO_PROBE,
-                    AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
-                ];
-
-                $this->redirect(':Core:Authentication:login', $params);
-            }
-        }
-
-        if ($this->user->logoutReason === UserStorage::LOGOUT_INACTIVITY) {
+        if ($this->getUser()->logoutReason === UserStorage::LOGOUT_INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;
