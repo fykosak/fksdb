@@ -24,7 +24,7 @@ abstract class Machine {
     /** @var Transition[] */
     private array $transitions = [];
     protected Explorer $explorer;
-    private AbstractService $service;
+    protected AbstractService $service;
     /**
      * @var callable|null
      * if callback return true, transition is allowed explicit, independently of transition's condition

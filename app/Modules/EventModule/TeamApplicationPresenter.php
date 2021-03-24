@@ -2,6 +2,8 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Entity\TeamApplicationFormComponent;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
@@ -65,6 +67,20 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
         return new SchoolCheckComponent($this->getEvent(), $this->getContext());
+    }
+
+    protected function createComponentCreateTeamApplicationForm(): TeamApplicationFormComponent {
+        return new TeamApplicationFormComponent($this->getContext(), null);
+    }
+
+    /**
+     * @return TeamApplicationFormComponent
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEditTeamApplicationForm(): TeamApplicationFormComponent {
+        return new TeamApplicationFormComponent($this->getContext(), $this->getEntity());
     }
 
     /**

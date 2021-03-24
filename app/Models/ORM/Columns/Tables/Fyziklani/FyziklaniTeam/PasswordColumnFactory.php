@@ -6,6 +6,8 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\HashPrinter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
 /**
@@ -20,5 +22,11 @@ class PasswordColumnFactory extends ColumnFactory {
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new HashPrinter())($model->password);
+    }
+
+    protected function createFormControl(...$args): BaseControl {
+        $control = new TextInput($this->getTitle());
+        $control->setHtmlType('password');
+        return $control;
     }
 }
