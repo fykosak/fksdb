@@ -76,7 +76,7 @@ class GroupOptions implements OptionsProvider {
         $model = $baseHolder->getModel2();
         $groups = $this->getGroups($event);
 
-        $selection = $this->serviceMParticipant->getMainService()->getExplorer()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->serviceMParticipant->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)

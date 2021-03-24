@@ -58,7 +58,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
         $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
 
-        $connection = $this->serviceSchool->getExplorer()->getConnection();
+        $connection = $this->serviceSchool->explorer->getConnection();
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */

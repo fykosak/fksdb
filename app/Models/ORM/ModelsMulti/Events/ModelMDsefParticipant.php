@@ -11,22 +11,22 @@ use Nette\InvalidStateException;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelEventParticipant getMainModel()
+ * @property-read  ModelEventParticipant $mainModel
  */
 class ModelMDsefParticipant extends AbstractModelMulti {
 
     public function __toString(): string {
-        if (!$this->getMainModel()->getPerson()) {
-            throw new InvalidStateException("Missing person in '" . $this->getMainModel() . "'.");
+        if (!$this->mainModel->getPerson()) {
+            throw new InvalidStateException("Missing person in '" . $this->mainModel . "'.");
         }
-        return $this->getMainModel()->getPerson()->getFullName();
+        return $this->mainModel->getPerson()->getFullName();
     }
 
     public function getEvent(): ModelEvent {
-        return $this->getMainModel()->getEvent();
+        return $this->mainModel->getEvent();
     }
 
     public function getPerson(): ModelPerson {
-        return $this->getMainModel()->getPerson();
+        return $this->mainModel->getPerson();
     }
 }

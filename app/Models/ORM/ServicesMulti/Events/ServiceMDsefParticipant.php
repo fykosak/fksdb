@@ -25,6 +25,6 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
      */
     public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
-        $this->getMainService()->dispose($model->getMainModel());
+        $this->mainService->dispose($model->mainModel);
     }
 }

@@ -212,7 +212,7 @@ class SubmitPresenter extends BasePresenter {
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
         try {
-            $this->submitService->getExplorer()->getConnection()->beginTransaction();
+            $this->submitService->explorer->getConnection()->beginTransaction();
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
@@ -251,11 +251,11 @@ class SubmitPresenter extends BasePresenter {
             }
 
             $this->uploadedSubmitStorage->commit();
-            $this->submitService->getExplorer()->getConnection()->commit();
+            $this->submitService->explorer->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException | ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
-            $this->submitService->getExplorer()->getConnection()->rollBack();
+            $this->submitService->explorer->getConnection()->rollBack();
             Debugger::log($exception);
             $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         }

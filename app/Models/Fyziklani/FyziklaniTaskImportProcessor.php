@@ -30,7 +30,7 @@ class FyziklaniTaskImportProcessor {
 
     public function process(ArrayHash $values, Logger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
-        $connection = $this->serviceFyziklaniTask->getExplorer()->getConnection();
+        $connection = $this->serviceFyziklaniTask->explorer->getConnection();
         $connection->beginTransaction();
         if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
             $this->event->getFyziklaniTasks()->delete();

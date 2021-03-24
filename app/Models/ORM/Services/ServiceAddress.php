@@ -52,7 +52,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
             throw new InvalidPostalCode($postalCode);
         }
         /** @var ActiveRow|ModelRegion $row */
-        $row = $this->getExplorer()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->explorer->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {
