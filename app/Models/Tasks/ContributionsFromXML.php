@@ -79,13 +79,12 @@ class ContributionsFromXML extends Stage {
                     ->related(DbNames::TAB_ORG)
                     ->where('tex_signature', $signature)
                     ->fetch();
-                $org = $row ? ModelOrg::createFromActiveRow($row) : null;
 
-                if (!$org) {
+                if (!$row) {
                     $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));
                     continue;
                 }
-                $contributors[] = $org;
+                $contributors[] = ModelOrg::createFromActiveRow($row);
             }
 
             // delete old contributions
