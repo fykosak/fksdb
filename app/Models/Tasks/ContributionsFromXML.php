@@ -4,6 +4,8 @@ namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
@@ -73,7 +75,11 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
+                $row = $this->data->getContest()
+                    ->related(DbNames::TAB_ORG)
+                    ->where('tex_signature', $signature)
+                    ->fetch();
+                $org = $row ? ModelOrg::createFromActiveRow($row) : null;
 
                 if (!$org) {
                     $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));
@@ -96,8 +102,6 @@ class ContributionsFromXML extends Stage {
                 ]);
             }
         }
-
         $this->taskContributionService->getExplorer()->getConnection()->commit();
     }
-
 }

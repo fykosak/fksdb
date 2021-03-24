@@ -13,16 +13,6 @@ use Fykosak\NetteORM\AbstractService;
  */
 class ServiceOrg extends AbstractService {
 
-    public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
-        if (!$signature) {
-            return null;
-        }
-        /** @var ModelOrg|null $result */
-        $result = $this->getTable()->where('tex_signature', $signature)
-            ->where('contest_id', $contestId)->fetch();
-        return $result;
-    }
-
     public function store(?ModelOrg $model, array $data): ModelOrg {
         if (is_null($model)) {
             return $this->createNewModel($data);
