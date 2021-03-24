@@ -108,8 +108,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model); // TODO
-            //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
+            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();

@@ -15,6 +15,7 @@ use Nette\Database\Explorer;
 /**
  * Class PaymentMachine
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ServicePayment $service
  */
 class PaymentMachine extends Machine {
 
@@ -22,12 +23,10 @@ class PaymentMachine extends Machine {
     private ModelEvent $event;
     private ServiceEvent $serviceEvent;
     private array $scheduleGroupTypes;
-    private ServicePayment $servicePayment;
 
     public function __construct(Explorer $explorer, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
         parent::__construct($explorer, $servicePayment);
         $this->serviceEvent = $serviceEvent;
-        $this->servicePayment = $servicePayment;
     }
 
     final public function decorateTransitions(TransitionsDecorator $decorator): void {
@@ -66,6 +65,6 @@ class PaymentMachine extends Machine {
     }
 
     public function createHolder(?AbstractModel $model):PaymentHolder{
-        return new PaymentHolder($model, $this->servicePayment);
+        return new PaymentHolder($model, $this->service);
     }
 }
