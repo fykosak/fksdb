@@ -3,12 +3,12 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\PreferredLangFormComponent;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -17,6 +17,7 @@ use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\UI\Form;
+use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
@@ -27,18 +28,22 @@ use Nette\Forms\Controls\TextInput;
  */
 class SettingsPresenter extends BasePresenter {
 
+    /** show field pair for setting a password */
+    public const SHOW_PASSWORD = 0x2;
+    /** show field for the old password */
+    public const VERIFY_OLD_PASSWORD = 0x4;
+    /** require nonempty (new) password */
+    public const REQUIRE_PASSWORD = 0x8;
+
     public const CONT_LOGIN = 'login';
 
-    private LoginFactory $loginFactory;
     private ServiceLogin $loginService;
     private ServicePersonInfo $servicePersonInfo;
 
     final public function injectQuarterly(
-        LoginFactory $loginFactory,
         ServiceLogin $loginService,
         ServicePersonInfo $servicePersonInfo
     ): void {
-        $this->loginFactory = $loginFactory;
         $this->loginService = $loginService;
         $this->servicePersonInfo = $servicePersonInfo;
     }
@@ -63,7 +68,7 @@ class SettingsPresenter extends BasePresenter {
         $control->getForm()->setDefaults($defaults);
     }
 
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
         }
@@ -93,13 +98,13 @@ class SettingsPresenter extends BasePresenter {
         $group = $form->addGroup(_('Authentication'));
 
         if ($tokenAuthentication) {
-            $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
+            $options = self::SHOW_PASSWORD | self::REQUIRE_PASSWORD;
         } elseif (!$login->hash) {
-            $options = LoginFactory::SHOW_PASSWORD;
+            $options = self::SHOW_PASSWORD;
         } else {
-            $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
+            $options = self::SHOW_PASSWORD | self::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($login): bool {
+        $loginContainer = $this->createLogin($options, $group, function (BaseControl $baseControl) use ($login): bool {
             $uniqueLogin = new UniqueLogin($this->loginService);
             $uniqueLogin->setIgnoredLogin($login);
 
@@ -128,6 +133,40 @@ class SettingsPresenter extends BasePresenter {
             $this->handleSettingsFormSuccess($form);
         };
         return $control;
+    }
+
+    private function createLogin(int $options = 0, ?ControlGroup $group = null, ?callable $loginRule = null): ModelContainer {
+        $container = new ModelContainer();
+        $container->setCurrentGroup($group);
+
+        $login = $container->addText('login', _('Username'));
+        $login->setHtmlAttribute('autocomplete', 'username');
+
+        if ($loginRule) {
+            $login->addRule($loginRule, _('This username is already taken.'));
+        }
+
+        if ($options & self::SHOW_PASSWORD) {
+            if ($options & self::VERIFY_OLD_PASSWORD) {
+                $container->addPassword('old_password', _('Old password'))->setHtmlAttribute('autocomplete', 'current-password');
+            }
+            $newPwd = $container->addPassword('password', _('Password'));
+            $newPwd->setHtmlAttribute('autocomplete', 'new-password');
+            $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('The password must have at least %d characters.'), 6);
+
+            if ($options & self::VERIFY_OLD_PASSWORD) {
+                $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
+                    ->addRule(Form::FILLED, _('It is necessary to set a new password.'));
+            } elseif ($options & self::REQUIRE_PASSWORD) {
+                $newPwd->addRule(Form::FILLED, _('Password cannot be empty.'));
+            }
+
+            $container->addPassword('password_verify', _('Password (verification)'))
+                ->addRule(Form::EQUAL, _('The submitted passwords do not match.'), $newPwd)
+                ->setHtmlAttribute('autocomplete', 'new-password');
+        }
+
+        return $container;
     }
 
     /**

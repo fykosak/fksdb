@@ -108,7 +108,7 @@ class BreadcrumbsComponent extends BaseComponent {
      * Rendering
      * ********************** */
 
-    public function render(): void {
+    final public function render(): void {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -119,9 +119,8 @@ class BreadcrumbsComponent extends BaseComponent {
                 'title' => $naviRequest->title,
             ];
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
         $this->template->path = $path;
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
     }
 
     /*     * **********************
@@ -129,7 +128,6 @@ class BreadcrumbsComponent extends BaseComponent {
      * ********************** */
 
     public function getBackLinkUrl(): ?string {
-
         // backLink is actually the second, as first is the current request
         $path = $this->getTraversePath($this->getPresenter()->getRequest(), 2);
 

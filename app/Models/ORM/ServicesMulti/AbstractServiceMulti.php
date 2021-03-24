@@ -20,6 +20,7 @@ use Nette\SmartObject;
  * Joined side is in a sense primary (search, select, delete).
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 abstract class AbstractServiceMulti implements IService {
 

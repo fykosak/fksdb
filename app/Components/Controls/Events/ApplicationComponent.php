@@ -66,20 +66,19 @@ class ApplicationComponent extends BaseComponent {
         return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->renderForm();
     }
 
-    public function renderForm(): void {
+    final public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
 
-        $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
         $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
-        $this->template->render();
+        $this->template->render($this->templateFile);
     }
 
     /**

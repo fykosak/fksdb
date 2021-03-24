@@ -14,7 +14,7 @@ use Nette\DI\Container;
  */
 class FinalResultsComponent extends BaseComponent {
 
-    private ModelEvent$event;
+    private ModelEvent $event;
 
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
@@ -52,9 +52,8 @@ class FinalResultsComponent extends BaseComponent {
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->that = $this;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
     }
 }

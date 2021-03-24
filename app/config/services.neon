@@ -109,7 +109,6 @@ services:
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
-    - FKSDB\Components\Forms\Factories\LoginFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     - FKSDB\Components\Forms\Factories\PersonScheduleFactory

@@ -90,7 +90,7 @@ class SubmitPresenter extends BasePresenter {
         throw new GoneException('');
     }
 
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
@@ -106,7 +106,7 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    public function renderAjax(): void {
+    final public function renderAjax(): void {
         $this->template->availableTasks = $this->getAvailableTasks();
     }
 
@@ -262,6 +262,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     private function getAvailableTasks(): TypedTableSelection {
+        // TODO related
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');

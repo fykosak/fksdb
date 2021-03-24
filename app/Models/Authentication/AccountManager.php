@@ -6,6 +6,7 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -94,10 +95,8 @@ class AccountManager {
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $this->serviceAuthToken->getTable()->where([
-            'login_id' => $login->login_id,
-            'type' => ModelAuthToken::TYPE_RECOVERY,
-        ])
+        $token = $login->related(DbNames::TAB_AUTH_TOKEN)
+            ->where('type', ModelAuthToken::TYPE_RECOVERY)
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
             throw new RecoveryExistsException();
@@ -120,8 +119,7 @@ class AccountManager {
     }
 
     public function cancelRecovery(ModelLogin $login): void {
-        $this->serviceAuthToken->getTable()->where([
-            'login_id' => $login->login_id,
+        $login->related(DbNames::TAB_AUTH_TOKEN)->where([
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])->delete();
     }

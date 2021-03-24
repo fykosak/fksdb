@@ -50,7 +50,7 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [

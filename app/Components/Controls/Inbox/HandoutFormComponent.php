@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -18,6 +19,7 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
 class HandoutFormComponent extends BaseComponent {
+
     public const TASK_PREFIX = 'task';
 
     private ServicePerson $servicePerson;
@@ -75,8 +77,7 @@ class HandoutFormComponent extends BaseComponent {
         $connection->beginTransaction();
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $this->serviceTaskContribution->getTable()->where([
-                'task_id' => $task->task_id,
+            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
                 'type' => ModelTaskContribution::TYPE_GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
@@ -96,9 +97,8 @@ class HandoutFormComponent extends BaseComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
-        $this->template->render();
+    final public function render(): void {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 
     /**

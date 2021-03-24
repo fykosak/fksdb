@@ -89,7 +89,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -100,7 +100,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderEdit(): void {
+    final public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 

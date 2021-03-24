@@ -23,11 +23,11 @@ trait ChartPresenterTrait {
         $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
     }
 
-    public function renderChart(): void {
+    final public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 

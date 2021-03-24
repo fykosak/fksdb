@@ -7,7 +7,6 @@ use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
 
 /**

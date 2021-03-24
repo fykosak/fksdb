@@ -9,10 +9,12 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Security\User;
 
 /**
  * Trait ContestPresenterTrait
  * @property ServiceContest $serviceContest
+ * @method User getUser()
  */
 trait ContestPresenterTrait {
 

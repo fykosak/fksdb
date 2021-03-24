@@ -31,7 +31,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
     }

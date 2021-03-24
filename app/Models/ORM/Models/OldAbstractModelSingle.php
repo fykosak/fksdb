@@ -8,6 +8,7 @@ use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 abstract class OldAbstractModelSingle extends AbstractModel {
 

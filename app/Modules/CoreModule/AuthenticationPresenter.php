@@ -56,7 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
-    /** @var GlobalSession  */
+    /** @var GlobalSession|IGlobalSession */
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;

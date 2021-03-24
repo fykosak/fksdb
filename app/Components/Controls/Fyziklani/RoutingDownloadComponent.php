@@ -37,13 +37,12 @@ class RoutingDownloadComponent extends BaseComponent {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $rooms = [];// $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
 
         $this->template->rooms = $rooms;
         // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
         $this->template->teams = $this->serviceFyziklaniTeam->getTeamsAsArray($this->event);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingDownload.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'RoutingDownload.latte');
     }
 }

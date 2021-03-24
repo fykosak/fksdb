@@ -81,7 +81,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         parent::renderDetail();
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();

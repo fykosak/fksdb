@@ -86,7 +86,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 

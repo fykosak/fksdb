@@ -61,7 +61,7 @@ class PreferredLangFormComponent extends FormComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render(): void {
+    final public function render(): void {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);
         parent::render();
     }

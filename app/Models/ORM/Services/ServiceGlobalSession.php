@@ -3,8 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Http\Request;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;

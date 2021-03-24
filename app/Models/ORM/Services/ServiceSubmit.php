@@ -26,11 +26,7 @@ class ServiceSubmit extends AbstractService {
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
             ])->fetch();
-            if ($result !== false) {
-                $this->submitCache[$key] = $result;
-            } else {
-                $this->submitCache[$key] = null;
-            }
+            $this->submitCache[$key] = $result ?? null;
         }
         return $this->submitCache[$key];
     }
