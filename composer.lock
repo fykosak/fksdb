@@ -4,32 +4,37 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a363d0a803eef6f3c4cd1d7fb211eb45",
+    "content-hash": "79e869c49061af95be56f9d9068c6774",
     "packages": [
         {
             "name": "fykosak/nette-orm",
-            "version": "0.1.3",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "7b9fdc739b033f3161a311c5144ea21801687da6"
+                "reference": "19571cdebee16c212c0b2562f9511df0d5116e29"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/7b9fdc739b033f3161a311c5144ea21801687da6",
-                "reference": "7b9fdc739b033f3161a311c5144ea21801687da6",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/19571cdebee16c212c0b2562f9511df0d5116e29",
+                "reference": "19571cdebee16c212c0b2562f9511df0d5116e29",
                 "shasum": ""
             },
             "require": {
+                "ext-gettext": "*",
                 "ext-pdo": "*",
                 "nette/database": "^3.1",
-                "nette/di": "^3.0.8",
+                "nette/di": "^3.0",
                 "php": ">=7.4"
+            },
+            "require-dev": {
+                "nette/tester": "^2.4.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Fykosak\\NetteORM\\": "src/"
+                    "Fykosak\\NetteORM\\": "src/",
+                    "Fykosak\\NetteORM\\Tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -50,7 +55,7 @@
                     "email": "lukast@fykos.cz"
                 }
             ],
-            "time": "2021-03-24T22:06:11+00:00"
+            "time": "2021-03-25T03:33:11+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
