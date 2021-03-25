@@ -2,18 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */
-class ServicePerson extends OldAbstractServiceSingle {
+class ServicePerson extends AbstractService {
 
     public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
@@ -27,9 +25,9 @@ class ServicePerson extends OldAbstractServiceSingle {
     /**
      * @param ModelPerson|AbstractModel|null $model
      * @param array $data
-     * @return OldAbstractModelSingle
+     * @return AbstractModel
      */
-    public function store(?AbstractModel $model, array $data): OldAbstractModelSingle {
+    public function store(?AbstractModel $model, array $data): AbstractModel {
         if (is_null($model) && is_null($data['gender'])) {
             $data['gender'] = ModelPerson::inferGender($data);
         }

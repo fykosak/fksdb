@@ -2,8 +2,7 @@
 
 namespace FKSDB\Models\ORM\ModelsMulti;
 
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractModel;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -17,36 +16,23 @@ abstract class AbstractModelMulti extends ActiveRow {
 
     use SmartObject;
 
-    public OldAbstractModelSingle $mainModel;
-    public OldAbstractModelSingle $joinedModel;
+    public AbstractModel $mainModel;
+    public AbstractModel $joinedModel;
 
     /**
      * @note DO NOT use directly, use AbstractServiceMulti::composeModel
      *
-     * @param AbstractServiceMulti|null $service
-     * @param OldAbstractModelSingle $mainModel
-     * @param OldAbstractModelSingle $joinedModel
+     * @param AbstractModel $mainModel
+     * @param AbstractModel $joinedModel
      */
-    public function __construct(?AbstractServiceMulti $service, OldAbstractModelSingle $mainModel, OldAbstractModelSingle $joinedModel) {
+    public function __construct(AbstractModel $mainModel, AbstractModel $joinedModel) {
         parent::__construct($joinedModel->toArray(), $joinedModel->getTable());
-        if (is_null($service)) {
-            $this->joinedModel = $joinedModel;
-            $this->mainModel = $mainModel;
-        } else {
-            $this->joinedModel = $joinedModel;
-            $this->setMainModel($mainModel, $service);
-        }
+        $this->joinedModel = $joinedModel;
+        $this->mainModel = $mainModel;
     }
 
     public function toArray(): array {
         return $this->mainModel->toArray() + $this->joinedModel->toArray();
-    }
-
-    public function setMainModel(OldAbstractModelSingle $mainModel, AbstractServiceMulti $service): void {
-        $this->mainModel = $mainModel;
-        if (!$mainModel->isNew() && $this->joinedModel) { // bind via foreign key
-            $this->joinedModel->{$service->joiningColumn} = $mainModel->getPrimary();
-        }
     }
 
     /**
@@ -94,14 +80,6 @@ abstract class AbstractModelMulti extends ActiveRow {
      */
     public function getPrimary($throw = true) {
         return $this->joinedModel->getPrimary($throw);
-    }
-
-    /**
-     * @return bool
-     * @deprecated
-     */
-    public function isNew(): bool {
-        return $this->joinedModel->isNew();
     }
 
     /**

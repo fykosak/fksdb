@@ -9,10 +9,10 @@ use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -38,7 +38,7 @@ use Nette\Security\Resource;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends OldAbstractModelSingle implements Resource, NodeCreator {
+class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';

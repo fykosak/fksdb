@@ -3,7 +3,8 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -35,7 +36,14 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $holder->setModel($foundModel); // "swap" models
     }
 
-    private function getConflicts(ActiveRow $foundModel, array $joinData, IService $service, BaseHolder $holder): array {
+    /**
+     * @param ActiveRow $foundModel
+     * @param array $joinData
+     * @param AbstractService|AbstractServiceMulti $service
+     * @param BaseHolder $holder
+     * @return array
+     */
+    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
         $currentArray = $holder->getModel2() ? $holder->data : [];
         $foundArray = $foundModel->toArray();
         $result = [];
@@ -54,7 +62,13 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    private function updateFoundModel(ActiveRow $foundModel, array $joinData, IService $service, BaseHolder $holder): void {
+    /**
+     * @param ActiveRow $foundModel
+     * @param array $joinData
+     * @param AbstractService|AbstractServiceMulti $service
+     * @param BaseHolder $holder
+     */
+    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
         $currentArray = $holder->getModel2() ? $holder->data : [];
         $data = [];
         foreach ($currentArray as $key => $value) {

@@ -6,6 +6,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
@@ -19,7 +20,7 @@ use Nette\Security\Resource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends OldAbstractModelSingle implements Resource {
+class ModelPerson extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'person';
 

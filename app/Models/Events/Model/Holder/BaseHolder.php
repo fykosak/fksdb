@@ -6,13 +6,12 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
@@ -40,14 +39,15 @@ class BaseHolder {
     private ?EventRelation $eventRelation;
     private ModelEvent $event;
     private string $label;
-    private IService $service;
+    /** @var AbstractService|AbstractServiceMulti */
+    private $service;
     private ?string $joinOn = null;
     private ?string $joinTo = null;
     private string $eventIdColumn;
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    /** @var ActiveRow|null|OldAbstractModelSingle|AbstractModelMulti */
+    /** @var ActiveRow|null|AbstractModel|AbstractModelMulti */
     private ?ActiveRow $model;
     private array $paramScheme;
     private array $parameters;
@@ -113,6 +113,7 @@ class BaseHolder {
      */
     private function setEvent(ModelEvent $event): void {
         $this->event = $event;
+        $this->data[self::EVENT_COLUMN] = $this->event->getPrimary();
         $this->cacheParameters();
     }
 
@@ -161,24 +162,10 @@ class BaseHolder {
     }
 
     /**
-     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant
-     * @deprecated
-     */
-    public function &getModel(): ActiveRow {
-        if (!isset($this->model)) {
-            $this->model = $this->getService()->createNew(); // TODO!!!
-        }
-        return $this->model;
-    }
-
-    /**
      * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
     public function getModel2(): ?ActiveRow {
-        if (!isset($this->model)) {
-            return null;
-        }
-        return (!$this->model->isNew()) ? $this->model : null;
+        return $this->model ?? null;
     }
 
     public function setModel(?ActiveRow $model): void {
@@ -187,7 +174,10 @@ class BaseHolder {
 
     public function saveModel(): void {
         if ($this->getModelState() == Machine::STATE_TERMINATED) {
-            $this->service->dispose($this->getModel());
+            $model = $this->getModel2();
+            if ($model) {
+                $this->service->dispose($model);
+            }
         } elseif ($this->getModelState() != Machine::STATE_INIT) {
             if ($this->service instanceof AbstractService) {
                 $this->model = $this->service->store($this->getModel2(), $this->data);
@@ -199,24 +189,18 @@ class BaseHolder {
 
     public function getModelState(): string {
         $model = $this->getModel2();
-        if ($model && $model[self::STATE_COLUMN]) {
-            return $model[self::STATE_COLUMN];
-        }
         if (isset($this->data[self::STATE_COLUMN])) {
             return $this->data[self::STATE_COLUMN];
         }
+        if ($model && $model[self::STATE_COLUMN]) {
+            return $model[self::STATE_COLUMN];
+        }
+
         return Machine::STATE_INIT;
     }
 
     public function setModelState(string $state): void {
         $this->data[self::STATE_COLUMN] = $state;
-        $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
-    }
-
-    public function updateModel(iterable $values, bool $alive = true): void {
-        $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        $this->data += (array)$values;
-        $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
     public function getName(): string {
@@ -224,13 +208,16 @@ class BaseHolder {
     }
 
     /**
-     * @return IService|AbstractService|AbstractServiceMulti
+     * @return AbstractService|AbstractServiceMulti
      */
-    public function getService(): IService {
+    public function getService() {
         return $this->service;
     }
 
-    public function setService(IService $service): void {
+    /**
+     * @param AbstractService|AbstractServiceMulti $service
+     */
+    public function setService($service): void {
         $this->service = $service;
     }
 

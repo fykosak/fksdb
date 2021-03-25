@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\ServicesMulti;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
@@ -19,7 +18,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @deprecated
  */
-abstract class AbstractServiceMulti implements IService {
+abstract class AbstractServiceMulti {
 
     use SmartObject;
 
@@ -38,20 +37,6 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param iterable|null $data
-     * @return AbstractModelMulti
-     * @throws ModelException
-     * @deprecated
-     */
-    public function createNew(?iterable $data = null): ActiveRow {
-        $mainModel = $this->mainService->createNew($data);
-        $joinedModel = $this->joinedService->createNew($data);
-        return $this->composeModel($mainModel, $joinedModel);
-    }
-
-    /**
-     * Use this method to create new models!
-     *
      * @param array $data
      * @return AbstractModelMulti
      * @throws ModelException
@@ -65,20 +50,7 @@ abstract class AbstractServiceMulti implements IService {
 
     public function composeModel(AbstractModel $mainModel, AbstractModel $joinedModel): AbstractModelMulti {
         $className = $this->getModelClassName();
-        return new $className($this, $mainModel, $joinedModel);
-    }
-
-    /**
-     * @param ActiveRow|AbstractModelMulti $model
-     * @param iterable $data
-     * @param bool $alive
-     * @return void
-     * @deprecated
-     */
-    public function updateModel(ActiveRow $model, iterable $data, bool $alive = true): void {
-        $this->checkType($model);
-        $this->mainService->updateModel($model->mainModel, $data, $alive);
-        $this->joinedService->updateModel($model->joinedModel, $data, $alive);
+        return new $className($mainModel, $joinedModel);
     }
 
     /**
@@ -113,14 +85,11 @@ abstract class AbstractServiceMulti implements IService {
      * @deprecated
      */
     public function store(?AbstractModelMulti $model, array $data): AbstractModelMulti {
+        $mainModel = $this->mainService->store($model ? $model->mainModel : null, $data);
 
-        $mainModel = $this->mainService->store((!$model || $model->mainModel->isNew()) ? null : $model->mainModel, $data);
-        $mainModel->setNew(false);
-
-        $joinedModel = $this->joinedService->store((!$model || $model->joinedModel->isNew()) ? null : $model->joinedModel, array_merge($data, [
+        $joinedModel = $this->joinedService->store($model ? $model->joinedModel : null, array_merge($data, [
             $this->joiningColumn => $mainModel->getPrimary(),
         ]));
-        $joinedModel->setNew(false);
         return $this->composeModel($mainModel, $joinedModel);
     }
 

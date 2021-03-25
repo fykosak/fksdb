@@ -5,8 +5,9 @@ namespace FKSDB\Models\Events\Model\Grid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -85,7 +86,7 @@ class SingleEventSource implements HolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[][] $group */
+        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);

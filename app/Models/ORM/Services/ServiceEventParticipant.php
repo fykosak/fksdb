@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\AbstractModel;
@@ -14,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  */
 class ServiceEventParticipant extends OldAbstractServiceSingle {
 
-    public function store(?AbstractModel $model, array $data): OldAbstractModelSingle {
+    public function store(?AbstractModel $model, array $data): AbstractModel {
         try {
             return parent::store($model, $data);
         } catch (ModelException $exception) {
@@ -37,19 +36,13 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
     }
 
     /**
-     * @param ActiveRow|ModelEventParticipant $model
-     * @param iterable|null $data
-     * @param bool $alive
-     * @return void
-     * @deprecated
+     * @param AbstractModel|ActiveRow|ModelEventParticipant $model
      */
-    public function updateModel(ActiveRow $model, ?iterable $data, $alive = true): void {
-        parent::updateModel($model, $data, $alive);
-        if (!$alive && !$model->isNew()) {
-            $person = $model->getPerson();
-            if ($person) {
-                $person->removeScheduleForEvent($model->event_id);
-            }
+    public function dispose($model): void {
+        $person = $model->getPerson();
+        if ($person) {
+            $person->removeScheduleForEvent($model->event_id);
         }
+        parent::dispose($model);
     }
 }

@@ -21,6 +21,7 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
+
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -227,7 +228,7 @@ class ApplicationHandler {
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if (isset($values[$name])) {
-                $baseHolder->updateModel($values[$name], isset($newStates[$name]) && ($newStates[$name] != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)); // terminated models may not be correctly updated
+                $baseHolder->data += (array)$values[$name];
             }
         }
 
