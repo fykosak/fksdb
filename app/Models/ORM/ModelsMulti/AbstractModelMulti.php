@@ -99,10 +99,6 @@ abstract class AbstractModelMulti extends ActiveRow {
         return $this->joinedModel->getPrimary($throw);
     }
 
-    public function getSignature(bool $throw = true): string {
-        return implode('|', (array)$this->getPrimary($throw));
-    }
-
     /**
      * @return bool
      * @deprecated
