@@ -142,11 +142,15 @@ class Field {
      * @return mixed
      */
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel2(false);
-        if (isset($model) && isset($model[$this->name])) {
-            return $model[$this->name];
+        $model = $this->getBaseHolder()->getModel2();
+        if (isset($this->baseHolder->data[$this->name])) {
+            return $this->baseHolder->data[$this->name];
         }
-        if (!isset($model)) {
+        if (isset($model)) {
+            if (isset($model[$this->name])) {
+                return $model[$this->name];
+            }
+        } else {
             return $this->getDefault();
         }
         return null;

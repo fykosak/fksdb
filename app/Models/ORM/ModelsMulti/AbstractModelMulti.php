@@ -11,7 +11,7 @@ use Nette\SmartObject;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read OldAbstractModelSingle $mainModel
+ * @deprecated
  */
 abstract class AbstractModelMulti extends ActiveRow {
 

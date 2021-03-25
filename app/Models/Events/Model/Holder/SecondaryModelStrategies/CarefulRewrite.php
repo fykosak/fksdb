@@ -24,20 +24,19 @@ class CarefulRewrite extends SecondaryModelStrategy {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
 
-        $currentModel = $holder->getModel2(false);
         $foundModel = reset($secondaries);
-        $conflicts = $this->getConflicts($currentModel, $foundModel, $joinData, $holder->getService());
+        $conflicts = $this->getConflicts($foundModel, $joinData, $holder->getService(), $holder);
 
         if ($conflicts) {
             throw new SecondaryModelDataConflictException($conflicts, $holder, $secondaries);
         }
 
-        $this->updateFoundModel($currentModel, $foundModel, $joinData, $holder->getService());
+        $this->updateFoundModel($foundModel, $joinData, $holder->getService(), $holder);
         $holder->setModel($foundModel); // "swap" models
     }
 
-    private function getConflicts(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): array {
-        $currentArray = $currentModel->toArray();
+    private function getConflicts(ActiveRow $foundModel, array $joinData, IService $service, BaseHolder $holder): array {
+        $currentArray = $holder->getModel2() ? $holder->data : [];
         $foundArray = $foundModel->toArray();
         $result = [];
         foreach ($currentArray as $key => $value) {
@@ -55,8 +54,8 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    private function updateFoundModel(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): void {
-        $currentArray = $currentModel->toArray();
+    private function updateFoundModel(ActiveRow $foundModel, array $joinData, IService $service, BaseHolder $holder): void {
+        $currentArray = $holder->getModel2() ? $holder->data : [];
         $data = [];
         foreach ($currentArray as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
@@ -64,6 +63,6 @@ class CarefulRewrite extends SecondaryModelStrategy {
             }
             $data[$key] = $value;
         }
-        $service->updateModel($foundModel, $data);
+        $service->updateModel2($foundModel, $data);
     }
 }

@@ -33,7 +33,6 @@ class ServiceGlobalSession extends AbstractService {
             'until' => $until,
             'remote_ip' => $request->getRemoteAddress(),
         ]);
-        // $this->save($session);
         $this->explorer->getConnection()->commit();
 
         return $session;

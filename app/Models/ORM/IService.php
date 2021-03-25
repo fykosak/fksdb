@@ -24,13 +24,6 @@ interface IService {
      */
     public function findByPrimary($key);
 
-    /**
-     * @param ActiveRow $model
-     * @return void
-     * @deprecated
-     */
-    public function save(ActiveRow &$model): void;
-
     public function getTable(): Selection;
 
     /**

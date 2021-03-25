@@ -69,18 +69,17 @@ abstract class SecondaryModelStrategy {
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
                 $conflicts = [];
-                $baseModel = $baseHolder->getModel2(false);
                 foreach ($existing as $secondaryModel) {
-                    if ($baseModel && ($baseModel->getPrimary(false) !== $secondaryModel->getPrimary())) {
+                   // if ($baseModel && ($baseModel->getPrimary(false) !== $secondaryModel->getPrimary())) { TODO WTF?
                         $conflicts[] = $secondaryModel;
-                    }
+                   // }
                 }
                 if ($conflicts) {
                     // TODO this could be called even for joining via PK
                     $this->resolveMultipleSecondaries($baseHolder, $conflicts, $joinData);
                 }
             }
-            $service->updateModel($baseHolder->getModel(), $joinData);
+            $baseHolder->data += (array)$joinData;
         }
     }
 

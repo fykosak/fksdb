@@ -5,6 +5,7 @@ namespace FKSDB\Models\Events\Spec\Dsef;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
+use FKSDB\Models\ORM\Models\Events\ModelDsefParticipant;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -72,7 +73,7 @@ class GroupOptions implements OptionsProvider {
     public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
-        $application = $baseHolder->getModel2(false);
+        /** @var ModelDsefParticipant $model */
         $model = $baseHolder->getModel2();
         $groups = $this->getGroups($event);
 
@@ -91,7 +92,7 @@ class GroupOptions implements OptionsProvider {
         }
         $groupOccupied = $selection->fetchPairs('e_dsef_group_id', 'occupied');
 
-        $selfGroup = $application->e_dsef_group_id;
+        $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;

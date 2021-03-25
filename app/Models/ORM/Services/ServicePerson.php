@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
@@ -10,7 +12,6 @@ use Nette\Database\Table\ActiveRow;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
- * @method ModelPerson store(?ModelPerson $model, array $data)
  */
 class ServicePerson extends OldAbstractServiceSingle {
 
@@ -24,14 +25,14 @@ class ServicePerson extends OldAbstractServiceSingle {
     }
 
     /**
-     * @param ActiveRow|ModelPerson $model
-     * @return void
-     * @throws ModelException
+     * @param ModelPerson|AbstractModel|null $model
+     * @param array $data
+     * @return OldAbstractModelSingle
      */
-    public function save(ActiveRow &$model): void {
-        if (is_null($model->gender)) {
-            $model->inferGender();
+    public function store(?AbstractModel $model, array $data): OldAbstractModelSingle {
+        if (is_null($model) && is_null($data['gender'])) {
+            $data['gender'] = ModelPerson::inferGender($data);
         }
-        parent::save($model);
+        return parent::store($model, $data);
     }
 }

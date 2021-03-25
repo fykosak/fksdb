@@ -2,8 +2,10 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Table\ActiveRow;
 
@@ -12,15 +14,9 @@ use Nette\Database\Table\ActiveRow;
  */
 class ServiceEventParticipant extends OldAbstractServiceSingle {
 
-    /**
-     * @param ModelEventParticipant|ActiveRow $model
-     * @throws DuplicateApplicationException
-     * @throws ModelException
-     * @deprecated
-     */
-    public function save(ActiveRow &$model): void {
+    public function store(?AbstractModel $model, array $data): OldAbstractModelSingle {
         try {
-            parent::save($model);
+            return parent::store($model, $data);
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 throw new DuplicateApplicationException($model->getPerson(), $exception);

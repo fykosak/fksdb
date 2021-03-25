@@ -43,8 +43,6 @@ class GlobalSession implements IGlobalSession {
 
             // touch the session for another expiration period
             if (isset($this->globalSession) && !$this->globalSession->isValid()) {
-                // $this->globalSession->until = DateTime::from($this->expiration);
-                // $this->serviceGlobalSession->save($this->globalSession);
                 $this->serviceGlobalSession->updateModel2($this->globalSession, ['until' => DateTime::from($this->expiration)]);
                 $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
             }

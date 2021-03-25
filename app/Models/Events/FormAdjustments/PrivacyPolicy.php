@@ -68,8 +68,6 @@ class PrivacyPolicy implements Processing, FormAdjustment {
                 if ($personInfo) {
                     $this->servicePersonInfo->updateModel2($personInfo, ['agreed' => 1]);
 
-                    // This is done in ApplicationHandler transaction, still can be rolled back.
-                    //$this->servicePersonInfo->save($personInfo);
                     $values[$key . '_1']['person_info']['agreed'] = 1;
                 }
             }

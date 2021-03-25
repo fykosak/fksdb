@@ -145,7 +145,7 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
     }
 
     public function getDeliveryPostContact(): ?ModelPostContact {
-       return  $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
     }
 
     public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
@@ -263,14 +263,11 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
         ];
     }
 
-    /**
-     * Infers gender from name.
-     */
-    public function inferGender(): void {
-        if (mb_substr($this->family_name, -1) == 'á') {
-            $this->gender = 'F';
+    public static function inferGender(array $data): string {
+        if (mb_substr($data['family_name'], -1) == 'á') {
+            return 'F';
         } else {
-            $this->gender = 'M';
+            return 'M';
         }
     }
 

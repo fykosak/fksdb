@@ -22,6 +22,7 @@ use PDOException;
  * @author Michal Červeňak <miso@fykos.cz>
  * @deprecated
  * @use AbstractServiceSingle
+ * @method OldAbstractModelSingle  store(?AbstractModel $model, array $data)
  */
 abstract class OldAbstractServiceSingle extends AbstractService implements IService {
 
@@ -111,19 +112,5 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
-    }
-
-    /**
-     * Use this method to store a model!
-     *
-     * @param ActiveRow|OldAbstractModelSingle $model
-     * @throws ModelException
-     * @deprecated
-     */
-    public function save(ActiveRow &$model): void {
-        /** @var OldAbstractModelSingle $model */
-        $this->checkType($model);
-        $model = $this->store($model->isNew() ? null : $model, $model->getTmpData());
-        $model->setNew(false);
     }
 }

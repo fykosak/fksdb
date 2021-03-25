@@ -47,7 +47,7 @@ class BaseHolder {
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    /** @var ActiveRow|null|OldAbstractModelSingle|AbstractModelMulti  */
+    /** @var ActiveRow|null|OldAbstractModelSingle|AbstractModelMulti */
     private ?ActiveRow $model;
     private array $paramScheme;
     private array $parameters;
@@ -55,6 +55,8 @@ class BaseHolder {
     private $modifiable;
     /** @var bool|callable */
     private $visible;
+
+    public array $data = [];
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -170,17 +172,13 @@ class BaseHolder {
     }
 
     /**
-     * @param bool $newAsNull
      * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
-    public function getModel2(bool $newAsNull = true): ?ActiveRow {
+    public function getModel2(): ?ActiveRow {
         if (!isset($this->model)) {
             return null;
         }
-        if ($newAsNull) {
-            return (!$this->model->isNew()) ? $this->model : null;
-        }
-        return $this->model;
+        return (!$this->model->isNew()) ? $this->model : null;
     }
 
     public function setModel(?ActiveRow $model): void {
@@ -191,30 +189,33 @@ class BaseHolder {
         if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } elseif ($this->getModelState() != Machine::STATE_INIT) {
-            $this->service->save($this->getModel());
+            if ($this->service instanceof AbstractService) {
+                $this->model = $this->service->store($this->getModel2(), $this->data);
+            } else {
+                $this->model = $this->service->store($this->getModel2(), $this->data);
+            }
         }
     }
 
     public function getModelState(): string {
-        $model = $this->getModel2(false);
-        if (!$model || (!$model[self::STATE_COLUMN])) {
-            return Machine::STATE_INIT;
-        } else {
+        $model = $this->getModel2();
+        if ($model && $model[self::STATE_COLUMN]) {
             return $model[self::STATE_COLUMN];
         }
+        if (isset($this->data[self::STATE_COLUMN])) {
+            return $this->data[self::STATE_COLUMN];
+        }
+        return Machine::STATE_INIT;
     }
 
     public function setModelState(string $state): void {
+        $this->data[self::STATE_COLUMN] = $state;
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
     public function updateModel(iterable $values, bool $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        /*  if ($this->model) {
-              $this->getService()->updateModel2($this->model, (array)$values);
-          } else {
-              $this->model = $this->getService()->createNewModel((array)$values);
-          }*/
+        $this->data += (array)$values;
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
@@ -314,7 +315,11 @@ class BaseHolder {
     public function getPerson(): ?ModelPerson {
         /** @var ModelPerson $model */
         try {
-            $model = ReferencedAccessor::accessModel($this->getModel2(false), ModelPerson::class);
+            $app = $this->getModel2();
+            if (!$app) {
+                return null;
+            }
+            $model = ReferencedAccessor::accessModel($app, ModelPerson::class);
         } catch (CannotAccessModelException $exception) {
             return null;
         }

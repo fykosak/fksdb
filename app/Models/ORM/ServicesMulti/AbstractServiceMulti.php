@@ -107,20 +107,21 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to store a model!
      *
-     * @param ActiveRow|AbstractModelMulti $model
-     * @throws ModelException
+     * @param AbstractModelMulti|null $model
+     * @param array $data
+     * @return AbstractModelMulti
      * @deprecated
      */
-    public function save(ActiveRow &$model): void {
-        $this->checkType($model);
+    public function store(?AbstractModelMulti $model, array $data): AbstractModelMulti {
 
-        $mainModel = $model->mainModel;
-        $joinedModel = $model->joinedModel;
-        $this->mainService->save($mainModel);
-        //update ID when it was new
-        $model->setMainModel($mainModel, $this);
-        $this->joinedService->save($joinedModel);
-        $model->joinedModel = $joinedModel;
+        $mainModel = $this->mainService->store((!$model || $model->mainModel->isNew()) ? null : $model->mainModel, $data);
+        $mainModel->setNew(false);
+
+        $joinedModel = $this->joinedService->store((!$model || $model->joinedModel->isNew()) ? null : $model->joinedModel, array_merge($data, [
+            $this->joiningColumn => $mainModel->getPrimary(),
+        ]));
+        $joinedModel->setNew(false);
+        return $this->composeModel($mainModel, $joinedModel);
     }
 
     /**
