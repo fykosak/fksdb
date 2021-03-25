@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "465ca710b39ab7b93fedc49911207cdb",
+    "content-hash": "79e869c49061af95be56f9d9068c6774",
     "packages": [
         {
             "name": "fykosak/nette-orm",

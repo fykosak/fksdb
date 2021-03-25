@@ -7,11 +7,11 @@ use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @property-read OldAbstractModelSingle $mainModel
  */
 abstract class AbstractModelMulti extends ActiveRow {
 
@@ -43,17 +43,12 @@ abstract class AbstractModelMulti extends ActiveRow {
     }
 
     public function setMainModel(OldAbstractModelSingle $mainModel, AbstractServiceMulti $service): void {
-        if (!isset($service)) {
-            throw new InvalidStateException('Cannot set main model on multiModel w/out service.');
-        }
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->joinedModel) { // bind via foreign key
-            $joiningColumn = $service->joiningColumn;
-            $this->joinedModel->{$joiningColumn} = $mainModel->getPrimary();
+            $this->joinedModel->{$service->joiningColumn} = $mainModel->getPrimary();
         }
     }
-
-    public function setJoinedModel(OldAbstractModelSingle $joinedModel): void {
+        public function setJoinedModel(OldAbstractModelSingle $joinedModel): void {
         $this->joinedModel = $joinedModel;
     }
 
@@ -62,7 +57,6 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get(string $key) {
-        // $value = $this->mainModel->{$name} ?? $this->joinedModel->{$name} ?? null;
         if ($this->mainModel->__isset($key)) {
             return $this->mainModel->__get($key);
         }
