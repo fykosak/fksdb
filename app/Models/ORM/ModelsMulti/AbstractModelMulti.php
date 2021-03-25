@@ -54,7 +54,6 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get(string $key) {
-        // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
         if ($this->mainModel->__isset($key)) {
             return $this->mainModel->__get($key);
         }
@@ -87,6 +86,14 @@ abstract class AbstractModelMulti extends ActiveRow {
      */
     public function __unset($key) {
         throw new LogicException('Cannot update multiModel directly.');
+    }
+
+    /**
+     * @param bool $throw
+     * @return mixed
+     */
+    public function getPrimary($throw = true) {
+        return $this->joinedModel->getPrimary($throw);
     }
 
     /**

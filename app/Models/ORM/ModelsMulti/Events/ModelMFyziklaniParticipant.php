@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read  ModelEventParticipant $mainModel
+ * @property-read ModelEventParticipant $mainModel
  */
 class ModelMFyziklaniParticipant extends AbstractModelMulti {
 
