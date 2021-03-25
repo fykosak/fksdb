@@ -48,9 +48,6 @@ abstract class AbstractModelMulti extends ActiveRow {
             $this->joinedModel->{$service->joiningColumn} = $mainModel->getPrimary();
         }
     }
-        public function setJoinedModel(OldAbstractModelSingle $joinedModel): void {
-        $this->joinedModel = $joinedModel;
-    }
 
     /**
      * @param string|int $key
