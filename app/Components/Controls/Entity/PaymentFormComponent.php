@@ -104,7 +104,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $model = $holder->getModel();
         }
 
-        $connection = $this->servicePayment->getExplorer()->getConnection();
+        $connection = $this->servicePayment->explorer->getConnection();
         $connection->beginTransaction();
 
         try {

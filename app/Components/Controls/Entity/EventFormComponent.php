@@ -156,7 +156,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
     }
 
     private function updateTokens(ModelEvent $event): void {
-        $connection = $this->serviceAuthToken->getExplorer()->getConnection();
+        $connection = $this->serviceAuthToken->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?: $event->end];

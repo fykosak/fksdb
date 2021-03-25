@@ -23,7 +23,7 @@ abstract class ApplicationsPerCountryChart extends GeoChart {
     }
 
     final protected function getTeams(): ResultSet {
-        return $this->serviceEventParticipant->getExplorer()->query('SELECT 
+        return $this->serviceEventParticipant->explorer->query('SELECT 
 region.country_iso3 as `country` ,
 COUNT(distinct e_fyziklani_team_id) as `t`, 
 COUNT(*) as `p`

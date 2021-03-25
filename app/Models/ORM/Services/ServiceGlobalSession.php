@@ -20,7 +20,7 @@ class ServiceGlobalSession extends AbstractService {
             $since = new DateTime();
         }
 
-        $this->getExplorer()->getConnection()->beginTransaction();
+        $this->explorer->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
@@ -34,7 +34,7 @@ class ServiceGlobalSession extends AbstractService {
             'remote_ip' => $request->getRemoteAddress(),
         ]);
         // $this->save($session);
-        $this->getExplorer()->getConnection()->commit();
+        $this->explorer->getConnection()->commit();
 
         return $session;
     }

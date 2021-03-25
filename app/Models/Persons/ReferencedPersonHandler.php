@@ -366,7 +366,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function beginTransaction(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
@@ -375,14 +375,14 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function commit(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
     }
 
     private function rollback(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();
         }

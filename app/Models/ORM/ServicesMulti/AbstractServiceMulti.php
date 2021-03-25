@@ -9,9 +9,6 @@ use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
-use Nette\Database\Connection;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
@@ -26,9 +23,9 @@ abstract class AbstractServiceMulti implements IService {
 
     use SmartObject;
 
-    protected OldAbstractServiceSingle $mainService;
-    protected OldAbstractServiceSingle $joinedService;
-    private string $joiningColumn;
+    public OldAbstractServiceSingle $mainService;
+    public OldAbstractServiceSingle $joinedService;
+    public string $joiningColumn;
     private string $modelClassName;
 
     public function __construct(OldAbstractServiceSingle $mainService, OldAbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
@@ -47,8 +44,8 @@ abstract class AbstractServiceMulti implements IService {
      * @deprecated
      */
     public function createNew(?iterable $data = null): ActiveRow {
-        $mainModel = $this->getMainService()->createNew($data);
-        $joinedModel = $this->getJoinedService()->createNew($data);
+        $mainModel = $this->mainService->createNew($data);
+        $joinedModel = $this->joinedService->createNew($data);
         return $this->composeModel($mainModel, $joinedModel);
     }
 
@@ -60,9 +57,9 @@ abstract class AbstractServiceMulti implements IService {
      * @throws ModelException
      */
     public function createNewModel(array $data): AbstractModelMulti {
-        $mainModel = $this->getMainService()->createNewModel($data);
-        $data[$this->getJoiningColumn()] = $mainModel->{$this->getJoiningColumn()};
-        $joinedModel = $this->getJoinedService()->createNewModel($data);
+        $mainModel = $this->mainService->createNewModel($data);
+        $data[$this->joiningColumn] = $mainModel->{$this->joiningColumn};
+        $joinedModel = $this->joinedService->createNewModel($data);
         return $this->composeModel($mainModel, $joinedModel);
     }
 
@@ -80,8 +77,8 @@ abstract class AbstractServiceMulti implements IService {
      */
     public function updateModel(ActiveRow $model, iterable $data, bool $alive = true): void {
         $this->checkType($model);
-        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
-        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
+        $this->mainService->updateModel($model->mainModel, $data, $alive);
+        $this->joinedService->updateModel($model->joinedModel, $data, $alive);
     }
 
     /**
@@ -92,8 +89,8 @@ abstract class AbstractServiceMulti implements IService {
      */
     public function updateModel2(ActiveRow $model, array $data): bool {
         $this->checkType($model);
-        $this->getMainService()->updateModel2($model->getMainModel(), $data);
-        return $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+        $this->mainService->updateModel2($model->mainModel, $data);
+        return $this->joinedService->updateModel2($model->joinedModel, $data);
     }
 
     /**
@@ -117,14 +114,13 @@ abstract class AbstractServiceMulti implements IService {
     public function save(ActiveRow &$model): void {
         $this->checkType($model);
 
-        $mainModel = $model->getMainModel();
-        $joinedModel = $model->getJoinedModel();
-        $this->getMainService()->save($mainModel);
+        $mainModel = $model->mainModel;
+        $joinedModel = $model->joinedModel;
+        $this->mainService->save($mainModel);
         //update ID when it was new
-        $model->setService($this);
-        $model->setMainModel($mainModel);
-        $this->getJoinedService()->save($joinedModel);
-        $model->setJoinedModel($joinedModel);
+        $model->setMainModel($mainModel, $this);
+        $this->joinedService->save($joinedModel);
+        $model->joinedModel = $joinedModel;
     }
 
     /**
@@ -135,31 +131,8 @@ abstract class AbstractServiceMulti implements IService {
      */
     public function dispose(AbstractModelMulti $model): void {
         $this->checkType($model);
-        $this->getJoinedService()->dispose($model->getJoinedModel());
+        $this->joinedService->dispose($model->joinedModel);
         //TODO here should be deletion of mainModel as well, consider parametrizing this
-    }
-
-    final public function getMainService(): OldAbstractServiceSingle {
-        return $this->mainService;
-    }
-
-    final public function getJoinedService(): OldAbstractServiceSingle {
-        return $this->joinedService;
-    }
-
-    public function getConnection(): Connection {
-        return $this->mainService->getExplorer()->getConnection();
-    }
-
-    public function getContext(): Explorer {
-        return $this->mainService->getExplorer();
-    }
-    public function getExplorer(): Explorer {
-        return $this->mainService->getExplorer();
-    }
-
-    public function getConventions(): Conventions {
-        return $this->mainService->getConventions();
     }
 
     /**
@@ -168,31 +141,27 @@ abstract class AbstractServiceMulti implements IService {
      * @return AbstractModelMulti|null
      */
     public function findByPrimary($key): ?AbstractModelMulti {
-        $joinedModel = $this->getJoinedService()->findByPrimary($key);
+        $joinedModel = $this->joinedService->findByPrimary($key);
         if (!$joinedModel) {
             return null;
         }
         /** @var AbstractModel $mainModel */
-        $mainModel = $this->getMainService()
+        $mainModel = $this->mainService
             ->getTable()
-            ->where($this->getJoiningColumn(), $joinedModel->{$this->getJoiningColumn()})
+            ->where($this->joiningColumn, $joinedModel->{$this->joiningColumn})
             ->fetch(); //?? is this always unique??
         return $this->composeModel($mainModel, $joinedModel);
     }
 
     public function getTable(): MultiTableSelection {
-        $joinedTable = $this->getJoinedService()->getTable()->getName();
-        $mainTable = $this->getMainService()->getTable()->getName();
+        $joinedTable = $this->joinedService->getTable()->getName();
+        $mainTable = $this->mainService->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getExplorer(), $this->getJoinedService()->getConventions());
+        $selection = new MultiTableSelection($this, $joinedTable, $this->joinedService->explorer, $this->joinedService->explorer->getConventions());
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 
         return $selection;
-    }
-
-    final public function getJoiningColumn(): string {
-        return $this->joiningColumn;
     }
 
     final public function getModelClassName(): string {

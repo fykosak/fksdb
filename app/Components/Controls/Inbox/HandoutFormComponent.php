@@ -72,7 +72,7 @@ class HandoutFormComponent extends BaseComponent {
     public function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
 
-        $connection = $this->serviceTaskContribution->getExplorer()->getConnection();
+        $connection = $this->serviceTaskContribution->explorer->getConnection();
 
         $connection->beginTransaction();
         /** @var ModelTask $task */

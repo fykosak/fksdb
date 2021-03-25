@@ -33,7 +33,7 @@ class RankingStrategy {
      * @internal
      */
     public function close(?string $category = null): Html {
-        $connection = $this->serviceFyziklaniTeam->getExplorer()->getConnection();
+        $connection = $this->serviceFyziklaniTeam->explorer->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
