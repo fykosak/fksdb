@@ -53,7 +53,6 @@ class FinalResultsComponent extends BaseComponent {
     }
 
     final public function render(): void {
-        $this->template->that = $this;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
     }
 }
