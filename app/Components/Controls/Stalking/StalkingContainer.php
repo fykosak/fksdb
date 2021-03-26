@@ -26,11 +26,10 @@ class StalkingContainer extends BaseComponent {
         $this->userPermission = $userPermission;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->userPermissions = $this->userPermission;
         $this->template->person = $this->person;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid {
