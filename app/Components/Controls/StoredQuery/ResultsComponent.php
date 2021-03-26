@@ -114,7 +114,7 @@ class ResultsComponent extends BaseComponent {
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function render(): void {
+    final public function render(): void {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
@@ -131,8 +131,7 @@ class ResultsComponent extends BaseComponent {
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 
     /**
