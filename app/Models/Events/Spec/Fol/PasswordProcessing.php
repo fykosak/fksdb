@@ -16,12 +16,12 @@ class PasswordProcessing extends AbstractProcessing {
             return;
         }
         $model = $holder->getPrimaryHolder()->getModel2();
-        $original = $model ? $model->password : null;
+        $original = $model ? $model->password : ($holder->getPrimaryHolder()->data['password'] ?? null);
 
-        if (!isset($values['team']['password']) || !$values['team']['password']) {
-            $result = $values['team']['password'] = $original;
-        } else {
+        if (isset($values['team']['password']) && $values['team']['password']) {
             $result = $values['team']['password'] = $this->hash($values['team']['password']);
+        } else {
+            $result = $values['team']['password'] = $original;
         }
 
         if ($original !== null && $original != $result) {

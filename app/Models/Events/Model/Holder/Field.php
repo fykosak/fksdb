@@ -146,7 +146,7 @@ class Field {
         if (isset($this->baseHolder->data[$this->name])) {
             return $this->baseHolder->data[$this->name];
         }
-        if (isset($model)) {
+        if ($model) {
             if (isset($model[$this->name])) {
                 return $model[$this->name];
             }

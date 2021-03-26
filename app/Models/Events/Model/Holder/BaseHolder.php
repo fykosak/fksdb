@@ -307,10 +307,10 @@ class BaseHolder {
                 return null;
             }
             $model = ReferencedAccessor::accessModel($app, ModelPerson::class);
+            return $model;
         } catch (CannotAccessModelException $exception) {
             return null;
         }
-        return $model;
     }
 
     public function __toString(): string {

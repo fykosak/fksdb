@@ -44,10 +44,9 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @return array
      */
     private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
-        $currentArray = $holder->getModel2() ? $holder->data : [];
         $foundArray = $foundModel->toArray();
         $result = [];
-        foreach ($currentArray as $key => $value) {
+        foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
             }
@@ -69,9 +68,8 @@ class CarefulRewrite extends SecondaryModelStrategy {
      * @param BaseHolder $holder
      */
     private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
-        $currentArray = $holder->getModel2() ? $holder->data : [];
         $data = [];
-        foreach ($currentArray as $key => $value) {
+        foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
             }
