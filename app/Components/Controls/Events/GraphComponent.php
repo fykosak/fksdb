@@ -37,12 +37,11 @@ class GraphComponent extends BaseComponent {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
         $this->template->id = $this->getHtmlId();
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
     }
 
     private function getHtmlId(): string {
