@@ -21,7 +21,7 @@ class StalkingComponent extends BaseStalkingComponent {
      * @return void
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermission): void {
+    final public function render(string $section, ModelPerson $person, int $userPermission): void {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
@@ -44,7 +44,6 @@ class StalkingComponent extends BaseStalkingComponent {
      * @throws NotImplementedException
      */
     private function renderSingle(array $definition, ModelPerson $person): void {
-
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
@@ -62,8 +61,7 @@ class StalkingComponent extends BaseStalkingComponent {
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     /**
@@ -81,7 +79,6 @@ class StalkingComponent extends BaseStalkingComponent {
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }
 }

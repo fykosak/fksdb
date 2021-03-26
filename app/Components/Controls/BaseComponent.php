@@ -10,7 +10,6 @@ use Nette\DI\Container;
 /**
  * Class BaseComponent
  * @author Michal Červeňák <miso@fykos.cz>
- * @property Template $template
  */
 abstract class BaseComponent extends Control {
 

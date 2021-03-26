@@ -33,9 +33,8 @@ class SubmitCheckComponent extends BaseComponent {
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+    final public function render(): void {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     /**
@@ -57,7 +56,6 @@ class SubmitCheckComponent extends BaseComponent {
             if (!$submit->corrected && $this->correctedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), Logger::ERROR);
-
             }
         }
         $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? Logger::WARNING : Logger::SUCCESS);

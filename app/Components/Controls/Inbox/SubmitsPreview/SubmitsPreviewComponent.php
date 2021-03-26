@@ -23,9 +23,8 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+    final public function render(): void {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     /**
@@ -38,7 +37,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
-        } catch (ForbiddenRequestException|NotFoundException|StorageException$exception) {
+        } catch (ForbiddenRequestException | NotFoundException | StorageException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         }
     }
@@ -52,7 +51,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
-        } catch (ForbiddenRequestException|NotFoundException|StorageException$exception) {
+        } catch (ForbiddenRequestException | NotFoundException | StorageException$exception) {
             $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
         }
     }
