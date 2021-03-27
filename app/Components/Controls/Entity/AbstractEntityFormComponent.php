@@ -26,7 +26,7 @@ abstract class AbstractEntityFormComponent extends FormComponent {
         $this->model = $model;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->setDefaults();
         parent::render();
     }

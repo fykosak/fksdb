@@ -29,11 +29,10 @@ class LinkPrinterComponent extends BaseComponent {
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function render(string $linkId, AbstractModel $model): void {
+    final public function render(string $linkId, AbstractModel $model): void {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
     }
 }

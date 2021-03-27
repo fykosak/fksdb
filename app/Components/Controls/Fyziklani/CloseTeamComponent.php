@@ -44,10 +44,9 @@ class CloseTeamComponent extends BaseComponent {
      * @return void
      * @throws NotSetGameParametersException
      */
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
+    final public function render(): void {
         $this->template->task = $this->getNextTask();
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
     }
 
     /**

@@ -19,7 +19,7 @@
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="categoryA" role="tabpanel" aria-labelledby="home-tab">
         <h2>{\sprintf(_('Category %s'),'A')}</h2>
-        {if $that->isClosedCategory('A')}
+        {if $control->isClosedCategory('A')}
             {control resultsCategoryAGrid}
         {else}
             <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
@@ -27,7 +27,7 @@
     </div>
     <div class="tab-pane fade" id="categoryB" role="tabpanel" aria-labelledby="profile-tab">
         <h2>{\sprintf(_('Category %s'),'B')}</h2>
-        {if $that->isClosedCategory('B')}
+        {if $control->isClosedCategory('B')}
             {control resultsCategoryBGrid}
         {else}
             <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
@@ -35,7 +35,7 @@
     </div>
     <div class="tab-pane fade" id="categoryC" role="tabpanel" aria-labelledby="contact-tab">
         <h2>{\sprintf(_('Category %s'),'C')}</h2>
-        {if $that->isClosedCategory('C')}
+        {if $control->isClosedCategory('C')}
             {control resultsCategoryCGrid}
         {else}
             <p class="alert-warning alert">{_'Results for some category are not closed yet.'}</p>
@@ -43,7 +43,7 @@
     </div>
     <div class="tab-pane fade" id="total" role="tabpanel" aria-labelledby="contact-tab">
         <h2>{_('Global')}</h2>
-        {if $that->isClosedTotal()}
+        {if $control->isClosedTotal()}
             {control resultsTotalGrid}
         {else}
             <p class="alert-warning alert">{_'Results for some teams are not closed yet'}</p>
