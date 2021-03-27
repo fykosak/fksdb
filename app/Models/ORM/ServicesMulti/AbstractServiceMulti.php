@@ -77,10 +77,10 @@ abstract class AbstractServiceMulti implements IService {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
+    public function updateModelLegacy(IModel $model, iterable $data, bool $alive = true): void {
         $this->checkType($model);
-        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
-        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
+        $this->getMainService()->updateModelLegacy($model->getMainModel(), $data, $alive);
+        $this->getJoinedService()->updateModelLegacy($model->getJoinedModel(), $data, $alive);
     }
 
     /**

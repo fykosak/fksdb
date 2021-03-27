@@ -194,12 +194,12 @@ class BaseHolder {
     }
 
     public function setModelState(string $state): void {
-        $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
+        $this->getService()->updateModelLegacy($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
-    public function updateModel(iterable $values, bool $alive = true): void {
+    public function updateModelLegacy(iterable $values, bool $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        $this->getService()->updateModel($this->getModel(), $values, $alive);
+        $this->getService()->updateModelLegacy($this->getModel(), $values, $alive);
     }
 
     public function getName(): string {

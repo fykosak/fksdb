@@ -183,7 +183,7 @@ class Holder {
                 $alive = true;
             }
             if (isset($values[$name])) {
-                $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
+                $baseHolder->updateModelLegacy($values[$name], $alive); // terminated models may not be correctly updated
             }
         }
         return $newStates;
