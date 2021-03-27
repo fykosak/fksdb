@@ -7,7 +7,6 @@
         xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
-    <wsdl:import namespace="http://fykos.cz/xml/ws/definitions" location="http://db.fykos.local/xml/signatures.wsdl"/>
     <!-- wsdl:types encapsulates schema definitions of communication types -->
     <wsdl:types>
         <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
