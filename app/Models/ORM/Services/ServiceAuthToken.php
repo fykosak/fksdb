@@ -67,7 +67,7 @@ class ServiceAuthToken extends AbstractService {
                 'type' => $type,
             ]);
         } else {
-            $this->updateModel2($token, ['until' => $until]);
+            $this->updateModel($token, ['until' => $until]);
         }
         if (!$outerTransaction) {
             $this->explorer->getConnection()->commit();

@@ -179,11 +179,7 @@ class BaseHolder {
                 $this->service->dispose($model);
             }
         } elseif ($this->getModelState() != Machine::STATE_INIT) {
-            if ($this->service instanceof AbstractService) {
-                $this->model = $this->service->store($this->getModel2(), $this->data);
-            } else {
-                $this->model = $this->service->store($this->getModel2(), $this->data);
-            }
+                $this->model = $this->service->storeModel($this->data, $this->getModel2());
         }
     }
 

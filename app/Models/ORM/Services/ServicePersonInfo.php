@@ -28,7 +28,7 @@ class ServicePersonInfo extends AbstractService {
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(AbstractModel $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();
@@ -36,6 +36,6 @@ class ServicePersonInfo extends AbstractService {
                 unset($data['agreed']);
             }
         }
-        return parent::updateModel2($model, $data);
+        return parent::updateModel($model, $data);
     }
 }

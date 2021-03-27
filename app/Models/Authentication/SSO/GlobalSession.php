@@ -43,8 +43,7 @@ class GlobalSession implements IGlobalSession {
 
             // touch the session for another expiration period
             if (isset($this->globalSession) && !$this->globalSession->isValid()) {
-                $this->serviceGlobalSession->updateModel2($this->globalSession, ['until' => DateTime::from($this->expiration)]);
-                $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
+                $this->serviceGlobalSession->updateModel($this->globalSession, ['until' => DateTime::from($this->expiration)]);
             }
         }
         $this->started = true;
@@ -127,7 +126,7 @@ class GlobalSession implements IGlobalSession {
             throw new InvalidArgumentException("Cannot set offset '$offset' in global session.");
         }
         if (isset($this->globalSession) && $value != $this->globalSession->login_id) {
-            $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
+            $this->serviceGlobalSession->updateModel($this->globalSession, ['login_id' => $value]);
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($this->globalSession->session_id) ?: null;
         }
         // lazy initialization because we need to know login id

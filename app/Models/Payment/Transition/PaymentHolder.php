@@ -24,9 +24,7 @@ class PaymentHolder implements ModelHolder {
     }
 
     public function updateState(string $newState): void {
-        $this->service->updateModel2($this->model, ['state' => $newState]);
-        $newModel = $this->service->refresh($this->model);
-        $this->model = $newModel;
+        $this->service->updateModel($this->model, ['state' => $newState]);
     }
 
     public function getState(): string {
@@ -39,8 +37,7 @@ class PaymentHolder implements ModelHolder {
 
     public function updateData(array $data): void {
         if (isset($this->model)) {
-            $this->service->updateModel2($this->model, $data);
-            $this->model = $this->service->refresh($this->model);
+            $this->service->updateModel($this->model, $data);
         } else {
             $this->model = $this->service->createNewModel($data);
         }

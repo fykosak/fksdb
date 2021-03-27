@@ -94,8 +94,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         ];
 
         if (isset($this->model)) {
-            $this->servicePayment->updateModel2($this->model, $data);
-            $model = $this->servicePayment->refresh($this->model);
+            $this->servicePayment->updateModel($this->model, $data);
+            $model = $this->model;
         } else {
             $holder = $this->machine->createHolder(null);
             $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [

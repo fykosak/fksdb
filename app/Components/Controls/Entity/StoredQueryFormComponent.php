@@ -72,7 +72,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
 
         if (isset($this->model)) {
             $model = $this->model;
-            $this->serviceStoredQuery->updateModel2($model, $data);
+            $this->serviceStoredQuery->updateModel($model, $data);
         } else {
             $model = $this->serviceStoredQuery->createNewModel($data);
         }

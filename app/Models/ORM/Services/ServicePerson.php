@@ -27,10 +27,10 @@ class ServicePerson extends AbstractService {
      * @param array $data
      * @return AbstractModel
      */
-    public function store(?AbstractModel $model, array $data): AbstractModel {
+    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {
         if (is_null($model) && is_null($data['gender'])) {
             $data['gender'] = ModelPerson::inferGender($data);
         }
-        return parent::store($model, $data);
+        return parent::storeModel($data, $model);
     }
 }

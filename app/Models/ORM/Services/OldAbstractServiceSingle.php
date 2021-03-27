@@ -16,7 +16,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @author Michal Červeňak <miso@fykos.cz>
  * @deprecated
  * @use AbstractServiceSingle
- * @method AbstractModel store(?AbstractModel $model, array $data)
+ * @method AbstractModel storeModel(array $data, ?AbstractModel $model = null)
  */
 abstract class OldAbstractServiceSingle extends AbstractService {
 

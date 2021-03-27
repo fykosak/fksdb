@@ -33,7 +33,7 @@ class PriceCalculator implements TransitionCallback {
             $subPrice = $preProcess->calculate($holder->getModel());
             $price->add($subPrice);
         }
-        $this->servicePayment->updateModel2($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**

@@ -108,7 +108,7 @@ class TasksFromXML extends Stage {
                 'tasknr' => $tasknr,
             ]));
         } else {
-            $this->taskService->updateModel2($task, $data);
+            $this->taskService->updateModel($task, $data);
         }
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);

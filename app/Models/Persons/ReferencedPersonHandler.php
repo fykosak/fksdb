@@ -202,13 +202,13 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->store($model, array_merge((array)$data['person_info'], ['person_id' => $person->person_id]));
+                        $this->servicePersonInfo->storeModel(array_merge((array)$data['person_info'], ['person_id' => $person->person_id]), $model);
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->store($model, array_merge((array)$data['person_history'], [
+                        $this->servicePersonHistory->storeModel(array_merge((array)$data['person_history'], [
                             'ac_year' => $this->acYear,
                             'person_id' => $person->person_id,
-                        ]));
+                        ]), $model);
                         continue 2;
                     case 'person_schedule':
                         $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
@@ -220,11 +220,11 @@ class ReferencedPersonHandler implements ReferencedHandler {
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
                             $flag = $this->serviceFlag->findByFid($flagId);
-                            $this->servicePersonHasFlag->store($model[$flagId], [
+                            $this->servicePersonHasFlag->storeModel([
                                 'value' => $flagValue,
                                 'flag_id' => $flag->flag_id,
                                 'person_id' => $person->person_id,
-                            ]);
+                            ], $model[$flagId]);
                         }
                         continue 2;
                 }
@@ -238,8 +238,8 @@ class ReferencedPersonHandler implements ReferencedHandler {
 
     private function storePostContact(ModelPerson $person, ?ModelPostContact $model, array $data, string $type): void {
         if ($model) {
-            $this->serviceAddress->updateModel2($model->getAddress(), $data);
-            $this->servicePostContact->updateModel2($model, $data);
+            $this->serviceAddress->updateModel($model->getAddress(), $data);
+            $this->servicePostContact->updateModel($model, $data);
         } else {
             $data = array_merge((array)$data, [
                 'person_id' => $person->person_id,
@@ -285,7 +285,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function storePerson(?ModelPerson $person, array $data): ModelPerson {
-        return $this->servicePerson->store($person, (array)$data['person']);
+        return $this->servicePerson->storeModel((array)$data['person'], $person);
     }
 
     private function removeConflicts(iterable $data, iterable $conflicts): iterable {

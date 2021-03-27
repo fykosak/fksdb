@@ -36,7 +36,7 @@ class DeadlineFromXML extends Stage {
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
         foreach ($this->data->getTasks() as $task) {
-            $this->taskService->updateModel2($task, ['submit_deadline' => $datetime]);
+            $this->taskService->updateModel($task, ['submit_deadline' => $datetime]);
         }
     }
 

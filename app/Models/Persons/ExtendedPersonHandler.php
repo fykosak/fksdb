@@ -171,7 +171,7 @@ class ExtendedPersonHandler {
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel2($model, (array)$data);
+            $this->service->updateModel($model, (array)$data);
         }
     }
 }

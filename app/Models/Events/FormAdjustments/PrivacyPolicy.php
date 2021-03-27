@@ -66,7 +66,7 @@ class PrivacyPolicy implements Processing, FormAdjustment {
                 $personId = $value;
                 $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                 if ($personInfo) {
-                    $this->servicePersonInfo->updateModel2($personInfo, ['agreed' => 1]);
+                    $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
 
                     $values[$key . '_1']['person_info']['agreed'] = 1;
                 }

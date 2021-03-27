@@ -97,7 +97,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         unset($personData['family_name']);
         unset($personData['other_name']);
         unset($personData['display_name']);
-        $this->servicePerson->updateModel2($person, $personData);
+        $this->servicePerson->updateModel($person, $personData);
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);
@@ -111,7 +111,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
+        $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
 
         $this->servicePerson->explorer->getConnection()->commit();
     }

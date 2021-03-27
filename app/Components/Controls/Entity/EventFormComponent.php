@@ -79,7 +79,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->year;
-        $model = $this->serviceEvent->store($this->model ?? null, $data);
+        $model = $this->serviceEvent->storeModel($data,$this->model ?? null);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
@@ -161,7 +161,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?: $event->end];
         foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-            $this->serviceAuthToken->updateModel2($token, $tokenData);
+            $this->serviceAuthToken->updateModel($token, $tokenData);
         }
         $connection->commit();
     }

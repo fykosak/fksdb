@@ -6,16 +6,15 @@ use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventParticipant extends OldAbstractServiceSingle {
 
-    public function store(?AbstractModel $model, array $data): AbstractModel {
+    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {
         try {
-            return parent::store($model, $data);
+            return parent::storeModel($data, $model);
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 throw new DuplicateApplicationException($model->getPerson(), $exception);
@@ -36,9 +35,9 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
     }
 
     /**
-     * @param AbstractModel|ActiveRow|ModelEventParticipant $model
+     * @param AbstractModel|ModelEventParticipant $model
      */
-    public function dispose($model): void {
+    public function dispose(AbstractModel $model): void {
         $person = $model->getPerson();
         if ($person) {
             $person->removeScheduleForEvent($model->event_id);

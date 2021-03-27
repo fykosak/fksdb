@@ -59,10 +59,10 @@ abstract class AbstractServiceMulti {
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(ActiveRow $model, array $data): bool {
+    public function updateModel(ActiveRow $model, array $data): bool {
         $this->checkType($model);
-        $this->mainService->updateModel2($model->mainModel, $data);
-        return $this->joinedService->updateModel2($model->joinedModel, $data);
+        $this->mainService->updateModel($model->mainModel, $data);
+        return $this->joinedService->updateModel($model->joinedModel, $data);
     }
 
     /**
@@ -84,12 +84,12 @@ abstract class AbstractServiceMulti {
      * @return AbstractModelMulti
      * @deprecated
      */
-    public function store(?AbstractModelMulti $model, array $data): AbstractModelMulti {
-        $mainModel = $this->mainService->store($model ? $model->mainModel : null, $data);
+    public function storeModel(array $data, ?AbstractModelMulti $model = null): AbstractModelMulti {
+        $mainModel = $this->mainService->storeModel($data, $model ? $model->mainModel : null);
 
-        $joinedModel = $this->joinedService->store($model ? $model->joinedModel : null, array_merge($data, [
+        $joinedModel = $this->joinedService->storeModel(array_merge($data, [
             $this->joiningColumn => $mainModel->getPrimary(),
-        ]));
+        ]), $model ? $model->joinedModel : null);
         return $this->composeModel($mainModel, $joinedModel);
     }
 
