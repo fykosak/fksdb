@@ -74,7 +74,7 @@ class EventCoveringTest extends PersonTest {
     }
 
     private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
-        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
+        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s.'), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 
     private function getEventOrgYears(ModelPerson $person): array {

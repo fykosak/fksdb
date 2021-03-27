@@ -43,6 +43,7 @@ class SubmitContainer extends BaseComponent {
     }
 
     private function getAvailableTasks(): TypedTableSelection {
+        // TODO related
         return $this->serviceTask->getTable()
             ->where('contest_id = ? AND year = ?', $this->contestant->contest_id, $this->contestant->year)
             ->where('submit_start IS NULL OR submit_start < NOW()')
@@ -50,9 +51,8 @@ class SubmitContainer extends BaseComponent {
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->availableTasks = $this->getAvailableTasks();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 }

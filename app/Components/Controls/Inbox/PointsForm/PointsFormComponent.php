@@ -50,12 +50,11 @@ class PointsFormComponent extends SeriesTableFormComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render(): void {
+    final public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

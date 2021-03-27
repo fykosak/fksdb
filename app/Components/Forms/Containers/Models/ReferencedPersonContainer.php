@@ -130,7 +130,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName) : bool {
+                        ->addRule(function (BaseControl $control) use ($fullFieldName): bool {
                             $personId = $this->getReferencedId()->getValue(false);
 
                             $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
@@ -154,7 +154,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      */
     public function setModel(?IModel $model, string $mode): void {
-
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
@@ -245,7 +244,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
             case 'person_has_flag':
                 return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
             case 'person_schedule':
-                $control = $this->personScheduleFactory->createField($fieldName, $this->event);
+                $control = $this->personScheduleFactory->createField($fieldName, $this->event, $metadata['label'] ?? null);
                 break;
             case 'person':
             case 'person_info':

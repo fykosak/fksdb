@@ -38,11 +38,10 @@ class TransitionButtonsComponent extends BaseComponent {
         $this->holder = $holder;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->transitions = $this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
         $this->template->holder = $this->holder;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
 
     /**

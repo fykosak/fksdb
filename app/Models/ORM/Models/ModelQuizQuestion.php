@@ -16,7 +16,7 @@ use Fykosak\NetteORM\AbstractModel;
 class ModelQuizQuestion extends AbstractModel {
 
     public function getFQName(): string {
-        return sprintf(_('%s. otázka'), $this->question_nr);
+        return sprintf(_('%s. question'), $this->question_nr);
     }
 
     public function getTask(): ModelTask {

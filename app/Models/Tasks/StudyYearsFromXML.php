@@ -89,7 +89,7 @@ class StudyYearsFromXML extends Stage {
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'), Logger::INFO));
+                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO));
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
         }
@@ -106,6 +106,6 @@ class StudyYearsFromXML extends Stage {
                 'study_year' => $studyYear,
             ]);
         }
-        $this->serviceTaskStudyYear->getConnection()->commit();
+        $this->serviceTaskStudyYear->getExplorer()->getConnection()->commit();
     }
 }

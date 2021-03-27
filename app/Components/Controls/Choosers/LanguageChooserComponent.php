@@ -92,12 +92,11 @@ class LanguageChooserComponent extends ChooserComponent {
         return $candidate;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->isModifiable();
         $this->template->currentLanguageName = self::$languageNames[$this->language] ?? null;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
     }
 
     private function getUserPreferredLang(): ?string {

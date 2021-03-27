@@ -125,9 +125,8 @@ class PersonTestComponent extends BaseComponent {
         return $logs;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->logs = $this->calculateProblems();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }
