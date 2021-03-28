@@ -33,7 +33,7 @@ class FyziklaniTaskImportProcessor {
         $connection = $this->serviceFyziklaniTask->explorer->getConnection();
         $connection->beginTransaction();
         if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
-            $this->serviceFyziklaniTask->findAll($this->event)->delete();
+            $this->event->getFyziklaniTasks()->delete();
         }
         $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
         foreach ($parser as $row) {

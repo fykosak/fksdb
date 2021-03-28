@@ -3,11 +3,12 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -21,8 +22,6 @@ use NiftyGrid\DuplicateGlobalButtonException;
  */
 class ContestantsGrid extends BaseGrid {
 
-    private ServiceContestant $serviceContestant;
-
     private int $year;
 
     private ModelContest $contest;
@@ -33,15 +32,8 @@ class ContestantsGrid extends BaseGrid {
         $this->year = $year;
     }
 
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
-        $this->serviceContestant = $serviceContestant;
-    }
-
     protected function getData(): IDataSource {
-        $contestants = $this->serviceContestant->getTable()->where([
-            'contest_id' => $this->contest,
-            'year' => $this->year,
-        ]);
+        $contestants = $this->contest->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->year);
         return new NDataSource($contestants);
     }
 
@@ -62,7 +54,8 @@ class ContestantsGrid extends BaseGrid {
             'person.full_name',
             'person_history.study_year',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(function (ModelContestant $contestant) {
+        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
+            $contestant = ModelContestant::createFromActiveRow($row);
             return $contestant->getPersonHistory()->getSchool()->name_abbrev;
         });
 

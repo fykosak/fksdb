@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Services;
 use DateTime;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Fykosak\NetteORM\AbstractService;
 

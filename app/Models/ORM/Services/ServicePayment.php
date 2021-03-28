@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Fykosak\NetteORM\AbstractService;
 

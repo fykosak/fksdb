@@ -48,7 +48,7 @@ class PriceCalculator implements TransitionCallback {
         return $items;
     }
 
-    public function invoke(ModelHolder $model, ...$args): void {
-        $this->__invoke($model, ...$args);
+    public function invoke(ModelHolder $holder, ...$args): void {
+        $this->__invoke($holder, ...$args);
     }
 }

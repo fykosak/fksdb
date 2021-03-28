@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -18,8 +18,6 @@ use FKSDB\Models\SQL\SearchableDataSource;
  */
 class TaskGrid extends BaseGrid {
 
-    private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ModelEvent $event;
 
     public function __construct(ModelEvent $event, Container $container) {
@@ -27,12 +25,8 @@ class TaskGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    final public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
     protected function getData(): IDataSource {
-        $submits = $this->serviceFyziklaniTask->findAll($this->event);
+        $submits = $this->event->getFyziklaniTasks();
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
@@ -52,5 +46,9 @@ class TaskGrid extends BaseGrid {
         $this->addColumn('fyziklani_task_id', _('Task Id'));
         $this->addColumn('label', _('#'));
         $this->addColumn('name', _('Task name'));
+    }
+
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTask::class;
     }
 }

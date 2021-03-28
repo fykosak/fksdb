@@ -111,7 +111,7 @@ class Handler {
      * @throws ModelException
      */
     public function changePoints(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         $this->serviceFyziklaniSubmit->updateModel($submit, [
@@ -166,7 +166,7 @@ class Handler {
      * @throws ModelException
      */
     public function checkSubmit(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {

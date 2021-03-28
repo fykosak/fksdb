@@ -55,7 +55,7 @@ class TeacherPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

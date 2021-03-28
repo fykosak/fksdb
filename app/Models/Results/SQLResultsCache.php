@@ -64,13 +64,12 @@ class SQLResultsCache {
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
         }
-
+// TODO related
         $tasks = $this->serviceTask->getTable()
             ->where([
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
             ]);
-
 
         $this->connection->beginTransaction();
         /** @var ModelTask $task */

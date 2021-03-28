@@ -62,7 +62,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @param mixed $element
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);

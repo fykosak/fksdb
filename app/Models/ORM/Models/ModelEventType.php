@@ -2,8 +2,10 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\GroupedSelection;
 
 /**
  *
@@ -18,5 +20,9 @@ class ModelEventType extends AbstractModel {
 
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->contest);
+    }
+
+    public function getEventsByType(): GroupedSelection {
+        return $this->related(DbNames::TAB_EVENT);
     }
 }

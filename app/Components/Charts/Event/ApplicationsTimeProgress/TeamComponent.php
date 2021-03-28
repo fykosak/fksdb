@@ -7,7 +7,6 @@ use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\DI\Container;
 
 /**
@@ -16,18 +15,11 @@ use Nette\DI\Container;
  */
 class TeamComponent extends ReactComponent implements Chart {
 
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ModelEventType $eventType;
-    private ServiceEvent $serviceEvent;
 
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'chart.events.teams.time-progress');
         $this->eventType = $event->getEventType();
-    }
-
-    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceEvent = $serviceEvent;
     }
 
     protected function getData(): array {
@@ -35,9 +27,9 @@ class TeamComponent extends ReactComponent implements Chart {
             'teams' => [],
             'events' => [],
         ];
-        /** @var ModelEvent $event */
-        foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
-            $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
+        foreach ($this->eventType->getEventsByType() as $row) {
+            $event = ModelEvent::createFromActiveRow($row);
+            $data['teams'][$event->event_id] = ServiceFyziklaniTeam::getTeamsAsArray($event);
             $data['events'][$event->event_id] = $event->__toArray();
         }
         return $data;

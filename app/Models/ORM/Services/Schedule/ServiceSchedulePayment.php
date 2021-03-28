@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
+use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelPayment;
@@ -36,8 +37,7 @@ class ServiceSchedulePayment extends AbstractService {
         if (count($newScheduleIds) == 0) {
             throw new EmptyDataException(_('No item selected.'));
         }
-
-        $this->getTable()->where('payment_id', $payment->payment_id)->delete();
+        $payment->related(DbNames::TAB_SCHEDULE_PAYMENT)->delete();
         foreach ($newScheduleIds as $id) {
             /** @var ModelSchedulePayment $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
