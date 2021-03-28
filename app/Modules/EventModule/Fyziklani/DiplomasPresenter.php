@@ -15,6 +15,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DiplomasPresenter extends BasePresenter {
+
     /**
      * @return void
      * @throws EventNotFoundException
@@ -49,15 +50,15 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
+                'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
+                'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),

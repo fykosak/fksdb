@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoleComponent extends BaseStalkingComponent {
-    public function render(ModelPerson $person, int $userPermissions): void {
+    final public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
         $login = $person->getLogin();
@@ -26,7 +26,6 @@ class RoleComponent extends BaseStalkingComponent {
             }
         }
         $this->template->roles = $roles;
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
-        $template->render();
+        $template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
     }
 }

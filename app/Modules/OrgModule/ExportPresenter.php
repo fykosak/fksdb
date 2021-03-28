@@ -92,7 +92,7 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function renderExecute(): void {
+    final public function renderExecute(): void {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 

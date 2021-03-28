@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -67,21 +66,19 @@ class ApplicationComponent extends BaseComponent {
         return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->renderForm();
     }
 
-    public function renderForm(): void {
+    final public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
 
-        $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
         $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
-        $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
-        $this->template->render();
+        $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
+        $this->template->render($this->templateFile);
     }
 
     /**
@@ -117,7 +114,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Create transition buttons
          */
-        $primaryMachine = $this->getMachine()->getPrimaryMachine();
+        $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
 
         foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
@@ -177,17 +174,14 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    private function getMachine(): Machine {
-        return $this->handler->getMachine();
-    }
-
     private function canEdit(): bool {
         return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void {
         if ($this->redirectCallback) {
-            $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
+            $model = $this->holder->getPrimaryHolder()->getModel2();
+            $id = $model ? $model->getPrimary(false) : null;
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');

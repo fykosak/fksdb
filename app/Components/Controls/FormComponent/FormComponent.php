@@ -16,8 +16,7 @@ use Nette\Forms\Form;
 abstract class FormComponent extends BaseComponent {
 
     public function render(): void {
-        $this->template->setFile($this->getTemplatePath());
-        $this->template->render();
+        $this->template->render($this->getTemplatePath());
     }
 
     protected function getTemplatePath(): string {

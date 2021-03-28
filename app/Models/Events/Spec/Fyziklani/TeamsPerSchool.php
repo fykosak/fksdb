@@ -81,7 +81,7 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
     private array $cache;
 
     private function checkMulti(bool $first, ?Control $control, array $schools): bool {
-        $team = $this->getHolder()->getPrimaryHolder()->getModel();
+        $team = $this->getHolder()->getPrimaryHolder()->getModel2();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
@@ -101,8 +101,8 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
                 ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?
-            if ($team && !$team->isNew()) {
-                $result->where('NOT e_fyziklani_participant:e_fyziklani_team_id', $team->getPrimary());
+            if ($team) {
+                $result->where('NOT e_fyziklani_participant:e_fyziklani_team_id', $team->getPrimary(false));
             }
 
             $result->group('person.person_history:school_id', 'COUNT(DISTINCT e_fyziklani_participant:e_fyziklani_team.e_fyziklani_team_id) >= ' . $this->getTeamsPerSchool());

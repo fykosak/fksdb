@@ -5,12 +5,13 @@ namespace FKSDB\Models\Events\Model\Grid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -35,9 +36,9 @@ class SingleEventSource implements HolderSource {
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private Holder $dummyHolder;
-    /** @var IModel[] */
+    /** @var ActiveRow[] */
     private ?array $primaryModels = null;
-    /** @var IModel[][] */
+    /** @var ActiveRow[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
     private ?array $holders = [];
@@ -85,7 +86,7 @@ class SingleEventSource implements HolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[][] $group */
+        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);

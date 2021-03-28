@@ -27,7 +27,7 @@ class ModelFyziklaniGameSetup extends AbstractModel {
     }
 
     /**
-     *  Take care, this function is not state-less!!!
+     * @note Take care, this function is not state-less!!!
      */
     public function isResultsVisible(): bool {
         if ($this->result_hard_display) {

@@ -12,21 +12,13 @@ use Fykosak\NetteORM\TypedTableSelection;
  */
 class ServiceFyziklaniTeamPosition extends AbstractService {
 
-
-
-    public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
-        /** @var ModelFyziklaniTeamPosition $row */
-        $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
-        return $row ? $row : null;
-    }
-
     public function updateRouting(array $data): array {
         $updatedTeams = [];
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
             try {
                 /** @var ModelFyziklaniTeamPosition $model */
-                $model = $this->findByTeamId($teamData->teamId);
+                $model = $this->findByPrimary($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
                     $data = [
                         'e_fyziklani_team_id' => $teamData->teamId,

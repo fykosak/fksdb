@@ -30,7 +30,7 @@ class PersonGrid extends BaseGrid {
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
+    final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }

@@ -106,9 +106,8 @@ class ScheduleField extends TextInput {
     private function serializeGroup(ModelScheduleGroup $group): array {
         $groupArray = $group->__toArray();
         $itemList = [];
-        $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        /** @var ModelScheduleItem $item */
-        foreach ($items as $item) {
+        foreach ($group->getItems() as $row) {
+            $item = ModelScheduleItem::createFromActiveRow($row);
             $itemList[] = $item->__toArray();
         }
 

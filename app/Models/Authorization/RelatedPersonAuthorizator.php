@@ -46,7 +46,7 @@ class RelatedPersonAuthorizator {
         }
 
         foreach ($holder->getBaseHolders() as $baseHolder) {
-            if ($baseHolder->getPersonId() == $person->person_id) {
+            if ($baseHolder->getPerson()->person_id == $person->person_id) {
                 return true;
             }
         }

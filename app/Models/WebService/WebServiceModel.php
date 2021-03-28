@@ -319,7 +319,7 @@ class WebServiceModel {
     }
 
     private function log(string $msg): void {
-        if (!$this->authenticatedLogin) {
+        if (!isset($this->authenticatedLogin)) {
             $message = 'unauthenticated@';
         } else {
             $message = $this->authenticatedLogin->__toString() . '@';

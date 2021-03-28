@@ -40,9 +40,9 @@ class PointsFormComponent extends SeriesTableFormComponent {
             }
             $submit = $this->serviceSubmit->findByPrimary($submitId);
             if ($points !== '' && $points !== $submit->raw_points) {
-                $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
+                $this->serviceSubmit->updateModel($submit, ['raw_points' => +$points]);
             } elseif (!is_null($submit->raw_points) && $points === '') {
-                $this->serviceSubmit->updateModel2($submit, ['raw_points' => null]);
+                $this->serviceSubmit->updateModel($submit, ['raw_points' => null]);
             }
         }
         ($this->invalidCacheCallback)();
@@ -50,12 +50,11 @@ class PointsFormComponent extends SeriesTableFormComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render(): void {
+    final public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

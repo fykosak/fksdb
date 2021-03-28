@@ -59,7 +59,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        $this->serviceTeacher->store($this->model ?? null, $data);
+        $this->serviceTeacher->storeModel($data, $this->model ?? null);
         $this->getPresenter()->flashMessage(!isset($this->model) ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }

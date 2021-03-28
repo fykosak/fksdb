@@ -95,11 +95,11 @@ class DeduplicatePresenter extends BasePresenter {
     public function actionDontMerge(int $trunkId, int $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
+        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
 
         $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
+        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
 
         $this->flashMessage(_('Persons not merged.'), Logger::SUCCESS);
         $this->backLinkRedirect(true);

@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
 
@@ -140,14 +139,18 @@ class Field {
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel();
-        if (isset($model[$this->name])) {
-            return $model[$this->name];
+        $model = $this->getBaseHolder()->getModel2();
+        if (isset($this->baseHolder->data[$this->name])) {
+            return $this->baseHolder->data[$this->name];
         }
-        if ($this->getBaseHolder()->getModelState() == Machine::STATE_INIT) {
+        if ($model) {
+            if (isset($model[$this->name])) {
+                return $model[$this->name];
+            }
+        } else {
             return $this->getDefault();
         }
         return null;

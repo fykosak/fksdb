@@ -97,7 +97,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
                     break;
                 default:
                     throw new InvalidArgumentException();
-
             }
             $form->addComponent($control, $table);
         }
@@ -109,13 +108,13 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();
         $this->logger->clear();
-        $person = $this->servicePerson->store($this->model ?? null, $data[self::PERSON_CONTAINER]);
-        $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
+        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model ?? null);
+        $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
         $this->storeAddresses($person, $data);
 
         $connection->commit();
@@ -146,7 +145,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
             $oldAddress = $person->getAddress2($shortType);
             if (count($datum)) {
                 if ($oldAddress) {
-                    $this->serviceAddress->updateModel2($oldAddress, $datum);
+                    $this->serviceAddress->updateModel($oldAddress, $datum);
                     $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
                 } else {
                     $address = $this->serviceAddress->createNewModel($datum);

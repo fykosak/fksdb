@@ -20,7 +20,7 @@ class ValidationComponent extends BaseStalkingComponent {
         $this->validationFactory = $factory;
     }
 
-    public function render(ModelPerson $person, int $userPermissions): void {
+    final public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
@@ -28,7 +28,6 @@ class ValidationComponent extends BaseStalkingComponent {
         }
 
         $this->template->logs = $logger->getMessages();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
     }
 }

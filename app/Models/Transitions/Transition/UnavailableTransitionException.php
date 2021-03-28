@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Machine\Transition as EventTransition;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
@@ -16,7 +16,7 @@ class UnavailableTransitionException extends \Exception {
     /**
      * UnavailableTransitionException constructor.
      * @param EventTransition|Transition $transition
-     * @param IModel|ModelHolder|null $holder
+     * @param ActiveRow|ModelHolder|null $holder
      */
     public function __construct($transition, $holder) {
         $target = $transition->getTargetState();

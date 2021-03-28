@@ -21,6 +21,7 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
+
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -48,12 +49,16 @@ class ApplicationHandler {
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
+    public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->connection = $connection;
         $this->container = $container;
+        $container->callInjects($this);
+    }
+
+    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->connection = $connection;
     }
 
     public function getErrorMode(): string {
@@ -92,7 +97,7 @@ class ApplicationHandler {
             $this->beginTransaction();
             $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
             if (!$transition->matches($holder->getPrimaryHolder()->getModelState())) {
-                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
+                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel2());
             }
 
             $transition->execute($holder);
@@ -102,11 +107,11 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif ($transition->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
             } elseif (isset($transition)) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
@@ -140,11 +145,9 @@ class ApplicationHandler {
                 $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
-            if ($data || $form) {
-                $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
-            }
+            $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
 
-            if ($execute == self::STATE_OVERWRITE) {
+            if ($execute === self::STATE_OVERWRITE) {
                 foreach ($holder->getBaseHolders() as $name => $baseHolder) {
                     if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
                         $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
@@ -166,14 +169,14 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
@@ -209,6 +212,7 @@ class ApplicationHandler {
         }
         // Find out transitions
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
+
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
                 $state = $holder->getBaseHolder($name)->getModelState();
@@ -221,6 +225,13 @@ class ApplicationHandler {
                 }
             }
         }
+
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
+            if (isset($values[$name])) {
+                $baseHolder->data += (array)$values[$name];
+            }
+        }
+
         return $transitions;
     }
 

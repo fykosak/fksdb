@@ -6,6 +6,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
@@ -19,7 +20,7 @@ use Nette\Security\Resource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends OldAbstractModelSingle implements Resource {
+class ModelPerson extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'person';
 
@@ -145,7 +146,7 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
     }
 
     public function getDeliveryPostContact(): ?ModelPostContact {
-       return  $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
     }
 
     public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
@@ -263,14 +264,11 @@ class ModelPerson extends OldAbstractModelSingle implements Resource {
         ];
     }
 
-    /**
-     * Infers gender from name.
-     */
-    public function inferGender(): void {
-        if (mb_substr($this->family_name, -1) == 'á') {
-            $this->gender = 'F';
+    public static function inferGender(array $data): string {
+        if (mb_substr($data['family_name'], -1) == 'á') {
+            return 'F';
         } else {
-            $this->gender = 'M';
+            return 'M';
         }
     }
 

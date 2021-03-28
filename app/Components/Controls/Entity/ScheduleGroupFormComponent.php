@@ -40,7 +40,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
-        $model = $this->serviceScheduleGroup->store($this->model ?? null, $data);
+        $model = $this->serviceScheduleGroup->storeModel($data, $this->model ?? null);
         $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }

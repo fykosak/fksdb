@@ -32,11 +32,10 @@ class FormControl extends BaseComponent {
         return $component;
     }
 
-    public function render(): void {
+    final public function render(): void {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 }

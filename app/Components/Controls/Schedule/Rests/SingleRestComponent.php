@@ -12,10 +12,9 @@ use FKSDB\Models\ORM\Models\ModelPerson;
  */
 class SingleRestComponent extends BaseComponent {
 
-    public function render(ModelPerson $person, ModelEvent $event): void {
+    final public function render(ModelPerson $person, ModelEvent $event): void {
         $this->template->rests = $person->getScheduleRests($event);
         $this->template->person = $person;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.person.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.person.latte');
     }
 }

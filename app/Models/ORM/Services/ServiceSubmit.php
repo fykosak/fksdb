@@ -3,59 +3,39 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
-use Fykosak\NetteORM\TypedTableSelection;
 use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
- * @method ModelSubmit refresh(AbstractModel $model)
  */
 class ServiceSubmit extends AbstractService {
 
     private array $submitCache = [];
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param int $ctId
-     * @param int $taskId
-     * @param bool $useCache
-     * @return ModelSubmit|null
-     */
-    public function findByContestant(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
+    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
         if (!isset($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
             ])->fetch();
-            if ($result !== false) {
-                $this->submitCache[$key] = $result;
-            } else {
-                $this->submitCache[$key] = null;
-            }
+            $this->submitCache[$key] = $result ?? null;
         }
         return $this->submitCache[$key];
     }
 
-    public function getSubmits(): TypedTableSelection {
-        return $this->getTable()
-            ->select(DbNames::TAB_SUBMIT . '.*')
-            ->select(DbNames::TAB_TASK . '.*');
-    }
-
-    public function store(?ModelSubmit $submit, array $data): ModelSubmit {
-        if (is_null($submit)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($submit, $data);
-            return $this->refresh($submit);
+    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?ModelSubmit {
+        $key = $contestant->ct_id . ':' . $task->task_id;
+        if (!isset($this->submitCache[$key]) || !$useCache) {
+            $row = $contestant->related(DbNames::TAB_SUBMIT)->where('task_id', $task->task_id)->fetch();
+            $this->submitCache[$key] = $row ? ModelSubmit::createFromActiveRow($row) : null;
         }
+        return $this->submitCache[$key];
     }
 
     public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {

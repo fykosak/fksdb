@@ -47,7 +47,7 @@ class RoomsFromCSV extends Stage {
             ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = [];
 
-        $this->serviceTeam->getExplorer()->getConnection()->beginTransaction();
+        $this->serviceTeam->explorer->getConnection()->beginTransaction();
         $parser = new CSVParser($this->data);
         foreach ($parser as $row) {
             $teamId = $row[0];
@@ -60,16 +60,15 @@ class RoomsFromCSV extends Stage {
                 continue;
             }
             $team = $teams[$teamId];
-            $this->serviceTeam->updateModel2($team, [
+            $this->serviceTeam->updateModel($team, [
                 'room' => $room,
             ]);
-            //  $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);
             }
         }
-        $this->serviceTeam->getExplorer()->getConnection()->commit();
+        $this->serviceTeam->explorer->getConnection()->commit();
 
         foreach ($teams as $team) {
             $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), Logger::WARNING));

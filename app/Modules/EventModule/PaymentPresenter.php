@@ -123,7 +123,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderEdit(): void {
+    final public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -134,7 +134,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $payment = $this->getEntity();
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
         $this->template->model = $payment;

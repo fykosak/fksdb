@@ -23,7 +23,7 @@ class SchoolCheckComponent extends BaseComponent {
         $this->event = $event;
     }
 
-    public function render(ModelFyziklaniTeam $currentTeam): void {
+    final public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
         foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
             $schools[$schoolId] = [
@@ -37,8 +37,7 @@ class SchoolCheckComponent extends BaseComponent {
             }
         }
         $this->template->schools = $schools;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
     }
 
     /**

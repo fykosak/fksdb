@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -35,8 +34,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
-
-        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }
@@ -59,7 +58,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {
-                /** @var ModelRegion|false $country */
+                /** @var ModelRegion|null $country */
                 $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;

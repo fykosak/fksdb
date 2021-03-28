@@ -94,8 +94,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         ];
 
         if (isset($this->model)) {
-            $this->servicePayment->updateModel2($this->model, $data);
-            $model = $this->servicePayment->refresh($this->model);
+            $this->servicePayment->updateModel($this->model, $data);
+            $model = $this->model;
         } else {
             $holder = $this->machine->createHolder(null);
             $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [
@@ -104,11 +104,11 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $model = $holder->getModel();
         }
 
-        $connection = $this->servicePayment->getExplorer()->getConnection();
+        $connection = $this->servicePayment->explorer->getConnection();
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model); // TODO
+            $this->serviceSchedulePayment->storeItems((array)$values['payment_accommodation'], $model); // TODO
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);

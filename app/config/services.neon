@@ -51,7 +51,6 @@ services:
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
-    - FKSDB\Models\Events\Model\ApplicationHandlerFactory
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
     #fyziklani
@@ -104,18 +103,13 @@ services:
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-    - FKSDB\Components\Forms\Factories\StoredQueryFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
-    - FKSDB\Components\Forms\Factories\LoginFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     - FKSDB\Components\Forms\Factories\PersonScheduleFactory
-    #checks
-    - FKSDB\Components\Forms\Rules\UniqueEmailFactory
-    - FKSDB\Components\Forms\Rules\UniqueLoginFactory
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 

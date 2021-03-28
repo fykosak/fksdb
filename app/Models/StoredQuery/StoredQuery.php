@@ -158,7 +158,6 @@ class StoredQuery implements IDataSource, Resource {
     // return true if pattern query is real ORM model, it means is already stored in DB
     public function hasQueryPattern(): bool {
         return (bool)$this->queryPattern ?? false;
-        // return isset($this->queryPattern) && !is_null($this->queryPattern) && !$this->queryPattern->isNew();
     }
 
     public function getColumnNames(): array {

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\IModel;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -10,7 +9,7 @@ use Nette\Database\Table\Selection;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class OldAbstractModelSingle extends AbstractModel implements IModel {
+abstract class OldAbstractModelSingle extends AbstractModel {
 
     private array $tmpData;
 

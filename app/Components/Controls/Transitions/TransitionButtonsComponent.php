@@ -26,10 +26,9 @@ class TransitionButtonsComponent extends BaseComponent {
         $this->model = $model;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->buttons = $this->machine->getAvailableTransitions($this->model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
     }
 
     public function handleTransition(string $name): void {

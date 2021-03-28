@@ -13,7 +13,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int question_id
  * @property-read int question_nr
  */
-class ModelQuizQuestion extends AbstractModel {
+class ModelQuiz extends AbstractModel {
 
     public function getFQName(): string {
         return sprintf(_('%s. question'), $this->question_nr);
