@@ -110,6 +110,7 @@ class WebServiceModel {
      * @throws \SoapFault
      */
     public function getSignatures(\stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }

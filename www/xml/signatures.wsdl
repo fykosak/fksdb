@@ -19,7 +19,7 @@
     </wsdl:types>
     <!-- messages -->
     <wsdl:message name="GetSignaturesRequest">
-        <wsdl:part name="GetSignaturesRequest" type="xsd1:GetSignatureRequestType"/>
+        <wsdl:part name="GetSignaturesRequest" type="xsd1:GetSignaturesRequestType"/>
     </wsdl:message>
 
     <wsdl:message name="GetSignaturesResponse">
