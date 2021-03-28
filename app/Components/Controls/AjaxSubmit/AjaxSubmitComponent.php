@@ -50,7 +50,7 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @throws NotFoundException
      */
     private function getSubmit(bool $throw = false): ?ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id, false);
+        $submit = $this->serviceSubmit->findByContestant($this->contestant, $this->task, false);
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
         }

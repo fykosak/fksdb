@@ -115,7 +115,7 @@ class PersonPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */

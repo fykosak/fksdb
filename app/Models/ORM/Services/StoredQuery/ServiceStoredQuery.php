@@ -5,8 +5,6 @@ namespace FKSDB\Models\ORM\Services\StoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

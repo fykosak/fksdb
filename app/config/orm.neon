@@ -313,7 +313,7 @@ orm:
                     title: _('Until')
                 order:
                     type: class
-                    
+
                     class: FKSDB\Models\ORM\Columns\Tables\Org\OrderColumnFactory
                     description: _('Pro řazení v seznamu organizátorů')
 
@@ -593,8 +593,8 @@ orm:
             serviceClassName: FKSDB\Models\ORM\Services\ServicePostContact
             modelClassName: FKSDB\Models\ORM\Models\ModelPostContact
         quiz:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceQuizQuestion
-            modelClassName: FKSDB\Models\ORM\Models\ModelQuizQuestion
+            serviceClassName: FKSDB\Models\ORM\Services\ServiceQuiz
+            modelClassName: FKSDB\Models\ORM\Models\ModelQuiz
         region:
             serviceClassName: FKSDB\Models\ORM\Services\ServiceRegion
             modelClassName: FKSDB\Models\ORM\Models\ModelRegion
@@ -627,8 +627,8 @@ orm:
             serviceClassName: FKSDB\Models\ORM\Services\ServiceSubmit
             modelClassName: FKSDB\Models\ORM\Models\ModelSubmit
         submit_quiz:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceSubmitQuizQuestion
-            modelClassName: FKSDB\Models\ORM\Models\ModelSubmitQuizQuestion
+            serviceClassName: FKSDB\Models\ORM\Services\ServiceSubmitQuiz
+            modelClassName: FKSDB\Models\ORM\Models\ModelSubmitQuiz
         task:
              serviceClassName: FKSDB\Models\ORM\Services\ServiceTask
              modelClassName: FKSDB\Models\ORM\Models\ModelTask

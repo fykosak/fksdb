@@ -54,7 +54,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     /**
-     * @param string|null $id
+     * @param string $id
      * @return ModelLogin
      * @throws InactiveLoginException
      * @throws NoLoginException

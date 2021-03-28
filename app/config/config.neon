@@ -3,9 +3,6 @@
 #
 
 parameters:
-    # Flag marking the beta version
-    beta: false
-
     # Various logs
     logDir: %appDir%/../log
 

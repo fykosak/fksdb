@@ -42,9 +42,9 @@ class InboxFormComponent extends SeriesTableFormComponent {
                     // secure check for rewrite ct_id.
                     throw new ForbiddenRequestException();
                 }
-                $submit = $this->serviceSubmit->findByContestant($ctId, $taskNo);
+                $submit = $this->serviceSubmit->findByContestantId($ctId, $taskNo);
                 if ($submittedOn && $submit) {
-                    //   $serviceSubmit->updateModel2($submit, ['submitted_on' => $submittedOn]);
+                    //   $serviceSubmit->updateModel($submit, ['submitted_on' => $submittedOn]);
                     //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), ILogger::INFO);
                 } elseif (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Logger::WARNING);

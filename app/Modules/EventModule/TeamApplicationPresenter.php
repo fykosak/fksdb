@@ -43,7 +43,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         parent::renderDetail();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();

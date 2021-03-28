@@ -5,7 +5,8 @@ namespace FKSDB\Models\ORM\Services;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Červeňák <miso@fykos.cz>
+ * @author Miroslav Jarý <mira.jary@gmail.com>
  */
-class ServiceTeacher extends AbstractService {
+class ServiceQuiz extends AbstractService {
+
 }

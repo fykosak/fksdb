@@ -3,8 +3,9 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -19,8 +20,6 @@ use FKSDB\Models\SQL\SearchableDataSource;
  */
 class OrgsGrid extends BaseGrid {
 
-    private ServiceOrg $serviceOrg;
-
     private ModelContest $contest;
 
     public function __construct(Container $container, ModelContest $contest) {
@@ -28,13 +27,8 @@ class OrgsGrid extends BaseGrid {
         $this->contest = $contest;
     }
 
-    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
-        $this->serviceOrg = $serviceOrg;
-    }
-
     protected function getData(): IDataSource {
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
-            ->select('org.*, person.family_name AS display_name');
+        $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
@@ -68,5 +62,9 @@ class OrgsGrid extends BaseGrid {
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
     }
 }

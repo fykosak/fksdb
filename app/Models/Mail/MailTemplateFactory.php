@@ -56,13 +56,13 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string|null $lang ISO 639-1
+     * @param string $lang ISO 639-1
      * @param array $data
      * @return Template
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function createPasswordRecovery(?string $lang, array $data): Template {
+    public function createPasswordRecovery(string $lang, array $data): Template {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 

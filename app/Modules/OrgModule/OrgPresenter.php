@@ -68,7 +68,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

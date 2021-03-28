@@ -46,7 +46,7 @@ class DashboardPresenter extends BasePresenter {
     /**
      * @throws UnsupportedLanguageException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
             $this->flashMessage($new);
         }

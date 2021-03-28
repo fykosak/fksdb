@@ -19,6 +19,7 @@ use SoapVar;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventSoapFactory {
+
     use SmartObject;
 
     private ServiceEvent $serviceEvent;
@@ -184,8 +185,9 @@ class EventSoapFactory {
     private function handleParticipantList(\stdClass $args, ModelEvent $event): SoapVar {
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('participantList');
-        /** @var ModelEventParticipant $participant */
-        foreach ($this->serviceEventParticipant->findByEvent($event) as $participant) {
+
+        foreach ($event->getParticipants() as $row) {
+            $participant = ModelEventParticipant::createFromActiveRow($row);
             $pNode = $this->createParticipantNode($participant, $doc);
             $rootNode->appendChild($pNode);
         }

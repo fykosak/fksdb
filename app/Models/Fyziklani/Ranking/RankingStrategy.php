@@ -6,7 +6,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Fykosak\NetteORM\TypedTableSelection;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
 /**
@@ -69,14 +69,14 @@ class RankingStrategy {
     }
 
     /**
-     * @param TypedTableSelection $teams
+     * @param GroupedSelection $teams
      * @return array[]
      * @throws NotClosedTeamException
      */
-    private function getTeamsStats(TypedTableSelection $teams): array {
+    private function getTeamsStats(GroupedSelection $teams): array {
         $teamsData = [];
-        /** @var ModelFyziklaniTeam $team */
-        foreach ($teams as $team) {
+        foreach ($teams as $row) {
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -108,8 +108,8 @@ class RankingStrategy {
         };
     }
 
-    private function getAllTeams(?string $category = null): TypedTableSelection {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
+    private function getAllTeams(?string $category = null): GroupedSelection {
+        $query = $this->event->getParticipatingTeams();
         if ($category) {
             $query->where('category', $category);
         }

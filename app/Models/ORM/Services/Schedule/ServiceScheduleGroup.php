@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use Fykosak\NetteORM\AbstractService;
 
