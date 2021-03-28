@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
@@ -32,13 +32,11 @@ class AjaxSubmitComponent extends AjaxComponent {
     private ModelTask $task;
     private ModelContestant $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
-    private int $academicYear;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
+    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant) {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
-        $this->academicYear = $academicYear;
     }
 
     final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
@@ -52,7 +50,7 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @throws NotFoundException
      */
     private function getSubmit(bool $throw = false): ?ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id, false);
+        $submit = $this->serviceSubmit->findByContestant($this->contestant, $this->task, false);
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
         }
@@ -86,7 +84,7 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @throws NotFoundException
      */
     protected function getData(): array {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
         return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
@@ -98,7 +96,7 @@ class AjaxSubmitComponent extends AjaxComponent {
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
-            $this->serviceSubmit->getConnection()->beginTransaction();
+            $this->serviceSubmit->explorer->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
@@ -111,7 +109,7 @@ class AjaxSubmitComponent extends AjaxComponent {
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->serviceSubmit->getConnection()->commit();
+            $this->serviceSubmit->explorer->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), Logger::SUCCESS));
             $this->sendAjaxResponse();
         }
@@ -125,12 +123,12 @@ class AjaxSubmitComponent extends AjaxComponent {
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Logger::WARNING));
+            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING));
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), Message::LVL_DANGER));
         }
 
         $this->sendAjaxResponse();

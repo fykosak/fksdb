@@ -1,4 +1,5 @@
 {block content}
+    {varType array $charts}
     <ul>
         {foreach $charts as $action=>$chart}
             <li><a href="{plink $action}">{$chart->getTitle()}</a></li>

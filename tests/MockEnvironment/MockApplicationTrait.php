@@ -6,7 +6,6 @@ use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -68,13 +67,12 @@ trait MockApplicationTrait {
         $storage->setAuthenticated(true);
 
         if ($presenter) {
-            $login->injectYearCalculator($this->getContainer()->getByType(YearCalculator::class));
             $presenter->getUser()->login($login);
         }
     }
 
     protected function createPresenter(string $presenterName): Presenter {
-        $_COOKIE['nette-samesite'] = '1';
+        $_COOKIE['_nss'] = '1';
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;

@@ -3,7 +3,8 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -19,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int teacher_id
  */
-class ModelTeacher extends AbstractModelSingle implements IResource {
+class ModelTeacher extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'teacher';
 

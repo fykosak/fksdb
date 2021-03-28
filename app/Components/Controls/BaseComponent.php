@@ -4,14 +4,12 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\Models\Localization\GettextTranslator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\ITemplate;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 
 /**
  * Class BaseComponent
  * @author Michal Červeňák <miso@fykos.cz>
- * @property Template $template
  */
 abstract class BaseComponent extends Control {
 
@@ -32,7 +30,7 @@ abstract class BaseComponent extends Control {
         return $this->translator;
     }
 
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;

@@ -32,6 +32,7 @@ use Nette\Utils\Html;
  * @property ModelEvent $model
  */
 class EventFormComponent extends AbstractEntityFormComponent {
+
     public const CONT_EVENT = 'event';
 
     private ModelContest $contest;
@@ -79,7 +80,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->year;
-        $model = $this->serviceEvent->store($this->model ?? null, $data);
+        $model = $this->serviceEvent->storeModel($data, $this->model ?? null);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
@@ -101,7 +102,6 @@ class EventFormComponent extends AbstractEntityFormComponent {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $paramControl->setOption('description', $this->createParamDescription($holder));
             $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
-
                 $scheme = $holder->getPrimaryHolder()->getParamScheme();
                 $parameters = $control->getValue();
                 try {
@@ -116,7 +116,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
                     $control->addError($exception->getMessage());
                     return false;
                 }
-            }, _('Parameters does not fulfill the Neon scheme'));
+            }, _('Parameters do not fulfill the Neon scheme'));
         }
     }
 
@@ -156,12 +156,12 @@ class EventFormComponent extends AbstractEntityFormComponent {
     }
 
     private function updateTokens(ModelEvent $event): void {
-        $connection = $this->serviceAuthToken->getConnection();
+        $connection = $this->serviceAuthToken->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?: $event->end];
         foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-            $this->serviceAuthToken->updateModel2($token, $tokenData);
+            $this->serviceAuthToken->updateModel($token, $tokenData);
         }
         $connection->commit();
     }

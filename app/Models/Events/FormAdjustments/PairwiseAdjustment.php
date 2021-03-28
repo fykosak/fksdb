@@ -2,11 +2,10 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
 /**
@@ -22,7 +21,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdju
         $this->rules = $rules;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisites) {
             if (is_scalar($prerequisites)) {
                 $prerequisites = [$prerequisites];
@@ -58,5 +57,5 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdju
         }
     }
 
-    abstract protected function processPair(BaseControl $target, IControl $prerequisite): void;
+    abstract protected function processPair(BaseControl $target, Control $prerequisite): void;
 }

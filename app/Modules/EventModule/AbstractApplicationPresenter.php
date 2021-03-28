@@ -3,11 +3,11 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsComponent;
@@ -21,21 +21,19 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class AbstractApplicationPresenter
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
-    protected ApplicationHandlerFactory $applicationHandlerFactory;
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    final public function injectQuarterly(ApplicationHandlerFactory $applicationHandlerFactory, ServiceEventParticipant $serviceEventParticipant): void {
-        $this->applicationHandlerFactory = $applicationHandlerFactory;
+    final public function injectQuarterly(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -66,7 +64,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
@@ -88,7 +86,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 
@@ -106,12 +104,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new ApplicationComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**
@@ -124,12 +117,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new TransitionButtonsComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**

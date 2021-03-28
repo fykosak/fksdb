@@ -16,7 +16,7 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
@@ -92,7 +92,7 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function renderExecute(): void {
+    final public function renderExecute(): void {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
@@ -160,7 +160,7 @@ class ExportPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

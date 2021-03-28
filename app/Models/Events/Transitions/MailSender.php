@@ -9,10 +9,9 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -22,6 +21,7 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 
@@ -139,7 +139,7 @@ class MailSender {
         $person = $login->getPerson();
         $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
-        $application = $holder->getPrimaryHolder()->getModel();
+        $application = $holder->getPrimaryHolder()->getModel2();
 
         $token = $this->createToken($login, $event, $application);
 
@@ -178,7 +178,7 @@ class MailSender {
         return $this->serviceEmailMessage->createNewModel($data);
     }
 
-    private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
+    private function createToken(ModelLogin $login, ModelEvent $event, ActiveRow $application): ModelAuthToken {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
@@ -186,15 +186,15 @@ class MailSender {
 
     /**
      * @param ModelEvent $event
-     * @param IModel $application
+     * @param ActiveRow $application
      * @param Holder $holder
      * @param Machine $machine
      * @return string
      * TODO extension point
      */
-    private function getSubject(ModelEvent $event, IModel $application, Holder $holder, Machine $machine): string {
+    private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string {
         if (in_array($event->event_type_id, [4, 5])) {
-            return _('Pozvánka na soustředění');
+            return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
@@ -242,9 +242,9 @@ class MailSender {
 
         $persons = [];
         foreach ($names as $name) {
-            $personId = $holder->getBaseHolder($name)->getPersonId();
-            if ($personId) {
-                $persons[] = $personId;
+            $person = $holder->getBaseHolder($name)->getPerson();
+            if ($person) {
+                $persons[] = $person->person_id;
             }
         }
         return $persons;

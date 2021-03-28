@@ -7,8 +7,6 @@ use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelEventType;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\DI\Container;
 
 /**
@@ -17,18 +15,11 @@ use Nette\DI\Container;
  */
 class SingleComponent extends ReactComponent implements Chart {
 
-    private ServiceEventParticipant $serviceEventParticipant;
     private ModelEventType $eventType;
-    private ServiceEvent $serviceEvent;
 
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'chart.events.participants.time-progress');
         $this->eventType = $event->getEventType();
-    }
-
-    final public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
-        $this->serviceEventParticipant = $serviceEventParticipant;
-        $this->serviceEvent = $serviceEvent;
     }
 
     protected function getData(): array {
@@ -36,12 +27,13 @@ class SingleComponent extends ReactComponent implements Chart {
             'participants' => [],
             'events' => [],
         ];
-        /** @var ModelEvent $event */
-        foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
+        foreach ($this->eventType->getEventsByType() as $eventRow) {
+            $event = ModelEvent::createFromActiveRow($eventRow);
             $participants = [];
-            $query = $this->serviceEventParticipant->findPossiblyAttending($event);
+            $query = $event->getPossiblyAttendingParticipants();
             /** @var ModelEventParticipant $participant */
-            foreach ($query as $participant) {
+            foreach ($query as $row) {
+                $participant = ModelEventParticipant::createFromActiveRow($row);
                 $participants[] = [
                     'created' => $participant->created->format('c'),
                 ];

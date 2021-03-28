@@ -4,7 +4,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEventType;
@@ -46,10 +46,10 @@ class EventTypeColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
+     * @param AbstractModel|ModelEvent $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('span')->addText($model->getEventType()->name);
     }
 }

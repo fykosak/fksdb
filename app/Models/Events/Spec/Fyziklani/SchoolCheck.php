@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -34,8 +34,8 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment 
     }
 
     /**
-     * @param IControl[] $schoolControls
-     * @param IControl[]|ReferencedId[] $personControls
+     * @param Control[] $schoolControls
+     * @param Control[]|ReferencedId[] $personControls
      * @return array
      */
     final protected function getSchools(array $schoolControls, array $personControls): array {
@@ -43,7 +43,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment 
             try {
                 return $control->getValue();
             } catch (ModelDataConflictException $exception) {
-                $control->addError(sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $control->getLabel()));
+                $control->addError(sprintf(_('Some fields of the group "%s" do not match an existing record.'), $control->getLabel()));
             }
         }, $personControls));
 

@@ -2,7 +2,8 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -22,6 +23,7 @@ use Nette\Application\ForbiddenRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
+
     /**
      * @return void
      * @throws ForbiddenRequestException
@@ -66,7 +68,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
+        $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
 
         return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
@@ -79,7 +81,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         parent::renderDetail();
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();

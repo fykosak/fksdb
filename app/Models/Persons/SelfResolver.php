@@ -13,6 +13,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SelfResolver implements VisibilityResolver, ModifiabilityResolver {
+
     use SmartObject;
 
     private User $user;
@@ -21,16 +22,19 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver {
         $this->user = $user;
     }
 
-    public function isVisible(ModelPerson $person): bool {
-        return $person->isNew() || $this->isSelf($person);
+    public function isVisible(?ModelPerson $person): bool {
+        return !$person || $this->isSelf($person);
     }
 
-    public function getResolutionMode(ModelPerson $person): string {
+    public function getResolutionMode(?ModelPerson $person): string {
+        if (!$person) {
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        }
         return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
-        return $person->isNew() || $this->isSelf($person);
+    public function isModifiable(?ModelPerson $person): bool {
+        return !$person || $this->isSelf($person);
     }
 
     protected function isSelf(ModelPerson $person): bool {

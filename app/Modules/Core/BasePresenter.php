@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
-use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
@@ -26,19 +25,17 @@ use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
+use Nette;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
 use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
- * @property ITemplate $template
  */
 abstract class BasePresenter extends Presenter implements JavaScriptCollector, StylesheetCollector, AutocompleteJSONProvider, NavigablePresenter {
 
@@ -63,26 +60,26 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     public ?string $lang = null;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
-    protected BreadcrumbsFactory $breadcrumbsFactory;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     private ?PageTitle $pageTitle;
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
+    private Nette\DI\Container $diContainer;
 
     final public function injectBase(
+        Nette\DI\Container $diContainer,
         YearCalculator $yearCalculator,
         ServiceContest $serviceContest,
-        BreadcrumbsFactory $breadcrumbsFactory,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator
     ): void {
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
-        $this->breadcrumbsFactory = $breadcrumbsFactory;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
+        $this->diContainer = $diContainer;
     }
 
     /**
@@ -97,7 +94,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         $control->init();
     }
 
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Nette\Application\UI\Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -221,7 +218,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     }
 
     protected function createComponentBreadcrumbs(): BreadcrumbsComponent {
-        return $this->breadcrumbsFactory->create();
+        return new BreadcrumbsComponent($this->getContext());
     }
 
     protected function createComponentNavigationChooser(): NavigationChooserComponent {
@@ -287,7 +284,6 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
 
     /**
      * @param mixed $element
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -348,5 +344,9 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
             }
         }
         return $this->authorizedCache[$key];
+    }
+
+    public function getContext(): Nette\DI\Container {
+        return $this->diContainer;
     }
 }

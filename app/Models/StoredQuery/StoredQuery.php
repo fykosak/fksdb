@@ -7,7 +7,7 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
@@ -15,7 +15,7 @@ use NiftyGrid\DataSource\IDataSource;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQuery implements IDataSource, IResource {
+class StoredQuery implements IDataSource, Resource {
 
     private const INNER_QUERY = 'sub';
     private ?ModelStoredQuery $queryPattern = null;
@@ -158,7 +158,6 @@ class StoredQuery implements IDataSource, IResource {
     // return true if pattern query is real ORM model, it means is already stored in DB
     public function hasQueryPattern(): bool {
         return (bool)$this->queryPattern ?? false;
-        // return isset($this->queryPattern) && !is_null($this->queryPattern) && !$this->queryPattern->isNew();
     }
 
     public function getColumnNames(): array {

@@ -11,9 +11,8 @@ use FKSDB\Models\Expressions\Predicates\After;
 use FKSDB\Models\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Definitions\Statement;
-use Nette\DI\Resolver;
 use Nette\DI\ServiceCreationException;
-use Nette\Reflection\ClassType;
+use Nette\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,6 +20,7 @@ use Nette\Reflection\ClassType;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Helpers {
+
     /** @var string[] */
     private static array $semanticMap = [
         'and' => LogicAnd::class,
@@ -88,10 +88,11 @@ class Helpers {
             if (function_exists($entity)) {
                 return $entity(...$arguments);
             } else {
-                $rc = ClassType::from($entity);
+                throw new NotImplementedException();
+              /*  $rc = ClassType::from($entity);
                 return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
                     return $this->getByType($type);
-                }));
+                }));*/
                 // TODO!!!
             }
         } else {
@@ -115,5 +116,15 @@ class Helpers {
         } else {
             return self::evalExpression($expressionArray, $container);
         }
+    }
+    /**
+     * @param $statement
+     * @return Statement|string
+     */
+    public static function translate($statement) {
+        if ($statement instanceof Statement && $statement->entity === '_') {
+            return _(...$statement->arguments);
+        }
+        return $statement;
     }
 }

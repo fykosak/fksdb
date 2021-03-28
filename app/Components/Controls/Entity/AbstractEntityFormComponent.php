@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
@@ -19,14 +19,14 @@ use Tracy\Debugger;
  */
 abstract class AbstractEntityFormComponent extends FormComponent {
 
-    protected ?AbstractModelSingle $model;
+    protected ?AbstractModel $model;
 
-    public function __construct(Container $container, ?AbstractModelSingle $model) {
+    public function __construct(Container $container, ?AbstractModel $model) {
         parent::__construct($container);
         $this->model = $model;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->setDefaults();
         parent::render();
     }

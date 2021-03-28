@@ -6,7 +6,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
 /**
@@ -33,7 +33,7 @@ class RankingStrategy {
      * @internal
      */
     public function close(?string $category = null): Html {
-        $connection = $this->serviceFyziklaniTeam->getConnection();
+        $connection = $this->serviceFyziklaniTeam->explorer->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
@@ -58,9 +58,9 @@ class RankingStrategy {
             /** @var ModelFyziklaniTeam $team */
             $team = $teamData['team'];
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_category' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
             $log->addHtml(Html::el('li')
                 ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Rank') . ': ' . ($index + 1)));
@@ -69,14 +69,14 @@ class RankingStrategy {
     }
 
     /**
-     * @param TypedTableSelection $teams
+     * @param GroupedSelection $teams
      * @return array[]
      * @throws NotClosedTeamException
      */
-    private function getTeamsStats(TypedTableSelection $teams): array {
+    private function getTeamsStats(GroupedSelection $teams): array {
         $teamsData = [];
-        /** @var ModelFyziklaniTeam $team */
-        foreach ($teams as $team) {
+        foreach ($teams as $row) {
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -108,8 +108,8 @@ class RankingStrategy {
         };
     }
 
-    private function getAllTeams(?string $category = null): TypedTableSelection {
-        $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
+    private function getAllTeams(?string $category = null): GroupedSelection {
+        $query = $this->event->getParticipatingTeams();
         if ($category) {
             $query->where('category', $category);
         }

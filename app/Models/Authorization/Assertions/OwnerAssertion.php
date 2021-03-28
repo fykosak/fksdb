@@ -3,14 +3,14 @@
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 
@@ -21,10 +21,10 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    private IUserStorage $user;
+    private IUserStorage $userStorage;
 
-    public function __construct(IUserStorage $user) {
-        $this->user = $user;
+    public function __construct(IUserStorage $userStorage) {
+        $this->userStorage = $userStorage;
     }
 
     /**
@@ -36,16 +36,16 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelSubmit $submit */
         $submit = $acl->getQueriedResource();
 
-        if (!$submit instanceof IResource) {
+        if (!$submit instanceof Resource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->user->getIdentity()->getId();
+        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->userStorage->getIdentity()->getId();
     }
 
     /**
@@ -58,7 +58,7 @@ class OwnerAssertion {
      * @return bool
      */
     public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelContestant $contestant */
@@ -79,7 +79,7 @@ class OwnerAssertion {
      * @return bool
      */
     public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelPerson $person */
@@ -104,14 +104,15 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->user->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
-        $loggedPerson = $this->user->getIdentity()->getPerson();
+        $loggedPerson = $this->userStorage->getIdentity()->getPerson();
         $model = $acl->getQueriedResource();
         try {
-            $contest = ReferencedFactory::accessModel($model, ModelContest::class);
+            /** @var ModelContest $contest */
+            $contest = ReferencedAccessor::accessModel($model, ModelContest::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContestId()) {
                 return false;
             }
@@ -120,7 +121,7 @@ class OwnerAssertion {
 
         $person = null;
         try {
-            $person = ReferencedFactory::accessModel($model, ModelPerson::class);
+            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException $exception) {
         }
 

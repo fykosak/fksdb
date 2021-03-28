@@ -15,9 +15,9 @@ class QIDColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
-        $control->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
+        $control->setOption('description', _('The queries with QID cannot be deleted and QID can be used for permissions and permanent reference.'))
             ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
+            ->addRule(Form::MAX_LENGTH, _('The query name is too long'), 64)
             ->addRule(Form::PATTERN, _('QID can contain only english letters, numbers and dots.'), '[a-z][a-z0-9.]*');
         return $control;
     }

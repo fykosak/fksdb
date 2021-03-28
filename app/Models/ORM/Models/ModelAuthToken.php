@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -14,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string type
  * @property-read \DateTimeInterface until
  */
-class ModelAuthToken extends AbstractModelSingle {
+class ModelAuthToken extends AbstractModel {
 
     /** @const The first login for setting up a password. */
     public const TYPE_INITIAL_LOGIN = 'initial_login';

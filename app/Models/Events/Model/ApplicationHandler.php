@@ -2,19 +2,18 @@
 
 namespace FKSDB\Models\Events\Model;
 
+use Exception;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Models\Events\Exceptions\MachineExecutionException;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use Exception;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Logging\Logger;
@@ -22,6 +21,7 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
+
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -39,27 +39,26 @@ class ApplicationHandler {
     public const ERROR_SKIP = 'skip';
     public const STATE_TRANSITION = 'transition';
     public const STATE_OVERWRITE = 'overwrite';
-
     private ModelEvent $event;
 
     private Logger $logger;
 
     private string $errorMode = self::ERROR_ROLLBACK;
-
     private Connection $connection;
-
     private Container $container;
-
     private Machine $machine;
-
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
+    public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->connection = $connection;
         $this->container = $container;
+        $container->callInjects($this);
+    }
+
+    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->connection = $connection;
     }
 
     public function getErrorMode(): string {
@@ -98,7 +97,7 @@ class ApplicationHandler {
             $this->beginTransaction();
             $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
             if (!$transition->matches($holder->getPrimaryHolder()->getModelState())) {
-                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
+                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel2());
             }
 
             $transition->execute($holder);
@@ -108,11 +107,11 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif ($transition->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
             } elseif (isset($transition)) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
@@ -146,11 +145,9 @@ class ApplicationHandler {
                 $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
-            if ($data || $form) {
-                $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
-            }
+            $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
 
-            if ($execute == self::STATE_OVERWRITE) {
+            if ($execute === self::STATE_OVERWRITE) {
                 foreach ($holder->getBaseHolders() as $name => $baseHolder) {
                     if (isset($data[$name][BaseHolder::STATE_COLUMN])) {
                         $baseHolder->setModelState($data[$name][BaseHolder::STATE_COLUMN]);
@@ -172,14 +169,14 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
@@ -215,18 +212,26 @@ class ApplicationHandler {
         }
         // Find out transitions
         $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
+
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
                 $state = $holder->getBaseHolder($name)->getModelState();
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($state == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $newState == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)) {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
         }
+
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
+            if (isset($values[$name])) {
+                $baseHolder->data += (array)$values[$name];
+            }
+        }
+
         return $transitions;
     }
 

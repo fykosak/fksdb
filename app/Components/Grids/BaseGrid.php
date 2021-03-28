@@ -8,14 +8,13 @@ use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\ITemplate;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Localization\Translator;
@@ -75,10 +74,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return ITemplate
+     * @return Template
      * @throws BadTypeException
      */
-    protected function createTemplate(): ITemplate {
+    protected function createTemplate(): Template {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
@@ -151,7 +150,7 @@ abstract class BaseGrid extends Grid {
         $form = $control->getForm();
         //$form = new Form();
         $form->setMethod(Form::GET);
-        $form->addText('term')->setDefaultValue($this->searchTerm)->setHtmlAttribute('placeholder', _('Vyhledat'));
+        $form->addText('term')->setDefaultValue($this->searchTerm)->setHtmlAttribute('placeholder', _('Find'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
@@ -203,7 +202,7 @@ abstract class BaseGrid extends Grid {
     private function addReflectionColumn(string $field, int $userPermission): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission): Html {
-            if (!$model instanceof AbstractModelSingle) {
+            if (!$model instanceof AbstractModel) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
             return $factory->render($model, $userPermission);
@@ -226,7 +225,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @return string|AbstractModelSingle
+     * @return string|AbstractModel
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
@@ -266,14 +265,14 @@ abstract class BaseGrid extends Grid {
         $button = $this->addButton($id, $label)
             ->setText($label)
             ->setLink(function ($model) use ($destination, $paramMapCallback): string {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
@@ -294,14 +293,14 @@ abstract class BaseGrid extends Grid {
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $factory->create($this->getPresenter(), $model);
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($factory) {
-                if (!$model instanceof AbstractModelSingle) {
+                if (!$model instanceof AbstractModel) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized(...$factory->createLinkParameters($model));

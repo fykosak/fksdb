@@ -8,17 +8,18 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelQuizQuestion;
+use FKSDB\Models\ORM\Models\ModelQuiz;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Services\ServiceQuizQuestion;
+use FKSDB\Models\ORM\Services\ServiceQuiz;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
-use FKSDB\Models\ORM\Services\ServiceSubmitQuizQuestion;
+use FKSDB\Models\ORM\Services\ServiceSubmitQuiz;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
@@ -36,18 +37,18 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;
-    private ServiceSubmitQuizQuestion $submitQuizQuestionService;
+    private ServiceSubmitQuiz $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
     private ServiceTask $taskService;
-    private ServiceQuizQuestion $quizQuestionService;
+    private ServiceQuiz $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
         ServiceSubmit $submitService,
-        ServiceSubmitQuizQuestion $submitQuizQuestionService,
+        ServiceSubmitQuiz $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
         ServiceTask $taskService,
-        ServiceQuizQuestion $quizQuestionService,
+        ServiceQuiz $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
@@ -89,23 +90,23 @@ class SubmitPresenter extends BasePresenter {
         throw new GoneException('');
     }
 
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
             /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+            $currentYear = $this->getSelectedContest()->getCurrentYear();
             $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->yearCalculator->getCurrentYear($this->getSelectedContest())) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedYear() == $this->getSelectedContest()->getCurrentYear()) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
-    public function renderAjax(): void {
+    final public function renderAjax(): void {
         $this->template->availableTasks = $this->getAvailableTasks();
     }
 
@@ -128,18 +129,17 @@ class SubmitPresenter extends BasePresenter {
         $prevDeadline = null;
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $questions = $this->quizQuestionService->getTable()->where('task_id', $task->task_id);
-
             if ($task->submit_deadline !== $prevDeadline) {
                 $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
             }
-            $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
+            $submit = $this->submitService->findByContestant($this->getContestant(), $task);
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
             $container = new ModelContainer();
             $form->addComponent($container, 'task' . $task->task_id);
             //$container = $form->addContainer();
+            $questions = $task->related(DbNames::TAB_QUIZ);
             if (!count($questions)) {
                 $upload = $container->addUpload('file', $task->getFQName());
                 $conditionedUpload = $upload
@@ -158,13 +158,11 @@ class SubmitPresenter extends BasePresenter {
             } else {
                 //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
-                foreach ($questions as $question) {
+                foreach ($questions as $row) {
+                    $question = ModelQuiz::createFromActiveRow($row);
                     $select = $container->addRadioList('question' . $question->question_id, $task->getFQName() . ' - ' . $question->getFQName(), $options);
-                    foreach ($options as $option) {
-                        $select->setValue($option);
-                    }
 
-                    $existingEntry = $this->submitQuizQuestionService->findByContestant($this->getContestant()->ct_id, $question->question_id);
+                    $existingEntry = $this->submitQuizQuestionService->findByContestant($question, $this->getContestant());
                     if ($existingEntry) {
                         $existingAnswer = $existingEntry->answer;
                         $select->setValue($existingAnswer);
@@ -197,7 +195,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     protected function createComponentSubmitContainer(): SubmitContainer {
-        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
+        return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 
     /**
@@ -214,11 +212,10 @@ class SubmitPresenter extends BasePresenter {
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
         try {
-            $this->submitService->getConnection()->beginTransaction();
+            $this->submitService->explorer->getConnection()->beginTransaction();
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);
@@ -231,7 +228,7 @@ class SubmitPresenter extends BasePresenter {
                 $taskValues = $values['task' . $task->task_id];
 
                 if (count($questions)) {
-                    /** @var ModelQuizQuestion $question */
+                    /** @var ModelQuiz $question */
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];
@@ -254,17 +251,18 @@ class SubmitPresenter extends BasePresenter {
             }
 
             $this->uploadedSubmitStorage->commit();
-            $this->submitService->getConnection()->commit();
+            $this->submitService->explorer->getConnection()->commit();
             $this->redirect('this');
         } catch (ModelException | ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
-            $this->submitService->getConnection()->rollBack();
+            $this->submitService->explorer->getConnection()->rollBack();
             Debugger::log($exception);
             $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         }
     }
 
     private function getAvailableTasks(): TypedTableSelection {
+        // TODO related
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');

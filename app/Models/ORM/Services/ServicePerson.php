@@ -2,44 +2,35 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\IModel;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */
-class ServicePerson extends OldAbstractServiceSingle {
+class ServicePerson extends AbstractService {
 
     public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
             return null;
         }
-        /** @var ModelPerson|false $result */
+        /** @var ModelPerson|null $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
         return $result;
     }
 
     /**
-     * @param IModel|ModelPerson $model
-     * @return void
-     * @throws ModelException
+     * @param ModelPerson|AbstractModel|null $model
+     * @param array $data
+     * @return AbstractModel
      */
-    public function save(IModel &$model): void {
-        if (is_null($model->gender)) {
-            $model->inferGender();
+    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {
+        if (is_null($model) && is_null($data['gender'])) {
+            $data['gender'] = ModelPerson::inferGender($data);
         }
-        parent::save($model);
-    }
-
-    public function store(?ModelPerson $person, array $data): ModelPerson {
-        if ($person) {
-            $this->updateModel2($person, $data);
-            return $person;
-        } else {
-            return $this->createNewModel($data);
-        }
+        return parent::storeModel($data, $model);
     }
 }

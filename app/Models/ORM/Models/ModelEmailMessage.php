@@ -2,8 +2,9 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Mail\Message;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class ModelEmailMessage
@@ -19,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface sent
  */
-class ModelEmailMessage extends AbstractModelSingle implements IResource {
+class ModelEmailMessage extends AbstractModel implements Resource {
     public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const STATE_WAITING = 'waiting'; //čaká na poslanie
     public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)

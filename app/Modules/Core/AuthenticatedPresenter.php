@@ -14,9 +14,9 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
+use Nette\Security\IUserStorage;
 use ReflectionClass;
 use Tracy\Debugger;
-use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
 
 /**
@@ -62,7 +62,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @param mixed $element
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
@@ -120,7 +119,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     final protected function loginRedirect(): void {
-        if ($this->user->logoutReason === UserStorage::INACTIVITY) {
+        if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
             $reason = AuthenticationPresenter::REASON_AUTH;
@@ -198,11 +197,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             return;
         }
         try {
-            $credentials = [
-                PasswordAuthenticator::USERNAME => $_SERVER['PHP_AUTH_USER'],
-                PasswordAuthenticator::PASSWORD => $_SERVER['PHP_AUTH_PW'],
-            ];
-            $login = $this->passwordAuthenticator->authenticate($credentials);
+            $login = $this->passwordAuthenticator->authenticate($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
 
             Debugger::log("$login signed in using HTTP authentication.");
 

@@ -5,7 +5,6 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
 
@@ -14,12 +13,6 @@ use Nette\DeprecatedException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SeatingPresenter extends BasePresenter {
-
-    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
-
-    final public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
 
     /**
      * @return void
@@ -103,7 +96,7 @@ class SeatingPresenter extends BasePresenter {
     }
 
 
-    public function renderEdit(): void {
+    final public function renderEdit(): void {
         throw new DeprecatedException();
         /* if ($this->isAjax()) {
              $data = $this->getHttpRequest()->getPost('requestData');
@@ -120,7 +113,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->event = $this->getEvent();
         $teams = $this->getEvent()->getTeams();
         $this->template->teams = $teams;
@@ -136,7 +129,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderPreview(): void {
+    final public function renderPreview(): void {
         $this->template->event = $this->getEvent();
     }
 

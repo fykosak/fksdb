@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 
 /**
@@ -11,28 +11,17 @@ use Nette\Utils\DateTime;
  */
 class SeriesCalculator {
 
-    private ServiceTask $serviceTask;
-
-    private YearCalculator $yearCalculator;
-
-    public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
-        $this->serviceTask = $serviceTask;
-        $this->yearCalculator = $yearCalculator;
-    }
-
     public function getCurrentSeries(ModelContest $contest): int {
-        $year = $this->yearCalculator->getCurrentYear($contest);
-        $currentSeries = $this->serviceTask->getTable()->where([
-            'contest_id' => $contest->contest_id,
+        $year = $contest->getCurrentYear();
+        $currentSeries = $contest->related(DbNames::TAB_TASK)->where([
             'year' => $year,
             '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime(),
         ])->max('series');
-        return ($currentSeries === null) ? 1 : $currentSeries;
+        return $currentSeries ?? 1;
     }
 
     public function getLastSeries(ModelContest $contest, int $year): int {
-        return $this->serviceTask->getTable()->where([
-            'contest_id' => $contest->contest_id,
+        return $contest->related(DbNames::TAB_TASK)->where([
             'year' => $year,
         ])->max('series') ?: 1;
     }

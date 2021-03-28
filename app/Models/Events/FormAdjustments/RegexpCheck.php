@@ -2,10 +2,9 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use Nette\Utils\Strings;
 
 /**
@@ -25,13 +24,13 @@ class RegexpCheck extends AbstractAdjustment implements FormAdjustment {
         $this->pattern = $pattern;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
         foreach ($controls as $control) {
-            $control->addRule(function (IControl $control): bool {
+            $control->addRule(function (Control $control): bool {
                 return (bool)Strings::match($control->getValue(), $this->pattern);
             }, $this->message);
         }

@@ -18,8 +18,7 @@ abstract class ChooserComponent extends BaseComponent {
 
     public function render(): void {
         $this->beforeRender();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
     }
 
     abstract protected function getTitle(): Title;

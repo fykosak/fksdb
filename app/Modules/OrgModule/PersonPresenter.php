@@ -19,7 +19,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
@@ -115,7 +115,7 @@ class PersonPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
@@ -219,7 +219,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
      */

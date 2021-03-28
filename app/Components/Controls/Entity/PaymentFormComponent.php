@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -92,22 +92,25 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             'currency' => $values['currency'],
             'person_id' => $values['person_id'],
         ];
+
         if (isset($this->model)) {
-            $this->servicePayment->updateModel2($this->model, $data);
-            $model = $this->servicePayment->refresh($this->model);
+            $this->servicePayment->updateModel($this->model, $data);
+            $model = $this->model;
         } else {
-            $model = $this->machine->createNewModel(array_merge($data, [
+            $holder = $this->machine->createHolder(null);
+            $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
-            ]), $this->servicePayment);
+            ]));
+            $model = $holder->getModel();
         }
 
-        $connection = $this->servicePayment->getConnection();
+        $connection = $this->servicePayment->explorer->getConnection();
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
+            $this->serviceSchedulePayment->storeItems((array)$values['payment_accommodation'], $model); // TODO
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException|EmptyDataException $exception) {
+        } catch (DuplicatePaymentException | EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;

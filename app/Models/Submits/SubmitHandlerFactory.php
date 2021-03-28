@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -53,10 +53,10 @@ class SubmitHandlerFactory {
         $this->checkPrivilege($submit, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
-            throw new StorageException(_('Lze stahovat jen uploadovaná řešení.'));
+            throw new StorageException(_('Only uploaded solutions can be downloaded.'));
         }
         if (!$filename) {
-            throw new StorageException(_('Poškozený soubor submitu'));
+            throw new StorageException(_('Damaged submit file'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $presenter->sendResponse($response);
@@ -73,11 +73,11 @@ class SubmitHandlerFactory {
     public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.corrected');
         if (!$submit->corrected) {
-            throw new StorageException(_('Opravené riešenie nieje nahrané'));
+            throw new StorageException(_('Corrected solution is not uploaded'));
         }
         $filename = $this->correctedStorage->retrieveFile($submit);
         if (!$filename) {
-            throw new StorageException(_('Poškozený soubor submitu'));
+            throw new StorageException(_('Damaged submit file'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
         $presenter->sendResponse($response);
@@ -93,7 +93,7 @@ class SubmitHandlerFactory {
     public function handleRevoke(ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'revoke');
         if (!$submit->canRevoke()) {
-            throw new StorageException(_('Nelze zrušit submit.'));
+            throw new StorageException(_('Submit cannot be revoked.'));
         }
         $this->uploadedStorage->deleteFile($submit);
         $this->serviceSubmit->dispose($submit);
@@ -106,9 +106,9 @@ class SubmitHandlerFactory {
         return $submit;
     }
 
-    public function getUserStudyYear(ModelContestant $contestant, int $academicYear): ?int {
+    public function getUserStudyYear(ModelContestant $contestant): ?int {
         // TODO AC_year from contestant
-        $personHistory = $contestant->getPerson()->getHistory($academicYear);
+        $personHistory = $contestant->getPersonHistory();
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 
@@ -117,14 +117,14 @@ class SubmitHandlerFactory {
     }
 
     private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $submit = $this->serviceSubmit->findByContestant($contestant, $task);
         $data = [
             'submitted_on' => new DateTime(),
             'source' => $source,
             'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
             'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
         ];
-        return $this->serviceSubmit->store($submit, $data);
+        return $this->serviceSubmit->storeModel($data, $submit);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\ReferencedFactory;
-use FKSDB\Models\Entity\CannotAccessModelException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
@@ -24,34 +24,34 @@ abstract class LinkFactory {
 
     /**
      * @param Presenter $presenter
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @return string
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
-    public function create(Presenter $presenter, AbstractModelSingle $model): string {
+    public function create(Presenter $presenter, AbstractModel $model): string {
         return $presenter->link(...$this->createLinkParameters($model));
     }
 
     /**
-     * @param AbstractModelSingle $modelSingle
-     * @return AbstractModelSingle|null
+     * @param AbstractModel $modelSingle
+     * @return AbstractModel|null
      * @throws CannotAccessModelException
      */
-    protected function getModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
+    protected function getModel(AbstractModel $modelSingle): ?AbstractModel {
         if (!isset($this->modelClassName)) {
             return $modelSingle;
         }
-        return ReferencedFactory::accessModel($modelSingle, $this->modelClassName);
+        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @return array
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function createLinkParameters(AbstractModelSingle $model): array {
+    public function createLinkParameters(AbstractModel $model): array {
         $model = $this->getModel($model);
         if (is_null($model)) {
             throw new InvalidLinkException();
@@ -62,7 +62,7 @@ abstract class LinkFactory {
         ];
     }
 
-    abstract protected function getDestination(AbstractModelSingle $model): string;
+    abstract protected function getDestination(AbstractModel $model): string;
 
-    abstract protected function prepareParams(AbstractModelSingle $model): array;
+    abstract protected function prepareParams(AbstractModel $model): array;
 }

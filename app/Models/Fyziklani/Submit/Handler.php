@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -78,7 +78,7 @@ class Handler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Task given and validated.')));
         }
     }
 
@@ -111,10 +111,10 @@ class Handler {
      * @throws ModelException
      */
     public function changePoints(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -124,7 +124,7 @@ class Handler {
             'modified' => null,
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
-        $logger->log(new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
@@ -142,7 +142,7 @@ class Handler {
      */
     public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
-            $this->serviceFyziklaniSubmit->updateModel2($submit, [
+            $this->serviceFyziklaniSubmit->updateModel($submit, [
                 'points' => null,
                 'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
                 /* ugly, exclude previous value of `modified` from query
@@ -166,13 +166,13 @@ class Handler {
      * @throws ModelException
      */
     public function checkSubmit(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -182,7 +182,7 @@ class Handler {
         ]);
         $this->logEvent($submit, 'checked');
 
-        $logger->log(new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
@@ -203,7 +203,7 @@ class Handler {
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 
-        $logger->log(new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,

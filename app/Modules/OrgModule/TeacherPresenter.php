@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * Class TeacherPresenter
@@ -55,7 +55,7 @@ class TeacherPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -76,7 +76,7 @@ class TeacherPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

@@ -3,9 +3,6 @@
 #
 
 parameters:
-    # Flag marking the beta version
-    beta: false
-
     # Various logs
     logDir: %appDir%/../log
 
@@ -199,6 +196,7 @@ extensions:
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
     payment: FKSDB\Models\Payment\PaymentExtension
+    transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
 includes:

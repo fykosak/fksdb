@@ -1,7 +1,6 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
 
 {block content}
-
 <ul>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->storeRequest()}
@@ -13,5 +12,4 @@
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
-
 {control form}

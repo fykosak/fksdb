@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * Class ServiceFyziklaniGameSetup
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
+class ServiceFyziklaniGameSetup extends AbstractService {
 
 }

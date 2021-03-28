@@ -2,12 +2,11 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 
 /**
@@ -24,12 +23,12 @@ abstract class AbstractAdjustment implements FormAdjustment {
 
     private array $pathCache;
 
-    final public function adjust(Form $form, Machine $machine, Holder $holder): void {
+    final public function adjust(Form $form, Holder $holder): void {
         $this->setForm($form);
-        $this->innerAdjust($form, $machine, $holder);
+        $this->innerAdjust($form, $holder);
     }
 
-    abstract protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void;
+    abstract protected function innerAdjust(Form $form, Holder $holder): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILD_CART) !== false;
@@ -37,7 +36,7 @@ abstract class AbstractAdjustment implements FormAdjustment {
 
     /**
      * @param string $mask
-     * @return IControl[]
+     * @return FormControl[]
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->pathCache);
@@ -63,7 +62,7 @@ abstract class AbstractAdjustment implements FormAdjustment {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe
-        foreach ($form->getComponents(true, IControl::class) as $control) {
+        foreach ($form->getComponents(true, FormControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);

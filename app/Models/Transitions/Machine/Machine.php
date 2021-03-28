@@ -3,15 +3,14 @@
 namespace FKSDB\Models\Transitions\Machine;
 
 use Exception;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\Transitions\StateModel;
+use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * Class Machine
@@ -21,24 +20,30 @@ abstract class Machine {
 
     public const STATE_INIT = '__init';
     public const STATE_TERMINATED = '__terminated';
+    public const STATE_ANY = '*';
+    /** @var Transition[] */
     private array $transitions = [];
     protected Explorer $explorer;
-    private AbstractServiceSingle $service;
+    private AbstractService $service;
     /**
-     * @var callable
+     * @var callable|null
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
-    private $explicitCondition;
+    private $implicitCondition = null;
 
-    public function __construct(Explorer $explorer, AbstractServiceSingle $service) {
-        $this->explorer=$explorer;
+    public function __construct(Explorer $explorer, AbstractService $service) {
+        $this->explorer = $explorer;
         $this->service = $service;
     }
 
-    public function addTransition(Transition $transition): void {
+    final public function addTransition(Transition $transition): void {
         $this->transitions[] = $transition;
     }
 
+    final public function setImplicitCondition(callable $implicitCondition): void {
+        $this->implicitCondition = $implicitCondition;
+    }
+    /* **************** Select transition ****************/
     /**
      * @return Transition[]
      */
@@ -47,35 +52,33 @@ abstract class Machine {
     }
 
     /**
-     * @param StateModel|null $model
+     * @param ModelHolder $holder
      * @return Transition[]
      */
-    public function getAvailableTransitions(?StateModel $model = null): array {
-        $state = $model ? $model->getState() : null;
-        if (\is_null($state)) {
-            $state = self::STATE_INIT;
-        }
-        return \array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state): bool {
-            return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
+    public function getAvailableTransitions(ModelHolder $holder): array {
+        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder): bool {
+            return $this->isAvailable($transition, $holder);
         });
     }
 
     /**
      * @param string $id
-     * @param StateModel $model
      * @return Transition
      * @throws UnavailableTransitionsException
      */
-    protected function findTransitionById(string $id, StateModel $model): Transition {
-        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id): bool {
+    public function getTransitionById(string $id): Transition {
+        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) use ($id): bool {
             return $transition->getId() === $id;
         });
-
         return $this->selectTransition($transitions);
     }
 
+    private function isAvailable(Transition $transition, ModelHolder $holder): bool {
+        return $transition->matchSource($holder->getState()) && $this->canExecute($transition, $holder);
+    }
+
     /**
-     * @param array $transitions
+     * @param Transition[] $transitions
      * @return Transition
      * @throws LogicException
      * @throws UnavailableTransitionsException
@@ -92,106 +95,78 @@ abstract class Machine {
         return \array_values($transitions)[0];
     }
 
-    /* ********** CONDITION ******** */
-
-    public function setExplicitCondition(callable $condition): void {
-        $this->explicitCondition = $condition;
-    }
-
-    protected function canExecute(Transition $transition, ?StateModel $model = null): bool {
-        if ($this->explicitCondition && ($this->explicitCondition)($model)) {
-            return true;
-        }
-        return $transition->canExecute($model);
-    }
-    /* ********** EXECUTION ******** */
+    /* ********** execution ******** */
 
     /**
      * @param string $id
-     * @param StateModel $model
-     * @return StateModel
-     *
+     * @param ModelHolder $holder
+     * @return void
+     * @throws UnavailableTransitionsException
+     * @throws Exception
+     */
+    final public function executeTransitionById(string $id, ModelHolder $holder): void {
+        $transition = $this->getTransitionById($id);
+        if (!$this->isAvailable($transition, $holder)) {
+            throw new UnavailableTransitionsException();
+        }
+        $this->execute($transition, $holder);
+    }
+
+    /**
+     * @param ModelHolder $holder
+     * @param array $data
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
      * @throws Exception
      */
-    public function executeTransition(string $id, StateModel $model): StateModel {
-        $transition = $this->findTransitionById($id, $model);
-        if (!$this->canExecute($transition, $model)) {
-            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
-        }
-        return $this->execute($transition, $model);
+
+    final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void {
+        $transition = $this->selectTransition($this->getAvailableTransitions($holder));
+        $this->saveAndExecuteTransition($transition, $holder, $data);
     }
 
     /**
      * @param Transition $transition
-     * @param StateModel|null $model
-     * @return StateModel
-     * @throws BadTypeException
+     * @param ModelHolder $holder
+     * @param array $data
+     * @throws ForbiddenRequestException
+     */
+    final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void {
+        $holder->updateData($data);
+        $this->execute($transition, $holder);
+    }
+
+    protected function canExecute(Transition $transition, ModelHolder $holder): bool {
+        if (isset($this->implicitCondition) && ($this->implicitCondition)($holder)) {
+            return true;
+        }
+        return $transition->canExecute2($holder);
+    }
+
+    /**
+     * @param Transition $transition
+     * @param ModelHolder|null $holder
+     * @return void
+     * @throws ForbiddenRequestException
      * @throws Exception
      */
-    private function execute(Transition $transition, ?StateModel $model = null): StateModel {
+    private function execute(Transition $transition, ModelHolder $holder): void {
+        if (!$this->canExecute($transition, $holder)) {
+            throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
+        }
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             $this->explorer->getConnection()->beginTransaction();
         }
         try {
-            $transition->beforeExecute($model);
+            $transition->callBeforeExecute($holder);
         } catch (Exception $exception) {
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
-        if (!$model instanceof StateModel) {
-            throw new BadTypeException(StateModel::class, $model);
-        }
-
         $this->explorer->getConnection()->commit();
-        $model->updateState($transition->getToState());
-        /* select from DB new (updated) model */
-
-        // $newModel = $model;
-        $newModel = $model->refresh($this->explorer, $this->explorer->getConventions());
-        $transition->afterExecute($newModel);
-        return $newModel;
+        $holder->updateState($transition->getTargetState());
+        $transition->callAfterExecute($holder);
     }
 
-    /* ********** MODEL CREATING ******** */
-
-    abstract public function getCreatingState(): string;
-
-    /**
-     * @return Transition
-     * @throws UnavailableTransitionsException
-     */
-    private function getCreatingTransition(): Transition {
-        $transitions = \array_filter($this->getTransitions(), function (Transition $transition): bool {
-            return $transition->getFromState() === self::STATE_INIT && $transition->getToState() === $this->getCreatingState();
-        });
-        return $this->selectTransition($transitions);
-    }
-
-    /**
-     * @return bool
-     * @throws Exception
-     */
-    public function canCreate(): bool {
-        return $this->canExecute($this->getCreatingTransition());
-    }
-
-    /**
-     * @param array $data
-     * @param AbstractServiceSingle $service
-     * @return StateModel
-     * @throws ForbiddenRequestException
-     * @throws UnavailableTransitionsException
-     * @throws Exception
-     */
-    public function createNewModel(array $data, AbstractServiceSingle $service): StateModel {
-        $transition = $this->getCreatingTransition();
-        if (!$this->canExecute($transition)) {
-            throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
-        }
-        /** @var StateModel|ActiveRow $model */
-        $model = $service->createNewModel($data);
-        return $this->execute($transition, $model);
-    }
+    abstract public function createHolder(?AbstractModel $model): ModelHolder;
 }

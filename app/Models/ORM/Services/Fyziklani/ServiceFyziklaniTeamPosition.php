@@ -3,22 +3,14 @@
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
  * Class ServiceFyziklaniTeamPosition
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
-
-
-
-    public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
-        /** @var ModelFyziklaniTeamPosition $row */
-        $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
-        return $row ? $row : null;
-    }
+class ServiceFyziklaniTeamPosition extends AbstractService {
 
     public function updateRouting(array $data): array {
         $updatedTeams = [];
@@ -26,7 +18,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
             $teamData = (object)$teamData;
             try {
                 /** @var ModelFyziklaniTeamPosition $model */
-                $model = $this->findByTeamId($teamData->teamId);
+                $model = $this->findByPrimary($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
                     $data = [
                         'e_fyziklani_team_id' => $teamData->teamId,

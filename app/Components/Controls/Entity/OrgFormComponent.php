@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -22,6 +21,7 @@ use Nette\Forms\Form;
  * @property ModelOrg $model
  */
 class OrgFormComponent extends AbstractEntityFormComponent {
+
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'org';
@@ -29,17 +29,15 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     private ServiceOrg $serviceOrg;
     private ModelContest $contest;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private YearCalculator $yearCalculator;
 
-    public function __construct(Container $container, ModelContest $contest,?ModelOrg $model) {
+    public function __construct(Container $container, ModelContest $contest, ?ModelOrg $model) {
         parent::__construct($container, $model);
         $this->contest = $contest;
     }
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator): void {
+    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
-        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -68,7 +66,7 @@ class OrgFormComponent extends AbstractEntityFormComponent {
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        $this->serviceOrg->store($this->model ?? null, $data);
+        $this->serviceOrg->storeModel($data, $this->model ?? null);
         $this->getPresenter()->flashMessage(!isset($this->model) ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
@@ -90,11 +88,14 @@ class OrgFormComponent extends AbstractEntityFormComponent {
      */
     private function createOrgContainer(): ModelContainer {
         $container = new ModelContainer();
-        $min = $this->yearCalculator->getFirstYear($this->contest);
-        $max = $this->yearCalculator->getLastYear($this->contest);
 
         foreach (['since', 'until'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField('org', $field, $min, $max);
+            $control = $this->singleReflectionFormFactory->createField(
+                'org',
+                $field,
+                $this->contest->getFirstYear(),
+                $this->contest->getLastYear()
+            );
             $container->addComponent($control, $field);
         }
 

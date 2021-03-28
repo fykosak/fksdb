@@ -2,14 +2,14 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,11 +21,9 @@ class ResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
-
     /** @var string Name of event parameter that hold overall capacity. */
     private string $paramCapacity;
-    /** @var array|string */
-    private $includeStates;
+    private array $includeStates;
     /** @var string[] */
     private array $excludeStates;
     private string $message;
@@ -35,10 +33,10 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array $fields Fields that contain amount of the resource
      * @param string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param string $includeStates any state or array of state
+     * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, $includeStates = BaseMachine::STATE_ANY, array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -46,7 +44,7 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -88,7 +86,7 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[]|BaseHolder[][] $serviceData */
+        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
@@ -96,17 +94,18 @@ class ResourceAvailability extends AbstractAdjustment {
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');
             }
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
-                return $baseHolder->getModel()->getPrimary(false);
+                $model = $baseHolder->getModel2();
+                return $model ? $model->getPrimary(false) : null;
             }, $serviceData['holders']);
             $primaries = array_filter($primaries, function ($primary): bool {
                 return (bool)$primary;
@@ -130,7 +129,7 @@ class ResourceAvailability extends AbstractAdjustment {
 
         $form->onValidate[] = function (Form $form) use ($capacity, $usage, $controls) {
             $controlsUsage = 0;
-            /** @var IControl $control */
+            /** @var Control $control */
             foreach ($controls as $control) {
                 $controlsUsage += (int)$control->getValue();
             }

@@ -3,17 +3,23 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ReferencedAccessor;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Neon\Neon;
 
 /**
@@ -33,21 +39,24 @@ class BaseHolder {
     private ?EventRelation $eventRelation;
     private ModelEvent $event;
     private string $label;
-    private IService $service;
+    /** @var AbstractService|AbstractServiceMulti */
+    private $service;
     private ?string $joinOn = null;
     private ?string $joinTo = null;
-    private array $personIdColumns;
     private string $eventIdColumn;
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    private ?IModel $model = null;
+    /** @var ActiveRow|null|AbstractModel|AbstractModelMulti */
+    private ?ActiveRow $model;
     private array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
     private $modifiable;
     /** @var bool|callable */
     private $visible;
+
+    public array $data = [];
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -104,6 +113,7 @@ class BaseHolder {
      */
     private function setEvent(ModelEvent $event): void {
         $this->event = $event;
+        $this->data[self::EVENT_COLUMN] = $this->event->getPrimary();
         $this->cacheParameters();
     }
 
@@ -151,50 +161,42 @@ class BaseHolder {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
-    public function &getModel(): IModel {
-        if (!$this->model) {
-            $this->model = $this->getService()->createNew(); // TODO!!!
-        }
-        return $this->model;
+    /**
+     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
+     */
+    public function getModel2(): ?ActiveRow {
+        return $this->model ?? null;
     }
 
-    /**
-     * @param int|IModel $model
-     */
-    public function setModel($model): void {
-        if ($model instanceof IModel) {
-            $this->model = $model;
-        } elseif ($model) {
-            $this->model = $this->service->findByPrimary($model);
-        } else {
-            $this->model = null;
-        }
+    public function setModel(?ActiveRow $model): void {
+        $this->model = $model;
     }
 
     public function saveModel(): void {
-        if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
-            $this->service->dispose($this->getModel());
-        } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
-            $this->service->save($this->getModel());
+        if ($this->getModelState() == Machine::STATE_TERMINATED) {
+            $model = $this->getModel2();
+            if ($model) {
+                $this->service->dispose($model);
+            }
+        } elseif ($this->getModelState() != Machine::STATE_INIT) {
+                $this->model = $this->service->storeModel($this->data, $this->getModel2());
         }
     }
 
     public function getModelState(): string {
-        $model = $this->getModel();
-        if ($model->isNew() && !$model[self::STATE_COLUMN]) {
-            return BaseMachine::STATE_INIT;
-        } else {
+        $model = $this->getModel2();
+        if (isset($this->data[self::STATE_COLUMN])) {
+            return $this->data[self::STATE_COLUMN];
+        }
+        if ($model && $model[self::STATE_COLUMN]) {
             return $model[self::STATE_COLUMN];
         }
+
+        return Machine::STATE_INIT;
     }
 
     public function setModelState(string $state): void {
-        $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
-    }
-
-    public function updateModel(iterable $values, bool $alive = true): void {
-        $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
-        $this->getService()->updateModel($this->getModel(), $values, $alive);
+        $this->data[self::STATE_COLUMN] = $state;
     }
 
     public function getName(): string {
@@ -202,13 +204,16 @@ class BaseHolder {
     }
 
     /**
-     * @return IService|AbstractServiceSingle|AbstractServiceMulti
+     * @return AbstractService|AbstractServiceMulti
      */
-    public function getService(): IService {
+    public function getService() {
         return $this->service;
     }
 
-    public function setService(IService $service): void {
+    /**
+     * @param AbstractService|AbstractServiceMulti $service
+     */
+    public function setService($service): void {
         $this->service = $service;
     }
 
@@ -242,24 +247,6 @@ class BaseHolder {
 
     public function setJoinTo(?string $joinTo): void {
         $this->joinTo = $joinTo;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getPersonIdColumns(): array {
-        return $this->personIdColumns;
-    }
-
-    public function setPersonIdColumns(array $personIds): void {
-        if (!$this->getService()) {
-            throw new InvalidStateException('Call setService prior setting person IDs.');
-        }
-
-        $this->personIdColumns = [];
-        foreach ($personIds as $personId) {
-            $this->personIdColumns[] = $this->resolveColumnJoins($personId);
-        }
     }
 
     public function getEventIdColumn(): string {
@@ -308,18 +295,18 @@ class BaseHolder {
         return $container;
     }
 
-    /**
-     * @return int|null  ID of a person associated with the application
-     */
-    public function getPersonId(): ?int {
-        $personColumns = $this->getPersonIdColumns();
-        if (!$personColumns) {
+    public function getPerson(): ?ModelPerson {
+        /** @var ModelPerson $model */
+        try {
+            $app = $this->getModel2();
+            if (!$app) {
+                return null;
+            }
+            $model = ReferencedAccessor::accessModel($app, ModelPerson::class);
+            return $model;
+        } catch (CannotAccessModelException $exception) {
             return null;
         }
-        $personColumn = reset($personColumns); //TODO we support only single person per model, so far
-        $personColumn = self::getBareColumn($personColumn);
-        $model = $this->getModel();
-        return $model[$personColumn];
     }
 
     public function __toString(): string {
@@ -335,6 +322,9 @@ class BaseHolder {
     private function cacheParameters(): void {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
+        if (is_string($parameters)) {
+            throw new NeonSchemaException('Parameters must be an array string given');
+        }
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
     }
 

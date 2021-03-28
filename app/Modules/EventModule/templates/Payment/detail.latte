@@ -1,36 +1,39 @@
 {block content}
+    {varType FKSDB\Models\ORM\Models\ModelPayment $model}
+    {varType bool $isOrg}
+    {varType array $items}
     <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
     <div class="d-flex justify-content-around mt-3 mb-3 align-items-center state-timeline">
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING,\FKSDB\Models\ORM\Models\ModelPayment::STATE_NEW])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
+        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING,\FKSDB\Models\ORM\Models\ModelPayment::STATE_NEW])?'border-success':'border-secondary') .
+        ' d-flex align-items-center justify-content-center text-center'}"
              style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
             <span>{_'Select items'}</span>
         </div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary').' line col'}"></div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
+        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary') . ' line col'}"></div>
+        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED,\FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING])?'border-success':'border-secondary') .
+        ' d-flex align-items-center justify-content-center text-center'}"
              style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
             <span>{_'Confirm payment'}</span>
         </div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary').' line col'}"></div>
-        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary').
-' d-flex align-items-center justify-content-center text-center'}"
+        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary') . ' line col'}"></div>
+        <div class="{(in_array($model->state,[\FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED])?'border-success':'border-secondary') .
+        ' d-flex align-items-center justify-content-center text-center'}"
              style="border-radius: 3rem; height: 6rem; width: 6rem; border: solid 5px;">
             <span>{_'Payment recieved'}</span>
         </div>
     </div>
     <hr/>
     {if $model->hasGeneratedSymbols()}
-        <h2>{_'Informacie o platbe'}</h2>
+        <h2>{_'Payment info'}</h2>
         {foreach ['constant_symbol','variable_symbol','specific_symbol','bank_account','bank_name','recipient','iban','swift','price'] as $field}
             {if $model->{$field}}
-                {control valuePrinter:row 'payment.'.$field, $model}
+                {control valuePrinter:row 'payment.' . $field, $model}
             {/if}
         {/foreach}
         <hr/>
     {/if}
 
-    <h2>{_'Informace o platcovi'}</h2>
+    <h2>{_'Person information'}</h2>
     <div>
         {if $isOrg}
             {control valuePrinter:row 'person.person_link', $model}
@@ -57,7 +60,7 @@
         {/foreach}
         {if !is_null($model->price)}
             <tr class="table-primary">
-                <td>{_'Spolu'}</td>
+                <td>{_'Sum'}</td>
                 <td>{$model->getPrice()->__toString()}</td>
             </tr>
         {/if}

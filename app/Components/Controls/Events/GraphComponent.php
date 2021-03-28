@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
 /**
@@ -15,9 +16,7 @@ use Nette\DI\Container;
 class GraphComponent extends BaseComponent {
 
     private BaseMachine $baseMachine;
-
     private ExpressionPrinter $expressionPrinter;
-
     private bool $attachedJS = false;
 
     public function __construct(Container $container, BaseMachine $baseMachine) {
@@ -38,12 +37,11 @@ class GraphComponent extends BaseComponent {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
         $this->template->id = $this->getHtmlId();
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
     }
 
     private function getHtmlId(): string {
@@ -54,7 +52,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge($this->baseMachine->getStates(), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
     }
 
     /**
@@ -64,11 +62,10 @@ class GraphComponent extends BaseComponent {
         $states = $this->getAllStates();
         $nodes = [];
         foreach ($states as $state) {
-
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : ($state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;
@@ -85,7 +82,7 @@ class GraphComponent extends BaseComponent {
                 if ($transition->matches($state)) {
                     $edges[] = [
                         'source' => $state,
-                        'target' => $transition->getTarget(),
+                        'target' => $transition->getTargetState(),
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

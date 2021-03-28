@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\IModel;
+use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -21,11 +21,11 @@ interface ReferencedHandler {
 
     public function setResolution(string $resolution): void;
 
-    public function update(IModel $model, ArrayHash $values): void;
+    public function update(ActiveRow $model, ArrayHash $values): void;
 
-    public function createFromValues(ArrayHash $values): AbstractModelSingle;
+    public function createFromValues(ArrayHash $values): AbstractModel;
 
     public function isSecondaryKey(string $field): bool;
 
-    public function findBySecondaryKey(string $field, string $key): ?AbstractModelSingle;
+    public function findBySecondaryKey(string $field, string $key): ?AbstractModel;
 }

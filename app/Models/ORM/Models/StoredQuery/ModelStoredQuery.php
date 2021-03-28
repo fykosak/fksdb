@@ -3,9 +3,9 @@
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * @todo Better (general) support for related collection setter.
@@ -17,7 +17,7 @@ use Nette\Security\IResource;
  * @property-read string sql
  * @property-read string name
  */
-class ModelStoredQuery extends AbstractModelSingle implements IResource {
+class ModelStoredQuery extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'storedQuery';
 

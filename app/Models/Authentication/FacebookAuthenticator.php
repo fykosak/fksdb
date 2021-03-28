@@ -3,13 +3,12 @@
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
@@ -25,8 +24,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     private ServicePersonInfo $servicePersonInfo;
     private AccountManager $accountManager;
 
-    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin) {
+        parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->accountManager = $accountManager;
@@ -34,7 +33,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return AbstractModelSingle|ModelLogin
+     * @return AbstractModel|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws \Exception
@@ -68,13 +67,13 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      */
     private function findPerson(array $fbUser): ?ModelPerson {
         if (!$fbUser['email']) {
-            throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
+            throw new AuthenticationException(_('Email not found in the facebook account.'));
         }
 
         // try both e-mail and FB ID
         $result = $this->servicePerson->getTable()->where(':person_info.email = ? OR person_info.fb_id = ?', $fbUser['email'], $fbUser['id']);
         if (count($result) > 1) {
-            throw new AuthenticationException(_('Facebook účtu odpovídá více osob.'));
+            throw new AuthenticationException(_('Multiple persons correspond to the Facebook profile.'));
         } elseif (count($result) == 0) {
             return null;
         } else {
@@ -83,22 +82,22 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     private function registerFromFB(array $fbUser): ModelLogin {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->explorer->getConnection()->beginTransaction();
         $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
         $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
         $login = $this->accountManager->createLogin($person);
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->explorer->getConnection()->commit();
         return $login;
     }
 
     private function updateFromFB(ModelPerson $person, array $fbUser): void {
-        $this->servicePerson->getConnection()->beginTransaction();
+        $this->servicePerson->explorer->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
         unset($personData['family_name']);
         unset($personData['other_name']);
         unset($personData['display_name']);
-        $this->servicePerson->updateModel2($person, $personData);
+        $this->servicePerson->updateModel($person, $personData);
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);
@@ -112,9 +111,9 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
+        $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
 
-        $this->servicePerson->getConnection()->commit();
+        $this->servicePerson->explorer->getConnection()->commit();
     }
 
     private function getPersonData(array $fbUser): array {

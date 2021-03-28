@@ -47,30 +47,31 @@ class RoomsFromCSV extends Stage {
             ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = [];
 
-        $this->serviceTeam->getConnection()->beginTransaction();
+        $this->serviceTeam->explorer->getConnection()->beginTransaction();
         $parser = new CSVParser($this->data);
         foreach ($parser as $row) {
             $teamId = $row[0];
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(new Message(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), Logger::WARNING));
+
+                $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), Logger::WARNING));
+
                 continue;
             }
             $team = $teams[$teamId];
-            $this->serviceTeam->updateModel2($team, [
+            $this->serviceTeam->updateModel($team, [
                 'room' => $room,
             ]);
-            //  $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);
             }
         }
-        $this->serviceTeam->getConnection()->commit();
+        $this->serviceTeam->explorer->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(new Message(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), Logger::WARNING));
+            $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), Logger::WARNING));
         }
     }
 
@@ -82,3 +83,4 @@ class RoomsFromCSV extends Stage {
     }
 
 }
+

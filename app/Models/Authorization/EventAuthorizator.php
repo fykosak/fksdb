@@ -4,7 +4,7 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -23,16 +23,8 @@ class EventAuthorizator {
         $this->permission = $acl;
     }
 
-    public function getUser(): IUserStorage {
-        return $this->userStorage;
-    }
-
-    protected function getPermission(): Permission {
-        return $this->permission;
-    }
-
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -43,7 +35,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -53,13 +45,13 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             return false;
         }
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
@@ -69,13 +61,13 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$this->userStorage->isAuthenticated()) {
             return false;
         }
         if (!$this->isEventOrg($resource, $privilege, $event)) {
@@ -85,14 +77,14 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
         /** @var ModelLogin $identity */
-        $identity = $this->getUser()->getIdentity();
+        $identity = $this->userStorage->getIdentity();
         $person = $identity ? $identity->getPerson() : null;
         if (!$person) {
             return false;

@@ -30,20 +30,19 @@ class StoredQueryTagCloudComponent extends BaseComponent {
         $this->activeTagIds = $activeTagIds;
     }
 
-    public function render(string $mode): void {
+    final public function render(string $mode): void {
         $this->template->mode = $mode;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
     }
 
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->tags = $this->serviceStoredQueryTagType->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
     }
 
-    public function renderDetail(ModelStoredQuery $query): void {
+    final public function renderDetail(ModelStoredQuery $query): void {
         $this->template->tags = $query->getStoredQueryTagTypes();
         $this->render(self::MODE_DETAIL);
     }

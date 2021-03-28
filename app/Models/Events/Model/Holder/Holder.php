@@ -4,16 +4,15 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -32,17 +31,12 @@ class Holder {
 
     /** @var Processing[] */
     private array $processings = [];
-
     /** @var BaseHolder[] */
     private array $baseHolders = [];
-
     /** @var BaseHolder[] */
     private array $secondaryBaseHolders = [];
-
     private BaseHolder $primaryHolder;
-
     private Connection $connection;
-
     private SecondaryModelStrategy $secondaryModelStrategy;
 
     public function __construct(Connection $connection) {
@@ -76,8 +70,8 @@ class Holder {
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    public function addFormAdjustment(FormAdjustment $formAdjusment): void {
-        $this->formAdjustments[] = $formAdjusment;
+    public function addFormAdjustment(FormAdjustment $formAdjustment): void {
+        $this->formAdjustments[] = $formAdjustment;
     }
 
     public function addProcessing(Processing $processing): void {
@@ -85,7 +79,7 @@ class Holder {
     }
 
     public function getBaseHolder(string $name): BaseHolder {
-        if (!array_key_exists($name, $this->baseHolders)) {
+        if (!isset($this->baseHolders[$name])) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
         return $this->baseHolders[$name];
@@ -100,10 +94,6 @@ class Holder {
 
     public function hasBaseHolder(string $name): bool {
         return isset($this->baseHolders[$name]);
-    }
-
-    public function getSecondaryModelStrategy(): SecondaryModelStrategy {
-        return $this->secondaryModelStrategy;
     }
 
     public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void {
@@ -122,7 +112,7 @@ class Holder {
         return $this;
     }
 
-    public function setModel(?IModel $primaryModel = null, ?array $secondaryModels = null): void {
+    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
@@ -137,7 +127,7 @@ class Holder {
         /*
          * When deleting, first delete children, then parent.
          */
-        if ($this->primaryHolder->getModelState() == BaseMachine::STATE_TERMINATED) {
+        if ($this->primaryHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
                 $baseHolder->saveModel();
             }
@@ -147,7 +137,7 @@ class Holder {
              * When creating/updating primary model, propagate its PK to referencing secondary models.
              */
             $this->primaryHolder->saveModel();
-            $primaryModel = $this->primaryHolder->getModel();
+            $primaryModel = $this->primaryHolder->getModel2();
 
             foreach ($this->getGroupedSecondaryHolders() as $group) {
                 $this->secondaryModelStrategy->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
@@ -172,7 +162,7 @@ class Holder {
     public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->getTarget();
+            $newStates[$name] = $transition->getTargetState();
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
@@ -181,23 +171,12 @@ class Holder {
             }
         }
 
-        foreach ($this->baseHolders as $name => $baseHolder) {
-            $stateExist = isset($newStates[$name]);
-            if ($stateExist) {
-                $alive = ($newStates[$name] != BaseMachine::STATE_TERMINATED);
-            } else {
-                $alive = true;
-            }
-            if (isset($values[$name])) {
-                $baseHolder->updateModel($values[$name], $alive); // terminated models may not be correctly updated
-            }
-        }
         return $newStates;
     }
 
-    public function adjustForm(Form $form, Machine $machine): void {
+    public function adjustForm(Form $form): void {
         foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $machine, $this);
+            $adjustment->adjust($form, $this);
         }
     }
 
@@ -221,7 +200,6 @@ class Holder {
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
-                        'personIds' => $baseHolder->getPersonIdColumns(),
                         'holders' => [],
                     ];
                 }

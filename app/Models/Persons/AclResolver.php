@@ -5,7 +5,7 @@ namespace FKSDB\Models\Persons;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\SmartObject;
 
 /**
@@ -14,6 +14,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class AclResolver implements VisibilityResolver, ModifiabilityResolver {
+
     use SmartObject;
 
     private ContestAuthorizator $contestAuthorizator;
@@ -25,21 +26,24 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver {
         $this->contest = $contest;
     }
 
-    public function isVisible(ModelPerson $person): bool {
-        return $person->isNew() || $this->isAllowed($person, 'edit');
+    public function isVisible(?ModelPerson $person): bool {
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
-    public function getResolutionMode(ModelPerson $person): string {
+    public function getResolutionMode(?ModelPerson $person): string {
+        if (!$person) {
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        }
         return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
-        return $person->isNew() || $this->isAllowed($person, 'edit');
+    public function isModifiable(?ModelPerson $person): bool {
+        return !$person || $this->isAllowed($person, 'edit');
     }
 
     /**
      * @param ModelPerson $person
-     * @param string|IResource $privilege
+     * @param string|Resource $privilege
      * @return bool
      */
     private function isAllowed(ModelPerson $person, $privilege): bool {

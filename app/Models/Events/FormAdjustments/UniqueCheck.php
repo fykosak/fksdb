@@ -3,11 +3,10 @@
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,7 +26,7 @@ class UniqueCheck extends AbstractAdjustment {
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
@@ -36,7 +35,7 @@ class UniqueCheck extends AbstractAdjustment {
         foreach ($controls as $name => $control) {
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function (IControl $control) use ($baseHolder) : bool {
+            $control->addRule(function (Control $control) use ($baseHolder): bool {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
@@ -47,12 +46,12 @@ class UniqueCheck extends AbstractAdjustment {
                 } else {
                     $value = $control->getValue();
                 }
-                $model = $baseHolder->getModel();
+                $model = $baseHolder->getModel2();
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
                 $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
-                if ($model && !$model->isNew()) {
+                if ($model) {
                     $table->where("NOT $pk = ?", $model->getPrimary());
                 }
                 return count($table) == 0;

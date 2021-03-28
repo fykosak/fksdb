@@ -9,10 +9,12 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Nette\Security\User;
 
 /**
  * Trait ContestPresenterTrait
  * @property ServiceContest $serviceContest
+ * @method User getUser()
  */
 trait ContestPresenterTrait {
 
@@ -76,11 +78,11 @@ trait ContestPresenterTrait {
                     break;
                 }
                 $person = $login->getPerson();
-                $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
+                $contestIds = array_keys($person->getActiveContestants());
 
                 break;
             case YearChooserComponent::ROLE_ORG:
-                $contestIds = array_keys($login->getActiveOrgs($this->yearCalculator));
+                $contestIds = array_keys($login->getActiveOrgs());
                 break;
         }
         $contests = [];

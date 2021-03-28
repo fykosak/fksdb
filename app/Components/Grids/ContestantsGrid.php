@@ -2,25 +2,25 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use FKSDB\Models\SQL\ViewDataSource;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ContestantsGrid extends BaseGrid {
-
-    private ServiceContestant $serviceContestant;
 
     private int $year;
 
@@ -32,13 +32,9 @@ class ContestantsGrid extends BaseGrid {
         $this->year = $year;
     }
 
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
-        $this->serviceContestant = $serviceContestant;
-    }
-
     protected function getData(): IDataSource {
-        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
-        return new ViewDataSource('ct_id', $contestants);
+        $contestants = $this->contest->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->year);
+        return new NDataSource($contestants);
     }
 
     /**
@@ -48,15 +44,20 @@ class ContestantsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws BadTypeException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
-        $this->setDefaultOrder('name_lex ASC');
-
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Study year'));
-        $this->addColumn('school_name', _('School'));
+        $this->setDefaultOrder('person.other_name ASC');
+        $this->addColumns([
+            'person.full_name',
+            'person_history.study_year',
+        ]);
+        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
+            $contestant = ModelContestant::createFromActiveRow($row);
+            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
+        });
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);

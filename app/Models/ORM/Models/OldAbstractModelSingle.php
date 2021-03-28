@@ -2,14 +2,14 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\IModel;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class OldAbstractModelSingle extends AbstractModelSingle implements IModel {
+abstract class OldAbstractModelSingle extends AbstractModel {
 
     private array $tmpData;
 
@@ -52,11 +52,11 @@ abstract class OldAbstractModelSingle extends AbstractModelSingle implements IMo
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $column
      * @param mixed $value
      */
-    public function __set($key, $value) {
-        $this->tmpData[$key] = $value;
+    public function __set($column, $value) {
+        $this->tmpData[$column] = $value;
     }
 
     /**

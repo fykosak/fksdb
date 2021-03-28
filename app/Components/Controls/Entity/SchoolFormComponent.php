@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceAddress;
@@ -58,13 +58,13 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
         $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
 
-        $connection = $this->serviceSchool->getConnection();
+        $connection = $this->serviceSchool->explorer->getConnection();
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */
-            $this->serviceAddress->updateModel2($this->model->getAddress(), $addressData);
+            $this->serviceAddress->updateModel($this->model->getAddress(), $addressData);
             /* School */
-            $this->serviceSchool->updateModel2($this->model, $schoolData);
+            $this->serviceSchool->updateModel($this->model, $schoolData);
         } else {
             /* Address */
             $address = $this->serviceAddress->createNewModel($addressData);

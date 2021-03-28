@@ -72,6 +72,7 @@ class TasksFromXML extends Stage {
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
+                /** @var SimpleXMLElement[] $elements */
                 $elements = $XMLTask->{$name};
                 $csvalue = null;
 
@@ -107,7 +108,7 @@ class TasksFromXML extends Stage {
                 'tasknr' => $tasknr,
             ]));
         } else {
-            $this->taskService->updateModel2($task, $data);
+            $this->taskService->updateModel($task, $data);
         }
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);

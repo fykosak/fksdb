@@ -2,6 +2,8 @@
 
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
+use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
@@ -11,7 +13,7 @@ use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
  * Class AbstractSymbolGenerator
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractSymbolGenerator {
+abstract class AbstractSymbolGenerator implements TransitionCallback {
 
     protected ServicePayment $servicePayment;
 
@@ -21,19 +23,36 @@ abstract class AbstractSymbolGenerator {
 
     /**
      * @param ModelPayment $modelPayment
+     * @param $args
      * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    abstract protected function create(ModelPayment $modelPayment): array;
+    abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param ModelHolder $holder
+     * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    final public function __invoke(ModelPayment $modelPayment): void {
-        $info = $this->create($modelPayment);
-        $modelPayment->update($info);
+    final public function __invoke(ModelHolder $holder, ...$args): void {
+        /** @var ModelPayment $model */
+        $model = $holder->getModel();
+        $info = $this->create($model, ...$args);
+        $this->servicePayment->updateModel($model, $info);
+    }
+
+    /**
+     * @param ModelHolder $holder
+     * @param $args
+     * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
+     */
+    final public function invoke(ModelHolder $holder, ...$args): void {
+        /** @var ModelPayment $model */
+        $model = $holder->getModel();
+        $info = $this->create($model, ...$args);
+        $this->servicePayment->updateModel($model, $info);
     }
 }

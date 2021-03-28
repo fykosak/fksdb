@@ -3,7 +3,8 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -18,7 +19,7 @@ use Nette\Security\IResource;
  * @property-read int task_id
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModel implements Resource {
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';

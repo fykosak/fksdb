@@ -4,7 +4,6 @@ namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use Nette\Utils\DateTime;
 
 /**
@@ -18,11 +17,9 @@ use Nette\Utils\DateTime;
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
     protected ServiceLogin $serviceLogin;
-    protected YearCalculator $yearCalculator;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
-        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -30,6 +27,6 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @throws \Exception
      */
     protected function logAuthentication(ModelLogin $login): void {
-        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
+        $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\LinkPrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\UI\InvalidLinkException;
 
 /**
@@ -23,17 +23,16 @@ class LinkPrinterComponent extends BaseComponent {
 
     /**
      * @param string $linkId
-     * @param AbstractModelSingle $model
+     * @param AbstractModel $model
      * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function render(string $linkId, AbstractModelSingle $model): void {
+    final public function render(string $linkId, AbstractModel $model): void {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
     }
 }
