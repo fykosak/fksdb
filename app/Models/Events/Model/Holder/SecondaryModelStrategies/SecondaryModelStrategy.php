@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
@@ -16,7 +16,7 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param BaseHolder[] $holders
-     * @param IModel[] $models
+     * @param ActiveRow[] $models
      * @return void
      */
     public function setSecondaryModels(array $holders, iterable $models): void {
@@ -37,10 +37,10 @@ abstract class SecondaryModelStrategy {
      * @param string|null $joinOn
      * @param string|null $joinTo
      * @param BaseHolder[] $holders
-     * @param IModel|null $primaryModel
+     * @param ActiveRow|null $primaryModel
      * @return void
      */
-    public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?IModel $primaryModel = null): void {
+    public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void {
         $table = $service->getTable();
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
@@ -60,10 +60,10 @@ abstract class SecondaryModelStrategy {
      * @param string|null $joinOn
      * @param string|null $joinTo
      * @param BaseHolder[] $holders
-     * @param IModel $primaryModel
+     * @param ActiveRow $primaryModel
      * @return void
      */
-    public function updateSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, IModel $primaryModel): void {
+    public function updateSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];

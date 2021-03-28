@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**
@@ -21,26 +22,26 @@ interface IService {
 
     /**
      * @param mixed $key
-     * @return IModel|null
+     * @return ActiveRow|null
      */
     public function findByPrimary($key);
 
     /**
-     * @param IModel $model
+     * @param ActiveRow $model
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model): void;
+    public function save(ActiveRow &$model): void;
 
     public function getTable(): Selection;
 
     /**
-     * @param IModel $model
+     * @param ActiveRow $model
      * @param iterable $data
      * @return void
      * @deprecated
      */
-    public function updateModelLegacy(IModel $model, iterable $data): void;
+    public function updateModelLegacy(ActiveRow $model, iterable $data): void;
 
     /**
      * @return string|AbstractModel|AbstractModelMulti

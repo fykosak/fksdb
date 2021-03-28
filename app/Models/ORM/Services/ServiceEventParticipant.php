@@ -3,11 +3,11 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedTableSelection;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -15,12 +15,12 @@ use Fykosak\NetteORM\TypedTableSelection;
 class ServiceEventParticipant extends OldAbstractServiceSingle {
 
     /**
-     * @param ModelEventParticipant|IModel $model
+     * @param ModelEventParticipant|ActiveRow $model
      * @throws DuplicateApplicationException
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel &$model): void {
+    public function save(ActiveRow &$model): void {
         try {
             parent::save($model);
         } catch (ModelException $exception) {
@@ -43,13 +43,13 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
     }
 
     /**
-     * @param IModel|ModelEventParticipant $model
+     * @param ActiveRow|ModelEventParticipant $model
      * @param array $data
      * @param bool $alive
      * @return void
      * @deprecated
      */
-    public function updateModelLegacy(IModel $model, $data, $alive = true): void {
+    public function updateModelLegacy(ActiveRow $model, $data, $alive = true): void {
         parent::updateModelLegacy($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();
