@@ -62,7 +62,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

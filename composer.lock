@@ -4,60 +4,77 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e7f2aee221a06f5d7779dadde056ef8",
+    "content-hash": "b0ff2bbef5040443d0fe7cc3315fd5db",
     "packages": [
         {
             "name": "fykosak/nette-orm",
-            "version": "0.1.0-beta",
+            "version": "dev-dev-0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "354f1903018856820eaa8a5d82f00fdbc2867b09"
+                "reference": "dc129251766cf4b590dae30678273a9017507d91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/354f1903018856820eaa8a5d82f00fdbc2867b09",
-                "reference": "354f1903018856820eaa8a5d82f00fdbc2867b09",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/dc129251766cf4b590dae30678273a9017507d91",
+                "reference": "dc129251766cf4b590dae30678273a9017507d91",
                 "shasum": ""
             },
             "require": {
+                "ext-gettext": "*",
+                "ext-pdo": "*",
                 "nette/database": "^3.1",
-                "nette/di": "^3.0.8",
+                "nette/di": "^3.0",
                 "php": ">=7.4"
+            },
+            "require-dev": {
+                "nette/tester": "^2.4.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Fykosak\\NetteORM\\": "src/"
+                    "Fykosak\\NetteORM\\": "src/",
+                    "Fykosak\\NetteORM\\Tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
             "authors": [
+                {
+                    "name": "Michal Koutny",
+                    "email": "michal@fykos.cz"
+                },
                 {
                     "name": "Michal Mišo Červeňák",
                     "email": "miso@fykos.cz"
+                },
+                {
+                    "name": "Lukáš Timo",
+                    "email": "lukast@fykos.cz"
                 }
             ],
-            "time": "2021-03-09T19:05:23+00:00"
+            "time": "2021-03-27T00:18:53+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.2.0",
+            "version": "7.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79"
+                "reference": "7008573787b430c1c1f650e3722d9bba59967628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/0aa74dfb41ae110835923ef10a9d803a22d50e79",
-                "reference": "0aa74dfb41ae110835923ef10a9d803a22d50e79",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/7008573787b430c1c1f650e3722d9bba59967628",
+                "reference": "7008573787b430c1c1f650e3722d9bba59967628",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "guzzlehttp/promises": "^1.4",
-                "guzzlehttp/psr7": "^1.7",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
                 "php": "^7.2.5 || ^8.0",
                 "psr/http-client": "^1.0"
             },
@@ -65,6 +82,7 @@
                 "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4.1",
                 "ext-curl": "*",
                 "php-http/client-integration-tests": "^3.0",
                 "phpunit/phpunit": "^8.5.5 || ^9.3.5",
@@ -78,7 +96,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "7.1-dev"
+                    "dev-master": "7.3-dev"
                 }
             },
             "autoload": {
@@ -118,7 +136,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2020-10-10T11:47:56+00:00"
+            "time": "2021-03-23T11:33:13+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -173,16 +191,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.7.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3"
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/53330f47520498c0ae1f61f7e2c90f55690c06a3",
-                "reference": "53330f47520498c0ae1f61f7e2c90f55690c06a3",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/35ea11d335fd638b5882ff1725228b3d35496ab1",
+                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1",
                 "shasum": ""
             },
             "require": {
@@ -240,7 +258,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2020-09-30T07:37:11+00:00"
+            "time": "2021-03-21T16:25:00+00:00"
         },
         {
             "name": "latte/latte",
@@ -2191,7 +2209,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fykosak/nette-orm": 10
+        "fykosak/nette-orm": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

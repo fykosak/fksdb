@@ -142,7 +142,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    public function renderContest(): void {
+    final public function renderContest(): void {
         $this->template->contests = $this->serviceContest->getTable();
     }
 
@@ -150,7 +150,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return void
      * @throws AbortException
      */
-    public function renderYear(): void {
+    final public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
@@ -169,7 +169,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return void
      * @throws BadTypeException
      */
-    public function renderContestant(): void {
+    final public function renderContestant(): void {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');

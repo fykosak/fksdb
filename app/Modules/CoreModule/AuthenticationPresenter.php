@@ -9,6 +9,7 @@ use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Models\Authentication\SSO\GlobalSession;
 use FKSDB\Models\Authentication\SSO\IGlobalSession;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
@@ -27,7 +28,6 @@ use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Forms\Controls\TextInput;
 use Nette\Http\SessionSection;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
@@ -56,6 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
+    /** @var GlobalSession|IGlobalSession */
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
@@ -157,11 +158,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->getParameter('login');
             if ($login) {
                 $formControl->getForm()->setDefaults(['id' => $login]);
-                /** @var TextInput $input */
-                $input = $formControl->getForm()->getComponent('id');
-                /* $input->setDisabled()
-                     ->setOmitted(false)
-                     ->setDefaultValue($login);*/
+                $formControl->getForm()->getComponent('id');
             }
         }
     }
@@ -261,13 +258,13 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form): void {
-        $connection = $this->serviceAuthToken->getExplorer()->getConnection();
+        $connection = $this->serviceAuthToken->explorer->getConnection();
         try {
             $values = $form->getValues();
 
             $connection->beginTransaction();
             $login = $this->passwordAuthenticator->findLogin($values['id']);
-            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
+            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
             $connection->commit();

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
+use FKSDB\Models\ORM\ORMFactory;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -26,9 +26,9 @@ class DBReflectionFactory extends AbstractFactory {
     private Connection $connection;
     /** @var array tableName => columnName[] */
     private array $columns = [];
-    private ReflectionFactory $tableReflectionFactory;
+    private ORMFactory $tableReflectionFactory;
 
-    public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -44,7 +44,7 @@ class DBReflectionFactory extends AbstractFactory {
             if ($service instanceof AbstractService) {
                 $tableName = $service->getTable()->getName();
             } elseif ($service instanceof AbstractServiceMulti) {
-                $tableName = $service->getMainService()->getTable()->getName();
+                $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
                 $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
@@ -106,10 +106,10 @@ class DBReflectionFactory extends AbstractFactory {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
         } elseif ($service instanceof AbstractServiceMulti) {
-            $tableName = $service->getMainService()->getTable()->getName();
+            $tableName = $service->mainService->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {
-                $tableName = $service->getJoinedService()->getTable()->getName();
+                $tableName = $service->joinedService->getTable()->getName();
                 $column = $this->getColumnMetadata($tableName, $columnName);
             }
         }

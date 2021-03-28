@@ -5,20 +5,11 @@ namespace FKSDB\Models\ORM\Services\StoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceStoredQuery extends AbstractService {
-
-    private ServiceStoredQueryTag $serviceStoredQueryTag;
-
-    public function __construct(string $tableName, string $className, Explorer $explorer, ServiceStoredQueryTag $serviceStoredQueryTag, Conventions $conventions) {
-        parent::__construct($tableName, $className, $explorer, $conventions);
-        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
-    }
 
     public function findByQid(string $qid): ?ModelStoredQuery {
         /** @var ModelStoredQuery $result */

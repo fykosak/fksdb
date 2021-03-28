@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
@@ -35,9 +34,6 @@ class ModelEventOrg extends AbstractModel implements Resource {
     }
 
     public function __toString(): string {
-        if (!$this->getPerson()) {
-            throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
-        }
         return $this->getPerson()->__toString();
     }
 }

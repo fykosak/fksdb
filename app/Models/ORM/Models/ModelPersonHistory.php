@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -14,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow school
  * @property-read ActiveRow person
  */
-class ModelPersonHistory extends OldAbstractModelSingle {
+class ModelPersonHistory extends AbstractModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -32,11 +33,12 @@ class ModelPersonHistory extends OldAbstractModelSingle {
             'class' => $this->extrapolateClass($this->class, $diff),
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
-        $result = new self([], $this->getTable());
+
+        $tmpData = [];
         foreach ($data as $key => $value) {
-            $result->$key = $value; // this is workaround to properly set modfified flag
+            $tmpData[$key] = $value; // this is workaround to properly set modfified flag
         }
-        return $result;
+        return new self($tmpData, $this->getTable());
     }
 
     /** @var string[][] */

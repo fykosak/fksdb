@@ -3,6 +3,7 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
  *
@@ -36,7 +37,7 @@ use FKSDB\Models\ORM\DbNames;
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
  */
-class ModelPersonInfo extends OldAbstractModelSingle {
+class ModelPersonInfo extends AbstractModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));

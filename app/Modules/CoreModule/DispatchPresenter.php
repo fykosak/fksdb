@@ -23,7 +23,7 @@ class DispatchPresenter extends BasePresenter {
     /**
      * @throws InvalidLinkException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -49,7 +49,7 @@ class DispatchPresenter extends BasePresenter {
                 'link' => $this->link(':Org:Dashboard:default', [
                     'contestId' => $contestId,
                 ]),
-                'title' => sprintf(_('Organiser %s'), $this->getContestProperty($contestId)['model']->name),
+                'title' => sprintf(_('Organiser %s'), $org->getContest()->name),
             ];
         }
         return $results;
@@ -82,12 +82,12 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllContestants(ModelPerson $person): array {
         $result = [];
-        foreach ($person->getActiveContestants() as $contestId => $org) {
+        foreach ($person->getActiveContestants() as $contestId => $contestant) {
             $result[$contestId] = [
                 'link' => $this->link(':Public:Dashboard:default', [
                     'contestId' => $contestId,
                 ]),
-                'title' => sprintf(_('Contestant %s'), $this->getContestProperty($contestId)['model']->name),
+                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
             ];
         }
         return $result;

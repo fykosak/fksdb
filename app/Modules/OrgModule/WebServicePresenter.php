@@ -31,7 +31,7 @@ class WebServicePresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         try {
             $response = new SoapResponse($this->server);
             $this->sendResponse($response);

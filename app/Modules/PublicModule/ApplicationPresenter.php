@@ -4,12 +4,12 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
+use FKSDB\Models\Events\Model\ApplicationHandler;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -17,7 +17,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\ORM\IModel;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -29,6 +28,7 @@ use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 /**
@@ -40,23 +40,20 @@ class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
     private ?ModelEvent $event;
-    private ?IModel $eventApplication = null;
+    private ?ActiveRow $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
     private ServiceEvent $serviceEvent;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
-    private ApplicationHandlerFactory $handlerFactory;
     private EventDispatchFactory $eventDispatchFactory;
 
     final public function injectTernary(
         ServiceEvent $serviceEvent,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
-        ApplicationHandlerFactory $handlerFactory,
         EventDispatchFactory $eventDispatchFactory
     ): void {
         $this->serviceEvent = $serviceEvent;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
-        $this->handlerFactory = $handlerFactory;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -198,7 +195,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getEvent(), $logger);
+        $handler = new ApplicationHandler($this->getEvent(), $logger,$this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
@@ -230,10 +227,10 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModel|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
+     * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?IModel {
+    private function getEventApplication(): ?ActiveRow {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();

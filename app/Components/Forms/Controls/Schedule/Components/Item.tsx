@@ -35,7 +35,7 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
         return <div className="mb-3">
                 <span className={'form-check ' + (isChecked ? 'text-success border-success' : '')}>
                 <span
-                    className={isChecked ? 'fa fa-check-square-o' : 'fa fa-square-o'}
+                    className={isChecked ? 'fas fa-check-circle' : 'far fa-circle'}
                     onClick={() => {
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}

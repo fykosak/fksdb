@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -39,7 +38,7 @@ class TransitionButtonsComponent extends BaseComponent {
     }
 
     final public function render(): void {
-        $this->template->transitions = $this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
+        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
         $this->template->holder = $this->holder;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
@@ -57,9 +56,5 @@ class TransitionButtonsComponent extends BaseComponent {
             /* handled elsewhere, here it's to just prevent redirect */
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
         }
-    }
-
-    private function getMachine(): Machine {
-        return $this->handler->getMachine();
     }
 }

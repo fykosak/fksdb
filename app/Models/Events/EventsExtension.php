@@ -405,7 +405,6 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setJoinOn', [$definition['joinOn']]);
         $factory->addSetup('setJoinTo', [$definition['joinTo']]);
-        $factory->addSetup('setPersonIdColumns', [$definition['personIds']]); // must be set after setService
         $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
