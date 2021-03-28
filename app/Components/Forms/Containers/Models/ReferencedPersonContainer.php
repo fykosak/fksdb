@@ -158,7 +158,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $visible = $this->visibilityResolver->isVisible($model);
-
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
