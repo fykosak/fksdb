@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\AbstractModel;
@@ -14,7 +15,7 @@ use Tracy\Debugger;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class ServiceAddress extends OldAbstractServiceSingle {
+class ServiceAddress extends AbstractService {
 
     private const PATTERN = '/[0-9]{5}/';
 

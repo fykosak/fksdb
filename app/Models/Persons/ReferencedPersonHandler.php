@@ -220,16 +220,11 @@ class ReferencedPersonHandler implements ReferencedHandler {
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
                             $flag = $this->serviceFlag->findByFid($flagId);
-                            $flagData = [
+                            $this->servicePersonHasFlag->storeModel([
                                 'value' => $flagValue,
                                 'flag_id' => $flag->flag_id,
-                            ];
-                            if ($model[$flagId]) {
-                                $this->servicePersonHasFlag->updateModel($model[$flagId], (array)$flagData);
-                            } else {
-                                $flagData['person_id'] = $person->person_id;
-                                $this->servicePersonHasFlag->createNewModel((array)$flagData);
-                            }
+                                'person_id' => $person->person_id,
+                            ], $model[$flagId]);
                         }
                         continue 2;
                 }

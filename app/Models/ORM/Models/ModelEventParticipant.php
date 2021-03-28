@@ -4,10 +4,10 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\PaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -42,15 +42,13 @@ use Nette\Security\Resource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends OldAbstractModelSingle implements
-    PaymentModel,
-    Resource,
-    NodeCreator {
+class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
+// TODO can not be nullable
     public function getPerson(): ?ModelPerson {
         return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
     }
@@ -64,6 +62,7 @@ class ModelEventParticipant extends OldAbstractModelSingle implements
     }
 
     public function __toString(): string {
+        // TODO
         if (!$this->getPerson()) {
             throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }

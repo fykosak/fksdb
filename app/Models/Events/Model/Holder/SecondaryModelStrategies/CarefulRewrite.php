@@ -3,7 +3,8 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -24,23 +25,28 @@ class CarefulRewrite extends SecondaryModelStrategy {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
 
-        $currentModel = $holder->getModel();
         $foundModel = reset($secondaries);
-        $conflicts = $this->getConflicts($currentModel, $foundModel, $joinData, $holder->getService());
+        $conflicts = $this->getConflicts($foundModel, $joinData, $holder->getService(), $holder);
 
         if ($conflicts) {
             throw new SecondaryModelDataConflictException($conflicts, $holder, $secondaries);
         }
 
-        $this->updateFoundModel($currentModel, $foundModel, $joinData, $holder->getService());
+        $this->updateFoundModel($foundModel, $joinData, $holder->getService(), $holder);
         $holder->setModel($foundModel); // "swap" models
     }
 
-    private function getConflicts(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): array {
-        $currentArray = $currentModel->toArray();
+    /**
+     * @param ActiveRow $foundModel
+     * @param array $joinData
+     * @param AbstractService|AbstractServiceMulti $service
+     * @param BaseHolder $holder
+     * @return array
+     */
+    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
         $foundArray = $foundModel->toArray();
         $result = [];
-        foreach ($currentArray as $key => $value) {
+        foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
             }
@@ -55,16 +61,20 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    private function updateFoundModel(ActiveRow $currentModel, ActiveRow $foundModel, array $joinData, IService $service): void {
-        $currentArray = $currentModel->toArray();
+    /**
+     * @param ActiveRow $foundModel
+     * @param array $joinData
+     * @param AbstractService|AbstractServiceMulti $service
+     * @param BaseHolder $holder
+     */
+    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
         $data = [];
-        foreach ($currentArray as $key => $value) {
+        foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {
                 continue;
             }
             $data[$key] = $value;
         }
-        $service->updateModelLegacy($foundModel, $data);
+        $service->updateModel($foundModel, $data);
     }
-
 }

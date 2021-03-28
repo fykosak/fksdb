@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -21,11 +20,11 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param ActiveRow|AbstractModelMulti $model
+     * @param AbstractModelMulti $model
      * @throws ModelException
      */
     public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
-        $this->getMainService()->dispose($model->getMainModel());
+        $this->mainService->dispose($model->mainModel);
     }
 }

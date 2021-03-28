@@ -6,7 +6,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -16,13 +15,13 @@ class PasswordProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->password : ($holder->getPrimaryHolder()->data['password'] ?? null);
 
-        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
-
-        if (!isset($values['team']['password']) || !$values['team']['password']) {
-            $result = $values['team']['password'] = $original;
-        } else {
+        if (isset($values['team']['password']) && $values['team']['password']) {
             $result = $values['team']['password'] = $this->hash($values['team']['password']);
+        } else {
+            $result = $values['team']['password'] = $original;
         }
 
         if ($original !== null && $original != $result) {

@@ -3,7 +3,8 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
@@ -33,18 +34,17 @@ abstract class SecondaryModelStrategy {
     }
 
     /**
-     * @param IService $service
+     * @param AbstractService|AbstractServiceMulti $service
      * @param string|null $joinOn
      * @param string|null $joinTo
      * @param BaseHolder[] $holders
      * @param ActiveRow|null $primaryModel
      * @return void
      */
-    public function loadSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void {
-        $table = $service->getTable();
+    public function loadSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void {
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $table->where($joinOn, $joinValue);
+            $secondary = $service->getTable()->where($joinOn, $joinValue);
             if ($joinTo) {
                 $event = reset($holders)->getEvent();
                 $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
@@ -56,14 +56,14 @@ abstract class SecondaryModelStrategy {
     }
 
     /**
-     * @param IService $service
+     * @param AbstractService|AbstractServiceMulti $service
      * @param string|null $joinOn
      * @param string|null $joinTo
      * @param BaseHolder[] $holders
      * @param ActiveRow $primaryModel
      * @return void
      */
-    public function updateSecondaryModels(IService $service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void {
+    public function updateSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];
@@ -71,16 +71,16 @@ abstract class SecondaryModelStrategy {
                 $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
                 $conflicts = [];
                 foreach ($existing as $secondaryModel) {
-                    if ($baseHolder->getModel()->getPrimary(false) !== $secondaryModel->getPrimary()) {
-                        $conflicts[] = $secondaryModel;
-                    }
+                    // if ($baseModel && ($baseModel->getPrimary(false) !== $secondaryModel->getPrimary())) { TODO WTF?
+                    $conflicts[] = $secondaryModel;
+                    // }
                 }
                 if ($conflicts) {
                     // TODO this could be called even for joining via PK
                     $this->resolveMultipleSecondaries($baseHolder, $conflicts, $joinData);
                 }
             }
-            $service->updateModelLegacy($baseHolder->getModel(), $joinData);
+            $baseHolder->data += (array)$joinData;
         }
     }
 

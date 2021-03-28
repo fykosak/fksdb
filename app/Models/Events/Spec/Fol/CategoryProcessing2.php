@@ -7,7 +7,6 @@ use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -25,8 +24,8 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
-
-        $original = $holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }

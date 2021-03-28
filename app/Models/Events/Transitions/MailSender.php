@@ -139,7 +139,7 @@ class MailSender {
         $person = $login->getPerson();
         $event = $baseHolder->getEvent();
         $email = $person->getInfo()->email;
-        $application = $holder->getPrimaryHolder()->getModel();
+        $application = $holder->getPrimaryHolder()->getModel2();
 
         $token = $this->createToken($login, $event, $application);
 
@@ -242,9 +242,9 @@ class MailSender {
 
         $persons = [];
         foreach ($names as $name) {
-            $personId = $holder->getBaseHolder($name)->getPersonId();
-            if ($personId) {
-                $persons[] = $personId;
+            $person = $holder->getBaseHolder($name)->getPerson();
+            if ($person) {
+                $persons[] = $person->person_id;
             }
         }
         return $persons;

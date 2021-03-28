@@ -23,8 +23,6 @@ class FlagProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
-        $event = $holder->getPrimaryHolder()->getEvent();
-        $acYear = $event->getAcYear();
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
@@ -48,7 +46,7 @@ class FlagProcessing extends AbstractProcessing {
                     continue;
                 }
 
-                $history = $baseHolder->getModel()->getMainModel()->getPersonHistory();
+                $history = $baseHolder->getModel2()->mainModel->getPersonHistory();
                 $participantData = [
                     'school_id' => $history->school_id,
                     'study_year' => $history->study_year,

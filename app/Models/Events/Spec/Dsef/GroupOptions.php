@@ -4,6 +4,9 @@ namespace FKSDB\Models\Events\Spec\Dsef;
 
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
+use FKSDB\Models\ORM\Models\Events\ModelDsefParticipant;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\SmartObject;
@@ -13,6 +16,7 @@ use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated
  */
 class GroupOptions implements OptionsProvider {
 
@@ -25,7 +29,6 @@ class GroupOptions implements OptionsProvider {
     /** @var string|string[] */
     private $excludeStates;
 
-    /** @var array[]  eventId => groups cache */
     private array $groups = [];
 
     /**
@@ -59,27 +62,26 @@ class GroupOptions implements OptionsProvider {
         return $result;
     }
 
-    private function getGroups(int $eventId): array {
-        if (!isset($this->groups[$eventId])) {
-            $this->groups[$eventId] = $this->serviceDsefGroup->getTable()
-                ->select('*')
-                ->where('event_id', $eventId)
-                ->fetchPairs('e_dsef_group_id');
-        }
-        return $this->groups[$eventId];
+    /**
+     * @param ModelEvent $event
+     * @return ModelDsefGroup[]
+     */
+    private function getGroups(ModelEvent $event): array {
+        return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }
 
     public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
-        $application = $baseHolder->getModel();
-        $groups = $this->getGroups($event->getPrimary());
+        /** @var ModelDsefParticipant $model */
+        $model = $baseHolder->getModel2();
+        $groups = $this->getGroups($event);
 
-        $selection = $this->serviceMParticipant->getMainService()->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->serviceMParticipant->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)
-            ->where('NOT event_participant.event_participant_id', $application->getPrimary(false));
+            ->where('NOT event_participant.event_participant_id', $model ? $model->getPrimary(false) : null);
         if ($this->includeStates !== Machine::STATE_ANY) {
             $selection->where('event_participant.status', $this->includeStates);
         }
@@ -90,7 +92,7 @@ class GroupOptions implements OptionsProvider {
         }
         $groupOccupied = $selection->fetchPairs('e_dsef_group_id', 'occupied');
 
-        $selfGroup = $application->e_dsef_group_id;
+        $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
             $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;

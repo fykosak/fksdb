@@ -9,17 +9,15 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 
 class TestResolver implements VisibilityResolver, ModifiabilityResolver {
 
-    public function getResolutionMode(ModelPerson $person): string {
+    public function getResolutionMode(?ModelPerson $person): string {
         return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(ModelPerson $person): bool {
+    public function isModifiable(?ModelPerson $person): bool {
         return true;
     }
 
-    public function isVisible(ModelPerson $person): bool {
+    public function isVisible(?ModelPerson $person): bool {
         return true;
     }
-
 }
-

@@ -9,9 +9,9 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Utils\Promise;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
@@ -34,7 +34,7 @@ class ReferencedId extends HiddenField {
     private const JSON_DATA = 'referencedContainer';
     private ReferencedContainer $referencedContainer;
     private SearchContainer $searchContainer;
-    private IService $service;
+    private AbstractService $service;
     private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
@@ -42,7 +42,7 @@ class ReferencedId extends HiddenField {
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, ReferencedHandler $handler) {
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, AbstractService $service, ReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -86,7 +86,7 @@ class ReferencedId extends HiddenField {
         $this->promise = $promise;
     }
 
-    public function getService(): IService {
+    public function getService(): AbstractService {
         return $this->service;
     }
 
@@ -112,20 +112,20 @@ class ReferencedId extends HiddenField {
      * @return static
      */
     public function setValue($value, bool $force = false): self {
-        if ($value instanceof ActiveRow) {
+        if ($value instanceof ModelPerson) {
             $personModel = $value;
         } elseif ($value === self::VALUE_PROMISE) {
-            $personModel = $this->service->createNew();
+            $personModel = null;
         } else {
             $personModel = $this->service->findByPrimary($value);
         }
 
-        if ($personModel && !$personModel->isNew()) {
+        if ($personModel) {
             $this->model = $personModel;
         }
-        $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
+        $this->setModel($personModel ?? null, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($value instanceof ActiveRow) {
+        if ($value instanceof ModelPerson) {
             $value = $personModel->getPrimary();
         }
         $this->getSearchContainer()->setOption('visible', !$value);
@@ -178,10 +178,10 @@ class ReferencedId extends HiddenField {
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {
-                    $model = $this->getService()->findByPrimary($referencedId);
+                    $model = $this->service->findByPrimary($referencedId);
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-                    $model = $this->getService()->findByPrimary($model->getPrimary());
+                    $model = $this->service->findByPrimary($model->getPrimary());
                     $this->setValue($model, self::MODE_FORCE);
                     return $referencedId;
                 } else {
