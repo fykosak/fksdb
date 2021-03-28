@@ -11,7 +11,6 @@ use Fykosak\NetteORM\AbstractService;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelPersonInfo refresh(AbstractModel $model)
  * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractService {
@@ -29,7 +28,7 @@ class ServicePersonInfo extends AbstractService {
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(AbstractModel $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();
@@ -37,16 +36,6 @@ class ServicePersonInfo extends AbstractService {
                 unset($data['agreed']);
             }
         }
-        return parent::updateModel2($model, $data);
-    }
-
-    public function store(ModelPerson $person, ?ModelPersonInfo $info, array $data): ModelPersonInfo {
-        if ($info) {
-            $this->updateModel2($info, $data);
-            return $this->refresh($info);
-        } else {
-            $data['person_id'] = $person->person_id;
-            return $this->createNewModel($data);
-        }
+        return parent::updateModel($model, $data);
     }
 }

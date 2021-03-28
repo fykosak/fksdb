@@ -33,13 +33,4 @@ class ServicePerson extends OldAbstractServiceSingle {
         }
         parent::save($model);
     }
-
-    public function store(?ModelPerson $person, array $data): ModelPerson {
-        if ($person) {
-            $this->updateModel2($person, $data);
-            return $person;
-        } else {
-            return $this->createNewModel($data);
-        }
-    }
 }

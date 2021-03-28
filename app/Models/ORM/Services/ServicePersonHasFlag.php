@@ -33,16 +33,16 @@ class ServicePersonHasFlag extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel(IModel $model, ?iterable $data, bool $alive = true): void {
+    public function updateModelLegacy(IModel $model, ?iterable $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }
         $data['modified'] = new DateTime();
-        parent::updateModel($model, $data);
+        parent::updateModelLegacy($model, $data);
     }
 
-    public function updateModel2(AbstractModel $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool {
         $data['modified'] = new DateTime();
-        return parent::updateModel2($model, $data);
+        return parent::updateModel($model, $data);
     }
 }

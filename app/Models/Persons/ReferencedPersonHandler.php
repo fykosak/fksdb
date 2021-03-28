@@ -202,10 +202,13 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->store($person, $model, (array)$data['person_info']);
+                        $this->servicePersonInfo->storeModel(array_merge((array)$data['person_info'], ['person_id' => $person->person_id]), $model);
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
+                        $this->servicePersonHistory->storeModel(array_merge((array)$data['person_history'], [
+                            'ac_year' => $this->acYear,
+                            'person_id' => $person->person_id,
+                        ]), $model);
                         continue 2;
                     case 'person_schedule':
                         $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
@@ -222,7 +225,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                                 'flag_id' => $flag->flag_id,
                             ];
                             if ($model[$flagId]) {
-                                $this->servicePersonHasFlag->updateModel2($model[$flagId], (array)$flagData);
+                                $this->servicePersonHasFlag->updateModel($model[$flagId], (array)$flagData);
                             } else {
                                 $flagData['person_id'] = $person->person_id;
                                 $this->servicePersonHasFlag->createNewModel((array)$flagData);
@@ -240,8 +243,8 @@ class ReferencedPersonHandler implements ReferencedHandler {
 
     private function storePostContact(ModelPerson $person, ?ModelPostContact $model, array $data, string $type): void {
         if ($model) {
-            $this->serviceAddress->updateModel2($model->getAddress(), $data);
-            $this->servicePostContact->updateModel2($model, $data);
+            $this->serviceAddress->updateModel($model->getAddress(), $data);
+            $this->servicePostContact->updateModel($model, $data);
         } else {
             $data = array_merge((array)$data, [
                 'person_id' => $person->person_id,
@@ -287,7 +290,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function storePerson(?ModelPerson $person, array $data): ModelPerson {
-        return $this->servicePerson->store($person, (array)$data['person']);
+        return $this->servicePerson->storeModel((array)$data['person'], $person);
     }
 
     private function removeConflicts(iterable $data, iterable $conflicts): iterable {
@@ -368,7 +371,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function beginTransaction(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
@@ -377,14 +380,14 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     private function commit(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
     }
 
     private function rollback(): void {
-        $connection = $this->servicePerson->getExplorer()->getConnection();
+        $connection = $this->servicePerson->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();
         }

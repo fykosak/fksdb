@@ -40,7 +40,7 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
         /** @var ModelPayment $model */
         $model = $holder->getModel();
         $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel2($model, $info);
+        $this->servicePayment->updateModel($model, $info);
     }
 
     /**
@@ -53,6 +53,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
         /** @var ModelPayment $model */
         $model = $holder->getModel();
         $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel2($model, $info);
+        $this->servicePayment->updateModel($model, $info);
     }
 }

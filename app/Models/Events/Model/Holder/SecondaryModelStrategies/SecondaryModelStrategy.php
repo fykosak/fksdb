@@ -80,7 +80,7 @@ abstract class SecondaryModelStrategy {
                     $this->resolveMultipleSecondaries($baseHolder, $conflicts, $joinData);
                 }
             }
-            $service->updateModel($baseHolder->getModel(), $joinData);
+            $service->updateModelLegacy($baseHolder->getModel(), $joinData);
         }
     }
 

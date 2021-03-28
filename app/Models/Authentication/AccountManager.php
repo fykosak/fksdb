@@ -137,7 +137,7 @@ class AccountManager {
         /* Must be done after login_id is allocated. */
         if ($password) {
             $hash = $login->createHash($password);
-            $this->serviceLogin->updateModel2($login, ['hash' => $hash]);
+            $this->serviceLogin->updateModel($login, ['hash' => $hash]);
         }
         return $login;
     }

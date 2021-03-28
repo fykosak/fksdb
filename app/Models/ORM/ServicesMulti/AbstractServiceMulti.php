@@ -77,10 +77,10 @@ abstract class AbstractServiceMulti implements IService {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
+    public function updateModelLegacy(IModel $model, iterable $data, bool $alive = true): void {
         $this->checkType($model);
-        $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
-        $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
+        $this->getMainService()->updateModelLegacy($model->getMainModel(), $data, $alive);
+        $this->getJoinedService()->updateModelLegacy($model->getJoinedModel(), $data, $alive);
     }
 
     /**
@@ -89,10 +89,10 @@ abstract class AbstractServiceMulti implements IService {
      * @return bool
      * @throws ModelException
      */
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel(IModel $model, array $data): bool {
         $this->checkType($model);
-        $this->getMainService()->updateModel2($model->getMainModel(), $data);
-        return $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+        $this->getMainService()->updateModel($model->getMainModel(), $data);
+        return $this->getJoinedService()->updateModel($model->getJoinedModel(), $data);
     }
 
     /**
@@ -147,18 +147,18 @@ abstract class AbstractServiceMulti implements IService {
     }
 
     public function getConnection(): Connection {
-        return $this->mainService->getExplorer()->getConnection();
+        return $this->mainService->explorer->getConnection();
     }
 
     public function getContext(): Explorer {
-        return $this->mainService->getExplorer();
+        return $this->mainService->explorer;
     }
     public function getExplorer(): Explorer {
-        return $this->mainService->getExplorer();
+        return $this->mainService->explorer;
     }
 
     public function getConventions(): Conventions {
-        return $this->mainService->getConventions();
+        return $this->mainService->explorer->getConventions();
     }
 
     /**
@@ -183,7 +183,7 @@ abstract class AbstractServiceMulti implements IService {
         $joinedTable = $this->getJoinedService()->getTable()->getName();
         $mainTable = $this->getMainService()->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->getExplorer(), $this->getJoinedService()->getConventions());
+        $selection = new MultiTableSelection($this, $joinedTable, $this->getJoinedService()->explorer, $this->getJoinedService()->explorer->getConventions());
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 

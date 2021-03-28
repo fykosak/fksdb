@@ -40,7 +40,7 @@ interface IService {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, iterable $data): void;
+    public function updateModelLegacy(IModel $model, iterable $data): void;
 
     /**
      * @return string|AbstractModel|AbstractModelMulti

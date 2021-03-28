@@ -5,6 +5,7 @@ namespace FKSDB\Models\Authentication\SSO;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
 use FKSDB\Models\ORM\Services\ServiceGlobalSession;
+use Nette\Http\Request;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
@@ -22,9 +23,11 @@ class GlobalSession implements IGlobalSession {
     /** @var string  expecting string like '+10 days' */
     private string $expiration;
     private bool $started = false;
+    private Request $request;
 
-    public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, GlobalSessionIdHolder $globalSessionIdHolder) {
+    public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, GlobalSessionIdHolder $globalSessionIdHolder, Request $request) {
         $this->expiration = $expiration;
+        $this->request = $request;
         $this->serviceGlobalSession = $serviceGlobalSession;
         $this->globalSessionIdHolder = $globalSessionIdHolder;
     }
@@ -40,10 +43,7 @@ class GlobalSession implements IGlobalSession {
 
             // touch the session for another expiration period
             if (isset($this->globalSession) && !$this->globalSession->isValid()) {
-                // $this->globalSession->until = DateTime::from($this->expiration);
-                // $this->serviceGlobalSession->save($this->globalSession);
-                $this->serviceGlobalSession->updateModel2($this->globalSession, ['until' => DateTime::from($this->expiration)]);
-                $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
+                $this->serviceGlobalSession->updateModel($this->globalSession, ['until' => DateTime::from($this->expiration)]);
             }
         }
         $this->started = true;
@@ -126,13 +126,13 @@ class GlobalSession implements IGlobalSession {
             throw new InvalidArgumentException("Cannot set offset '$offset' in global session.");
         }
         if (isset($this->globalSession) && $value != $this->globalSession->login_id) {
-            $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
+            $this->serviceGlobalSession->updateModel($this->globalSession, ['login_id' => $value]);
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($this->globalSession->session_id) ?: null;
         }
         // lazy initialization because we need to know login id
         if (!isset($this->globalSession)) {
             $until = DateTime::from($this->expiration);
-            $this->globalSession = $this->serviceGlobalSession->createSession($value, $until);
+            $this->globalSession = $this->serviceGlobalSession->createSession($value, $this->request, $until);
             $this->globalSessionIdHolder->setGlobalSessionId($this->globalSession->session_id);
         }
     }

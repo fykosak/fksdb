@@ -33,7 +33,7 @@ class RankingStrategy {
      * @internal
      */
     public function close(?string $category = null): Html {
-        $connection = $this->serviceFyziklaniTeam->getExplorer()->getConnection();
+        $connection = $this->serviceFyziklaniTeam->explorer->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
@@ -58,9 +58,9 @@ class RankingStrategy {
             /** @var ModelFyziklaniTeam $team */
             $team = $teamData['team'];
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel2($team, ['rank_category' => $index + 1]);
+                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
             $log->addHtml(Html::el('li')
                 ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Rank') . ': ' . ($index + 1)));

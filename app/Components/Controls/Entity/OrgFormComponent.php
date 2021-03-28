@@ -66,7 +66,7 @@ class OrgFormComponent extends AbstractEntityFormComponent {
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        $this->serviceOrg->store($this->model ?? null, $data);
+        $this->serviceOrg->storeModel($data, $this->model ?? null);
         $this->getPresenter()->flashMessage(!isset($this->model) ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }

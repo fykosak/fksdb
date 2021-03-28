@@ -13,13 +13,6 @@ use Nette\Database\Explorer;
  */
 class ServiceStoredQuery extends AbstractService {
 
-    private ServiceStoredQueryTag $serviceStoredQueryTag;
-
-    public function __construct(string $tableName, string $className, Explorer $explorer, ServiceStoredQueryTag $serviceStoredQueryTag, Conventions $conventions) {
-        parent::__construct($tableName, $className, $explorer, $conventions);
-        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
-    }
-
     public function findByQid(string $qid): ?ModelStoredQuery {
         /** @var ModelStoredQuery $result */
         $result = $this->getTable()->where('qid', $qid)->fetch();

@@ -114,7 +114,7 @@ class Handler {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -142,7 +142,7 @@ class Handler {
      */
     public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
-            $this->serviceFyziklaniSubmit->updateModel2($submit, [
+            $this->serviceFyziklaniSubmit->updateModel($submit, [
                 'points' => null,
                 'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
                 /* ugly, exclude previous value of `modified` from query
@@ -172,7 +172,7 @@ class Handler {
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB

@@ -25,7 +25,7 @@ class ServiceSubmitQuizQuestion extends AbstractService {
     public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, ?string $answer): void {
         $submit = $this->findByContestant($contestant->ct_id, $question->question_id);
         if ($submit) {
-            $this->updateModel2($submit, [
+            $this->updateModel($submit, [
                 'submitted_on' => new DateTime(),
                 'answer' => $answer,
             ]);
