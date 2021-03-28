@@ -27,8 +27,8 @@ class ServiceSchedulePayment extends AbstractService {
      * @throws StorageException
      * @throws ModelException
      */
-    public function store(array $data, ModelPayment $payment): void {
-        if (!$this->getExplorer()->getConnection()->getPdo()->inTransaction()) {
+    public function storeItems(array $data, ModelPayment $payment): void {
+        if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
 

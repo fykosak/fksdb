@@ -58,13 +58,13 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
         $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
 
-        $connection = $this->serviceSchool->getExplorer()->getConnection();
+        $connection = $this->serviceSchool->explorer->getConnection();
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */
-            $this->serviceAddress->updateModel2($this->model->getAddress(), $addressData);
+            $this->serviceAddress->updateModel($this->model->getAddress(), $addressData);
             /* School */
-            $this->serviceSchool->updateModel2($this->model, $schoolData);
+            $this->serviceSchool->updateModel($this->model, $schoolData);
         } else {
             /* Address */
             $address = $this->serviceAddress->createNewModel($addressData);

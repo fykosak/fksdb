@@ -3,8 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Http\Request;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -16,19 +14,13 @@ use Fykosak\NetteORM\AbstractService;
 class ServiceGlobalSession extends AbstractService {
 
     private const SESSION_ID_LENGTH = 32;
-    private Request $request;
 
-    public function __construct(string $tableName, string $modelClassName, Request $request, Explorer $explorer, Conventions $conventions) {
-        parent::__construct($tableName, $modelClassName, $explorer, $conventions);
-        $this->request = $request;
-    }
-
-    public function createSession(int $loginId, ?DateTime $until = null, ?DateTime $since = null): ModelGlobalSession {
+    public function createSession(int $loginId,Request $request, ?DateTime $until = null, ?DateTime $since = null): ModelGlobalSession {
         if ($since === null) {
             $since = new DateTime();
         }
 
-        $this->getExplorer()->getConnection()->beginTransaction();
+        $this->explorer->getConnection()->beginTransaction();
 
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
@@ -39,10 +31,9 @@ class ServiceGlobalSession extends AbstractService {
             'login_id' => $loginId,
             'since' => $since,
             'until' => $until,
-            'remote_ip' => $this->request->getRemoteAddress(),
+            'remote_ip' => $request->getRemoteAddress(),
         ]);
-        // $this->save($session);
-        $this->getExplorer()->getConnection()->commit();
+        $this->explorer->getConnection()->commit();
 
         return $session;
     }

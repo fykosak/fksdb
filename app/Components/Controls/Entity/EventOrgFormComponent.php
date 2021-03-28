@@ -55,7 +55,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        $this->serviceEventOrg->store($this->model ?? null, $data);
+        $this->serviceEventOrg->storeModel($data, $this->model ?? null);
         $this->getPresenter()->flashMessage(!isset($this->model) ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }

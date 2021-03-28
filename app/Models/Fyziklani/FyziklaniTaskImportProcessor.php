@@ -30,7 +30,7 @@ class FyziklaniTaskImportProcessor {
 
     public function process(ArrayHash $values, Logger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
-        $connection = $this->serviceFyziklaniTask->getExplorer()->getConnection();
+        $connection = $this->serviceFyziklaniTask->explorer->getConnection();
         $connection->beginTransaction();
         if ($values->state == TaskPresenter::IMPORT_STATE_REMOVE_N_INSERT) {
             $this->serviceFyziklaniTask->findAll($this->event)->delete();
@@ -48,7 +48,7 @@ class FyziklaniTaskImportProcessor {
 
                     $logger->log(new Message(sprintf(_('Task %s "%s" added'), $row['label'], $row['name']), BasePresenter::FLASH_SUCCESS));
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                    $this->serviceFyziklaniTask->updateModel2($task, [
+                    $this->serviceFyziklaniTask->updateModel($task, [
                         'label' => $row['label'],
                         'name' => $row['name'],
                     ]);

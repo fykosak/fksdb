@@ -13,7 +13,6 @@ use Fykosak\NetteORM\AbstractService;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
- * @method ModelSubmit refresh(AbstractModel $model)
  */
 class ServiceSubmit extends AbstractService {
 
@@ -47,15 +46,6 @@ class ServiceSubmit extends AbstractService {
         return $this->getTable()
             ->select(DbNames::TAB_SUBMIT . '.*')
             ->select(DbNames::TAB_TASK . '.*');
-    }
-
-    public function store(?ModelSubmit $submit, array $data): ModelSubmit {
-        if (is_null($submit)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($submit, $data);
-            return $this->refresh($submit);
-        }
     }
 
     public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {

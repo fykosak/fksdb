@@ -124,7 +124,7 @@ class SubmitHandlerFactory {
             'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
             'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
         ];
-        return $this->serviceSubmit->store($submit, $data);
+        return $this->serviceSubmit->storeModel($data, $submit);
     }
 
     /**

@@ -30,11 +30,11 @@ class ServiceAddress extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(AbstractModel $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
-        return parent::updateModel2($model, $data);
+        return parent::updateModel($model, $data);
     }
 
     /**
@@ -52,7 +52,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
             throw new InvalidPostalCode($postalCode);
         }
         /** @var ActiveRow|ModelRegion $row */
-        $row = $this->getExplorer()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->explorer->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {

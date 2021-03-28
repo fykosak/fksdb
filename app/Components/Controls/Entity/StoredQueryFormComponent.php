@@ -61,14 +61,14 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      */
     protected function handleFormSuccess(Form $form): void {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
-        $connection = $this->serviceStoredQuery->getExplorer()->getConnection();
+        $connection = $this->serviceStoredQuery->explorer->getConnection();
         $connection->beginTransaction();
 
         $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
 
         if (isset($this->model)) {
             $model = $this->model;
-            $this->serviceStoredQuery->updateModel2($model, $data);
+            $this->serviceStoredQuery->updateModel($model, $data);
         } else {
             $model = $this->serviceStoredQuery->createNewModel($data);
         }

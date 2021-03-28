@@ -96,7 +96,7 @@ class AjaxSubmitComponent extends AjaxComponent {
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
-            $this->serviceSubmit->getExplorer()->getConnection()->beginTransaction();
+            $this->serviceSubmit->explorer->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
@@ -109,7 +109,7 @@ class AjaxSubmitComponent extends AjaxComponent {
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->serviceSubmit->getExplorer()->getConnection()->commit();
+            $this->serviceSubmit->explorer->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), Logger::SUCCESS));
             $this->sendAjaxResponse();
         }

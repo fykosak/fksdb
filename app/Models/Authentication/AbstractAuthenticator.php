@@ -27,6 +27,6 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @throws \Exception
      */
     protected function logAuthentication(ModelLogin $login): void {
-        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
+        $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

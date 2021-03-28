@@ -10,7 +10,6 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * Class ServiceEventOrg
  * @author Michal Červeňák <miso@fykos.cz>
- * @method ModelEventOrg refresh(AbstractModel $model)
  */
 class ServiceEventOrg extends AbstractService {
 
@@ -22,15 +21,6 @@ class ServiceEventOrg extends AbstractService {
                 throw new DuplicateOrgException(null, $exception);
             }
             throw $exception;
-        }
-    }
-
-    public function store(?ModelEventOrg $model, array $data): ModelEventOrg {
-        if (is_null($model)) {
-            return $this->createNewModel($data);
-        } else {
-            $this->updateModel2($model, $data);
-            return $this->refresh($model);
         }
     }
 }
