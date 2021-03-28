@@ -4,7 +4,6 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
 use Fykosak\NetteORM\AbstractService;

@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\TypedTableSelection;
