@@ -4,11 +4,11 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use InvalidArgumentException;
+use Nette\Database\Table\ActiveRow;
 use PDOException;
 use Tracy\Debugger;
 
@@ -78,7 +78,7 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
      * Use this method to delete a model!
      * (Name chosen not to collide with parent.)
      *
-     * @param IModel|AbstractModel $model
+     * @param ActiveRow|AbstractModel $model
      * @throws ModelException
      */
     public function dispose($model): void {
@@ -92,12 +92,12 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
     /**
      * Updates values in model from given data.
      *
-     * @param IModel $model
+     * @param ActiveRow $model
      * @param iterable|null $data
      * @param bool $alive
      * @deprecated
      */
-    public function updateModelLegacy(IModel $model, ?iterable $data, bool $alive = true): void {
+    public function updateModelLegacy(ActiveRow $model, ?iterable $data, bool $alive = true): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
@@ -112,11 +112,11 @@ abstract class OldAbstractServiceSingle extends AbstractService implements IServ
     /**
      * Use this method to store a model!
      *
-     * @param IModel|OldAbstractModelSingle $model
+     * @param ActiveRow|OldAbstractModelSingle $model
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel &$model): void {
+    public function save(ActiveRow &$model): void {
         $modelClassName = $this->getModelClassName();
         /** @var OldAbstractModelSingle $model */
         if (!$model instanceof $modelClassName) {

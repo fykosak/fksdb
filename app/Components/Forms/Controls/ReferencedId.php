@@ -9,13 +9,13 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Utils\Promise;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
@@ -38,7 +38,7 @@ class ReferencedId extends HiddenField {
     private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
-    private ?IModel $model = null;
+    private ?ActiveRow $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
@@ -102,17 +102,17 @@ class ReferencedId extends HiddenField {
         $this->modelCreated = $modelCreated;
     }
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?ActiveRow {
         return $this->model;
     }
 
     /**
-     * @param string|int|IModel|AbstractModel|ModelPerson $value
+     * @param string|int|ActiveRow|AbstractModel|ModelPerson $value
      * @param bool $force
      * @return static
      */
     public function setValue($value, bool $force = false): self {
-        if ($value instanceof IModel) {
+        if ($value instanceof ActiveRow) {
             $personModel = $value;
         } elseif ($value === self::VALUE_PROMISE) {
             $personModel = $this->service->createNew();
@@ -125,7 +125,7 @@ class ReferencedId extends HiddenField {
         }
         $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($value instanceof IModel) {
+        if ($value instanceof ActiveRow) {
             $value = $personModel->getPrimary();
         }
         $this->getSearchContainer()->setOption('visible', !$value);
@@ -218,7 +218,7 @@ class ReferencedId extends HiddenField {
         }
     }
 
-    protected function setModel(?IModel $model, string $mode): void {
+    protected function setModel(?ActiveRow $model, string $mode): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

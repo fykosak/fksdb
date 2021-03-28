@@ -6,7 +6,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
@@ -14,6 +13,7 @@ use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -43,7 +43,7 @@ class BaseHolder {
     private Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    private ?IModel $model = null;
+    private ?ActiveRow $model = null;
     private array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
@@ -154,9 +154,9 @@ class BaseHolder {
     }
 
     /**
-     * @return IModel|ModelMDsefParticipant|ModelMFyziklaniParticipant
+     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant
      */
-    public function &getModel(): IModel {
+    public function &getModel(): ActiveRow {
         if (!$this->model) {
             $this->model = $this->getService()->createNew(); // TODO!!!
         }
@@ -164,10 +164,10 @@ class BaseHolder {
     }
 
     /**
-     * @param int|IModel $model
+     * @param int|ActiveRow $model
      */
     public function setModel($model): void {
-        if ($model instanceof IModel) {
+        if ($model instanceof ActiveRow) {
             $this->model = $model;
         } elseif ($model) {
             $this->model = $this->service->findByPrimary($model);
