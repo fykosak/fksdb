@@ -10,7 +10,6 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * Class ServiceEventOrg
  * @author Michal Červeňák <miso@fykos.cz>
- * @method ModelEventOrg refresh(AbstractModel $model)
  */
 class ServiceEventOrg extends AbstractService {
 

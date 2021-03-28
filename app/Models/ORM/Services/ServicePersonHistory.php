@@ -9,7 +9,6 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPersonHistory createNewModel(array $data)
- * @method ModelPersonHistory refresh(AbstractModel $model)
  */
 class ServicePersonHistory extends AbstractService {
 

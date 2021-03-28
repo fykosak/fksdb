@@ -9,7 +9,6 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelOrg createNewModel(array $data)
- * @method ModelOrg refresh(AbstractModel $model)
  */
 class ServiceOrg extends AbstractService {
 }

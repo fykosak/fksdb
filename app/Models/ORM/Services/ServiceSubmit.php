@@ -13,7 +13,6 @@ use Fykosak\NetteORM\AbstractService;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
- * @method ModelSubmit refresh(AbstractModel $model)
  */
 class ServiceSubmit extends AbstractService {
 

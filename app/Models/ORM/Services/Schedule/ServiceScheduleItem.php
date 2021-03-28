@@ -11,7 +11,6 @@ use Fykosak\NetteORM\AbstractService;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleItem|null findByPrimary($key)
  * @method ModelScheduleItem createNewModel(array $data)
- * @method ModelScheduleItem refresh(AbstractModel $model)
  */
 class ServiceScheduleItem extends AbstractService {
 }

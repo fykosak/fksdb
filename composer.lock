@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "79e869c49061af95be56f9d9068c6774",
+    "content-hash": "b0ff2bbef5040443d0fe7cc3315fd5db",
     "packages": [
         {
             "name": "fykosak/nette-orm",
-            "version": "0.2.1",
+            "version": "dev-dev-0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "19571cdebee16c212c0b2562f9511df0d5116e29"
+                "reference": "dc129251766cf4b590dae30678273a9017507d91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/19571cdebee16c212c0b2562f9511df0d5116e29",
-                "reference": "19571cdebee16c212c0b2562f9511df0d5116e29",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/dc129251766cf4b590dae30678273a9017507d91",
+                "reference": "dc129251766cf4b590dae30678273a9017507d91",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                     "email": "lukast@fykos.cz"
                 }
             ],
-            "time": "2021-03-25T03:33:11+00:00"
+            "time": "2021-03-27T00:18:53+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2208,7 +2208,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "fykosak/nette-orm": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
