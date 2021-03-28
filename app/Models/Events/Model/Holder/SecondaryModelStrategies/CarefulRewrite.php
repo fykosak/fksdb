@@ -75,6 +75,6 @@ class CarefulRewrite extends SecondaryModelStrategy {
             }
             $data[$key] = $value;
         }
-        $service->updateModelLegacy($foundModel, $data);
+        $service->updateModel($foundModel, $data);
     }
 }
