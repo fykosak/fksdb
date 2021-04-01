@@ -49,7 +49,7 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 8"
+      "vendor/bin/tester tests/ModelsTests/WebServiceModelTest.phpt -p php -s -c tests/php.ini -j 8"
     ],
     "testCoverage": [
       "@clearTestCache",

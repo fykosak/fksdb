@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
-use Tracy\Debugger;
 use FKSDB\Models\WebService\SoapResponse;
 
 /**
@@ -37,8 +36,7 @@ class WebServicePresenter extends BasePresenter {
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
-        } catch (\Exception $exception) {
-            Debugger::log($exception);
+        } catch (\Throwable $exception) {
             $this->redirect('Dashboard:');
         }
     }

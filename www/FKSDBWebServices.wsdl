@@ -13,9 +13,10 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
 
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/signatures.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/event.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/eventsList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/signatures.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/event.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/eventsList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/organizers.wsdl"/>
 
     <!-- wsdl:types encapsulates schema definitions of communication types -->
     <wsdl:types>
@@ -146,6 +147,10 @@
             <wsdl:input message="tns:GetSignaturesRequest"/>
             <wsdl:output message="tns:GetSignaturesResponse"/>
         </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <wsdl:input message="tns:GetOrganizersRequest"/>
+            <wsdl:output message="tns:GetOrganizersResponse"/>
+        </wsdl:operation>
     </wsdl:portType>
 
     <wsdl:binding name="FKSDBBinding" type="tns:FKSDBPortType">
@@ -202,6 +207,16 @@
         </wsdl:operation>
         <wsdl:operation name="GetSignatures">
             <soap:operation soapAction="GetSignatures"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <soap:operation soapAction="GetOrganizers"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>

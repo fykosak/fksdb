@@ -140,7 +140,7 @@ class ReferencedId extends HiddenField {
      * @param bool $fullfilPromise
      * @return mixed
      */
-    public function getValue($fullfilPromise = true) {
+    public function getValue(bool $fullfilPromise = true) {
         if ($fullfilPromise && $this->promise) {
             return $this->promise->getValue();
         }

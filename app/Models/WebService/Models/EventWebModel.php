@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Models\WebService;
+namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -10,26 +10,21 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use Nette\SmartObject;
+use FKSDB\Models\WebService\XMLHelper;
 use SoapVar;
 
 /**
  * Class FyziklaniSoapFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventSoapFactory {
-
-    use SmartObject;
+class EventWebModel extends WebModel {
 
     private ServiceEvent $serviceEvent;
     private ServicePersonSchedule $servicePersonSchedule;
-    private ServiceEventParticipant $serviceEventParticipant;
 
-    public function __construct(ServiceEvent $serviceEvent, ServicePersonSchedule $servicePersonSchedule, ServiceEventParticipant $serviceEventParticipant) {
+    public function inject(ServiceEvent $serviceEvent, ServicePersonSchedule $servicePersonSchedule): void {
         $this->serviceEvent = $serviceEvent;
         $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
@@ -37,7 +32,7 @@ class EventSoapFactory {
      * @return SoapVar
      * @throws \SoapFault
      */
-    public function handleGetEvent(\stdClass $args): SoapVar {
+    public function getResponse(\stdClass $args): SoapVar {
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown event.');
         }
@@ -67,26 +62,6 @@ class EventSoapFactory {
             $nodeString .= $doc->saveXML($node);
         }
         return new SoapVar($nodeString, XSD_ANYXML);
-    }
-
-    /**
-     * @param \stdClass $args
-     * @return SoapVar
-     * @throws \SoapFault
-     */
-    public function handleGetEventsList(\stdClass $args): SoapVar {
-        if (!isset($args->eventTypeIds)) {
-            throw new \SoapFault('Sender', 'Unknown eventType.');
-        }
-        $query = $this->serviceEvent->getTable()->where('event_type_id', (array)$args->eventTypeIds);
-        $doc = new \DOMDocument();
-        $doc->formatOutput = true;
-        $rootNode = $doc->createElement('events');
-        /** @var ModelEvent $event */
-        foreach ($query as $event) {
-            $rootNode->appendChild($event->createXMLNode($doc));
-        }
-        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
     private function createPersonScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
