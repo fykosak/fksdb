@@ -22,11 +22,8 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
+use Throwable;
 
-/**
- * Class AbstractApplicationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractApplicationPresenter extends BasePresenter {
 
     use EventEntityPresenterTrait;
@@ -49,7 +46,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws \Throwable
+     * @throws Throwable
      */
     final public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));

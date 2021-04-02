@@ -9,8 +9,6 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2012 extends EvaluationStrategy {
 

@@ -6,10 +6,6 @@ use DateTime;
 use Exception;
 use FKSDB\Models\Transitions\Transition\Statements\Statement;
 
-/**
- * Class DateBetween
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DateBetween extends Statement {
 
     private \DateTimeInterface $to;

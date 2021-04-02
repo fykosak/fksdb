@@ -5,10 +5,6 @@ namespace FKSDB\Models\ORM\Links;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 
-/**
- * Class ParticipantListLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ParticipantListLink extends LinkFactory {
 
     public function getText(): string {

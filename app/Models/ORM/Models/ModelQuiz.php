@@ -6,8 +6,6 @@ use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Miroslav Jarý <mira.jary@gmail.com>
  * @property-read ActiveRow task
  * @property-read int task_id
  * @property-read int question_id

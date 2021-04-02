@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
 
-/**
- * Class RoutingEdit
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class RoutingEditComponent extends AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

@@ -13,10 +13,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class PersonsGrid extends BaseGrid {
 
     private TypedTableSelection $trunkPersons;

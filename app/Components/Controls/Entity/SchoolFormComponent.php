@@ -14,8 +14,6 @@ use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 
 /**
- * Class AbstractForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelSchool $model
  */
 class SchoolFormComponent extends AbstractEntityFormComponent {

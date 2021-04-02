@@ -27,8 +27,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * Class StoredQueryForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @method StoredQueryPresenter getPresenter($throw = true)
  * @property ModelStoredQuery $model
  */

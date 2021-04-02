@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Trait EventEntityTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait EventEntityPresenterTrait {
 
     use EntityPresenterTrait {

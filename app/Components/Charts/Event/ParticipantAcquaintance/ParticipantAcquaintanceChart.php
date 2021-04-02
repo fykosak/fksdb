@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\DI\Container;
 
-/**
- * Class ParticipantAcquaintanceChartControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ParticipantAcquaintanceChart extends ReactComponent implements Chart {
 
     private ModelEvent $event;

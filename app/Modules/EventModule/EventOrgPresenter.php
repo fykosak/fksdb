@@ -18,8 +18,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class EventOrgPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelEventOrg getEntity()
  */
 class EventOrgPresenter extends BasePresenter {

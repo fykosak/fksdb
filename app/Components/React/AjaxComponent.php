@@ -7,10 +7,6 @@ use Nette\Application\AbortException;
 use Nette\Http\IRequest;
 use Nette\Http\Response;
 
-/**
- * Class AjaxComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AjaxComponent extends ReactComponent {
 
     private IRequest $request;

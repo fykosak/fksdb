@@ -13,10 +13,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
-/**
- * Class AbstractEntityFormControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractEntityFormComponent extends FormComponent {
 
     protected ?AbstractModel $model;

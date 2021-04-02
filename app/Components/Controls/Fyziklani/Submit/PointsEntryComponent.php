@@ -17,10 +17,6 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-/**
- * Class TaskCodeInput
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PointsEntryComponent extends AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

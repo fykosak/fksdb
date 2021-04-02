@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\DI\Container;
+use stdClass;
 
 class MockSeriesPresenter extends BasePresenter {
 
@@ -39,9 +40,9 @@ class MockSeriesPresenter extends BasePresenter {
     /**
      * @param string $message
      * @param string $type
-     * @return \stdClass
+     * @return stdClass
      */
-    public function flashMessage($message, string $type = 'info'): \stdClass {
-        return new \stdClass();
+    public function flashMessage($message, string $type = 'info'): stdClass {
+        return new stdClass();
     }
 }

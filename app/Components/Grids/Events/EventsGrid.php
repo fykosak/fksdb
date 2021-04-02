@@ -11,10 +11,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class EventsGrid extends EntityGrid {
 
     public function __construct(Container $container, ModelContest $contest, int $year) {

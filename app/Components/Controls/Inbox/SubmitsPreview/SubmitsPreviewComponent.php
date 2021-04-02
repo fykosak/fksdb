@@ -11,10 +11,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Class SubmitsPreviewControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SubmitsPreviewComponent extends SeriesTableComponent {
 
     private SubmitHandlerFactory $submitHandlerFactory;

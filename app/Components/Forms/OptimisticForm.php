@@ -9,8 +9,6 @@ use Nette\Forms\Controls\HiddenField;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class OptimisticForm extends Form {
 
@@ -37,6 +35,7 @@ class OptimisticForm extends Form {
     /**
      * @param null $data Must be always null! Defaults callback is used to produce the values.
      * @param bool $erase
+     * @return static
      * @throws LogicException
      */
     public function setDefaults($data = null, $erase = false): self {

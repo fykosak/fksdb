@@ -12,10 +12,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Class SpamPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SpamPresenter extends BasePresenter {
 
     use EntityPresenterTrait;

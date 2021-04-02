@@ -13,10 +13,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class AllPersonsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class AllPersonsGrid extends BaseGrid {
 
     private ServicePersonSchedule $servicePersonSchedule;

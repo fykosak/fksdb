@@ -18,8 +18,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class ScheduleGroupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleGroup getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter {

@@ -11,10 +11,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeachersGrid extends BaseGrid {
 
     private ServiceTeacher $serviceTeacher;

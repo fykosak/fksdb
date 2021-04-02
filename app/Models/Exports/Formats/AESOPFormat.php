@@ -5,11 +5,6 @@ namespace FKSDB\Models\Exports\Formats;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class AESOPFormat extends XSLFormat {
 
     public const ID_SCOPE = 'fksdb.person_id';

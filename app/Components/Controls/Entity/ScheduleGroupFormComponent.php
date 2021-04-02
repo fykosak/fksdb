@@ -14,8 +14,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class ScheduleGroupFormComponent
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelScheduleGroup|null $model
  */
 class ScheduleGroupFormComponent extends AbstractEntityFormComponent {

@@ -10,10 +10,6 @@ use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 
-/**
- * Class CorrectedControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CorrectedComponent extends SeriesTableComponent {
 
     private CorrectedStorage $correctedStorage;

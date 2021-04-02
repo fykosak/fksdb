@@ -4,10 +4,6 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
-/**
- * Class BinaryPrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class BinaryPrinter extends AbstractValuePrinter {
     /**
      * @param int|bool $value

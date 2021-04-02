@@ -20,8 +20,6 @@ use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * Class ExportPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
 class ExportPresenter extends BasePresenter {

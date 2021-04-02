@@ -6,10 +6,6 @@ use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Utils\Html;
 
-/**
- * Class PricePrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PricePrinter extends AbstractValuePrinter {
     /**
      * @param Price $value

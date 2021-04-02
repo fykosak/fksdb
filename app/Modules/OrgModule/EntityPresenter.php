@@ -13,8 +13,6 @@ use Nette\Application\UI\Form;
  *   - check ACL
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class EntityPresenter extends BasePresenter {
 

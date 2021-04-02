@@ -12,10 +12,6 @@ use LogicException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
-/**
- * Class Machine
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class Machine {
 
     public const STATE_INIT = '__init';

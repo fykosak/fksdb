@@ -5,10 +5,6 @@ namespace FKSDB\Models\Exceptions;
 use Nette\Application\BadRequestException;
 use Nette\Http\Response;
 
-/**
- * Class BadTypeException
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class BadTypeException extends BadRequestException {
 
     public function __construct(string $expected, ?object $got, ?\Throwable $previous = null) {

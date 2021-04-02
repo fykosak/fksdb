@@ -10,10 +10,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Class ProductPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ProductPresenter extends BasePresenter {
     use EntityPresenterTrait;
 

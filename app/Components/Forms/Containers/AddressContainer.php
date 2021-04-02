@@ -11,10 +11,6 @@ use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class AddressContainer extends ModelContainer {
 
     private ServiceRegion $serviceRegion;

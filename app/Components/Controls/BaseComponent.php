@@ -7,10 +7,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
 
-/**
- * Class BaseComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class BaseComponent extends Control {
 
     private Container $context;

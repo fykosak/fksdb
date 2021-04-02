@@ -8,11 +8,6 @@ use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
-/**
- * Class SeriesTableFormControl
- * @author Michal Červeňák <miso@fykos.cz>
- * @author Michal Koutny
- */
 abstract class SeriesTableFormComponent extends SeriesTableComponent {
 
     protected function createComponentForm(): OptimisticForm {

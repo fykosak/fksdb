@@ -6,10 +6,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Class ServiceFyziklaniTeamPosition
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ServiceFyziklaniTeamPosition extends AbstractService {
 
     public function updateRouting(array $data): array {

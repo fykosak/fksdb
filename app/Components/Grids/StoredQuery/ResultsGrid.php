@@ -14,10 +14,6 @@ use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ResultsGrid extends BaseGrid {
 
     private StoredQuery $storedQuery;

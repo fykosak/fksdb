@@ -14,8 +14,6 @@ use Nette\SmartObject;
 /**
  * Service for object representing one side of M:N relation, or entity in is-a relation ship.
  * Joined side is in a sense primary (search, select, delete).
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @deprecated
  */
 abstract class AbstractServiceMulti {

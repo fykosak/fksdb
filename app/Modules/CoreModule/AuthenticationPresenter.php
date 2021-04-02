@@ -33,9 +33,6 @@ use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 
-/**
- * Class AuthenticationPresenter
- */
 final class AuthenticationPresenter extends BasePresenter {
 
     public const PARAM_GSID = 'gsid';

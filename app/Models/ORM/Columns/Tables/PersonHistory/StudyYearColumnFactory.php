@@ -11,10 +11,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-/**
- * Class StudyYearRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StudyYearColumnFactory extends ColumnFactory {
 
     private YearCalculator $yearCalculator;

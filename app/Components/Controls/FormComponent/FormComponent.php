@@ -9,10 +9,6 @@ use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
-/**
- * Class FormComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class FormComponent extends BaseComponent {
 
     public function render(): void {

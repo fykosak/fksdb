@@ -11,11 +11,7 @@ use FKSDB\Models\ORM\Services\ServiceTask;
 use Fykosak\NetteORM\TypedTableSelection;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo Prominent example for necessity of caching.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesTable {
 

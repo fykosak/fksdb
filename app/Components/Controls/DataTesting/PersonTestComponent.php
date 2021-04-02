@@ -14,10 +14,6 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
-/**
- * Class PersonTestControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonTestComponent extends BaseComponent {
 
     /**

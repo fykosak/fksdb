@@ -15,10 +15,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class NewApplicationsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NewApplicationsGrid extends BaseGrid {
 
     protected ServiceEvent $serviceEvent;

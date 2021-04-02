@@ -5,10 +5,6 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class EvaluationStrategy {
 
     /**

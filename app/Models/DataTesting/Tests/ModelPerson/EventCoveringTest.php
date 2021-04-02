@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class EventCoveringTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventCoveringTest extends PersonTest {
 
     public function __construct() {

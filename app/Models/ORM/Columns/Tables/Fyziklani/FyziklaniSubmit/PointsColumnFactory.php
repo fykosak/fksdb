@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Utils\Html;
 
-/**
- * Class PointsRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PointsColumnFactory extends ColumnFactory {
 
     /**

@@ -28,10 +28,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
-/**
- * Class ReferencedPersonContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ReferencedPersonContainer extends ReferencedContainer {
 
     public const TARGET_FORM = 0x1;

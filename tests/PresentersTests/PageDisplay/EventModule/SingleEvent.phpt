@@ -2,6 +2,8 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
+use DateTime;
+
 $container = require '../../../Bootstrap.php';
 
 /**
@@ -14,8 +16,8 @@ class SingleEvent extends EventModuleTestCase {
             'event_type_id' => 7,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'TEST TSAF',
         ];
     }

@@ -12,10 +12,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 class TaskGrid extends BaseGrid {
 
     private ModelEvent $event;

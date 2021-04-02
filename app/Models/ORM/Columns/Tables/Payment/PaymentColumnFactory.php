@@ -13,10 +13,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class Payment
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PaymentColumnFactory extends ColumnFactory {
 
     private ORMFactory $reflectionFactory;

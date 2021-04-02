@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-/**
- * Class MailCallback
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MailCallback implements TransitionCallback {
 
     protected ServiceEmailMessage $serviceEmailMessage;

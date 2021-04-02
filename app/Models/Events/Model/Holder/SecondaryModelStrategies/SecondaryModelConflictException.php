@@ -6,10 +6,6 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
-/**
- * Class SecondaryModelConflictException
- *
- */
 class SecondaryModelConflictException extends RuntimeException {
 
     private BaseHolder $baseHolder;

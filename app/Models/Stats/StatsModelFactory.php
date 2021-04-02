@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Nette\Database\Connection;
 
-/**
- * Description of ResultsModelFactory
- *
- * @author michal
- */
 class StatsModelFactory {
 
     private Connection $connection;

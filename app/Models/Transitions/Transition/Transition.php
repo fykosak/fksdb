@@ -9,10 +9,6 @@ use Nette\SmartObject;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Transitions\Machine\Machine;
 
-/**
- * Class Transition
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Transition {
 
     use SmartObject;

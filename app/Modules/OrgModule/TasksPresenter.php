@@ -20,11 +20,6 @@ use Nette\InvalidStateException;
 use SimpleXMLElement;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TasksPresenter extends BasePresenter {
 
     public const SOURCE_ASTRID = 'astrid';

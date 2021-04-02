@@ -13,10 +13,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
-/**
- * Class MassTransitionsControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MassTransitionsComponent extends BaseComponent {
 
     private ModelEvent $event;

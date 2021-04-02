@@ -13,9 +13,6 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
- *
- * @author Aleš Podolník <ales@fykos.cz>
- * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
 class CategoryProcessing extends AbstractCategoryProcessing {
 

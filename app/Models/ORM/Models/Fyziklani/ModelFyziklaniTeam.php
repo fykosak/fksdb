@@ -33,10 +33,6 @@ use Nette\Security\Resource;
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- * @author Michal Červeňák <miso@fykos.cz>
- *
  */
 class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator {
 

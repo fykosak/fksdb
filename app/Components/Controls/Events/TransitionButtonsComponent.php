@@ -14,9 +14,6 @@ use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
  */
 class TransitionButtonsComponent extends BaseComponent {

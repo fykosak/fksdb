@@ -10,11 +10,6 @@ use FKSDB\Models\Maintenance\Updater;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GithubPresenter extends AuthenticatedPresenter {
 
     private Updater $updater;

@@ -9,8 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Formulářový kontejder reprezentující záznam z DB tabulky.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelContainer extends ContainerWithOptions {
 

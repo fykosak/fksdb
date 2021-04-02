@@ -3,6 +3,7 @@
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 use FKSDB\Models\StoredQuery\StoredQueryPostProcessing;
+use PDOStatement;
 
 class MockProcessing extends StoredQueryPostProcessing {
 
@@ -14,7 +15,7 @@ class MockProcessing extends StoredQueryPostProcessing {
         return '';
     }
 
-    public function processData(\PDOStatement $data): \PDOStatement {
+    public function processData(PDOStatement $data): PDOStatement {
         return $data;
     }
 }

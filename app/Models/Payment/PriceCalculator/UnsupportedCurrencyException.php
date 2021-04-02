@@ -4,10 +4,6 @@ namespace FKSDB\Models\Payment\PriceCalculator;
 
 use Throwable;
 
-/**
- * Class UnsupportedCurrencyException
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UnsupportedCurrencyException extends \Exception {
 
     public function __construct(string $currency, int $code = 0, ?Throwable $previous = null) {

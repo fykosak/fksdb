@@ -9,10 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\UI\InvalidLinkException;
 
-/**
- * Class LinkPrinterComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class LinkPrinterComponent extends BaseComponent {
 
     private ORMFactory $tableReflectionFactory;

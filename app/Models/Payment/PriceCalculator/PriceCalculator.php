@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 
-/**
- * Class PriceCalculator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PriceCalculator implements TransitionCallback {
 
     private ServicePayment $servicePayment;

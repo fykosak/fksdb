@@ -23,8 +23,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * Class AbstractPersonFormControl
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelPerson $model
  */
 class PersonFormComponent extends AbstractEntityFormComponent {
@@ -142,7 +140,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);
-            $oldAddress = $person->getAddress2($shortType);
+            $oldAddress = $person->getAddress($shortType);
             if (count($datum)) {
                 if ($oldAddress) {
                     $this->serviceAddress->updateModel($oldAddress, $datum);

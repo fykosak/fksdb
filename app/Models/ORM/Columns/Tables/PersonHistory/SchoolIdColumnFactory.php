@@ -10,10 +10,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class SchoolIdRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SchoolIdColumnFactory extends ColumnFactory {
 
     private SchoolFactory $schoolFactory;

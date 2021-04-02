@@ -14,9 +14,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\DI\MissingServiceException;
 
-/**
- * Class TaskPresenter
- */
 class TaskPresenter extends BasePresenter {
 
     public const IMPORT_STATE_UPDATE_N_INSERT = 1;

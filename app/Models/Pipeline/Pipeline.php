@@ -12,8 +12,6 @@ use Nette\InvalidStateException;
  * comprise a linear chain.
  *
  * @todo Implement generic ILogger.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {
 

@@ -10,8 +10,6 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Strings;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int $contest_id
  * @property-read string $name
  */

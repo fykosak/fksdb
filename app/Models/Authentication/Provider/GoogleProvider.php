@@ -7,10 +7,6 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\SmartObject;
 
-/**
- * Class GoogleProvider
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GoogleProvider extends Google {
     use SmartObject;
 

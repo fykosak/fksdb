@@ -7,11 +7,6 @@ use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 use SimpleXMLElement;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TasksFromXML extends Stage {
 
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';

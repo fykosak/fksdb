@@ -7,10 +7,6 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class ModelPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ModelPresenter extends BasePresenter {
 
     /**

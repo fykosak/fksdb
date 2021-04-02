@@ -9,10 +9,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 
-/**
- * Class PriceRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PriceColumnFactory extends ColumnFactory {
 
     /**

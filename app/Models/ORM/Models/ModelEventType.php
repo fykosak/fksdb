@@ -8,8 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow contest
  * @property-read int contest_id
  * @property-read int event_type_id

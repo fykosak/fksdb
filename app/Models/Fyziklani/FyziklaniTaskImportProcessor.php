@@ -12,11 +12,6 @@ use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 class FyziklaniTaskImportProcessor {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;

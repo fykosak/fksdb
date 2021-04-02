@@ -5,6 +5,7 @@ namespace FKSDB\Tests\ModelsTests\Persons;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use Fykosak\NetteORM\AbstractModel;
+use stdClass;
 
 class PersonPresenter extends BasePresenter implements ExtendedPersonPresenter {
 
@@ -28,8 +29,8 @@ class PersonPresenter extends BasePresenter implements ExtendedPersonPresenter {
         return '';
     }
 
-    public function flashMessage($message, string $type = 'info'): \stdClass {
-        return new \stdClass();
+    public function flashMessage($message, string $type = 'info'): stdClass {
+        return new stdClass();
     }
 
 }

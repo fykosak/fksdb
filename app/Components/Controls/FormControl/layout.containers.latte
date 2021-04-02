@@ -3,7 +3,7 @@
     {snippet groupContainer}
         {import layout.macros.latte}
 
-        {include #errors form => $mainContainer}
+        {include errors form => $mainContainer}
 
         {var $container = $mainContainer}
         {var $level = isset($level) ? $level : 0}
@@ -28,20 +28,20 @@
                     {foreach $container->getComponents() as $component}
                         {if $component instanceof Nette\Forms\Container}
                             {if $controls}
-                                {include #controls controls => $controls}
+                                {include controls controls => $controls}
                                 {var $controls = []}
                             {/if}
                             {if $level < 2 || ($withOptions && $component->getOption('showGroup'))}
-                                {include #group container => $component, level => $level + 1}
+                                {include group container => $component, level => $level + 1}
                             {else}
-                                {include #controls controls => $component->getControls()}
+                                {include controls controls => $component->getControls()}
                             {/if}
                         {else}
                             {var $controls[] = $component}
                         {/if}
                     {/foreach}
                     {if $controls}
-                        {include #controls controls => $controls}
+                        {include controls controls => $controls}
                         {var $controls = []}
                     {/if}
                 </fieldset>

@@ -11,10 +11,6 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class OrderRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class OrderColumnFactory extends ColumnFactory {
 
     public function getOrderMapping(): array {

@@ -12,10 +12,6 @@ use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Explorer;
 
-/**
- * Class PaymentMachine
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PaymentMachine extends Machine {
 
     private PriceCalculator $priceCalculator;

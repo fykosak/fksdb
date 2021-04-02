@@ -16,10 +16,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ContestantsGrid extends BaseGrid {
 
     private int $year;

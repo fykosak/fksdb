@@ -12,10 +12,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
 
-/**
- * Class PersonGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonGrid extends BaseGrid {
 
     public function setData(ModelEvent $event, ModelPerson $person): void {

@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
-/**
- * Class PasswordRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PasswordColumnFactory extends ColumnFactory {
 
     /**

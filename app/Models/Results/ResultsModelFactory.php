@@ -30,8 +30,6 @@ use FKSDB\Models\WebService\XMLNodeSerializer;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory
- *
- * @author michal
  */
 class ResultsModelFactory implements XMLNodeSerializer {
     use SmartObject;

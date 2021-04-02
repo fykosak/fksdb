@@ -6,8 +6,6 @@ use Nette\Security\Role;
 
 /**
  * POD for briefer encapsulation of granted roles (instead of ModelMGrant).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Grant implements Role {
 

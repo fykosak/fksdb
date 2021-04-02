@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-/**
- * Class TeamRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeamColumnFactory extends ColumnFactory {
 
     /**

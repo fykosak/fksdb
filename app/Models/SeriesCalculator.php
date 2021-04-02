@@ -6,9 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\DateTime;
 
-/**
- * Class FKSDB\SeriesCalculator
- */
 class SeriesCalculator {
 
     public function getCurrentSeries(ModelContest $contest): int {

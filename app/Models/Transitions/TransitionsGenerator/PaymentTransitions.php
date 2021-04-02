@@ -16,10 +16,6 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Tracy\Debugger;
 
-/**
- * Class PaymentTransitions
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class PaymentTransitions implements TransitionsDecorator {
 
     protected EventAuthorizator $eventAuthorizator;

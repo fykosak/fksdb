@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Database\Connection;
 use Nette\Database\Row;
 
-/**
- * General results sheet with contestants and their ranks.
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TaskStatsModel {
 
     protected int $year;

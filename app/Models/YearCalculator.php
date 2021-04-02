@@ -11,9 +11,6 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Security\User;
 
-/**
- * Class FKSDB\YearCalculator
- */
 class YearCalculator {
 
     /**

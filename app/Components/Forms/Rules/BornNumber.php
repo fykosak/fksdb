@@ -7,9 +7,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @author David Grudl
  * @see http://latrine.dgx.cz/jak-overit-platne-ic-a-rodne-cislo
  */

@@ -10,10 +10,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class DispatchGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DispatchGrid extends EntityGrid {
 
     public function __construct(Container $container) {

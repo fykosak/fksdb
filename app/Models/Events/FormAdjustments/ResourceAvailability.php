@@ -12,9 +12,6 @@ use Nette\Forms\Form;
 use Nette\Forms\Control;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated use person_schedule UC
  */
 class ResourceAvailability extends AbstractAdjustment {

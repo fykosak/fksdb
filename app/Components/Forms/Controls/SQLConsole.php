@@ -7,11 +7,6 @@ use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SQLConsole extends TextArea {
 
     protected const CSS_CLASS = 'sqlConsole';

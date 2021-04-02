@@ -8,11 +8,6 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use Nette\Http\Request;
 use Nette\Http\Session;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TokenGlobalSessionIdHolder implements GlobalSessionIdHolder {
 
     public const SESSION_NS = 'sso';

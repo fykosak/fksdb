@@ -13,10 +13,6 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
 use PDOException;
 
-/**
- * Class Handler
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Handler {
 
     private ServicePersonSchedule $servicePersonSchedule;

@@ -6,10 +6,6 @@ use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistic
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class ResultsPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ResultsPresenter extends BasePresenter {
     /**
      * @return void

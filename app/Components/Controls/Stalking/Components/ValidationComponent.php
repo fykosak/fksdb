@@ -8,10 +8,6 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 
-/**
- * Class Validation
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ValidationComponent extends BaseStalkingComponent {
 
     private DataTestingFactory $validationFactory;

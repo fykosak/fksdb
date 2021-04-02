@@ -9,11 +9,6 @@ use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Nette\Application\BadRequestException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class AESOPContestant extends StoredQueryPostProcessing {
 
     public const END_YEAR = 'end-year';

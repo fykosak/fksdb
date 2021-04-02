@@ -10,8 +10,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\IIdentity;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read bool active
  * @property-read int login_id
  * @property-read \DateTimeInterface last_login

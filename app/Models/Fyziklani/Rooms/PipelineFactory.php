@@ -7,10 +7,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\Pipeline\Pipeline;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PipelineFactory {
 
     private ServiceFyziklaniTeam $serviceTeam;

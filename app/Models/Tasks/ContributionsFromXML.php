@@ -13,8 +13,6 @@ use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
 

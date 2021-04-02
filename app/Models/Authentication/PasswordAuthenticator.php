@@ -16,9 +16,6 @@ use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 
-/**
- * Users authenticator.
- */
 class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler {
 
     private ServicePerson $servicePerson;

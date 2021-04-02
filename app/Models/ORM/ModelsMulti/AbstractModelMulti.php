@@ -9,7 +9,6 @@ use Nette\Database\Table\Selection;
 use Nette\SmartObject;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @deprecated
  */
 abstract class AbstractModelMulti extends ActiveRow {

@@ -7,9 +7,7 @@ use Nette\Database\Table\ActiveRow;
 use FKSDB\Models\Exceptions\NotImplementedException;
 
 /**
- * Null Object pattern for FKSDB\Results\EvaluationStrategies\IEvaluationStrategy.
- *
- * @author Lukáš Timko <lukast@fykos.cz>
+ * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
  */
 class EvaluationNullObject extends EvaluationStrategy {
 

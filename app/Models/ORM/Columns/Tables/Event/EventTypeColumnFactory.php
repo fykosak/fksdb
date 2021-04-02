@@ -12,10 +12,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-/**
- * Class EventTypeRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventTypeColumnFactory extends ColumnFactory {
 
     private ServiceEventType $serviceEventType;

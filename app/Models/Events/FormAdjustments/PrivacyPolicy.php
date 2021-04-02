@@ -18,8 +18,6 @@ use Nette\Utils\ArrayHash;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class PrivacyPolicy implements Processing, FormAdjustment {
 

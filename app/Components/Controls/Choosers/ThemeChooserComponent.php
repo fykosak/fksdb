@@ -8,11 +8,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ThemeChooserComponent extends ChooserComponent {
 
     private const AVAILABLE_THEMES = ['light', 'dark'];

@@ -11,11 +11,6 @@ use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServicePersonHistory $servicePersonHistory;

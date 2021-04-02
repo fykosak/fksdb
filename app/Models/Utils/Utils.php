@@ -4,11 +4,6 @@ namespace FKSDB\Models\Utils;
 
 use DateTimeInterface;
 
-/**
- * Description of Utils
- *
- * @author michal
- */
 class Utils {
 
     public static function toRoman(int $arabic): string {

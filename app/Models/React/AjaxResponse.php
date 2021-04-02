@@ -7,10 +7,6 @@ use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\SmartObject;
 
-/**
- * Class ReactResponse
- * @author Michal Červeňák <miso@fykos.cz>
- */
 final class AjaxResponse implements Nette\Application\Response {
 
     use SmartObject;

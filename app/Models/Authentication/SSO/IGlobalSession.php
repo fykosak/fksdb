@@ -11,8 +11,6 @@ use ArrayAccess;
  *
  * It's similar to normal sessions -- instead of cookies we have normal sessions
  * and session storage itself depends on the implementation.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 interface IGlobalSession extends ArrayAccess {
 

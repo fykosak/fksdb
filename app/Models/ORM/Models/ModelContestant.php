@@ -8,8 +8,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
  * @property-read int person_id
  * @property-read ActiveRow contest

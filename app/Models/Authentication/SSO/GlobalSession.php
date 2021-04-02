@@ -10,11 +10,6 @@ use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\DateTime;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GlobalSession implements IGlobalSession {
 
     private ServiceGlobalSession $serviceGlobalSession;

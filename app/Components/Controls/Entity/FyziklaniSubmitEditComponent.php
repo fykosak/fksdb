@@ -17,8 +17,6 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * Class EditControl
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelFyziklaniSubmit $model
  */
 class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {

@@ -11,12 +11,6 @@ use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Security\User;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Jakub Šafin <xellos@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class LanguageChooserComponent extends ChooserComponent {
 
     private array $supportedLanguages = [];

@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
  */

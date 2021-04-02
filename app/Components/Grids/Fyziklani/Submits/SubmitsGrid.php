@@ -9,11 +9,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 abstract class SubmitsGrid extends BaseGrid {
 
     protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;

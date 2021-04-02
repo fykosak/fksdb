@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
-/**
- * Class AbstractLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class LinkFactory {
 
     protected string $modelClassName;

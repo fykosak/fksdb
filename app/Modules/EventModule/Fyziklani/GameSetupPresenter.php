@@ -8,10 +8,6 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class GameSetupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GameSetupPresenter extends BasePresenter {
     private ModelFyziklaniGameSetup $gameSetup;
 

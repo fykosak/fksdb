@@ -6,10 +6,6 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
-/**
- * Trait ChartPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ChartPresenterTrait {
 
     protected Chart $selectedChart;

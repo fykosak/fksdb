@@ -9,8 +9,6 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\InvalidStateException;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read  ModelEventParticipant $mainModel
  */
 class ModelMDsefParticipant extends AbstractModelMulti {

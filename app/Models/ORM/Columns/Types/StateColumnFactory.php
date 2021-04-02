@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class StateRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StateColumnFactory extends ColumnFactory {
 
     protected array $states = [];

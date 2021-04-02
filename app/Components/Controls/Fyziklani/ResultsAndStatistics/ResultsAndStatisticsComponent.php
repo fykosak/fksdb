@@ -16,10 +16,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-/**
- * Class ResultsAndStatistics
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ResultsAndStatisticsComponent extends AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Utils\Html;
 
-/**
- * Class AvailablePointsRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class AvailablePointsColumnFactory extends ColumnFactory{
     /**
      * @param AbstractModel|ModelFyziklaniGameSetup $model

@@ -8,11 +8,6 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GraphComponent extends BaseComponent {
 
     private BaseMachine $baseMachine;

@@ -16,11 +16,6 @@ use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class AccountManager {
 
     private ServiceLogin $serviceLogin;

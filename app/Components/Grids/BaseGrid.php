@@ -31,10 +31,6 @@ use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 abstract class BaseGrid extends Grid {
 
     /** @persistent string */

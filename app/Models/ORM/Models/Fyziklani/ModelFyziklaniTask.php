@@ -4,8 +4,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Lukáš Timko <lukast@fykos.cz>
  * @property-read string name
  * @property-read string label
  * @property-read int fyziklani_task_id

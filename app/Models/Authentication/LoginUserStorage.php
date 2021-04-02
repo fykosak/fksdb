@@ -18,8 +18,6 @@ use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @see http://forum.nette.org/cs/9574-jak-rozsirit-userstorage
  * @property IIdentity $identity
  */

@@ -10,9 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-/**
- * Error presenter.
- */
 class ErrorPresenter extends BasePresenter {
 
     protected function beforeRender(): void {

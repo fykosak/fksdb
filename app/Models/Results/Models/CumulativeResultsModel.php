@@ -7,8 +7,6 @@ use Nette\InvalidStateException;
 
 /**
  * Cumulative results (sums and percentage) for chosen series.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 

@@ -7,7 +7,6 @@ use Fykosak\NetteORM\TypedTableSelection;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelRegion findByPrimary($key)
  */
 class ServiceRegion extends AbstractService {

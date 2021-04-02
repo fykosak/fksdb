@@ -1,7 +1,7 @@
 <div style="background-image: url('/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
     <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
 
-        {block #styles}
+        {block styles}
             <style>
                 g.mode-single .team-id {
                     display: none;
@@ -130,10 +130,10 @@
                 </g>
             </g>
             <g class="places">
-                {block #places}
+                {block places}
                     {foreach $places as $place}
                         {var $className= 'free'}
-                        {block #place}
+                        {block place}
                             <circle
                                     class="{$className.' team-position'}"
                                     r="15"

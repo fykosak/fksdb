@@ -14,10 +14,6 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\SmartObject;
 use SoapVar;
 
-/**
- * Class FyziklaniSoapFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventSoapFactory {
 
     use SmartObject;

@@ -11,10 +11,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
-/**
- * Class SubmitCheckComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SubmitCheckComponent extends BaseComponent {
 
     private SeriesTable $seriesTable;

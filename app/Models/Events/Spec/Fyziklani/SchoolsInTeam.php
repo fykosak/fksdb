@@ -9,11 +9,6 @@ use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
 
     /** @var callable|int */

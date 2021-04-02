@@ -13,10 +13,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 
-/**
- * Class PreferredLangForm
- * @package FKSDB\Components\Forms\Controls
- */
 class PreferredLangFormComponent extends FormComponent {
 
     protected ModelPerson $person;

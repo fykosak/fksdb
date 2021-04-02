@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class BasePresenter extends AuthenticatedPresenter {
     use YearPresenterTrait;
 

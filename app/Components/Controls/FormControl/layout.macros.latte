@@ -30,7 +30,7 @@
         {label $field/}
             {do $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
             {input $field}
-            {include #metadata field => $field}
+            {include metadata field => $field}
     </div>
 {/define}
 
@@ -42,7 +42,7 @@
             {do $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
             {$field->getLabelPart()}
         </div>
-        {include #metadata field => $field}
+        {include metadata field => $field}
     </div>
 {/define}
 
@@ -55,7 +55,7 @@
                 {$field->getLabelPart($key)->addAttributes(['class'=>'form-check-label'])}
             </div>
         {/foreach}
-        {include #metadata field => $field}
+        {include metadata field => $field}
     </div>
 {/define}
 
@@ -78,7 +78,7 @@
         <div n:if="$row">
             <div class="btn-group col-12">
                 {foreach $row as $button}
-                    {include #button field => $button}
+                    {include button field => $button}
                 {/foreach}
             </div>
         </div>
@@ -90,7 +90,7 @@
             id="{$field->getHtmlId()}-pair">
         <div n:tag-if="$field->hasErrors()">
             {input $field}
-            {include #metadata field => $field}
+            {include metadata field => $field}
         </div>
 
     </div>
@@ -103,21 +103,21 @@
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}
-                {include #buttonArray buttons => $buttons}
+                {include buttonArray buttons => $buttons}
                 {var $buttons = []}
             {/if}
             {if $field instanceof Nette\Forms\Controls\Checkbox}
-                {include #checkbox field => $field}
+                {include checkbox field => $field}
             {elseif $field instanceof Nette\Forms\Controls\HiddenField}
-                {include #hidden field => $field}
+                {include hidden field => $field}
             {elseif $field instanceof Nette\Forms\Controls\RadioList}
-                {include #radiolist field => $field}
+                {include radiolist field => $field}
             {elseif $field instanceof Nette\Forms\Controls\Button}
                 {var $buttons[] = $field}
             {else}
-                {include #plain field => $field}
+                {include plain field => $field}
             {/if}
         {/if}
     {/foreach}
-    {include #buttonArray buttons => $buttons}
+    {include buttonArray buttons => $buttons}
 {/define}

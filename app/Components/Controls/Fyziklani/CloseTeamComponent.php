@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 
-/**
- * Class CloseTeamControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CloseTeamComponent extends BaseComponent {
 
     private ModelFyziklaniTeam $team;

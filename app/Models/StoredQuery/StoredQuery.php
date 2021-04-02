@@ -12,8 +12,6 @@ use NiftyGrid\DataSource\IDataSource;
 
 /**
  * Represents instantiotion (in term of parameters) of FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQuery implements IDataSource, Resource {
 

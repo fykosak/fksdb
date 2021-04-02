@@ -22,10 +22,6 @@ use Nette\Http\FileUpload;
 use Nette\Http\Response;
 use Tracy\Debugger;
 
-/**
- * Class TaskUpload
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class AjaxSubmitComponent extends AjaxComponent {
 
     private ServiceSubmit $serviceSubmit;

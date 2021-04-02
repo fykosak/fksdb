@@ -8,9 +8,6 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceGlobalSession extends AbstractService {
 
     private const SESSION_ID_LENGTH = 32;

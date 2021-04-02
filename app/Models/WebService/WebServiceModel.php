@@ -23,10 +23,6 @@ use SoapVar;
 use stdClass;
 use Tracy\Debugger;
 
-/**
- * Web service provider for fksdb.wdsl
- * @author michal
- */
 class WebServiceModel {
 
     /** @var array  contest name => contest_id */

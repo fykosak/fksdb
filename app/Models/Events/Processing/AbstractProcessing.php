@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Processing;
 
-
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\Logger;
@@ -14,11 +13,6 @@ use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class AbstractProcessing implements Processing {
 
     use SmartObject;
@@ -95,7 +89,6 @@ abstract class AbstractProcessing implements Processing {
      * @return bool
      */
     protected function isBaseReallyEmpty(string $name): bool {
-
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return true; // it was empty since beginning

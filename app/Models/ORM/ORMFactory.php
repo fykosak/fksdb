@@ -9,10 +9,6 @@ use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 
-/**
- * Class TableReflectionFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 final class ORMFactory {
 
     use SmartObject;

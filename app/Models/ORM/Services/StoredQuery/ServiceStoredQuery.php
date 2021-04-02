@@ -6,9 +6,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceStoredQuery extends AbstractService {
 
     public function findByQid(string $qid): ?ModelStoredQuery {

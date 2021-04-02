@@ -9,8 +9,6 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Introduced in FYKOS 1987?? but data are only from 15 th year (2001).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationFykos2001 extends EvaluationStrategy {
 

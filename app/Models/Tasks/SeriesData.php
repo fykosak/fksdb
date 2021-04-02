@@ -7,8 +7,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
 
 /**
  * "POD" to hold series pipeline processing data.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesData {
 

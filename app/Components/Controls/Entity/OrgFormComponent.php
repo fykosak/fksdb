@@ -16,8 +16,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class OrgForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelOrg $model
  */
 class OrgFormComponent extends AbstractEntityFormComponent {

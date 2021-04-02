@@ -12,10 +12,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-/**
- * Class PriceCZKRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PriceCZKColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelScheduleItem $model

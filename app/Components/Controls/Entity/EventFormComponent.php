@@ -27,8 +27,6 @@ use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
 /**
- * Class AbstractForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelEvent $model
  */
 class EventFormComponent extends AbstractEntityFormComponent {

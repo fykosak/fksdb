@@ -5,14 +5,13 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
@@ -30,13 +29,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @return ModelLogin|null
      */
     public function getLogin(): ?ModelLogin {
-        $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
-        $logins->rewind();
-        if (!$logins->valid()) {
-            return null;
-        }
-
-        return ModelLogin::createFromActiveRow($logins->current());
+        $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
+        return $login ? ModelLogin::createFromActiveRow($login) : null;
     }
 
     public function getPreferredLang(): ?string {
@@ -44,13 +38,8 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getInfo(): ?ModelPersonInfo {
-        $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
-        $infos->rewind();
-        if (!$infos->valid()) {
-            return null;
-        }
-
-        return ModelPersonInfo::createFromActiveRow($infos->current());
+        $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
+        return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
     }
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
@@ -128,14 +117,14 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getDeliveryAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
+        return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
     }
 
     public function getPermanentAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+        return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
     }
 
-    public function getAddress2(string $type): ?ModelAddress {
+    public function getAddress(string $type): ?ModelAddress {
         $postContact = $this->getPostContact($type);
         return $postContact ? $postContact->getAddress() : null;
     }
@@ -222,7 +211,8 @@ class ModelPerson extends AbstractModel implements Resource {
         $year = $contest->getCurrentYear();
         return $this->related(DbNames::TAB_ORG, 'person_id')
             ->where('contest_id', $contest->contest_id)
-            ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
+            ->where('since<=?', $year)
+            ->where('until IS NULL OR until >=?', $year);
     }
 
     /**
@@ -308,7 +298,6 @@ class ModelPerson extends AbstractModel implements Resource {
      */
     public function removeScheduleForEvent(int $eventId): void {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
-        /** @var ModelPersonSchedule $row */
         foreach ($query as $row) {
             $row->delete();
         }
@@ -327,7 +316,7 @@ class ModelPerson extends AbstractModel implements Resource {
      * @param string[] $types
      * @return ModelSchedulePayment[]
      */
-    public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
+    public function getScheduleRests(ModelEvent $event, array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]): array {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
@@ -373,7 +362,7 @@ class ModelPerson extends AbstractModel implements Resource {
                 'participant' => $participant,
             ];
         }
-        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs())) {
+        if ($this->getActiveOrgsAsQuery($event->getEventType()->getContest())->fetch()) {
             $roles[] = [
                 'type' => 'contest_org',
             ];

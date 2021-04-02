@@ -9,10 +9,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class EmailsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EmailsGrid extends EntityGrid {
 
     public function __construct(Container $container) {

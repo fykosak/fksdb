@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SeatingPresenter extends BasePresenter {
 
     /**
@@ -94,7 +90,6 @@ class SeatingPresenter extends BasePresenter {
         $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
-
 
     final public function renderEdit(): void {
         throw new DeprecatedException();

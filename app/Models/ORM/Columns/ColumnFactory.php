@@ -15,10 +15,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-/**
- * Class DefaultRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class ColumnFactory {
 
     use SmartObject;

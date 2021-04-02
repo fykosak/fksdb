@@ -8,8 +8,6 @@ use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class DetailResultsModel extends AbstractResultsModel {
 

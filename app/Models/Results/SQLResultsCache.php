@@ -11,8 +11,6 @@ use Nette\InvalidArgumentException;
 
 /**
  * Fill calculated points into database.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SQLResultsCache {
 

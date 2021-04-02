@@ -26,10 +26,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 class AllSubmitsGrid extends SubmitsGrid {
 
     private ModelEvent $event;

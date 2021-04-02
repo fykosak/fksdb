@@ -9,10 +9,6 @@ use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
-/**
- * Class DefaultGenerator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DefaultGenerator extends AbstractSymbolGenerator {
 
     private int $variableSymbolStart;

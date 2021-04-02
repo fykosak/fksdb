@@ -9,10 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
-/**
- * Class TextRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TextColumnFactory extends ColumnFactory {
 
     protected function createHtmlValue(AbstractModel $model): Html {

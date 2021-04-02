@@ -9,7 +9,6 @@ use Fykosak\NetteORM\TypedTableSelection;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelEvent createNewModel(array $data)
  * @method ModelEvent|null findByPrimary($key)
  */

@@ -5,10 +5,6 @@ namespace FKSDB\Models\Payment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use LogicException;
 
-/**
- * Class Price
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Price {
 
     public const CURRENCY_EUR = 'eur';

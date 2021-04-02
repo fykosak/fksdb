@@ -12,10 +12,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-/**
- * Class PriceEURRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PriceEURColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelScheduleItem $model

@@ -129,10 +129,6 @@ class PointsPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleCalculateQuizPoints(): void {
         try {
             $contest = $this->getSelectedContest();

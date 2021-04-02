@@ -2,10 +2,6 @@
 
 namespace FKSDB\Models\Transitions;
 
-/**
- * Class AbstractTransitionsGenerator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractTransitionsGenerator {
     protected array $emailData = [
         'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',

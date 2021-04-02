@@ -11,10 +11,6 @@ use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class StalkingControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class BaseStalkingComponent extends BaseComponent {
 
     protected ORMFactory $tableReflectionFactory;

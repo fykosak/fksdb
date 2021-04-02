@@ -2,6 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
+use DateTime;
 use FKSDB\Models\ORM\DbNames;
 
 $container = require '../../../Bootstrap.php';
@@ -21,8 +22,8 @@ class Schedule extends EventModuleTestCase {
             'name_cs' => 'name CS',
             'name_en' => 'name EN',
             'event_id' => $this->eventId,
-            'start' => new \DateTime(),
-            'end' => new \DateTime(),
+            'start' => new DateTime(),
+            'end' => new DateTime(),
         ]);
     }
 
@@ -31,8 +32,8 @@ class Schedule extends EventModuleTestCase {
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'TEST FOF',
         ];
     }
