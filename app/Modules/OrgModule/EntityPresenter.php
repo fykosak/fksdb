@@ -49,7 +49,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @param int $id
      * @throws BadTypeException
      */
-    public function renderEdit($id): void {
+    final public function renderEdit($id): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();
@@ -59,7 +59,7 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadTypeException
      */
-    public function renderCreate(): void {
+    final public function renderCreate(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = $component->getForm();

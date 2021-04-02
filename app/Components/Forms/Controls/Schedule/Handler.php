@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
 use PDOException;
@@ -20,16 +19,13 @@ use PDOException;
  */
 class Handler {
 
-    private ServiceScheduleGroup $serviceScheduleGroup;
     private ServicePersonSchedule $servicePersonSchedule;
     private ServiceScheduleItem $serviceScheduleItem;
 
     public function __construct(
-        ServiceScheduleGroup $serviceScheduleGroup,
         ServicePersonSchedule $servicePersonSchedule,
         ServiceScheduleItem $serviceScheduleItem
     ) {
-        $this->serviceScheduleGroup = $serviceScheduleGroup;
         $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
@@ -62,12 +58,11 @@ class Handler {
      * @throws ModelException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
-        $oldRows = $this->servicePersonSchedule->getTable()
-            ->where('person_id', $person->person_id)
-            ->where('schedule_item.schedule_group.event_id', $event->event_id)->where('schedule_item.schedule_group.schedule_group_type', $type);
+        $oldRows = $person->getScheduleForEvent($event)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
-        foreach ($oldRows as $modelPersonSchedule) {
+        foreach ($oldRows as $oldRow) {
+            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow);
             if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);

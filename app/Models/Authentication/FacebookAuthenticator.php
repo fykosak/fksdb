@@ -82,22 +82,22 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     private function registerFromFB(array $fbUser): ModelLogin {
-        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
+        $this->servicePerson->explorer->getConnection()->beginTransaction();
         $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
         $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
         $login = $this->accountManager->createLogin($person);
-        $this->servicePerson->getExplorer()->getConnection()->commit();
+        $this->servicePerson->explorer->getConnection()->commit();
         return $login;
     }
 
     private function updateFromFB(ModelPerson $person, array $fbUser): void {
-        $this->servicePerson->getExplorer()->getConnection()->beginTransaction();
+        $this->servicePerson->explorer->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
         unset($personData['family_name']);
         unset($personData['other_name']);
         unset($personData['display_name']);
-        $this->servicePerson->updateModel2($person, $personData);
+        $this->servicePerson->updateModel($person, $personData);
 
         $personInfo = $person->getInfo();
         $personInfoData = $this->getPersonInfoData($fbUser);
@@ -111,9 +111,9 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
+        $this->servicePersonInfo->updateModel($personInfo, $personInfoData);
 
-        $this->servicePerson->getExplorer()->getConnection()->commit();
+        $this->servicePerson->explorer->getConnection()->commit();
     }
 
     private function getPersonData(array $fbUser): array {

@@ -11,7 +11,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -22,6 +21,7 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -149,14 +149,15 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param IModel|ModelPerson|null $model
+     * @param ActiveRow|ModelPerson|null $model
      * @param string $mode
      * @return void
      */
-    public function setModel(?IModel $model, string $mode): void {
-        $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
-        $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
+    public function setModel(?ActiveRow $model, string $mode): void {
+
+        $resolution = $this->modifiabilityResolver->getResolutionMode($model);
+        $modifiable = $this->modifiabilityResolver->isModifiable($model);
+        $visible = $this->visibilityResolver->isVisible($model);
         if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
@@ -309,11 +310,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
             }
         }
         return false;
-    }
-
-    final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
-        $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
-        return !($value === null || $value === '');
     }
 
     /**

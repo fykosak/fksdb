@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
@@ -23,16 +23,13 @@ class MassTransitionsComponent extends BaseComponent {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    private ApplicationHandlerFactory $applicationHandlerFactory;
-
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
-        $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
     final public function render(): void {
@@ -55,7 +52,7 @@ class MassTransitionsComponent extends BaseComponent {
         $total = 0;
         $errored = 0;
         foreach ($source->getHolders() as $key => $holder) {
-            $handler = $this->applicationHandlerFactory->create($this->event, $logger);
+            $handler = new ApplicationHandler($this->event, $logger, $this->getContext());
             $total++;
             try {
                 $handler->onlyExecute($holder, $name);

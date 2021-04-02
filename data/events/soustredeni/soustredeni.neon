@@ -232,7 +232,7 @@ events:
                     tshirt_size:
                         label: _('What size of T-shirt do you wear?')
                         required: %events.soustredeni.requiredCond%
-                        factory: Chooser("Choose a size", Options(%events.soustredeni.tshirt%))
+                        factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
                     price:
                         label: _('Price of camp (CZK)')
                         modifiable: false

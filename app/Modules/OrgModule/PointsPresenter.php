@@ -5,17 +5,18 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Models\ModelTaskContribution;
-use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
@@ -28,18 +29,15 @@ class PointsPresenter extends BasePresenter {
     public $all;
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
-    private ServiceTask $serviceTask;
     private ServiceTaskContribution $serviceTaskContribution;
 
     final public function injectQuarterly(
         SQLResultsCache $SQLResultsCache,
         SeriesTable $seriesTable,
-        ServiceTask $serviceTask,
         ServiceTaskContribution $serviceTaskContribution
     ): void {
         $this->SQLResultsCache = $SQLResultsCache;
         $this->seriesTable = $seriesTable;
-        $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
@@ -70,7 +68,7 @@ class PointsPresenter extends BasePresenter {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
-    public function renderEntry(): void {
+    final public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
         if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
             $this->template->hasQuizTask = true;
@@ -114,12 +112,10 @@ class PointsPresenter extends BasePresenter {
         try {
             $contest = $this->getSelectedContest();
 
-            $years = $this->serviceTask->getTable()
+            $years = $contest->related(DbNames::TAB_TASK)
                 ->select('year')
-                ->where([
-                    'contest_id' => $contest->contest_id,
-                ])->group('year');
-
+                ->group('year');
+            /** @var ModelTask|ActiveRow $year */
             foreach ($years as $year) {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
             }

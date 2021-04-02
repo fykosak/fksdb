@@ -14,7 +14,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read \DateTimeInterface submitted_on
  * @property-read string answer
  */
-class ModelSubmitQuizQuestion extends AbstractModel {
+class ModelSubmitQuiz extends AbstractModel {
 
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));

@@ -3,7 +3,7 @@
 namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\IModel;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -21,7 +21,7 @@ interface ReferencedHandler {
 
     public function setResolution(string $resolution): void;
 
-    public function update(IModel $model, ArrayHash $values): void;
+    public function update(ActiveRow $model, ArrayHash $values): void;
 
     public function createFromValues(ArrayHash $values): AbstractModel;
 

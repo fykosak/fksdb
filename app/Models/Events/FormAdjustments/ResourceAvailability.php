@@ -4,8 +4,9 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -85,7 +86,7 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[]|BaseHolder[][] $serviceData */
+        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
@@ -103,7 +104,8 @@ class ResourceAvailability extends AbstractAdjustment {
             }
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
-                return $baseHolder->getModel()->getPrimary(false);
+                $model = $baseHolder->getModel2();
+                return $model ? $model->getPrimary(false) : null;
             }, $serviceData['holders']);
             $primaries = array_filter($primaries, function ($primary): bool {
                 return (bool)$primary;

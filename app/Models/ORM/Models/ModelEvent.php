@@ -19,6 +19,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int year
  * @property-read string name
  * @property-read int event_id
+ * @property-read string report
  * @property-read ActiveRow event_type
  * @property-read int event_type_id
  * @property-read \DateTimeInterface begin
@@ -32,6 +33,8 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator {
     public const TEAM_EVENTS = [1, 9, 13];
 
     public const RESOURCE_ID = 'event';
+
+    public const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
 
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
@@ -81,8 +84,20 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
+    public function getPossiblyAttendingParticipants(): GroupedSelection {
+        return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
+    }
+
     public function getTeams(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
+    }
+
+    public function getParticipatingTeams(): GroupedSelection {
+        return $this->getTeams()->where('status', 'participated');
+    }
+
+    public function getPossiblyAttendingTeams(): GroupedSelection {
+        return $this->getTeams()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
     public function getEventOrgs(): GroupedSelection {
@@ -91,6 +106,10 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator {
 
     public function getPayments(): GroupedSelection {
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
+    }
+
+    public function getFyziklaniTasks(): GroupedSelection {
+        return $this->related(DbNames::TAB_FYZIKLANI_TASK);
     }
 
     public function __toArray(): array {

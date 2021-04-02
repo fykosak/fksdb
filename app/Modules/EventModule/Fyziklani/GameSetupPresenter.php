@@ -29,7 +29,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $this->template->gameSetup = $this->getGameSetup();
     }
 

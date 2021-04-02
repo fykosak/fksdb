@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Authorization;
 
-
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\IUserStorage;
@@ -47,7 +46,7 @@ class RelatedPersonAuthorizator {
         }
 
         foreach ($holder->getBaseHolders() as $baseHolder) {
-            if ($baseHolder->getPersonId() == $person->person_id) {
+            if ($baseHolder->getPerson()->person_id == $person->person_id) {
                 return true;
             }
         }

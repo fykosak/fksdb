@@ -103,7 +103,7 @@ abstract class PaymentTransitions implements TransitionsDecorator {
         $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED));
         $transition->beforeExecuteCallbacks[] = function (ModelHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
-                $this->servicePersonSchedule->updateModel2($personSchedule, [$personSchedule->state => 'received']);
+                $this->servicePersonSchedule->updateModel($personSchedule, [$personSchedule->state => 'received']);
             }
         };
         $transition->setCondition(false);

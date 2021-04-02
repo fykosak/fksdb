@@ -117,14 +117,14 @@ class SubmitHandlerFactory {
     }
 
     private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $submit = $this->serviceSubmit->findByContestant($contestant, $task);
         $data = [
             'submitted_on' => new DateTime(),
             'source' => $source,
             'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
             'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
         ];
-        return $this->serviceSubmit->store($submit, $data);
+        return $this->serviceSubmit->storeModel($data, $submit);
     }
 
     /**
