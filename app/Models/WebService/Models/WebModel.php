@@ -35,4 +35,11 @@ abstract class WebModel {
         Debugger::log($message);
     }
 
+    protected function saveXML(\DOMDocument $doc): \SoapVar {
+        $nodeString = '';
+        foreach ($doc->childNodes as $node) {
+            $nodeString .= $doc->saveXML($node);
+        }
+        return new \SoapVar($nodeString, XSD_ANYXML);
+    }
 }

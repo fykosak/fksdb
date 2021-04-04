@@ -31,6 +31,7 @@ class OrganizersWebModel extends WebModel {
 
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
+        $doc->appendChild($rootNode);
         /** @var ModelOrg $org */
         foreach ($orgs as $org) {
             $orgNode = $doc->createElement('org');
@@ -49,13 +50,8 @@ class OrganizersWebModel extends WebModel {
             ], $doc, $orgNode);
             $rootNode->appendChild($orgNode);
         }
-        $doc->appendChild($rootNode);
-        $doc->formatOutput = true;
 
-        $nodeString = '';
-        foreach ($doc->childNodes as $node) {
-            $nodeString .= $doc->saveXML($node);
-        }
-        return new SoapVar($nodeString, XSD_ANYXML);
+        $doc->formatOutput = true;
+        return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 }

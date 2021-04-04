@@ -46,10 +46,6 @@ class SignaturesWebModel extends WebModel {
         $doc->appendChild($rootNode);
         $doc->formatOutput = true;
 
-        $nodeString = '';
-        foreach ($doc->childNodes as $node) {
-            $nodeString .= $doc->saveXML($node);
-        }
-        return new \SoapVar($nodeString, XSD_ANYXML);
+        return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 }

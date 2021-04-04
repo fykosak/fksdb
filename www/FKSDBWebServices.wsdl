@@ -13,10 +13,10 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
 
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/signatures.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/event.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/eventsList.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="./xml/organizers.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/signatures/definitions" location="./xml/signatures.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/event/definitions" location="./xml/event.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/eventsList/definitions" location="./xml/eventsList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/organizers/definitions" location="./xml/organizers.wsdl"/>
 
     <!-- wsdl:types encapsulates schema definitions of communication types -->
     <wsdl:types>

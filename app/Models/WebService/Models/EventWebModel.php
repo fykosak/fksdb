@@ -42,29 +42,30 @@ class EventWebModel extends WebModel {
         }
         $doc = new \DOMDocument();
 
-        if (isset($args->teamsList)) {
-            $this->createTeamList($doc, $args, $event);
+        if (isset($args->teamList)) {
+            $rootNode = $this->createTeamListNode($doc, $args, $event);
         }
-        if (isset($args->schedule)) {
-            $this->createScheduleNode($doc, $args, $event);
+        if (isset($args->scheduleList)) {
+            $rootNode = $this->createScheduleListNode($doc, $args, $event);
         }
         if (isset($args->personSchedule)) {
-            $this->createPersonScheduleNode($doc, $args, $event);
+            $rootNode = $this->createPersonScheduleNode($doc, $args, $event);
         }
-        if (isset($args->participantsList)) {
-            $this->createPersonScheduleNode($doc, $args, $event);
+        if (isset($args->participantList)) {
+            $rootNode = $this->createParticipantListNode($doc, $args, $event);
+        }
+        if (isset($args->eventDetail)) {
+            $rootNode = $this->createEventDetailNode($doc, $args, $event);
+        }
+        if (!isset($rootNode)) {
+            throw new \SoapFault('Sender', 'Unknown type');
         }
 
         $doc->formatOutput = true;
-
-        $nodeString = '';
-        foreach ($doc->childNodes as $node) {
-            $nodeString .= $doc->saveXML($node);
-        }
-        return new SoapVar($nodeString, XSD_ANYXML);
+        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
-    private function createPersonScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
+    private function createPersonScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): \DOMElement {
         $rootNode = $doc->createElement('personSchedule');
 
         $query = $this->servicePersonSchedule->getTable()
@@ -93,14 +94,14 @@ class EventWebModel extends WebModel {
             $scheduleItemNode->nodeValue = $model->schedule_item_id;
             $currentNode->appendChild($scheduleItemNode);
         }
-        $doc->appendChild($rootNode);
+        return $rootNode;
     }
 
-    private function createScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
+    private function createScheduleListNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): \DOMElement {
         $rootNode = $doc->createElement('schedule');
         $query = $event->getScheduleGroups();
-        if (isset($args->schedule) && isset($args->schedule->groupType)) {
-            $query->where('schedule_group_type', $args->schedule->groupType);
+        if (isset($args->scheduleList) && isset($args->scheduleList->groupType)) {
+            $query->where('schedule_group_type', $args->scheduleList->groupType);
         }
         foreach ($query as $row) {
             $group = ModelScheduleGroup::createFromActiveRow($row);
@@ -112,17 +113,23 @@ class EventWebModel extends WebModel {
             }
             $rootNode->appendChild($groupNode);
         }
-        $doc->appendChild($rootNode);
+        return $rootNode;
+    }
+
+    public function createEventDetailNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): \DOMElement {
+        $rootNode = $doc->createElement('eventDetail');
+        $rootNode->appendChild($event->createXMLNode($doc));
+        return $rootNode;
     }
 
     /**
      * @param \DOMDocument $doc
      * @param \stdClass $args
      * @param ModelEvent $event
-     * @return void
+     * @return \DOMElement
      * @throws \SoapFault
      */
-    private function createTeamList(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
+    private function createTeamListNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): \DOMElement {
         if (!$event->isTeamEvent()) {
             throw new \SoapFault('Sender', 'Wrong event type.');
         }
@@ -154,21 +161,21 @@ class EventWebModel extends WebModel {
 
             $rootNode->appendChild($teamNode);
         }
-        $doc->appendChild($rootNode);
+        return $rootNode;
     }
 
-    private function handleParticipantList(\stdClass $args, ModelEvent $event): SoapVar {
-        $doc = new \DOMDocument();
+    private function createParticipantListNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): \DOMElement {
         $rootNode = $doc->createElement('participantList');
-
-        foreach ($event->getParticipants() as $row) {
+        $query = $event->getParticipants();
+        if (isset($args->participantList) && isset($args->participantList->status)) {
+            $query->where('status', $args->participantList->status);
+        }
+        foreach ($query as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
             $pNode = $this->createParticipantNode($participant, $doc);
             $rootNode->appendChild($pNode);
         }
-        $doc->appendChild($rootNode);
-        $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+        return $rootNode;
     }
 
     private function createParticipantNode(ModelEventParticipant $participant, \DOMDocument $doc): \DOMElement {
