@@ -1,6 +1,6 @@
 events:
     soustredeni34p:
-        event_type_id: [4, 5] # jarní i podzimní sous. nejsou různá
+        event_type_id: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
         paramScheme:

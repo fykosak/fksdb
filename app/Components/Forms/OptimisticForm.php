@@ -39,7 +39,7 @@ class OptimisticForm extends Form {
      * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($data = null, $erase = false): self {
+    public function setDefaults($data = null, bool $erase = false): self {
         if ($data !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }

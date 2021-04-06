@@ -2,9 +2,9 @@
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
-use Tracy\Debugger;
 use FKSDB\Models\WebService\SoapResponse;
 
 /**
@@ -15,9 +15,16 @@ use FKSDB\Models\WebService\SoapResponse;
 class WebServicePresenter extends BasePresenter {
 
     private \SoapServer $server;
+    private ContestAuthorizator $contestAuthorizator;
 
-    final public function injectSoapServer(\SoapServer $server): void {
+    final public function injectSoapServer(\SoapServer $server, ContestAuthorizator $contestAuthorizator): void {
         $this->server = $server;
+        $this->contestAuthorizator = $contestAuthorizator;
+    }
+
+    /* TODO */
+    public function authorizedDefault(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('webService', 'default'));
     }
 
     /**
@@ -29,8 +36,7 @@ class WebServicePresenter extends BasePresenter {
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;
-        } catch (\Exception $exception) {
-            Debugger::log($exception);
+        } catch (\Throwable $exception) {
             $this->redirect('Dashboard:');
         }
     }
