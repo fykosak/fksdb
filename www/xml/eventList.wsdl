@@ -10,18 +10,18 @@
     <wsdl:types>
         <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
             <!-- types for web service only -->
-            <xsd:complexType name="GetEventsListRequestType">
+            <xsd:complexType name="GetEventListRequestType">
                 <xsd:sequence>
                     <xsd:element name="eventTypeIds" type="xsd:nonNegativeInteger" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
     </wsdl:types>
-    <wsdl:message name="GetEventsListRequest">
-        <wsdl:part name="GetEventsListRequest" type="xsd1:GetEventsListRequestType"/>
+    <wsdl:message name="GetEventListRequest">
+        <wsdl:part name="GetEventListRequest" type="xsd1:GetEventListRequestType"/>
     </wsdl:message>
 
-    <wsdl:message name="GetEventsListResponse">
-        <wsdl:part name="GetEventsListResponse"/>
+    <wsdl:message name="GetEventListResponse">
+        <wsdl:part name="GetEventListResponse"/>
     </wsdl:message>
 </wsdl:definitions>

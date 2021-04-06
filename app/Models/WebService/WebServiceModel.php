@@ -3,7 +3,6 @@
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
-use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
@@ -21,12 +20,11 @@ class WebServiceModel {
 
     private ModelLogin $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
-
     private Container $container;
 
-    private array $webModels = [
+    private const WEB_MODELS = [
         'GetOrganizers' => Models\OrganizersWebModel::class,
-        'GetEventsList' => Models\EventsListWebModel::class,
+        'GetEventList' => Models\EventListWebModel::class,
         'GetEvent' => Models\EventWebModel::class,
         'GetExport' => Models\ExportWebModel::class,
         'GetSignatures' => Models\SignaturesWebModel::class,
@@ -65,15 +63,17 @@ class WebServiceModel {
      * @param \stdClass[] $arguments
      * @return SoapVar
      * @throws SoapFault
-     * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __call(string $name, array $arguments): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
-        if (isset($this->webModels[$name])) {
-            $webModel = new $this->webModels[$name]($this->container);
-            if (!$webModel instanceof WebModel) {
-                throw new BadTypeException(Models\WebModel::class, $webModel);
+        if (isset(self::WEB_MODELS[$name])) {
+            $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
+            if (!$reflection->isSubclassOf(WebModel::class)) {
+                throw new SoapFault('Server', 'Server error');
             }
+            /** @var WebModel $webModel */
+            $webModel = $reflection->newInstance($this->container);
             $webModel->setLogin($this->authenticatedLogin);
             return $webModel->getResponse(...$arguments);
         }
@@ -86,8 +86,9 @@ class WebServiceModel {
      */
     private function checkAuthentication(string $serviceName): void {
         if (!isset($this->authenticatedLogin)) {
-            $this->log("Unauthenticated access to $serviceName.");
-            throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
+            $msg = sprintf('Unauthenticated access to %s.', $serviceName);
+            $this->log($msg);
+            throw new SoapFault('Sender', $msg);
         } else {
             $this->log(sprintf('Called %s ', $serviceName));
         }
