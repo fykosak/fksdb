@@ -50,8 +50,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws \ReflectionException
      */
     protected function getFieldsDefinition(): array {
-        $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        $contestName =$this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 

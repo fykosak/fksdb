@@ -81,7 +81,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $this->saveParameters($values[self::CONT_PARAMS], $model);
 
         $connection->commit();
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Query has been edited') : _('Query has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
@@ -144,12 +144,11 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $this->serviceStoredQueryTag->getTable()->where([
             'query_id' => $query->query_id,
         ])->delete();
-        foreach ($tags['tags'] as $tagTypeId) {
-            $data = [
+        foreach ($tags as $tagTypeId) {
+            $this->serviceStoredQueryTag->createNewModel([
                 'query_id' => $query->query_id,
                 'tag_type_id' => $tagTypeId,
-            ];
-            $this->serviceStoredQueryTag->createNewModel($data);
+            ]);
         }
     }
 

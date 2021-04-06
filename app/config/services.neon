@@ -19,7 +19,7 @@ services:
         setup:
             - start()
     submitUploatedStorage:
-        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
@@ -29,7 +29,7 @@ services:
 
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
     - FKSDB\Models\Authentication\SSO\TokenGlobalSessionIdHolder
     - FKSDB\Models\Authentication\FacebookAuthenticator
@@ -73,7 +73,7 @@ services:
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
-    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
     - FKSDB\Models\Submits\SeriesTable
@@ -89,8 +89,7 @@ services:
     - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
 
     #webservice
-    - FKSDB\Models\WebService\EventSoapFactory
-    webServiceModel: FKSDB\Models\WebService\WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
     - FKSDB\Models\YearCalculator
     - FKSDB\Models\SeriesCalculator

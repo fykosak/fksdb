@@ -55,7 +55,7 @@ abstract class OldAbstractModelSingle extends AbstractModel {
      * @param string|int $column
      * @param mixed $value
      */
-    public function __set($column, $value) {
+    public function __set($column, $value): void {
         $this->tmpData[$column] = $value;
     }
 
@@ -63,7 +63,7 @@ abstract class OldAbstractModelSingle extends AbstractModel {
      * @param int|string $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get($key) {
+    public function &__get(string $key) {
         if (array_key_exists($key, $this->tmpData)) {
             return $this->tmpData[$key];
         }

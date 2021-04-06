@@ -60,7 +60,7 @@ abstract class AbstractModelMulti extends ActiveRow {
     }
 
     /**
-     * @param string|int $column
+     * @param string $column
      * @param mixed $value
      */
     public function __set($column, $value): void {
@@ -70,7 +70,7 @@ abstract class AbstractModelMulti extends ActiveRow {
     /**
      * @param string|int $key
      */
-    public function __unset($key) {
+    public function __unset($key): void {
         throw new LogicException('Cannot update multiModel directly.');
     }
 

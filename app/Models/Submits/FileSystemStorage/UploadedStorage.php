@@ -45,16 +45,13 @@ class UploadedStorage implements SubmitStorage {
      * @var string
      */
     private string $filenameMask;
-    /** @var array   contestId => contest name */
-    private array $contestMap;
     /** @var StorageProcessing[] */
     private array $processings = [];
 
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
     public function addProcessing(StorageProcessing $processing): void {

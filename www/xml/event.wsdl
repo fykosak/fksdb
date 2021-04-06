@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<!-- root element wsdl:definitions defines set of related services -->
+<wsdl:definitions
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd1="http://fykos.cz/xml/ws/schema"
+        xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
+    <!-- wsdl:types encapsulates schema definitions of communication types -->
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
+            <!-- types for web service only -->
+            <xsd:complexType name="GetEventRequestType">
+                <xsd:sequence>
+                    <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
+                    <xsd:choice>
+                        <xsd:element name="eventDetail"/>
+                        <xsd:element name="participantList">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="teamList">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="scheduleList">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+                        <xsd:element name="personSchedule">
+                            <xsd:complexType>
+                                <xsd:sequence>
+                                    <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
+                                </xsd:sequence>
+                            </xsd:complexType>
+                        </xsd:element>
+
+                    </xsd:choice>
+                </xsd:sequence>
+            </xsd:complexType>
+
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="GetEventRequest">
+        <wsdl:part name="GetEventRequest" type="xsd1:GetEventRequestType"/>
+    </wsdl:message>
+    <wsdl:message name="GetEventResponse">
+        <wsdl:part name="GetEventResponse"/>
+    </wsdl:message>
+
+</wsdl:definitions>
