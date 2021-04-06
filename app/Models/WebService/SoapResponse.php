@@ -22,7 +22,7 @@ class SoapResponse implements Response {
     public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         try {
             $this->soapServer->handle();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Debugger::log($e);
         }
     }

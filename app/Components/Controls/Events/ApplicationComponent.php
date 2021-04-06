@@ -11,6 +11,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\DI\Container;
@@ -175,7 +176,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     private function canEdit(): bool {
-        return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void {

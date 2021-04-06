@@ -38,7 +38,7 @@ class LoggingMailer implements Mailer {
 
     public function setLogPath(string $logPath): void {
         $this->logPath = $logPath;
-        @mkdir($this->logPath, 0770, true);
+        mkdir($this->logPath, 0770, true);
     }
 
     public function getLogging(): bool {
@@ -75,7 +75,7 @@ class LoggingMailer implements Mailer {
             return;
         }
         $fingerprint = Utils::getFingerprint($mail->getHeaders());
-        $filename = 'mail-' . @date('Y-m-d-H-i-s') . '-' . $fingerprint . '.txt';
+        $filename = 'mail-' . date('Y-m-d-H-i-s') . '-' . $fingerprint . '.txt';
         $f = fopen($this->logPath . DIRECTORY_SEPARATOR . $filename, 'w');
 
         if ($exception) {

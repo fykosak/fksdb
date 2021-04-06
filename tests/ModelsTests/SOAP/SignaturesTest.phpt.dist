@@ -1,0 +1,51 @@
+<?php
+
+namespace FKSDB\Tests\ModelsTests\SOAP;
+
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
+use Nette\DI\Container;
+
+class SignaturesTest extends DatabaseTestCase {
+
+    public function __construct(Container $container) {
+        parent::__construct($container);
+    }
+
+    protected function setUp(): void {
+        parent::setUp();
+        $personId = $this->createPerson('Ferko', 'Mrkvička', ['email' => 'ferko@mrkvicka.cz'], [
+            'login' => 'fm',
+            'active' => 1,
+            'hash' => 'fm',
+        ]);
+        $this->insert(DbNames::TAB_ORG, [
+            'person_id' => $personId,
+            'contest_id' => ModelContest::ID_FYKOS,
+            'since' => 1,
+            'tex_signature' => 'ferko',
+            'domain_alias' => 'mrkvicka',
+        ]);
+    }
+
+    public function testDownload(): void {
+        file_put_contents('signature.soap', '
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://fykos.cz/ws/service">
+    <SOAP-ENV:Header>
+        <ns1:AuthenticationCredentials>
+            <ns1:username>ferko@mrkvicka.cz</ns1:username>
+            <ns1:password>fn</ns1:password>
+        </ns1:AuthenticationCredentials>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <GetSignaturesRequest>
+            <contestId>1</contestId>
+        </GetSignaturesRequest>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>'
+        );
+        shell_exec()
+    }
+}

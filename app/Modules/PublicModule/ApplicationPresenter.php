@@ -5,7 +5,6 @@ namespace FKSDB\Modules\PublicModule;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -77,11 +76,11 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
+     * @param int|null $eventId
+     * @param int|null $id
      * @throws GoneException
      */
-    public function authorizedDefault($eventId, $id): void {
+    public function authorizedDefault(?int $eventId, ?int $id): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
@@ -128,16 +127,14 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
+     * @param int|null $eventId
+     * @param int|null $id
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
-     * @throws ConfigurationNotFoundException
-     * @throws CannotAccessModelException
      */
-    public function actionDefault($eventId, $id): void {
+    public function actionDefault(?int $eventId, ?int $id): void {
         if (!$this->getEvent()) {
             throw new EventNotFoundException();
         }
@@ -195,7 +192,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
-        $handler = new ApplicationHandler($this->getEvent(), $logger,$this->getContext());
+        $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
