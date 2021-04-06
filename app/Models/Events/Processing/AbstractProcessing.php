@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Processing;
 
-
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\Logger;
@@ -95,7 +94,6 @@ abstract class AbstractProcessing implements Processing {
      * @return bool
      */
     protected function isBaseReallyEmpty(string $name): bool {
-
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return true; // it was empty since beginning
@@ -106,11 +104,7 @@ abstract class AbstractProcessing implements Processing {
         return false;
     }
 
-    /**
-     * @param ArrayHash $values
-     * @param string $prefix
-     */
-    private function setValues(ArrayHash $values, $prefix = ''): void {
+    private function setValues(ArrayHash $values, string $prefix = ''): void {
         if (!$prefix) {
             $this->valuesPathCache = [];
         }

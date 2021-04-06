@@ -1,68 +1,19 @@
-parameters:
-    events:
-        soustredeni:
-            appCond: or(regOpen(), role('admin'))
-            requiredCond: or(and(neg(role('admin')),or(state('applied'),state('interested'))), state('participated')) # povinné pro účastníka nebo pro všechny, když jsou účastnivší se
-            person:
-                person:
-                    other_name:
-                        required: true
-                    family_name:
-                        required: true
-                person_info:
-                    born_id:
-                        required: %events.soustredeni.requiredCond%
-                        description: "For the insurance company."
-                    birthplace:
-                        required: state('participated')
-                    phone:
-                        required: %events.soustredeni.requiredCond%
-                        description: "Telephone number (including state prefix), that you will carry with you."
-                post_contact_p:
-                    address:
-                        required: %events.soustredeni.requiredCond%
-                person_history:
-                    school_id:
-                        required: state('participated')
-                        description: "If you cannto find your school, email the webmaster."
-            tshirt:
-                M_S: _('S men')
-                M_M: _('M men')
-                M_L: _('L men')
-                M_XL: _('XL men')
-                M_XXL: _('XXL men')
-                F_S: _('S women')
-                F_M: _('M women')
-                F_L: _('L women')
-                F_XL: _('XL women')
-
-
 events:
-    soustredeni:
-        event_type_id: [4, 5] # jarní i podzimní sous. nejsou různá
-        #eventYears: [1,2,3,4] # specify for which years this machine is valid, by default all years
+    soustredeni34j:
+        event_type_id: [4] # jarní i podzimní sous. nejsou různá
+        eventYears: [34]
         formLayout: soustredeni.form
         paramScheme:
             notifyBcc:
                 default: soustredeni@fykos.cz
             notifyFrom:
                 default: soustredeni@fykos.cz
-            deadline1:
-                default: 1970-01-01 00:00:00
-            deadline2:
-                default: 1970-01-01 00:00:00
-            deadline3:
-                default: 1970-01-01 00:00:00
-            deadline4:
+            deadline:
                 default: 1970-01-01 00:00:00
             letterWhere:
                 default: nikde
             letterSignature:
                 default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
-
         baseMachines:
             PARTICIPANT:
                 service: @orm.event_participant.service
@@ -74,82 +25,88 @@ events:
                         condition: role('admin')
                         label: _('Invite participant')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: _('Invite participant')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     __init->spare:
                         condition: role('admin')
                         label: _('Invite Spare')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: _('Invite Spare')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j, .self)
                     invited|invited1|invited2|invited3->applied:
-                        condition: or(before(param('deadline1')),role('admin'))
+                        condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')
                     spare|spare1|spare2|spare3->interested:
-                        condition: before(param('deadline1'))
+                        condition: before(param('deadline'))
                         label: _('I want to go')
-                    invited|invited1|invited2|invited3->rejected:
-                        condition: or(before(param('deadline1')),role('admin'))
+                    invited|invited1|invited2|invited3|spare|spare1|spare2|spare3->rejected:
+                        condition: or(before(param('deadline')),role('admin'))
                         label: _('Decline participation')
-                        behaviorType: danger
+                        behaviorType: warning
 
                     spare->spare1:
-                        condition: and(after(param('deadline2')),role('admin'))
+                        condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare1, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited->invited1:
-                        condition: and(after(param('deadline2')),role('admin'))
+                        condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited1, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     spare1->spare2:
-                        condition: and(after(param('deadline3')),role('admin'))
+                        condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare2, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited1->invited2:
-                        condition: and(after(param('deadline3')),role('admin'))
+                        condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited2, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     spare2->spare3:
-                        condition: and(after(param('deadline4')),role('admin'))
+                        condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare3, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     invited2->invited3:
-                        condition: and(after(param('deadline4')),role('admin'))
+                        condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/invited3, self)
-                    spare|spare1|spare2|spare3->rejected:
-                        condition: or(before(param('deadline1')),role('admin'))
-                        label: _('Decline participation')
-                        behaviorType: danger
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/34j.call, self)
                     interested->applied:
                         condition: role('admin')
-                        label: _('Confirm participation')
+                        label: _('Validate as a participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied, self)
                     spare->invited:
                         condition: role('admin')
-                        label: _('Invite as participant')
+                        label: _('Invite as a participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare1->invited1:
                         condition: role('admin')
-                        label: _('Invite as participant')
+                        label: _('Invite as a participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare2->invited2:
                         condition: role('admin')
-                        label: _('Invite as participant')
+                        label: _('Invite as a participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     spare3->invited3:
                         condition: role('admin')
-                        label: _('Invite as participant')
+                        label: _('Invite as a participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Participated')
@@ -159,7 +116,7 @@ events:
 
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
-                        label: _('Cancel application')
+                        label: _('Cancel the application')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
                         condition: role('admin')
                         label: _('Deal with outside FKSDB')
@@ -207,10 +164,10 @@ events:
                         label: _('Return to DB as Rejected')
                     out_of_db->missed:
                         condition: role('admin')
-                        label: _('Return to DB as missed')
+                        label: _('Return to DB as Missed')
                     out_of_db->cancelled:
                         condition: role('admin')
-                        label: _('Return to DB as cancelled')
+                        label: _('Return to DB as Cancelled')
 
                     cancelled->__terminated:
                         condition: role('admin')
@@ -230,7 +187,7 @@ events:
                         label: _('Health restrictions')
                         description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
                     tshirt_size:
-                        label: _('What size of T-shirt do you wear?')
+                        label: _('What t-shirt size do you wear?')
                         required: %events.soustredeni.requiredCond%
                         factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
                     price:

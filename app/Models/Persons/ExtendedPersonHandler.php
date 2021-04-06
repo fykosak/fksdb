@@ -16,6 +16,7 @@ use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -82,9 +83,9 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @return ModelPerson|null|AbstractModel
+     * @return ModelPerson|null|AbstractModel|ActiveRow
      */
-    final protected function getReferencedPerson(Form $form) {
+    final protected function getReferencedPerson(Form $form): ?ActiveRow {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
         return $input->getModel();

@@ -141,7 +141,7 @@ class SingleEventSource implements HolderSource {
      * @param array $args
      * @return SingleEventSource|int
      */
-    public function __call($name, $args) {
+    public function __call(string $name, array $args) {
         static $delegated = [
             'where' => false,
             'order' => false,

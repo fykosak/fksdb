@@ -16,12 +16,9 @@ use Nette\InvalidArgumentException;
  */
 class SQLResultsCache {
 
-    private Connection $connection;
-
     private ServiceTask $serviceTask;
 
-    public function __construct(Connection $connection, ServiceTask $serviceTask) {
-        $this->connection = $connection;
+    public function __construct(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
     }
 
@@ -31,7 +28,7 @@ class SQLResultsCache {
      * @param int|null $year
      * @throws \PDOException
      */
-    public function invalidate(ModelContest $contest = null, $year = null): void {
+    public function invalidate(ModelContest $contest = null, ?int $year = null): void {
         $data = [
             'calc_points' => null,
         ];
@@ -49,7 +46,7 @@ class SQLResultsCache {
             SET ?
             WHERE (' . implode(') and (', $conditions) . ')';
 
-        $this->connection->query($sql, $data);
+        $this->serviceTask->explorer->query($sql, $data);
     }
 
     /**
@@ -71,7 +68,7 @@ class SQLResultsCache {
                 'year' => $year,
             ]);
 
-        $this->connection->beginTransaction();
+        $this->serviceTask->explorer->getConnection()->beginTransaction();
         /** @var ModelTask $task */
         foreach ($tasks as $task) {
             $conditions = [];
@@ -88,9 +85,9 @@ class SQLResultsCache {
             )
             WHERE (' . implode(') and (', $conditions) . ')';
 
-            $this->connection->query($sql);
+            $this->serviceTask->explorer->query($sql);
         }
-        $this->connection->commit();
+        $this->serviceTask->explorer->getConnection()->commit();
     }
 
     /**
@@ -113,6 +110,6 @@ class SQLResultsCache {
         WHERE t.' . implode(' AND t.', $params) . ' GROUP BY task_id, ct_id
         ) as T SET s.raw_points = T.total
         WHERE T.' . implode(' AND T.', $params) . ' AND s.ct_id = T.ct_id AND s.task_id = T.task_id';
-        $this->connection->query($sql);
+        $this->serviceTask->explorer->query($sql);
     }
 }

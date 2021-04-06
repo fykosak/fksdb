@@ -44,10 +44,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * Processing itself is not injectable so we ask the dependency explicitly per method (the task service).
      *
      * @param ServiceTask $serviceTask
-     * @return int|double
+     * @return int|double|null
      * @throws BadRequestException
      */
-    public function getMaxPoints(ServiceTask $serviceTask) {
+    public function getMaxPoints(ServiceTask $serviceTask): ?int {
         $evalutationStrategy = $this->getEvaluationStrategy();
         $category = $this->getCategory();
         if (!$category) {
