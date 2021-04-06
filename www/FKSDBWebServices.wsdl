@@ -13,9 +13,10 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
 
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/signatures.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/event.wsdl"/>
-    <wsdl:import namespace="https://fykos.cz/xml/ws/definitions" location="https://db.fykos.cz/xml/eventsList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/signatures/definitions" location="./xml/signatures.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/event/definitions" location="./xml/event.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/eventList/definitions" location="./xml/eventList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/organizers/definitions" location="./xml/organizers.wsdl"/>
 
     <!-- wsdl:types encapsulates schema definitions of communication types -->
     <wsdl:types>
@@ -130,9 +131,9 @@
             <wsdl:input message="tns:GetEventRequest"/>
             <wsdl:output message="tns:GetEventResponse"/>
         </wsdl:operation>
-        <wsdl:operation name="GetEventsList">
-            <wsdl:input message="tns:GetEventsListRequest"/>
-            <wsdl:output message="tns:GetEventsListResponse"/>
+        <wsdl:operation name="GetEventList">
+            <wsdl:input message="tns:GetEventListRequest"/>
+            <wsdl:output message="tns:GetEventListResponse"/>
         </wsdl:operation>
         <wsdl:operation name="GetStats">
             <wsdl:input message="tns:GetStatsRequest"/>
@@ -145,6 +146,10 @@
         <wsdl:operation name="GetSignatures">
             <wsdl:input message="tns:GetSignaturesRequest"/>
             <wsdl:output message="tns:GetSignaturesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <wsdl:input message="tns:GetOrganizersRequest"/>
+            <wsdl:output message="tns:GetOrganizersResponse"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -170,8 +175,8 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="GetEventsList">
-            <soap:operation soapAction="GetEventsList"/>
+        <wsdl:operation name="GetEventList">
+            <soap:operation soapAction="GetEventList"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>
@@ -202,6 +207,16 @@
         </wsdl:operation>
         <wsdl:operation name="GetSignatures">
             <soap:operation soapAction="GetSignatures"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <soap:operation soapAction="GetOrganizers"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>

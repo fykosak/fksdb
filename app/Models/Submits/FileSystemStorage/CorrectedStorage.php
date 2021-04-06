@@ -36,14 +36,10 @@ class CorrectedStorage implements SubmitStorage {
      */
     private string $filenameMask;
 
-    /** @var array   contestId => contest name */
-    private array $contestMap;
-
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
     /**

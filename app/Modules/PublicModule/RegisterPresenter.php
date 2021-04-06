@@ -237,8 +237,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @throws \ReflectionException
      */
     private function getFieldsDefinition(): array {
-        $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
 
