@@ -297,7 +297,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    public function authorized(string $destination, $args = null): bool {
+    public function authorized(string $destination, ?array $args = null): bool {
         if (substr($destination, -1) === '!' || $destination === 'this') {
             $destination = $this->getAction(true);
         }
