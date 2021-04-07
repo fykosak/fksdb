@@ -1,8 +1,12 @@
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType string $token}
 <p>{if $person->gender == 'F'}Milá kamarádko{else}Milý kamaráde{/if},<br/>
     jelikož jsi byl{if $person->gender == 'F'}a{/if} při řešení našeho semináře velmi úspěšn{if $person->gender == 'F'}á{else}ý{/if},
     je nám ctí Tě pozvat jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b>
     na Letní tábor Výfuku, který se tentokrát koná
-{$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
+    {$event->begin|date:'j.n. Y'}–{$event->end|date:'j.n. Y'} {$holder->getParameter('letterWhere')}.
     Můžeš se těšit na další řešitele Výfuku, přednášky z fyziky či matematiky a spoustu zajímavých
     her v přírodě. Na konci tábora proběhne slavnostní vyhlášení vítězů letošního ročníku Výfuku.
 </p>
