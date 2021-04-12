@@ -39,8 +39,6 @@ class ResultsWebModel extends WebModel {
      * @throws SoapFault
      */
     public function getResponse(stdClass $args): SoapVar {
-        var_dump($args);
-        var_dump($this->container->getParameters()['inverseContestMapping']);
         if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
