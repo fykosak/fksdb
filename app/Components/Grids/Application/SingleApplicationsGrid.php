@@ -28,6 +28,7 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
      * @throws InvalidLinkException
      */
     protected function configure(IPresenter $presenter): void {
+        $this->setDefaultOrder('person.family_name');
         $this->paginate = false;
 
         $this->addColumns([
