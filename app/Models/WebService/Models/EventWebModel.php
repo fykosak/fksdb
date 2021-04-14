@@ -180,12 +180,13 @@ class EventWebModel extends WebModel {
 
     private function createParticipantNode(ModelEventParticipant $participant, \DOMDocument $doc): \DOMElement {
         $pNode = $participant->createXMLNode($doc);
+        $history = $participant->getPersonHistory();
         XMLHelper::fillArrayToNode([
             'name' => $participant->getPerson()->getFullName(),
             'email' => $participant->getPerson()->getInfo()->email,
-            'schoolId' => $participant->getPersonHistory()->school_id,
-            'schoolName' => $participant->getPersonHistory()->getSchool()->name_abbrev,
-            'countryIso' => $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso,
+            'schoolId' => $history ? $history->school_id : null,
+            'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
+            'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
         ], $doc, $pNode);
         return $pNode;
     }
