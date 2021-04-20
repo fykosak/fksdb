@@ -8,29 +8,21 @@ use Tracy\Debugger;
 
 const SAFE_LIMIT = 500;
 
-/**
- * @var Container $container
- */
+/** @var Container $container */
 $container = require __DIR__ . '/bootstrap.php';
 set_time_limit(60);
 if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['spamMailer']['enabled']) {
     exit(0);
 }
-/**
- * @var Mailer $mailer
- */
+/** @var Mailer $mailer */
 $mailer = $container->getByType(Mailer::class);
 
-/**
- * @var ServiceEmailMessage $serviceEmailMessage
- */
+/** @var ServiceEmailMessage $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $container->getParameters()['spamMailer']['defaultLimit']);
 $counter = 0;
-/**
- * @var ModelEmailMessage $model
- */
+/** @var ModelEmailMessage $model */
 foreach ($query as $model) {
     $counter++;
     if ($counter > SAFE_LIMIT) {
@@ -41,7 +33,7 @@ foreach ($query as $model) {
         $message = $model->toMessage();
         $mailer->send($message);
         $model->update(['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
-    } catch (Exception $e) {
+    } catch (Throwable $e) {
         $model->update(['state' => ModelEmailMessage::STATE_FAILED]);
         Debugger::log($e, 'mailer-exceptions');
     }
