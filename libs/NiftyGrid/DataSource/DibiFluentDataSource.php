@@ -3,9 +3,8 @@
 namespace NiftyGrid;
 
 use Nette,
-	DibiFluent;
+    DibiFluent;
 use NiftyGrid\DataSource\IDataSource;
-
 
 /**
  * DibiFluent datasource for Nifty's grid.
@@ -25,149 +24,125 @@ use NiftyGrid\DataSource\IDataSource;
  * @licence LGPL
  * @see     https://github.com/Niftyx/NiftyGrid
  */
-class DibiFluentDataSource implements IDataSource
-{
+class DibiFluentDataSource implements IDataSource {
+
     use Nette\SmartObject;
-	/** @var DibiFluent */
-	private $fluent;
 
-	/** @var string  Primary key column name */
-	private $pKeyColumn;
+    /** @var DibiFluent */
+    private $fluent;
 
-	/** @var int  LIMIT clause value */
-	private $limit;
+    /** @var string  Primary key column name */
+    private $pKeyColumn;
 
-	/** @var int  OFFSET clause value */
-	private $offset;
+    /** @var int  LIMIT clause value */
+    private $limit;
 
+    /** @var int  OFFSET clause value */
+    private $offset;
 
+    /**
+     * @param DibiFluent
+     * @param string  Primary key column name
+     */
+    public function __construct(DibiFluent $fluent, $pKeyColumn) {
+        $this->fluent = clone $fluent;
+        $this->pKeyColumn = $pKeyColumn;
+    }
 
-	/**
-	 * @param DibiFluent
-	 * @param string  Primary key column name
-	 */
-	public function __construct(DibiFluent $fluent, $pKeyColumn)
-	{
-		$this->fluent = clone $fluent;
-		$this->pKeyColumn = $pKeyColumn;
-	}
+    /* --- NiftyGrid\IDataSource implementation ----------------------------- */
 
+    public function getData(): array {
+        return $this->fluent->getConnection()->query('%SQL %lmt %ofs', (string)$this->fluent, $this->limit, $this->offset)->fetchAssoc($this->pKeyColumn);
+    }
 
+    public function getPrimaryKey(): ?string {
+        return $this->pKeyColumn;
+    }
 
-	/* --- NiftyGrid\IDataSource implementation ----------------------------- */
+    public function getCount(string $column = '*'): int {
+        // @see http://forum.dibiphp.com/cs/792-velky-problem-s-dibidatasource-a-mysql
 
+        $fluent = clone $this->fluent;
+        $fluent->removeClause('SELECT')->removeClause('ORDER BY');
 
+        $modifiers = \DibiFluent::$modifiers;
+        \DibiFluent::$modifiers['SELECT'] = '%sql';
+        $fluent->select(['COUNT(%n) AS [count]', $column]);
+        \DibiFluent::$modifiers = $modifiers;
 
-	public function getData()
-	{
-		return $this->fluent->getConnection()->query('%SQL %lmt %ofs', (string) $this->fluent, $this->limit, $this->offset)->fetchAssoc($this->pKeyColumn);
-	}
+        if (strpos((string)$fluent, 'GROUP BY') === false) {
+            return $fluent->fetchSingle();
+        }
 
+        try {
+            return $fluent->execute()->count();
+        } catch (\DibiNotSupportedException $e) {
+        }
 
+        $count = 0;
+        foreach ($fluent as $row) {
+            $count += 1;
+        }
 
-	public function getPrimaryKey()
-	{
-		return $this->pKeyColumn;
-	}
+        return $count;
+    }
 
+    public function orderData(?string $by, ?string $way): void {
+        $this->fluent->orderBy([$by => $way]);
+    }
 
+    public function limitData(int $limit, ?int $offset = null): void {
+        $this->limit = $limit;
+        $this->offset = $offset;
+    }
 
-	public function getCount($column = '*')
-	{
-		// @see http://forum.dibiphp.com/cs/792-velky-problem-s-dibidatasource-a-mysql
+    public function filterData(array $filters): void {
+        static $typeToModifier = [
+            FilterCondition::NUMERIC => '%f',
+            FilterCondition::DATE => '%d',
+        ];
 
-		$fluent = clone $this->fluent;
-		$fluent->removeClause('SELECT')->removeClause('ORDER BY');
+        $where = [];
+        foreach ($filters as $filter) {
+            $cond = [];
 
-		$modifiers = \DibiFluent::$modifiers;
-		\DibiFluent::$modifiers['SELECT'] = '%sql';
-		$fluent->select(array('COUNT(%n) AS [count]', $column));
-		\DibiFluent::$modifiers = $modifiers;
+            // Column
+            if (isset($filter['columnFunction'])) {
+                $cond[] = $filter['columnFunction'] . '(';
+            }
 
-		if (strpos((string) $fluent, 'GROUP BY') === FALSE) {
-			return $fluent->fetchSingle();
-		}
+            $cond[] = '%n';
+            $cond[] = $filter['column'];
 
-		try {
-			return $fluent->execute()->count();
-		} catch (\DibiNotSupportedException $e) {}
+            if (isset($filter['columnFunction'])) {
+                $cond[] = ')';
+            }
 
-		$count = 0;
-		foreach ($fluent as $row) {
-			$count += 1;
-		}
+            // Operator
+            $cond[] = trim(strtoupper(str_replace('?', '', $filter['cond'])));
 
-		return $count;
-	}
+            // Value
+            if (isset($filter['valueFunction'])) {
+                $cond[] = $filter['valueFunction'] . '(';
+            }
 
+            $cond[] = isset($typeToModifier[$filter['datatype']]) ? $typeToModifier[$filter['datatype']] : '%s';
+            $cond[] = $filter['value'];
 
+            if (isset($filter['valueFunction'])) {
+                $cond[] = ')';
+            }
 
-	public function orderData($by, $way)
-	{
-		$this->fluent->orderBy(array($by => $way));
-	}
+            if ($filter['type'] === FilterCondition::WHERE) {
+                $where[] = $cond;
+            } else {
+                trigger_error("Unknown filter type '$filter[type]'.", E_USER_NOTICE);
+            }
+        }
 
-
-
-	public function limitData($limit, $offset)
-	{
-		$this->limit = $limit;
-		$this->offset = $offset;
-	}
-
-
-
-	public function filterData(array $filters)
-	{
-		static $typeToModifier = array(
-			FilterCondition::NUMERIC => '%f',
-			FilterCondition::DATE => '%d',
-		);
-
-		$where = array();
-		foreach ($filters as $filter) {
-			$cond = array();
-
-			// Column
-			if (isset($filter['columnFunction'])) {
-				$cond[] = $filter['columnFunction'] . '(';
-			}
-
-			$cond[] = '%n';
-			$cond[] = $filter['column'];
-
-			if (isset($filter['columnFunction'])) {
-				$cond[] = ')';
-			}
-
-
-			// Operator
-			$cond[] = trim(strtoupper(str_replace('?', '', $filter['cond'])));
-
-
-			// Value
-			if (isset($filter['valueFunction'])) {
-				$cond[] = $filter['valueFunction'] . '(';
-			}
-
-			$cond[] = isset($typeToModifier[$filter['datatype']]) ? $typeToModifier[$filter['datatype']] : '%s';
-			$cond[] = $filter['value'];
-
-			if (isset($filter['valueFunction'])) {
-				$cond[] = ')';
-			}
-
-			if ($filter['type'] === FilterCondition::WHERE) {
-				$where[] = $cond;
-
-			} else {
-				trigger_error("Unknown filter type '$filter[type]'.", E_USER_NOTICE);
-			}
-		}
-
-		if (count($where)) {
-			$this->fluent->where($where);
-		}
-	}
+        if (count($where)) {
+            $this->fluent->where($where);
+        }
+    }
 
 }

@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -53,13 +53,13 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -173,7 +173,10 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
+            if ($this->dataSource instanceof SearchableDataSource) {
+                $this->dataSource->applyFilter($values);
+            }
+
             // TODO is this vv needed? vv
             $count = $this->dataSource->getCount();
             $this->getPaginator()->itemCount = $count;
