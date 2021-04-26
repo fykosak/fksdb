@@ -88,8 +88,6 @@ class TableMerger {
     }
 
     public function merge(?array $mergedParent = null): void {
-        $this->trunkRow->getTable()->accessColumn(null); // stupid touch
-        $this->mergedRow->getTable()->accessColumn(null); // stupid touch
 
         /*
          * We merge child-rows (referencing rows) of the merged rows.

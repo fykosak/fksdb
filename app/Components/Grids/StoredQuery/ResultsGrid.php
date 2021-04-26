@@ -6,13 +6,14 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
+use stdClass;
 
 /**
  *
@@ -32,17 +33,17 @@ class ResultsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         try {
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (\stdClass $row) use ($name) {
+                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (stdClass $row) use ($name) {
                     return ((array)$row)[$name];
                 });
             }

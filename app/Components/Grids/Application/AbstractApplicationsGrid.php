@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -67,7 +67,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
                 ->addText(': ')
                 ->addHtml(Html::el('i')->addText(_($state['description'])))
                 ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(\str_replace('.', '__', $state['state']), $label);
+            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
@@ -82,12 +82,12 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addHolderColumns();
     }
@@ -97,10 +97,10 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {
-                    $states[] = \str_replace('__', '.', $state);
+                    $states[] = str_replace('__', '.', $state);
                 }
             }
-            if (\count($states)) {
+            if (count($states)) {
                 $table->where('status IN ?', $states);
             }
         };
@@ -117,7 +117,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
         $fields = [];
         foreach ($holderFields as $name => $def) {
-            if (\in_array($name, $this->getHoldersColumns())) {
+            if (in_array($name, $this->getHoldersColumns())) {
                 $fields[] = $this->getTableName() . '.' . $name;
             }
         }

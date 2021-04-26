@@ -32,9 +32,9 @@ foreach ($query as $model) {
     try {
         $message = $model->toMessage();
         $mailer->send($message);
-        $model->update(['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
+        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
     } catch (Throwable $e) {
-        $model->update(['state' => ModelEmailMessage::STATE_FAILED]);
+        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_FAILED]);
         Debugger::log($e, 'mailer-exceptions');
     }
 }

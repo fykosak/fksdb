@@ -5,9 +5,10 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -18,16 +19,14 @@ use FKSDB\Models\SQL\SearchableDataSource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class SchoolsGrid extends BaseGrid {
+class SchoolsGrid extends EntityGrid {
 
-    private ServiceSchool $serviceSchool;
-
-    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
-        $this->serviceSchool = $serviceSchool;
+    public function __construct(Container $container) {
+        parent::__construct($container, ServiceSchool::class, [], []);
     }
 
     protected function getData(): IDataSource {
-        $schools = $this->serviceSchool->getTable();
+        $schools = $this->service->getTable();
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
@@ -39,13 +38,13 @@ class SchoolsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         //
