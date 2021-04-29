@@ -64,6 +64,10 @@ class StalkingContainer extends BaseComponent {
         return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());
     }
 
+    protected function createComponentEmailMessageGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('email_message', $this->person, $this->userPermission, $this->getContext());
+    }
+
     protected function createComponentStalkingComponent(): StalkingComponent {
         return new StalkingComponent($this->getContext());
     }

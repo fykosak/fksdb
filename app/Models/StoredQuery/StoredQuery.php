@@ -242,10 +242,10 @@ class StoredQuery implements IDataSource, Resource {
 
     /**
      * @param string $column
+     * @return int
      * @throws \PDOException
-     * @return int|null
      */
-    public function getCount($column = '*'): ?int {
+    public function getCount(string $column = '*'): int {
         if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
@@ -265,7 +265,7 @@ class StoredQuery implements IDataSource, Resource {
      * @return mixed|\PDOStatement|null
      * @throws \PDOException
      */
-    public function getData() {
+    public function getData(): iterable {
         if (!isset($this->data)) {
             $innerSql = $this->getSQL();
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
@@ -292,19 +292,15 @@ class StoredQuery implements IDataSource, Resource {
         return $this->data; // lazy load during iteration?
     }
 
-    /**
-     * @return null
-     */
-    public function getPrimaryKey() {
+    public function getPrimaryKey(): ?string {
         return null;
-        //throw new NotImplementedException();
     }
 
     /**
      * @param int $limit
      * @param int $offset
      */
-    public function limitData($limit, $offset): void {
+    public function limitData(int $limit, ?int $offset = null): void {
         $this->limit = $limit;
         $this->offset = $offset;
         $this->invalidateData();
@@ -313,10 +309,10 @@ class StoredQuery implements IDataSource, Resource {
     /**
      * Implements only single column sorting.
      *
-     * @param string $by column name
-     * @param string $way DESC|ASC
+     * @param string|null $by column name
+     * @param string|null $way DESC|ASC
      */
-    public function orderData($by, $way): void {
+    public function orderData(?string $by, ?string $way): void {
         if (!is_numeric($by)) {
             $by = "`$by`";
         }
