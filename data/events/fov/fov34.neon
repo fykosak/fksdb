@@ -1,6 +1,6 @@
 events:
     fov34:
-        event_type_id: [15]
+        event_type_id: [16]
         #eventYears: [34] # specify for which years this machine is valid, by default all years
         formLayout: fov.form
         paramScheme:
