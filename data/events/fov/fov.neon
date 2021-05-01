@@ -21,8 +21,6 @@ parameters:
                 - rejected
                 - missed
                 - cancelled
-                - out_of_db
-
 
 events:
     fov:
@@ -74,34 +72,9 @@ events:
                     applied->missed:
                         condition: and(role('admin'),eventWas())
                         label: _('Missed')
-
                     invited|auto.invited|applied->cancelled:
                         condition: role('admin')
                         label: _('Cancel application')
-                    invited|applied->out_of_db:
-                        condition: role('admin')
-                        label: _('Deal with outside FKSDB')
-                    out_of_db->invited:
-                        condition: role('admin')
-                        label: _('Return to DB as Invited')
-                    out_of_db->auto.invited:
-                        condition: role('admin')
-                        label: _('Return to DB as Invited (auto)')
-                    out_of_db->applied:
-                        condition: role('admin')
-                        label: _('Return to DB as Applied')
-                    out_of_db->participated:
-                        condition: role('admin')
-                        label: _('Return to DB as Participated')
-                    out_of_db->rejected:
-                        condition: role('admin')
-                        label: _('Return to DB as Rejected')
-                    out_of_db->missed:
-                        condition: role('admin')
-                        label: _('Return to DB as missed')
-                    out_of_db->cancelled:
-                        condition: role('admin')
-                        label: _('Return to DB as cancelled')
 
                     cancelled->__terminated:
                         condition: role('admin')
