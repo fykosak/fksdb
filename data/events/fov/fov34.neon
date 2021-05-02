@@ -1,0 +1,86 @@
+events:
+    fov34:
+        event_type_id: [16]
+        #eventYears: [34] # specify for which years this machine is valid, by default all years
+        formLayout: fov.form
+        paramScheme:
+            notifyBcc:
+                default: soustredeni@fykos.cz
+            notifyFrom:
+                default: soustredeni@fykos.cz
+            deadline:
+                default: 2021-05-09 23:59:00
+            letterWhere:
+                default: nikde
+            letterSignature:
+                default: Student Pilný
+            letterResolutionTime:
+                default: až naprší a uschne
+
+
+        baseMachines:
+            PARTICIPANT:
+                service: @orm.event_participant.service
+
+                states: %events.fov.states%
+
+                transitions:
+                    __init->invited:
+                        condition: role('admin')
+                        label: _('Invite participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited.34, .self)
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: _('Invite participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(fov/invited.34, .self)
+                    invited->applied:
+                        condition: or(before(param('deadline')),role('admin'))
+                        label: _('Confirm participation')
+                    invited->rejected:
+                        condition: or(before(param('deadline')),role('admin'))
+                        label: _('Decline participation')
+                        behaviorType: warning
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Participated')
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Missed')
+
+                    invited|auto.invited|applied->cancelled:
+                        condition: role('admin')
+                        label: _('Cancel application')
+
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Delete application')
+
+                fields:
+                    person_id:
+                        label: _('Person')
+                        required: true
+                        modifiable: %events.fov.appCond%
+                        default: null
+                        factory: RefPerson(%events.fov.person%, email, role('admin'), role('admin'), false)
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: _('Participant')
+                    required: true # default false, it's conjunction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+            formAdjustments:
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
+                - @events.privacyPolicy
+
+            processings:
+                - @events.privacyPolicy
