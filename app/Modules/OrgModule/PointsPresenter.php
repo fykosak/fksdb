@@ -134,13 +134,13 @@ class PointsPresenter extends BasePresenter {
      * @throws AbortException
      */
     public function handleCalculateQuizPoints(): void {
-        $contest = $this->getSelectedContest();
-        $year = $this->getSelectedYear();
-        $series = $this->getSelectedSeries();
-
-        $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
-        $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
         try {
+            $contest = $this->getSelectedContest();
+            $year = $this->getSelectedYear();
+            $series = $this->getSelectedSeries();
+
+            $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
+            $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
         } catch (Exception $exception) {
             $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
             Debugger::log($exception);

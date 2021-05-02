@@ -3,6 +3,6 @@ export interface ModelSubmit {
     name: string;
     deadline: string | null;
     taskId: number;
-    isQuiz: boolean | null;
+    isQuiz: boolean;
     disabled: boolean;
 }
