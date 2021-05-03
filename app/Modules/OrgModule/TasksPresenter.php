@@ -67,7 +67,11 @@ class TasksPresenter extends BasePresenter {
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
-        $seriesItems = $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
+        $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
+        if ($this->seriesCalculator->hasHolidaySeries($this->getSelectedContest(), $this->getSelectedYear())) {
+            $key = array_search('7', $seriesItems);
+            unset($seriesItems[$key]);
+        }
         $form->addSelect('series', _('Series'))
             ->setItems($seriesItems, false);
 
