@@ -39,7 +39,6 @@ class ServiceSubmit extends AbstractService {
     }
 
     public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
-        $test = count($task->related(DbNames::TAB_QUIZ));
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
