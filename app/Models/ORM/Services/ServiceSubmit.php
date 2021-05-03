@@ -39,12 +39,13 @@ class ServiceSubmit extends AbstractService {
     }
 
     public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
+        $test = count($task->related(DbNames::TAB_QUIZ));
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
             'taskId' => $task->task_id,
-            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)),
+            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
             'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
         ];
     }
