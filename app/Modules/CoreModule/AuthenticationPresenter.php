@@ -31,8 +31,6 @@ use Nette\Security\UserStorage;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    /** @const Indicates that page is accessed via dispatch from the login page. */
-    public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
     public const PARAM_REASON = 'reason';
     /** @persistent */

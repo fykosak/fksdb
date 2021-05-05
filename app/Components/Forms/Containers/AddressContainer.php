@@ -33,7 +33,7 @@ class AddressContainer extends ModelContainer {
      * @param iterable|null $value
      */
     public function setValue($value): void {
-        $this->setValues($value === null ? [] : $value);
+        $this->setValues($value ?? []);
     }
 
     /**

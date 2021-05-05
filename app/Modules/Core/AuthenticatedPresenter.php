@@ -110,13 +110,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         if (!$this->requiresLogin()) {
             return;
         }
-        $this->loginRedirect();
-    }
-
-    /**
-     * @throws AbortException
-     */
-    final protected function loginRedirect(): void {
         $this->redirect(':Core:Authentication:login', [
             'backlink' => $this->storeRequest(),
             AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,

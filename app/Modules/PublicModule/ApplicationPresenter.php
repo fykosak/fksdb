@@ -16,6 +16,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -172,7 +173,10 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                $this->loginRedirect();
+                $this->redirect(':Core:Authentication:login', [
+                    'backlink' => $this->storeRequest(),
+                    AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+                ]);
             }
         }
     }

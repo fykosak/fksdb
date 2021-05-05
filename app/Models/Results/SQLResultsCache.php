@@ -6,7 +6,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Nette\Application\BadRequestException;
-use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 
 /**

@@ -15,6 +15,7 @@ interface FieldFactory {
 
     /**
      * @param Field $field field for which it's created
+     * @return BaseControl
      */
     public function createComponent(Field $field): BaseControl;
 
