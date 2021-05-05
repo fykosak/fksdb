@@ -48,13 +48,6 @@ parameters:
             # to unauthenticated one.
             tokenExpiration: '+1 minute'
 
-
-    # Settings for global session used for SSO (single sign on)
-    globalSession:
-        # How long inactivity is allowed until globalSession expires.
-        expiration: '+120 minutes'
-
-
     # Submits by contestats
     upload:
         # Path to storage directory

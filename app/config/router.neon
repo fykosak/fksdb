@@ -15,19 +15,11 @@ parameters:
         # Main domain
         host: fykos
 
-    # Available subdomains
-    subdomain:
-        # Central authentication domain for SSO.
-        auth: auth
-
-        # Main domain for the application.
-        db: db
-
     # Pipe-separated list of presenters w/out module
     rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
-    modules: org|public|warehouse
+    constestModules: org|public|warehouse
     eventModules: event|fyziklani
 
     # Pipe-separated list of contest names
@@ -53,75 +45,52 @@ fksrouter:
             action: default
             flags: [ONE_WAY]
 
-        # Cool URL
-        -
-            mask: '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            module: Org
-            presenter: Export
-            action: execute
-            contestId: [filterTable: %inverseContestMapping%]
-
         # Central authentication domain (+ logout must be enabled at each domain too)
-        -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>'
-            module: Core
-            presenter: Authentication
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
 
         -
-            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover|google>'
+            mask: 'auth/<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
-            subdomain: %subdomain.auth%
             tld: %domain.tld%
 
         # Registration must be at the same domain as central authentication.
         -
-            mask: '//[!<subdomain>].%domain.cz%%path%<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
+            mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
-            subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             year: null
 
         -
-            mask: '//%subdomain.db%.%domain.host%.[!<tld>]%path%[<contestId %contests%>/]<presenter register>/<action=default>'
+            mask: '[<contestId %contests%>/]<presenter register>/<action=default>'
             module: Public
-            subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: [ONE_WAY]
 
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%'
+            mask: '/'
             module: Core
-            subdomain: %subdomain.db%
             presenter: Dispatch
             tld: %domain.tld%
             action: default
 
         # Application itself (note the presenters w/out module are handled specially)
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<presenter %rootPresenters%>/<action=default>[/<id>]'
-            subdomain: %subdomain.db%
+            mask: '<presenter %rootPresenters%>/<action=default>[/<id>]'
             module: Core
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
 
         # Application itself (note the presenters w/out module are handled specially)
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %eventModules%>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
-            subdomain: %subdomain.db%
+            mask: '<module %eventModules%>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             tld: %domain.tld%
             module: Event
             presenter: Dashboard
 
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[<contestId %contests%>[<year [0-9]+>[/series<series [0-9]+>]]/]<presenter>/<action=default>[/<id>]'
+            mask: '<module %constestModules%>/[<contestId %contests%>[<year [0-9]+>[/series<series [0-9]+>]]/]<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
-            subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
