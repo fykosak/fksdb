@@ -41,8 +41,9 @@ class SeriesCalculator {
 
     public function getTotalSeries(ModelContest $contest, int $year): int {
         //TODO Think of better way of getting series count (maybe year schema?)
-        if ($this->hasHolidaySeries($contest, $year))
+        if ($this->hasHolidaySeries($contest, $year)) {
             return 9;
+        }
 
         return 6;
     }
@@ -52,9 +53,10 @@ class SeriesCalculator {
      * Made primarly for Výfuk contest.
      */
     public function hasHolidaySeries(ModelContest $contest, int $year): bool {
-        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9)
+        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) {
             return true;
-        
+        }
+
         return false;
     }
 }
