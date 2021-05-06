@@ -38,7 +38,7 @@ class MailSender {
 
     public const BCC_PARAM = 'notifyBcc';
     public const FROM_PARAM = 'notifyFrom';
-    // Adressee
+    // Addressee
     public const ADDR_SELF = 'self';
     public const ADDR_PRIMARY = 'primary';
     public const ADDR_SECONDARY = 'secondary';

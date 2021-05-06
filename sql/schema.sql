@@ -1401,17 +1401,23 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
-    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `recipient`         VARCHAR(128) NOT NULL,
-    `sender`           VARCHAR(128) NOT NULL,
-    `reply_to`         VARCHAR(128) NOT NULL,
-    `subject`          VARCHAR(128) NOT NULL,
-    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
-    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
-    `text`             TEXT         NOT NULL,
-    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
-    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `sent`             DATETIME     NULL DEFAULT NULL
+    `email_message_id`    INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`           VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `recipient_person_id` INT(11)      NULl                                                        DEFAULT NULL,
+    `sender`              VARCHAR(128) NOT NULL,
+    `reply_to`            VARCHAR(128) NOT NULL,
+    `subject`             VARCHAR(128) NOT NULL,
+    `carbon_copy`         VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `blind_carbon_copy`   VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `text`                TEXT         NOT NULL,
+    `state`               ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
+    `created`             DATETIME     NOT NULL                                                    DEFAULT CURRENT_TIMESTAMP,
+    `sent`                DATETIME     NULL                                                        DEFAULT NULL,
+    INDEX `email_message_person` (`recipient_person_id` ASC),
+    CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
+    CONSTRAINT `email_message_ibfk_1`
+        FOREIGN KEY (`recipient_person_id`)
+            REFERENCES `person` (`person_id`)
 )
     ENGINE = 'InnoDB';
 -- -----------------------------------------------------

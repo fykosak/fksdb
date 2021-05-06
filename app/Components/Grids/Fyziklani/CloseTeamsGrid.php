@@ -7,7 +7,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -34,13 +34,13 @@ class CloseTeamsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

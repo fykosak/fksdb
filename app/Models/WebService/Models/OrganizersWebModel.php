@@ -37,6 +37,7 @@ class OrganizersWebModel extends WebModel {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
                 'name' => $org->getPerson()->getFullName(),
+                'personId' => $org->person_id,
                 'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
                 'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
                 'career' => $org->getPerson()->getInfo()->career,
