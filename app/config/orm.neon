@@ -182,13 +182,13 @@ orm:
                     title: _(Note)
              linkFactories:
                  edit:
-                    destination: ':Event:Eventorg:edit'
+                    destination: ':Event:EventOrg:edit'
                     params:
                         eventId: event_id
                         id: e_org_id
                     title: Edit
                  detail:
-                     destination: ':Event:Eventorg:detail'
+                     destination: ':Event:EventOrg:detail'
                      params:
                          eventId: event_id
                          id: e_org_id

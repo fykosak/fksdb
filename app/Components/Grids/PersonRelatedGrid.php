@@ -6,7 +6,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -43,7 +43,7 @@ class PersonRelatedGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
@@ -51,7 +51,7 @@ class PersonRelatedGrid extends BaseGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         $this->paginate = false;
         parent::configure($presenter);
         $this->addColumns($this->definition['rows'], $this->userPermissions);

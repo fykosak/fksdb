@@ -14,38 +14,6 @@
             <xsd:complexType name="GetEventRequestType">
                 <xsd:sequence>
                     <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
-                    <xsd:choice>
-                        <xsd:element name="eventDetail"/>
-                        <xsd:element name="participantList">
-                            <xsd:complexType>
-                                <xsd:sequence>
-                                    <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
-                                </xsd:sequence>
-                            </xsd:complexType>
-                        </xsd:element>
-                        <xsd:element name="teamList">
-                            <xsd:complexType>
-                                <xsd:sequence>
-                                    <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
-                                </xsd:sequence>
-                            </xsd:complexType>
-                        </xsd:element>
-                        <xsd:element name="scheduleList">
-                            <xsd:complexType>
-                                <xsd:sequence>
-                                    <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
-                                </xsd:sequence>
-                            </xsd:complexType>
-                        </xsd:element>
-                        <xsd:element name="personSchedule">
-                            <xsd:complexType>
-                                <xsd:sequence>
-                                    <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
-                                </xsd:sequence>
-                            </xsd:complexType>
-                        </xsd:element>
-
-                    </xsd:choice>
                 </xsd:sequence>
             </xsd:complexType>
 

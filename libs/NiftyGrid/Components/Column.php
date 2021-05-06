@@ -11,12 +11,13 @@
 namespace NiftyGrid\Components;
 
 use Nette;
+use Nette\Application\UI\Component;
 use NiftyGrid,
     NiftyGrid\Grid,
     NiftyGrid\FilterCondition;
 
+class Column extends Component {
 
-class Column extends \Nette\Application\UI\Component {
     /** @var string */
     public $name;
 
@@ -62,7 +63,7 @@ class Column extends \Nette\Application\UI\Component {
     /**
      * @param Grid $parent
      */
-    public function injectParent(Grid $parent) {
+    public function injectParent(Grid $parent): void {
         $this->parent = $parent;
     }
 
@@ -70,7 +71,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param string $name
      * @return Column
      */
-    public function setName($name) {
+    public function setName($name): self {
         $this->name = $name;
 
         return $this;
@@ -80,7 +81,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param string $tableName
      * @return Column
      */
-    public function setTableName($tableName) {
+    public function setTableName($tableName): self {
         $this->tableName = $tableName;
 
         return $this;
@@ -90,7 +91,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param callback|string $label
      * @return Column
      */
-    public function setLabel($label) {
+    public function setLabel($label): self {
         $this->label = $label;
 
         return $this;
@@ -100,7 +101,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param string $width
      * @return Column
      */
-    public function setWidth($width) {
+    public function setWidth($width): self {
         $this->width = $width;
 
         return $this;
@@ -110,7 +111,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param int $truncate
      * @return Column
      */
-    public function setTruncate($truncate) {
+    public function setTruncate($truncate): self {
         $this->truncate = $truncate;
 
         return $this;
@@ -121,13 +122,13 @@ class Column extends \Nette\Application\UI\Component {
      * @return string
      */
     public function prepareValue($row) {
-        if (!empty($this->renderer)) {
+        if (isset($this->renderer)) {
             $value = ($this->renderer)((object)$row);
         } else {
             $value = $row[$this->name];
         }
 
-        if (!empty($this->truncate)) {
+        if (isset($this->truncate)) {
             return \Nette\Utils\Strings::truncate($value ?? '', $this->truncate);
         } else {
             return $value;
@@ -140,7 +141,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param callback $renderer
      * @return Column
      */
-    public function setRenderer($renderer) {
+    public function setRenderer($renderer): self {
         $this->renderer = $renderer;
 
         return $this;
@@ -150,7 +151,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param callback $renderer
      * @return Column
      */
-    public function setFormRenderer($renderer) {
+    public function setFormRenderer($renderer): self {
         $this->formRenderer = $renderer;
 
         return $this;
@@ -160,7 +161,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param callback|string $renderer
      * @return Column
      */
-    public function setCellRenderer($renderer) {
+    public function setCellRenderer($renderer): self {
         $this->cellRenderer = $renderer;
 
         return $this;
@@ -177,11 +178,8 @@ class Column extends \Nette\Application\UI\Component {
         return $this->cellRenderer;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasCellRenderer() {
-        return !empty($this->cellRenderer) ? true : false;
+    public function hasCellRenderer(): bool {
+        return isset($this->cellRenderer);
     }
 
     /**
@@ -190,8 +188,8 @@ class Column extends \Nette\Application\UI\Component {
      * @throws NiftyGrid\InvalidFilterException
      * @throws NiftyGrid\UnknownFilterException
      */
-    public function setAutocomplete($numOfResults = 10) {
-        if (empty($this->filterType)) {
+    public function setAutocomplete($numOfResults = 10): self {
+        if (!isset($this->filterType)) {
             throw new NiftyGrid\UnknownFilterException("Autocomplete can't be used without filter.");
         } elseif ($this->filterType != FilterCondition::TEXT) {
             throw new NiftyGrid\InvalidFilterException("Autocomplete can be used only with Text filter.");
@@ -223,7 +221,7 @@ class Column extends \Nette\Application\UI\Component {
      * @return Column
      * @throws NiftyGrid\DuplicateEditableColumnException
      */
-    public function setTextEditable($textarea = false, $cols = null, $rows = null) {
+    public function setTextEditable($textarea = false, $cols = null, $rows = null): self {
         if ($this->editable) {
             throw new NiftyGrid\DuplicateEditableColumnException("Column $this->name is already editable.");
         }
@@ -247,7 +245,7 @@ class Column extends \Nette\Application\UI\Component {
      * @return Column
      * @throws NiftyGrid\DuplicateEditableColumnException
      */
-    public function setSelectEditable(array $values, $prompt = null) {
+    public function setSelectEditable(array $values, $prompt = null): self {
         if ($this->editable) {
             throw new NiftyGrid\DuplicateEditableColumnException("Column $this->name is already editable.");
         }
@@ -265,7 +263,7 @@ class Column extends \Nette\Application\UI\Component {
      * @return Column
      * @throws NiftyGrid\DuplicateEditableColumnException
      */
-    public function setBooleanEditable() {
+    public function setBooleanEditable(): self {
         if ($this->editable) {
             throw new NiftyGrid\DuplicateEditableColumnException("Column $this->name is already editable.");
         }
@@ -280,7 +278,7 @@ class Column extends \Nette\Application\UI\Component {
      * @return Column
      * @throws NiftyGrid\DuplicateEditableColumnException
      */
-    public function setDateEditable() {
+    public function setDateEditable(): self {
         if ($this->editable) {
             throw new NiftyGrid\DuplicateEditableColumnException("Column $this->name is already editable.");
         }
@@ -291,51 +289,32 @@ class Column extends \Nette\Application\UI\Component {
         return $this;
     }
 
-    /**
-     * @param bool $sortable
-     * @return Column
-     */
-    public function setSortable($sortable = true) {
+    public function setSortable(bool $sortable = true): self {
         $this->sortable = $sortable;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSortable() {
+    public function isSortable(): bool {
         return $this->sortable;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasFilter() {
-        return (!empty($this->parent['gridForm'][$this->parent->name]['filter'][$this->name])) ? true : false;
+    public function hasFilter(): bool {
+        return isset($this->parent['gridForm'][$this->parent->name]['filter'][$this->name]);
     }
 
-    /**
-     * @return string
-     */
-    public function getFilterType() {
+    public function getFilterType(): string {
         return $this->filterType;
     }
 
-    /**
-     * @return Column
-     */
-    public function setTextFilter() {
+    public function setTextFilter(): self {
         $this->parent['gridForm'][$this->parent->name]['filter']->addText($this->name, $this->label . ":");
         $this->filterType = FilterCondition::TEXT;
 
         return $this;
     }
 
-    /**
-     * @return Column
-     */
-    public function setNumericFilter() {
+    public function setNumericFilter(): self {
         $this->parent['gridForm'][$this->parent->name]['filter']->addText($this->name, $this->label . ":");
         $this->filterType = FilterCondition::NUMERIC;
 
@@ -347,7 +326,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param string $prompt
      * @return Column
      */
-    public function setSelectFilter($values, $prompt = "-----") {
+    public function setSelectFilter($values, $prompt = "-----"): self {
         $this->parent['gridForm'][$this->parent->name]['filter']->addSelect($this->name, $this->label . ":", $values);
         if ($prompt) {
             $this->parent['gridForm'][$this->parent->name]['filter'][$this->name]->setPrompt($prompt);
@@ -357,10 +336,7 @@ class Column extends \Nette\Application\UI\Component {
         return $this;
     }
 
-    /**
-     * @return Column
-     */
-    public function setDateFilter() {
+    public function setDateFilter(): self {
         $this->parent['gridForm'][$this->parent->name]['filter']->addText($this->name, $this->label . ":")->getControlPrototype()->class("grid-datepicker");
         $this->filterType = FilterCondition::DATE;
 
@@ -372,7 +348,7 @@ class Column extends \Nette\Application\UI\Component {
      * @param string $prompt
      * @return Column
      */
-    public function setBooleanFilter($values = [0 => "Ne", 1 => "Ano"], $prompt = "-----") {
+    public function setBooleanFilter($values = [0 => "Ne", 1 => "Ano"], $prompt = "-----"): self {
         $this->setSelectFilter($values, $prompt);
         $this->filterType = FilterCondition::BOOLEAN;
 
