@@ -9,9 +9,6 @@ parameters:
         cz: fykos.cz
         org: fykos.org
 
-        # Default top level domain
-        tld: cz
-
         # Main domain
         host: fykos
 
@@ -44,27 +41,30 @@ fksrouter:
             presenter: WebService
             action: default
             flags: [ONE_WAY]
+        # cool URL for SQLQuery
+        -
+            mask: '<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'
+            module: Org
+            presenter: Export
+            action: execute
+            contestId: [filterTable: %inverseContestMapping%]
 
         # Central authentication domain (+ logout must be enabled at each domain too)
-
         -
             mask: 'auth/<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
-            tld: %domain.tld%
 
         # Registration must be at the same domain as central authentication.
         -
             mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
-            tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             year: null
 
         -
             mask: '[<contestId %contests%>/]<presenter register>/<action=default>'
             module: Public
-            tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: [ONE_WAY]
 
@@ -72,25 +72,20 @@ fksrouter:
             mask: '/'
             module: Core
             presenter: Dispatch
-            tld: %domain.tld%
             action: default
 
         # Application itself (note the presenters w/out module are handled specially)
         -
             mask: '<presenter %rootPresenters%>/<action=default>[/<id>]'
             module: Core
-            tld: %domain.tld%
-            contestId: [filterTable: %inverseContestMapping%]
 
         # Application itself (note the presenters w/out module are handled specially)
         -
             mask: '<module %eventModules%>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
-            tld: %domain.tld%
             module: Event
             presenter: Dashboard
 
         -
-            mask: '<module %constestModules%>/[<contestId %contests%>[<year [0-9]+>[/series<series [0-9]+>]]/]<presenter>/<action=default>[/<id>]'
+            mask: '<module %constestModules%>/[<contestId %contests%>[<year [0-9]+>/[series<series [0-9]+>/]]]<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
-            tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
