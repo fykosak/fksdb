@@ -25,7 +25,6 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
-    - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
@@ -107,7 +106,5 @@ services:
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 
-    ## external
-    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
 includes:
     - merger.neon
