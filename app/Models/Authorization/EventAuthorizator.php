@@ -5,21 +5,21 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Security\Resource;
-use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
+use Nette\Security\User;
 use Nette\SmartObject;
 
 class EventAuthorizator {
 
     use SmartObject;
 
-    private IUserStorage $userStorage;
+    private User $user;
     private Permission $permission;
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->userStorage = $identity;
+        $this->user = $user;
         $this->permission = $acl;
     }
 
@@ -51,7 +51,8 @@ class EventAuthorizator {
      * @return bool
      */
     public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        $login = $this->user->getIdentity();
+        if (!$login) {
             return false;
         }
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
@@ -67,7 +68,8 @@ class EventAuthorizator {
      * @return bool
      */
     public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        $login = $this->user->getIdentity();
+        if (!$login) {
             return false;
         }
         if (!$this->isEventOrg($resource, $privilege, $event)) {
@@ -83,9 +85,9 @@ class EventAuthorizator {
      * @return bool
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
-        /** @var ModelLogin $identity */
-        $identity = $this->userStorage->getIdentity();
-        $person = $identity ? $identity->getPerson() : null;
+        $login = $this->user->getIdentity();
+        /** @var ModelLogin $login */
+        $person = $login ? $login->getPerson() : null;
         if (!$person) {
             return false;
         }

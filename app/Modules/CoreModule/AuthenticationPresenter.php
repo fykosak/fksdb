@@ -5,12 +5,10 @@ namespace FKSDB\Modules\CoreModule;
 use Exception;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
-use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\SSO\GlobalSession;
-use FKSDB\Models\Authentication\SSO\IGlobalSession;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -38,17 +36,18 @@ use Nette\Utils\DateTime;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
+    /** @const Value meaning the user is not centally authneticated. */
+    public const SSO_AUTHENTICATED = 'a';
+
+    /** @const Value meaning the user is not centally authneticated. */
+    public const SSO_UNAUTHENTICATED = 'ua';
+
     public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
     public const PARAM_REASON = 'reason';
-    /** @const Various modes of authentication. */
-    public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
-    /** @const Only check of authentication with subsequent backlink redirect. */
-    public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
     /** @persistent */
@@ -56,8 +55,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public ?string $flag = null;
     private ServiceAuthToken $serviceAuthToken;
-    /** @var GlobalSession|IGlobalSession */
-    private IGlobalSession $globalSession;
+    private GlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
     private Google $googleProvider;
@@ -65,7 +63,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     final public function injectTernary(
         ServiceAuthToken $serviceAuthToken,
-        IGlobalSession $globalSession,
+        GlobalSession $globalSession,
         PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
         GoogleAuthenticator $googleAuthenticator,
@@ -101,11 +99,10 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->getUser()->logout(true);
 
             // redirect to global logout
-            $params = [
+            $url = $this->link('//this', [
                 'subdomain' => $subDomainAuth,
                 self::PARAM_GSID => $this->globalSession->getId(),
-            ];
-            $url = $this->link('//this', $params);
+            ]);
             $this->redirectUrl($url);
         }
         // else: $subdomain == $subdomainAuth
@@ -138,11 +135,8 @@ final class AuthenticationPresenter extends BasePresenter {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect();
+            $this->initialRedirect($login);
         } else {
-            if ($this->flag == self::FLAG_SSO_PROBE) {
-                $this->loginBackLinkRedirect();
-            }
             if ($this->getParameter(self::PARAM_REASON)) {
                 switch ($this->getParameter(self::PARAM_REASON)) {
                     case self::REASON_TIMEOUT:
@@ -165,10 +159,11 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @throws AbortException
+     * @throws Exception
      */
     public function actionRecover(): void {
         if ($this->isLoggedIn()) {
-            $this->initialRedirect();
+            $this->initialRedirect($this->getUser()->getIdentity());
         }
     }
 
@@ -180,7 +175,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @return bool
      */
     private function isLoggedIn(): bool {
-        return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);
+        return $this->getUser()->isLoggedIn() || $this->globalSession->getUIdSession();
     }
 
     /*     * ******************* components ****************************** */
@@ -245,7 +240,7 @@ final class AuthenticationPresenter extends BasePresenter {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
-            $this->initialRedirect();
+            $this->initialRedirect($login);
         } catch (AuthenticationException $exception) {
             $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
@@ -283,7 +278,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @return void
      * @throws Exception
      */
-    private function loginBackLinkRedirect($login = null): void {
+    private function loginBackLinkRedirect(?ModelLogin $login = null): void {
         if (!$this->backlink) {
             return;
         }
@@ -293,19 +288,12 @@ final class AuthenticationPresenter extends BasePresenter {
         $url = new Url($this->backlink);
         $this->backlink = null;
 
-        if (in_array($this->flag, [self::FLAG_SSO_PROBE, self::FLAG_SSO_LOGIN])) {
+        if (in_array($this->flag, [ModelAuthToken::TYPE_SSO])) {
             if ($login) {
-                $globalSessionId = $this->globalSession->getId();
-                $expiration = $this->getContext()->getParameters()['authentication']['sso']['tokenExpiration'];
-                $until = DateTime::from($expiration);
-                $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
-                $url->appendQuery([
-                    LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_AUTHENTICATED,
-                    TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token,
-                ]);
+                $url->appendQuery($this->getAuthTokenQuery($login));
             } else {
                 $url->appendQuery([
-                    LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_UNAUTHENTICATED,
+                    ModelAuthToken::TYPE_SSO => self::SSO_UNAUTHENTICATED,
                 ]);
             }
         }
@@ -317,6 +305,22 @@ final class AuthenticationPresenter extends BasePresenter {
                 $this->flashMessage(sprintf(_('Backlink %s not allowed'), (string)$url), self::FLASH_ERROR);
             }
         }
+    }
+
+    /**
+     * @param ModelLogin $login
+     * @return array
+     * @throws Exception
+     */
+    private function getAuthTokenQuery(ModelLogin $login): array {
+        $globalSessionId = $this->globalSession->getId();
+        $expiration = $this->getContext()->getParameters()['authentication']['sso']['tokenExpiration'];
+        $until = DateTime::from($expiration);
+        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
+        return [
+            ModelAuthToken::TYPE_SSO => self::SSO_AUTHENTICATED,
+            TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token,
+        ];
     }
 
     /**
@@ -334,7 +338,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $ownerDetails = $this->googleProvider->getResourceOwner($token);
             $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
             $this->getUser()->login($login);
-            $this->initialRedirect();
+            $this->initialRedirect($login);
         } catch (UnknownLoginException $exception) {
             $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
             $this->redirect('login');
@@ -355,13 +359,14 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @param ModelLogin $login
+     * @throws Exception
      */
-    private function initialRedirect(): void {
+    private function initialRedirect(ModelLogin $login): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }
-        $this->redirect(':Core:Dispatch:');
+        $this->redirect(':Core:Dispatch:', $this->getAuthTokenQuery($login));
     }
 
     protected function beforeRender(): void {
