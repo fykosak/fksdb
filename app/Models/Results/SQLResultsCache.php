@@ -102,13 +102,12 @@ class SQLResultsCache {
         $params[] = 'contest_id=' . $contest->contest_id;
         $params[] = 'year=' . $year;
         $params[] = 'series=' . $series;
-        $sql = 'UPDATE submit s, (SELECT sq.ct_id, sq.question_id, sq.answer, q.task_id, q.points,
-        q.answer AS "corr_answer", t.contest_id, t.year, t.series,
-        SUM(IF(sq.answer=q.answer, q.points, 0)) AS "total" FROM submit_quiz sq
-        JOIN quiz q USING (question_id) JOIN task t USING (task_id)
-        WHERE t.' . implode(' AND t.', $params) . ' GROUP BY task_id, ct_id
-        ) as T SET s.raw_points = T.total
-        WHERE T.' . implode(' AND T.', $params) . ' AND s.ct_id = T.ct_id AND s.task_id = T.task_id';
+
+        $sql = 'UPDATE submit s INNER JOIN (SELECT sq.ct_id, q.task_id, SUM(IF(sq.answer=q.answer, q.points, 0))
+                AS "raw_points" FROM submit_quiz sq JOIN quiz q USING (question_id) JOIN task t USING (task_id)
+                WHERE t.' . implode(' AND t.', $params) . ' GROUP BY ct_id, task_id ) r ON s.ct_id = r.ct_id AND
+                s.task_id = r.task_id SET s.raw_points = r.raw_points';
+
         $this->serviceTask->explorer->query($sql);
     }
 }

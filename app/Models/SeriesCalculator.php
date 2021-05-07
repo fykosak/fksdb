@@ -28,15 +28,35 @@ class SeriesCalculator {
 
     public function getAllowedSeries(ModelContest $contest, int $year): array {
         $lastSeries = $this->getLastSeries($contest, $year);
-        return range(1, $lastSeries);
+        $range = range(1, $lastSeries);
+
+        // If the year has holiday series, remove posibility to upload 7th series
+        // (due to Astrid's structure)
+        if ($this->hasHolidaySeries($contest, $year)) {
+            $key = array_search('7', $range);
+            unset($range[$key]);
+        }
+        return $range;
     }
 
     public function getTotalSeries(ModelContest $contest, int $year): int {
-        //TODO allow variance?
-        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
+        //TODO Think of better way of getting series count (maybe year schema?)
+        if ($this->hasHolidaySeries($contest, $year)) {
             return 9;
-        } else {
-            return 6;
         }
+
+        return 6;
+    }
+
+    /**
+     * Check if specific year has a holiday series.
+     * Made primarly for Výfuk contest.
+     */
+    public function hasHolidaySeries(ModelContest $contest, int $year): bool {
+        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) {
+            return true;
+        }
+
+        return false;
     }
 }
