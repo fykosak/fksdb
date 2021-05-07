@@ -45,14 +45,14 @@ trait YearPresenterTrait {
     }
 
     private function isValidYear(?int $year): bool {
-        return in_array($year, $this->getAvailableItems());
+        return in_array($year, $this->getAvailableYears());
     }
 
     public function getSelectedYear(): ?int {
         return $this->year;
     }
 
-    protected function getAvailableItems(): array {
+    protected function getAvailableYears(): array {
         return $this->yearCalculator->getAvailableYears($this->getRole(), $this->getSelectedContest(), $this->getUser());
     }
 
@@ -61,6 +61,6 @@ trait YearPresenterTrait {
     }
 
     protected function createComponentYearChooser(): YearChooserComponent {
-        return new YearChooserComponent($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
+        return new YearChooserComponent($this->getContext(), $this->getSelectedYear(), $this->getAvailableYears());
     }
 }

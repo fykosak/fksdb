@@ -14,13 +14,14 @@ use FKSDB\Models\UI\PageTitle;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
+
     use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
     protected function startup(): void {
-        $this->yearTraitStartup();
         parent::startup();
+        $this->yearTraitStartup();
     }
 
     public function getContestant(): ?ModelContestant {
