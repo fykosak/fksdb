@@ -38,6 +38,9 @@ class UploadContainer extends React.Component<StateProps, {}> {
         if (submitting) {
             return (<LoadingState/>);
         }
+        if (submit.isQuiz) {
+            return <p className="alert alert-info">{translator.getText('Pro vyplnění kvízu použijte starý systém nahrávání.')}</p>;
+        }
         if (submit.submitId) {
             return (<File submit={submit}/>);
         } else {
