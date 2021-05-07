@@ -37,6 +37,7 @@ class OptimisticForm extends Form {
     /**
      * @param null $data Must be always null! Defaults callback is used to produce the values.
      * @param bool $erase
+     * @return static
      * @throws LogicException
      */
     public function setDefaults($data = null, bool $erase = false): self {

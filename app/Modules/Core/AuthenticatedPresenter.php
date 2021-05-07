@@ -9,12 +9,10 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
-use Nette\Security\IUserStorage;
 use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
@@ -112,22 +110,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         if (!$this->requiresLogin()) {
             return;
         }
-        $this->loginRedirect();
-    }
-
-    /**
-     * @throws AbortException
-     */
-    final protected function loginRedirect(): void {
-        if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
-            $reason = AuthenticationPresenter::REASON_TIMEOUT;
-        } else {
-            $reason = AuthenticationPresenter::REASON_AUTH;
-        }
-
         $this->redirect(':Core:Authentication:login', [
             'backlink' => $this->storeRequest(),
-            AuthenticationPresenter::PARAM_REASON => $reason,
+            AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
         ]);
     }
 
@@ -174,11 +159,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log("$login signed in using token $tokenData.", 'token-login');
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
-                $this->tokenAuthenticator->disposeAuthToken();
-            } else {
-                $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
-            }
+            $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
 
             $this->getUser()->login($login);
             $this->redirect('this');

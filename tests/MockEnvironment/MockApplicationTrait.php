@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\MockEnvironment;
 
-use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
@@ -10,6 +9,7 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Http\Session;
+use Nette\Security\UserStorage;
 use Tester\Assert;
 
 /**
@@ -36,7 +36,6 @@ trait MockApplicationTrait {
     protected function mockApplication(): void {
         $mockPresenter = new MockPresenter();
         $application = new MockApplication($mockPresenter);
-
         $this->container->callInjects($mockPresenter);
         $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
@@ -62,9 +61,9 @@ trait MockApplicationTrait {
             $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
             Assert::type(ModelLogin::class, $login);
         }
-        $storage = $container->getByType(LoginUserStorage::class);
-        $storage->setIdentity($login);
-        $storage->setAuthenticated(true);
+        /** @var UserStorage $storage */
+        $storage = $container->getByType(UserStorage::class);
+        $storage->saveAuthentication($login);
 
         if ($presenter) {
             $presenter->getUser()->login($login);
@@ -76,8 +75,6 @@ trait MockApplicationTrait {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
-
-        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
         return $presenter;
     }
 

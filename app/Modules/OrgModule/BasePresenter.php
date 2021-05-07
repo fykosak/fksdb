@@ -9,16 +9,12 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Security\Resource;
 
 abstract class BasePresenter extends AuthenticatedPresenter {
+
     use SeriesPresenterTrait;
 
     protected function startup(): void {
-        $this->seriesTraitStartup();
-        /*  @var ModelLogin $login
-         * $login = $this->getUser()->getIdentity();
-         * if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
-         * throw new ForbiddenRequestException();
-         * }*/
         parent::startup();
+        $this->seriesTraitStartup();
     }
 
     protected function getNavRoots(): array {
