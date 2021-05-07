@@ -9,7 +9,6 @@ parameters:
     domain:
         cz: fykos.local
         org: fykos.localen
-        tld: local
 
     email:
         # On debug environment do no send any real e-mails.

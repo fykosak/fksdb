@@ -12,10 +12,6 @@ services:
         factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
     ## need setUp
-    globalSession:
-        factory: FKSDB\Models\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
-        setup:
-            - start()
     submitUploatedStorage:
         factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
         setup:
@@ -29,7 +25,6 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
-    - FKSDB\Models\Authentication\SSO\TokenGlobalSessionIdHolder
     - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator

@@ -222,6 +222,7 @@ class PersonPresenter extends BasePresenter {
      * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
+     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);

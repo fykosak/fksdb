@@ -33,7 +33,7 @@ trait ContestPresenterTrait {
      * @throws BadRequestException
      */
     protected function contestTraitStartup(): void {
-        if (!isset($this->contestId) || !$this->isValidContest($this->getSelectedContest())) {
+        if (!isset($this->contestId) || !$this->isValidContest()) {
             $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
         }
     }
@@ -50,9 +50,9 @@ trait ContestPresenterTrait {
         return reset($candidates);
     }
 
-    private function isValidContest(ModelContest $contest): bool {
+    private function isValidContest(): bool {
         foreach ($this->getAllowedContests() as $allowedContest) {
-            if ($allowedContest->contest_id === $contest->contest_id) {
+            if ($allowedContest->contest_id === $this->getSelectedContest()->contest_id) {
                 return true;
             }
         }
@@ -63,33 +63,38 @@ trait ContestPresenterTrait {
      * @return ModelContest[]
      */
     private function getAllowedContests(): array {
-        $contestIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         switch ($this->getRole()) {
             case YearChooserComponent::ROLE_SELECTED:
-                $contestIds = [$this->contestId];
-                break;
+                return [$this->serviceContest->findByPrimary($this->contestId)];
             case YearChooserComponent::ROLE_ALL:
-                $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
-                break;
+                $contests = [];
+                foreach ($this->serviceContest->getTable() as $contest) {
+                    $contests[] = $contest;
+                }
+                return $contests;
             case YearChooserComponent::ROLE_CONTESTANT:
                 if (!$login || !$login->getPerson()) {
-                    break;
+                    return [];
                 }
                 $person = $login->getPerson();
-                $contestIds = array_keys($person->getActiveContestants());
-
-                break;
+                $contests = [];
+                foreach ($person->getActiveContestants() as $contestant) {
+                    $contests[] = $contestant->getContest();
+                }
+                return $contests;
             case YearChooserComponent::ROLE_ORG:
-                $contestIds = array_keys($login->getActiveOrgs());
-                break;
+                if (!$login) {
+                    return [];
+                }
+                $contests = [];
+                foreach ($login->getActiveOrgs() as $org) {
+                    $contests[] = $org->getContest();
+                }
+                return $contests;
         }
-        $contests = [];
-        foreach ($contestIds as $id) {
-            $contests[] = $this->serviceContest->findByPrimary($id);
-        }
-        return $contests;
+        return [];
     }
 
     public function getSelectedContest(): ?ModelContest {

@@ -32,7 +32,7 @@ trait SeriesPresenterTrait {
      */
     protected function seriesTraitStartup(): void {
         $this->yearTraitStartup();
-        if (!isset($this->series)) {
+        if (!isset($this->series) || !$this->isValidSeries($this->series)) {
             $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
         }
     }

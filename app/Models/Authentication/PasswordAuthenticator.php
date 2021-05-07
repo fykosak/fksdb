@@ -6,7 +6,6 @@ use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\InvalidCredentialsException;
 use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
-use FKSDB\Models\Authentication\SSO\GlobalSession;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
@@ -22,12 +21,10 @@ use Nette\Security\SimpleIdentity;
 class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler {
 
     private ServicePerson $servicePerson;
-    private GlobalSession $globalSession;
 
-    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson, GlobalSession $globalSession) {
+    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
-        $this->globalSession = $globalSession;
     }
 
     /**
@@ -101,20 +98,10 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         return $identity;
     }
 
-    public function wakeupIdentity(IIdentity $identity): ?IIdentity {
-        $global = $this->globalSession->getUIdSession();
-        if ($global) {
-            // update identity
-            return $global->getLogin();
-        }
-
+    public function wakeupIdentity(IIdentity $identity): ?ModelLogin {
         // Find login
-        /** @var ModelLogin $login */
+        /** @var ModelLogin|null $login */
         $login = $this->serviceLogin->findByPrimary($identity->getId());
-
-        if (!$login) {
-            return null;
-        }
         return $login;
     }
 }

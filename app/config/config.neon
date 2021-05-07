@@ -31,30 +31,6 @@ parameters:
     navigation:
         # How long data for navigation tree is held in the session
         expiration: '+30 minutes'
-
-    # Authentication settings
-    authentication:
-        # List of allowed hosts to which backlinking after successful authentization is possible.
-        backlinkHosts:
-            - %domain.cz%
-            - db.%domain.cz%
-            - vyfuk.%domain.cz%
-            - %domain.org%
-            - db.%domain.org%
-            - vyfuk.%domain.org%
-
-        sso:
-            # How ling is valid auth token when redirecting from authenticated domain
-            # to unauthenticated one.
-            tokenExpiration: '+1 minute'
-
-
-    # Settings for global session used for SSO (single sign on)
-    globalSession:
-        # How long inactivity is allowed until globalSession expires.
-        expiration: '+120 minutes'
-
-
     # Submits by contestats
     upload:
         # Path to storage directory
