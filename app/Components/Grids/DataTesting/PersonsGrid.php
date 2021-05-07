@@ -9,7 +9,7 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -36,12 +36,12 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns(['person.person_link']);
@@ -56,13 +56,12 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param array $logs
+     * @param TestLog[] $logs
      * @return Html
      * @throws BadTypeException
      * @throws NotImplementedException
      */
     protected static function createHtmlLog(array $logs): Html {
-
         $container = Html::el('span');
         foreach ($logs as $log) {
             if ($log instanceof TestLog) {
