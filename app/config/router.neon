@@ -9,9 +9,6 @@ parameters:
         cz: fykos.cz
         org: fykos.org
 
-        # Main domain
-        host: fykos
-
     # Pipe-separated list of presenters w/out module
     rootPresenters: settings|github|my-payments|my-applications
 
@@ -49,13 +46,12 @@ fksrouter:
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
 
-        # Central authentication domain (+ logout must be enabled at each domain too)
+        # Central authentication
         -
             mask: 'auth/<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
 
-        # Registration must be at the same domain as central authentication.
         -
             mask: '<presenter register>/[<contestId %contests%>/[year<year [0-9]+>/[person<personId -?[0-9]+>/]]]<action=default>'
             module: Public
