@@ -11,6 +11,7 @@ upload/*
 app/config/config.local.neon
 vendor/*
 .idea/*
+.vscode/*
 *.map
 www/**/.sass-cache/
 coverage.html
