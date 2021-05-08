@@ -863,29 +863,6 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter` (
   ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `global_session`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `global_session` (
-  `session_id` CHAR(32)    NOT NULL,
-  `login_id`   INT(11)     NOT NULL
-  COMMENT 'the only data\nfield of the session',
-  `since`      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `until`      TIMESTAMP   NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `remote_ip`  VARCHAR(45) NULL     DEFAULT NULL
-  COMMENT 'IP adresa klienta',
-  PRIMARY KEY (`session_id`),
-  INDEX `fk_auth_token_login1_idx` (`login_id` ASC),
-  CONSTRAINT `fk_auth_token_login10`
-  FOREIGN KEY (`login_id`)
-  REFERENCES `login` (`login_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COMMENT = 'Stores global sessions for SSO (single sign-on/off)';
-
--- -----------------------------------------------------
 -- Table `flag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `flag` (
