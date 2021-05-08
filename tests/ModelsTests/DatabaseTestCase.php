@@ -46,7 +46,6 @@ abstract class DatabaseTestCase extends TestCase {
     protected function tearDown(): void {
         $this->truncateTables([
             DbNames::TAB_ORG,
-            DbNames::TAB_GLOBAL_SESSION,
             DbNames::TAB_LOGIN,
             DbNames::TAB_PERSON_HISTORY,
             DbNames::TAB_CONTEST_YEAR,
