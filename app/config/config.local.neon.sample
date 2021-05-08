@@ -18,9 +18,6 @@ parameters:
         host: astrid.fykos.cz
         user:
         password:
-    facebook:
-        appId:
-        secret:
     ro-database:
         dsn: 'mysql:host=127.0.0.1;dbname=newfks'
         user:
