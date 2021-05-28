@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -14,8 +14,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class EventOrgFormComponent
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelEventOrg $model
  */
 class EventOrgFormComponent extends AbstractEntityFormComponent {

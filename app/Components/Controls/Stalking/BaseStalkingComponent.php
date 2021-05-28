@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\Badges\ContestBadge;
-use FKSDB\Components\Controls\Badges\NoRecordsBadge;
-use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Badges\ContestBadge;
+use FKSDB\Components\Badges\NoRecordsBadge;
+use FKSDB\Components\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;

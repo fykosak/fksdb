@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
@@ -17,11 +17,9 @@ use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * Class EditControl
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
+class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
 
     private ModelEvent $event;
     private HandlerFactory $handlerFactory;

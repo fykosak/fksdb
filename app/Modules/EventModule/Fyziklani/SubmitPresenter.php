@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
+use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\PointsEntryComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -122,14 +122,14 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return FyziklaniSubmitEditComponent
+     * @return FyziklaniSubmitFormComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentEditForm(): FyziklaniSubmitEditComponent {
-        return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent(), $this->getEntity());
+    protected function createComponentEditForm(): FyziklaniSubmitFormComponent {
+        return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
 
     /**

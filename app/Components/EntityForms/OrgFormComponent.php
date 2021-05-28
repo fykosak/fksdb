@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -16,8 +16,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class OrgForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelOrg $model
  */
 class OrgFormComponent extends AbstractEntityFormComponent {

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Badges;
+namespace FKSDB\Components\Badges;
 
 use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Models\ModelContest;

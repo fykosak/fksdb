@@ -32,19 +32,19 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
         foreach ($this->config as $tableName => $fieldDefinitions) {
             $this->tryRegisterORMService($tableName, $fieldDefinitions);
             foreach ($fieldDefinitions['columnFactories'] as $fieldName => $field) {
-                $this->createColumnFactory($tableName, $fieldDefinitions['modelClassName'], $fieldName, $field);
+                $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
             foreach ($fieldDefinitions['linkFactories'] as $fieldName => $field) {
-                $this->createLinkFactory($tableName, $fieldDefinitions['modelClassName'], $fieldName, $field);
+                $this->createLinkFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
         }
     }
 
     private function tryRegisterORMService(string $tableName, array $fieldDefinitions): void {
-        if (isset($fieldDefinitions['serviceClassName'])) {
+        if (isset($fieldDefinitions['service'])) {
             $builder = $this->getContainerBuilder();
             $factory = $builder->addDefinition($this->prefix($tableName . '.service'));
-            $factory->setFactory($fieldDefinitions['serviceClassName'], [$tableName, $fieldDefinitions['modelClassName']]);
+            $factory->setFactory($fieldDefinitions['service'], [$tableName, $fieldDefinitions['model']]);
         }
     }
 

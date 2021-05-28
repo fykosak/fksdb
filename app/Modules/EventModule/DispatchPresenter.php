@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\UI\PageTitle;

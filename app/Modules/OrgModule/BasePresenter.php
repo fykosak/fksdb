@@ -4,7 +4,6 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Security\Resource;
 

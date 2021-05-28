@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
+use FKSDB\Components\Controls\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -23,8 +23,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * Class AbstractPersonFormControl
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelPerson $model
  */
 class PersonFormComponent extends AbstractEntityFormComponent {

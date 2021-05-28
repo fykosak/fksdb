@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
@@ -15,8 +15,6 @@ use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
 /**
- * Class TeacherForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelTeacher $model
  */
 class TeacherFormComponent extends AbstractEntityFormComponent {

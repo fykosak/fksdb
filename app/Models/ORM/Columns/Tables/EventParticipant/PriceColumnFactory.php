@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\PricePrinter;
 use Fykosak\NetteORM\AbstractModel;

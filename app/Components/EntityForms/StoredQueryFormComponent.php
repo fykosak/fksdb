@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -27,8 +27,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * Class StoredQueryForm
- * @author Michal Červeňák <miso@fykos.cz>
  * @method StoredQueryPresenter getPresenter($throw = true)
  * @property ModelStoredQuery $model
  */
@@ -253,6 +251,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     }
 
     protected function getTemplatePath(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
+        return __DIR__ . DIRECTORY_SEPARATOR;
     }
 }

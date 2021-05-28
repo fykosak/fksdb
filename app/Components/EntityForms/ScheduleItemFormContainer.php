@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -15,8 +15,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class ScheduleGroupFormComponent
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelScheduleItem|null $model
  */
 class ScheduleItemFormContainer extends AbstractEntityFormComponent {

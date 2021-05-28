@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Badges;
+namespace FKSDB\Components\Badges;
 
 use FKSDB\Components\Controls\BaseComponent;
 use Nette\Utils\Html;
@@ -15,6 +15,6 @@ abstract class Badge extends BaseComponent {
 
     final public function render(...$args): void {
         $this->template->html = static::getHtml(...$args);
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR);
     }
 }

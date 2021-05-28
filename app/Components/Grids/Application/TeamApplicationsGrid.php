@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;

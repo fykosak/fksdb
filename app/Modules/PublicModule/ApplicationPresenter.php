@@ -77,11 +77,9 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int|null $eventId
-     * @param int|null $id
      * @throws GoneException
      */
-    public function authorizedDefault(?int $eventId, ?int $id): void {
+    public function authorizedDefault(): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())

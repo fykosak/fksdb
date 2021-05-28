@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\TeacherFormComponent;
+use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;

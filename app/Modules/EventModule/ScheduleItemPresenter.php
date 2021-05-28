@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
+use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
