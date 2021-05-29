@@ -84,6 +84,12 @@ class ExportPresenter extends BasePresenter {
                     $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
             }
+            $this->getStoredQuery()->setParameters($parameters);
+            if ($this->getParameter('format')) {
+                /** @var ResultsComponent $resultsComponent */
+                $resultsComponent = $this->getComponent('resultsComponent');
+                $resultsComponent->handleFormat($this->getParameter('format'));
+            }
         }
     }
 
