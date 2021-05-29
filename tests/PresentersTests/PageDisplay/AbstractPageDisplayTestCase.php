@@ -77,7 +77,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_GLOBAL_SESSION, DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
+        $this->truncateTables([DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
         parent::tearDown();
     }
 }
