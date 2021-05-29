@@ -143,24 +143,25 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         return $this;
     }
 
-    private function callTitleMethod(): void {
-        $method = $this->formatTitleMethod($this->getView());
-        if (method_exists($this, $method)) {
-            $this->{$method}();
-            return;
-        }
-        $this->pageTitle = null;
-    }
-
+    /**
+     * @return PageTitle
+     * @throws BadRequestException
+     */
     public function getTitle(): PageTitle {
         if (!isset($this->pageTitle)) {
-            $this->callTitleMethod();
+            $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
         }
-        return $this->pageTitle ?? new PageTitle();
+        $this->pageTitle = $this->pageTitle ?? new PageTitle();
+        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
+        return $this->pageTitle;
     }
 
     protected function setPageTitle(PageTitle $pageTitle): void {
         $this->pageTitle = $pageTitle;
+    }
+
+    protected function getDefaultSubTitle(): ?string {
+        return null;
     }
 
     public function setBackLink(string $backLink): ?string {

@@ -51,9 +51,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
-        parent::setPageTitle($pageTitle);
+    protected function getDefaultSubTitle(): ?string {
+        return sprintf(_('%d. year'), $this->year);
     }
 
     protected function getRole(): string {
