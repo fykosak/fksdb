@@ -119,7 +119,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $data;
     }
 
-    private function studyYearToGraduation(int $studyYear, int $acYear): ?int {
+    private function studyYearToGraduation(?int $studyYear, int $acYear): ?int {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         } elseif ($studyYear >= 6 && $studyYear <= 9) {
