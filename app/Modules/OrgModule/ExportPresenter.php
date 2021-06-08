@@ -102,10 +102,10 @@ class ExportPresenter extends BasePresenter {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): int {
-        $methods = parent::getAllowedAuthMethods();
+    public function getAllowedAuthMethods2(): array {
+        $methods = parent::getAllowedAuthMethods2();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
+            $methods[self::AUTH_HTTP] = true;
         }
         return $methods;
     }

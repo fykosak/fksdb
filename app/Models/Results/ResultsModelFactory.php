@@ -6,6 +6,7 @@ use DOMDocument;
 use DOMNode;
 use Exception;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceTask;
@@ -28,12 +29,8 @@ use SoapFault;
 use Tracy\Debugger;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-/**
- * Description of FKSDB\Results\ResultsModelFactory
- *
- * @author michal
- */
 class ResultsModelFactory implements XMLNodeSerializer {
+
     use SmartObject;
 
     private Connection $connection;
@@ -46,74 +43,91 @@ class ResultsModelFactory implements XMLNodeSerializer {
 
     /**
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @return CumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createCumulativeResultsModel(ModelContest $contest, int $year): CumulativeResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel {
+        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
-        return new CumulativeResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new CumulativeResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
 
     /**
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @return DetailResultsModel
      * @throws BadRequestException
      */
-    public function createDetailResultsModel(ModelContest $contest, int $year): DetailResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel {
+        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
-        return new DetailResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new DetailResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
 
     /**
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @return BrojureResultsModel
      * @throws BadRequestException
      */
-    public function createBrojureResultsModel(ModelContest $contest, int $year): BrojureResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategy($contest, $year);
+    public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel {
+        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
-        return new BrojureResultsModel($contest, $this->serviceTask, $this->connection, $year, $evaluationStrategy);
+        return new BrojureResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
 
     /**
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @return SchoolCumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createSchoolCumulativeResultsModel(ModelContest $contest, int $year): SchoolCumulativeResultsModel {
-        $cumulativeResultsModel = $this->createCumulativeResultsModel($contest, $year);
-        return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contest, $this->serviceTask, $this->connection, $year);
+    public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel {
+        $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
+        return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contestYear, $this->serviceTask, $this->connection);
+    }
+
+    /**
+     * @param ModelContestYear $contestYear
+     * @return EvaluationStrategy
+     * @throws BadRequestException
+     */
+    public static function findEvaluationStrategyByContestYear(ModelContestYear $contestYear): EvaluationStrategy {
+        switch ($contestYear->contest_id) {
+            case ModelContest::ID_FYKOS:
+                if ($contestYear->year >= 25) {
+                    return new EvaluationFykos2011();
+                } else {
+                    return new EvaluationFykos2001();
+                }
+            case ModelContest::ID_VYFUK:
+                if ($contestYear->year >= 4) {
+                    return new EvaluationVyfuk2014();
+                } elseif ($contestYear->year >= 2) {
+                    return new EvaluationVyfuk2012();
+                } else {
+                    return new EvaluationVyfuk2011();
+                }
+        }
+        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->getContest()->name));
     }
 
     /**
      *
-     * @param ModelContest|int $contest
+     * @param int $contestId
      * @param int $year
      * @return EvaluationStrategy
      * @throws BadRequestException
+     * @deprecated
      */
-    public static function findEvaluationStrategy($contest, int $year): EvaluationStrategy {
-        if ($contest instanceof ModelContest) {
-            $contestId = $contest->contest_id;
-        } else {
-            $contestId = $contest;
-        }
+    public static function findEvaluationStrategy(int $contestId, int $year): EvaluationStrategy {
         if ($contestId == ModelContest::ID_FYKOS) {
             if ($year >= 25) {
                 return new EvaluationFykos2011();
@@ -129,7 +143,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
                 return new EvaluationVyfuk2011();
             }
         }
-        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contest->name));
+        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contestId));
     }
 
     /**

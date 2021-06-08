@@ -113,6 +113,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();
         $this->logger->clear();
+        /** @var ModelPerson $person */
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model ?? null);
         $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
         $this->storeAddresses($person, $data);
@@ -132,8 +133,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?: [],
-                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?: [],
+                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?? [],
+                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?? [],
             ]);
         }
     }

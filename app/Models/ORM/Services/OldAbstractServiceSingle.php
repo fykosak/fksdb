@@ -21,25 +21,6 @@ use Fykosak\NetteORM\AbstractModel;
 abstract class OldAbstractServiceSingle extends AbstractService {
 
     /**
-     * Default data for the new model.
-     * TODO is this really needed?
-     * @return array
-     */
-    protected function getDefaultData(): array {
-        if (!isset($this->defaults)) {
-            $this->defaults = [];
-            foreach ($this->getColumnMetadata() as $column) {
-                if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default'])
-                    && !preg_match('/^[0-9]{4}/', $column['default'])) {
-                    continue;
-                }
-                $this->defaults[$column['name']] = isset($column['default']) ? $column['default'] : null;
-            }
-        }
-        return $this->defaults;
-    }
-
-    /**
      * @param array $data
      * @return AbstractModel
      * @deprecated

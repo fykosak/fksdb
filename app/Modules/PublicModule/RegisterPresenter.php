@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -155,13 +156,13 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
             $years = [
-                $contest->getCurrentYear(),
-                $contest->getCurrentYear() + $forward,
+                $contest->getCurrentContestYear()->year,
+                $contest->getCurrentContestYear()->year + $forward,
             ];
 
             $this->template->years = $years;
         } else {
-            $this->redirect('email', ['year' => $contest->getCurrentYear(),]);
+            $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year,]);
         }
     }
 
@@ -188,6 +189,15 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function getSelectedYear(): ?int {
         return $this->year;
+    }
+
+    public function getSelectedContestYear(): ?ModelContestYear {
+        $contest = $this->getSelectedContest();
+        if (is_null($contest)) {
+            return null;
+        }
+        $row = $contest->getContestYears()->where('year', $this->year)->fetch();
+        return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
     public function getSelectedAcademicYear(): int {
@@ -272,7 +282,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $form->addComponent($captcha, 'captcha');
         }
 
-        $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
+        $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContestYear(), $this->getLang());
 
         $submit = $form->addSubmit('register', _('Register'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {

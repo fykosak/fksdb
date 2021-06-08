@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Results;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Nette\Application\BadRequestException;
@@ -21,23 +21,12 @@ class SQLResultsCache {
         $this->serviceTask = $serviceTask;
     }
 
-    /**
-     *
-     * @param ModelContest|null $contest
-     * @param int|null $year
-     * @throws \PDOException
-     */
-    public function invalidate(ModelContest $contest = null, ?int $year = null): void {
+    public function invalidate(ModelContestYear $contestYear): void {
         $data = [
             'calc_points' => null,
         ];
-        $conditions = ['1 = 1'];
-        if ($contest !== null) {
-            $conditions[] = 'contest_id = ' . $contest->contest_id;
-        }
-        if ($year !== null) {
-            $conditions[] = 'year = ' . (int)$year;
-        }
+        $conditions[] = 'contest_id = ' . $contestYear->contest_id;
+        $conditions[] = 'year = ' . (int)$contestYear->year;
 
         $sql = '
             UPDATE submit s
@@ -49,30 +38,28 @@ class SQLResultsCache {
     }
 
     /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @throws BadRequestException
      * @throws \PDOException
      */
-    public function recalculate(ModelContest $contest, int $year): void {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
+    public function recalculate(ModelContestYear $contestYear): void {
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategyByContestYear($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
 // TODO related
         $tasks = $this->serviceTask->getTable()
             ->where([
-                'contest_id' => $contest->contest_id,
-                'year' => $year,
+                'contest_id' => $contestYear->getContest()->contest_id,
+                'year' => $contestYear->year,
             ]);
 
         $this->serviceTask->explorer->getConnection()->beginTransaction();
         /** @var ModelTask $task */
         foreach ($tasks as $task) {
             $conditions = [];
-            $conditions[] = 't.contest_id = ' . $contest->contest_id;
-            $conditions[] = 't.year = ' . (int)$year;
+            $conditions[] = 't.contest_id = ' . $contestYear->getContest()->contest_id;
+            $conditions[] = 't.year = ' . (int)$contestYear->year;
             $conditions[] = 's.task_id = ' . $task->task_id;
             $sql = '
             UPDATE submit s
@@ -92,15 +79,13 @@ class SQLResultsCache {
     /**
      * Calculate points from form-based tasks, such as quizzes.
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContestYear $contestYear
      * @param int $series
-     * @throws \PDOException
      */
-    public function calculateQuizPoints(ModelContest $contest, int $year, int $series): void {
+    public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void {
         $params = [];
-        $params[] = 'contest_id=' . $contest->contest_id;
-        $params[] = 'year=' . $year;
+        $params[] = 'contest_id=' . $contestYear->contest_id;
+        $params[] = 'year=' . $contestYear->year;
         $params[] = 'series=' . $series;
 
         $sql = 'UPDATE submit s INNER JOIN (SELECT sq.ct_id, q.task_id, SUM(IF(sq.answer=q.answer, q.points, 0))

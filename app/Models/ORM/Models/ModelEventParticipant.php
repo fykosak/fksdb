@@ -48,9 +48,8 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-// TODO can not be nullable
-    public function getPerson(): ?ModelPerson {
-        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    public function getPerson(): ModelPerson {
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     public function getPersonHistory(): ?ModelPersonHistory {
@@ -62,10 +61,6 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
     }
 
     public function __toString(): string {
-        // TODO
-        if (!$this->getPerson()) {
-            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
-        }
         return $this->getPerson()->__toString();
     }
 

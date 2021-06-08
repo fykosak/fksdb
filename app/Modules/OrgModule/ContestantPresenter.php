@@ -35,7 +35,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     protected function createComponentGrid(): ContestantsGrid {
-        return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+        return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
     protected function appendExtendedContainer(Form $form): void {

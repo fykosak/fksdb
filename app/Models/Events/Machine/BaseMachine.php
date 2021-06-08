@@ -12,8 +12,6 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine {
 
-    public const EXECUTABLE = 0x1;
-    public const VISIBLE = 0x2;
     private string $name;
     private array $states;
     private array $transitions = [];
@@ -86,18 +84,19 @@ class BaseMachine {
     /**
      * @param Holder $holder
      * @param string $sourceState
-     * @param int $mode
+     * @param bool $visible
+     * @param bool $executable
      * @return Transition[]
      */
-    public function getAvailableTransitions(Holder $holder, string $sourceState, int $mode = self::EXECUTABLE): array {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) : bool {
+    public function getAvailableTransitions(Holder $holder, string $sourceState, bool $visible = false, bool $executable = true): array {
+        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($holder, $executable, $visible): bool {
             return
-                (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
+                (!$executable || $transition->canExecute($holder)) && (!$visible || $transition->isVisible($holder));
         });
     }
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
-        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState):bool {
+        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState): bool {
             return $transition->getTargetState() == $targetState;
         });
         if (count($candidates) == 0) {

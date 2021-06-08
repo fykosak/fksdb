@@ -4,7 +4,7 @@
 
 parameters:
     exports:
-        maintainer: webmaster@fykos.cz
+        maintainer: it@fykos.cz
 
         # Specifies which special are available per QIDed export
         specialFormats:
@@ -34,6 +34,8 @@ parameters:
                 aesop: _(Save AESOP) # format name -> GUI label
             aesop.setkani.p:
                 aesop: _(Save AESOP) # format name -> GUI label
+            aesop.fov::
+                aesop: _('Save AESOP') # format name -> GUI label
 
         # Specifies parameters per each format in general
         formats:
@@ -77,3 +79,6 @@ parameters:
                 aesop.setkani.p:
                     idMask: '%%s.setkani.podzim' # sprintf mask: contestName, year, category
                     eventTypeId: 12
+                aesop.fov:
+                    idMask: '%%s.fov' # sprintf mask: contestName, year, category
+                    eventTypeId: 16

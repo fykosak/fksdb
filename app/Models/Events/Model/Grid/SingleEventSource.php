@@ -41,7 +41,7 @@ class SingleEventSource implements HolderSource {
     /** @var ActiveRow[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
-    private ?array $holders = [];
+    private array $holders = [];
 
     /**
      * SingleEventSource constructor.

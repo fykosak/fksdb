@@ -29,7 +29,7 @@ class ThemeChooserComponent extends ChooserComponent {
 
     public function getSelectedTheme(): ?string {
         $session = $this->getSession();
-        return $session->theme ?: null;
+        return $session->theme;
     }
 
     /**

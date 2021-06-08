@@ -57,8 +57,6 @@ class TasksFromXML extends Stage {
     }
 
     private function processTask(SimpleXMLElement $XMLTask): void {
-        $contest = $this->data->getContest();
-        $year = $this->data->getYear();
         $series = $this->data->getSeries();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -98,12 +96,12 @@ class TasksFromXML extends Stage {
         }
 
         // obtain FKSDB\Models\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
+        $task = $this->taskService->findBySeries($this->data->getContestYear(), $series, $tasknr);
 
         if ($task == null) {
             $task = $this->taskService->createNewModel(array_merge($data, [
-                'contest_id' => $contest->contest_id,
-                'year' => $year,
+                'contest_id' => $this->data->getContestYear()->contest_id,
+                'year' => $this->data->getContestYear()->year,
                 'series' => $series,
                 'tasknr' => $tasknr,
             ]));

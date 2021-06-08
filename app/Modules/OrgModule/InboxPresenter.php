@@ -68,8 +68,7 @@ class InboxPresenter extends BasePresenter {
      */
     protected function startup(): void {
         parent::startup();
-        $this->seriesTable->setContest($this->getSelectedContest());
-        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
