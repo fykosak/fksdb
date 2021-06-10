@@ -75,7 +75,7 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-                $row = $this->data->getContest()
+                $row = $this->data->getContestYear()->getContest()
                     ->related(DbNames::TAB_ORG)
                     ->where('tex_signature', $signature)
                     ->fetch();

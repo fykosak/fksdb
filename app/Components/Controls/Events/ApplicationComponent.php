@@ -118,7 +118,7 @@ class ApplicationComponent extends BaseComponent {
         $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
 
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 

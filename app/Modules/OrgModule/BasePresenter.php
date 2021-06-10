@@ -29,7 +29,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     protected function getDefaultSubTitle(): ?string {
-        return sprintf(_('%d. year, %s. series'), $this->getSelectedYear(), $this->getSelectedSeries());
+        return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
     }
 
     /**

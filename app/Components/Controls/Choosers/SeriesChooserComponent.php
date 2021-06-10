@@ -12,14 +12,12 @@ use Nette\DI\Container;
  */
 class SeriesChooserComponent extends ChooserComponent {
 
-    private int $year;
     private int $series;
     private array $allowedSeries;
 
-    public function __construct(Container $container, int $year, int $series, array $allowedSeries) {
+    public function __construct(Container $container, int $series, array $allowedSeries) {
         parent::__construct($container);
         $this->series = $series;
-        $this->year = $year;
         $this->allowedSeries = $allowedSeries;
     }
 

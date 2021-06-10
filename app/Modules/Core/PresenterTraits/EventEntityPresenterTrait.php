@@ -29,6 +29,7 @@ trait EventEntityPresenterTrait {
      */
     protected function getEntity(): AbstractModel {
         $model = $this->getBaseEntity();
+        /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
         if ($event->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();

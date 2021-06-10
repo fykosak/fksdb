@@ -34,11 +34,6 @@ use Nette\InvalidStateException;
  */
 class ReferencedPersonContainer extends ReferencedContainer {
 
-    public const TARGET_FORM = 0x1;
-    public const TARGET_VALIDATION = 0x2;
-    public const EXTRAPOLATE = 0x4;
-    public const HAS_DELIVERY = 0x8;
-
     public ModifiabilityResolver $modifiabilityResolver;
 
     public VisibilityResolver $visibilityResolver;
@@ -154,7 +149,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      */
     public function setModel(?ActiveRow $model, string $mode): void {
-
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $visible = $this->visibilityResolver->isVisible($model);
@@ -175,13 +169,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
              * TODO type safe
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
-                if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $options = self::TARGET_FORM | self::HAS_DELIVERY;
-                } else {
-                    $options = self::TARGET_FORM;
-                }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $options); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $options | self::EXTRAPOLATE);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, false, isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, true, isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY]));
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
                 if (!$controlVisible && !$controlModifiable) {
@@ -232,13 +221,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
                 if ($fieldName == 'address') {
-                    $required = (bool)$metadata['required'] ?? false;
-                    if ($required) {
-                        $options = AddressFactory::REQUIRED;
-                    } else {
-                        $options = 0;
-                    }
-                    return $this->addressFactory->createAddress($options, $this->getReferencedId());
+                    return $this->addressFactory->createAddress($this->getReferencedId(), (bool)$metadata['required'] ?? false);
                 } else {
                     throw new InvalidArgumentException("Only 'address' field is supported.");
                 }
@@ -316,10 +299,16 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param ModelPerson|null $person
      * @param string $sub
      * @param string $field
-     * @param int $options
+     * @param bool $extrapolate
+     * @param bool $hasDelivery
+     * @param bool $targetValidation
      * @return mixed
      */
-    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, int $options) {
-        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
+    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false) {
+        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear,
+            $extrapolate,
+            $hasDelivery,
+            $targetValidation,
+            $this->event);
     }
 }

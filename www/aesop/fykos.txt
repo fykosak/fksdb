@@ -158,3 +158,4 @@
 ../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
 ../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
 ../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
+../fykos34/q/aesop.fov?ha=1&format=aesop

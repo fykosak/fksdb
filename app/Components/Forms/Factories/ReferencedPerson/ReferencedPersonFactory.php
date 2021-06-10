@@ -27,13 +27,13 @@ class ReferencedPersonFactory {
 
     use SmartObject;
 
-    protected ServicePerson $servicePerson;
+    private ServicePerson $servicePerson;
 
-    protected PersonFactory $personFactory;
+    private PersonFactory $personFactory;
 
-    protected ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
+    private ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
 
-    protected PersonProvider $personProvider;
+    private PersonProvider $personProvider;
 
     private PersonScheduleFactory $personScheduleFactory;
 
@@ -74,7 +74,7 @@ class ReferencedPersonFactory {
     }
 
     final public static function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, ?ModelEvent $event = null): bool {
-        $value = self::getPersonValue($person, $sub, $field, $acYear, ReferencedPersonContainer::TARGET_VALIDATION, $event);
+        $value = self::getPersonValue($person, $sub, $field, $acYear,  false, false, true, $event);
         return !($value === null || $value === '');
     }
 
@@ -83,11 +83,13 @@ class ReferencedPersonFactory {
      * @param string $sub
      * @param string $field
      * @param int $acYear
-     * @param int|null $options
+     * @param bool $extrapolate
+     * @param bool $hasDelivery
+     * @param bool $targetValidation
      * @param ModelEvent|null $event
      * @return mixed
      */
-    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, int $acYear, ?int $options, ?ModelEvent $event = null) {
+    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, int $acYear, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false, ?ModelEvent $event = null) {
         if (!$person) {
             return null;
         }
@@ -104,11 +106,11 @@ class ReferencedPersonFactory {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, (bool)($options & ReferencedPersonContainer::EXTRAPOLATE))) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear, $extrapolate)) ? $history[$field] : null;
             case 'post_contact_d':
                 return $person->getDeliveryPostContact();
             case 'post_contact_p':
-                if (($options & ReferencedPersonContainer::TARGET_VALIDATION) || !($options & ReferencedPersonContainer::HAS_DELIVERY)) {
+                if ($targetValidation || !$hasDelivery) {
                     return $person->getPermanentPostContact();
                 }
                 return $person->getPermanentPostContact(true);

@@ -45,13 +45,13 @@ class ResultsWebModel extends WebModel {
         if (!isset($args->year)) {
             throw new SoapFault('Sender', 'Unknown year.');
         }
-        $contest = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest]);
+        $contestYear = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest])->getContestYear($args->year);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
 
         if (isset($args->detail)) {
-            $resultsModel = $this->resultsModelFactory->createDetailResultsModel($contest, $args->year);
+            $resultsModel = $this->resultsModelFactory->createDetailResultsModel($contestYear);
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
@@ -61,7 +61,7 @@ class ResultsWebModel extends WebModel {
         }
 
         if (isset($args->cumulatives)) {
-            $resultsModel = $this->resultsModelFactory->createCumulativeResultsModel($contest, $args->year);
+            $resultsModel = $this->resultsModelFactory->createCumulativeResultsModel($contestYear);
 
             if (!is_array($args->cumulatives->cumulative)) {
                 $args->cumulatives->cumulative = [$args->cumulatives->cumulative];
@@ -74,7 +74,7 @@ class ResultsWebModel extends WebModel {
         }
 
         if (isset($args->{'school-cumulatives'})) {
-            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contest, $args->year);
+            $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
                 $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
@@ -89,7 +89,7 @@ class ResultsWebModel extends WebModel {
         // This type of call is deprecated (2015-10-02), when all possible callers
         // are notified about it, change it to SoapFault exception.
         if (isset($args->brojure)) {
-            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
+            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contestYear);
 
             $series = explode(' ', $args->brojure);
             foreach ($series as $seriesSingle) {
@@ -100,7 +100,7 @@ class ResultsWebModel extends WebModel {
         }
 
         if (isset($args->brojures)) {
-            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contest, $args->year);
+            $resultsModel = $this->resultsModelFactory->createBrojureResultsModel($contestYear);
 
             if (!is_array($args->brojures->brojure)) {
                 $args->brojures->brojure = [$args->brojures->brojure];

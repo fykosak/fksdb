@@ -220,7 +220,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ?: $this->getParameter('eventId');
+            $eventId = $eventId ?? $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 

@@ -65,10 +65,10 @@ class StoredQueryFactory implements XMLNodeSerializer {
 
     private function presenterContextParameters(BasePresenter $presenter): array {
         return [
-            self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_YEAR => $presenter->getSelectedYear(),
-            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+            self::PARAM_CONTEST_ID => $presenter->getSelectedContestYear()->contest_id,
+            self::PARAM_CONTEST => $presenter->getSelectedContestYear()->contest_id,
+            self::PARAM_YEAR => $presenter->getSelectedContestYear()->year,
+            self::PARAM_AC_YEAR => $presenter->getSelectedContestYear()->ac_year,
             self::PARAM_SERIES => $presenter->getSelectedSeries(),
         ];
     }

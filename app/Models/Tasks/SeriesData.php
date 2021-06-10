@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelTask;
 
 /**
@@ -12,8 +12,7 @@ use FKSDB\Models\ORM\Models\ModelTask;
  */
 class SeriesData {
 
-    private ModelContest $contest;
-    private int $year;
+    private ModelContestYear $contestYear;
     private int $series;
     private \SimpleXMLElement $data;
 
@@ -22,19 +21,14 @@ class SeriesData {
      */
     private array $tasks = [];
 
-    public function __construct(ModelContest $contest, int $year, int $series, \SimpleXMLElement $data) {
-        $this->contest = $contest;
-        $this->year = $year;
+    public function __construct(ModelContestYear $contestYear, int $series, \SimpleXMLElement $data) {
+        $this->contestYear = $contestYear;
         $this->series = $series;
         $this->data = $data;
     }
 
-    public function getContest(): ModelContest {
-        return $this->contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
+    public function getContestYear(): ModelContestYear {
+        return $this->contestYear;
     }
 
     public function getSeries(): int {

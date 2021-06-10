@@ -2,19 +2,14 @@
 
 namespace FKSDB\Models;
 
-use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelLogin;
 use InvalidArgumentException;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
-use Nette\Security\User;
+use Nette\SmartObject;
 
-/**
- * Class FKSDB\YearCalculator
- */
 class YearCalculator {
+
+    use SmartObject;
 
     /**
      * @const No. of years of shift for forward registration.
@@ -45,7 +40,7 @@ class YearCalculator {
         return $calYear;
     }
 
-    public function getGraduationYear(int $studyYear, ?int $acYear): int {
+    public static function getGraduationYear(int $studyYear, ?int $acYear): int {
         $acYear = is_null($acYear) ? self::getCurrentAcademicYear() : $acYear;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
@@ -65,7 +60,7 @@ class YearCalculator {
     public function getForwardShift(ModelContest $contest): int {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
-            $forwardYear = $contest->getCurrentYear() + self::FORWARD_SHIFT;
+            $forwardYear = $contest->getCurrentContestYear()->year + self::FORWARD_SHIFT;
             $row = $contest->getContestYears()->where('year', $forwardYear)->fetch();
 
             /* Apply the forward shift only when the appropriate year is defined in the database */
@@ -76,31 +71,6 @@ class YearCalculator {
             }
         } else {
             return 0;
-        }
-    }
-
-    public function getAvailableYears(string $role, ModelContest $contest, User $user): array {
-        switch ($role) {
-            case YearChooserComponent::ROLE_ORG:
-            case YearChooserComponent::ROLE_ALL:
-            case YearChooserComponent::ROLE_SELECTED:
-                return array_reverse(range($contest->getFirstYear(), $contest->getLastYear()));
-            case YearChooserComponent::ROLE_CONTESTANT:
-                /** @var ModelLogin $login */
-                $login = $user->getIdentity();
-                $currentYear = $contest->getCurrentYear();
-                $years = [];
-                if ($login && !$login->getPerson()) {
-                    $contestants = $login->getPerson()->getContestants($contest);
-                    /** @var ModelContestant $contestant */
-                    foreach ($contestants as $contestant) {
-                        $years[] = $contestant->year;
-                    }
-                }
-                sort($years);
-                return count($years) ? $years : [$currentYear];
-            default:
-                throw new InvalidStateException(sprintf('Role %s is not supported', $role));
         }
     }
 }

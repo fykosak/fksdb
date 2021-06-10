@@ -44,7 +44,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         $schoolContainer = $this->schoolFactory->createContainer();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
-        $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);
+        $addressContainer = $this->addressFactory->createAddress(null, true, true);
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
     }
 
