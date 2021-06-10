@@ -23,7 +23,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\InvalidStateException;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
@@ -200,13 +199,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
-    public function getSelectedAcademicYear(): int {
-        if (!$this->getSelectedContest()) {
-            throw new InvalidStateException(_('Cannot get academic year without selected contest.'));
-        }
-        return $this->getSelectedContest()->getContestYear($this->getSelectedYear())->ac_year;
-    }
-
     private function getPerson(): ?ModelPerson {
         if (!isset($this->person)) {
             if ($this->user->isLoggedIn()) {
@@ -265,7 +257,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
-            $this->getSelectedAcademicYear(),
+            $this->getSelectedContestYear()->ac_year,
             PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),
