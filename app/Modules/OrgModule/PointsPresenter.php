@@ -26,7 +26,7 @@ class PointsPresenter extends BasePresenter {
      * Show all tasks?
      * @persistent
      */
-    public $all;
+    public ?bool $all = null;
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
     private ServiceTaskContribution $serviceTaskContribution;
@@ -43,8 +43,7 @@ class PointsPresenter extends BasePresenter {
 
     protected function startup(): void {
         parent::startup();
-        $this->seriesTable->setContest($this->getSelectedContest());
-        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
@@ -79,7 +78,7 @@ class PointsPresenter extends BasePresenter {
 
     protected function createComponentPointsForm(): PointsFormComponent {
         return new PointsFormComponent(function () {
-            $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
+            $this->SQLResultsCache->recalculate($this->getSelectedContestYear());
         }, $this->getContext(), $this->seriesTable);
     }
 
@@ -93,7 +92,7 @@ class PointsPresenter extends BasePresenter {
      */
     public function handleInvalidate(): void {
         try {
-            $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
+            $this->SQLResultsCache->invalidate($this->getSelectedContestYear());
             $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
         } catch (Exception $exception) {
             $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
@@ -110,14 +109,12 @@ class PointsPresenter extends BasePresenter {
      */
     public function handleRecalculateAll(): void {
         try {
-            $contest = $this->getSelectedContest();
-
-            $years = $contest->related(DbNames::TAB_TASK)
+            $years = $this->getSelectedContestYear()->getContest()->related(DbNames::TAB_TASK)
                 ->select('year')
                 ->group('year');
             /** @var ModelTask|ActiveRow $year */
             foreach ($years as $year) {
-                $this->SQLResultsCache->recalculate($contest, $year->year);
+                $this->SQLResultsCache->recalculate($this->getSelectedContestYear());
             }
 
             $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
@@ -135,11 +132,7 @@ class PointsPresenter extends BasePresenter {
      */
     public function handleCalculateQuizPoints(): void {
         try {
-            $contest = $this->getSelectedContest();
-            $year = $this->getSelectedYear();
-            $series = $this->getSelectedSeries();
-
-            $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
+            $this->SQLResultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
         } catch (Exception $exception) {
             $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);

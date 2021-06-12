@@ -84,6 +84,12 @@ class ExportPresenter extends BasePresenter {
                     $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
             }
+            $this->getStoredQuery()->setParameters($parameters);
+            if ($this->getParameter('format')) {
+                /** @var ResultsComponent $resultsComponent */
+                $resultsComponent = $this->getComponent('resultsComponent');
+                $resultsComponent->handleFormat($this->getParameter('format'));
+            }
         }
     }
 
@@ -96,10 +102,10 @@ class ExportPresenter extends BasePresenter {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): int {
-        $methods = parent::getAllowedAuthMethods();
+    public function getAllowedAuthMethods2(): array {
+        $methods = parent::getAllowedAuthMethods2();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
+            $methods[self::AUTH_HTTP] = true;
         }
         return $methods;
     }

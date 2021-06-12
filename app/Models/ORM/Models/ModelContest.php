@@ -24,8 +24,8 @@ class ModelContest extends AbstractModel {
         return strtolower(Strings::webalize($this->name));
     }
 
-    public function getContestYear(int $year): ?ModelContestYear {
-        $row = $this->related(DbNames::TAB_CONTEST_YEAR)->where('year', $year)->fetch();
+    public function getContestYear(?int $year): ?ModelContestYear {
+        $row = $this->getContestYears()->where('year', $year)->fetch();
         return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
@@ -41,9 +41,9 @@ class ModelContest extends AbstractModel {
         return $this->related(DbNames::TAB_CONTEST_YEAR);
     }
 
-    public function getCurrentYear(): int {
+    public function getCurrentContestYear(): ModelContestYear {
         /** @var ActiveRow|ModelContestYear $row */
         $row = $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
-        return $row->year;
+        return ModelContestYear::createFromActiveRow($row);
     }
 }

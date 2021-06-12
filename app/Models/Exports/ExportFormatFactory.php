@@ -20,6 +20,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ExportFormatFactory {
+
     use SmartObject;
 
     public const AESOP = 'aesop';
@@ -99,8 +100,9 @@ class ExportFormatFactory {
         ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
-            $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
-            $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
+            $contestYear = $this->serviceContest->findByPrimary($queryParameters['contest'])->getContestYear($queryParameters['year']);
+
+            $event = $this->serviceEvent->getByEventTypeId($contestYear, $parameters[$qid]['eventTypeId']);
             $format->addParameters([
                 'start-date' => $event->begin->format('Y-m-d'),
                 'end-date' => $event->end->format('Y-m-d'),

@@ -43,7 +43,7 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self {
-        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters(), $queryPattern->php_post_proc ?: null);
+        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters(), $queryPattern->php_post_proc);
         $storedQuery->queryPattern = $queryPattern;
         $storedQuery->name = $queryPattern->name;
         return $storedQuery;
@@ -296,10 +296,6 @@ class StoredQuery implements IDataSource, Resource {
         return null;
     }
 
-    /**
-     * @param int $limit
-     * @param int $offset
-     */
     public function limitData(int $limit, ?int $offset = null): void {
         $this->limit = $limit;
         $this->offset = $offset;

@@ -59,7 +59,7 @@ class NewApplicationsGrid extends BaseGrid {
             ->setShow(function (ModelEvent $modelEvent): bool {
                 $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
                 $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
-                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions($holder, Machine::STATE_INIT, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
+                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions($holder, Machine::STATE_INIT, true, true);
                 return (bool)count($transitions);
             });
     }

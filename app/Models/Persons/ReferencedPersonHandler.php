@@ -361,7 +361,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                 unset($data['person_has_flag'][$fid]);
                 continue;
             }
-            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid) ?: null;
+            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid);
         }
     }
 

@@ -25,8 +25,13 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->updater = $updater;
     }
 
-    public function getAllowedAuthMethods(): int {
-        return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
+    public function getAllowedAuthMethods2(): array {
+        return [
+            self::AUTH_GITHUB => true,
+            self::AUTH_HTTP => false,
+            self::AUTH_LOGIN => false,
+            self::AUTH_TOKEN => false,
+        ];
     }
 
     public function authorizedApi(): void {

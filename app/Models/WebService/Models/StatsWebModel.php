@@ -43,7 +43,7 @@ class StatsWebModel extends WebModel {
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
 
-        $model = $this->statsModelFactory->createTaskStatsModel($contest, (int)$args->year);
+        $model = $this->statsModelFactory->createTaskStatsModel($contest->getContestYear((int)$args->year));
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {

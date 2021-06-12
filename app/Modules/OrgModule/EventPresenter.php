@@ -53,11 +53,11 @@ class EventPresenter extends BasePresenter {
     }
 
     protected function createComponentGrid(): EventsGrid {
-        return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+        return new EventsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
     protected function createComponentCreateForm(): EventFormComponent {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), null);
+        return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
@@ -65,7 +65,7 @@ class EventPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): EventFormComponent {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), $this->getEntity());
+        return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceEvent {

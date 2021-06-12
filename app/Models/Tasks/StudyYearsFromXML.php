@@ -91,7 +91,7 @@ class StudyYearsFromXML extends Stage {
             if ($hasYears) {
                 $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO));
             }
-            $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
+            $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }
 
         // delete old contributions

@@ -28,10 +28,11 @@ use Nette\Security\AuthenticationException;
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
-    public const AUTH_ALLOW_LOGIN = 0x1;
-    public const AUTH_ALLOW_HTTP = 0x2;
-    public const AUTH_ALLOW_TOKEN = 0x4;
-    public const AUTH_ALLOW_GITHUB = 0x8;
+    public const AUTH_LOGIN = 'login';
+    public const AUTH_HTTP = 'http';
+    public const AUTH_TOKEN = 'token';
+    public const AUTH_GITHUB = 'github';
+
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected GithubAuthenticator $githubAuthenticator;
@@ -81,22 +82,22 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     protected function startup(): void {
         parent::startup();
 
-        $methods = $this->getAllowedAuthMethods();
+        $methods = $this->getAllowedAuthMethods2();
 
-        if ($methods & self::AUTH_ALLOW_TOKEN) {
+        if ($methods[self::AUTH_TOKEN]) {
             // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
         }
 
-        if ($methods & self::AUTH_ALLOW_HTTP) {
+        if ($methods[self::AUTH_HTTP]) {
             $this->tryHttpAuth();
         }
 
-        if ($methods & self::AUTH_ALLOW_GITHUB) {
+        if ($methods[self::AUTH_GITHUB]) {
             $this->tryGithub();
         }
         // if token did nod succeed redirect to login credentials page
-        if (!$this->getUser()->isLoggedIn() && ($methods & self::AUTH_ALLOW_LOGIN)) {
+        if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
         } elseif (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
@@ -127,12 +128,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return true;
     }
 
-    /**
-     * It may be override (should return realm).
-     * @return int
-     */
-    public function getAllowedAuthMethods(): int {
-        return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
+    public function getAllowedAuthMethods2(): array {
+        return [
+            self::AUTH_GITHUB => false,
+            self::AUTH_HTTP => false,
+            self::AUTH_LOGIN => true,
+            self::AUTH_TOKEN => true,
+        ];
     }
 
     protected function getHttpRealm(): ?string {

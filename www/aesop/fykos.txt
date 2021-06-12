@@ -150,3 +150,12 @@
 ../fykos33/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
 ../fykos33/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
 ../fykos33/q/aesop.klani.uc?ha=1&format=aesop
+../fykos34/q/aesop.sous.p?ha=1&format=aesop
+../fykos34/q/aesop.dsef?ha=1&format=aesop
+../fykos34/q/aesop.fol?ha=1&format=aesop&p_category=A
+../fykos34/q/aesop.fol?ha=1&format=aesop&p_category=B
+../fykos34/q/aesop.fol?ha=1&format=aesop&p_category=C
+../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=A
+../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=B
+../fykos34/q/aesop.klani.ct?ha=1&format=aesop&p_category=C
+../fykos34/q/aesop.fov?ha=1&format=aesop

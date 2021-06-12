@@ -30,16 +30,13 @@ class TasksPresenter extends BasePresenter {
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
 
-    private SeriesCalculator $seriesCalculator;
     private PipelineFactory $pipelineFactory;
     private Downloader $downloader;
 
     final public function injectQuarterly(
-        SeriesCalculator $seriesCalculator,
         PipelineFactory $pipelineFactory,
         Downloader $downloader
     ): void {
-        $this->seriesCalculator = $seriesCalculator;
         $this->pipelineFactory = $pipelineFactory;
         $this->downloader = $downloader;
     }
@@ -67,8 +64,8 @@ class TasksPresenter extends BasePresenter {
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
-        $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        if ($this->seriesCalculator->hasHolidaySeries($this->getSelectedContest(), $this->getSelectedYear())) {
+        $seriesItems = range(1, SeriesCalculator::getTotalSeries($this->getSelectedContestYear()));
+        if (SeriesCalculator::hasHolidaySeries($this->getSelectedContestYear())) {
             $key = array_search('7', $seriesItems);
             unset($seriesItems[$key]);
         }
@@ -104,7 +101,7 @@ class TasksPresenter extends BasePresenter {
 
         switch ($values['source']) {
             case self::SOURCE_ASTRID:
-                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series);
+                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContestYear(), $series);
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
@@ -122,7 +119,7 @@ class TasksPresenter extends BasePresenter {
             if ($this->isLegacyXml($xml)) {
                 throw new DeprecatedException();
             } else {
-                $data = new SeriesData($this->getSelectedContest(), $this->getSelectedYear(), $series, $xml);
+                $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
                 $pipeline = $this->pipelineFactory->create();
                 $pipeline->setInput($data);
                 $pipeline->run();

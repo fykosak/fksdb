@@ -7,12 +7,12 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -33,17 +33,15 @@ class EventFormComponent extends AbstractEntityFormComponent {
 
     public const CONT_EVENT = 'event';
 
-    private ModelContest $contest;
+    private ModelContestYear $contestYear;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private ServiceAuthToken $serviceAuthToken;
     private ServiceEvent $serviceEvent;
-    private int $year;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelContest $contest, Container $container, int $year, ?ModelEvent $model) {
+    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model) {
         parent::__construct($container, $model);
-        $this->contest = $contest;
-        $this->year = $year;
+        $this->contestYear = $contestYear;
     }
 
     final public function injectPrimary(
@@ -77,7 +75,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
-        $data['year'] = $this->year;
+        $data['year'] = $this->contestYear->year;
+        /** @var ModelEvent $model */
         $model = $this->serviceEvent->storeModel($data, $this->model ?? null);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
@@ -134,7 +133,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
             'registration_end',
             'report',
             'parameters',
-        ], $this->contest);
+        ], $this->contestYear->getContest());
     }
 
     private function createParamDescription(Holder $holder): Html {
@@ -157,7 +156,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $connection = $this->serviceAuthToken->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
-        $tokenData = ['until' => $event->registration_end ?: $event->end];
+        $tokenData = ['until' => $event->registration_end ?? $event->end];
         foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
             $this->serviceAuthToken->updateModel($token, $tokenData);
         }
