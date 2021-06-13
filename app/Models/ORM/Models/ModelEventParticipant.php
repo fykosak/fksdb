@@ -10,7 +10,6 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\Resource;
 
 /**

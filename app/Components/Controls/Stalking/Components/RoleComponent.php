@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelGrant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class Role
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class RoleComponent extends BaseStalkingComponent {
     final public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);

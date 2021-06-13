@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
 
-/**
- * Class HandlerFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class HandlerFactory {
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;

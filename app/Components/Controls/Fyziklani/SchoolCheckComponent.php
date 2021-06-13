@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use Nette\DI\Container;
 
-/**
- * Class SchoolCheckComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SchoolCheckComponent extends BaseComponent {
 
     private ModelEvent $event;

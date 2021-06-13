@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Stats;
 
-use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Database\Connection;
 use Nette\Database\Row;

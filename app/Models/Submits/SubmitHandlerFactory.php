@@ -18,10 +18,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 
-/**
- * Class SubmitHandlerFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SubmitHandlerFactory {
 
     public CorrectedStorage $correctedStorage;

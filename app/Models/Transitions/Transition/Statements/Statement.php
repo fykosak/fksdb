@@ -2,10 +2,6 @@
 
 namespace FKSDB\Models\Transitions\Transition\Statements;
 
-/**
- * Class Statement
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class Statement {
     /**
      * @param array $args

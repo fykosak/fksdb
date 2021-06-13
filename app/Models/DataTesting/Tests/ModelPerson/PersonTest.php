@@ -5,10 +5,6 @@ namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class PersonTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class PersonTest {
 
     public string $id;

@@ -17,7 +17,6 @@ use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
-use SimpleXMLElement;
 use Tracy\Debugger;
 
 /**
@@ -84,7 +83,7 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
-    private function isLegacyXml(SimpleXMLElement $xml): bool {
+    private function isLegacyXml(\SimpleXMLElement $xml): bool {
         return $xml->getName() === 'problems';
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -25,9 +25,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * Class SelectForm
- * @author Michal Červeňák <miso@fykos.cz>
- * @property ModelPayment $model
+ * @property ModelPayment|null $model
  */
 class PaymentFormComponent extends AbstractEntityFormComponent {
 

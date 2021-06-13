@@ -6,8 +6,6 @@ use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoaderComponent;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoaderComponent;
 
 /**
- * Trait CollectorPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
  * @author Michal Koutny
  */
 trait CollectorPresenterTrait {

@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-/**
- * Class CategoryProcessing2
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CategoryProcessing2 extends AbstractCategoryProcessing {
 
     protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void {

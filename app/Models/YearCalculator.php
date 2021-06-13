@@ -3,7 +3,6 @@
 namespace FKSDB\Models;
 
 use FKSDB\Models\ORM\Models\ModelContest;
-use InvalidArgumentException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -49,7 +48,7 @@ class YearCalculator {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
-        throw new InvalidArgumentException('Graduation year not match');
+        throw new \InvalidArgumentException('Graduation year not match');
     }
 
     /**

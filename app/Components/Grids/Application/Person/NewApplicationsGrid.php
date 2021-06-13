@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids\Application\Person;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -15,10 +14,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class NewApplicationsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NewApplicationsGrid extends BaseGrid {
 
     protected ServiceEvent $serviceEvent;

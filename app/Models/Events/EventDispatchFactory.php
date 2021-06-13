@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 
-/**
- * Class EventDispatchFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventDispatchFactory {
 
     private array $definitions = [];

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -13,10 +13,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
-/**
- * Class AbstractEntityFormControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractEntityFormComponent extends FormComponent {
 
     protected ?AbstractModel $model;
@@ -35,11 +31,6 @@ abstract class AbstractEntityFormComponent extends FormComponent {
         return !isset($this->model);
     }
 
-    /**
-     * @param SubmitButton $button
-     * @return void
-     * @throws AbortException
-     */
     final protected function handleSuccess(SubmitButton $button): void {
         try {
             $this->handleFormSuccess($button->getForm());
@@ -69,7 +60,6 @@ abstract class AbstractEntityFormComponent extends FormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
      * @throws ModelException
      */
     abstract protected function handleFormSuccess(Form $form): void;

@@ -1,16 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 
-/**
- * Trait ReferencedPersonTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ReferencedPersonTrait {
 
     protected PersonFactory $personFactory;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\ScheduleGroupFormComponent;
+use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
@@ -18,8 +18,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class ScheduleGroupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleGroup getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter {

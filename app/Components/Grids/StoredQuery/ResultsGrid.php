@@ -12,8 +12,6 @@ use Nette\Utils\Strings;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use PDOException;
-use stdClass;
 
 /**
  *
@@ -43,11 +41,11 @@ class ResultsGrid extends BaseGrid {
         $this->paginate = false;
         try {
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (stdClass $row) use ($name) {
+                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (\stdClass $row) use ($name) {
                     return ((array)$row)[$name];
                 });
             }
-        } catch (PDOException $exception) {
+        } catch (\PDOException $exception) {
             // pass, exception should be handled inn parent components
         }
 

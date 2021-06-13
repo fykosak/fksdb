@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
-/**
- * Class RoutingDownload
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class RoutingDownloadComponent extends BaseComponent {
 
     private static bool $attachedJS = false;

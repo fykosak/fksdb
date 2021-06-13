@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\DI\Container;
 
@@ -15,10 +15,6 @@ class MockSeriesPresenter extends BasePresenter {
     public function __construct(Container $container) {
         parent::__construct();
         $this->contest = $container->getByType(ServiceContest::class)->findByPrimary(1);
-    }
-
-    public function getSelectedAcademicYear(): int {
-        return YearCalculator::getCurrentAcademicYear();
     }
 
     /**
@@ -32,8 +28,8 @@ class MockSeriesPresenter extends BasePresenter {
         return 1;
     }
 
-    public function getSelectedYear(): int {
-        return 1;
+    public function getSelectedContestYear(): ModelContestYear {
+        return $this->contest->getContestYear(1);
     }
 
     /**

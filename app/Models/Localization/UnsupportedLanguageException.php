@@ -5,10 +5,6 @@ namespace FKSDB\Models\Localization;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Class UnsupportedLanguageException
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UnsupportedLanguageException extends BadRequestException {
 
     public function __construct(string $lang, ?\Throwable $previous = null) {

@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Utils\Html;
 
-/**
- * Class UsedCapacityRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UsedCapacityColumnFactory extends ColumnFactory {
 
     /**

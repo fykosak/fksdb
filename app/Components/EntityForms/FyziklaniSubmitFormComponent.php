@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
@@ -10,26 +10,15 @@ use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
-use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * Class EditControl
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
+class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
 
-    private ModelEvent $event;
     private HandlerFactory $handlerFactory;
-
-    public function __construct(Container $container, ModelEvent $event, ModelFyziklaniSubmit $model) {
-        parent::__construct($container, $model);
-        $this->event = $event;
-    }
 
     final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
@@ -57,15 +46,11 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
         }
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
-            $handler = $this->handlerFactory->create($this->event);
+            $handler = $this->handlerFactory->create($this->model->getEvent());
             $handler->changePoints($logger, $this->model, $values['points']);
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
@@ -83,7 +68,7 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
     private function createPointsField(): RadioList {
         $field = new RadioList(_('Number of points'));
         $items = [];
-        foreach ($this->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
+        foreach ($this->model->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);

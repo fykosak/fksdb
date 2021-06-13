@@ -6,8 +6,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Security\Resource;
 
 /**
- * Class ProducerModel
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int producer_id
  * @property-read string name
  */

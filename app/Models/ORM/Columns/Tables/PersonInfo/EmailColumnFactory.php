@@ -11,10 +11,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class EmailRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EmailColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

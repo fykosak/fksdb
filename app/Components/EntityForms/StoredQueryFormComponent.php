@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\OrgModule\BasePresenter;
-use FKSDB\Modules\OrgModule\StoredQueryPresenter;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
@@ -20,17 +19,13 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use Kdyby\Extension\Forms\Replicator\Replicator;
-use Nette\Application\AbortException;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * Class StoredQueryForm
- * @author Michal Červeňák <miso@fykos.cz>
- * @method StoredQueryPresenter getPresenter($throw = true)
- * @property ModelStoredQuery $model
+ * @property ModelStoredQuery|null $model
  */
 class StoredQueryFormComponent extends AbstractEntityFormComponent {
 
@@ -60,7 +55,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
      * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void {

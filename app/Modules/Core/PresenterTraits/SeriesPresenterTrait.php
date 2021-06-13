@@ -7,10 +7,6 @@ use FKSDB\Models\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Class SeriesPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait SeriesPresenterTrait {
 
     use YearPresenterTrait;

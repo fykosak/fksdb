@@ -5,10 +5,6 @@ namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Class DateTimeRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TimeColumnFactory extends AbstractDateTimeColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

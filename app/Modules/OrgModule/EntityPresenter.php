@@ -38,18 +38,14 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @param int $id
-     */
-    public function authorizedDelete($id): void {
+    public function authorizedDelete(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
     /**
-     * @param int $id
      * @throws BadTypeException
      */
-    final public function renderEdit($id): void {
+    final public function renderEdit(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();

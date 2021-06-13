@@ -30,22 +30,22 @@ parameters:
 
 orm:
         address:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceAddress
-            modelClassName: FKSDB\Models\ORM\Models\ModelAddress
+            service: FKSDB\Models\ORM\Services\ServiceAddress
+            model: FKSDB\Models\ORM\Models\ModelAddress
         auth_token:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceAuthToken
-            modelClassName: FKSDB\Models\ORM\Models\ModelAuthToken
+            service: FKSDB\Models\ORM\Services\ServiceAuthToken
+            model: FKSDB\Models\ORM\Models\ModelAuthToken
         contest:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceContest
-            modelClassName: FKSDB\Models\ORM\Models\ModelContest
+            service: FKSDB\Models\ORM\Services\ServiceContest
+            model: FKSDB\Models\ORM\Models\ModelContest
             columnFactories:
                 contest:
                    type: class
                    class: FKSDB\Models\ORM\Columns\Tables\Contest\ContestColumnFactory
                    title: _('Contest')
         contestant_base:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceContestant
-            modelClassName: FKSDB\Models\ORM\Models\ModelContestant
+            service: FKSDB\Models\ORM\Services\ServiceContestant
+            model: FKSDB\Models\ORM\Models\ModelContestant
             columnFactories:
                 ct_id:
                     type: primaryKey
@@ -61,11 +61,11 @@ orm:
                        id: ct_id
                     title: Edit
         contest_year:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceContestYear
-            modelClassName: FKSDB\Models\ORM\Models\ModelContestYear
+            service: FKSDB\Models\ORM\Services\ServiceContestYear
+            model: FKSDB\Models\ORM\Models\ModelContestYear
         email_message:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceEmailMessage
-            modelClassName: FKSDB\Models\ORM\Models\ModelEmailMessage
+            service: FKSDB\Models\ORM\Services\ServiceEmailMessage
+            model: FKSDB\Models\ORM\Models\ModelEmailMessage
             columnFactories:
                 email_message_id:
                     type: primaryKey
@@ -104,8 +104,8 @@ orm:
              #created:
              #send:
         event:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceEvent
-            modelClassName: FKSDB\Models\ORM\Models\ModelEvent
+            service: FKSDB\Models\ORM\Services\ServiceEvent
+            model: FKSDB\Models\ORM\Models\ModelEvent
             columnFactories:
                 event:
                     type: string
@@ -170,8 +170,8 @@ orm:
             linkFactories:
                  application.list: FKSDB\Models\ORM\Links\ParticipantListLink
         event_org:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceEventOrg
-             modelClassName: FKSDB\Models\ORM\Models\ModelEventOrg
+             service: FKSDB\Models\ORM\Services\ServiceEventOrg
+             model: FKSDB\Models\ORM\Models\ModelEventOrg
              columnFactories:
                 event_org_id:
                     accessKey: e_org_id
@@ -194,8 +194,8 @@ orm:
                          id: e_org_id
                      title: Detail
         event_participant:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceEventParticipant
-             modelClassName: FKSDB\Models\ORM\Models\ModelEventParticipant
+             service: FKSDB\Models\ORM\Services\ServiceEventParticipant
+             model: FKSDB\Models\ORM\Models\ModelEventParticipant
              columnFactories:
                 team:
                     type: class
@@ -265,17 +265,17 @@ orm:
                    detail: FKSDB\Models\ORM\Links\ParticipantDetailLink
                    edit: FKSDB\Models\ORM\Links\ApplicationEditLink
         event_type:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceEventType
-            modelClassName: FKSDB\Models\ORM\Models\ModelEventType
+            service: FKSDB\Models\ORM\Services\ServiceEventType
+            model: FKSDB\Models\ORM\Models\ModelEventType
         flag:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceFlag
-            modelClassName: FKSDB\Models\ORM\Models\ModelFlag
+            service: FKSDB\Models\ORM\Services\ServiceFlag
+            model: FKSDB\Models\ORM\Models\ModelFlag
         grant:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceGrant
-            modelClassName: FKSDB\Models\ORM\Models\ModelGrant
+            service: FKSDB\Models\ORM\Services\ServiceGrant
+            model: FKSDB\Models\ORM\Models\ModelGrant
         login:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceLogin
-            modelClassName: FKSDB\Models\ORM\Models\ModelLogin
+            service: FKSDB\Models\ORM\Services\ServiceLogin
+            model: FKSDB\Models\ORM\Models\ModelLogin
             columnFactories:
                 login_id:
                     type: primaryKey
@@ -294,8 +294,8 @@ orm:
                     title: _(Login)
                     permission: RESTRICT
         org:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceOrg
-             modelClassName: FKSDB\Models\ORM\Models\ModelOrg
+             service: FKSDB\Models\ORM\Services\ServiceOrg
+             model: FKSDB\Models\ORM\Models\ModelOrg
              columnFactories:
                 org_id:
                     type: primaryKey
@@ -344,8 +344,8 @@ orm:
                         id: org_id
                     title: Edit
         payment:
-             serviceClassName: FKSDB\Models\ORM\Services\ServicePayment
-             modelClassName: FKSDB\Models\ORM\Models\ModelPayment
+             service: FKSDB\Models\ORM\Services\ServicePayment
+             model: FKSDB\Models\ORM\Models\ModelPayment
              columnFactories:
                  payment:
                     type: class
@@ -400,8 +400,8 @@ orm:
                           id: payment_id
                       title: Detail
         person:
-             serviceClassName: FKSDB\Models\ORM\Services\ServicePerson
-             modelClassName: FKSDB\Models\ORM\Models\ModelPerson
+             service: FKSDB\Models\ORM\Services\ServicePerson
+             model: FKSDB\Models\ORM\Models\ModelPerson
              columnFactories:
                 person_link:
                     type: class
@@ -442,11 +442,11 @@ orm:
                     title: _(Other name)
                     permission: BASIC
         person_has_flag:
-            serviceClassName: FKSDB\Models\ORM\Services\ServicePersonHasFlag
-            modelClassName: FKSDB\Models\ORM\Models\ModelPersonHasFlag
+            service: FKSDB\Models\ORM\Services\ServicePersonHasFlag
+            model: FKSDB\Models\ORM\Models\ModelPersonHasFlag
         person_history:
-             serviceClassName: FKSDB\Models\ORM\Services\ServicePersonHistory
-             modelClassName: FKSDB\Models\ORM\Models\ModelPersonHistory
+             service: FKSDB\Models\ORM\Services\ServicePersonHistory
+             model: FKSDB\Models\ORM\Models\ModelPersonHistory
              columnFactories:
                 school_id:
                     type: class
@@ -466,8 +466,8 @@ orm:
                     title: _('Class')
                     permissions: RESTRICT
         person_info:
-             serviceClassName: FKSDB\Models\ORM\Services\ServicePersonInfo
-             modelClassName: FKSDB\Models\ORM\Models\ModelPersonInfo
+             service: FKSDB\Models\ORM\Services\ServicePersonInfo
+             model: FKSDB\Models\ORM\Models\ModelPersonInfo
              columnFactories:
                 email:
                     type: class
@@ -587,20 +587,20 @@ orm:
                     title: Pizza
                     permission: RESTRICT
         post_contact:
-            serviceClassName: FKSDB\Models\ORM\Services\ServicePostContact
-            modelClassName: FKSDB\Models\ORM\Models\ModelPostContact
+            service: FKSDB\Models\ORM\Services\ServicePostContact
+            model: FKSDB\Models\ORM\Models\ModelPostContact
         quiz:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceQuiz
-            modelClassName: FKSDB\Models\ORM\Models\ModelQuiz
+            service: FKSDB\Models\ORM\Services\ServiceQuiz
+            model: FKSDB\Models\ORM\Models\ModelQuiz
         region:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceRegion
-            modelClassName: FKSDB\Models\ORM\Models\ModelRegion
+            service: FKSDB\Models\ORM\Services\ServiceRegion
+            model: FKSDB\Models\ORM\Models\ModelRegion
         role:
-           serviceClassName: FKSDB\Models\ORM\Services\ServiceRole
-           modelClassName: FKSDB\Models\ORM\Models\ModelRole
+           service: FKSDB\Models\ORM\Services\ServiceRole
+           model: FKSDB\Models\ORM\Models\ModelRole
         school:
-              serviceClassName: FKSDB\Models\ORM\Services\ServiceSchool
-              modelClassName: FKSDB\Models\ORM\Models\ModelSchool
+              service: FKSDB\Models\ORM\Services\ServiceSchool
+              model: FKSDB\Models\ORM\Models\ModelSchool
               columnFactories:
                   school:
                       type: string
@@ -618,17 +618,17 @@ orm:
                           id: school_id
                       title: Detail
         study_year:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceStudyYear
-            modelClassName: FKSDB\Models\ORM\Models\ModelStudyYear
+            service: FKSDB\Models\ORM\Services\ServiceStudyYear
+            model: FKSDB\Models\ORM\Models\ModelStudyYear
         submit:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceSubmit
-            modelClassName: FKSDB\Models\ORM\Models\ModelSubmit
+            service: FKSDB\Models\ORM\Services\ServiceSubmit
+            model: FKSDB\Models\ORM\Models\ModelSubmit
         submit_quiz:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceSubmitQuiz
-            modelClassName: FKSDB\Models\ORM\Models\ModelSubmitQuiz
+            service: FKSDB\Models\ORM\Services\ServiceSubmitQuiz
+            model: FKSDB\Models\ORM\Models\ModelSubmitQuiz
         task:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceTask
-             modelClassName: FKSDB\Models\ORM\Models\ModelTask
+             service: FKSDB\Models\ORM\Services\ServiceTask
+             model: FKSDB\Models\ORM\Models\ModelTask
              columnFactories:
                  fq_name:
                     type: class
@@ -653,18 +653,18 @@ orm:
                      type: string
                      title: _(Year)
         task_contribution:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceTaskContribution
-             modelClassName: FKSDB\Models\ORM\Models\ModelTaskContribution
+             service: FKSDB\Models\ORM\Services\ServiceTaskContribution
+             model: FKSDB\Models\ORM\Models\ModelTaskContribution
              columnFactories:
                  type:
                     type: string
                     title: _(Type)
         task_study_year:
-            serviceClassName: FKSDB\Models\ORM\Services\ServiceTaskStudyYear
-            modelClassName: FKSDB\Models\ORM\Models\ModelTaskStudyYear
+            service: FKSDB\Models\ORM\Services\ServiceTaskStudyYear
+            model: FKSDB\Models\ORM\Models\ModelTaskStudyYear
         teacher:
-             serviceClassName: FKSDB\Models\ORM\Services\ServiceTeacher
-             modelClassName: FKSDB\Models\ORM\Models\ModelTeacher
+             service: FKSDB\Models\ORM\Services\ServiceTeacher
+             model: FKSDB\Models\ORM\Models\ModelTeacher
              columnFactories:
                  state:
                     type: state
@@ -700,15 +700,15 @@ orm:
                      title: Detail
 #fyziklani
         fyziklani_room:
-            serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
-            modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom
+            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom
         fyziklani_team_position:
-            serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
-            modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
+            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
 
         fyziklani_submit:
-             serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
-             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit
+             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
+             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit
              columnFactories:
                 fyziklani_submit_id:
                     type: primaryKey
@@ -732,8 +732,8 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
                     title: _('Points')
         fyziklani_task:
-             serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
-             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask
+             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
+             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask
              columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
@@ -745,8 +745,8 @@ orm:
                     type: string
                     title: _(Label)
         fyziklani_game_setup:
-             serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
-             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
+             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
+             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
              columnFactories:
                 tasks_on_board:
                     type: string
@@ -775,8 +775,8 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
         e_fyziklani_team:
-             serviceClassName: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
-             modelClassName: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
+             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
              columnFactories:
                 e_fyziklani_team_id:
                   type: primaryKey
@@ -844,11 +844,11 @@ orm:
 
 #schedule
         person_schedule:
-            serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
-            modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
+            service: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
+            model: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
         schedule_group:
-             serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
-             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
+             service: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
+             model: FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
                  schedule_group_id:
                     type: primaryKey
@@ -864,6 +864,8 @@ orm:
                          weekend: [badge: 'badge badge-5', label: 'Weekend']
                          weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
                          visa: [badge: 'badge badge-7', label: 'Visa']
+                         dsef_morning: [badge: 'badge badge-8', label: 'DSEF morning']
+                         dsef_afternoon: [badge: 'badge badge-9', label: 'DSEF afternoon']
                  start:
                     type: dateTime
                     title: _(Schedule start)
@@ -881,8 +883,8 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
                     title: _(Group name)
         schedule_item:
-             serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem
-             modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem
+             service: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem
+             model: FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem
              columnFactories:
                 schedule_item_id:
                     type: primaryKey
@@ -928,12 +930,12 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
                     title: _(Used capacity)
         schedule_payment:
-            serviceClassName: FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment
-            modelClassName: FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment
+            service: FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment
+            model: FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment
 #stored query
         stored_query:
-            serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery
-            modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery
+            service: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery
+            model: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery
             columnFactories:
                 qid:
                     type: class
@@ -963,18 +965,18 @@ orm:
                     description: _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.')
 
         stored_query_parameter:
-             serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter
-             modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter
+             service: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+             model: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter
         stored_query_tag:
-             serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag
-             modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag
+             service: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag
+             model: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag
         stored_query_tag_type:
-             serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType
-             modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType
+             service: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType
+             model: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType
 #wareHouse
         warehouse_product:
-             serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceProduct
-             modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelProduct
+             service: FKSDB\Models\ORM\Services\Warehouse\ServiceProduct
+             model: FKSDB\Models\ORM\Models\Warehouse\ModelProduct
              columnFactories:
                  product_id:
                      type: primaryKey
@@ -994,10 +996,10 @@ orm:
                          apparel: {badge: 'badge badge-2', label: 'Apparel'}
                          book: {badge: 'badge badge-3', label: 'Book'}
         warehouse_producer:
-             serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
-             modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
+             service: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
+             model: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
              referencedAccess:
-                 modelClassName: FKSDB\Models\ORM\Models\Warehouse\IProducerReferencedModel
+                 model: FKSDB\Models\ORM\Models\Warehouse\IProducerReferencedModel
                  method: getProducer
              columnFactories:
                  producer_id:
@@ -1007,18 +1009,18 @@ orm:
                      type: string
                      title: _(Producer)
         warehouse_item:
-            serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
-            modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelItem
+            service: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
+            model: FKSDB\Models\ORM\Models\Warehouse\ModelItem
         e_fyziklani_participant:
-            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
-            modelClassName: FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant
+            service: FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
+            model: FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant
 
         e_dsef_participant:
-            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
-            modelClassName: FKSDB\Models\ORM\Models\Events\ModelDsefParticipant
+            service: FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
+            model: FKSDB\Models\ORM\Models\Events\ModelDsefParticipant
         e_dsef_group:
-            serviceClassName: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
-            modelClassName: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
+            service: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
+            model: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
 
 services:
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant

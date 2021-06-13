@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use Exception;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
@@ -14,7 +13,6 @@ use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
@@ -86,15 +84,11 @@ class PointsPresenter extends BasePresenter {
         return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContestYear());
             $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
@@ -104,7 +98,6 @@ class PointsPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void {
@@ -114,7 +107,7 @@ class PointsPresenter extends BasePresenter {
                 ->group('year');
             /** @var ModelTask|ActiveRow $year */
             foreach ($years as $year) {
-                $this->SQLResultsCache->recalculate($this->getSelectedContestYear());
+                $this->SQLResultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
             }
 
             $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
@@ -126,15 +119,11 @@ class PointsPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleCalculateQuizPoints(): void {
         try {
             $this->SQLResultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }

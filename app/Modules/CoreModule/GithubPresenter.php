@@ -7,7 +7,6 @@ use FKSDB\Models\Github\EventFactory;
 use FKSDB\Models\Github\Events\Event;
 use FKSDB\Models\Github\Events\PushEvent;
 use FKSDB\Models\Maintenance\Updater;
-use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
 /**
@@ -53,9 +52,6 @@ class GithubPresenter extends AuthenticatedPresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     final public function renderApi(): void {
         $response = new TextResponse('Thank you, Github.');
         $this->sendResponse($response);

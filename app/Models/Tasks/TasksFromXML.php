@@ -5,7 +5,6 @@ namespace FKSDB\Models\Tasks;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -56,7 +55,7 @@ class TasksFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $series = $this->data->getSeries();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -70,7 +69,7 @@ class TasksFromXML extends Stage {
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
-                /** @var SimpleXMLElement[] $elements */
+                /** @var \SimpleXMLElement[] $elements */
                 $elements = $XMLTask->{$name};
                 $csvalue = null;
 

@@ -7,10 +7,6 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\Html;
 
-/**
- * Class PhoneNumberFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PhoneNumberFactory {
 
     private ServiceRegion $serviceRegion;

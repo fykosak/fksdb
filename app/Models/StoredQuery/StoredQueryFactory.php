@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\StoredQuery;
 
-use DOMDocument;
-use DOMNode;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
@@ -75,13 +73,13 @@ class StoredQueryFactory implements XMLNodeSerializer {
 
     /**
      * @param StoredQuery $dataSource
-     * @param DOMNode $node
-     * @param DOMDocument $doc
+     * @param \DOMNode $node
+     * @param \DOMDocument $doc
      * @param int $formatVersion
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }

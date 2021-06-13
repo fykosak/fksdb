@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
-/**
- * Class WeekInput
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class WeekInput extends AbstractDateInput {
     /**
      * WeekInput constructor.

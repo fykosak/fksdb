@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -17,15 +17,12 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * Class AbstractPersonFormControl
- * @author Michal Červeňák <miso@fykos.cz>
- * @property ModelPerson $model
+ * @property ModelPerson|null $model
  */
 class PersonFormComponent extends AbstractEntityFormComponent {
 
@@ -102,11 +99,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();
@@ -114,12 +106,12 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $connection->beginTransaction();
         $this->logger->clear();
         /** @var ModelPerson $person */
-        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model ?? null);
+        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
         $this->storeAddresses($person, $data);
 
         $connection->commit();
-        $this->logger->log(new Message(!isset($this->model) ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+        $this->logger->log(new Message(isset($this->model) ? _('Data has been updated') : _('Person has been created'), Message::LVL_SUCCESS));
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
         $this->getPresenter()->redirect('this');
     }

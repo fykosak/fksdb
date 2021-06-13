@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class FQNameRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FQNameColumnFactory extends ColumnFactory {
 
     /**

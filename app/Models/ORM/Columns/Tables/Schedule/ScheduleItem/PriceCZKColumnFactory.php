@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
@@ -12,10 +12,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-/**
- * Class PriceCZKRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PriceCZKColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelScheduleItem $model

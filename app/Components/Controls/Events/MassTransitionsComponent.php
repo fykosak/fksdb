@@ -10,13 +10,8 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
-/**
- * Class MassTransitionsControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MassTransitionsComponent extends BaseComponent {
 
     private ModelEvent $event;
@@ -42,8 +37,6 @@ class MassTransitionsComponent extends BaseComponent {
     /**
      * @param string $name
      * @return void
-     * @throws AbortException
-     *
      * @throws NeonSchemaException
      */
     public function handleTransition(string $name): void {

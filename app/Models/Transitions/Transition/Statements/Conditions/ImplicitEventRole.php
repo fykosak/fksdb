@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Security\Resource;
 
-/**
- * Class ImplicitEventRole
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ImplicitEventRole extends EventRole {
 
     /**

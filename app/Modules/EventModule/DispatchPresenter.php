@@ -2,15 +2,11 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class DispatchPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DispatchPresenter extends AuthenticatedPresenter {
 
     protected function createComponentContestBadge(): ContestBadge {

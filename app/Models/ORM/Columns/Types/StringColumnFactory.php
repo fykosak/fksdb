@@ -10,10 +10,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class StringRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StringColumnFactory extends ColumnFactory {
 
     protected function createHtmlValue(AbstractModel $model): Html {

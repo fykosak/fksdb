@@ -6,10 +6,6 @@ use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 
-/**
- * Class PaymentTransitionsExtension
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TransitionsExtension extends CompilerExtension {
 
     public function loadConfiguration(): void {

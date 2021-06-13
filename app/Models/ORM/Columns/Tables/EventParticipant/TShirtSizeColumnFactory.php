@@ -8,10 +8,6 @@ use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class TShirtSizeRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TShirtSizeColumnFactory extends ColumnFactory {
 
     public const SIZE_MAP = [

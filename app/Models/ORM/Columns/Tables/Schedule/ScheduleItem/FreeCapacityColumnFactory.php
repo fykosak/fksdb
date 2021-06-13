@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Utils\Html;
 
-/**
- * Class FreeCapacityRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FreeCapacityColumnFactory extends ColumnFactory {
 
     /**

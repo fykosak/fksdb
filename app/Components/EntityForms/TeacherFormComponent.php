@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
@@ -11,13 +11,10 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
 /**
- * Class TeacherForm
- * @author Michal Červeňák <miso@fykos.cz>
- * @property ModelTeacher $model
+ * @property ModelTeacher|null $model
  */
 class TeacherFormComponent extends AbstractEntityFormComponent {
 
@@ -52,15 +49,10 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        $this->serviceTeacher->storeModel($data, $this->model ?? null);
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
+        $this->serviceTeacher->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

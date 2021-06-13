@@ -10,8 +10,6 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
 /**
- *
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 class RankingStrategy {

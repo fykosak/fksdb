@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
-/**
- * Class StalkingComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StalkingComponent extends BaseStalkingComponent {
 
     /**

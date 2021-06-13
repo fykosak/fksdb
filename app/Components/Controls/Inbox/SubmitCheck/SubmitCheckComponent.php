@@ -8,13 +8,8 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
-/**
- * Class SubmitCheckComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SubmitCheckComponent extends BaseComponent {
 
     private SeriesTable $seriesTable;
@@ -37,9 +32,6 @@ class SubmitCheckComponent extends BaseComponent {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
-    /**
-     * @throws AbortException
-     */
     public function handleCheck(): void {
         /** @var ModelSubmit $submit */
         $errors = 0;

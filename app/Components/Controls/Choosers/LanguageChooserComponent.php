@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\UI\Title;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -15,7 +14,6 @@ use Nette\Security\User;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
  */
 class LanguageChooserComponent extends ChooserComponent {
 
@@ -45,7 +43,6 @@ class LanguageChooserComponent extends ChooserComponent {
      * Preferred language of the page
      *
      * Should be final
-     * @throws AbortException
      * @throws UnsupportedLanguageException
      * @note do not call in constructor, call after component is attached
      */
@@ -63,8 +60,6 @@ class LanguageChooserComponent extends ChooserComponent {
      * Preferred language of the page
      *
      * @return string ISO 639-1
-     * Should be final
-     * @throws AbortException
      * @throws UnsupportedLanguageException
      */
     final public function getLang(): string {

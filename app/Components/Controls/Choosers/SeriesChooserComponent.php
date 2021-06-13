@@ -6,10 +6,6 @@ use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-/**
- * Class SeriesChooser
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SeriesChooserComponent extends ChooserComponent {
 
     private int $series;

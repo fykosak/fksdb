@@ -6,10 +6,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\Payment\Price;
 
-/**
- * Class EventPrice
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventPrice implements Preprocess {
 
     private ServiceEventParticipant $serviceEventParticipant;

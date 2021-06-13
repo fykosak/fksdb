@@ -6,10 +6,6 @@ use FKSDB\Components\Controls\DataTesting\PersonTestComponent;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class ValidationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ValidationPresenter extends BasePresenter {
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Data validation'), 'fas fa-check'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -9,14 +9,11 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class EventOrgFormComponent
- * @author Michal Červeňák <miso@fykos.cz>
- * @property ModelEventOrg $model
+ * @property ModelEventOrg|null $model
  */
 class EventOrgFormComponent extends AbstractEntityFormComponent {
 
@@ -45,18 +42,13 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        $this->serviceEventOrg->storeModel($data, $this->model ?? null);
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
+        $this->serviceEventOrg->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Event org has been updated') : _('Event org has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

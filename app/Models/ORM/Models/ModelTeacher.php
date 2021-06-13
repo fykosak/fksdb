@@ -7,8 +7,6 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read \DateTimeInterface until
  * @property-read \DateTimeInterface since
  * @property-read int school_id

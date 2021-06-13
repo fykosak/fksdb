@@ -15,7 +15,6 @@ use Nette\InvalidArgumentException;
 /**
  * Class SearchContainer
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonSearchContainer extends SearchContainer {
     public const SEARCH_EMAIL = 'email';

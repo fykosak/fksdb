@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -14,8 +14,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * Class ScheduleGroupFormComponent
- * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelScheduleGroup|null $model
  */
 class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
@@ -40,7 +38,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
-        $model = $this->serviceScheduleGroup->storeModel($data, $this->model ?? null);
+        $model = $this->serviceScheduleGroup->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\OrgFormComponent;
+use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -96,7 +96,6 @@ class OrgPresenter extends BasePresenter {
     protected function createComponentGrid(): OrgsGrid {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
-
 
     /**
      * @param Resource|string|null $resource

@@ -9,10 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-/**
- * Class HealthInsuranceRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class HealthInsuranceColumnFactory extends ColumnFactory {
     protected const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',

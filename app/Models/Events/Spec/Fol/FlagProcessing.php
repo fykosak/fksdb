@@ -3,15 +3,14 @@
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Processing\AbstractProcessing;
+use FKSDB\Models\Events\Spec\WithSchoolProcessing;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class FlagProcessing extends AbstractProcessing {
+class FlagProcessing extends WithSchoolProcessing {
 
     private ServiceSchool $serviceSchool;
 
@@ -28,17 +27,9 @@ class FlagProcessing extends AbstractProcessing {
             if ($name == 'team') {
                 continue;
             }
-            /** @var BaseControl[][] $formControls */
-            $formControls = [
-                'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
-                'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
-            ];
-            $formControls['school_id'] = reset($formControls['school_id']);
-            $formControls['study_year'] = reset($formControls['study_year']);
-            /** @var BaseControl[] $formControls */
             $formValues = [
-                'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
-                'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
+                'school_id' => $this->getSchoolValue($name),
+                'study_year' => $this->getStudyYearValue($name),
             ];
 
             if (!$formValues['school_id']) {

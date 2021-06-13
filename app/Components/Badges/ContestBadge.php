@@ -1,15 +1,11 @@
 <?php
 
-namespace FKSDB\Components\Controls\Badges;
+namespace FKSDB\Components\Badges;
 
 use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
-/**
- * Class ContestBadge
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ContestBadge extends Badge {
     /**
      * @param ...$args

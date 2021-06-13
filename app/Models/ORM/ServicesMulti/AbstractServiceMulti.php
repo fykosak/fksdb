@@ -7,7 +7,6 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
-use InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
@@ -67,12 +66,12 @@ abstract class AbstractServiceMulti {
 
     /**
      * @param AbstractModelMulti|ActiveRow $model
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function checkType(AbstractModelMulti $model): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+            throw new \InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
     }
 
@@ -96,8 +95,8 @@ abstract class AbstractServiceMulti {
     /**
      * Use this method to delete a model!
      *
-     * @param ActiveRow|AbstractModelMulti $model
-     * @throws InvalidArgumentException
+     * @param AbstractModelMulti $model
+     * @throws \InvalidArgumentException
      */
     public function dispose(AbstractModelMulti $model): void {
         $this->checkType($model);

@@ -4,10 +4,6 @@ namespace FKSDB\Models\UI;
 
 use Nette\Utils\Html;
 
-/**
- * Class Title
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Title {
 
     public string $title;

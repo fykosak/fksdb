@@ -14,10 +14,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- * Class StalkingGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonRelatedGrid extends BaseGrid {
 
     protected ModelPerson $person;

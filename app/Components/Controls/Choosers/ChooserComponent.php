@@ -5,10 +5,6 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\UI\Title;
 
-/**
- * Class Chooser
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class ChooserComponent extends BaseComponent {
 
     protected function beforeRender(): void {

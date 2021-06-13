@@ -5,11 +5,11 @@ namespace FKSDB\Tests\PresentersTests;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\Application\IResponse;
 use Nette\Application\Request;
+use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -18,6 +18,7 @@ use Tester\Assert;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class EntityPresenterTestCase extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
     protected int $cartesianPersonId;
@@ -62,10 +63,11 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $this->authenticate($this->loginId, $this->fixture);
     }
 
-    protected function assertPageDisplay(IResponse $response): string {
+    protected function assertPageDisplay(Response $response): string {
         Assert::type(TextResponse::class, $response);
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         Assert::noError(function () use ($source): string {
             return (string)$source;
@@ -73,7 +75,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         return (string)$source;
     }
 
-    protected function createFormRequest(string $action, array $formData, array $params = []): IResponse {
+    protected function createFormRequest(string $action, array $formData, array $params = []): Response {
         $request = $this->createPostRequest($action, $params, array_merge([
             '_do' => ($action === 'create') ? 'createForm-formControl-form-submit' : 'editForm-formControl-form-submit',
             'send' => 'Save',

@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Utils\Html;
 
-/**
- * Class SQLColumnFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SQLColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelStoredQuery $model

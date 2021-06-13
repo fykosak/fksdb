@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
-/**
- * Class ParticipantsDurationTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ParticipantsDurationTest extends PersonTest {
 
     private const CONTESTS = [

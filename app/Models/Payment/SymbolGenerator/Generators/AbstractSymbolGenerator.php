@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
-/**
- * Class AbstractSymbolGenerator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractSymbolGenerator implements TransitionCallback {
 
     protected ServicePayment $servicePayment;

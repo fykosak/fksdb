@@ -13,12 +13,10 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use PDOException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -97,8 +95,8 @@ class ResultsComponent extends BaseComponent {
         if (!isset($this->error)) {
             $this->error = null;
             try {
-                $this->storedQuery->getColumnNames(); // this may throw PDOException in the main query
-            } catch (PDOException $exception) {
+                $this->storedQuery->getColumnNames(); // this may throw \PDOException in the main query
+            } catch (\PDOException $exception) {
                 $this->error = $exception->getMessage();
             }
         }
@@ -133,7 +131,6 @@ class ResultsComponent extends BaseComponent {
     /**
      * @param string $format
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */

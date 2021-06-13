@@ -7,7 +7,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 
 /**
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelFyziklaniTeam|null findByPrimary($key)
  */
 class ServiceFyziklaniTeam extends OldAbstractServiceSingle {

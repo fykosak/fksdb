@@ -6,10 +6,6 @@ use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use Nette\DI\Container;
 
-/**
- * Class ProductsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ProductsGrid extends EntityGrid {
 
     public function __construct(Container $container) {

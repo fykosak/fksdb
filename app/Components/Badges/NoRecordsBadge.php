@@ -1,13 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\Badges;
+namespace FKSDB\Components\Badges;
 
 use Nette\Utils\Html;
 
-/**
- * Class NoRecordsBadge
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NoRecordsBadge extends Badge {
 
     public static function getHtml(...$args): Html {

@@ -4,10 +4,6 @@ namespace FKSDB\Models\WebService;
 
 use Nette\InvalidArgumentException;
 
-/**
- * Class XMLHelper
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class XMLHelper {
 
     public function __construct() {

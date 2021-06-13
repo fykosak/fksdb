@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity;
+namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -27,9 +26,7 @@ use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
 /**
- * Class AbstractForm
- * @author Michal Červeňák <miso@fykos.cz>
- * @property ModelEvent $model
+ * @property ModelEvent|null $model
  */
 class EventFormComponent extends AbstractEntityFormComponent {
 
@@ -69,17 +66,12 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->contestYear->year;
         /** @var ModelEvent $model */
-        $model = $this->serviceEvent->storeModel($data, $this->model ?? null);
+        $model = $this->serviceEvent->storeModel($data, $this->model);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');

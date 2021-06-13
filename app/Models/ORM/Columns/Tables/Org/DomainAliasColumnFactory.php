@@ -13,10 +13,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class DomainAliasRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DomainAliasColumnFactory extends ColumnFactory {
 
     /**

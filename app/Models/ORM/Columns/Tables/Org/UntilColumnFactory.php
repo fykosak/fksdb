@@ -11,10 +11,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class UntilRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UntilColumnFactory extends ColumnFactory {
 
     /**

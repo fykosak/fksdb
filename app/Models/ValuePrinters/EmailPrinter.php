@@ -4,10 +4,6 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
-/**
- * Class EmailPrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EmailPrinter extends AbstractValuePrinter {
     /**
      * @param null $value

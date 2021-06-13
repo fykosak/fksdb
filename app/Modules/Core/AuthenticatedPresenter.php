@@ -7,13 +7,10 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
-use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
-use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 
@@ -64,7 +61,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
-        if ($element instanceof ReflectionClass) {
+        if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
             if ($this->isAuthorized()) { // check authorization
                 $method = $this->formatAuthorizedMethod($this->getAction());
@@ -75,9 +72,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     protected function startup(): void {
         parent::startup();
@@ -104,9 +100,6 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
@@ -149,7 +142,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryAuthToken(): void {
         $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
@@ -172,7 +165,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -205,7 +198,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws ForbiddenRequestException|BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

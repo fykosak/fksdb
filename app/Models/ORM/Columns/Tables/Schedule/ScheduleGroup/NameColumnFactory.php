@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Utils\Html;
 
-/**
- * Class NameColumnFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NameColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelScheduleGroup $model

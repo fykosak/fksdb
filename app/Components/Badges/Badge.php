@@ -1,14 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Controls\Badges;
+namespace FKSDB\Components\Badges;
 
 use FKSDB\Components\Controls\BaseComponent;
 use Nette\Utils\Html;
 
-/**
- * Class Badge
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class Badge extends BaseComponent {
 
     abstract public static function getHtml(...$args): Html;

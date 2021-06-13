@@ -8,8 +8,6 @@ use Nette\Application\UI\Template;
 use Nette\DI\Container;
 
 /**
- * Class SeriesTableComponent
- * @author Michal Červeňák <miso@fykos.cz>
  * @author Michal Koutny
  */
 abstract class SeriesTableComponent extends BaseComponent {
