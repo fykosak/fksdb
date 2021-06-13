@@ -15,7 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
 /**
- * @property ModelTeacher $model
+ * @property ModelTeacher|null $model
  */
 class TeacherFormComponent extends AbstractEntityFormComponent {
 
@@ -57,8 +57,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        $this->serviceTeacher->storeModel($data, $this->model ?? null);
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
+        $this->serviceTeacher->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

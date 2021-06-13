@@ -27,8 +27,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @method StoredQueryPresenter getPresenter($throw = true)
- * @property ModelStoredQuery $model
+ * @property ModelStoredQuery|null $model
  */
 class StoredQueryFormComponent extends AbstractEntityFormComponent {
 

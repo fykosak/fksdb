@@ -143,6 +143,7 @@ class Authorization extends FyziklaniTestCase {
                 }
             } elseif (!$forbidden) {
                 Assert::type(RedirectResponse::class, $response);
+                /** @var RedirectResponse $response */
                 $url = $response->getUrl();
                 Assert::contains('login', $url);
             }

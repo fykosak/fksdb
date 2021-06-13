@@ -114,7 +114,7 @@ class PointsPresenter extends BasePresenter {
                 ->group('year');
             /** @var ModelTask|ActiveRow $year */
             foreach ($years as $year) {
-                $this->SQLResultsCache->recalculate($this->getSelectedContestYear());
+                $this->SQLResultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
             }
 
             $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);

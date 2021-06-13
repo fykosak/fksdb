@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
@@ -20,8 +19,6 @@ use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * Class ExportPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
 class ExportPresenter extends BasePresenter {

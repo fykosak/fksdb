@@ -7,8 +7,6 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
-use SoapFault;
-use SoapVar;
 
 class ExportWebModel extends WebModel {
 
@@ -27,7 +25,7 @@ class ExportWebModel extends WebModel {
      * @param \stdClass $args
      * @return \SoapVar
      * @throws BadRequestException
-     * @throws SoapFault
+     * @throws \SoapFault
      */
     public function getResponse(\stdClass $args): \SoapVar {
         // parse arguments
@@ -47,7 +45,7 @@ class ExportWebModel extends WebModel {
                 if (!isset($this->container->getParameters()['inverseContestMapping'][$parameters[$parameter->name]])) {
                     $msg = "Unknown contest '{$parameters[$parameter->name]}'.";
                     $this->log($msg);
-                    throw new SoapFault('Sender', $msg);
+                    throw new \SoapFault('Sender', $msg);
                 }
                 $parameters[$parameter->name] = $this->container->getParameters()['inverseContestMapping'][$parameters[$parameter->name]];
             }
@@ -56,14 +54,14 @@ class ExportWebModel extends WebModel {
         try {
             $storedQuery = $this->storedQueryFactory->createQueryFromQid($args->qid, $parameters);
         } catch (\InvalidArgumentException $exception) {
-            throw new SoapFault('Sender', $exception->getMessage(), $exception);
+            throw new \SoapFault('Sender', $exception->getMessage(), $exception);
         }
 
         // authorization
         if (!$this->isAuthorizedExport($storedQuery)) {
             $msg = 'Unauthorized';
             $this->log($msg);
-            throw new SoapFault('Sender', $msg);
+            throw new \SoapFault('Sender', $msg);
         }
 
         $doc = new \DOMDocument();
@@ -75,7 +73,7 @@ class ExportWebModel extends WebModel {
 
         $doc->formatOutput = true;
 
-        return new SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
+        return new \SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
     }
 
     private function isAuthorizedExport(StoredQuery $query): bool {

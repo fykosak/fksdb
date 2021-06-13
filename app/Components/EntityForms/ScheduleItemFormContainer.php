@@ -39,7 +39,8 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
-        $model = $this->serviceScheduleItem->storeModel($data, $this->model ?? null);
+        /** @var ModelScheduleItem $model */
+        $model = $this->serviceScheduleItem->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
         $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);
     }

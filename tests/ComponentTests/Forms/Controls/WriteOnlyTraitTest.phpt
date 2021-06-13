@@ -14,6 +14,7 @@ use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class WriteOnlyTraitTest extends DsefTestCase {
+
     /** @var int */
     private $dsefAppId;
 
@@ -70,7 +71,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
         Assert::type(Template::class, $source);
 

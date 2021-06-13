@@ -24,6 +24,7 @@ use Nette\Security\Resource;
  * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
     protected HandlerFactory $handlerFactory;
@@ -129,7 +130,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     protected function createComponentEditForm(): FyziklaniSubmitFormComponent {
-        return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
+        return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
     }
 
     /**

@@ -10,9 +10,7 @@ use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
-use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
@@ -21,13 +19,7 @@ use Nette\Forms\Form;
  */
 class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
 
-    private ModelEvent $event;
     private HandlerFactory $handlerFactory;
-
-    public function __construct(Container $container, ModelEvent $event, ModelFyziklaniSubmit $model) {
-        parent::__construct($container, $model);
-        $this->event = $event;
-    }
 
     final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
@@ -63,7 +55,7 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
-            $handler = $this->handlerFactory->create($this->event);
+            $handler = $this->handlerFactory->create($this->model->getEvent());
             $handler->changePoints($logger, $this->model, $values['points']);
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
@@ -81,7 +73,7 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
     private function createPointsField(): RadioList {
         $field = new RadioList(_('Number of points'));
         $items = [];
-        foreach ($this->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
+        foreach ($this->model->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);

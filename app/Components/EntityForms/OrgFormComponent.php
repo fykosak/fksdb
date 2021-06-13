@@ -16,7 +16,7 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelOrg $model
+ * @property ModelOrg|null $model
  */
 class OrgFormComponent extends AbstractEntityFormComponent {
 
@@ -64,8 +64,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        $this->serviceOrg->storeModel($data, $this->model ?? null);
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
+        $this->serviceOrg->storeModel($data, $this->model);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('Org has been updated.') : _('Org has been created.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

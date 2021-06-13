@@ -23,7 +23,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * @property ModelPerson $model
+ * @property ModelPerson|null $model
  */
 class PersonFormComponent extends AbstractEntityFormComponent {
 
@@ -112,12 +112,12 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $connection->beginTransaction();
         $this->logger->clear();
         /** @var ModelPerson $person */
-        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model ?? null);
+        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
         $this->storeAddresses($person, $data);
 
         $connection->commit();
-        $this->logger->log(new Message(!isset($this->model) ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+        $this->logger->log(new Message(isset($this->model) ? _('Data has been updated') : _('Person has been created'), Message::LVL_SUCCESS));
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
         $this->getPresenter()->redirect('this');
     }

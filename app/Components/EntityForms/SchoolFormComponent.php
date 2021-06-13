@@ -14,7 +14,7 @@ use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 
 /**
- * @property ModelSchool $model
+ * @property ModelSchool|null $model
  */
 class SchoolFormComponent extends AbstractEntityFormComponent {
 
@@ -72,7 +72,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(isset($this->model) ? _('School has been updated') : _('School has been created'), BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

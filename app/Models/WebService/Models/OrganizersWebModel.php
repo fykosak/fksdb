@@ -5,7 +5,6 @@ namespace FKSDB\Models\WebService\Models;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\WebService\XMLHelper;
-use SoapVar;
 
 class OrganizersWebModel extends WebModel {
 
@@ -17,10 +16,10 @@ class OrganizersWebModel extends WebModel {
 
     /**
      * @param \stdClass $args
-     * @return SoapVar
+     * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }

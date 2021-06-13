@@ -27,7 +27,7 @@ use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
 /**
- * @property ModelEvent $model
+ * @property ModelEvent|null $model
  */
 class EventFormComponent extends AbstractEntityFormComponent {
 
@@ -77,7 +77,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->contestYear->year;
         /** @var ModelEvent $model */
-        $model = $this->serviceEvent->storeModel($data, $this->model ?? null);
+        $model = $this->serviceEvent->storeModel($data, $this->model);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
         $this->getPresenter()->redirect('list');

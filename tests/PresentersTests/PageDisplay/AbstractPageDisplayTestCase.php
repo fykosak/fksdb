@@ -7,6 +7,7 @@ use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -60,9 +61,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $this->authenticate($this->loginId, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
+        /** @var TextResponse $response */
         Assert::type(TextResponse::class, $response);
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\Template::class, $source);
+        Assert::type(Template::class, $source);
 
         Assert::noError(function () use ($source): string {
             return (string)$source;

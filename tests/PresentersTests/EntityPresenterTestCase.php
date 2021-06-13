@@ -65,6 +65,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
 
     protected function assertPageDisplay(Response $response): string {
         Assert::type(TextResponse::class, $response);
+        /** @var TextResponse $response */
         $source = $response->getSource();
         Assert::type(Template::class, $source);
 

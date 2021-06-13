@@ -25,7 +25,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property ModelPayment $model
+ * @property ModelPayment|null $model
  */
 class PaymentFormComponent extends AbstractEntityFormComponent {
 
