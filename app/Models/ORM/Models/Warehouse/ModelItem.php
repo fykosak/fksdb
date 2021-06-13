@@ -8,8 +8,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- * Class ModelItem
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int item_id
  * @property-read int product_id
  * @property-read ActiveRow product

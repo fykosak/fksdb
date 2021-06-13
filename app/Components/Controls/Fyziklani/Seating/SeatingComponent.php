@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
-/**
- * Class SeatingControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SeatingComponent extends BaseComponent {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;

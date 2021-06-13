@@ -17,10 +17,6 @@ use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class AbstractApplicationGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractApplicationsGrid extends BaseGrid {
 
     protected ModelEvent $event;

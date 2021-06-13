@@ -2,9 +2,6 @@
 
 namespace FKSDB\Models\WebService;
 
-use DOMDocument;
-use DOMNode;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -17,10 +14,10 @@ interface XMLNodeSerializer {
 
     /**
      * @param mixed $dataSource
-     * @param DOMNode $node
-     * @param DOMDocument $doc
+     * @param \DOMNode $node
+     * @param \DOMDocument $doc
      * @param int $formatVersion
      * @return void
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void;
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void;
 }

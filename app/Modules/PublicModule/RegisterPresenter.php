@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -101,16 +100,11 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
-    /**
-     * @throws AbortException
-     */
+
     public function actionDefault(): void {
         $this->redirect('contest');
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionContestant(): void {
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
@@ -146,10 +140,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $this->template->contests = $this->serviceContest->getTable();
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     final public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->yearCalculator->getForwardShift($contest);
@@ -225,10 +215,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);

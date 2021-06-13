@@ -20,9 +20,6 @@ use Nette\DI\Definitions\ServiceDefinition;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\DI\Definitions\Statement;
 
-/**
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
 
     /**

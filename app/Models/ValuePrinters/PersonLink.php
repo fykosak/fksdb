@@ -8,10 +8,6 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-/**
- * Class PersonLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonLink extends AbstractValuePrinter {
 
     private LinkGenerator $presenterComponent;

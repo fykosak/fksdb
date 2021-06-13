@@ -5,10 +5,6 @@ namespace FKSDB\Components\Controls\Schedule\Rests;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 
-/**
- * Class TeamRestsComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeamRestsComponent extends BaseComponent {
 
     final public function render(ModelFyziklaniTeam $team): void {

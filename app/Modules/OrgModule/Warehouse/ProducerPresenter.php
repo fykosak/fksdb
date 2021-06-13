@@ -15,8 +15,6 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * Class ProducerPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelProducer getEntity(bool $throw = true)
  */
 class ProducerPresenter extends BasePresenter {

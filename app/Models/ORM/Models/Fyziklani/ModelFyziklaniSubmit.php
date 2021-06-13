@@ -12,7 +12,6 @@ use Nette\Security\Resource;
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
  *
  * @property-read string state
  * @property-read int e_fyziklani_team_id

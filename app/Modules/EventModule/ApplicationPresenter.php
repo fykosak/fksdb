@@ -18,10 +18,6 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 
-/**
- * Class ApplicationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**

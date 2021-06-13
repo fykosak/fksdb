@@ -9,10 +9,6 @@ use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-/**
- * Class EventRole
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventRolePrinter {
 
     use SmartObject;

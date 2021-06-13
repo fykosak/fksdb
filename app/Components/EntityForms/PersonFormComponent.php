@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -100,11 +99,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();

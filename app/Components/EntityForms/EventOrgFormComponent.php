@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -43,11 +42,6 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {

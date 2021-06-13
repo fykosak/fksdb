@@ -16,10 +16,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class PhoneRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
 
     protected PhoneNumberFactory $phoneNumberFactory;

@@ -2,9 +2,6 @@
 
 namespace FKSDB\Models\Results;
 
-use DOMDocument;
-use DOMNode;
-use Exception;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractModel;
@@ -25,7 +22,6 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use SoapFault;
 use Tracy\Debugger;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
@@ -148,14 +144,14 @@ class ResultsModelFactory implements XMLNodeSerializer {
 
     /**
      * @param AbstractResultsModel $dataSource
-     * @param DOMNode $node
-     * @param DOMDocument $doc
+     * @param \DOMNode $node
+     * @param \DOMDocument $doc
      * @param int $formatVersion
      * @return void
-     * @throws SoapFault
+     * @throws \SoapFault
      * @throws BadTypeException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new BadTypeException(AbstractModel::class, $dataSource);
         }
@@ -209,9 +205,9 @@ class ResultsModelFactory implements XMLNodeSerializer {
                     }
                 }
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             Debugger::log($exception);
-            throw new SoapFault('Receiver', 'Internal error.');
+            throw new \SoapFault('Receiver', 'Internal error.');
         }
     }
 }

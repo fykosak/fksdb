@@ -23,18 +23,10 @@ class TaskPresenter extends BasePresenter {
     public const IMPORT_STATE_REMOVE_N_INSERT = 2;
     public const IMPORT_STATE_INSERT = 3;
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Tasks'), 'fas fa-tasks'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-upload'));
     }

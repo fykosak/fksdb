@@ -13,10 +13,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\YearCalculator;
 use Nette\DI\Container;
 
-/**
- * Class TimelineControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TimelineComponent extends ReactComponent {
 
     private ModelPerson $person;

@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 final class TaskCodePreprocessor {

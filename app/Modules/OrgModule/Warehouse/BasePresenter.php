@@ -4,10 +4,6 @@ namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use Nette\Security\Resource;
 
-/**
- * Class BasePresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter {
 
     /**

@@ -15,10 +15,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
 use Tracy\Debugger;
 
-/**
- * Class SubmitHandler
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Handler {
 
     public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';

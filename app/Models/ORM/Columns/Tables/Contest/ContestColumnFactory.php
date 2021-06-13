@@ -9,10 +9,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
-/**
- * Class ContestRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ContestColumnFactory extends ColumnFactory {
 
     /**

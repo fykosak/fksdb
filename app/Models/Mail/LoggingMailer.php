@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Mail;
 
-use Exception;
 use FKSDB\Models\Utils\Utils;
 use Nette\DI\Container;
 use Nette\Mail\Mailer;
@@ -52,7 +51,7 @@ class LoggingMailer implements Mailer {
     /**
      * @param Message $mail
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function send(Message $mail): void {
         try {
@@ -60,7 +59,7 @@ class LoggingMailer implements Mailer {
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->logMessage($mail, $exception);
             throw $exception;
         }
@@ -70,7 +69,7 @@ class LoggingMailer implements Mailer {
         return $this->sentMessages;
     }
 
-    private function logMessage(Message $mail, ?Exception $exception = null): void {
+    private function logMessage(Message $mail, ?\Exception $exception = null): void {
         if (!$this->logging) {
             return;
         }

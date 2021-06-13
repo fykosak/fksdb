@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 
-/**
- * Class TotalPersonsChartControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TotalPersonsChart extends ReactComponent implements Chart {
 
     private ServicePerson $servicePerson;

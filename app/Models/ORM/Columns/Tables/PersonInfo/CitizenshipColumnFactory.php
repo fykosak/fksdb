@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
-/**
- * Class CitizenshipRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CitizenshipColumnFactory extends ColumnFactory {
 
     private ServiceRegion $serviceRegion;

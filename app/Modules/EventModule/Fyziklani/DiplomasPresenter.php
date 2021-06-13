@@ -7,27 +7,14 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Utils\Html;
 
-/**
- * Class DiplomasPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DiplomasPresenter extends BasePresenter {
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleResults(): void {
         $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
     }
@@ -69,7 +56,6 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @param string|null $category
-     * @throws AbortException
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */

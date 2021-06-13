@@ -4,9 +4,8 @@ namespace FKSDB\Models\Persons;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Http\Response;
-use RuntimeException;
 
-class ModelDataConflictException extends RuntimeException {
+class ModelDataConflictException extends \RuntimeException {
 
     private iterable $conflicts;
 

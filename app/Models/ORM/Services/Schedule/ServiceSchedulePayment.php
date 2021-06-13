@@ -12,10 +12,6 @@ use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 
-/**
- * Class ServiceSchedulePayment
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ServiceSchedulePayment extends AbstractService {
 
     /**

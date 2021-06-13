@@ -11,12 +11,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
-use PDOException;
 
-/**
- * Class Handler
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Handler {
 
     private ServicePersonSchedule $servicePersonSchedule;
@@ -54,7 +49,7 @@ class Handler {
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
-     * @throws PDOException
+     * @throws \PDOException
      * @throws ModelException
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
@@ -70,7 +65,7 @@ class Handler {
             } else {
                 try {
                     $modelPersonSchedule->delete();
-                } catch (PDOException $exception) {
+                } catch (\PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('The item "%s" has already a payment generated, so it cannot be deleted.'),

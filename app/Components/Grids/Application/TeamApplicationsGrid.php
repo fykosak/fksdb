@@ -14,10 +14,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- * Class TeamApplicationGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeamApplicationsGrid extends AbstractApplicationsGrid {
 
     /**

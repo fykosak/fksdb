@@ -4,10 +4,6 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 
-/**
- * Class ContestantsPerSeries
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PerSeriesChart extends AbstractPerSeriesChart {
 
     private ServiceSubmit $serviceSubmit;

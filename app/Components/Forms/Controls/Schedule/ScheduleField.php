@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 
-/**
- * Class ScheduleField
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ScheduleField extends TextInput {
 
     use ReactComponentTrait;

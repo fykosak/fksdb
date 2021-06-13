@@ -57,7 +57,6 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
             }
         }
 
-
         /*
          * Rule no. 2
          */

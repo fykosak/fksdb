@@ -10,10 +10,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class IdNumberRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class IdNumberColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

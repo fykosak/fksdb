@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Utils\Html;
 
-/**
- * Class HashRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class HashColumnFactory extends ColumnFactory {
 
     /**

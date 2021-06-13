@@ -10,10 +10,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class EntityGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class EntityGrid extends BaseGrid {
 
     protected AbstractService $service;

@@ -15,8 +15,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- *
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 class CloseTeamsGrid extends BaseGrid {

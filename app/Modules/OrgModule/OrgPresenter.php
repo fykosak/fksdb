@@ -97,7 +97,6 @@ class OrgPresenter extends BasePresenter {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege

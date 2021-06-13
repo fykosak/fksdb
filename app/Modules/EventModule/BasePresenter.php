@@ -14,14 +14,11 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
@@ -42,7 +39,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */

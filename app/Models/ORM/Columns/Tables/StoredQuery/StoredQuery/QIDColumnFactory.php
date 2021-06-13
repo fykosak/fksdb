@@ -7,10 +7,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
-/**
- * Class QIDRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class QIDColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

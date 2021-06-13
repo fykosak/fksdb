@@ -18,7 +18,6 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -67,11 +66,6 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);

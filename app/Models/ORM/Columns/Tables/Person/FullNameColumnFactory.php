@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class FullNameRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FullNameColumnFactory extends ColumnFactory {
 
     /**

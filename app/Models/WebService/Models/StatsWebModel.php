@@ -4,10 +4,6 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Stats\StatsModelFactory;
-use DOMDocument;
-use SoapFault;
-use SoapVar;
-use stdClass;
 
 class StatsWebModel extends WebModel {
 
@@ -23,23 +19,23 @@ class StatsWebModel extends WebModel {
     }
 
     /**
-     * @param stdClass $args
-     * @return SoapVar
-     * @throws SoapFault
+     * @param \stdClass $args
+     * @return \SoapVar
+     * @throws \SoapFault
      */
-    public function getResponse(stdClass $args): SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar {
         if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
-            throw new SoapFault('Sender', 'Unknown contest.');
+            throw new \SoapFault('Sender', 'Unknown contest.');
         }
         $contest = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest]);
         if (!isset($args->year)) {
-            throw new SoapFault('Sender', 'Unknown year.');
+            throw new \SoapFault('Sender', 'Unknown year.');
         }
         if (!isset($args->series)) {
-            throw new SoapFault('Sender', 'Unknown series.');
+            throw new \SoapFault('Sender', 'Unknown series.');
         }
 
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
 
@@ -75,6 +71,6 @@ class StatsWebModel extends WebModel {
 
         $doc->formatOutput = true;
 
-        return new SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
+        return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
     }
 }

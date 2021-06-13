@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 
-/**
- * Class AbstractCategoryProcessing
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider {
 
     protected ServiceSchool $serviceSchool;

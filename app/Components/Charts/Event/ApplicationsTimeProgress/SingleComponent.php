@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use Nette\DI\Container;
 
-/**
- * Class SingleApplicationsTimeProgress
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleComponent extends ReactComponent implements Chart {
 
     private ModelEventType $eventType;

@@ -7,7 +7,6 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -56,7 +55,7 @@ class StudyYearsFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 

@@ -7,10 +7,6 @@ use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use Nette\DI\Container;
 
-/**
- * Class ProductsFromProducerGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ProductsFromProducerGrid extends EntityGrid {
 
     public function __construct(Container $container, ModelProducer $producer) {

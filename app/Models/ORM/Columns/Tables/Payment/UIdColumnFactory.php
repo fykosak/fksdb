@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 
-/**
- * Class IdRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UIdColumnFactory extends ColumnFactory {
 
     /**

@@ -7,10 +7,6 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
-/**
- * Class ImRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ImColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

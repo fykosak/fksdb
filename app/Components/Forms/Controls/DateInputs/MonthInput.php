@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
-/**
- * Class MonthInput
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MonthInput extends AbstractDateInput {
     /**
      * MonthInput constructor.

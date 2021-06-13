@@ -7,10 +7,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class PersonInfoFieldTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonInfoFieldTest extends PersonFileLevelTest {
 
     /**

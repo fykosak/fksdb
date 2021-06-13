@@ -4,10 +4,6 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use Nette\Database\Explorer;
 
-/**
- * Class ContestantsPerSeries
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class AggregatedSeriesChart extends AbstractPerSeriesChart {
 
     private Explorer $explorer;

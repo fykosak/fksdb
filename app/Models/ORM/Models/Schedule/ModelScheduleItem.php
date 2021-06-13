@@ -9,7 +9,6 @@ use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -87,11 +86,11 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
 
     /**
      * @return int
-     * @throws LogicException
+     * @throws \LogicException
      */
     public function getAvailableCapacity(): int {
         if ($this->isUnlimitedCapacity()) {
-            throw new LogicException(_('Unlimited capacity'));
+            throw new \LogicException(_('Unlimited capacity'));
         }
         return $this->calculateAvailableCapacity();
     }

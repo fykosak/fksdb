@@ -9,10 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * Class StringRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class LogicColumnFactory extends ColumnFactory {
 
     protected function createHtmlValue(AbstractModel $model): Html {

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use Exception;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
@@ -20,7 +19,6 @@ use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Http\SessionSection;
 use Nette\Security\AuthenticationException;
@@ -64,8 +62,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function actionLogout(): void {
         if ($this->isLoggedIn()) {
@@ -76,9 +73,8 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
      * @throws BadTypeException
-     * @throws Exception
+     * @throws \Exception
      */
     public function actionLogin(): void {
         if ($this->isLoggedIn()) {
@@ -105,8 +101,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function actionRecover(): void {
         if ($this->isLoggedIn()) {
@@ -177,8 +172,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
@@ -219,7 +213,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function actionGoogle(): void {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
@@ -244,8 +238,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleGoogle(): void {
         $url = $this->googleProvider->getAuthorizationUrl();
@@ -254,7 +247,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function initialRedirect(): void {
         if ($this->backlink) {

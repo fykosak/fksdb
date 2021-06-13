@@ -7,16 +7,11 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use InvalidArgumentException;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
 
-/**
- * Class PersonGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonGrid extends BaseGrid {
 
     public function setData(ModelEvent $event, ModelPerson $person): void {
@@ -28,12 +23,12 @@ class PersonGrid extends BaseGrid {
     /**
      * @param ModelPerson|null $person
      * @param ModelEvent|null $event
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @throws GridException
      */
     final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
         if (!$event || !$person) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException();
         }
         $this->setData($event, $person);
         parent::render();

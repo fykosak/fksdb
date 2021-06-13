@@ -11,10 +11,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-/**
- * Class TransitionButtonsControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TransitionButtonsComponent extends BaseComponent {
 
     private Machine $machine;

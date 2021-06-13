@@ -7,10 +7,6 @@ use FKSDB\Models\ValuePrinters\DatePrinter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class AbstractDateTimeRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory {
 
     private string $format;

@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class MyApplicationsPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MyApplicationsPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {

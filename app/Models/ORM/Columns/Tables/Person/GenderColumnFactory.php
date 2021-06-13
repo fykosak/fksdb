@@ -9,10 +9,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
 use Nette\Utils\Html;
 
-/**
- * Class GenderRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GenderColumnFactory extends ColumnFactory {
 
     /**

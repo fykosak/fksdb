@@ -13,7 +13,6 @@ use Fykosak\NetteORM\AbstractModel;
  *       duplicated in all descendant classes.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @author Michal Červeňak <miso@fykos.cz>
  * @deprecated
  * @use AbstractServiceSingle
  * @method AbstractModel storeModel(array $data, ?AbstractModel $model = null)

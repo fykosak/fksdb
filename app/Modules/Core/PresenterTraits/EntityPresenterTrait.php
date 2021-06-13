@@ -15,10 +15,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Trait EntityTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait EntityPresenterTrait {
 
     /**

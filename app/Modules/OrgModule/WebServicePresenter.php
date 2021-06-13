@@ -27,9 +27,6 @@ class WebServicePresenter extends BasePresenter {
         $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('webService', 'default'));
     }
 
-    /**
-     * @throws AbortException
-     */
     final public function renderDefault(): void {
         try {
             $response = new SoapResponse($this->server);

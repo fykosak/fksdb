@@ -7,10 +7,6 @@ use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
-/**
- * Class GenderFromBornNumberTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GenderFromBornNumberTest extends PersonTest {
 
     public function __construct() {

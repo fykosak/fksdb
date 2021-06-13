@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -321,9 +320,6 @@ abstract class BaseGrid extends Grid {
             ->setLink($this->link('csv!'));
     }
 
-    /**
-     * @throws AbortException
-     */
     public function handleCsv(): void {
         $columns = $this->getColumnsContainer()->components;
         $rows = $this->dataSource->getData();

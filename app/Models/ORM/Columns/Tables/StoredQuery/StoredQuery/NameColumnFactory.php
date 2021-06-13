@@ -7,10 +7,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
-/**
- * Class NameColumnFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NameColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

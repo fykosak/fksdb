@@ -8,10 +8,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
-/**
- * Class TShirtColorRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TShirtColorColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelEventParticipant $model

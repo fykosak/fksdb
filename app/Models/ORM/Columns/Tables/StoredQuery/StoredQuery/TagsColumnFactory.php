@@ -13,10 +13,6 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class TagsRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TagsColumnFactory extends ColumnFactory {
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
