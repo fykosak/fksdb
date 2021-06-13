@@ -46,7 +46,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\Template::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);

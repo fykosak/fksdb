@@ -251,6 +251,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     }
 
     protected function getTemplatePath(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR;
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
     }
 }

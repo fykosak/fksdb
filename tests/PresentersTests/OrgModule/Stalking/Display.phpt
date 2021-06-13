@@ -6,7 +6,6 @@ $container = require '../../../Bootstrap.php';
 
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -34,7 +33,7 @@ class Display extends StalkingTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\Template::class, $source);
         $html = (string)$source;
 
         Assert::contains('Base info', $html); // contains headline

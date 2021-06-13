@@ -9,7 +9,6 @@ use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FolTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 
 class AnonymousTest extends FolTestCase {
@@ -27,7 +26,7 @@ class AnonymousTest extends FolTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Register team', $html);
