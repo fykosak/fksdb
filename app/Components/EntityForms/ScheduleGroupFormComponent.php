@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelScheduleGroup|null $model
  */
-class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
+class ScheduleGroupFormComponent extends EntityFormComponent {
 
     public const CONTAINER = 'container';
 

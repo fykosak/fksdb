@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelTeacher|null $model
  */
-class TeacherFormComponent extends AbstractEntityFormComponent {
+class TeacherFormComponent extends EntityFormComponent {
 
     use ReferencedPersonTrait;
 

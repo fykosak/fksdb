@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
+use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
-use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use FKSDB\Models\UI\PageTitle;
@@ -11,6 +11,7 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 class ProductPresenter extends BasePresenter {
+
     use EntityPresenterTrait;
 
     private ServiceProduct $serviceProduct;
@@ -32,11 +33,11 @@ class ProductPresenter extends BasePresenter {
     }
 
     protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        return new ProductFormComponent($this->getContext(), null);
     }
 
     protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        return new ProductFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function createComponentGrid(): ProductsGrid {
