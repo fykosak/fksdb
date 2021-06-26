@@ -117,13 +117,6 @@ class ExportFormatFactory {
             ]);
         }
 
-        if ($qid == 'aesop.ct') {
-            $format->addParameters([
-                'max-points' => $storedQuery->getPostProcessing()
-                    ->getMaxPoints($this->container->getByType(ServiceTask::class)),
-            ]);
-        }
-
         return $format;
     }
 

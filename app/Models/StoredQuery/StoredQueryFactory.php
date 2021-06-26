@@ -36,11 +36,10 @@ class StoredQueryFactory implements XMLNodeSerializer {
      * @param BasePresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @param string|null $postProcessingClass
      * @return StoredQuery
      */
-    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
-        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
+    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery {
+        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }

@@ -114,9 +114,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     private function createMetadata(?ControlGroup $group = null): ModelContainer {
         $container = $this->reflectionFormFactory->createContainer('stored_query', ['name', 'qid', 'tags', 'description']);
         $container->setCurrentGroup($group);
-
-        $control = $this->reflectionFormFactory->createField('stored_query', 'php_post_proc')->setDisabled(true);
-        $container->addComponent($control, 'php_post_proc');
         return $container;
     }
 
@@ -212,9 +209,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS][] = $paramData;
-            }
-            if ($this->model->php_post_proc) {
-                $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
             }
             $this->getForm()->setDefaults($values);
         }
