@@ -4,24 +4,24 @@ namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\WebService\AESOP\AESOPFormat;
 
-class EventParticipantModel extends EventModel {
+class TeacherEventModel extends EventModel {
 
     protected function createFormat(): AESOPFormat {
-        $query = $this->explorer->query(
-            "select ap.*, 
-if(ep.`status`='participated','','N') as `status`
-from v_aesop_person ap
-right join event_participant ep on ep.`person_id` = ap.`x-person_id`
-join `event` e on e.`event_id` = ep.`event_id`
+        $query = $this->explorer->query("select distinct ap.`name`, ap.`surname`, ap.`id`, ap.`street`,
+ap.`town`, ap.`postcode`, ap.`country`, ap.`fullname`,
+ap.`gender`, ap.`born`,
+-- ap.`school`, ap.`school-name`, ap.`end-year`,
+ap.`email`, ap.`spam-flag`, ap.`spam-date`,
+'U' as `teacher` from v_aesop_person ap
+join `e_fyziklani_team` eft on ap.`x-person_id` = eft.`teacher_id`
+join `event` e on e.`event_id` = eft.`event_id`
 where
-	ap.`x-ac_year` = ?
-	and e.`event_type_id` = ?
+	e.`event_type_id` = ?
 	and e.`year` = ?
-	and ep.status in ('participated','missed','cancelled','rejected','interested')
+	and eft.status = 'participated'
 order by surname, name",
-            $this->contestYear->ac_year,
             $this->mapEventNameToTypeId(),
-            $this->contestYear->year,
+            $this->contestYear->year
         );
         $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
         return new AESOPFormat([
@@ -30,7 +30,6 @@ order by surname, name",
             'year' => $this->contestYear->ac_year,
             'date' => date('Y-m-d H:i:s'),
             'errors-to' => 'it@fykos.cz',
-            'max-rank' => $query->getRowCount(),
             'id-scope' => self::ID_SCOPE,
             'start-date' => $event->begin->format('Y-m-d'),
             'end-date' => $event->end->format('Y-m-d'),
@@ -38,12 +37,7 @@ order by surname, name",
     }
 
     protected function getMask(): string {
-        $maskMapping = [
-            'sous.j' => 'sous.jaro',
-            'sous.p' => 'sous.podzim',
-            'setkani.j' => 'setkani.jaro',
-            'setkani.p' => 'setkani.podzim',
-        ];
-        return $this->contestYear->getContest()->getContestSymbol() . '.' . $maskMapping[$this->eventName] ?? $this->eventName;
+        return $this->contestYear->getContest()->getContestSymbol() . '.fyziklani.ucitele';
     }
+
 }

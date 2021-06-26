@@ -3,23 +3,16 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\WebService\AESOP\Models\ContestantModel;
 use FKSDB\Models\WebService\AESOP\Models\EventParticipantModel;
+use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
+use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 
 class AESOPPresenter extends AuthenticatedPresenter {
 
     use YearPresenterTrait;
-
-    private ServiceEvent $serviceEvent;
-
-    private const XSLT_FILE = '';
-
-    public function injectSecondary(ServiceEvent $serviceEvent): void {
-        $this->serviceEvent = $serviceEvent;
-    }
 
     protected function startup(): void {
         parent::startup();
@@ -44,6 +37,10 @@ class AESOPPresenter extends AuthenticatedPresenter {
         $type = $this->getParameter('type');
         if (is_null($type)) {
             $this->sendResponse((new EventParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName))->createResponse());
+        } elseif ($type === 'uc') {
+            $this->sendResponse((new TeacherEventModel($this->getContext(), $this->getSelectedContestYear(), $eventName))->createResponse());
+        } else {
+            $this->sendResponse((new TeamParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName, $type))->createResponse());
         }
     }
 

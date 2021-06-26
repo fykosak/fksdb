@@ -5,20 +5,15 @@ namespace FKSDB\Tests\ModelsTests\Export\Formats;
 $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\Exports\ExportFormatFactory;
-use FKSDB\Models\Exports\Formats\AESOPFormat;
-use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
-use Tester\Assert;
 use Tester\Environment;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
     private ExportFormatFactory $exportFactory;
     private StoredQueryFactory $queryFactory;
-
-    private AESOPFormat $fixture;
 
     public function __construct(Container $container) {
         parent::__construct($container);

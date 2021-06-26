@@ -8,7 +8,6 @@ use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\WebService\AESOP\AESOPFormat;
 use Nette\Application\BadRequestException;
-use Nette\Database\Explorer;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
@@ -24,10 +23,7 @@ class ContestantModel extends AESOPModel {
         $container->callInjects($this);
     }
 
-    private Explorer $explorer;
-
-    public function injectExplorer(Explorer $explorer, ServiceTask $serviceTask): void {
-        $this->explorer = $explorer;
+    public function injectTaskService(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 
