@@ -26,30 +26,29 @@ class AESOPFormatTest extends DatabaseTestCase {
         $this->queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
     }
 
-    /*
-        protected function setUp(): void {
-            global $container;
-            parent::setUp();
+    protected function setUp(): void {
+        Environment::skip();
+        /*global $container;
+        parent::setUp();
 
-            //$queryFactory->setPresenter(new MockSeriesPresenter());
+        //$queryFactory->setPresenter(new MockSeriesPresenter());
 
-            $parameters = [
-                'category' => new MockQueryParameter('category'),
-            ];
-            $storedQuery = $this->queryFactory->createQueryFromSQL(new MockSeriesPresenter($container), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
+        $parameters = [
+            'category' => new MockQueryParameter('category'),
+        ];
+        $storedQuery = $this->queryFactory->createQueryFromSQL(new MockSeriesPresenter($container), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
 
-            // AESOP format requires QID
-            $storedQuery->setQId('aesop.ct');
+        // AESOP format requires QID
+        $storedQuery->setQId('aesop.ct');
 
-            $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
-        }*/
+        $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);*/
+    }
 
     protected function tearDown(): void {
         parent::tearDown();
     }
 
     public function testResponse(): void {
-        Environment::skip();
         /*  $response = $this->fixture->getResponse();
           Assert::type(PlainTextResponse::class, $response);*/
     }
