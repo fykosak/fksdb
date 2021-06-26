@@ -41,21 +41,17 @@ WHERE
                                                order by surname, name",
             $this->contestYear->contest_id,
             $this->contestYear->ac_year,
-            $this->category,
+            $this->category
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
-        $params = [
-            'version' => 1,
-            'event' => $this->getMask(),
-            'year' => $this->contestYear->ac_year,
-            'date' => date('Y-m-d H:i:s'),
-            'errors-to' => 'it@fykos.cz',
-            'max-rank' => count($data),
-            'max-points' => $this->getMaxPoints(),
-            'id-scope' => self::ID_SCOPE,
-        ];
-        return new AESOPFormat($params, $data, array_keys($query->getColumnTypes()));
+        return new AESOPFormat(
+            $this->getDefaultParams() + [
+                'max-rank' => count($data),
+                'max-points' => $this->getMaxPoints(),
+            ],
+            $data,
+            array_keys($query->getColumnTypes()));
     }
 
     protected function getMask(): string {

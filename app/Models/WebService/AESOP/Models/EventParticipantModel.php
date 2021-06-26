@@ -24,17 +24,11 @@ order by surname, name",
             $this->contestYear->year,
         );
         $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
-        return new AESOPFormat([
-            'version' => 1,
-            'event' => $this->getMask(),
-            'year' => $this->contestYear->ac_year,
-            'date' => date('Y-m-d H:i:s'),
-            'errors-to' => 'it@fykos.cz',
-            'max-rank' => $query->getRowCount(),
-            'id-scope' => self::ID_SCOPE,
-            'start-date' => $event->begin->format('Y-m-d'),
-            'end-date' => $event->end->format('Y-m-d'),
-        ], $query->fetchAll(), array_keys($query->getColumnTypes()));
+        return new AESOPFormat($this->getDefaultParams() + [
+                'max-rank' => $query->getRowCount(),
+                'start-date' => $event->begin->format('Y-m-d'),
+                'end-date' => $event->end->format('Y-m-d'),
+            ], $query->fetchAll(), array_keys($query->getColumnTypes()));
     }
 
     protected function getMask(): string {

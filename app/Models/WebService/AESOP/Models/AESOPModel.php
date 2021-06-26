@@ -33,6 +33,17 @@ abstract class AESOPModel {
         $this->explorer = $explorer;
     }
 
+    protected function getDefaultParams(): array {
+        return [
+            'version' => 1,
+            'event' => $this->getMask(),
+            'year' => $this->contestYear->ac_year,
+            'date' => date('Y-m-d H:i:s'),
+            'errors-to' => 'it@fykos.cz',
+            'id-scope' => self::ID_SCOPE,
+        ];
+    }
+
     /**
      * @return Response
      * @throws BadRequestException

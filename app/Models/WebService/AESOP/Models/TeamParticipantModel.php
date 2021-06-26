@@ -37,16 +37,10 @@ order by surname, name;",
             $this->mapCategory()
         );
         $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
-        return new AESOPFormat([
-            'version' => 1,
-            'event' => $this->getMask(),
-            'year' => $this->contestYear->ac_year,
-            'date' => date('Y-m-d H:i:s'),
-            'errors-to' => 'it@fykos.cz',
-            'id-scope' => self::ID_SCOPE,
-            'start-date' => $event->begin->format('Y-m-d'),
-            'end-date' => $event->end->format('Y-m-d'),
-        ], $query->fetchAll(), array_keys($query->getColumnTypes()));
+        return new AESOPFormat($this->getDefaultParams() + [
+                'start-date' => $event->begin->format('Y-m-d'),
+                'end-date' => $event->end->format('Y-m-d'),
+            ], $query->fetchAll(), array_keys($query->getColumnTypes()));
     }
 
     private function mapCategory(): string {
