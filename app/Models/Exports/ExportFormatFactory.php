@@ -82,6 +82,7 @@ class ExportFormatFactory {
 
     private function createAesop(string $name, StoredQuery $storedQuery): AESOPFormat {
         $parameters = $this->container->getParameters()['exports']['formats'][$name];
+
         $queryParameters = $storedQuery->getParameters(true);
 
         $qid = $storedQuery->getQId();
