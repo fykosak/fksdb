@@ -15,11 +15,18 @@ class ContestantModel extends AESOPModel {
 
     protected ServiceTask $serviceTask;
 
-    private ?string $category;
+    private ?ModelCategory $category;
 
+    /**
+     * ContestantModel constructor.
+     * @param Container $container
+     * @param ModelContestYear $contestYear
+     * @param string|null $category
+     * @throws BadRequestException
+     */
     public function __construct(Container $container, ModelContestYear $contestYear, ?string $category) {
         parent::__construct($container, $contestYear);
-        $this->category = $category;
+        $this->category = $this->getCategory($category);
         $container->callInjects($this);
     }
 
@@ -41,7 +48,7 @@ WHERE
                                                order by surname, name",
             $this->contestYear->contest_id,
             $this->contestYear->ac_year,
-            $this->category
+            $this->category->id
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
@@ -55,7 +62,7 @@ WHERE
     }
 
     protected function getMask(): string {
-        return $this->contestYear->getContest()->getContestSymbol() . '.rocnik.' . $this->category;
+        return $this->contestYear->getContest()->getContestSymbol() . '.rocnik.' . $this->category->id;
     }
 
     /**
@@ -65,7 +72,7 @@ WHERE
      * @throws BadRequestException
      */
     public function getMaxPoints(): ?int {
-        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategyByContestYear($this->contestYear);
+        $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
         if (!$this->category) {
             return null;
         }
@@ -75,20 +82,21 @@ WHERE
             ->where('series BETWEEN 1 AND 6');
         $sum = 0;
         foreach ($tasks as $task) {
-            $sum += $evalutationStrategy->getTaskPoints($task, $this->getCategory());
+            $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
         return $sum;
     }
 
     /**
      *
+     * @param string|null $stringCategory
      * @return ModelCategory|null
      * @throws BadRequestException
      */
-    private function getCategory(): ?ModelCategory {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategyByContestYear($this->contestYear);
+    private function getCategory(?string $stringCategory): ?ModelCategory {
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->id == $this->category) {
+            if ($category->id == $stringCategory) {
                 return $category;
             }
         }
@@ -101,12 +109,11 @@ WHERE
      * @throws BadRequestException
      */
     private function filterCategory(ResultSet $data): array {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategyByContestYear($this->contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
 
         $studyYears = [];
-        $category = $this->getCategory();
-        if ($category) {
-            $studyYears = $evaluationStrategy->categoryToStudyYears($category);
+        if ($this->category) {
+            $studyYears = $evaluationStrategy->categoryToStudyYears($this->category);
             $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 

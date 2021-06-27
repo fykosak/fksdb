@@ -3,6 +3,8 @@
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\WebService\AESOP\AESOPFormat;
 use Nette\Application\BadRequestException;
 use Nette\Application\Response;
@@ -52,6 +54,52 @@ abstract class AESOPModel {
         $response = $this->createFormat()->createResponse();
         $response->setName($this->getMask() . '.txt');
         return $response;
+    }
+
+    private function formatSchool(?ModelSchool $school): ?string {
+        if (!$school) {
+            return null;
+        }
+        $countryISO = $school->getAddress()->getRegion()->country_iso;
+        if ($countryISO === 'cz') {
+            return 'red-izo:' . $school->izo;
+        }
+        if ($countryISO === 'sk') {
+            return 'sk:' . $school->izo;
+        }
+        return 'ufo';
+    }
+
+    protected function getAESOPContestant(ModelPerson $person): array {
+        $postContact = $person->getPermanentPostContact(false);
+        $history = $person->getHistory($this->contestYear->ac_year);
+        $school = $history->getSchool();
+        $spamFlag = $person->getPersonHasFlag('spam_mff');
+        return [
+            'name' => $person->other_name,
+            'surname' => $person->family_name,
+            'id' => $person->person_id,
+            'street' => $postContact->getAddress()->target,
+            'town' => $postContact->getAddress()->city,
+            'postcode' => $postContact->getAddress()->postal_code,
+            'country' => $postContact->getAddress()->getRegion()->country_iso,
+            'fullname' => $person->display_name,
+            'gender' => $person->gender,
+            'school' => $this->formatSchool($school),
+            'school-name' => $school->name_abbrev,
+            'end-year' => ($history->study_year < 5 && $history->study_year > 0) ?
+                ($history->ac_year + 5 - $history->study_year) :
+                (($history->study_year > 5 && $history->study_year < 10) ?
+                    ($history->ac_year + 14 - $history->study_year)
+                    : null
+                ),
+            'email' => $person->getInfo()->email,
+            'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
+            'spam-date' => date('Y-m-d', $spamFlag->modified),
+            'x-person_id' => $person->person_id,
+            'x-birthplace' => $person->getInfo()->birthplace,
+            'x-ac_year' => $history->ac_year,
+        ];
     }
 
     /**
