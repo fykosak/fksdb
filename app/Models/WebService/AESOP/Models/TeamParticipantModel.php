@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\WebService\AESOP\Models;
 
+use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\WebService\AESOP\AESOPFormat;
 use Nette\DI\Container;
 
 class TeamParticipantModel extends EventModel {
@@ -15,7 +15,7 @@ class TeamParticipantModel extends EventModel {
         $this->category = $category;
     }
 
-    protected function createFormat(): AESOPFormat {
+    public function createResponse(): PlainTextResponse {
         $query = $this->explorer->query("select ap.*,
        eft.`rank_category`                        as `rank`,
        eft.`points`,
@@ -37,10 +37,14 @@ order by surname, name;",
             $this->mapCategory()
         );
         $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
-        return new AESOPFormat($this->getDefaultParams() + [
+        return $this->formatResponse(
+            $this->getDefaultParams() + [
                 'start-date' => $event->begin->format('Y-m-d'),
                 'end-date' => $event->end->format('Y-m-d'),
-            ], $query->fetchAll(), array_keys($query->getColumnTypes()));
+            ],
+            $query->fetchAll(),
+            array_keys($query->getColumnTypes())
+        );
     }
 
     private function mapCategory(): string {

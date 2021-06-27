@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\WebService\AESOP\Models;
 
+use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\WebService\AESOP\AESOPFormat;
 use Nette\Application\BadRequestException;
-use Nette\Application\Response;
 use Nette\Database\Explorer;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -46,16 +46,6 @@ abstract class AESOPModel {
         ];
     }
 
-    /**
-     * @return Response
-     * @throws BadRequestException
-     */
-    public function createResponse(): Response {
-        $response = $this->createFormat()->createResponse();
-        $response->setName($this->getMask() . '.txt');
-        return $response;
-    }
-
     private function formatSchool(?ModelSchool $school): ?string {
         if (!$school) {
             return null;
@@ -68,6 +58,23 @@ abstract class AESOPModel {
             return 'sk:' . $school->izo;
         }
         return 'ufo';
+    }
+
+    public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse {
+        $text = '';
+
+        foreach ($params as $key => $value) {
+            $text .= $key . "\t" . $value . "\n";
+        }
+        $text .= "\n";
+        /** @var Row $datum */
+        $text .= join("\t", $cools) . "\n";
+        foreach ($data as $datum) {
+            $text .= join("\t", iterator_to_array($datum->getIterator())) . "\n";
+        }
+        $response = new PlainTextResponse($text);
+        $response->setName($this->getMask() . '.txt');
+        return $response;
     }
 
     protected function getAESOPContestant(ModelPerson $person): array {
@@ -102,11 +109,7 @@ abstract class AESOPModel {
         ];
     }
 
-    /**
-     * @return AESOPFormat
-     * @throws BadRequestException
-     */
-    abstract protected function createFormat(): AESOPFormat;
+    abstract public function createResponse(): PlainTextResponse;
 
     abstract protected function getMask(): string;
 

@@ -9,6 +9,7 @@ use FKSDB\Models\WebService\AESOP\Models\TeacherEventModel;
 use FKSDB\Models\WebService\AESOP\Models\TeamParticipantModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use Nette\Application\BadRequestException;
 
 class AESOPPresenter extends AuthenticatedPresenter {
 
@@ -27,6 +28,9 @@ class AESOPPresenter extends AuthenticatedPresenter {
         $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderContestant(): void {
         $category = $this->getParameter('category');
         $this->sendResponse((new ContestantModel($this->getContext(), $this->getSelectedContestYear(), $category))->createResponse());
@@ -36,12 +40,13 @@ class AESOPPresenter extends AuthenticatedPresenter {
         $eventName = $this->getParameter('eventName');
         $type = $this->getParameter('type');
         if (is_null($type)) {
-            $this->sendResponse((new EventParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName))->createResponse());
+            $model = new EventParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName);
         } elseif ($type === 'uc') {
-            $this->sendResponse((new TeacherEventModel($this->getContext(), $this->getSelectedContestYear(), $eventName))->createResponse());
+            $model = new TeacherEventModel($this->getContext(), $this->getSelectedContestYear(), $eventName);
         } else {
-            $this->sendResponse((new TeamParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName, $type))->createResponse());
+            $model = new TeamParticipantModel($this->getContext(), $this->getSelectedContestYear(), $eventName, $type);
         }
+        $this->sendResponse($model->createResponse());
     }
 
     public function getAllowedAuthMethods(): array {

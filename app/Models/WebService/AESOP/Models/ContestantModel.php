@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\WebService\AESOP\Models;
 
+use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
-use FKSDB\Models\WebService\AESOP\AESOPFormat;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
@@ -35,10 +35,10 @@ class ContestantModel extends AESOPModel {
     }
 
     /**
-     * @return AESOPFormat
+     * @return PlainTextResponse
      * @throws BadRequestException
      */
-    protected function createFormat(): AESOPFormat {
+    public function createResponse(): PlainTextResponse {
         $query = $this->explorer->query("select ac.*, IF(ac.`x-points_ratio` >= 0.5, 'Y', 'N') AS `successful`
          FROM v_aesop_contestant ac
 WHERE
@@ -52,13 +52,14 @@ WHERE
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
-        return new AESOPFormat(
+        return $this->formatResponse(
             $this->getDefaultParams() + [
                 'max-rank' => count($data),
                 'max-points' => $this->getMaxPoints(),
             ],
             $data,
-            array_keys($query->getColumnTypes()));
+            array_keys($query->getColumnTypes())
+        );
     }
 
     protected function getMask(): string {
