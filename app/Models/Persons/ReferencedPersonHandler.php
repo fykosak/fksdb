@@ -61,7 +61,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
         ModelContestYear $contestYear,
         string $resolution
     ) {
-        $this->$contestYear = $contestYear;
+        $this->contestYear = $contestYear;
         $this->resolution = $resolution;
     }
 
