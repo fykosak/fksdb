@@ -4,6 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
@@ -46,12 +47,12 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return $this->serviceContestant;
     }
 
-    protected function getAcYearFromModel(): ?int {
+    protected function getAcYearFromModel(): ?ModelContestYear {
         $model = $this->getModel();
         if (!$model) {
             return null;
         }
-        return $model->getContestYear()->ac_year;
+        return $model->getContestYear();
     }
 
     public function messageCreate(): string {

@@ -53,6 +53,10 @@ class ModelPerson extends AbstractModel implements Resource {
         return ModelPersonInfo::createFromActiveRow($infos->current());
     }
 
+    public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory {
+        return $this->getHistory($contestYear->ac_year, $extrapolated);
+    }
+
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)->fetch();
@@ -61,14 +65,9 @@ class ModelPerson extends AbstractModel implements Resource {
         }
         if ($extrapolated) {
             $lastHistory = $this->getLastHistory();
-            if ($lastHistory) {
-                return $lastHistory->extrapolate($acYear);
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+            return $lastHistory ? $lastHistory->extrapolate($acYear) : null;
         }
+        return null;
     }
 
     /**

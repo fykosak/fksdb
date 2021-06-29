@@ -79,7 +79,7 @@ abstract class AESOPModel {
 
     protected function getAESOPContestant(ModelPerson $person): array {
         $postContact = $person->getPermanentPostContact(false);
-        $history = $person->getHistory($this->contestYear->ac_year);
+        $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->getSchool();
         $spamFlag = $person->getPersonHasFlag('spam_mff');
         return [

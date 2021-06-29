@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use Fykosak\NetteORM\AbstractService;
@@ -58,7 +59,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function getORMService(): AbstractService;
 
-    protected function getAcYearFromModel(): ?int {
+    protected function getAcYearFromModel(): ?ModelContestYear {
         return null;
     }
 
@@ -77,7 +78,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
-            $this->getAcYearFromModel() ?? $this->getSelectedContestYear()->ac_year,
+            $this->getAcYearFromModel() ?? $this->getSelectedContestYear(),
             PersonSearchContainer::SEARCH_ID,
             $create,
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),

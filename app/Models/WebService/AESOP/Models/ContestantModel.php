@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
@@ -120,7 +121,7 @@ WHERE
 
         $graduationYears = [];
         foreach ($studyYears as $studyYear) {
-            $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->contestYear->ac_year);
+            $graduationYears[] = $this->studyYearToGraduation($studyYear, $this->contestYear);
         }
 
         $result = [];
@@ -158,13 +159,10 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, int $acYear): ?int {
-        if ($studyYear >= 1 && $studyYear <= 4) {
-            return $acYear + (5 - $studyYear);
-        } elseif ($studyYear >= 6 && $studyYear <= 9) {
-            return $acYear + (14 - $studyYear);
-        } else {
+    private function studyYearToGraduation(?int $studyYear, ModelContestYear $contestYear): ?int {
+        if (is_null($studyYear)) {
             return null;
         }
+        return YearCalculator::getGraduationYear($studyYear, $contestYear);
     }
 }

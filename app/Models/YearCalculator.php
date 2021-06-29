@@ -3,6 +3,7 @@
 namespace FKSDB\Models;
 
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -39,8 +40,8 @@ class YearCalculator {
         return $calYear;
     }
 
-    public static function getGraduationYear(int $studyYear, ?int $acYear): int {
-        $acYear = is_null($acYear) ? self::getCurrentAcademicYear() : $acYear;
+    public static function getGraduationYear(int $studyYear, ?ModelContestYear $contestYear): int {
+        $acYear = is_null($contestYear) ? self::getCurrentAcademicYear() : $contestYear->ac_year;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
