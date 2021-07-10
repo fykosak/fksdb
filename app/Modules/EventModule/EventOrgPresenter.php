@@ -29,7 +29,7 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-users');
+        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
     }
 
     public function getTitleCreate(): PageTitle {
