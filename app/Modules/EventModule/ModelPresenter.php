@@ -18,7 +18,7 @@ class ModelPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-cubes'));
+        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-project-diagram'));
     }
 
     /**
