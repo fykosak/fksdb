@@ -15,6 +15,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard-teacher'));
+        $this->setPageTitle(new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard'));
     }
 }
