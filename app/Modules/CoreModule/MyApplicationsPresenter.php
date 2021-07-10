@@ -15,7 +15,7 @@ class MyApplicationsPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('My applications'), 'fa fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('My applications'), 'fa fa-calendar-alt'));
     }
 
     protected function createComponentNewApplicationsGrid(): NewApplicationsGrid {

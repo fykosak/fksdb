@@ -18,7 +18,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar-alt'));
     }
 
     protected function beforeRender(): void {

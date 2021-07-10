@@ -99,9 +99,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault(): void {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
         }
     }
 
