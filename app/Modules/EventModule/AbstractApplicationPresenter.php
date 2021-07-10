@@ -36,7 +36,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-users'));
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-clipboard-list'));
     }
 
     /**
@@ -55,7 +55,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleTransitions(): void {
-        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-exchange-alt'));
     }
 
     /**
