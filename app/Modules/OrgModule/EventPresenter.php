@@ -29,7 +29,7 @@ class EventPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Events'), 'fa fa-calendar');
+        return new PageTitle(_('Events'), 'fa fa-calendar-alt');
     }
 
     public function getTitleCreate(): PageTitle {
