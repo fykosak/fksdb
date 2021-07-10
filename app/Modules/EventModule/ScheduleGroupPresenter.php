@@ -50,7 +50,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-list'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list'));
     }
 
     /**
