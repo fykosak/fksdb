@@ -28,7 +28,7 @@ class TaskPresenter extends BasePresenter {
     }
 
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-download'));
     }
 
     /**
