@@ -17,7 +17,7 @@ class ResultsPresenter extends BasePresenter {
     }
 
     public function titleTable(): void {
-        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-info'));
     }
 
     public function titlePresentation(): void {
