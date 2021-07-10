@@ -33,7 +33,7 @@ class EventPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Add event'), 'fa fa-calendar');
+        return new PageTitle(_('Add event'), 'fa fa-calendar-plus');
     }
 
     /**
@@ -42,7 +42,7 @@ class EventPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day'));
     }
 
     /**
