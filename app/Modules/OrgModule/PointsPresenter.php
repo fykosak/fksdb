@@ -46,11 +46,11 @@ class PointsPresenter extends BasePresenter {
     }
 
     public function titleEntry(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-trophy'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen'));
     }
 
     public function titlePreview(): void {
-        $this->setPageTitle(new PageTitle(_('Points list'), 'fas fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Points list'), 'fas fa-clipboard-list'));
     }
 
     public function authorizedEntry(): void {
