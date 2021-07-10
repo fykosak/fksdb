@@ -43,7 +43,7 @@ class SQLResultsCache {
      * @throws \PDOException
      */
     public function recalculate(ModelContestYear $contestYear): void {
-        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategyByContestYear($contestYear);
+        $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }

@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -34,7 +35,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     public VisibilityResolver $visibilityResolver;
 
-    public int $acYear;
+    public ModelContestYear $contestYear;
 
     private array $fieldsDefinition;
 
@@ -56,7 +57,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         Container $container,
         ModifiabilityResolver $modifiabilityResolver,
         VisibilityResolver $visibilityResolver,
-        int $acYear,
+        ModelContestYear $contestYear,
         array $fieldsDefinition,
         ?ModelEvent $event,
         bool $allowClear
@@ -64,7 +65,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         parent::__construct($container, $allowClear);
         $this->modifiabilityResolver = $modifiabilityResolver;
         $this->visibilityResolver = $visibilityResolver;
-        $this->acYear = $acYear;
+        $this->contestYear = $contestYear;
         $this->fieldsDefinition = $fieldsDefinition;
         $this->event = $event;
         $this->monitor(IContainer::class, function (): void {
@@ -231,7 +232,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                 $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
                 break;
             case 'person_history':
-                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->acYear);
+                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->contestYear);
                 break;
             default:
                 throw new InvalidArgumentException();
@@ -301,7 +302,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return mixed
      */
     protected function getPersonValue(?ModelPerson $person, string $sub, string $field, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false) {
-        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear,
+        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->contestYear,
             $extrapolate,
             $hasDelivery,
             $targetValidation,

@@ -46,6 +46,7 @@ acl:
     - addResource(emailMessage) # list, detail
     - addResource(chart)         # list, chart
     - addResource(webService)    # default - stahovanie cez webService
+    - addResource(aesop)    # default - stahovanie cez webService
 
     #applications
     - addResource(event.participant)  # list, detail
@@ -144,7 +145,6 @@ acl:
     - allow(boss, emailMessage, list)
 
     # robot role
-    - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 

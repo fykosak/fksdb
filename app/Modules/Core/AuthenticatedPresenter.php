@@ -78,7 +78,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     protected function startup(): void {
         parent::startup();
 
-        $methods = $this->getAllowedAuthMethods2();
+        $methods = $this->getAllowedAuthMethods();
 
         if ($methods[self::AUTH_TOKEN]) {
             // successful token authentication overwrites the user identity (if any)
@@ -121,7 +121,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return true;
     }
 
-    public function getAllowedAuthMethods2(): array {
+    public function getAllowedAuthMethods(): array {
         return [
             self::AUTH_GITHUB => false,
             self::AUTH_HTTP => false,

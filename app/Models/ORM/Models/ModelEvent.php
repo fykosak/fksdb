@@ -44,10 +44,6 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator {
         return $this->getEventType()->getContest();
     }
 
-    public function getAcYear(): int {
-        return $this->getContestYear()->ac_year;
-    }
-
     public function getContestYear(): ModelContestYear {
         return ModelContestYear::createFromActiveRow($this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch());
     }
