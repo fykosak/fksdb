@@ -16,7 +16,7 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-calculator'));
     }
 
     /**
