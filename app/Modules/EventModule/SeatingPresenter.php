@@ -14,7 +14,7 @@ use Nette\DeprecatedException;
 class SeatingPresenter extends BasePresenter {
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows-alt'));
+        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa map-marked-alt'));
     }
 
     public function titleEdit(): void {
