@@ -33,7 +33,7 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
+        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
     }
 
     /**
@@ -44,7 +44,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     /**
