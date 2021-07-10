@@ -34,7 +34,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-list'));
     }
 
     /**
@@ -42,7 +42,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePersons(): void {
-        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-list'));
     }
 
     /**
@@ -50,7 +50,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-list'));
     }
 
     /**
