@@ -27,7 +27,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Schools'), 'fa fa-university');
+        return new PageTitle(_('Schools'), 'fa fa-school');
     }
 
     public function getTitleCreate(): PageTitle {

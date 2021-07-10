@@ -24,7 +24,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     public function titleCreate(): void {
@@ -32,7 +32,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-user-graduate'));
     }
 
     protected function createComponentGrid(): ContestantsGrid {

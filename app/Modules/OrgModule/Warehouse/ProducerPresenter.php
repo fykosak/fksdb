@@ -27,15 +27,15 @@ class ProducerPresenter extends BasePresenter {
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-industry'));
+        $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-store-alt'));
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-industry'));
+        $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-pen'));
     }
 
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create producer'), 'fas fa-industry'));
+        $this->setPageTitle(new PageTitle(_('Create producer'), 'fa fa-plus'));
     }
 
     /**

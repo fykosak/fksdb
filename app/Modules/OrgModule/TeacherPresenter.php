@@ -30,15 +30,15 @@ class TeacherPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fas fa-pen'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fas fa-user-edit'));
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Create new teacher'), 'fas fa-plus');
+        return new PageTitle(_('Create new teacher'), 'fas fa-user-plus');
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Teacher'), 'fas fa-graduation-cap');
+        return new PageTitle(_('Teacher'), 'fas fa-chalkboard-teacher');
     }
 
     /**
@@ -46,7 +46,7 @@ class TeacherPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fas fa-graduation-cap'));
+        $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fas fa-chalkboard-teacher'));
     }
 
     /**
