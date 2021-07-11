@@ -27,7 +27,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelPayment|null $model
  */
-class PaymentFormComponent extends AbstractEntityFormComponent {
+class PaymentFormComponent extends EntityFormComponent {
 
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;

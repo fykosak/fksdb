@@ -13,7 +13,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
-abstract class AbstractEntityFormComponent extends FormComponent {
+abstract class EntityFormComponent extends FormComponent {
 
     protected ?AbstractModel $model;
 
@@ -41,6 +41,7 @@ abstract class AbstractEntityFormComponent extends FormComponent {
             if ($previous && $previous instanceof ConstraintViolationException) {
                 $this->flashMessage($previous->getMessage(), Message::LVL_DANGER);
             } else {
+                Debugger::barDump($exception);
                 $this->flashMessage(_('Error when storing model'), Message::LVL_DANGER);
             }
         } catch (AbortException $exception) {

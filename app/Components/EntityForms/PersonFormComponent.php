@@ -24,7 +24,7 @@ use Nette\InvalidArgumentException;
 /**
  * @property ModelPerson|null $model
  */
-class PersonFormComponent extends AbstractEntityFormComponent {
+class PersonFormComponent extends EntityFormComponent {
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';

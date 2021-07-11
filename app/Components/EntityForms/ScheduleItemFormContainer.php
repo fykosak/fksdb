@@ -17,7 +17,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelScheduleItem|null $model
  */
-class ScheduleItemFormContainer extends AbstractEntityFormComponent {
+class ScheduleItemFormContainer extends EntityFormComponent {
 
     public const CONTAINER = 'container';
 

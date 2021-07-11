@@ -27,7 +27,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelStoredQuery|null $model
  */
-class StoredQueryFormComponent extends AbstractEntityFormComponent {
+class StoredQueryFormComponent extends EntityFormComponent {
 
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';

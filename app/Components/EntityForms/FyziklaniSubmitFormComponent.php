@@ -16,7 +16,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
+class FyziklaniSubmitFormComponent extends EntityFormComponent {
 
     private HandlerFactory $handlerFactory;
 
