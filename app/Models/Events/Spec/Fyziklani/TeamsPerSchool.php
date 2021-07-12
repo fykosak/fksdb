@@ -97,7 +97,7 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                 ->where($baseHolder->getEventIdColumn(), $event->getPrimary())
-                ->where('person.person_history:ac_year', $event->getAcYear())
+                ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
                 ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?

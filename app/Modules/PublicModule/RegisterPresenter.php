@@ -243,7 +243,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
-            $this->getSelectedContestYear()->ac_year,
+            $this->getSelectedContestYear(),
             PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),

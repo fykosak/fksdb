@@ -29,7 +29,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     /**
@@ -46,7 +46,7 @@ class OrgPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Organisers'), 'fa fa-address-book');
+        return new PageTitle(_('Organisers'), 'fa fa-user-tie');
     }
 
     /**

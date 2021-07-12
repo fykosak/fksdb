@@ -121,7 +121,7 @@ class SubmitPresenter extends BasePresenter {
         $taskIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $personHistory = $login->getPerson()->getHistory($this->getSelectedContestYear()->ac_year);
+        $personHistory = $login->getPerson()->getHistoryByContestYear($this->getSelectedContestYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));

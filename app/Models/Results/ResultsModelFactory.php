@@ -44,7 +44,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @throws BadRequestException
      */
     public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
@@ -58,7 +58,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @throws BadRequestException
      */
     public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
@@ -72,7 +72,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @throws BadRequestException
      */
     public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel {
-        $evaluationStrategy = self::findEvaluationStrategyByContestYear($contestYear);
+        $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
         }
@@ -95,7 +95,7 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    public static function findEvaluationStrategyByContestYear(ModelContestYear $contestYear): EvaluationStrategy {
+    public static function findEvaluationStrategy(ModelContestYear $contestYear): EvaluationStrategy {
         switch ($contestYear->contest_id) {
             case ModelContest::ID_FYKOS:
                 if ($contestYear->year >= 25) {
@@ -113,33 +113,6 @@ class ResultsModelFactory implements XMLNodeSerializer {
                 }
         }
         throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->getContest()->name));
-    }
-
-    /**
-     *
-     * @param int $contestId
-     * @param int $year
-     * @return EvaluationStrategy
-     * @throws BadRequestException
-     * @deprecated
-     */
-    public static function findEvaluationStrategy(int $contestId, int $year): EvaluationStrategy {
-        if ($contestId == ModelContest::ID_FYKOS) {
-            if ($year >= 25) {
-                return new EvaluationFykos2011();
-            } else {
-                return new EvaluationFykos2001();
-            }
-        } elseif ($contestId == ModelContest::ID_VYFUK) {
-            if ($year >= 4) {
-                return new EvaluationVyfuk2014();
-            } elseif ($year >= 2) {
-                return new EvaluationVyfuk2012();
-            } else {
-                return new EvaluationVyfuk2011();
-            }
-        }
-        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $year, $contestId));
     }
 
     /**

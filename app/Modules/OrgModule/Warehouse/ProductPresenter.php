@@ -16,15 +16,15 @@ class ProductPresenter extends BasePresenter {
     private ServiceProduct $serviceProduct;
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Products'), 'fas fa-clipboard-list'));
+        $this->setPageTitle(new PageTitle(_('Products'), 'fas fa-dolly'));
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit product'), 'fas fa-clipboard-list'));
+        $this->setPageTitle(new PageTitle(_('Edit product'), 'fas fa-pen'));
     }
 
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create product'), 'fas fa-clipboard-list'));
+        $this->setPageTitle(new PageTitle(_('Create product'), 'fa fa-plus'));
     }
 
     public function injectService(ServiceProduct $serviceProduct): void {

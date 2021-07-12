@@ -38,6 +38,19 @@ fksrouter:
             presenter: WebService
             action: default
             flags: [ONE_WAY]
+
+        -
+            mask: 'aesop/<contestId %contests%><year [0-9]+>/contestant/[<category [0-4]>]'
+            module: Core
+            presenter: AESOP
+            action: contestant
+            contestId: [filterTable: %inverseContestMapping%]
+        -
+            mask: 'aesop/<contestId %contests%><year [0-9]+>/event.<eventName>[/<type>]'
+            module: Core
+            presenter: AESOP
+            action: event
+            contestId: [filterTable: %inverseContestMapping%]
         # cool URL for SQLQuery
         -
             mask: '<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'

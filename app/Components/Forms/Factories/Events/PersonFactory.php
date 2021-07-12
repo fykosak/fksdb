@@ -95,7 +95,7 @@ class PersonFactory extends AbstractFactory {
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getContestYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
         $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
         $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
         return $referencedId;
@@ -125,7 +125,7 @@ class PersonFactory extends AbstractFactory {
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $event = $field->getBaseHolder()->getEvent();
-        $acYear = $event->getAcYear();
+        $contestYear = $event->getContestYear();
         $personId = $field->getValue();
         $person = $personId ? $this->servicePerson->findByPrimary($personId) : null;
 
@@ -138,7 +138,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = ['required' => $metadata];
                 }
-                if ($metadata['required'] && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $contestYear)) {
                     $validator->addError(sprintf(_('%s: %s is a required field.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }

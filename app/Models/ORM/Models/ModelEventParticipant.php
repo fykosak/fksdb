@@ -52,7 +52,7 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
     }
 
     public function getPersonHistory(): ?ModelPersonHistory {
-        return $this->getPerson()->getHistory($this->getEvent()->getAcYear());
+        return $this->getPerson()->getHistoryByContestYear($this->getEvent()->getContestYear());
     }
 
     public function getContest(): ModelContest {

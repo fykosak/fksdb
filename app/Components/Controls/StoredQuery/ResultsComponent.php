@@ -124,7 +124,7 @@ class ResultsComponent extends BaseComponent {
         $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
-        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
+        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 

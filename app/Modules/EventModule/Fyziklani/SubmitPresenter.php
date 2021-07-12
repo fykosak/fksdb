@@ -66,7 +66,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fas fa-pen'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fas fa-search'));
     }
 
     /* ***** Authorized methods *****/

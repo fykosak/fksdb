@@ -35,7 +35,7 @@ LEFT JOIN region USING (region_id)
 LEFT JOIN e_fyziklani_participant USING (event_participant_id)
 LEFT JOIN e_fyziklani_team USING (e_fyziklani_team_id, event_id)
 WHERE ep.event_id in (?)
-GROUP BY  region.country_iso3', $this->event->getAcYear(), $this->event->event_id);
+GROUP BY  region.country_iso3', $this->event->getContestYear()->ac_year, $this->event->event_id);
     }
 
     public function getDescription(): ?string {
