@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -27,7 +26,6 @@ use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
 /**
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 class AllSubmitsGrid extends SubmitsGrid {
@@ -116,10 +114,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
     }
 
-    /**
-     * @param int $id
-     * @throws AbortException
-     */
     public function handleDelete(int $id): void {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);

@@ -11,10 +11,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 
-/**
- * Class ChartPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ChartPresenter extends BasePresenter {
 
     use ChartPresenterTrait;

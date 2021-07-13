@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\PaymentFormComponent;
+use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;

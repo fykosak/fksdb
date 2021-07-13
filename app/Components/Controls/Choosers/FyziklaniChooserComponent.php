@@ -10,11 +10,6 @@ use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FyziklaniChooserComponent extends ChooserComponent {
 
     private ModelEvent $event;

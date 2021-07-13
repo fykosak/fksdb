@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
-/**
- * Class PersonLinkRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonLinkColumnFactory extends ColumnFactory {
 
     private LinkGenerator $presenterComponent;

@@ -6,17 +6,12 @@ use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Processing\AbstractProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 
-/**
- * Class AbstractCategoryProcessing
- * @author Michal Červeňák <miso@fykos.cz>
- */
-abstract class AbstractCategoryProcessing extends AbstractProcessing implements OptionsProvider {
+abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider {
 
     protected ServiceSchool $serviceSchool;
     protected ServicePerson $servicePerson;
@@ -27,7 +22,6 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
     }
 
     protected function extractValues(Holder $holder): array {
-
         $participants = [];
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
@@ -68,27 +62,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         $personControls = $this->getControl("$name.person_id");
         $value = reset($personControls)->getValue();
         $person = $this->servicePerson->findByPrimary($value);
-        return $person->getHistory($baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getAcYear());
-    }
-
-    protected function getSchoolValue(string $name): ?int {
-        $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
-        $schoolControl = reset($schoolControls);
-        if ($schoolControl) {
-            $schoolControl->loadHttpData();
-            return $schoolControl->getValue();
-        }
-        return null;
-    }
-
-    public function getStudyYearValue(string $name): ?int {
-        $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
-        $studyYearControl = reset($studyYearControls);
-        if ($studyYearControl) {
-            $studyYearControl->loadHttpData();
-            return $studyYearControl->getValue();
-        }
-        return null;
+        return $person->getHistoryByContestYear($baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getContestYear());
     }
 
     public function getOptions(Field $field): array {

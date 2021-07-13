@@ -7,7 +7,6 @@ use FKSDB\Models\Github\EventFactory;
 use FKSDB\Models\Github\Events\Event;
 use FKSDB\Models\Github\Events\PushEvent;
 use FKSDB\Models\Maintenance\Updater;
-use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
 /**
@@ -25,8 +24,13 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->updater = $updater;
     }
 
-    public function getAllowedAuthMethods(): int {
-        return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
+    public function getAllowedAuthMethods(): array {
+        return [
+            self::AUTH_GITHUB => true,
+            self::AUTH_HTTP => false,
+            self::AUTH_LOGIN => false,
+            self::AUTH_TOKEN => false,
+        ];
     }
 
     public function authorizedApi(): void {
@@ -48,9 +52,6 @@ class GithubPresenter extends AuthenticatedPresenter {
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     final public function renderApi(): void {
         $response = new TextResponse('Thank you, Github.');
         $this->sendResponse($response);

@@ -30,7 +30,6 @@ class NeonScheme {
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
 
-
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {
                     $result[$key] = Arrays::get($section, $key);

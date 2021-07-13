@@ -8,10 +8,6 @@ use FKSDB\Components\Forms\Rules\BornNumber;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
-/**
- * Class BornIdRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class BornIdColumnFactory extends ColumnFactory {
     /**
      * @param array $args

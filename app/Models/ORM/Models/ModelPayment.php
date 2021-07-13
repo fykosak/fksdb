@@ -12,8 +12,6 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int person_id
  * @property-read ActiveRow person
  * @property-read int payment_id

@@ -11,10 +11,6 @@ use Fykosak\NetteORM\TypedTableSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
-/**
- * Class SubmitContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SubmitContainer extends BaseComponent {
 
     private ModelContestant $contestant;

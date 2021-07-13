@@ -8,10 +8,6 @@ use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
-/**
- * Class FinalResults
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FinalResultsComponent extends BaseComponent {
 
     private ModelEvent $event;

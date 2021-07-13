@@ -13,10 +13,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- * Class OrgPaymentGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventPaymentGrid extends RelatedGrid {
 
     public function __construct(ModelEvent $event, Container $container) {

@@ -5,10 +5,6 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class DashboardPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DashboardPresenter extends BasePresenter {
 
     /**
@@ -16,7 +12,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-chalkboard-teacher'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt'));
     }
 
     /**

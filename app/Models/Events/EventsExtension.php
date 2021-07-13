@@ -36,7 +36,6 @@ use Nette\Utils\Strings;
  * It's a f**** magic!
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
 

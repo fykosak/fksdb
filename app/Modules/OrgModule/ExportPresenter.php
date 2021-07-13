@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
@@ -14,14 +13,13 @@ use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * Class ExportPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
 class ExportPresenter extends BasePresenter {
@@ -102,10 +100,10 @@ class ExportPresenter extends BasePresenter {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): int {
+    public function getAllowedAuthMethods(): array {
         $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
+            $methods[self::AUTH_HTTP] = true;
         }
         return $methods;
     }

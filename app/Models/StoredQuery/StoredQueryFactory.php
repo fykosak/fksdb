@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\StoredQuery;
 
-use DOMDocument;
-use DOMNode;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
@@ -38,11 +36,10 @@ class StoredQueryFactory implements XMLNodeSerializer {
      * @param BasePresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @param string|null $postProcessingClass
      * @return StoredQuery
      */
-    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
-        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
+    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery {
+        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
@@ -65,23 +62,23 @@ class StoredQueryFactory implements XMLNodeSerializer {
 
     private function presenterContextParameters(BasePresenter $presenter): array {
         return [
-            self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_YEAR => $presenter->getSelectedYear(),
-            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+            self::PARAM_CONTEST_ID => $presenter->getSelectedContestYear()->contest_id,
+            self::PARAM_CONTEST => $presenter->getSelectedContestYear()->contest_id,
+            self::PARAM_YEAR => $presenter->getSelectedContestYear()->year,
+            self::PARAM_AC_YEAR => $presenter->getSelectedContestYear()->ac_year,
             self::PARAM_SERIES => $presenter->getSelectedSeries(),
         ];
     }
 
     /**
      * @param StoredQuery $dataSource
-     * @param DOMNode $node
-     * @param DOMDocument $doc
+     * @param \DOMNode $node
+     * @param \DOMDocument $doc
      * @param int $formatVersion
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }

@@ -1139,32 +1139,34 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task` (
 -- -----------------------------------------------------
 -- Table `fyziklani_submit`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
-  `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `fyziklani_task_id`   INT         NOT NULL,
-  `e_fyziklani_team_id` INT         NOT NULL,
-  `points`              TINYINT     NOT NULL,
-  `state`       VARCHAR(64) NULL     DEFAULT NULL,
-  `created`             DATETIME    NULL     DEFAULT CURRENT_TIMESTAMP,
-  `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ON UPDATE CURRENT_TIMESTAMP,
-  INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
-  INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
-  UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
+CREATE TABLE IF NOT EXISTS `fyziklani_submit`
+(
+    `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `fyziklani_task_id`   INT         NOT NULL,
+    `e_fyziklani_team_id` INT         NOT NULL,
+    `points`              TINYINT     NULL     DEFAULT NULL,
+    `skipped`             BOOLEAN     NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
+    `state`               VARCHAR(64) NULL     DEFAULT NULL,
+    `created`             DATETIME    NULL     DEFAULT CURRENT_TIMESTAMP,
+    `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+    INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
+    INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
 
-  CONSTRAINT `fk_fyziklani_submit_1`
-  FOREIGN KEY (`fyziklani_task_id`)
-  REFERENCES `fyziklani_task` (`fyziklani_task_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_fyziklani_submit_1`
+        FOREIGN KEY (`fyziklani_task_id`)
+            REFERENCES `fyziklani_task` (`fyziklani_task_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
 
-  CONSTRAINT `fk_fyziklani_submit_2`
-  FOREIGN KEY (`e_fyziklani_team_id`)
-  REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    CONSTRAINT `fk_fyziklani_submit_2`
+        FOREIGN KEY (`e_fyziklani_team_id`)
+            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-  ENGINE = 'InnoDB';
+    ENGINE = 'InnoDB';
 
 
 -- -----------------------------------------------------
@@ -1293,7 +1295,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info') NOT NULL,
+    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info','dsef_morning','dsef_afternoon') NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,

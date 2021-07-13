@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Class SingleReflectionFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleReflectionFormFactory {
 
     protected ORMFactory $tableReflectionFactory;

@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class BornRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class BornColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {

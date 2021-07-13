@@ -11,12 +11,7 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\WebService\XMLHelper;
-use SoapVar;
 
-/**
- * Class FyziklaniSoapFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventWebModel extends WebModel {
 
     private ServiceEvent $serviceEvent;
@@ -29,10 +24,10 @@ class EventWebModel extends WebModel {
 
     /**
      * @param \stdClass $args
-     * @return SoapVar
+     * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar {
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown eventId.');
         }
@@ -48,7 +43,7 @@ class EventWebModel extends WebModel {
         $root->appendChild($this->createPersonScheduleNode($doc, $event));
         $root->appendChild($this->createParticipantListNode($doc, $event));
         $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML($root), XSD_ANYXML);
+        return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
     private function createPersonScheduleNode(\DOMDocument $doc, ModelEvent $event): \DOMElement {

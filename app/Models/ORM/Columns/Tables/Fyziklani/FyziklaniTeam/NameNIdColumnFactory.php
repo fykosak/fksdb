@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
-/**
- * Class NameNIdRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NameNIdColumnFactory extends ColumnFactory {
 
     /**

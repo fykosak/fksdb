@@ -10,10 +10,6 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-/**
- * Class ItemPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ItemPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
@@ -24,15 +20,15 @@ class ItemPresenter extends BasePresenter {
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-boxes'));
+        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-barcode'));
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit item'), 'fa fa-box-open'));
+        $this->setPageTitle(new PageTitle(_('Edit item'), 'fas fa-pen'));
     }
 
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-box-open'));
+        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-plus'));
     }
 
     protected function createComponentCreateForm(): Control {

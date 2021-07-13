@@ -7,10 +7,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
-/**
- * Class OpenedSubmittingRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class OpenedSubmittingColumnFactory extends ColumnFactory {
 
     /**

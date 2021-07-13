@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\DI\Container;
 use FKSDB\Components\Controls\Stalking\Components;
 
-/**
- * Class StalkingContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StalkingContainer extends BaseComponent {
 
     private ModelPerson $person;

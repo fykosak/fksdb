@@ -10,10 +10,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class IntRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class IntColumnFactory extends ColumnFactory {
 
     private string $nullValue = 'notSet';

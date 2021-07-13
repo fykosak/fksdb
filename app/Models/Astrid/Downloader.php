@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Astrid;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 
 /**
@@ -32,10 +32,10 @@ class Downloader {
         $this->container = $container;
     }
 
-    public function downloadSeriesTasks(ModelContest $contest, int $year, int $series): string {
+    public function downloadSeriesTasks(ModelContestYear $contestYear, int $series): string {
         $mask = $this->container->getParameters()['tasks']['paths'];
 
-        $path = sprintf($mask, $contest->getContestSymbol(), $year, $series);
+        $path = sprintf($mask, $contestYear->getContest()->getContestSymbol(), $contestYear->year, $series);
         return $this->download($path);
     }
 

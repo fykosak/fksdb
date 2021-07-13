@@ -7,8 +7,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- * Class ModelProduct
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int product_id
  * @property-read int producer_id
  * @property-read ActiveRow producer

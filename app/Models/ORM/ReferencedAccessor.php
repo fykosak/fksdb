@@ -5,10 +5,6 @@ namespace FKSDB\Models\ORM;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
 
-/**
- * Class ReferencedFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 final class ReferencedAccessor {
 
     /**

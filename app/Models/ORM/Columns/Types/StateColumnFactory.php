@@ -2,16 +2,12 @@
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Forms\Controls\SelectBox;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class StateRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StateColumnFactory extends ColumnFactory {
 
     protected array $states = [];

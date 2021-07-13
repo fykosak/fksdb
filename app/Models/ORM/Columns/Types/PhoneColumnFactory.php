@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
@@ -16,10 +16,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class PhoneRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
 
     protected PhoneNumberFactory $phoneNumberFactory;

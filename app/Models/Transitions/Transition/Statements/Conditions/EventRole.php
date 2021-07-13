@@ -5,10 +5,6 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Transitions\Transition\Statements\Statement;
 
-/**
- * Class EventRole
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class EventRole extends Statement {
 
     protected EventAuthorizator $eventAuthorizator;

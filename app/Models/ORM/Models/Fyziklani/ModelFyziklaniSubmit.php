@@ -12,11 +12,11 @@ use Nette\Security\Resource;
 /**
  *
  * @author Lukáš Timko <lukast@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
  *
  * @property-read string state
  * @property-read int e_fyziklani_team_id
- * @property-read int points
+ * @property-read int|null points
+ * @property-read bool|null skipped
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id

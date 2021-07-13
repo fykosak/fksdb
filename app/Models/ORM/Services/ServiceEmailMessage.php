@@ -9,8 +9,6 @@ use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * Class ServiceEmailMessage
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelEmailMessage createNewModel(array $data)
  */
 class ServiceEmailMessage extends AbstractService {

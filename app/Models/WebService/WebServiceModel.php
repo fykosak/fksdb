@@ -7,9 +7,6 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\WebService\Models\WebModel;
 use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
-use SoapFault;
-use SoapVar;
-use stdClass;
 use Tracy\Debugger;
 
 /**
@@ -40,55 +37,55 @@ class WebServiceModel {
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
      *
-     * @param stdClass $args
-     * @throws SoapFault
+     * @param \stdClass $args
+     * @throws \SoapFault
      * @throws \Exception
      */
-    public function authenticationCredentials(stdClass $args): void {
+    public function authenticationCredentials(\stdClass $args): void {
         if (!isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
-            throw new SoapFault('Sender', 'Missing credentials.');
+            throw new \SoapFault('Sender', 'Missing credentials.');
         }
         try {
             $this->authenticatedLogin = $this->authenticator->authenticate($args->username, $args->password);
             $this->log('Successfully authenticated for web service request.');
         } catch (AuthenticationException $exception) {
             $this->log('Invalid credentials.');
-            throw new SoapFault('Sender', 'Invalid credentials.');
+            throw new \SoapFault('Sender', 'Invalid credentials.');
         }
     }
 
     /**
      * @param string $name
      * @param \stdClass[] $arguments
-     * @return SoapVar
-     * @throws SoapFault
+     * @return \SoapVar
+     * @throws \SoapFault
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments): SoapVar {
+    public function __call(string $name, array $arguments): \SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (isset(self::WEB_MODELS[$name])) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
-                throw new SoapFault('Server', 'Server error');
+                throw new \SoapFault('Server', 'Server error');
             }
             /** @var WebModel $webModel */
             $webModel = $reflection->newInstance($this->container);
             $webModel->setLogin($this->authenticatedLogin);
             return $webModel->getResponse(...$arguments);
         }
-        throw new SoapFault('Sender', 'Undefined method');
+        throw new \SoapFault('Sender', 'Undefined method');
     }
 
     /**
      * @param string $serviceName
-     * @throws SoapFault
+     * @throws \SoapFault
      */
     private function checkAuthentication(string $serviceName): void {
         if (!isset($this->authenticatedLogin)) {
             $msg = sprintf('Unauthenticated access to %s.', $serviceName);
             $this->log($msg);
-            throw new SoapFault('Sender', $msg);
+            throw new \SoapFault('Sender', $msg);
         } else {
             $this->log(sprintf('Called %s ', $serviceName));
         }

@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use Nette\DI\Container;
 
-/**
- * Class SchoolCheckComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SchoolCheckComponent extends BaseComponent {
 
     private ModelEvent $event;
@@ -30,7 +26,7 @@ class SchoolCheckComponent extends BaseComponent {
                 'school' => $school,
             ];
             $query = $this->event->getTeams()
-                ->where(':e_fyziklani_participant.event_participant.person:person_history.ac_year', $this->event->getAcYear())
+                ->where(':e_fyziklani_participant.event_participant.person:person_history.ac_year', $this->event->getContestYear()->ac_year)
                 ->where(':e_fyziklani_participant.event_participant.person:person_history.school_id', $schoolId);
             foreach ($query as $team) {
                 $schools[$schoolId][] = ModelFyziklaniTeam::createFromActiveRow($team);

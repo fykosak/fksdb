@@ -12,10 +12,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class GroupsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GroupsGrid extends RelatedGrid {
 
     public function __construct(ModelEvent $event, Container $container) {

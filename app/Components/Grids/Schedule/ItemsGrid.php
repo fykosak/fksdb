@@ -11,9 +11,6 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ItemsGrid extends RelatedGrid {
 
     public function __construct(Container $container, ModelScheduleGroup $group) {

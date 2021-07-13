@@ -6,10 +6,6 @@ use FKSDB\Models\ArrayAble;
 use FKSDB\Models\Logging\Logger;
 use Nette\SmartObject;
 
-/**
- * Class Message
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Message implements ArrayAble {
     use SmartObject;
 

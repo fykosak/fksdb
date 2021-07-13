@@ -1,10 +1,7 @@
 <?php
 
 namespace FKSDB\Models\ORM;
-/**
- * Class FieldLevelPermission
- * @author Michal Červeňák <miso@fykos.cz>
- */
+
 class FieldLevelPermission {
 
     public const ALLOW_ANYBODY = 1;

@@ -13,10 +13,6 @@ use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Security\AuthenticationException;
 
-/**
- * Class GoogleAuthenticator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GoogleAuthenticator extends AbstractAuthenticator {
 
     private ServiceOrg $serviceOrg;

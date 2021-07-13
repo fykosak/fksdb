@@ -24,14 +24,12 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\YearCalculator;
-use InvalidArgumentException;
-use Nette;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use ReflectionException;
+use Nette\Application\UI\Template;
+use Nette\DI\Container;
 use FKSDB\Models\Utils\Utils;
 
 /**
@@ -64,10 +62,10 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
-    private Nette\DI\Container $diContainer;
+    private Container $diContainer;
 
     final public function injectBase(
-        Nette\DI\Container $diContainer,
+        Container $diContainer,
         YearCalculator $yearCalculator,
         ServiceContest $serviceContest,
         PresenterBuilder $presenterBuilder,
@@ -83,7 +81,6 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /**
      * @return void
      * @throws UnsupportedLanguageException
-     * @throws AbortException
      */
     protected function startup(): void {
         parent::startup();
@@ -92,7 +89,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         $control->init();
     }
 
-    protected function createTemplate(): Nette\Application\UI\Template {
+    protected function createTemplate(): Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
@@ -101,16 +98,11 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /*	 * ******************************
      * IJSONProvider
      * ****************************** */
-    /**
-     * @param string $acName
-     * @return void
-     * @throws AbortException
-     */
     public function handleAutocomplete(string $acName): void {
         ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         $component = $this->getComponent($acName);
         if (!($component instanceof AutocompleteSelectBox)) {
-            throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
+            throw new \InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
         } else {
             $provider = $component->getDataProvider();
             $data = null;
@@ -181,7 +173,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /**
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws UnsupportedLanguageException
      */
     protected function beforeRender(): void {
@@ -207,7 +199,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     }
 
     /**
-     * @throws ReflectionException
+     * @throws \ReflectionException
      * @throws BadTypeException
      */
     protected function putIntoBreadcrumbs(): void {
@@ -243,7 +235,6 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
     /**
      * @return string
      * @throws UnsupportedLanguageException
-     * @throws AbortException
      */
     public function getLang(): string {
         /** @var LanguageChooserComponent $control */
@@ -253,9 +244,8 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
 
     /**
      * @param bool $need
-     * @throws AbortException
      * @throws BadTypeException
-     * @throws ReflectionException
+     * @throws \ReflectionException
      */
     final public function backLinkRedirect(bool $need = false): void {
         $this->putIntoBreadcrumbs();
@@ -345,7 +335,7 @@ abstract class BasePresenter extends Presenter implements JavaScriptCollector, S
         return $this->authorizedCache[$key];
     }
 
-    public function getContext(): Nette\DI\Container {
+    public function getContext(): Container {
         return $this->diContainer;
     }
 }

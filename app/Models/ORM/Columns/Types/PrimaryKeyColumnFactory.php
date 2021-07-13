@@ -9,10 +9,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Class PrimaryKeyRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PrimaryKeyColumnFactory extends ColumnFactory {
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new StringPrinter())('#' . $model->getPrimary());

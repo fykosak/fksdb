@@ -6,10 +6,6 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 
-/**
- * Class ParticipantDetailLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ApplicationEditLink extends LinkFactory {
 
     public function getText(): string {

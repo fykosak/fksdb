@@ -53,6 +53,10 @@ class ModelPerson extends AbstractModel implements Resource {
         return ModelPersonInfo::createFromActiveRow($infos->current());
     }
 
+    public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory {
+        return $this->getHistory($contestYear->ac_year, $extrapolated);
+    }
+
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)->fetch();
@@ -61,14 +65,9 @@ class ModelPerson extends AbstractModel implements Resource {
         }
         if ($extrapolated) {
             $lastHistory = $this->getLastHistory();
-            if ($lastHistory) {
-                return $lastHistory->extrapolate($acYear);
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+            return $lastHistory ? $lastHistory->extrapolate($acYear) : null;
         }
+        return null;
     }
 
     /**
@@ -195,7 +194,7 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getFullName(): string {
-        return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
+        return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
     }
 
     public function __toString(): string {
@@ -210,7 +209,7 @@ class ModelPerson extends AbstractModel implements Resource {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
             $org = ModelOrg::createFromActiveRow($org);
-            $year = $org->getContest()->getCurrentYear();
+            $year = $org->getContest()->getCurrentContestYear()->year;
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
             }
@@ -219,10 +218,11 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getActiveOrgsAsQuery(ModelContest $contest): GroupedSelection {
-        $year = $contest->getCurrentYear();
+        $year = $contest->getCurrentContestYear()->year;
         return $this->related(DbNames::TAB_ORG, 'person_id')
             ->where('contest_id', $contest->contest_id)
-            ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
+            ->where('since<=?', $year)
+            ->where('until IS NULL OR until >=?', $year);
     }
 
     /**
@@ -234,7 +234,7 @@ class ModelPerson extends AbstractModel implements Resource {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromActiveRow($contestant);
-            $currentYear = $contestant->getContest()->getCurrentYear();
+            $currentYear = $contestant->getContest()->getCurrentContestYear()->year;
             if ($contestant->year >= $currentYear) { // forward contestant
                 if (isset($result[$contestant->contest_id])) {
                     if ($contestant->year > $result[$contestant->contest_id]->year) {

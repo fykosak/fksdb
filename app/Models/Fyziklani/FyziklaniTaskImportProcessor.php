@@ -13,8 +13,6 @@ use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
 /**
- *
- * @author Michal Červeňák
  * @author Lukáš Timko
  */
 class FyziklaniTaskImportProcessor {

@@ -6,10 +6,10 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
@@ -42,8 +42,7 @@ class ExtendedPersonHandler {
     protected ServicePerson $servicePerson;
     private Connection $connection;
     private AccountManager $accountManager;
-    private ModelContest $contest;
-    private int $year;
+    private ModelContestYear $contestYear;
     private string $invitationLang;
     private ?ModelPerson $person = null;
 
@@ -52,25 +51,15 @@ class ExtendedPersonHandler {
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
-        ModelContest $contest,
-        int $year,
+        ModelContestYear $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
-        $this->contest = $contest;
-        $this->year = $year;
+        $this->contestYear = $contestYear;
         $this->invitationLang = $invitationLang;
-    }
-
-    public function getContest(): ModelContest {
-        return $this->contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
     }
 
     public function getInvitationLang(): string {
@@ -154,7 +143,7 @@ class ExtendedPersonHandler {
     }
 
     protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
-        if ($this->contest === null || $this->year === null) {
+        if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
@@ -162,9 +151,9 @@ class ExtendedPersonHandler {
 
         if (!$model) {
             $data = [
-                'contest_id' => $this->contest ? $this->getContest()->contest_id : null,
+                'contest_id' => $this->contestYear->getContest(),
                 'person_id' => $person->getPrimary(),
-                'year' => $this->year ? $this->getYear() : null,
+                'year' => $this->contestYear->year,
             ];
             $model = $this->service->createNewModel((array)$data);
         }

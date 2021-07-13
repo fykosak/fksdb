@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\ModelsMulti;
 
 use Fykosak\NetteORM\AbstractModel;
-use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\SmartObject;
@@ -64,14 +63,14 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param mixed $value
      */
     public function __set($column, $value): void {
-        throw new LogicException('Cannot update multiModel directly.');
+        throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param string|int $key
      */
     public function __unset($key): void {
-        throw new LogicException('Cannot update multiModel directly.');
+        throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**
@@ -103,13 +102,13 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param mixed $value
      */
     public function offsetSet($column, $value): void {
-        throw new LogicException('Cannot update multiModel directly.');
+        throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param mixed $column
      */
     public function offsetUnset($column): void {
-        throw new LogicException('Cannot update multiModel directly.');
+        throw new \LogicException('Cannot update multiModel directly.');
     }
 }

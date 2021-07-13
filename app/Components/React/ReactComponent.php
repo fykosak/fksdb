@@ -6,10 +6,6 @@ use FKSDB\Components\Controls\BaseComponent;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
-/**
- * Class ReactComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class ReactComponent extends BaseComponent {
 
     use ReactComponentTrait;

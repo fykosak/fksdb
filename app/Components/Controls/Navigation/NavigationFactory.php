@@ -7,10 +7,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
-/**
- * Class NavigationFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NavigationFactory {
 
     private array $structure;
@@ -67,7 +63,6 @@ class NavigationFactory {
         }
         return $actionParams;
     }
-
 
     /**
      * @param Presenter $presenter

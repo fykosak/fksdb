@@ -77,11 +77,9 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int|null $eventId
-     * @param int|null $id
      * @throws GoneException
      */
-    public function authorizedDefault(?int $eventId, ?int $id): void {
+    public function authorizedDefault(): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
@@ -101,9 +99,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault(): void {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
         }
     }
 
@@ -220,7 +218,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ?: $this->getParameter('eventId');
+            $eventId = $eventId ?? $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 

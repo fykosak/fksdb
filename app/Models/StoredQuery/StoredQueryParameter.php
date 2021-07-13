@@ -4,10 +4,6 @@ namespace FKSDB\Models\StoredQuery;
 
 use Nette\InvalidStateException;
 
-/**
- * Class StoredQueryParameter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StoredQueryParameter {
     /** @var mixed */
     private $defaultValue;

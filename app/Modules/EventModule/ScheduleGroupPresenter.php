@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\ScheduleGroupFormComponent;
+use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
@@ -18,8 +18,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class ScheduleGroupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleGroup getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter {
@@ -36,7 +34,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-list'));
     }
 
     /**
@@ -44,7 +42,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePersons(): void {
-        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-list'));
     }
 
     /**
@@ -52,7 +50,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list'));
     }
 
     /**

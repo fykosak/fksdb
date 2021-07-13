@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -53,7 +52,7 @@ class ContributionsFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -75,7 +74,7 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-                $row = $this->data->getContest()
+                $row = $this->data->getContestYear()->getContest()
                     ->related(DbNames::TAB_ORG)
                     ->where('tex_signature', $signature)
                     ->fetch();

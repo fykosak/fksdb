@@ -12,10 +12,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class ResultsTotalGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ResultsTotalGrid extends BaseGrid {
 
     private ModelEvent $event;

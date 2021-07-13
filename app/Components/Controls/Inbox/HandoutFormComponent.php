@@ -49,7 +49,7 @@ class HandoutFormComponent extends BaseComponent {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->seriesTable->getContest());
+        $orgProvider->filterOrgs($this->seriesTable->getContestYear()->getContest());
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);

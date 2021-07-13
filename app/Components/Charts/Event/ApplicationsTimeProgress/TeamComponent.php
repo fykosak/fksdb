@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
-/**
- * Class TeamApplicationsTimeProgress
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeamComponent extends ReactComponent implements Chart {
 
     private ModelEventType $eventType;

@@ -7,10 +7,6 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
-/**
- * Class UnavailableTransitionException
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class UnavailableTransitionException extends \Exception {
 
     /**

@@ -3,14 +3,12 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
@@ -38,15 +36,11 @@ class TransitionButtonsComponent extends BaseComponent {
     }
 
     final public function render(): void {
-        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
+        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true);
         $this->template->holder = $this->holder;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
 
-    /**
-     * @param string $transitionName
-     * @throws AbortException
-     */
     public function handleTransition(string $transitionName): void {
         try {
             $this->handler->onlyExecute($this->holder, $transitionName);

@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\AbstractModel;
 
-/**
- * Class ValuePrinterComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ColumnPrinterComponent extends BaseComponent {
 
     private ORMFactory $tableReflectionFactory;

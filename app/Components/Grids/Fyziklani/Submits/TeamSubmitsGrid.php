@@ -11,11 +11,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class TeamSubmitsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- * @author Lukáš Timko
- */
 class TeamSubmitsGrid extends SubmitsGrid {
 
     private ModelFyziklaniTeam $team;

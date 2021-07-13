@@ -8,7 +8,6 @@ use FKSDB\Models\Submits\StorageProcessing;
 use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
-use UnexpectedValueException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -87,7 +86,7 @@ class CorrectedStorage implements SubmitStorage {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             /** @var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return null;
         }
 

@@ -21,7 +21,6 @@ class PDFStamper implements StorageProcessing {
     private int $fontSize;
 
     /**
-     *
      * @var string printf mask for arguments: series, label, contestant's name
      */
     private const STAMP_MASK = 'S%dU%s, %s, %s';

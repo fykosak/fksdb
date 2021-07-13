@@ -8,10 +8,6 @@ use FKSDB\Components\Charts\Contestants\PerYearsChart;
 use FKSDB\Components\Charts\TotalPersonsChart;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 
-/**
- * Class ChartPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 

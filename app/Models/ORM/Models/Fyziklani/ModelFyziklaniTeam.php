@@ -35,7 +35,6 @@ use Nette\Security\Resource;
  * @property-read int rank_total
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @author Michal Červeňák <miso@fykos.cz>
  *
  */
 class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator {

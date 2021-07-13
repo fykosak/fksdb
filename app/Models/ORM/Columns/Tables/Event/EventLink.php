@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-/**
- * Class EventLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventLink extends ColumnFactory {
 
     private LinkGenerator $linkGenerator;

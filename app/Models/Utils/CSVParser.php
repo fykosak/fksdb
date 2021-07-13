@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Utils;
 
-use Iterator;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -11,7 +10,7 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class CSVParser implements Iterator {
+class CSVParser implements \Iterator {
 
     use SmartObject;
 

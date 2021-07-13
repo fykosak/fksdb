@@ -6,10 +6,6 @@ use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class Flag
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FlagComponent extends BaseStalkingComponent {
 
     final public function render(ModelPerson $person, int $userPermissions): void {

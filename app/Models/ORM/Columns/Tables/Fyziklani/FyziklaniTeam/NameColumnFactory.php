@@ -7,11 +7,6 @@ use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class NameRow
- * @author Michal Červeňák <miso@fykos.cz>
- * TODO fix input
- */
 class NameColumnFactory extends ColumnFactory {
 
     /* TODO fix it

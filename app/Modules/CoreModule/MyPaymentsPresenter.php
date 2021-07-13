@@ -6,10 +6,6 @@ use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class MyPaymentsPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class MyPaymentsPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {

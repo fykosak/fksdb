@@ -3,16 +3,10 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\UI\Title;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ThemeChooserComponent extends ChooserComponent {
 
     private const AVAILABLE_THEMES = ['light', 'dark'];
@@ -29,13 +23,9 @@ class ThemeChooserComponent extends ChooserComponent {
 
     public function getSelectedTheme(): ?string {
         $session = $this->getSession();
-        return $session->theme ?: null;
+        return $session->theme;
     }
 
-    /**
-     * @param string $theme
-     * @throws AbortException
-     */
     public function handleChange(string $theme): void {
         $session = $this->getSession();
         $session->theme = $theme;

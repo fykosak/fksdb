@@ -6,10 +6,6 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
-/**
- * Class TestLog
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TestLog extends Message {
 
     public const LVL_SKIP = 'secondary';

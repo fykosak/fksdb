@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\Badges\PermissionDeniedBadge;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -15,10 +15,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-/**
- * Class DefaultRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class ColumnFactory {
 
     use SmartObject;

@@ -11,7 +11,6 @@ use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
-use UnexpectedValueException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -190,7 +189,7 @@ class UploadedStorage implements SubmitStorage {
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             return iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return [];
         }
     }

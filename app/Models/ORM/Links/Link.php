@@ -4,16 +4,11 @@ namespace FKSDB\Models\ORM\Links;
 
 use Fykosak\NetteORM\AbstractModel;
 
-/**
- * Class Link
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Link extends LinkFactory {
 
     private string $destination;
     private array $params;
     private string $title;
-
 
     public function __construct(string $destination, array $params, string $title, string $modelClassName) {
         parent::__construct($modelClassName);
