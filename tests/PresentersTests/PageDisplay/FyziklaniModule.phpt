@@ -2,35 +2,37 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\ORM\DbNames;
+use DateTime;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class FyziklaniModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniModule extends EventModuleTestCase {
+
     protected function getEventData(): array {
         return [
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'TEST FOF',
         ];
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_FYZIKLANI_GAME_SETUP, [
             'event_id' => $this->eventId,
-            'game_start' => new \DateTime(),
-            'result_display' => new \DateTime(),
-            'result_hide' => new \DateTime(),
-            'game_end' => new \DateTime(),
+            'game_start' => new DateTime(),
+            'result_display' => new DateTime(),
+            'result_hide' => new DateTime(),
+            'game_end' => new DateTime(),
             'refresh_delay' => 1000,
             'tasks_on_board' => 7,
             'result_hard_display' => false,
@@ -58,8 +60,8 @@ class FyziklaniModule extends EventModuleTestCase {
         ];
     }
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM fyziklani_game_setup');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_FYZIKLANI_GAME_SETUP]);
         parent::tearDown();
     }
 }

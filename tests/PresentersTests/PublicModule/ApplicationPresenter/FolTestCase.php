@@ -2,30 +2,24 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\Database\Row;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 abstract class FolTestCase extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    protected $fixture;
-    /** @var int */
-    protected $personId;
-    /**
-     * @var int
-     */
-    protected $eventId;
+    protected IPresenter $fixture;
+    protected int $personId;
+    protected int $eventId;
 
     protected function getEventId(): int {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $future = DateTime::from(time() + DateTime::DAY);
@@ -42,19 +36,17 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
     }
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_fyziklani_participant');
-        $this->connection->query('DELETE FROM e_fyziklani_team');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
 
     protected function assertTeamApplication(int $eventId, string $teamName): Row {
-        $application = $this->connection->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
-        Assert::notEqual(false, $application);
+        $application = $this->explorer->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
+        Assert::notEqual(null, $application);
         return $application;
     }
-
 }

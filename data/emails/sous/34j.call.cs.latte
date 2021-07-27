@@ -1,0 +1,13 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $baseHolder}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+
+<p>
+    {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    pouze Ti připomínáme pozvánku na {$event->event_type->name}. Pokud víš, že nepojedeš, budeme rádi, pokud v přihlášce
+    odmítneš účast. V takovém případě místo tebe pozveme{if strpos($baseHolder->getModelState(), 'spare') === 0} další{/if} náhradníky.
+</p>
+
+<hr>
+
+{include 34j.cs.latte}

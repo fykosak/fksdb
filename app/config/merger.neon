@@ -11,15 +11,13 @@ parameters:
             person_info: [person_id]
             person_history: [person_id, ac_year]
             person_has_flag: [person_id, flag_id]
+            person_schedule: [person_id, schedule_item_id]
             submit: [ct_id, task_id]
             org: [person_id, contest_id]
             post_contact: [person_id, type]
             event_participant: [person_id, event_id]
             e_dsef_participant: [event_participant_id]
-            e_tsaf_participant: [event_participant_id]
             e_fyziklani_participant: [event_participant_id]
-            e_sous_participant: [event_participant_id]
-            e_vikend_participant: [event_participant_id]
 
         # Default merge strategy for columns.
         defaultStrategy: @merge.cummulative
@@ -51,22 +49,22 @@ parameters:
 
 # Instantces of merge strategies.
 services:
-    merge.cummulative: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+    merge.cummulative: FKSDB\Models\Persons\Deduplication\MergeStrategy\CummulativeStrategy
     merge.cummTrunk:
-        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        factory: FKSDB\Models\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [trunk]
     merge.cummMerged:
-        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        factory: FKSDB\Models\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [merged]
-    merge.trunk: Persons\Deduplication\MergeStrategy\TrunkStrategy
-    merge.merged: Persons\Deduplication\MergeStrategy\MergedStrategy
-    merge.fail: Persons\Deduplication\MergeStrategy\FailStrategy
+    merge.trunk: FKSDB\Models\Persons\Deduplication\MergeStrategy\TrunkStrategy
+    merge.merged: FKSDB\Models\Persons\Deduplication\MergeStrategy\MergedStrategy
+    merge.fail: FKSDB\Models\Persons\Deduplication\MergeStrategy\FailStrategy
     merge.greater:
-        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        factory: FKSDB\Models\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [greater]
     merge.less:
-        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        factory: FKSDB\Models\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [less]
     merge.null:
-        class: Persons\Deduplication\MergeStrategy\ConstantStrategy
+        factory: FKSDB\Models\Persons\Deduplication\MergeStrategy\ConstantStrategy
         arguments: [null]

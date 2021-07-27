@@ -35,12 +35,8 @@
   background-color: darken($vyfukMainColor, 5%);
 }
 
-.bg-vyfuk-alt {
-  background-color: $vyfukMainColor;
-}
-
 .bg-vyfuk {
-  background-color: $vyfukAltColor;
+  background-color: $vyfukMainColor;
 }
 
 .bg-fykos {
@@ -57,6 +53,14 @@
 
 [data-contest~="vyfuk"] .navigation-item {
   @include navigation-item($vyfukMainColor, white);
+}
+
+.navigation-item-fykos {
+  @include navigation-item($fykosMainColor, white, false);
+}
+
+.navigation-item-vyfuk {
+  @include navigation-item($vyfukMainColor, white, false);
 }
 
 [data-contest~="fykos"] .bg-contest {
@@ -87,10 +91,3 @@
     background-color: transparent;
   }
 }
-
-body[data-contest="vyfuk"] {
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Gloria Hallelujah', cursive;
-  }
-}
-

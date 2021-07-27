@@ -1,6 +1,6 @@
 <?php
 
-namespace MockEnvironment;
+namespace FKSDB\Tests\MockEnvironment;
 
 use FKSDB\Modules\Core\BasePresenter;
 
@@ -10,7 +10,7 @@ class MockPresenter extends BasePresenter {
      * @param array $args
      * @return string
      */
-    public function link($destination, $args = []) {
+    public function link($destination, $args = []): string {
         return '';
     }
 

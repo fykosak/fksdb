@@ -1,0 +1,45 @@
+<?php
+
+namespace FKSDB\Models\ORM\Links;
+
+use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use Nette\Application\BadRequestException;
+
+class ParticipantDetailLink extends LinkFactory {
+
+    public function getText(): string {
+        return _('Detail');
+    }
+
+    /**
+     * @param ModelEventParticipant|AbstractModel $model
+     * @return string
+     */
+    protected function getDestination(AbstractModel $model): string {
+        if ($model->getEvent()->isTeamEvent()) {
+            return ':Event:TeamApplication:detail';
+        } else {
+            return ':Event:Application:detail';
+        }
+    }
+
+    /**
+     * @param AbstractModel|ModelEventParticipant $model
+     * @return array
+     * @throws BadRequestException
+     */
+    protected function prepareParams(AbstractModel $model): array {
+        if ($model->getEvent()->isTeamEvent()) {
+            return [
+                'eventId' => $model->event_id,
+                'id' => $model->getFyziklaniTeam()->e_fyziklani_team_id,
+            ];
+        } else {
+            return [
+                'eventId' => $model->event_id,
+                'id' => $model->event_participant_id,
+            ];
+        }
+    }
+}

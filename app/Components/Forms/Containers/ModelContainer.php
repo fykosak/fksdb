@@ -3,38 +3,34 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
 /**
  * Formulářový kontejder reprezentující záznam z DB tabulky.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ModelContainer extends ContainerWithOptions {
 
     /**
-     * @param $values
+     * @param ActiveRow|iterable $data
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
-            $values = $values->toArray();
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow || $data instanceof AbstractModelMulti) {
+            $data = $data->toArray();
         }
-        parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
     /**
      * @param bool $value
      */
-    public function setDisabled($value = true) {
+    public function setDisabled($value = true): void {
         /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
         }
     }
-
 }

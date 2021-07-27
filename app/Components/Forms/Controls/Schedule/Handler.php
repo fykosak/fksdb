@@ -2,46 +2,25 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
-use PDOException;
 
-/**
- * Class Handler
- * *
- */
 class Handler {
-    /**
-     * @var ServiceScheduleGroup
-     */
-    private $serviceScheduleGroup;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
 
-    /**
-     * Handler constructor.
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
+    private ServicePersonSchedule $servicePersonSchedule;
+    private ServiceScheduleItem $serviceScheduleItem;
+
     public function __construct(
-        ServiceScheduleGroup $serviceScheduleGroup,
         ServicePersonSchedule $servicePersonSchedule,
         ServiceScheduleItem $serviceScheduleItem
     ) {
-        $this->serviceScheduleGroup = $serviceScheduleGroup;
         $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
@@ -49,14 +28,15 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event): void {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
-            $this->updateDataType($newScheduleData, $type, $person, $eventId);
+            $this->updateDataType($newScheduleData, $type, $person, $event);
         }
     }
 
@@ -64,18 +44,20 @@ class Handler {
      * @param array $newScheduleData
      * @param string $type
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
+     * @throws \PDOException
+     * @throws ModelException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
-        $oldRows = $this->servicePersonSchedule->getTable()
-            ->where('person_id', $person->person_id)
-            ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
+        $oldRows = $person->getScheduleForEvent($event)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
-        foreach ($oldRows as $modelPersonSchedule) {
+        foreach ($oldRows as $oldRow) {
+            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow);
             if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
@@ -83,10 +65,10 @@ class Handler {
             } else {
                 try {
                     $modelPersonSchedule->delete();
-                } catch (PDOException $exception) {
+                } catch (\PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
-                            _('Položka "%s" má už vygenerovanú platu, teda nejde zmazať.'),
+                            _('The item "%s" has already a payment generated, so it cannot be deleted.'),
                             $modelPersonSchedule->getLabel()));
                     } else {
                         throw $exception;
@@ -102,7 +84,7 @@ class Handler {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
                 throw new FullCapacityException(\sprintf(
-                    _('Osobu %s nepodarilo ptihlásiť na "%s", z dôvodu plnej kapacity.'),
+                    _('The person %s could not be registered for "%s" because of full capacity.'),
                     $person->getFullName(),
                     $modelScheduleItem->getLabel()
                 ));

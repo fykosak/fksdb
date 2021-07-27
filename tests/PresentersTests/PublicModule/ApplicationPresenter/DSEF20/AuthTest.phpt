@@ -2,40 +2,39 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class AuthTest extends DsefTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
-
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
         ]);
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);
@@ -43,12 +42,12 @@ class AuthTest extends DsefTestCase {
         Assert::contains('Paní Bílá', $html);
     }
 
-    public function testAuthRegistration() {
+    public function testAuthRegistration(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -89,12 +88,10 @@ class AuthTest extends DsefTestCase {
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
 
-
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AuthTest($container);

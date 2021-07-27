@@ -2,18 +2,18 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Tester\Assert;
 
 class AnonymousTest extends DsefTestCase {
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -24,15 +24,15 @@ class AnonymousTest extends DsefTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);
     }
 
-    public function testAnonymousRegistration() {
+    public function testAnonymousRegistration(): void {
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
@@ -73,9 +73,8 @@ class AnonymousTest extends DsefTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AnonymousTest($container);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://fykos.cz/ws/service">
+    <SOAP-ENV:Header>
+        <ns1:AuthenticationCredentials>
+            <ns1:username>--LOGIN--</ns1:username>
+            <ns1:password>--PASSWD--</ns1:password>
+        </ns1:AuthenticationCredentials>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <GetFyziklaniRequest>
+            <eventId>134</eventId>
+            <teamList/>
+        </GetFyziklaniRequest>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -1,8 +1,10 @@
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType Fykosak\NetteORM\AbstractModel $model}
 <h2>{_'Actions'}</h2>
 
-{control applicationComponent:inline edit}
+<a href="{plink :Public:Application:default id => $model->getPrimary(), eventId => $event->event_id}"
+   class="btn btn-xs btn-sm btn-primary">{_'Edit'}</a>
 <hr/>
 
 <h2>{_'Transitions'}</h2>
-
-{control applicationComponent:inline transitions}
+{control applicationTransitions}

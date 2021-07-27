@@ -2,24 +2,22 @@
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\DI\Config\Helpers;
+use Nette\Schema\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class DeleteTest extends ScheduleTestCase {
-    /** @var int */
-    protected $lastPersonId;
-    /** @var int */
-    protected $dsefAppId;
-    /** @var int */
-    private $lastPSId;
 
-    public function setUp() {
+    protected int $lastPersonId;
+
+    protected int $dsefAppId;
+
+    protected function setUp(): void {
         parent::setUp();
         $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
             [
@@ -36,20 +34,19 @@ class DeleteTest extends ScheduleTestCase {
                 'event_participant_id' => $this->dsefAppId,
                 'e_dsef_group_id' => 2,
             ]);
-        $this->lastPSId = $this->insert('person_schedule', [
+        $this->insert('person_schedule', [
             'person_id' => $this->lastPersonId,
             'schedule_item_id' => $this->itemId,
         ]);
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
         $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
-        $this->authenticate($loginId);
-
+        $this->authenticate($loginId, $this->fixture);
     }
 
-    public function testRegistration() {
-        $postData = [
+    public function testRegistration(): void {
+        $formData = [
             'participant' => [
-                'person_id' => $this->lastPersonId,
+                'person_id' => (string)$this->lastPersonId,
                 'person_id_1' => [
                     '_c_compact' => ' ',
                     'person' => [
@@ -73,31 +70,31 @@ class DeleteTest extends ScheduleTestCase {
                         'accommodation' => json_encode([$this->groupId => $this->itemId]),
                     ],
                 ],
-                'e_dsef_group_id' => 2,
-                'lunch_count' => 0,
+                'e_dsef_group_id' => (string)2,
+                'lunch_count' => (string)0,
                 'message' => '',
             ],
             'privacy' => 'on',
             'c_a_p_t_cha' => 'pqrt',
             'cancelled____terminated' => 'Zrušit přihlášku',
+            '_do' => 'application-form-form-submit',
         ];
 
-        $post = Helpers::merge([], [
+        $params = Helpers::merge([], [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-            'id' => $this->dsefAppId,
-            'do' => 'application-form-form-submit',
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
+            'id' => (string)$this->dsefAppId,
         ]);
-        $request = new Request('Public:Application', 'POST', $post, $postData);
+        $request = new Request('Public:Application', 'POST', $params, $formData);
 
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
         //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
-        Assert::equal(0, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
+        Assert::equal(0, (int)$this->explorer->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
     }
 
     public function getAccommodationCapacity(): int {

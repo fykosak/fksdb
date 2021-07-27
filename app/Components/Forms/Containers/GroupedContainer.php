@@ -2,35 +2,27 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GroupedContainer extends Container {
 
     /**
-     *
      * @var ControlGroup[]
      */
-    private $groups = [];
-    /**
-     * @var mixed
-     */
-    private $prefix;
+    private array $groups = [];
+    private string $prefix;
 
-    /**
-     * GroupedContainer constructor.
-     * @param $prefix
-     */
-    public function __construct($prefix) {
-        parent::__construct();
-        $this->monitor(Form::class);
+    public function __construct(string $prefix) {
+        $this->monitor(Form::class, function (Form $form) {
+            foreach ($this->groups as $caption => $myGroup) {
+                $formGroup = $form->addGroup($this->prefix . '-' . $caption, false);
+                foreach ($myGroup->getControls() as $control) {
+                    $formGroup->add($control);
+                }
+            }
+        });
         $this->prefix = $prefix;
     }
 
@@ -40,10 +32,10 @@ class GroupedContainer extends Container {
      * @param bool $setAsCurrent
      * @return ControlGroup
      */
-    public function addGroup($caption, $setAsCurrent = true): ControlGroup {
+    public function addGroup(string $caption, bool $setAsCurrent = true): ControlGroup {
         $group = new ControlGroup();
         $group->setOption('label', $caption);
-        $group->setOption('visual', TRUE);
+        $group->setOption('visual', true);
 
         if ($setAsCurrent) {
             $this->setCurrentGroup($group);
@@ -70,22 +62,4 @@ class GroupedContainer extends Container {
 //        }
 //        parent::addComponent($component, $name, $insertBefore);
 //    }
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if ($obj instanceof Form) {
-            $this->getName();
-            foreach ($this->groups as $caption => $myGroup) {
-                $formGroup = $obj->addGroup($this->prefix . '-' . $caption, false);
-                foreach ($myGroup->getControls() as $control) {
-                    $formGroup->add($control);
-                }
-            }
-        }
-    }
-
 }

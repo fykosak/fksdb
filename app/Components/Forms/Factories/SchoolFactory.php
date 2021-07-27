@@ -7,74 +7,54 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\Form;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolFactory {
 
-    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
+    private SchoolProvider $schoolProvider;
 
-    /**
-     * @var SchoolProvider
-     */
-    private $schoolProvider;
-
-    /**
-     * SchoolFactory constructor.
-     * @param SchoolProvider $schoolProvider
-     */
     public function __construct(SchoolProvider $schoolProvider) {
         $this->schoolProvider = $schoolProvider;
     }
 
     public function createContainer(): ModelContainer {
         $container = new ModelContainer();
-        $container->addText('name_full', _('Plný název'))
+        $container->addText('name_full', _('Full name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
-            ->setOption('description', _('Úplný nezkrácený název školy.'));
+            ->setOption('description', _('Full name of the school.'));
 
-        $container->addText('name', _('Název'))
+        $container->addText('name', _('Name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
-            ->addRule(Form::FILLED, _('Název je povinný.'))
-            ->setOption('description', _('Název na obálku.'));
+            ->addRule(Form::FILLED, _('Name is required.'))
+            ->setOption('description', _('Envelope name.'));
 
-        $container->addText('name_abbrev', _('Zkrácený název'))
-            ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
-            ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
-            ->setOption('description', _('Název krátký do výsledkovky.'));
+        $container->addText('name_abbrev', _('Abbreviated name'))
+            ->addRule(Form::MAX_LENGTH, _('The length of the abbreviated name is restricted to a maximum %d characters.'), 32)
+            ->addRule(Form::FILLED, _('Short name is required.'))
+            ->setOption('description', _('Very short name.'));
 
-        $container->addText('email', _('Kontaktní e-mail'))
+        $container->addText('email', _('Contact e-mail'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL);
 
-        $container->addText('ic', _('IČ'))
-            ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na %d znaků.'), 8);
+        $container->addText('ic', _('IČ (Czech schools only)'))
+            ->addRule(Form::MAX_LENGTH, _('The length of IČ is restricted to %d characters.'), 8);
 
-        $container->addText('izo', _('IZO'))
-            ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
+        $container->addText('izo', _('IZO (Czech schools only)'))
+            ->addRule(Form::MAX_LENGTH, _('The length of IZO is restricted to %d characters.'), 32);
 
-        $container->addCheckbox('active', _('Aktivní záznam'))
+        $container->addCheckbox('active', _('Active record'))
             ->setDefaultValue(true);
 
-        $container->addText('note', _('Poznámka'));
+        $container->addText('note', _('Note'));
 
         return $container;
     }
 
-    /**
-     * @param int $options
-     * @return AutocompleteSelectBox
-     */
-    public function createSchoolSelect($options = 0): AutocompleteSelectBox {
-        $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
+    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox {
+        $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
-        if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
-            $schoolElement->setOption('description', sprintf(_('Pokud nelze školu nalézt, napište na %s.'), 'schola.novum () fykos.cz'));
+        if ($showUnknownSchoolHint) {
+            $schoolElement->setOption('description', sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz'));
         }
-
         return $schoolElement;
     }
-
 }

@@ -2,78 +2,66 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\UI\PageTitle;
-use Nette\Application\UI\Control;
+use FKSDB\Components\Charts\Core\Chart;
+use FKSDB\Models\UI\PageTitle;
+use Nette\ComponentModel\IComponent;
 
-/**
- * Trait ChartPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ChartPresenterTrait {
-    /**
-     * @var IChart
-     */
-    protected $selectedChart;
 
-    public function titleChart() {
-        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
+    protected Chart $selectedChart;
+    private array $chartComponents;
+
+    public function titleChart(): void {
+        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie'));
     }
 
-    public function titleList() {
-        $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
+    public function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
     }
 
-    public function renderChart() {
+    final public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList() {
+    final public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     protected function getCharts(): array {
-        static $chartComponents;
-        if (!$chartComponents) {
-            $chartComponents = $this->registerCharts();
-        }
-        return $chartComponents;
+        $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
+        return $this->chartComponents;
     }
 
-    protected function selectChart() {
-        foreach ($this->getCharts() as $action => $chart) {
-            if ($action === $this->getAction()) {
-                $this->selectedChart = $chart;
-                $this->setView('chart');
-            }
+    protected function selectChart(): void {
+        $charts = $this->getCharts();
+        $action = $this->getAction();
+        if (isset($charts[$action])) {
+            $this->selectedChart = $charts[$action];
+            $this->setView('chart');
         }
     }
 
-    protected function createComponentChart(): Control {
+    protected function createComponentChart(): IComponent {
         return $this->selectedChart->getControl();
     }
 
-    abstract public function authorizedList();
+    abstract public function authorizedList(): void;
 
-    abstract public function authorizedChart();
+    abstract public function authorizedChart(): void;
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     abstract protected function registerCharts(): array;
 
-    /**
-     * @param bool $fullyQualified
-     * @return string
-     */
-    abstract public function getAction($fullyQualified = false);
+    abstract public function getAction(bool $fullyQualified = false): string;
 
     /**
      * @param string $id
      * @return static
      */
-    abstract public function setView($id);
+    abstract public function setView(string $id);
 }

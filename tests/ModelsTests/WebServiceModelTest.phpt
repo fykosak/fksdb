@@ -1,28 +1,19 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests;
+namespace FKSDB\Tests\ModelsTests;
 
-$container = require '../bootstrap.php';
+$container = require '../Bootstrap.php';
 
-use FKSDB\WebService\WebServiceModel;
+use FKSDB\Models\WebService\WebServiceModel;
 use Nette\DI\Container;
 use SoapVar;
 use Tester\Assert;
 
 class WebServiceModelTest extends DatabaseTestCase {
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var WebServiceModel
-     */
-    private $fixture;
-
-    /** @var int */
-    private $personId;
+    private WebServiceModel $fixture;
 
     /**
      * WebServiceModelTest constructor.
@@ -33,19 +24,19 @@ class WebServiceModelTest extends DatabaseTestCase {
         $this->container = $container;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->fixture = $this->container->getService('webServiceModel');
-        $this->personId = $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
+        $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 
-    public function testResults() {
+    public function testResults(): void {
         $header = [
             'username' => 'homer',
             'password' => '123456',
@@ -58,7 +49,7 @@ class WebServiceModelTest extends DatabaseTestCase {
             'year' => 1,
             'brojure' => '1 2 3 4 5 6',
         ];
-        $result = $this->fixture->getResults((object)$resultsReq);
+        $result = $this->fixture->GetResults((object)$resultsReq);
 
         Assert::type(SoapVar::class, $result);
     }

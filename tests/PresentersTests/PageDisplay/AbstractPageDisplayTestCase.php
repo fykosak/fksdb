@@ -2,12 +2,12 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -16,10 +16,11 @@ use Tester\Assert;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $personId;
+    protected int $personId;
+    private int $loginId;
 
     /**
      * PageDisplayTest constructor.
@@ -30,7 +31,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
@@ -39,11 +40,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
             'gender' => 'M',
         ]);
 
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
+        $this->loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
 
-
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 1000, 'contest_id' => 1]);
-        $this->authenticate($loginId);
+        $this->insert(DbNames::TAB_GRANT, ['login_id' => $this->loginId, 'role_id' => 1000, 'contest_id' => 1]);
+        $this->authenticate($this->loginId);
     }
 
     final protected function createRequest(string $presenterName, string $action, array $params): Request {
@@ -55,16 +55,18 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     /**
      * @dataProvider getPages
      */
-    final public function testDisplay(string $presenterName, string $action, array $params = []) {
-        list($presenterName, $action, $params) = $this->transformParams($presenterName, $action, $params);
+    final public function testDisplay(string $presenterName, string $action, array $params = []): void {
+        [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
+        $this->authenticate($this->loginId, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
+        /** @var TextResponse $response */
         Assert::type(TextResponse::class, $response);
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
-        Assert::noError(function () use ($source) {
+        Assert::noError(function () use ($source): string {
             return (string)$source;
         });
     }
@@ -75,11 +77,8 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
 
     abstract public function getPages(): array;
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM global_session');
-        $this->connection->query('DELETE FROM `grant`');
-        $this->connection->query('DELETE FROM login');
-        $this->connection->query('DELETE FROM person');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
         parent::tearDown();
     }
 }

@@ -2,87 +2,80 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\Models\ModelAddress;
-use FKSDB\ORM\Models\ModelRegion;
-use FKSDB\ORM\Services\ServiceRegion;
+use FKSDB\Models\ORM\Models\ModelAddress;
+use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
+use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class AddressContainer extends ModelContainer {
 
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
+    private ServiceRegion $serviceRegion;
 
-    /**
-     * @param ServiceRegion $serviceRegion
-     * @return void
-     */
-    public function setServiceRegion(ServiceRegion $serviceRegion) {
+    public function __construct(DIContainer $container) {
+        parent::__construct($container);
+    }
+
+    final public function injectServiceRegion(ServiceRegion $serviceRegion): void {
         $this->serviceRegion = $serviceRegion;
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param iterable|null $value
      */
-    public function setValue($value) {
-        $this->setValues($value === null ? [] : $value);
+    public function setValue($value): void {
+        $this->setValues($value ?? []);
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param iterable $value
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         $this->setDefaults($value === null ? [] : $value);
     }
 
     /**
-     * @param $values
+     * @param ModelPostContact|mixed $data
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
-            if ($values instanceof AbstractModelMulti) {
-                $address = $values->getMainModel();
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow) { //assert its from address table
+            if ($data instanceof ModelPostContact) {
+                $address = $data->getAddress();
             } else {
-                $address = $values;
+                $address = $data;
             }
             /** @var ModelAddress $address */
-
-            $values = $address->toArray();
-            $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
-        } elseif (is_array($values) && isset($values['region_id'])) {
-            $region = $this->serviceRegion->findByPrimary($values['region_id']);
-            $values['country_iso'] = $region->country_iso;
+            $data = $address->toArray();
+            $data['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
+        } elseif (is_array($data) && isset($data['region_id'])) {
+            $region = $this->serviceRegion->findByPrimary($data['region_id']);
+            $data['country_iso'] = $region->country_iso;
         }
 
-        parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
     /**
-     * @param bool $asArray
+     * @param null $returnType
+     * @param array|null $controls
      * @return array|ArrayHash
      */
-    public function getValues($asArray = FALSE) {
-        $values = parent::getValues($asArray);
+    public function getUnsafeValues($returnType = null, array $controls = null) {
+        $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
-                throw new InvalidStateException("You must set FKSDB\ORM\Services\ServiceRegion before getting values from the address container.");
+                throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');
             }
-            /** @var ModelRegion|false $region */
+            /** @var ModelRegion|null $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }

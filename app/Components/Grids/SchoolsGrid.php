@@ -2,37 +2,27 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class SchoolsGrid extends BaseGrid {
+class SchoolsGrid extends EntityGrid {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
-
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
-        $this->serviceSchool = $serviceSchool;
+    public function __construct(Container $container) {
+        parent::__construct($container, ServiceSchool::class, [], []);
     }
 
     protected function getData(): IDataSource {
-        $schools = $this->serviceSchool->getSchools();
+        $schools = $this->service->getTable();
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
@@ -46,22 +36,26 @@ class SchoolsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         //
         // columns
         //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'));
-        $this->addColumn('active', _('Exists?'))->setRenderer(function (ModelSchool $row) {
+        $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
+            $school = ModelSchool::createFromActiveRow($row);
+            return $school->getAddress()->city;
+        });
+        $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row): Html {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+        $this->addLink('school.edit');
+        $this->addLink('school.detail');
     }
 }

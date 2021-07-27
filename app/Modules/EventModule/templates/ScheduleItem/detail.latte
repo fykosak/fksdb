@@ -1,5 +1,6 @@
 {block content}
-    {include './group.detail.latte' group=>$group}
+    {varType FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem $model}
+    {include './group.detail.latte' group=>$model->getScheduleGroup()}
     <hr/>
     <h2>{_'Schedule item'}</h2>
 
@@ -22,9 +23,7 @@
         {control valuePrinter:row 'schedule_item.free_capacity', $model}
         {control valuePrinter:row 'schedule_item.require_id_number', $model}
     </div>
-    <a class="btn btn-primary" href="{plink ScheduleGroup:list}">{_'List of groups'}</a>
-    <a class="btn btn-primary" href="{plink group id=>$model->schedule_group_id}"
-       }>{sprintf(_('Schedule group #%s'),$model->schedule_group_id)}</a>
+    <a class="btn btn-primary btn-sm" href="{plink ScheduleItem:edit}">{_'Edit item'}</a>
     <hr/>
     <h2>{_'Persons'}</h2>
     {control personsGrid}

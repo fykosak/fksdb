@@ -2,26 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ArrayProvider implements IFilteredDataProvider {
+class ArrayProvider implements FilteredDataProvider {
 
-    /**
-     * @var array
-     */
-    private $data;
-    /**
-     * @var array
-     */
-    private $labelById;
+    private array $data;
 
-    /**
-     * ArrayProvider constructor.
-     * @param array $data
-     */
+    private array $labelById;
+
     public function __construct(array $data) {
         $this->data = [];
         $this->labelById = $data;
@@ -36,10 +22,10 @@ class ArrayProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(?string $search): array {
         $result = [];
         foreach ($this->data as $item) {
             $label = $item[self::LABEL];
@@ -59,10 +45,10 @@ class ArrayProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 }

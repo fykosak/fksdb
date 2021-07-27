@@ -2,13 +2,13 @@
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
-use Nette\DI\Container;
-use Nette\DI\Config\Helpers;
 use Nette\Database\Row;
+use Nette\DI\Container;
+use Nette\Schema\Helpers;
 use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase {
@@ -24,10 +24,8 @@ abstract class EventTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM event_participant');
-        $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM auth_token');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_EVENT_PARTICIPANT, DbNames::TAB_EVENT, DbNames::TAB_AUTH_TOKEN]);
         parent::tearDown();
     }
 
@@ -47,34 +45,37 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $this->insert(DbNames::TAB_EVENT, $data);
     }
 
-    protected function createPostRequest(array $postData, array $post = []): Request {
-        $post = Helpers::merge($post, [
-            'action' => 'default',
-            'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->getEventId(),
-            'do' => 'application-form-form-submit',
-        ]);
-
-        return new Request('Public:Application', 'POST', $post, $postData);
+    protected function createPostRequest(array $formData, array $params = []): Request {
+        return new Request(
+            'Public:Application',
+            'POST',
+            Helpers::merge($params, [
+                'action' => 'default',
+                'lang' => 'cs',
+                'contestId' => (string)1,
+                'year' => (string)1,
+                'eventId' => $this->getEventId(),
+            ]),
+            Helpers::merge($formData, [
+                '_do' => 'application-form-form-submit',
+            ]));
     }
 
     abstract protected function getEventId(): int;
 
     protected function assertApplication(int $eventId, string $email): Row {
-        $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
-        Assert::notEqual(false, $personId);
+        $personId = $this->explorer->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
 
-        $application = $this->connection->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
-        Assert::notEqual(false, $application);
+        Assert::notEqual(null, $personId);
+
+        $application = $this->explorer->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
+        Assert::notEqual(null, $application);
         return $application;
     }
 
     protected function assertExtendedApplication(Row $application, string $table): Row {
-        $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
-        Assert::notEqual(false, $application);
+        $application = $this->explorer->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
+        Assert::notEqual(null, $application);
         return $application;
     }
-
 }

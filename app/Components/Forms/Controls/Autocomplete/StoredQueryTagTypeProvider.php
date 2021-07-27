@@ -2,33 +2,18 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- */
-class StoredQueryTagTypeProvider implements IFilteredDataProvider {
+class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
-    const DESCRIPTION = 'description';
+    private const DESCRIPTION = 'description';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
-    /**
-     * StoredQueryTagTypeProvider constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     */
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();
@@ -37,11 +22,11 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems($search) {
-        $search = trim($search);
+    public function getFilteredItems(?string $search): array {
+        $search = trim((string)$search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
             ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);
@@ -74,10 +59,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 }

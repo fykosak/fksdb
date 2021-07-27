@@ -2,23 +2,15 @@
 
 namespace FKSDB\Components;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 trait ClientDataTrait {
 
-    /**
-     * @var array
-     */
-    private $clientData = [];
+    private array $clientData = [];
 
     /**
      * @param string|int $key
-     * @param $value
+     * @param null|array|object|mixed $value
      */
-    public function setClientData($key, $value) {
+    public function setClientData($key, $value): void {
         if ($value === null) {
             unset($this->clientData[$key]);
         } elseif (is_array($value)) {
@@ -31,15 +23,14 @@ trait ClientDataTrait {
     }
 
     /**
-     * @param null $key
+     * @param string|int|null $key
      * @return array|null
      */
-    public function getClientData($key = null) {
+    public function getClientData($key = null): ?array {
         if ($key === null) {
             return $this->clientData;
         } else {
             return isset($this->clientData[$key]) ? $this->clientData[$key] : null;
         }
     }
-
 }

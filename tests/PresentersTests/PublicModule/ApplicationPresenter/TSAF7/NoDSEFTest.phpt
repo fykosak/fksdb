@@ -1,55 +1,51 @@
 <?php
 
-namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\ApplicationPresenter\TSAF7;
+namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
-use FKSDB\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class NoDSEFTest extends TsafTestCase {
-    /** @var int */
-    private $tsafAppId;
 
-    protected function setUp() {
+    protected int $tsafAppId;
+
+    protected function setUp(): void {
         parent::setUp();
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
 
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->tsafEventId,
             'status' => 'invited',
         ]);
-
-        $this->insert('e_tsaf_participant', [
-            'event_participant_id' => $this->tsafAppId,
-        ]);
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
-                    '_c_compact' => " ",
+                    '_c_compact' => ' ',
                     'person' => [
-                        'other_name' => "Paní",
-                        'family_name' => "Bílá",
+                        'other_name' => 'Paní',
+                        'family_name' => 'Bílá',
                     ],
                     'person_info' => [
-                        'email' => "bila@hrad.cz",
-                        'id_number' => "1231354",
-                        'born' => "2014-09-15",
+                        'email' => 'bila@hrad.cz',
+                        'id_number' => '1231354',
+                        'born' => '2014-09-15',
                         'phone' => '+420987654321',
                     ],
                     'post_contact_d' => [
                         'address' => [
-                            'target' => "jkljhkjh",
-                            'city' => "jkhlkjh",
-                            'postal_code' => "64546",
-                            'country_iso' => "",
+                            'target' => 'jkljhkjh',
+                            'city' => 'jkhlkjh',
+                            'postal_code' => '64546',
+                            'country_iso' => '',
                         ],
                     ],
                 ],
@@ -57,13 +53,13 @@ class NoDSEFTest extends TsafTestCase {
                 'jumper_size' => 'F_M',
             ],
             'participantDsef' => [
-                'e_dsef_group_id' => "1",
-                'lunch_count' => "3",
-                'message' => "",
+                'e_dsef_group_id' => '1',
+                'lunch_count' => '3',
+                'message' => '',
             ],
-            'privacy' => "on",
-            'c_a_p_t_cha' => "pqrt",
-            'invited__applied' => "Potvrdit účast",
+            'privacy' => 'on',
+            'c_a_p_t_cha' => 'pqrt',
+            'invited__applied' => 'Potvrdit účast',
         ], [
             'eventId' => $this->tsafEventId,
             'id' => $this->tsafAppId,
@@ -78,20 +74,17 @@ class NoDSEFTest extends TsafTestCase {
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
-
-        $eApplication = $this->assertExtendedApplication($application, 'e_tsaf_participant');
-        Assert::equal('F_M', $eApplication->jumper_size);
+        Assert::equal('F_M', $application->jumper_size);
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.tsaf', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
 
         Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
-
 }
 
 $testCase = new NoDSEFTest($container);

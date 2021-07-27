@@ -2,101 +2,48 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Events\Model\Holder\DataValidator;
-use FKSDB\Events\Model\Holder\Field;
-use Nette\Forms\Container;
+use FKSDB\Models\Events\Model\Holder\DataValidator;
+use FKSDB\Models\Events\Model\Holder\Field;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class AbstractFactory implements IFieldFactory {
+abstract class AbstractFactory implements FieldFactory {
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return array|mixed
-     */
-    public function create(Field $field, BaseMachine $machine, Container $container) {
-        $component = $this->createComponent($field, $machine, $container);
-
+    public function setFieldDefaultValue(BaseControl $control, Field $field): void {
         if (!$field->isModifiable()) {
-            $this->setDisabled($component, $field, $machine, $container);
+            $control->setDisabled();
         }
-        $this->setDefaultValue($component, $field, $machine, $container);
-
-        $control = $this->getMainControl(is_array($component) ? reset($component) : $component);
-        $this->appendRequiredRule($control, $field, $machine, $container);
-
-        return $component;
+        $this->setDefaultValue($control, $field);
+        $this->appendRequiredRule($control, $field);
     }
 
-    /**
-     * @param IControl $element
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return void
-     */
-    final protected function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(BaseControl $control, Field $field): void {
+        $container = $control->getParent();
         if ($field->isRequired()) {
-            $conditioned = $element;
+            $conditioned = $control;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
                 if ($determiningField === $field) {
-                    $conditioned = $element;
+                    $conditioned = $control;
                     break;
                 }
                 /*
                  * NOTE: If the control doesn't exists, it's hidden and as such cannot condition further requirements.
                  */
                 if (isset($container[$name])) {
-                    $control = $determiningField->getMainControl($container[$name]);
-                    $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
+                    $conditioned = $conditioned->addConditionOn($container[$name], Form::FILLED);
                 }
             }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
         }
     }
 
-    /**
-     * @param Field $field
-     * @param DataValidator $validator
-     * @return bool|void
-     */
-    public function validate(Field $field, DataValidator $validator) {
+    public function validate(Field $field, DataValidator $validator): void {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }
     }
 
-    /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return void
-     */
-    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
-
-    /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return void
-     */
-    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
-
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container);
+    protected function setDefaultValue(BaseControl $control, Field $field): void {
+        $control->setDefaultValue($field->getValue());
+    }
 }

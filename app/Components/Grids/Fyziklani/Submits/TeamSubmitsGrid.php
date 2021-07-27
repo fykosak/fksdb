@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -11,23 +11,10 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class TeamSubmitsGrid
- * @author Michal Červeňák <miso@fykos.cz>
- * @author Lukáš Timko
- */
 class TeamSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelFyziklaniTeam
-     */
-    private $team;
+    private ModelFyziklaniTeam $team;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelFyziklaniTeam $team
-     * @param Container $container
-     */
     public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
         parent::__construct($container);
@@ -46,7 +33,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumnTask();

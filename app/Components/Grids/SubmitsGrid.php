@@ -2,64 +2,43 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\SubmitHandlerFactory;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\Submits\StorageException;
+use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use Tracy\Debugger;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class SubmitsGrid extends BaseGrid {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ModelContestant $contestant;
 
-    /**
-     * @var ModelContestant
-     */
-    private $contestant;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**
-     * @var SubmitHandlerFactory
-     */
-    private $submitHandlerFactory;
-
-    /**
-     * SubmitsGrid constructor.
-     * @param Container $container
-     * @param ModelContestant $contestant
-     */
     public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
         $this->contestant = $contestant;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory) {
-        $this->serviceSubmit = $serviceSubmit;
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
     protected function getData(): IDataSource {
-        $submits = $this->serviceSubmit->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
+        $submits = $this->contestant->related(DbNames::TAB_SUBMIT);
         return new NDataSource($submits);
     }
 
@@ -68,7 +47,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -77,11 +56,12 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Task'))
-            ->setRenderer(function (ModelSubmit $row) use ($presenter) {
-                return $row->getTask()->getFQName();
+            ->setRenderer(function (ActiveRow $row): string {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return $submit->getTask()->getFQName();
             });
-        $this->addColumn('submitted_on', _('Čas odevzdání'));
-        $this->addColumn('source', _('Způsob odevzdání'));
+        $this->addColumn('submitted_on', _('Timestamp'));
+        $this->addColumn('source', _('Method of handing'));
 
         //
         // operations
@@ -89,59 +69,84 @@ class SubmitsGrid extends BaseGrid {
         $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
-            ->setShow(function (ModelSubmit $row) {
-                return $row->canRevoke();
+            ->setShow(function (ActiveRow $row): bool {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return $submit->canRevoke();
             })
-            ->setLink(function (ModelSubmit $row) {
-                return $this->link('revoke!', $row->submit_id);
+            ->setLink(function (ActiveRow $row): string {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return $this->link('revoke!', $submit->submit_id);
             })
-            ->setConfirmationDialog(function (ModelSubmit $row) {
-                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+            ->setConfirmationDialog(function (ActiveRow $row): string {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return sprintf(_('Do you really want to take the solution of task %s back?'), $submit->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(function (ModelSubmit $row) {
-                return $this->link('downloadUploaded!', $row->submit_id);
+            ->setText(_('Download original'))->setLink(function (ActiveRow $row): string {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return $this->link('downloadUploaded!', $submit->submit_id);
+            })
+            ->setShow(function (ActiveRow $row): bool {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return !$submit->isQuiz();
             });
         $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row) {
-                return $this->link('downloadCorrected!', $row->submit_id);
-            })->setShow(function (ModelSubmit $row) {
-                return $row->corrected;
+            ->setText(_('Download corrected'))->setLink(function (ActiveRow $row): string {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                return $this->link('downloadCorrected!', $submit->submit_id);
+            })->setShow(function (ActiveRow $row): bool {
+                $submit = ModelSubmit::createFromActiveRow($row);
+                if (!$submit->isQuiz()) {
+                    return $submit->corrected;
+                } else {
+                    return false;
+                }
             });
 
         $this->paginate = false;
         $this->enableSorting = false;
     }
 
-    /**
-     * @param $id
-     * @throws InvalidLinkException
-     */
-    public function handleRevoke(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+    public function handleRevoke(int $id): void {
+        try {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleRevoke($submit);
+            $this->flashMessage(sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING);
+        } catch (ForbiddenRequestException | NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException | ModelException$exception) {
+            Debugger::log($exception);
+            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_DANGER);
+        }
     }
 
     /**
      * @param int $id
-     * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+    public function handleDownloadUploaded(int $id): void {
+        try {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
+        } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        }
     }
 
     /**
      * @param int $id
-     * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+    public function handleDownloadCorrected(int $id): void {
+        try {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
+        } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
+    }
+
+    protected function getModelClassName(): string {
+        return ModelSubmit::class;
     }
 }

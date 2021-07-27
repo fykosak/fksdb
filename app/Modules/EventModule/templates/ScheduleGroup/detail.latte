@@ -1,0 +1,10 @@
+{block content}
+    {varType FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem $model}
+    <div class="mb-3">
+        {include '../ScheduleItem/group.detail.latte' group=>$model}
+    </div>
+    <a class="btn btn-primary btn-sm" href="{plink ScheduleGroup:list}">{_'List of groups'}</a>
+    <a class="btn btn-primary btn-sm" href="{plink ScheduleItem:create}">{_'Create item'}</a>
+    <hr/>
+    {control itemsGrid}
+{/block}

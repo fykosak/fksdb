@@ -1,7 +1,6 @@
 parameters:
     events:
         dsef2_1:
-            appCond: or(regOpen(), role('admin'))
             accomodation: 'Noc před akcí (tj. z 12. 5. na 13. 5.).'
             person:
                 person:
@@ -30,7 +29,6 @@ events:
     dsef2_1:
         event_type_id: 14
         eventYears: [1]
-        tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
             notifyBcc:
@@ -44,58 +42,31 @@ events:
             PARTICIPANT:
                 service: @event.ServiceMDsefParticipant
 
-                states:
-                    applied: Přihlášen
-                    participated: Účastnil se
-                    missed: Nepřijel
-                    cancelled: Zrušen
+                states: %events.defaultDsef.states%
 
-                transitions:
-                    __init->applied:
-                        condition: %events.dsef2_1.appCond%
-                        label: Přihlásit účastníka
-                        onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
-                    applied->participated:
-                        condition: and(role('admin'),eventWas())
-                        label: Prezentovat
-                    applied->missed:
-                        condition: and(role('admin'),eventWas())
-                        label: Nepřijel
-                        behaviorType: danger
-                    applied->cancelled:
-                        condition: role('admin')
-                        label: Zrušit přihlášku
-                        behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: Smazat přihlášku
+                transitions: %events.defaultDsef.transitions%
 
                 fields:
                     person_id:
-                        label: Osoba
+                        label: _('Person')
                         required: true
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef2_1.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
-                        label: Preferovaná skupina
+                        label: _('Preferovaná skupina')
                         required: true
-                        modifiable: %events.dsef2_1.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
+                        modifiable: %events.defaultDsef.appCond%
+                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
                     accomodation:
-                        label: Ubytování
+                        label: _('Ubytování')
                         description: %events.dsef2_1.accomodation%
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                     lunch_count:
-                        label:  Počet baget k obědu
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         description:  "2 zdarma, další à 40 Kč"
-                    message:
-                        label: Vzkaz ostatním
-                        modifiable: true
                     note:
-                        label: "Jaké další semináře a olympiády řešíš?"
+                        label: _('Jaké další semináře a olympiády řešíš?')
                         description: "Uveď další fyzikální, matematické či informatické vzdělávací či soutěžní akce, kterých se účastníš (stačí zkratky)."
 
 
@@ -107,12 +78,12 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT
-                    label: Účastník
+                    label: _('Účastník')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
-                - FKSDB\Events\FormAdjustments\ResourceAvailability('participant.accomodation', accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Models\Events\FormAdjustments\ResourceAvailability(['participant.accomodation'], accomodationCapacity, 'Kapacita ubytování je již vyčerpána.')
                 - @events.privacyPolicy
                 - @events.captcha
 

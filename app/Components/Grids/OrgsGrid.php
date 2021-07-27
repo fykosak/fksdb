@@ -2,53 +2,29 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class OrgsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
-    /**
-     * OrgsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     */
     public function __construct(Container $container, ModelContest $contest) {
         parent::__construct($container);
         $this->contest = $contest;
     }
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
-        $this->serviceOrg = $serviceOrg;
-    }
-
     protected function getData(): IDataSource {
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
-            ->select('org.*, person.family_name AS display_name');
+        $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
@@ -68,7 +44,7 @@ class OrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');
@@ -82,5 +58,9 @@ class OrgsGrid extends BaseGrid {
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
     }
 }

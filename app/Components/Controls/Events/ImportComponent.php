@@ -1,54 +1,34 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Events\Model\ApplicationHandler;
-use FKSDB\Events\Model\Grid\SingleEventSource;
-use FKSDB\Events\Model\ImportHandler;
-use FKSDB\Events\Model\ImportHandlerException;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Events\Model\ImportHandler;
+use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Utils\CSVParser;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Utils\CSVParser;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Utils\JsonException;
+use Nette\DI\MissingServiceException;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ImportComponent extends BaseComponent {
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private SingleEventSource $source;
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $handler;
+    private ApplicationHandler $handler;
 
-    /**
-     * ImportComponent constructor.
-     * @param Machine $machine
-     * @param SingleEventSource $source
-     * @param ApplicationHandler $handler
-     * @param Container $container
-     */
     public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct($container);
         $this->machine = $machine;
@@ -58,32 +38,31 @@ class ImportComponent extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    protected function createComponentFormImport() {
-        $control = new FormControl();
+    protected function createComponentFormImport(): FormControl {
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $form->addUpload('file', _('Soubor s přihláškami'))
+        $form->addUpload('file', _('File with applications'))
             ->addRule(Form::FILLED)
-            ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 
-        $form->addRadioList('errorMode', _('Chování při chybě'))
+        $form->addRadioList('errorMode', _('Error mode'))
             ->setItems([
-                ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
-                ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
+                ApplicationHandler::ERROR_ROLLBACK => _('Stop import and rollback.'),
+                ApplicationHandler::ERROR_SKIP => _('Skip the application and continue.'),
             ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
-        $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
+        $form->addRadioList('stateless', _('Stateless applications.'))
             ->setItems([
-                ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
-                ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
+                ImportHandler::STATELESS_IGNORE => _('Ignore.'),
+                ImportHandler::STATELESS_KEEP => _('Keep original state.'),
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
-
-        $form->addSubmit('import', _('Importovat'));
+        $form->addSubmit('import', _('Import'));
 
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormImport($form);
@@ -92,36 +71,29 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
-        $this->template->render();
+    final public function render(): void {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
     }
 
     /**
      * @param Form $form
-     * @throws AbortException
      * @throws NeonSchemaException
-     * @throws BadRequestException
-     * @throws JsonException
+     * @throws ConfigurationNotFoundException
+     * @throws MissingServiceException
      */
-    private function handleFormImport(Form $form) {
+    private function handleFormImport(Form $form): void {
+        /** @var FileUpload[] $values */
         $values = $form->getValues();
         try {
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
 
-
             $errorMode = $values['errorMode'];
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->getContext());
-            $importHandler->setInput($parser);
-            $importHandler->setSource($this->source);
+            $importHandler = new ImportHandler($this->getContext(), $parser, $this->source);
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);
@@ -129,9 +101,9 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
             }
 
             $this->redirect('this');

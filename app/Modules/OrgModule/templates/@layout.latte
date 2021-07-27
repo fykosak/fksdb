@@ -1,5 +1,13 @@
 {layout '../../Core/templates/@layout.latte'}
-{block nav-left}
-    {control contestChooser}
-    {include #parent}
+{block nav-right}
+    {if $control->getComponent('contestChooser',false)}
+        {control contestChooser}
+    {/if}
+    {if $control->getComponent('yearChooser',false)}
+        {control yearChooser}
+    {/if}
+    {if $control->getComponent('seriesChooser',false)}
+        {control seriesChooser}
+    {/if}
+    {include parent}
 {/block}

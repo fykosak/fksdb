@@ -2,85 +2,37 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\ViewDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ContestantsFromSchoolGrid extends BaseGrid {
+class ContestantsFromSchoolGrid extends EntityGrid {
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-    /**
-     * @var ModelSchool
-     */
-    private $school;
-
-    /**
-     * ContestantsGrid constructor.
-     * @param ModelSchool $school
-     * @param Container $container
-     */
     public function __construct(ModelSchool $school, Container $container) {
-        parent::__construct($container);
-        $this->school = $school;
-    }
-
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
-    }
-
-    protected function getData(): IDataSource {
-        $contestants = $this->serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)
-            ->select('*')->where([
-                'v_contestant.school_id' => $this->school->school_id,
-            ]);
-        return new ViewDataSource('ct_id', $contestants);
+        parent::__construct($container, ServiceContestant::class, [
+            'person.full_name',
+            'contestant_base.year', /*'person_history.study_year',*/
+            'contest.contest',
+        ], [
+            'person:person_history.school_id' => $school->school_id,
+        ]);
     }
 
     /**
      * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
-        $this->setDefaultOrder('name_lex ASC');
-
-        //
-        // columns
-        //
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Study year'));
-        $this->addColumn('contest_id', _('Contest'));
-        $this->addColumn('year', 'Contest year');
-
-        //
-        // operations
-        //
-        $this->addButton('editPerson', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Org:Contestant:edit', [
-                    'id' => $row->ct_id,
-                ]);
-            });
+        $this->addLinkButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
+        $this->addLinkButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
         $this->paginate = false;
     }
 }

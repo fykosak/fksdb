@@ -5,16 +5,16 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 use Nette\Utils\DateTime;
 
 abstract class TsafTestCase extends DsefTestCase {
-    /** @var int */
-    protected $dsefEventId;
-    /** @var int */
-    protected $tsafEventId;
+
+    protected int $dsefEventId;
+
+    protected int $tsafEventId;
 
     protected function getEventId(): int {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->dsefEventId = $this->eventId;
 
@@ -27,11 +27,5 @@ capacity: 5
 EOT
             ,
         ]);
-    }
-
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_tsaf_participant');
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        parent::tearDown();
     }
 }

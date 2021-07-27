@@ -1,21 +1,21 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -23,45 +23,20 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+    private ModelEvent $event;
+    private HandlerFactory $handlerFactory;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    final public function injectPrimary(HandlerFactory $handlerFactory): void {
+        $this->handlerFactory = $handlerFactory;
     }
 
     protected function getData(): IDataSource {
@@ -74,13 +49,12 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
-     * @throws BadTypeException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -94,23 +68,20 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
-        $this->addButton('delete', null)
+        $this->addButton('delete')
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function (ModelFyziklaniSubmit $row) {
+            ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
-            })->setConfirmationDialog(function () {
-                return _('Opravdu vzít submit úlohy zpět?');
+            })->setConfirmationDialog(function (): string {
+                return _('Really take back the task submit?');
             })->setText(_('Delete'))
-            ->setShow(function (ModelFyziklaniSubmit $row) {
+            ->setShow(function (ModelFyziklaniSubmit $row): bool {
                 return $row->canRevoke();
             });
     }
 
-    /**
-     * @return Closure
-     */
     private function getFilterCallBack(): callable {
-        return function (Selection $table, $value) {
+        return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;
@@ -137,26 +108,21 @@ class AllSubmitsGrid extends SubmitsGrid {
                         break;
                 }
             }
-            return;
         };
     }
 
-    /**
-     * @param $id
-     * @throws AbortException
-     */
-    public function handleDelete($id) {
-        /**
-         * @var ModelFyziklaniSubmit $submit
-         */
+    public function handleDelete(int $id): void {
+        /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {
-            $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
-            $this->flashMessage($log->getMessage(), BasePresenter::FLASH_SUCCESS);
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->revokeSubmit($logger, $submit);
+            FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
@@ -166,44 +132,46 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
-            throw new InvalidStateException("Cannot create search form without searchable data source.");
+            throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->setMethod(Form::GET);
 
-        $rows = $this->serviceFyziklaniTeam->findPossiblyAttending($this->event);
+        $rows = $this->event->getPossiblyAttendingTeams();
         $teams = [];
-        /** @var ModelFyziklaniTeam $team */
+        /** @var ModelFyziklaniTeam|ActiveRow $team */
         foreach ($rows as $team) {
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }
 
-        $rows = $this->serviceFyziklaniTask->findAll($this->event);
+        $rows = $this->event->getFyziklaniTasks();
         $tasks = [];
-        /** @var ModelFyziklaniTask $task */
+        /** @var ModelFyziklaniTask|ActiveRow $task */
         foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }
 
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
-        $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
+        $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
-            $this->dataSource->applyFilter($values);
+            if ($this->dataSource instanceof SearchableDataSource) {
+                $this->dataSource->applyFilter($values);
+            }
+
             // TODO is this vv needed? vv
             $count = $this->dataSource->getCount();
             $this->getPaginator()->itemCount = $count;
         };
         return $control;
     }
-
 }

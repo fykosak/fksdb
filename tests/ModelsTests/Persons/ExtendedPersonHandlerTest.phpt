@@ -1,45 +1,33 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\Person;
+namespace FKSDB\Tests\ModelsTests\Persons;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceContest;
-use FKSDB\ORM\Services\ServiceContestant;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\YearCalculator;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\ExtendedPersonHandlerFactory;
-use Persons\IExtendedPersonPresenter;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var ExtendedPersonHandler
-     */
-    private $fixture;
-
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ExtendedPersonHandler $fixture;
+    private ReferencedPersonFactory $referencedPersonFactory;
+    private ModelContestYear $contestYear;
 
     /**
      * ExtendedPersonHandlerTest constructor.
@@ -47,32 +35,27 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
-        $this->container = $container;
-    }
-
-    protected function setUp() {
-        parent::setUp();
-        $this->mockApplication();
-        $handlerFactory = $this->container->getByType(ExtendedPersonHandlerFactory::class);
-
-        $service = $this->container->getByType(ServiceContestant::class);
-        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
-        $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
+        $this->setContainer($container);
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
-    protected function tearDown() {
-        $this->connection->query("DELETE FROM contestant_base");
-        $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
+    protected function setUp(): void {
+        parent::setUp();
+        $this->mockApplication();
+        $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
+
+        $service = $this->getContainer()->getByType(ServiceContestant::class);
+        $this->contestYear = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS)->getContestYear(1);
+        $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');
+    }
+
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE, DbNames::TAB_AUTH_TOKEN, DbNames::TAB_LOGIN]);
 
         parent::tearDown();
     }
 
-
-    public function testNewPerson() {
-        Assert::true(true);
+    public function testNewPerson(): void {
         $presenter = new PersonPresenter();
         // Define a form
 
@@ -112,13 +95,13 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                     'required' => true,
                 ],
             ],
-        ], 2000);
+        ], YearCalculator::getCurrentAcademicYear());
 
         // Fill user data
         $form->setValues([
             ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => [
+                ExtendedPersonHandler::EL_PERSON . '_1' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Jana",
@@ -162,7 +145,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getPermanentAddress();
+        $address = $person->getPermanentAddress2();
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);
@@ -173,66 +156,25 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $searchType = ReferencedPersonFactory::SEARCH_NONE;
-        $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $fieldsDefinition,
+            $this->contestYear,
+            PersonSearchContainer::SEARCH_NONE,
+            false,
+            new TestResolver(),
+            new TestResolver()
+        );
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        // $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }
-
 }
 
 /*
  * Mock classes
  */
-
-class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
-
-    public function getModel() {
-
-    }
-
-    public function messageCreate(): string {
-        return '';
-    }
-
-    public function messageEdit(): string {
-        return '';
-    }
-
-    public function messageError(): string {
-        return '';
-    }
-
-    public function messageExists(): string {
-        return '';
-    }
-
-    public function flashMessage($message, $type = 'info') {
-
-    }
-
-}
-
-class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
-
-    public function getResolutionMode(ModelPerson $person): string {
-        return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
-    }
-
-    public function isModifiable(ModelPerson $person): bool {
-        return true;
-    }
-
-    public function isVisible(ModelPerson $person): bool {
-        return true;
-    }
-
-}
 
 $testCase = new ExtendedPersonHandlerTest($container);
 $testCase->run();

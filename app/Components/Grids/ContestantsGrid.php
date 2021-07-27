@@ -2,59 +2,31 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use SQL\ViewDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-    /**
-     * @var int
-     */
-    private $year;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContestYear $contestYear;
 
-    /**
-     * ContestantsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
-    public function __construct(Container $container, ModelContest $contest, int $year) {
+    public function __construct(Container $container, ModelContestYear $contestYear) {
         parent::__construct($container);
-        $this->contest = $contest;
-        $this->year = $year;
-    }
-
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
-        $this->serviceContestant = $serviceContestant;
+        $this->contestYear = $contestYear;
     }
 
     protected function getData(): IDataSource {
-        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
-        return new ViewDataSource('ct_id', $contestants);
+        return new NDataSource($this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->contestYear->year));
     }
 
     /**
@@ -64,38 +36,32 @@ class ContestantsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
-        $this->setDefaultOrder('name_lex ASC');
+        $this->setDefaultOrder('person.other_name ASC');
+        $this->addColumns([
+            'person.full_name',
+            'person_history.study_year',
+        ]);
+        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
+            $contestant = ModelContestant::createFromActiveRow($row);
+            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
+        });
 
-        //
-        // columns
-        //
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
-
-        //
-        // operations
-        //
-        $this->addButton('editPerson', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', [
-                    'id' => $row->ct_id,
-                ]);
-            });
+        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
+        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Založit řešitele'))
+            ->setLabel(_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
+    }
+
+    protected function getModelClassName(): string {
+        return ModelContestant::class;
     }
 }

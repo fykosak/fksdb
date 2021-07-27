@@ -3,23 +3,14 @@
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class SingleRestComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleRestComponent extends BaseComponent {
-    /**
-     * @param ModelPerson $person
-     * @param ModelEvent $event
-     * @return void
-     */
-    public function render(ModelPerson $person, ModelEvent $event) {
+
+    final public function render(ModelPerson $person, ModelEvent $event): void {
         $this->template->rests = $person->getScheduleRests($event);
         $this->template->person = $person;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.person.latte');
     }
 }

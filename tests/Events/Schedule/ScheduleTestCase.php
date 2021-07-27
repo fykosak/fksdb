@@ -2,28 +2,26 @@
 
 namespace FKSDB\Tests\Events\Schedule;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase {
+
     /** @var int */
     protected $itemId;
-    /** @var IPresenter */
-    protected $fixture;
-    /** @var int */
-    protected $groupId;
-    /** @var array */
-    protected $persons = [];
-    /** @var int */
-    protected $eventId;
+    protected IPresenter $fixture;
+    protected int $groupId;
+    protected array $persons = [];
+    protected int $eventId;
 
     protected function getEventId(): int {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -33,7 +31,6 @@ abstract class ScheduleTestCase extends EventTestCase {
 EOT
             ,
         ]);
-
 
         $this->groupId = $this->insert('schedule_group', [
             'event_id' => $this->eventId,
@@ -57,10 +54,8 @@ EOT
             'capacity' => 4,
         ]);
 
-
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
-
 
         $this->persons[] = $this->createPerson('Paní', 'Bílá',
             [
@@ -76,7 +71,6 @@ EOT
             'person_id' => end($this->persons),
             'schedule_item_id' => $this->itemId,
         ]);
-
 
         $this->persons[] = $this->createPerson('Paní', 'Bílá II.',
             [
@@ -121,8 +115,8 @@ EOT
                         'accommodation' => json_encode([$this->groupId => $this->itemId]),
                     ],
                 ],
-                'e_dsef_group_id' => 2,
-                'lunch_count' => 0,
+                'e_dsef_group_id' => (string)2,
+                'lunch_count' => (string)0,
                 'message' => "",
             ],
             'privacy' => "on",
@@ -133,12 +127,8 @@ EOT
 
     abstract public function getAccommodationCapacity(): int;
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        $this->connection->query('DELETE FROM e_dsef_group');
-        $this->connection->query('DELETE FROM person_schedule');
-        $this->connection->query('DELETE FROM schedule_item');
-        $this->connection->query('DELETE FROM schedule_group');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']);
         parent::tearDown();
     }
 }

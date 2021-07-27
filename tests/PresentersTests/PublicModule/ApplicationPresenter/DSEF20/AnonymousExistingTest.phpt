@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
@@ -11,12 +11,12 @@ use Tester\Assert;
 
 class AnonymousExistingTest extends DsefTestCase {
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -48,7 +48,6 @@ class AnonymousExistingTest extends DsefTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
-
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal((int)$this->personId, $application->person_id);
@@ -57,12 +56,10 @@ class AnonymousExistingTest extends DsefTestCase {
         Assert::equal('1231354', $info->id_number); // TODO here would be better null (at least we don't rewrite existing data)
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
 
-
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AnonymousExistingTest($container);

@@ -3,53 +3,38 @@
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Components\React\ReactComponentTrait;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
-use FKSDB\Exceptions\NotImplementedException;
-use Nette\Utils\JsonException;
 
-/**
- * Class ScheduleField
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+    private ModelEvent $event;
+    private string $type;
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * ScheduleField constructor.
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
-     * @throws JsonException
-     * @throws NotImplementedException
+     * @param string|null $label
      * @throws BadRequestException
+     * @throws NotImplementedException
      */
-    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
-        parent::__construct($this->getLabelByType($type));
+    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label) {
+        parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
         $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-
     }
 
     /**
@@ -57,7 +42,7 @@ class ScheduleField extends TextInput {
      * @return string
      * @throws NotImplementedException
      */
-    private function getLabelByType(string $type): string {
+    private function getDefaultLabel(string $type): string {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
@@ -76,7 +61,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    public function getData(...$args): string {
+    protected function getData(): array {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {
@@ -84,7 +69,7 @@ class ScheduleField extends TextInput {
             $groupList[] = $this->serializeGroup($group);
         }
         $options = $this->getRenderOptions();
-        return json_encode(['groups' => $groupList, 'options' => $options]);
+        return ['groups' => $groupList, 'options' => $options];
     }
 
     private function getRenderOptions(): array {
@@ -117,9 +102,8 @@ class ScheduleField extends TextInput {
     private function serializeGroup(ModelScheduleGroup $group): array {
         $groupArray = $group->__toArray();
         $itemList = [];
-        $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        /** @var ModelScheduleItem $item */
-        foreach ($items as $item) {
+        foreach ($group->getItems() as $row) {
+            $item = ModelScheduleItem::createFromActiveRow($row);
             $itemList[] = $item->__toArray();
         }
 

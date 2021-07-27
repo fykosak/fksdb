@@ -3,25 +3,20 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class PersonInfoContainer extends ModelContainer {
 
     /**
-     * @param $values
+     * @param mixed|iterable $data
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = FALSE) {
-        if ($values instanceof ActiveRow) { //assert its from person info table
-            $values['agreed'] = (bool) $values['agreed'];
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow) { //assert its from person info table
+            $data['agreed'] = (bool)$data['agreed'];
         }
 
-        parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
 }

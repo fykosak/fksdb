@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class OrgModule
@@ -11,6 +11,7 @@ $container = require '../../bootstrap.php';
 class CoreModule extends AbstractPageDisplayTestCase {
     public function getPages(): array {
         return [
+            ['Core:MyApplications', 'default'],
             ['Core:Dispatch', 'default'],
             ['Core:MyPayments', 'default'],
             ['Core:Settings', 'default'],

@@ -2,24 +2,16 @@
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    protected $fixture;
-    /**
-     * @var array
-     */
-    protected $persons = [];
-    /**
-     * @var int
-     */
-    protected $eventId;
+    protected IPresenter $fixture;
+    protected array $persons = [];
+    protected int $eventId;
 
     abstract protected function getCapacity(): int;
 
@@ -27,7 +19,7 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $capacity = $this->getCapacity();
@@ -47,7 +39,6 @@ EOT
             'name' => 'Alpha',
             'capacity' => 4,
         ]);
-
 
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
@@ -78,9 +69,8 @@ EOT
         ]);
     }
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        $this->connection->query('DELETE FROM e_dsef_group');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'event_participant', DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 }

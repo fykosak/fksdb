@@ -15,25 +15,24 @@ parameters:
                         required: true
                     born:
                         required: false
-                        description: _('Pouze pro české a slovenské studenty.')
+                        description: _('Only for czech and slovak students.')
                 person_history:
                     school_id:
                         required: true
-                        description: _('Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje rychle.')
+                        description: _('If you cannot find your school, write an email to schola.novum () fykos.cz.')
                     study_year:
                         required: false
-                        description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
+                        description: _('For calculating the category, leave the field empty if you are not at elementary or high-school.')
                 person_has_flag:
                     spam_mff:
                         required: false
-                        description: _('Pouze pro české a slovenské studenty.')
+                        description: _('Only for czech and slovak students.')
 
 
 events:
     fol1:
         event_type_id: 9
         eventYears: [1,2,3,4,5,6,7] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani.grid
         formLayout: fol.form
         paramScheme:
             notifyBcc:
@@ -48,61 +47,60 @@ events:
             #   TEAM
             #
             TEAM:
-                service: @fyziklani.ServiceFyziklaniTeam
+                service: @orm.e_fyziklani_team.service
                 personIds: []
                 eventId: e_fyziklani_team.event_id
 
                 states:
-                    applied: _('Přihlášen')
-                    cancelled: _('Zrušen')
-                    participated: _('Účastnil se')
-                    missed: _('Nezúčastnil se')
+                    - applied
+                    - cancelled
+                    - participated
+                    - missed
 
                 transitions:
                     __init->applied:
                         condition: %events.fol1.appCond%
-                        label: _('Přihlásit tým')
+                        label: _('Register team.')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(team, *)
+                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Zúčastnil se
+                        label: _('Confirm as Participated')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nezúčastnil se
+                        label: _('Confirm as Missed')
                         behaviorType: danger
                     applied->cancelled:
                         condition: role('admin')
-                        label: Zrušit tým
+                        label: _('Cancel the team.')
                         behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat tým
+                        label: _('Delete the team.')
 
                 fields:
                     name:
-                        label: _('Název týmu') # i18n
+                        label: _('Team name') # i18n
                         required: true
                         visible: true # or condition
                         modifiable: %events.fol1.appCond%
                     category:
-                        label: _('Kategorie') # i18n
+                        label: _('Category') # i18n
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                        factory: Chooser(_('Category'), FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%))
                     note:
-                        label: _('Kontaktní adresa')
+                        label: _('Contact address')
                         required: false
                         visible: true
                         modifiable: %events.fol1.modCond%
-                        description: _('Pro zaslání případné odměny.')
+                        description: _('For sending the prizes.')
                     password:
-                        label: _('Herní heslo') # i18n
+                        label: _('Game password') # i18n
                         required: state('__init')
                         visible: true
                         modifiable: %events.fol1.modCond%
-                        description: _('Slouží k přihlášení do herního systému. Prázdné pole zachová původní heslo.')
+                        description: _('For logging into the game system. An empty field will keep the original password.')
                         factory: FKSDB\Components\Forms\Factories\Events\PasswordFactory()
 
             #
@@ -114,17 +112,17 @@ events:
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
                 states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nezúčastnil se')
+                    - applied
+                    - participated
+                    - missed
 
                 transitions:
                     __init->applied:
                         condition: %events.fol1.modCond%
                         visible: false
-                        label: _('Přidat člena')
+                        label: _('Add a member')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(member,self)
+                            - FKSDB\Models\Events\Transitions\MailSender(member,self)
                     applied->participated:
                         condition: role('admin')
                         visible: false
@@ -133,12 +131,12 @@ events:
                         visible: false
                     applied->__terminated:
                         condition: %events.fol1.modCond%
-                        label: _('Smazat člena')
+                        label: _('Delete a member')
                         visible: false
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         visible: true
                         modifiable: %events.fol1.modCond%
                         determining: true
@@ -151,40 +149,19 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                team:
-                    bmName: TEAM
-                    label: _('Tým')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-                p1:
-                    bmName: PARTICIPANT
-                    label: _('1. člen')
-                    required: true
-                p2:
-                    bmName: PARTICIPANT
-                    label: _('2. člen')
-                p3:
-                    bmName: PARTICIPANT
-                    label: _('3. člen')
-                p4:
-                    bmName: PARTICIPANT
-                    label: _('4. člen')
-                p5:
-                    bmName: PARTICIPANT
-                    label: _('5. člen')
+            baseMachines: %events.fol.default.baseMachines%
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
-                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
-                - FKSDB\Events\Spec\Fol\FlagCheck()
-                - FKSDB\Events\Spec\Fol\BornCheck()
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('team.name', _("A team with name '%value' already exists."))
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('*.person_id', _("The person is already registered for Online Physics Brawl."))
+                - FKSDB\Models\Events\Spec\Fol\FlagCheck()
+                - FKSDB\Models\Events\Spec\Fol\BornCheck()
 
 
             processings:
-                - FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
-                - FKSDB\Events\Spec\Fol\PasswordProcessing()
+                - FKSDB\Models\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
+                - FKSDB\Models\Events\Spec\Fol\PasswordProcessing()
                 - @events.privacyPolicy
 
             joins:

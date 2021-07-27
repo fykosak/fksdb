@@ -2,58 +2,37 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\Models\Localization\GettextTranslator;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\ITemplate;
-use Nette\Bridges\ApplicationLatte\Template;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 
-/**
- * Class BaseComponent
- * @author Michal Červeňák <miso@fykos.cz>
- * @property Template $template
- */
 abstract class BaseComponent extends Control {
-    /**
-     * @var Container
-     */
-    private $context;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
-    /**
-     * SubmitsTableControl constructor.
-     * @param Container $container
-     */
+    private Container $context;
+
+    private GettextTranslator $translator;
+
     public function __construct(Container $container) {
-        parent::__construct();
         $container->callInjects($this);
         $this->context = $container;
     }
 
-    /**
-     * @param ITranslator $translator
-     * @return void
-     */
-    public function injectTranslator(ITranslator $translator) {
+    final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    final protected function getTranslator(): GettextTranslator {
+        return $this->translator;
+    }
+
+    protected function createTemplate(): Template {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;
     }
 
-    /**
-     * @return Container
-     */
-    final protected function getContext() {
+    final protected function getContext(): Container {
         return $this->context;
     }
 }

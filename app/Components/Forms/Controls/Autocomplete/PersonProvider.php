@@ -2,35 +2,19 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\YearCalculator;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class PersonProvider implements IFilteredDataProvider {
+class PersonProvider implements FilteredDataProvider {
 
-    const PLACE = 'place';
+    private const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
-    /**
-     * PersonProvider constructor.
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
@@ -39,25 +23,23 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * Syntactic sugar, should be solved more generally.
      * @param ModelContest $contest
-     * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+    public function filterOrgs(ModelContest $contest): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                ':org.contest_id' => $contest->contest_id
-            ])
-            ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
-            ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
-
+                ':org.contest_id' => $contest->contest_id,
+                ':org.since <= ?' => $contest->getCurrentContestYear()->year,
+                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentContestYear()->year,
+            ]);
     }
 
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(?string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -74,7 +56,6 @@ class PersonProvider implements IFilteredDataProvider {
         $persons = $this->searchTable
             ->order('family_name, other_name');
 
-
         $result = [];
         /** @var ModelPerson $person */
         foreach ($persons as $person) {
@@ -83,15 +64,11 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
-        $address = $person->getDeliveryAddress();
+        $address = $person->getDeliveryAddress2();
         if ($address) {
-            $place = $address->getAddress()->city;
+            $place = $address->city;
         }
         return [
             self::LABEL => $person->getFullName(),
@@ -103,7 +80,7 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * @param mixed $id
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 

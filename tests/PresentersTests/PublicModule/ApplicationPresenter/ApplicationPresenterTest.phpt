@@ -2,68 +2,64 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Tests\Events\EventTestCase;
-use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    private $fixture;
+    private IPresenter $fixture;
 
     protected function getEventId(): int {
         return 0;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->fixture = $this->createPresenter('Public:Application');
     }
 
-    public function test404() {
-        $fixture = $this->fixture;
-        Assert::exception(function () use ($fixture) {
+    public function test404(): void {
+        Assert::exception(function (): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'cs',
                 'eventId' => 666,
             ]);
 
-            $fixture->run($request);
-        }, BadRequestException::class, 'Neexistující akce.', 404);
+            $this->fixture->run($request);
+        }, EventNotFoundException::class, 'Event not found.', 404);
     }
 
-    public function test404Application() {
-        $fixture = $this->fixture;
+    public function test404Application(): void {
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 19,
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
         ]);
-        Assert::exception(function () use ($fixture, $eventId) {
+        Assert::exception(function () use ($eventId): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
-                'lang' => 'cs',
+                'lang' => 'en',
                 'id' => 666,
                 'eventId' => $eventId,
                 'contestId' => 1,
                 'year' => 1,
             ]);
 
-            $fixture->run($request);
-        }, BadRequestException::class, 'Neexistující přihláška.', 404);
+            $this->fixture->run($request);
+        }, NotFoundException::class, 'Unknown application.', 404);
     }
 
-    public function testClosed() {
+    public function testClosed(): void {
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,
@@ -72,7 +68,7 @@ class ApplicationPresenterTest extends EventTestCase {
 
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
-            'lang' => 'cs',
+            'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $eventId,
@@ -80,12 +76,12 @@ class ApplicationPresenterTest extends EventTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
-        Assert::contains('Přihlašování není povoleno', $html);
+        Assert::contains('Registration is not open.', $html);
     }
 }
 

@@ -1,0 +1,20 @@
+<?php
+
+namespace FKSDB\Modules\OrgModule;
+
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\UI\PageTitle;
+
+class DashboardPresenter extends BasePresenter {
+
+    public function authorizedDefault(): void {
+        /** @var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        $access = $login ? $login->isOrg() : false;
+        $this->setAuthorized($access);
+    }
+
+    public function titleDefault(): void {
+        $this->setPageTitle(new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard'));
+    }
+}

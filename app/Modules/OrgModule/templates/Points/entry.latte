@@ -1,12 +1,15 @@
 {block content}
     <div class="btn-group mb-3">
         {if !$showAll}
-            <a n:href="this, all => true" class="btn btn-sm btn-warning">{_'Zobrazit všechny úlohy'}</a>
+            <a n:href="this, all => true" class="btn btn-sm btn-warning">{_'Show all tasks'}</a>
         {else}
-            <a n:href="this, all => false" class="btn btn-sm btn-success">{_'Zobrazit jenom moje úlohy'}</a>
+            <a n:href="this, all => false" class="btn btn-sm btn-success">{_'Show only my tasks'}</a>
         {/if}
-        <a n:href="invalidate!" class="btn btn-sm btn-danger">{_'Invalidovat cache bodů'}</a>
-        <a n:href="recalculateAll!" class="btn btn-sm btn-secondary">{_'Přepočítat všechny body'}</a>
+        <a n:href="invalidate!" class="btn btn-sm btn-danger">{_'Invalidovate points cache'}</a>
+        <a n:href="recalculateAll!" class="btn btn-sm btn-secondary">{_'Recalculate all points'}</a>
+        {if $hasQuizTask}
+            <a n:href="calculateQuizPoints!" class="btn btn-sm btn-info">{_'Calculate quiz points'}</a>
+        {/if}
     </div>
     {control pointsForm}
 {/block}

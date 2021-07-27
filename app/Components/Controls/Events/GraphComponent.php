@@ -1,71 +1,42 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Application\IJavaScriptCollector;
-use Nette\ComponentModel\IComponent;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GraphComponent extends BaseComponent {
 
-    /**
-     * @var BaseMachine
-     */
-    private $baseMachine;
-    /** @var ExpressionPrinter */
-    private $expressionPrinter;
+    private BaseMachine $baseMachine;
+    private ExpressionPrinter $expressionPrinter;
+    private bool $attachedJS = false;
 
-    /**
-     * GraphComponent constructor.
-     * @param Container $container
-     * @param BaseMachine $baseMachine
-     */
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/graph/raphael.js');
+                $collector->registerJSFile('js/graph/dracula_graffle.js');
+                $collector->registerJSFile('js/graph/dracula_graph.js');
+                $collector->registerJSFile('js/eventModelGraph.js');
+            }
+        });
         $this->baseMachine = $baseMachine;
-
     }
 
-    /**
-     * @param ExpressionPrinter $expressionPrinter
-     * @return void
-     */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    /** @var bool */
-    private $attachedJS = false;
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/graph/raphael.js');
-            $obj->registerJSFile('js/graph/dracula_graffle.js');
-            $obj->registerJSFile('js/graph/dracula_graph.js');
-            $obj->registerJSFile('js/eventModelGraph.js');
-        }
-    }
-
-    public function render() {
+    final public function render(): void {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.latte');
         $this->template->id = $this->getHtmlId();
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
     }
 
     private function getHtmlId(): string {
@@ -76,7 +47,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
     }
 
     /**
@@ -86,11 +57,10 @@ class GraphComponent extends BaseComponent {
         $states = $this->getAllStates();
         $nodes = [];
         foreach ($states as $state) {
-
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'
+                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;
@@ -107,7 +77,7 @@ class GraphComponent extends BaseComponent {
                 if ($transition->matches($state)) {
                     $edges[] = [
                         'source' => $state,
-                        'target' => $transition->getTarget(),
+                        'target' => $transition->getTargetState(),
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

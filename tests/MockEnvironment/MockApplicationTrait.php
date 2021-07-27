@@ -1,15 +1,15 @@
 <?php
 
-namespace MockEnvironment;
+namespace FKSDB\Tests\MockEnvironment;
 
-use Authentication\LoginUserStorage;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
-use Mail\MailTemplateFactory;
-use Nette\Application\IPresenter;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Http\Session;
+use Nette\Security\UserStorage;
 use Tester\Assert;
 
 /**
@@ -18,10 +18,8 @@ use Tester\Assert;
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait MockApplicationTrait {
-    /**
-     * @var Container
-     */
-    private $container;
+
+    protected Container $container;
 
     /**
      * @param Container $container
@@ -31,18 +29,14 @@ trait MockApplicationTrait {
         $this->container = $container;
     }
 
-    /**
-     * @return Container
-     */
-    protected function getContainer() {
+    protected function getContainer(): Container {
         return $this->container;
     }
 
-    protected function mockApplication() {
+    protected function mockApplication(): void {
         $mockPresenter = new MockPresenter();
         $application = new MockApplication($mockPresenter);
-
-        $this->getContainer()->callInjects($mockPresenter);
+        $this->container->callInjects($mockPresenter);
         $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
     }
@@ -52,7 +46,7 @@ trait MockApplicationTrait {
      * @param null $timeout
      * @return void
      */
-    protected function fakeProtection($token, $timeout = null) {
+    protected function fakeProtection($token, $timeout = null): void {
         $container = $this->getContainer();
         /** @var Session $session */
         $session = $container->getService('session');
@@ -61,27 +55,26 @@ trait MockApplicationTrait {
         $section->$key = $token;
     }
 
-    protected function authenticate($login) {
+    protected function authenticate($login, ?Presenter $presenter = null): void {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
             Assert::type(ModelLogin::class, $login);
         }
-        $storage = $container->getByType(LoginUserStorage::class);
-        $storage->setIdentity($login);
-        $storage->setAuthenticated(true);
+        /** @var UserStorage $storage */
+        $storage = $container->getByType(UserStorage::class);
+        $storage->saveAuthentication($login);
+
+        if ($presenter) {
+            $presenter->getUser()->login($login);
+        }
     }
 
-    /**
-     * @param string $presenterName
-     * @return IPresenter
-     */
-    protected function createPresenter($presenterName): IPresenter {
+    protected function createPresenter(string $presenterName): Presenter {
+        $_COOKIE['_nss'] = '1';
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
-
-        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
         return $presenter;
     }
 

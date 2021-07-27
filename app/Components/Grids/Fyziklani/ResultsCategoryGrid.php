@@ -3,57 +3,29 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class ResultsCategoryGrid
- * *
- */
 class ResultsCategoryGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $category;
+    private ModelEvent $event;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param string $category
-     * @param Container $container
-     */
+    private string $category;
+
     public function __construct(ModelEvent $event, string $category, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
     protected function getData(): IDataSource {
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+        $teams = $this->event->getParticipatingTeams()
             ->where('category', $this->category)
             ->order('name');
         return new NDataSource($teams);
@@ -63,10 +35,10 @@ class ResultsCategoryGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

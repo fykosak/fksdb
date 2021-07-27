@@ -1,17 +1,19 @@
 {block content}
+    {varType FKSDB\Models\ORM\Models\ModelEventParticipant $model}
+    {varType array $groups}
+    {varType bool $hasSchedule}
     <h2>{_'Base info'}</h2>
     {control valuePrinter:row 'person.person_link', $model}
     {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
-        {control valuePrinter:row 'event_participant.'.$field, $model}
+        {control valuePrinter:row 'event_participant.' . $field, $model}
     {/foreach}
-
     <hr/>
-
     {foreach $groups as $groupName=>$fieldDef}
         <h2>{$groupName}</h2>
         {foreach $fieldDef as $field}
+            {varType array $fields}
             {if array_key_exists($field,$fields)}
-                {control valuePrinter:row 'event_participant.'.$field, $model}
+                {control valuePrinter:row 'event_participant.' . $field, $model}
             {/if}
         {/foreach}
         <hr/>

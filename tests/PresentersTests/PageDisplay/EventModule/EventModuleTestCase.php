@@ -2,35 +2,28 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase {
-    /** @var int */
-    protected $eventId;
 
-    protected function setUp() {
+    protected int $eventId;
+
+    protected function setUp(): void {
         parent::setUp();
-        $this->eventId = $this->insert(DbNames::TAB_EVENT, [
-            'event_type_id' => 1,
-            'year' => 1,
-            'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
-            'name' => 'TEST FOF',
-        ]);
+        $this->eventId = $this->insert(DbNames::TAB_EVENT, $this->getEventData());
     }
 
     abstract protected function getEventData(): array;
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
-        list($presenterName, $action, $params) = parent::transformParams($presenterName, $action, $params);
+        [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['eventId'] = $this->eventId;
         return [$presenterName, $action, $params];
     }
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM event');
+    protected function tearDown(): void {
+        $this->truncateTables([DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 }

@@ -2,9 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
@@ -12,12 +13,12 @@ use Tester\Assert;
 
 class AnonymousMatchTest extends DsefTestCase {
 
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_dsef_participant');
+    protected function tearDown(): void {
+         $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
         parent::tearDown();
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
@@ -66,7 +67,7 @@ class AnonymousMatchTest extends DsefTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
 
 }

@@ -2,7 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-$container = require '../../../bootstrap.php';
+use DateTime;
+
+$container = require '../../../Bootstrap.php';
 
 /**
  * Class EventModule
@@ -14,8 +16,8 @@ class TeamEvent extends EventModuleTestCase {
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'TEST FOF',
         ];
     }

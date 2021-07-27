@@ -6,19 +6,19 @@ parameters:
                 -
                     value: 1
                     capacity: 64
-                    label: "Hostel Elf"
+                    label: _('Hostel Elf')
                 -
                     value: 2
                     capacity: 29
-                    label: "Beta Pension"
+                    label: _('Beta Pension')
                 -
                     value: 3
                     capacity: 24
-                    label: "Wellness Hotel Step"
+                    label: _('Wellness Hotel Step')
                 -
                     value: 4
                     capacity: 73
-                    label: "Hostel Kolbenka"
+                    label: _('Hostel Kolbenka')
             teacher:
                 person:
                     other_name:
@@ -66,107 +66,95 @@ events:
     fyziklani11:
         event_type_id: 1
         eventYears: [1,2,3,4,5,6,7,8,9,10,11] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
             notifyBcc:
                 default: fyziklani@fykos.cz
             notifyFrom:
                 default: FYKOSí Fyziklání <fyziklani@fykos.cz>
-
             schoolsInTeam:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
-
         baseMachines:
             #
             #   TEAM
             #
             TEAM:
-                service: @fyziklani.ServiceFyziklaniTeam
+                service: @orm.e_fyziklani_team.service
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
-                states:
-                    pending: Čeká na schválení
-                    spare: Náhradník
-                    approved: Potvrzen
-                    participated: Účastnil se
-                    cancelled: Zrušen
-                    missed: Nepřijel
+                states: %events.defaultFyziklani.teamStates%
 
                 transitions:
                     __init->pending:
                         condition: %events.fyziklani11.appCond%
-                        label: Přihlásit tým
+                        label: _('Register team')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(team, .*)
+                            - FKSDB\Models\Events\Transitions\MailSender(team, .*)
                     pending->approved:
                         condition: role('admin')
-                        label: Schválit účast
+                        label: _('Schválit účast')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(team, *)
+                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
-                        label: Potvrdit jako náhradníka
+                        label: _('Potvrdit jako náhradníka')
                     approved|spare->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Prezentovat
+                        label: _('Prezentovat')
                     approved|spare->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nepřijel
+                        label: _('Nepřijel')
                         behaviorType: danger
                     pending|spare|approved->cancelled:
                         condition: role('admin')
-                        label: Zrušit tým
+                        label: _('Zrušit tým')
                         behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat tým
+                        label: _('Smazat tým')
 
                 fields:
                     name:
-                        label: Název týmu # i18n
+                        label: _('Název týmu # i18n')
                         required: true
                         visible: true # or condition
                         modifiable: %events.fyziklani11.appCond%
                     category:
-                        label: Kategorie # i18n
+                        label: _('Kategorie # i18n')
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
                     force_a:
-                        label: "Chceme se účastnit v kategorii A"
+                        label: _('Chceme se účastnit v kategorii A')
                         visible: true
                         description: "Budete zařazeni do nejvyšší kategorie (s nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Kategorie A soutěží v jiné budově než ostatní kategorie. Tato kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
 
                     phone:
-                        label: Kontaktní telefon
+                        label: _('Kontaktní telefon')
                         required: false
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                     teacher_id:
-                        label: Učitel/doprovod
+                        label: _('Učitel/doprovod')
                         required: false
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                         factory: RefPerson(%events.fyziklani11.teacher%, email, true, role('admin'), false)
                     teacher_present:
-                        label: Učitel má zájem o program
+                        label: _('Učitel má zájem o program')
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                     teacher_accomodation:
-                        label: Ubytování pro učitele
+                        label: _('Ubytování pro učitele')
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                         factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani11.accomodation%))
                         required: false
                     room:
-                        label: Místnost
+                        label: _('Místnost')
                         visible: role('admin')
                         modifiable: false
                         description: "Úpravy se provádí v TeXu routing.tex."
@@ -181,21 +169,17 @@ events:
                 joinOn: e_fyziklani_team_id
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
-                states:
-                    applied: Přihlášen
-                    participated: Účastnil se
-                    missed: Nepřijel
-                    cancelled: Zrušen
+                states: %events.defaultFyziklani.participantStates%
 
                 transitions:
                     __init->applied:
                         condition: %events.fyziklani11.appCond%
-                        label: Přihlásit člena
+                        label: _('Přihlásit člena')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(member,self)
+                            - FKSDB\Models\Events\Transitions\MailSender(member,self)
                     applied->__terminated:
                         condition: %events.fyziklani11.appCond% # TODO the time period is not specified in rules
-                        label: Odebrat člena
+                        label: _('Odebrat člena')
                     applied->participated:
                         condition: role('admin')
                         visible: false
@@ -208,13 +192,13 @@ events:
 
                 fields:
                     person_id:
-                        label: Osoba
+                        label: _('Person')
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                         determining: true
                         factory: RefPerson(%events.fyziklani11.participant%, email, true, role('admin'), false)
                     accomodation:
-                        label: Ubytování
+                        label: _('Ubytování')
                         visible: true
                         modifiable: %events.fyziklani11.appCond%
                         factory: Chooser("Ubytování noc před souteží z 16.2.2017 na 17.2.2017.", Options(%events.fyziklani11.accomodation%))
@@ -229,39 +213,39 @@ events:
             baseMachines:
                 team:
                     bmName: TEAM
-                    label: Tým
+                    label: _('Tým')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                 p1:
                     bmName: PARTICIPANT
-                    label: 1. člen
+                    label: _('1. člen')
                     required: true
                 p2:
                     bmName: PARTICIPANT
-                    label: 2. člen
+                    label: _('2. člen')
                 p3:
                     bmName: PARTICIPANT
-                    label: 3. člen
+                    label: _('3. člen')
                 p4:
                     bmName: PARTICIPANT
-                    label: 4. člen
+                    label: _('4. člen')
                 p5:
                     bmName: PARTICIPANT
-                    label: 5. člen
+                    label: _('5. člen')
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - FKSDB\Events\FormAdjustments\DependentRequirements(%events.fyziklani11.dep.require%)
-                - FKSDB\Events\FormAdjustments\DependentVisibility(%events.fyziklani11.dep.visible%)
-                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
-                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
-                - FKSDB\Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani11.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
-                - FKSDB\Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
+                - FKSDB\Models\Events\FormAdjustments\DependentRequirements(%events.fyziklani11.dep.require%)
+                - FKSDB\Models\Events\FormAdjustments\DependentVisibility(%events.fyziklani11.dep.visible%)
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
+                - FKSDB\Models\Events\FormAdjustments\MultiResourceAvailability(['team.teacher_accomodation', '*.accomodation'], %events.fyziklani11.accomodation%, 'Kapacita ubytování je již vyčerpána (zbývá %avail).')
+                - FKSDB\Models\Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
                 # Needs testing, may not work correctly when school field is disabled (i.e. not sent by browser).
-                #- FKSDB\Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
+                #- FKSDB\Models\Events\Spec\Fyziklani\TeamsPerSchool(param('teamsPerSchool'))
 
             processings:
-                - FKSDB\Events\Spec\Fyziklani\CategoryProcessing()
+                - FKSDB\Models\Events\Spec\Fyziklani\CategoryProcessing()
                 - @events.privacyPolicy
 
             joins:

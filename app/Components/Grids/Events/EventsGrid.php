@@ -2,93 +2,45 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
+use FKSDB\Components\Grids\EntityGrid;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class EventsGrid extends BaseGrid {
+class EventsGrid extends EntityGrid {
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
-    /**
-     * @var int
-     */
-    private $year;
-
-    /**
-     * EventsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
-    public function __construct(Container $container, ModelContest $contest, int $year) {
-        parent::__construct($container);
-        $this->contest = $contest;
-        $this->year = $year;
-    }
-
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
-        $this->serviceEvent = $serviceEvent;
-    }
-
-    public function getData(): IDataSource {
-        $events = $this->serviceEvent->getEvents($this->contest, $this->year);
-        return new NDataSource($events);
-    }
-
-    /**
-     * @param Presenter $presenter
-     * @throws BadRequestException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     */
-    protected function configure(Presenter $presenter) {
-        parent::configure($presenter);
-        $this->setDefaultOrder('event.begin ASC');
-
-        $this->addColumns([
+    public function __construct(Container $container, ModelContestYear $contestYear) {
+        parent::__construct($container, ServiceEvent::class, [
             'event.event_id',
             'event.event_type',
             'event.name',
             'event.year',
             'event.event_year',
+        ], [
+            'event_type.contest_id' => $contestYear->contest_id,
+            'year' => $contestYear->year,
         ]);
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @throws BadTypeException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+        $this->setDefaultOrder('event.begin ASC');
 
         $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event_participant.list');
+        $this->addLink('event.application.list');
 
         $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
-
-        $this->addGlobalButton('add')
-            ->setLink($this->getPresenter()->link('create'))
-            ->setLabel('Add event')
-            ->setClass('btn btn-sm btn-primary');
     }
 }

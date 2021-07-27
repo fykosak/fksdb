@@ -2,37 +2,25 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
-use FKSDB\Exceptions\NotImplementedException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class SchoolProvider implements IFilteredDataProvider {
+class SchoolProvider implements FilteredDataProvider {
 
-    const LIMIT = 50;
+    private const LIMIT = 50;
+
+    private ServiceSchool $serviceSchool;
 
     /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
-
-    /**
-     * School with school_id equal to defaulValue is suggested even when it's not
+     * School with school_id equal to defaultValue is suggested even when it's not
      * active.
      *
      * @var int
      */
     private $defaultValue;
 
-    /**
-     * SchoolProvider constructor.
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -40,10 +28,10 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(?string $search): array {
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 
@@ -97,8 +85,9 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
+     * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         $this->defaultValue = $id;
     }
 }

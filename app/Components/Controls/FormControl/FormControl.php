@@ -2,19 +2,17 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
-use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\UI\Control;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Application\UI\Form;
 
 /**
  * Bootstrap compatible form control with support for AJAX in terms
  * of form/container groups.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class FormControl extends Control {
+class FormControl extends BaseComponent {
 
-    const SNIPPET_MAIN = 'groupContainer';
+    public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form {
         return new Form();
@@ -32,11 +30,10 @@ class FormControl extends Control {
         return $component;
     }
 
-    public function render() {
+    final public function render(): void {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FormControl.containers.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 }

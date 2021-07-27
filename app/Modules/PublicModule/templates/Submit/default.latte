@@ -1,24 +1,21 @@
 {block content}
+    <a class="btn btn-success" href="{plink ajax}">{_'New submit system'}</a>
+    <a class="btn btn-info" href="{plink list}">{_'Submitted solutions'}</a>
+    <hr/>
     {if $hasTasks}
         {control uploadForm}
     {else}
         <p class="alert alert-info">
-            {_'Žádné úlohy k odevzdávání.'}
+            {_'No tasks available to submit.'}
         </p>
-
         {if $canRegister}
             <p>
-                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Registrovat se do dalšího ročníku'}</a>
+                <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Register for the next year'}</a>
             </p>
         {elseif $hasForward}
             <p>
-                <a class="btn btn-primary" n:href="this, year => $presenter->year + 1">{_'Další ročník'}</a>
+                <a class="btn btn-primary" n:href="this, year => $presenter->year + 1">{_'Next year'}</a>
             </p>
         {/if}
     {/if}
-
-    <h2>{_'Odevzdaná řešení'}</h2>
-
-    {control submitsGrid}
-
 {/block}

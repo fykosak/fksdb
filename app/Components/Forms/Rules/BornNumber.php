@@ -2,36 +2,28 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @author David Grudl
  * @see http://latrine.dgx.cz/jak-overit-platne-ic-a-rodne-cislo
  */
 class BornNumber {
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $rc = $control->getValue();
         // suppose once validated is always valid
         if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
-        $matches = [];
         // "be liberal in what you receive"
-        if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
-            return FALSE;
+        try {
+            [$year, $month, $day, $ext, $c] = self::parseBornNumber($rc);
+        } catch (OutOfRangeException $exception) {
+            return false;
         }
-
-        list(, $year, $month, $day, $ext, $c) = $matches;
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if ($c === '') {
@@ -44,7 +36,7 @@ class BornNumber {
             $mod = 0;
         }
         if ($mod !== (int)$c) {
-            return FALSE;
+            return false;
         }
 
         $originalYear = $year;
@@ -56,23 +48,35 @@ class BornNumber {
         // k měsíci může být připočteno 20, 50 nebo 70
         if ($month > 70 && $year > 2003) {
             $month -= 70;
-        }
-        elseif ($month > 50) {
+        } elseif ($month > 50) {
             $month -= 50;
-        }
-        elseif ($month > 20 && $year > 2003) {
+        } elseif ($month > 20 && $year > 2003) {
             $month -= 20;
         }
 
         if (!checkdate($month, $day, $year)) {
-            return FALSE;
+            return false;
         }
 
         $normalized = "$originalYear$originalMonth$originalDay/$ext$c";
         $control->setValue($normalized);
 
         // cislo je OK
-        return TRUE;
+        return true;
+    }
+
+    /**
+     * @param string $bornNumber
+     * @return array [year,month,day,extension,control]
+     * @throws OutOfRangeException
+     */
+    private static function parseBornNumber(string $bornNumber): array {
+        if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $bornNumber, $matches)) {
+            throw new OutOfRangeException('Born number not match');
+        }
+
+        [, $year, $month, $day, $ext, $c] = $matches;
+        return [$year, $month, $day, $ext, $c];
     }
 
     /**
@@ -81,11 +85,7 @@ class BornNumber {
      * @throws OutOfRangeException
      */
     public static function getGender(string $bornNumber): string {
-        if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $bornNumber, $matches)) {
-            throw new OutOfRangeException('Born number not match');
-        }
-
-        list(, , $month, , , $control) = $matches;
+        [, $month, , , $control] = self::parseBornNumber($bornNumber);
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if ($control === '') {
@@ -93,10 +93,8 @@ class BornNumber {
         }
         if ($month > 50) {
             return 'F';
-        }
-        else {
+        } else {
             return 'M';
         }
     }
-
 }

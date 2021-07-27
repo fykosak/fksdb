@@ -58,7 +58,6 @@ class Replicator extends Container
 	 */
 	public function __construct(callable $factory, $createDefault = 0, $forceDefault = FALSE)
 	{
-		parent::__construct();
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		try {
@@ -91,7 +90,7 @@ class Replicator extends Container
 	 *
 	 * @param \Nette\ComponentModel\IContainer
 	 */
-	protected function attached($obj)
+	protected function attached(Nette\ComponentModel\IComponent $obj):void
 	{
 		parent::attached($obj);
 
@@ -133,7 +132,7 @@ class Replicator extends Container
 	 * @param string $name
 	 * @return \Nette\Forms\Container
 	 */
-	protected function createComponent($name)
+	protected function createComponent(string $name):?Nette\ComponentModel\IComponent
 	{
 		$container = $this->createContainer($name);
 		$container->currentGroup = $this->currentGroup;
@@ -472,7 +471,7 @@ class Replicator extends Container
 
 		SubmitButton::extensionMethod('addRemoveOnClick', function (SubmitButton $_this, $callback = NULL) {
 			$replicator = $_this->lookup(__NAMESPACE__ . '\Replicator');
-			$_this->setValidationScope(FALSE);
+			$_this->setValidationScope(null);
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
 				/** @var Replicator $replicator */
 				if (is_callable($callback)) {
