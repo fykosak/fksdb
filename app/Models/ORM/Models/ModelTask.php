@@ -4,6 +4,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
+use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Strings;
 use Fykosak\NetteORM\AbstractModel;
 
@@ -15,6 +16,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int points
  * @property-read int year
  * @property-read int contest_id
+ * @property-read ActiveRow contest
  * @property-read \DateTimeInterface submit_deadline
  * @property-read \DateTimeInterface submit_start
  */
@@ -61,6 +63,6 @@ class ModelTask extends AbstractModel {
     }
 
     public function getContest(): ModelContest {
-        return ModelContest::createFromActiveRow($this->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return ModelContest::createFromActiveRow($this->contest);
     }
 }

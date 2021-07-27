@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
@@ -17,6 +17,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read \DateTimeInterface agreed
  * @property-read \DateTimeInterface born
  * @property-read int person_id
+ * @property-read ActiveRow person
  * @property-read string id_number
  * @property-read string im
  * @property-read string note
@@ -38,6 +39,6 @@ use Fykosak\NetteORM\AbstractModel;
 class ModelPersonInfo extends AbstractModel {
 
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->person);
     }
 }

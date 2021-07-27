@@ -7,11 +7,12 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int ac_year
- * @property-read int school_id
+ * @property-read int|null school_id
+ * @property-read ActiveRow|null school
+ * @property-read ActiveRow person
+ * @property-read int person_id
  * @property-read string class
  * @property-read int study_year
- * @property-read ActiveRow school
- * @property-read ActiveRow person
  */
 class ModelPersonHistory extends AbstractModel {
 

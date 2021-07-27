@@ -101,7 +101,7 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelSchool|false $school */
+        /** @var ModelSchool|null $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();

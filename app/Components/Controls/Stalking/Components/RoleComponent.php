@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\ModelGrant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
 class RoleComponent extends BaseStalkingComponent {
+
     final public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
@@ -18,7 +19,7 @@ class RoleComponent extends BaseStalkingComponent {
         if ($login) {
             /** @var ModelGrant $grant */
             foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
-                $roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                $roles[] = new Grant($grant->contest_id, $grant->role->name);
             }
         }
         $this->template->roles = $roles;

@@ -48,7 +48,8 @@ class ModelPerson extends AbstractModel implements Resource {
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY)
-            ->where('ac_year', $acYear)->fetch();
+            ->where('ac_year', $acYear)
+            ->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }
@@ -89,26 +90,9 @@ class ModelPerson extends AbstractModel implements Resource {
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
-    /**
-     * @return ModelPersonHasFlag[]
-     */
-    public function getPersonHasFlags(): array {
-        $personFlags = $this->getFlags();
-        $result = [];
-        foreach ($personFlags as $row) {
-            $result[] = ModelPersonHasFlag::createFromActiveRow($row);
-        }
-        return $result;
-    }
-
-    public function getPersonHasFlag(string $fid): ?ModelPersonHasFlag {
-        $flags = $this->getPersonHasFlags();
-        foreach ($flags as $flag) {
-            if ($flag->getFlag()->fid === $fid) {
-                return $flag;
-            }
-        }
-        return null;
+    public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag {
+        $row = $this->getFlags()->where('flag.fid', $flagType)->fetch();
+        return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
     }
 
     public function getPostContacts(): GroupedSelection {
@@ -149,7 +133,6 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getEventParticipants(): GroupedSelection {
-        //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
@@ -162,7 +145,7 @@ class ModelPerson extends AbstractModel implements Resource {
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);
         }
-        return ($tmp->count() > 0);
+        return (bool)$tmp->fetch();
     }
 
     public function getEventOrgs(): GroupedSelection {
@@ -173,13 +156,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
     private function getLastHistory(): ?ModelPersonHistory {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
-
-        if ($history) {
-            return ModelPersonHistory::createFromActiveRow($history);
-        } else {
-            return null;
-        }
+        $row = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
+        return $row ? ModelPersonHistory::createFromActiveRow($row) : null;
     }
 
     public function getFullName(): string {
