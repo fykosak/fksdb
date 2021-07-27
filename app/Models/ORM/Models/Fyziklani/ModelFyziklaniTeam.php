@@ -53,7 +53,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
     }
 
     public function getTeacher(): ?ModelPerson {
-        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+        return isset($this->person) ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
     public function getEvent(): ModelEvent {

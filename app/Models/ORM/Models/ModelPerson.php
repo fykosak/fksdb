@@ -40,7 +40,6 @@ class ModelPerson extends AbstractModel implements Resource {
     public function getInfo(): ?ModelPersonInfo {
         $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
         return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
-
     }
 
     public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory {
@@ -92,14 +91,14 @@ class ModelPerson extends AbstractModel implements Resource {
     }
 
     public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag {
-        $row = $this->getFlags()->where('fid', $flagType)->fetch();
+        $row = $this->getFlags()->where('flag.fid', $flagType)->fetch();
         return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
     }
 
     public function getPostContacts(): GroupedSelection {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
-    
+
     public function getDeliveryAddress2(): ?ModelAddress {
         return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
     }
@@ -157,13 +156,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
     private function getLastHistory(): ?ModelPersonHistory {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
-
-        if ($history) {
-            return ModelPersonHistory::createFromActiveRow($history);
-        } else {
-            return null;
-        }
+        $row = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
+        return $row ? ModelPersonHistory::createFromActiveRow($row) : null;
     }
 
     public function getFullName(): string {

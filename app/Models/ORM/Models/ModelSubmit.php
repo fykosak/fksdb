@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
@@ -34,7 +35,8 @@ class ModelSubmit extends AbstractModel implements Resource {
     }
 
     public function getContestant(): ModelContestant {
-        return ModelContestant::createFromActiveRow($this->contestant_base);
+        // TODO why?
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     public function getResourceId(): string {
