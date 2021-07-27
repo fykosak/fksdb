@@ -7,14 +7,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\Form;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolFactory {
-
-    private const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
     private SchoolProvider $schoolProvider;
 
@@ -34,7 +27,7 @@ class SchoolFactory {
             ->setOption('description', _('Envelope name.'));
 
         $container->addText('name_abbrev', _('Abbreviated name'))
-            ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
+            ->addRule(Form::MAX_LENGTH, _('The length of the abbreviated name is restricted to a maximum %d characters.'), 32)
             ->addRule(Form::FILLED, _('Short name is required.'))
             ->setOption('description', _('Very short name.'));
 
@@ -42,11 +35,11 @@ class SchoolFactory {
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL);
 
-        $container->addText('ic', _('IČ'))
-            ->addRule(Form::MAX_LENGTH, _('Délka IČ je omezena na %d znaků.'), 8);
+        $container->addText('ic', _('IČ (Czech schools only)'))
+            ->addRule(Form::MAX_LENGTH, _('The length of IČ is restricted to %d characters.'), 8);
 
-        $container->addText('izo', _('IZO'))
-            ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
+        $container->addText('izo', _('IZO (Czech schools only)'))
+            ->addRule(Form::MAX_LENGTH, _('The length of IZO is restricted to %d characters.'), 32);
 
         $container->addCheckbox('active', _('Active record'))
             ->setDefaultValue(true);
@@ -56,10 +49,10 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect(int $options = 0): AutocompleteSelectBox {
+    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
-        if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
+        if ($showUnknownSchoolHint) {
             $schoolElement->setOption('description', sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz'));
         }
         return $schoolElement;

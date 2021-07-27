@@ -7,28 +7,23 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelEvent;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 trait WithEventTrait {
 
     /**
-     * @param mixed $obj
+     * @param object $obj
      * @return ModelEvent
      * @throws \InvalidArgumentException
      */
-    protected function getEvent($obj): ModelEvent {
+    protected function getEvent(object $obj): ModelEvent {
         return $this->getHolder($obj)->getPrimaryHolder()->getEvent();
     }
 
     /**
-     * @param mixed $obj
+     * @param object $obj
      * @return Holder
      * @throws \InvalidArgumentException
      */
-    protected function getHolder($obj): Holder {
+    protected function getHolder(object $obj): Holder {
         if ($obj instanceof Holder) {
             return $obj;
         }
@@ -39,7 +34,5 @@ trait WithEventTrait {
             return $obj->getHolder();
         }
         throw new \InvalidArgumentException();
-
     }
-
 }

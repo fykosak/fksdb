@@ -2,25 +2,21 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\DataTesting\PersonTestControl;
+use FKSDB\Components\Controls\DataTesting\PersonTestComponent;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class ValidationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ValidationPresenter extends BasePresenter {
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Data validation'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('Data validation'), 'fas fa-clipboard-check'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('All test'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('All tests'), 'fas fa-tasks'));
     }
 
     public function titlePreview(): void {
-        $this->setPageTitle(new PageTitle(_('Select test'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('Select test'), 'fas fa-check'));
     }
 
     public function authorizedDefault(): void {
@@ -40,7 +36,7 @@ class ValidationPresenter extends BasePresenter {
         return new PersonsGrid($this->getContext());
     }
 
-    protected function createComponentValidationControl(): PersonTestControl {
-        return new PersonTestControl($this->getContext());
+    protected function createComponentValidationControl(): PersonTestComponent {
+        return new PersonTestComponent($this->getContext());
     }
 }

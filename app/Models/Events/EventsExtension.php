@@ -32,11 +32,7 @@ use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
  * It's a f**** magic!
- *
- * @author Michal Koutný <michal@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
 
@@ -184,7 +180,10 @@ class EventsExtension extends CompilerExtension {
             }
         }
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        foreach ($definition['onExecuted'] as $cb) {
+            $factory->addSetup('addAfterExecute', [$cb]);
+        }
+
         return $factory;
     }
 
@@ -402,7 +401,6 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setJoinOn', [$definition['joinOn']]);
         $factory->addSetup('setJoinTo', [$definition['joinTo']]);
-        $factory->addSetup('setPersonIdColumns', [$definition['personIds']]); // must be set after setService
         $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);

@@ -2,25 +2,21 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\Contest;
 
-use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
-/**
- * Class ContestRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ContestColumnFactory extends ColumnFactory {
 
     /**
-     * @param AbstractModelSingle|ModelContest $model
+     * @param AbstractModel|ModelContest $model
      * @return Html
      * @throws ContestNotFoundException
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return ContestBadge::getHtml($model);
     }
 }

@@ -2,17 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\AbstractService;
 
 /**
- * Class ServiceEmailMessage
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelEmailMessage createNewModel(array $data)
  */
-class ServiceEmailMessage extends AbstractServiceSingle {
+class ServiceEmailMessage extends AbstractService {
 
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
@@ -20,11 +19,10 @@ class ServiceEmailMessage extends AbstractServiceSingle {
 
     /**
      * @param array $data
-     * @param int $priority
      * @return ModelEmailMessage|ActiveRow
      * @throws ModelException
      */
-    public function addMessageToSend(array $data, int $priority = 0): ModelEmailMessage {
+    public function addMessageToSend(array $data): ModelEmailMessage {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];

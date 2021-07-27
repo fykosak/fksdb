@@ -3,20 +3,16 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use Nette\Application\IPresenter;
+use Fykosak\NetteORM\AbstractService;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * Class EntityGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class EntityGrid extends BaseGrid {
 
-    protected AbstractServiceSingle $service;
+    protected AbstractService $service;
 
     private array $queryParams;
 
@@ -35,12 +31,12 @@ abstract class EntityGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns($this->columns);
     }

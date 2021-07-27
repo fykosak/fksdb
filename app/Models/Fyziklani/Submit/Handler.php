@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\Logging\ILogger;
+use Fykosak\NetteORM\Exceptions\ModelException;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -15,10 +15,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
 use Tracy\Debugger;
 
-/**
- * Class SubmitHandler
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Handler {
 
     public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
@@ -44,7 +40,7 @@ class Handler {
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param string $code
      * @param int $points
      * @return void
@@ -52,13 +48,13 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    public function preProcess(ILogger $logger, string $code, int $points): void {
+    public function preProcess(Logger $logger, string $code, int $points): void {
         $this->checkTaskCode($code);
         $this->savePoints($logger, $code, $points);
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param string $code
      * @param int $points
      * @return void
@@ -66,7 +62,7 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    private function savePoints(ILogger $logger, string $code, int $points): void {
+    private function savePoints(Logger $logger, string $code, int $points): void {
         $task = $this->taskCodePreprocessor->getTask($code);
         $team = $this->taskCodePreprocessor->getTeam($code);
 
@@ -78,7 +74,7 @@ class Handler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
+            throw new TaskCodeException(\sprintf(_('Task given and validated.')));
         }
     }
 
@@ -103,18 +99,18 @@ class Handler {
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @param int $points
      * @return void
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function changePoints(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+    public function changePoints(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -124,25 +120,25 @@ class Handler {
             'modified' => null,
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
-        $logger->log(new Message(\sprintf(_('Body byly upraveny. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @return void
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function revokeSubmit(ILogger $logger, ModelFyziklaniSubmit $submit): void {
+    public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
-            $this->serviceFyziklaniSubmit->updateModel2($submit, [
+            $this->serviceFyziklaniSubmit->updateModel($submit, [
                 'points' => null,
                 'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
                 /* ugly, exclude previous value of `modified` from query
@@ -152,12 +148,12 @@ class Handler {
                 'modified' => null,
             ]);
             $this->logEvent($submit, 'revoked');
-            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS));
+            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Logger::SUCCESS));
         }
     }
 
     /**
-     * @param ILogger $logger
+     * @param Logger $logger
      * @param ModelFyziklaniSubmit $submit
      * @param int $points
      * @return void
@@ -165,14 +161,14 @@ class Handler {
      * @throws PointsMismatchException
      * @throws ModelException
      */
-    public function checkSubmit(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
-        if (!$submit->canChange()) {
+    public function checkSubmit(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void {
+        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->serviceFyziklaniSubmit->updateModel2($submit, [
+        $this->serviceFyziklaniSubmit->updateModel($submit, [
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -182,15 +178,15 @@ class Handler {
         ]);
         $this->logEvent($submit, 'checked');
 
-        $logger->log(new Message(\sprintf(_('Bodovanie bolo overené. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
             $points,
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
     }
 
-    public function createSubmit(ILogger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
+    public function createSubmit(Logger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
         $submit = $this->serviceFyziklaniSubmit->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
@@ -203,12 +199,12 @@ class Handler {
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 
-        $logger->log(new Message(\sprintf(_('Body byly uloženy. %d bodů, tým: "%s" (%d), úloha: %s "%s"'),
+        $logger->log(new Message(\sprintf(_('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
             $points,
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name), ILogger::SUCCESS));
+            $task->name), Logger::SUCCESS));
     }
 
     private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void {

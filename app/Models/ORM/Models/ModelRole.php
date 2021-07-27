@@ -2,11 +2,9 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ModelRole extends AbstractModelSingle {
+use Fykosak\NetteORM\AbstractModel;
+
+class ModelRole extends AbstractModel {
 
     public const CONTESTANT = 'contestant';
     public const ORG = 'org';

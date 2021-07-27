@@ -2,51 +2,46 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
-use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
+use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoaderComponent;
+use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoaderComponent;
 
-/**
- * Trait CollectorPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
- * @author Michal Koutny
- */
 trait CollectorPresenterTrait {
 
     /*	 * ******************************
      * Loading assets
      * ****************************** */
 
-    protected function createComponentJsLoader(): JavaScriptLoader {
-        return new JavaScriptLoader();
+    protected function createComponentJsLoader(): JavaScriptLoaderComponent {
+        return new JavaScriptLoaderComponent($this->getContext());
     }
 
-    protected function createComponentCssLoader(): StylesheetLoader {
-        return new StylesheetLoader();
+    protected function createComponentCssLoader(): StylesheetLoaderComponent {
+        return new StylesheetLoaderComponent($this->getContext());
     }
 
     /*	 * ******************************
      * IJavaScriptCollector
      * ****************************** */
     public function registerJSFile(string $file): void {
-        /** @var JavaScriptLoader $component */
+        /** @var JavaScriptLoaderComponent $component */
         $component = $this->getComponent('jsLoader');
         $component->addFile($file);
     }
 
     public function registerJSCode(string $code, ?string $tag = null): void {
-        /** @var JavaScriptLoader $component */
+        /** @var JavaScriptLoaderComponent $component */
         $component = $this->getComponent('jsLoader');
         $component->addInline($code, $tag);
     }
 
     public function unregisterJSCode(string $tag): void {
-        /** @var JavaScriptLoader $component */
+        /** @var JavaScriptLoaderComponent $component */
         $component = $this->getComponent('jsLoader');
         $component->removeInline($tag);
     }
 
     public function unregisterJSFile(string $file): void {
-        /** @var JavaScriptLoader $component */
+        /** @var JavaScriptLoaderComponent $component */
         $component = $this->getComponent('jsLoader');
         $component->removeFile($file);
     }
@@ -56,13 +51,13 @@ trait CollectorPresenterTrait {
      * ****************************** */
 
     public function registerStylesheetFile(string $file, array $media = []): void {
-        /** @var StylesheetLoader $component */
+        /** @var StylesheetLoaderComponent $component */
         $component = $this->getComponent('cssLoader');
         $component->addFile($file, $media);
     }
 
     public function unregisterStylesheetFile(string $file, array $media = []): void {
-        /** @var StylesheetLoader $component */
+        /** @var StylesheetLoaderComponent $component */
         $component = $this->getComponent('cssLoader');
         $component->removeFile($file, $media);
     }

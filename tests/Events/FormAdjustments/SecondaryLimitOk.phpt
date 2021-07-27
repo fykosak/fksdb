@@ -4,7 +4,7 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -45,8 +45,8 @@ EOT
      * @dataProvider getTestData
      */
     public function testDisplay(int $capacity, bool $disabled): void {
-        Assert::equal(2, (int)$this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
-        $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
+        Assert::equal(2, (int)$this->explorer->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
+        $this->explorer->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
 accomodationCapacity: $capacity                
 EOT
             , $this->eventId);
@@ -60,9 +60,9 @@ EOT
         $response = $this->fixture->run($request);
 
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);

@@ -5,10 +5,6 @@ namespace FKSDB\Models\ValuePrinters;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 
-/**
- * Class DatePrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DatePrinter extends AbstractValuePrinter {
 
     protected string $format;

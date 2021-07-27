@@ -5,21 +5,17 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- * Class ApplicationGrid
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleApplicationsGrid extends AbstractApplicationsGrid {
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
@@ -27,7 +23,8 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
+        $this->setDefaultOrder('person.family_name');
         $this->paginate = false;
 
         $this->addColumns([

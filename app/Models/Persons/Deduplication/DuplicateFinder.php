@@ -9,11 +9,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DuplicateFinder {
 
     public const IDX_PERSON = 'person';
@@ -46,6 +41,9 @@ class DuplicateFinder {
         foreach ($buckets as $bucket) {
             foreach ($bucket as $personA) {
                 foreach ($bucket as $personB) {
+                    /** @var ModelPerson $personA
+                     * @var ModelPerson $personB
+                     */
                     if ($personA->person_id >= $personB->person_id) {
                         continue;
                     }
@@ -100,7 +98,6 @@ class DuplicateFinder {
         $familyScore = $this->stringScore($a->family_name, $b->family_name);
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
-
         return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
     }
 
@@ -121,21 +118,11 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
-    /**
-     * @param string $a
-     * @param string $b
-     * @return float
-     */
-    private function stringScore($a, $b): float {
+    private function stringScore(string $a, string $b): float {
         return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
-    /**
-     * @param string $a
-     * @param string $b
-     * @return float
-     */
-    private function relativeDistance($a, $b): float {
+    private function relativeDistance(string $a, string $b): float {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
             return 0.0; // two empty strings are equal

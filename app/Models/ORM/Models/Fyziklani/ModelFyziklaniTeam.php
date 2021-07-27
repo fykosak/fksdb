@@ -9,13 +9,13 @@ use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\OldAbstractModelSingle;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
  * @property-read string category
@@ -34,12 +34,8 @@ use Nette\Security\IResource;
  * @property-read int rank_category
  * @property-read int rank_total
  * @property-read ActiveRow person
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- * @author Michal Červeňák <miso@fykos.cz>
- *
  */
-class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, INodeCreator {
+class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';
@@ -70,10 +66,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, IN
 
     public function getPosition(): ?ModelFyziklaniTeamPosition {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        if ($row) {
-            return ModelFyziklaniTeamPosition::createFromActiveRow($row);
-        }
-        return null;
+        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
     }
 
     /* ******************** SUBMITS ******************************* */
@@ -95,7 +88,7 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, IN
     }
 
     public function hasOpenSubmitting(): bool {
-        return !is_numeric($this->points);
+        return !isset($this->points);
     }
 
     /**
@@ -203,13 +196,13 @@ class ModelFyziklaniTeam extends OldAbstractModelSingle implements IResource, IN
     public static function mapCategoryToName(string $category): string {
         switch ($category) {
             case self::CATEGORY_HIGH_SCHOOL_A :
-                return _('Středoškoláci A');
+                return _('High-school students A');
             case self::CATEGORY_HIGH_SCHOOL_B :
-                return _('Středoškoláci B');
+                return _('High-school students B');
             case self::CATEGORY_HIGH_SCHOOL_C :
-                return _('Středoškoláci C');
+                return _('High-school students C');
             case self::CATEGORY_ABROAD :
-                return _('Zahraniční SŠ');
+                return _('Abroad high-school students');
             case self::CATEGORY_OPEN :
                 return _('Open');
             default:

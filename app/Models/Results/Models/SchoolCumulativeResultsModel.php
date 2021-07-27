@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
@@ -13,23 +13,18 @@ use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
- *
- * @author Lukáš Timko <lukast@fykos.cz>
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /** @var int */
-    protected $series;
-
+    protected array $series;
     /**
      * Cache
      */
     private array $dataColumns = [];
-
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
-        parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection) {
+        parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 
@@ -77,15 +72,12 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return int|mixed
-     */
-    public function getSeries() {
+    public function getSeries(): array {
         return $this->series;
     }
 
     /**
-     * @param mixed $series
+     * @param array $series
      */
     public function setSeries($series): void {
         $this->series = $series;
@@ -211,5 +203,4 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         }
         return $resultRow;
     }
-
 }

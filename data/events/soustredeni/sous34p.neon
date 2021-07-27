@@ -1,6 +1,6 @@
 events:
     soustredeni34p:
-        event_type_id: [4, 5] # jarní i podzimní sous. nejsou různá
+        event_type_id: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [34]
         formLayout: soustredeni.form
         paramScheme:
@@ -33,145 +33,145 @@ events:
                 transitions:
                     __init->invited:
                         condition: role('admin')
-                        label: _('Pozvat účastníka')
+                        label: _('Invite participant')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
-                        label: _('Pozvat účastníka')
+                        label: _('Invite participant')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited, .self)
                     __init->spare:
                         condition: role('admin')
-                        label: _('Pozvat náhradníka')
+                        label: _('Invite Spare')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
-                        label: _('Pozvat náhradníka')
+                        label: _('Invite Spare')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(param('deadline')),role('admin'))
-                        label: _('Potrvrdit učast')
+                        label: _('Confirm participation')
                     spare|spare1|spare2|spare3->interested:
                         condition: before(param('deadline'))
-                        label: _('Chci jet')
+                        label: _('I want to go')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3->rejected:
                         condition: or(before(param('deadline')),role('admin'))
-                        label: _('Odmítnout účast')
+                        label: _('Decline participation')
                         behaviorType: warning
 
                     spare->spare1:
                         condition: and(after(param('deadlineCall1')),role('admin'))
-                        label: _('Poslat I. upomínku')
+                        label: _('Send first call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare1, self)
                     invited->invited1:
                         condition: and(after(param('deadlineCall1')),role('admin'))
-                        label: _('Poslat I. upomínku')
+                        label: _('Send first call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited1, self)
                     spare1->spare2:
                         condition: and(after(param('deadlineCall2')),role('admin'))
-                        label: _('Poslat II. upomínku')
+                        label: _('Send second call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare2, self)
                     invited1->invited2:
                         condition: and(after(param('deadlineCall2')),role('admin'))
-                        label: _('Poslat II. upomínku')
+                        label: _('Send second call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited2, self)
                     spare2->spare3:
                         condition: and(after(param('deadlineCallLast')),role('admin'))
-                        label: _('Poslat last call')
+                        label: _('Send last call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare3, self)
                     invited2->invited3:
                         condition: and(after(param('deadlineCallLast')),role('admin'))
-                        label: _('Poslat last call')
+                        label: _('Send last call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited3, self)
                     interested->applied:
                         condition: role('admin')
-                        label: _('Schválit jako účastníka')
+                        label: _('Validate as a participant')
                     spare->invited:
                         condition: role('admin')
-                        label: _('Pozvat jako účastníka')
+                        label: _('Invite as a participant')
                     spare1->invited1:
                         condition: role('admin')
-                        label: _('Pozvat jako účastníka')
+                        label: _('Invite as a participant')
                     spare2->invited2:
                         condition: role('admin')
-                        label: _('Pozvat jako účastníka')
+                        label: _('Invite as a participant')
                     spare3->invited3:
                         condition: role('admin')
-                        label: _('Pozvat jako účastníka')
+                        label: _('Invite as a participant')
                     applied->participated:
                         condition: and(role('admin'),eventWas())
-                        label: _('Zúčastnil se')
+                        label: _('Participated')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: _('Nepřijel')
+                        label: _('Missed')
 
                     invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
                         condition: role('admin')
-                        label: _('Zrušit přihlášku')
+                        label: _('Cancel the application')
                     invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
                         condition: role('admin')
-                        label: _('Řešit mimo FKSDB')
+                        label: _('Deal with outside FKSDB')
                     out_of_db->invited:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Pozvaný')
+                        label: _('Return to DB as Invited')
                     out_of_db->invited1:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Pozvaný I.upomínka')
+                        label: _('Return to DB as Invited, first call')
                     out_of_db->invited2:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Pozvaný II.upomínka')
+                        label: _('Return to DB as Invited, second call')
                     out_of_db->invited3:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Pozvaný last call')
+                        label: _('Return to DB as Invited, last call')
                     out_of_db->auto.invited:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Pozvaný (auto)')
+                        label: _('Return to DB as Invited (auto)')
                     out_of_db->spare:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Náhradník')
+                        label: _('Return to DB as Spare')
                     out_of_db->spare1:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Nahradník I.upomínka')
+                        label: _('Return to DB as Spare, first call')
                     out_of_db->spare2:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Nahradník II.upomínka')
+                        label: _('Return to DB as Spare, second call')
                     out_of_db->spare3:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Nahradník last call')
+                        label: _('Return to DB as Spare, last call')
                     out_of_db->auto.spare:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Náhradník (auto)')
+                        label: _('Return to DB as Spare (auto)')
                     out_of_db->applied:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Účastní se')
+                        label: _('Return to DB as Applied')
                     out_of_db->interested:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Chce jet')
+                        label: _('Return to DB as Interested')
                     out_of_db->participated:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Účastnil se')
+                        label: _('Return to DB as Participated')
                     out_of_db->rejected:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Odmítl')
+                        label: _('Return to DB as Rejected')
                     out_of_db->missed:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Nepřijel')
+                        label: _('Return to DB as Missed')
                     out_of_db->cancelled:
                         condition: role('admin')
-                        label: _('Vrátit zpět do DB jako Zrušen')
+                        label: _('Return to DB as Cancelled')
 
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: _('Smazat přihlášku')
+                        label: _('Delete application')
 
                 fields:
                     person_id:
@@ -181,19 +181,19 @@ events:
                         default: null
                         factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
                     diet:
-                        label: _('Jídlo')
-                        description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
+                        label: _('Food')
+                        description: "Do you have any special diet – vegetarianism, veganism etc.? If so, do you want us to get you the special diet or will you bring your own food?"
                     health_restrictions:
-                        label: _('Zdravotní omezení')
-                        description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v pobytu na soustředění nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných nebo nočních her? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
+                        label: _('Health restrictions')
+                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
                     tshirt_size:
-                        label: _('Jaké triko nosíš?')
+                        label: _('What t-shirt size do you wear?')
                         required: %events.soustredeni.requiredCond%
-                        factory: Chooser("Zvolit velikost", Options(%events.soustredeni.tshirt%))
+                        factory: Chooser("Choose size", Options(%events.soustredeni.tshirt%))
                     price:
-                        label: _('Cena soustředění (CZK)')
+                        label: _('Price of camp (CZK)')
                         modifiable: false
-                        description: "Cena v spočtená dle pravidel (http://fykos.cz/sous_cena)."
+                        description: _("Price calculated according to the rules on our website.")
 
 
         #
@@ -204,12 +204,12 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT
-                    label: _('Účastník')
+                    label: _('Participant')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
                 - @events.privacyPolicy
 
             processings:

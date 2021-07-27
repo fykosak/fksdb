@@ -4,20 +4,15 @@ namespace FKSDB\Models\Logging;
 
 use FKSDB\Models\Messages\Message;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class StackedLogger implements ILogger {
+abstract class StackedLogger implements Logger {
 
-    private ?ILogger $child = null;
+    private ?Logger $child = null;
 
-    public function getChild(): ?ILogger {
+    public function getChild(): ?Logger {
         return $this->child;
     }
 
-    public function setChild(ILogger $child): void {
+    public function setChild(Logger $child): void {
         $this->child = $child;
     }
 

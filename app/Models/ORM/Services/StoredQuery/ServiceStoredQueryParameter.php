@@ -2,11 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ServiceStoredQueryParameter extends AbstractServiceSingle {
+class ServiceStoredQueryParameter extends AbstractService {
 
 }

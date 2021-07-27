@@ -10,24 +10,24 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\YearCalculator;
-use Nette\Security\IAuthenticator;
+use Nette\Security\Authenticator;
+use Nette\Security\IdentityHandler;
+use Nette\Security\IIdentity;
+use Nette\Security\SimpleIdentity;
 
-/**
- * Users authenticator.
- */
-class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
+class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler {
 
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
+        parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
     }
 
     /**
      * Performs an authentication.
-     * @param array $credentials
+     * @param string $user
+     * @param string $password
      * @return ModelLogin
      * @throws InactiveLoginException
      * @throws InvalidCredentialsException
@@ -35,18 +35,14 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws UnknownLoginException
      * @throws \Exception
      */
-    public function authenticate(array $credentials): ModelLogin {
-        [$id, $password] = $credentials;
-
-        $login = $this->findLogin($id);
+    public function authenticate(string $user, string $password): ModelLogin {
+        $login = $this->findLogin($user);
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
             throw new InvalidCredentialsException();
         }
 
         $this->logAuthentication($login);
-
-        $login->injectYearCalculator($this->yearCalculator);
 
         return $login;
     }
@@ -58,7 +54,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function findLogin($id): ModelLogin {
+    public function findLogin(string $id): ModelLogin {
         /** @var ModelPerson $person */
         $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
@@ -88,8 +84,21 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @param ModelLogin|object $login
      * @return string
      */
-    public static function calculateHash($password, $login): string {
+    public static function calculateHash(string $password, $login): string {
         return sha1($login->login_id . md5($password));
     }
 
+    public function sleepIdentity(IIdentity $identity): IIdentity {
+        if ($identity instanceof ModelLogin) {
+            $identity = new SimpleIdentity($identity->getId());
+        }
+        return $identity;
+    }
+
+    public function wakeupIdentity(IIdentity $identity): ?ModelLogin {
+        // Find login
+        /** @var ModelLogin|null $login */
+        $login = $this->serviceLogin->findByPrimary($identity->getId());
+        return $login;
+    }
 }

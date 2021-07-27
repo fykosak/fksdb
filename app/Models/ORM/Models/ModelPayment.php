@@ -5,19 +5,13 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
-use FKSDB\Models\Transitions\IStateModel;
 use FKSDB\Models\Transitions\Machine;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int person_id
  * @property-read ActiveRow person
  * @property-read int payment_id
@@ -37,7 +31,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IPaymentModel {
+class ModelPayment extends AbstractModel implements Resource {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received
@@ -75,7 +69,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     public function canEdit(): bool {
-        return \in_array($this->getState(), [Machine\Machine::STATE_INIT, self::STATE_NEW]);
+        return \in_array($this->state, [Machine\Machine::STATE_INIT, self::STATE_NEW]);
     }
 
     public function getPrice(): Price {
@@ -84,23 +78,5 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     public function hasGeneratedSymbols(): bool {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
-    }
-
-    public function updateState(?string $newState): void {
-        $this->update(['state' => $newState]);
-    }
-
-    public function getState(): ?string {
-        return $this->state;
-    }
-
-    /**
-     * @param Explorer $explorer
-     * @param Conventions $conventions
-     * @return static
-     */
-    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
-        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $explorer, $conventions);
-        return $query->get($this->getPrimary());
     }
 }

@@ -3,18 +3,14 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Models\ORM\Models\ModelAddress;
+use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\ModelRegion;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class AddressContainer extends ModelContainer {
 
     private ServiceRegion $serviceRegion;
@@ -33,7 +29,7 @@ class AddressContainer extends ModelContainer {
      * @param iterable|null $value
      */
     public function setValue($value): void {
-        $this->setValues($value === null ? [] : $value);
+        $this->setValues($value ?? []);
     }
 
     /**
@@ -46,35 +42,35 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * @param ActiveRow|mixed $values
+     * @param ModelPostContact|mixed $data
      * @param bool $erase
      * @return static
      */
-    public function setValues($values, $erase = false): self {
-        if ($values instanceof ActiveRow) { //assert its from address table
-            if ($values instanceof AbstractModelMulti) {
-                $address = $values->getMainModel();
+    public function setValues($data, bool $erase = false): self {
+        if ($data instanceof ActiveRow) { //assert its from address table
+            if ($data instanceof ModelPostContact) {
+                $address = $data->getAddress();
             } else {
-                $address = $values;
+                $address = $data;
             }
             /** @var ModelAddress $address */
-
-            $values = $address->toArray();
-            $values['country_iso'] = $address->region_id ? $address->region->country_iso : null;
-        } elseif (is_array($values) && isset($values['region_id'])) {
-            $region = $this->serviceRegion->findByPrimary($values['region_id']);
-            $values['country_iso'] = $region->country_iso;
+            $data = $address->toArray();
+            $data['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
+        } elseif (is_array($data) && isset($data['region_id'])) {
+            $region = $this->serviceRegion->findByPrimary($data['region_id']);
+            $data['country_iso'] = $region->country_iso;
         }
 
-        return parent::setValues($values, $erase);
+        return parent::setValues($data, $erase);
     }
 
     /**
-     * @param bool $asArray
+     * @param null $returnType
+     * @param array|null $controls
      * @return array|ArrayHash
      */
-    public function getValues($asArray = false) {
-        $values = parent::getValues($asArray);
+    public function getUnsafeValues($returnType = null, array $controls = null) {
+        $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');

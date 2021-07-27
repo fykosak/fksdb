@@ -18,13 +18,9 @@ use FKSDB\Models\Utils\CSVParser;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ImportComponent extends BaseComponent {
 
     private Machine $machine;
@@ -48,21 +44,21 @@ class ImportComponent extends BaseComponent {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $form->addUpload('file', _('Soubor s přihláškami'))
+        $form->addUpload('file', _('File with applications'))
             ->addRule(Form::FILLED)
             ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 
-        $form->addRadioList('errorMode', _('Chování při chybě'))
+        $form->addRadioList('errorMode', _('Error mode'))
             ->setItems([
-                ApplicationHandler::ERROR_ROLLBACK => _('Zastavit import a rollbackovat.'),
-                ApplicationHandler::ERROR_SKIP => _('Přeskočit přihlášku a pokračovat.'),
+                ApplicationHandler::ERROR_ROLLBACK => _('Stop import and rollback.'),
+                ApplicationHandler::ERROR_SKIP => _('Skip the application and continue.'),
             ])
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
-        $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
+        $form->addRadioList('stateless', _('Stateless applications.'))
             ->setItems([
                 ImportHandler::STATELESS_IGNORE => _('Ignore.'),
-                ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
+                ImportHandler::STATELESS_KEEP => _('Keep original state.'),
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
@@ -75,9 +71,8 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
-        $this->template->render();
+    final public function render(): void {
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
     }
 
     /**
@@ -87,6 +82,7 @@ class ImportComponent extends BaseComponent {
      * @throws MissingServiceException
      */
     private function handleFormImport(Form $form): void {
+        /** @var FileUpload[] $values */
         $values = $form->getValues();
         try {
             // process form values
@@ -105,9 +101,9 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
             }
 
             $this->redirect('this');

@@ -6,27 +6,23 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\Models\ModelContestYear;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Models\ModelContest;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ExtendedPersonHandler {
 
     use SmartObject;
@@ -37,40 +33,28 @@ class ExtendedPersonHandler {
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-    protected AbstractServiceSingle $service;
+    protected AbstractService $service;
     protected ServicePerson $servicePerson;
     private Connection $connection;
     private AccountManager $accountManager;
-    private ModelContest $contest;
-    private int $year;
+    private ModelContestYear $contestYear;
     private string $invitationLang;
-    /** @var ModelPerson */
-    private $person;
+    private ?ModelPerson $person = null;
 
     public function __construct(
-        AbstractServiceSingle $service,
+        AbstractService $service,
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
-        ModelContest $contest,
-        int $year,
+        ModelContestYear $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
-        $this->contest = $contest;
-        $this->year = $year;
+        $this->contestYear = $contestYear;
         $this->invitationLang = $invitationLang;
-    }
-
-    public function getContest(): ModelContest {
-        return $this->contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
     }
 
     public function getInvitationLang(): string {
@@ -83,9 +67,9 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @return ModelPerson|null|AbstractModelSingle
+     * @return ModelPerson|null|AbstractModel|ActiveRow
      */
-    final protected function getReferencedPerson(Form $form) {
+    final protected function getReferencedPerson(Form $form): ?ActiveRow {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
         return $input->getModel();
@@ -93,13 +77,13 @@ class ExtendedPersonHandler {
 
     /**
      * @param Form $form
-     * @param IExtendedPersonPresenter $presenter
+     * @param ExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
+    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int {
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -153,13 +137,8 @@ class ExtendedPersonHandler {
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param iterable $values
-     * @param IExtendedPersonPresenter $presenter
-     */
-    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter): void {
-        if ($this->contest === null || $this->year === null) {
+    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
+        if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
@@ -167,9 +146,9 @@ class ExtendedPersonHandler {
 
         if (!$model) {
             $data = [
-                'contest_id' => $this->contest ? $this->getContest()->contest_id : null,
+                'contest_id' => $this->contestYear->getContest(),
                 'person_id' => $person->getPrimary(),
-                'year' => $this->year ? $this->getYear() : null,
+                'year' => $this->contestYear->year,
             ];
             $model = $this->service->createNewModel((array)$data);
         }
@@ -177,7 +156,7 @@ class ExtendedPersonHandler {
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel2($model, (array)$data);
+            $this->service->updateModel($model, (array)$data);
         }
     }
 }

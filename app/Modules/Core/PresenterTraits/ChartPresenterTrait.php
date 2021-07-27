@@ -2,38 +2,33 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
-/**
- * Trait ChartPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ChartPresenterTrait {
 
-    protected IChart $selectedChart;
-
+    protected Chart $selectedChart;
     private array $chartComponents;
 
     public function titleChart(): void {
-        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
     }
 
-    public function renderChart(): void {
+    final public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     protected function getCharts(): array {
         $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
@@ -58,7 +53,7 @@ trait ChartPresenterTrait {
     abstract public function authorizedChart(): void;
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     abstract protected function registerCharts(): array;
 
@@ -68,5 +63,5 @@ trait ChartPresenterTrait {
      * @param string $id
      * @return static
      */
-    abstract public function setView($id);
+    abstract public function setView(string $id);
 }

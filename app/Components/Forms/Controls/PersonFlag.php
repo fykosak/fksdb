@@ -5,10 +5,6 @@ namespace FKSDB\Components\Forms\Controls;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PersonFlag extends SelectBox {
 
     public const FLAG_YES = 'flag-yes';
@@ -27,8 +23,8 @@ class PersonFlag extends SelectBox {
      */
     public function __construct($label = null) {
         $items = [
-            self::FLAG_YES => _('Ano'),
-            self::FLAG_NO => _('Ne'),
+            self::FLAG_YES => _('Yes'),
+            self::FLAG_NO => _('No'),
         ];
         parent::__construct($label, $items);
         $this->setPrompt('–');

@@ -5,7 +5,7 @@ namespace FKSDB\Tests\ModelsTests\ORM;
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -24,7 +24,7 @@ class ServicesTest extends DatabaseTestCase {
     public function getServices(): array {
         return array_map(function (string $service): array {
             return [$service];
-        }, $this->getContainer()->findByType(AbstractServiceSingle::class));
+        }, $this->getContainer()->findByType(AbstractService::class));
     }
 }
 

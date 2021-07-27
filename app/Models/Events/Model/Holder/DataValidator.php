@@ -4,12 +4,8 @@ namespace FKSDB\Models\Events\Model\Holder;
 
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DataValidator {
+
     use SmartObject;
 
     /** @var string[] */

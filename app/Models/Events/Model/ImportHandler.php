@@ -14,11 +14,6 @@ use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ImportHandler {
 
     use SmartObject;
@@ -95,11 +90,11 @@ class ImportHandler {
     }
 
     /**
-     * @param mixed $row
+     * @param iterable $row
      * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues($row): array {
+    private function rowToValues(iterable $row): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = [];
         $fieldExists = false;

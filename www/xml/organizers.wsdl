@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- root element wsdl:definitions defines set of related services -->
+<wsdl:definitions
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd1="http://fykos.cz/xml/ws/schema"
+        xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/definitions">
+    <!-- wsdl:types encapsulates schema definitions of communication types -->
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
+            <!-- types for web service only -->
+            <xsd:complexType name="GetOrganizersRequestType">
+                <xsd:sequence>
+                    <xsd:element name="contestId" type="xsd:nonNegativeInteger"/>
+                    <xsd:element name="year" type="xsd:nonNegativeInteger" minOccurs="0"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <!-- messages -->
+    <wsdl:message name="GetOrganizersRequest">
+        <wsdl:part name="GetOrganizersRequest" type="xsd1:GetOrganizersRequestType"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetOrganizersResponse">
+        <wsdl:part name="GetOrganizersResponse"/>
+    </wsdl:message>
+</wsdl:definitions>

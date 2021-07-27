@@ -2,10 +2,6 @@
 
 namespace FKSDB\Models\UI;
 
-/**
- * Class PageStyleContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PageStyleContainer {
 
     public ?string $styleId;

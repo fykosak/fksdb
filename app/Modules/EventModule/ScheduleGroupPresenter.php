@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\ScheduleGroupFormComponent;
+use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -15,11 +15,9 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class ScheduleGroupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelScheduleGroup getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter {
@@ -36,7 +34,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-list'));
     }
 
     /**
@@ -44,7 +42,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePersons(): void {
-        $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-list'));
     }
 
     /**
@@ -52,7 +50,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list'));
     }
 
     /**
@@ -62,7 +60,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -117,7 +115,7 @@ class ScheduleGroupPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException

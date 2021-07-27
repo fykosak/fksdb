@@ -3,14 +3,14 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
-use FKSDB\Components\Controls\Events\MassTransitionsControl;
+use FKSDB\Components\Controls\Events\MassTransitionsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Models\Logging\MemoryLogger;
@@ -18,24 +18,18 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Throwable;
 
-/**
- * Class AbstractApplicationPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractApplicationPresenter extends BasePresenter {
+
     use EventEntityPresenterTrait;
 
-    protected ApplicationHandlerFactory $applicationHandlerFactory;
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    final public function injectQuarterly(ApplicationHandlerFactory $applicationHandlerFactory, ServiceEventParticipant $serviceEventParticipant): void {
-        $this->applicationHandlerFactory = $applicationHandlerFactory;
+    final public function injectQuarterly(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -43,7 +37,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-address-book'));
     }
 
     /**
@@ -51,7 +45,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws \Throwable
+     * @throws Throwable
      */
     final public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
@@ -62,11 +56,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleTransitions(): void {
-        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-exchange-alt'));
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
@@ -88,7 +82,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 
@@ -106,12 +100,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new ApplicationComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**
@@ -124,27 +113,17 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        foreach ($source->getHolders() as $key => $holder) {
-            if ($key === $this->getEntity()->getPrimary()) {
-                return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
-            }
-        }
-        throw new InvalidStateException();
+        return new TransitionButtonsComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
     }
 
     /**
-     * @return MassTransitionsControl
+     * @return MassTransitionsComponent
      * @throws EventNotFoundException
      */
-    final protected function createComponentMassTransitions(): MassTransitionsControl {
-        return new MassTransitionsControl($this->getContext(), $this->getEvent());
+    final protected function createComponentMassTransitions(): MassTransitionsComponent {
+        return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @return AbstractApplicationsGrid
-     * @throws AbortException
-     *
-     */
     abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**

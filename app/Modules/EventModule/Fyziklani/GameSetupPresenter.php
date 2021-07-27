@@ -8,17 +8,9 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class GameSetupPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GameSetupPresenter extends BasePresenter {
     private ModelFyziklaniGameSetup $gameSetup;
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }
@@ -29,7 +21,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $this->template->gameSetup = $this->getGameSetup();
     }
 

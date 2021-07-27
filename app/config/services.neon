@@ -4,7 +4,6 @@
 
 services:
     ## extends nette
-    nette.userStorage: FKSDB\Models\Authentication\LoginUserStorage
     nette.mailer:
         factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
@@ -13,25 +12,19 @@ services:
         factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
     ## need setUp
-    globalSession:
-        factory: FKSDB\Models\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
-        setup:
-            - start()
     submitUploatedStorage:
-        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
-        factory: SoapServer(%wsdlUrl%)
+        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8})
         setup:
             - setObject(@webServiceModel)
 
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
-    - FKSDB\Models\Authentication\SSO\TokenGSIDHolder
-    - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
@@ -52,7 +45,6 @@ services:
     events.expressionEvaluator: FKSDB\Models\Events\Model\ExpressionEvaluator
     events.privacyPolicy: FKSDB\Models\Events\FormAdjustments\PrivacyPolicy
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
-    - FKSDB\Models\Events\Model\ApplicationHandlerFactory
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
     #fyziklani
@@ -73,7 +65,7 @@ services:
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
-    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
     - FKSDB\Models\Submits\SeriesTable
@@ -85,13 +77,11 @@ services:
     #stats
     - FKSDB\Models\Stats\StatsModelFactory
     #tasks
+
     - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    #transitions
-    - FKSDB\Models\Transitions\Transition\TransitionsFactory
 
     #webservice
-    - FKSDB\Models\WebService\EventSoapFactory
-    webServiceModel: FKSDB\Models\WebService\WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
     - FKSDB\Models\YearCalculator
     - FKSDB\Models\SeriesCalculator
@@ -99,7 +89,6 @@ services:
     ## components
     - FKSDB\Components\Controls\Navigation\PresenterBuilder
     - FKSDB\Components\Controls\Events\ExpressionPrinter
-    - FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
 
     ## forms
     #provider
@@ -107,22 +96,15 @@ services:
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     #formFactory
     event.DBReflectionFactory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-    - FKSDB\Components\Forms\Factories\StoredQueryFactory
     - FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - FKSDB\Components\Forms\Factories\SingleReflectionFormFactory
     - FKSDB\Components\Forms\Factories\AddressFactory
     - FKSDB\Components\Forms\Factories\FlagFactory
-    - FKSDB\Components\Forms\Factories\LoginFactory
     - FKSDB\Components\Forms\Factories\PersonFactory
     - FKSDB\Components\Forms\Factories\SchoolFactory
     - FKSDB\Components\Forms\Factories\PersonScheduleFactory
-    #checks
-    - FKSDB\Components\Forms\Rules\UniqueEmailFactory
-    - FKSDB\Components\Forms\Rules\UniqueLoginFactory
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 
-    ## external
-    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
 includes:
     - merger.neon

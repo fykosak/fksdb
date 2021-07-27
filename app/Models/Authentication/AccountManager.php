@@ -6,6 +6,7 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -15,17 +16,12 @@ use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class AccountManager {
 
     private ServiceLogin $serviceLogin;
     private ServiceAuthToken $serviceAuthToken;
-    private string $invitationExpiration = '+1 month';
-    private string $recoveryExpiration = '+1 day';
+    private string $invitationExpiration;
+    private string $recoveryExpiration;
     private string $emailFrom;
     private ServiceEmailMessage $serviceEmailMessage;
     private MailTemplateFactory $mailTemplateFactory;
@@ -72,7 +68,7 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?? $lang, $templateParams);
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;
@@ -88,16 +84,14 @@ class AccountManager {
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
+    public function sendRecovery(ModelLogin $login, string $lang): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $this->serviceAuthToken->getTable()->where([
-            'login_id' => $login->login_id,
-            'type' => ModelAuthToken::TYPE_RECOVERY,
-        ])
+        $token = $login->related(DbNames::TAB_AUTH_TOKEN)
+            ->where('type', ModelAuthToken::TYPE_RECOVERY)
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
             throw new RecoveryExistsException();
@@ -120,8 +114,7 @@ class AccountManager {
     }
 
     public function cancelRecovery(ModelLogin $login): void {
-        $this->serviceAuthToken->getTable()->where([
-            'login_id' => $login->login_id,
+        $login->related(DbNames::TAB_AUTH_TOKEN)->where([
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])->delete();
     }
@@ -137,7 +130,7 @@ class AccountManager {
         /* Must be done after login_id is allocated. */
         if ($password) {
             $hash = $login->createHash($password);
-            $this->serviceLogin->updateModel2($login, ['hash' => $hash]);
+            $this->serviceLogin->updateModel($login, ['hash' => $hash]);
         }
         return $login;
     }

@@ -2,19 +2,15 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo Implement AJAX loading
  *       Should return school_id or null.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class AutocompleteSelectBox extends TextBase {
 
@@ -23,7 +19,7 @@ class AutocompleteSelectBox extends TextBase {
     private const INTERNAL_DELIMITER = ',';
     private const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    private IDataProvider $dataProvider;
+    private DataProvider $dataProvider;
 
     private bool $ajax;
 
@@ -46,16 +42,16 @@ class AutocompleteSelectBox extends TextBase {
     public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 
-        $this->monitor(IAutocompleteJSONProvider::class, function (IAutocompleteJSONProvider $provider) {
+        $this->monitor(AutocompleteJSONProvider::class, function (AutocompleteJSONProvider $provider) {
             if (!$this->attachedJSON) {
                 $this->attachedJSON = true;
-                $name = $this->lookupPath(IAutocompleteJSONProvider::class);
+                $name = $this->lookupPath(AutocompleteJSONProvider::class);
                 $this->ajaxUrl = $provider->link('autocomplete!', [
                     self::PARAM_NAME => $name,
                 ]);
             }
         });
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
                 $collector->registerJSFile('js/autocompleteSelect.js');
@@ -66,7 +62,7 @@ class AutocompleteSelectBox extends TextBase {
         $this->renderMethod = $renderMethod;
     }
 
-    public function getDataProvider(): ?IDataProvider {
+    public function getDataProvider(): ?DataProvider {
         return $this->dataProvider ?? null;
     }
 
@@ -82,8 +78,8 @@ class AutocompleteSelectBox extends TextBase {
         return $this->multiSelect;
     }
 
-    public function setDataProvider(IDataProvider $dataProvider): void {
-        if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
+    public function setDataProvider(DataProvider $dataProvider): void {
+        if ($this->ajax && !($dataProvider instanceof FilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
         $this->dataProvider = $dataProvider;
@@ -185,7 +181,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
      */
     public function getValue() {
         return $this->value;

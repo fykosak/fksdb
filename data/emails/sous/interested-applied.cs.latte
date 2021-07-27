@@ -1,0 +1,20 @@
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+
+<p>
+    {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    protože se uvolnilo místo a tys projevil{if $person->gender == 'F'}a{/if} zájem o {$event->event_type->name} v
+    {$holder->getParameter('letterWhere')} od {$event->begin|date:'j. n.'} do {$event->end|date:'j. n. Y'}, jsi
+    nyní mezi pozvanými. Gratulujeme.
+</p>
+
+<p>
+    Brzy dostaneš další info. Pokud bys měl{if $person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
+    <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+</p>
+
+<p>
+    Za organizátory<br>
+    {$holder->getParameter('letterSignature')}
+</p>

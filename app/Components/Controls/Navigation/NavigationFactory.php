@@ -7,10 +7,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
-/**
- * Class NavigationFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NavigationFactory {
 
     private array $structure;
@@ -34,14 +30,14 @@ class NavigationFactory {
      * @param string $presenterName
      * @param string $action
      * @param array|null $providedParams
-     * @return Presenter|INavigablePresenter
+     * @return Presenter|NavigablePresenter
      * @throws BadRequestException
      * @throws BadTypeException
      */
     public function preparePresenter(Presenter $ownPresenter, string $presenterName, string $action, ?array $providedParams): Presenter {
         $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
-        if (!$presenter instanceof INavigablePresenter) {
-            throw new BadTypeException(INavigablePresenter::class, $presenter);
+        if (!$presenter instanceof NavigablePresenter) {
+            throw new BadTypeException(NavigablePresenter::class, $presenter);
         }
         return $presenter;
     }
@@ -67,7 +63,6 @@ class NavigationFactory {
         }
         return $actionParams;
     }
-
 
     /**
      * @param Presenter $presenter

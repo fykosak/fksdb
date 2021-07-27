@@ -3,16 +3,15 @@
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\WebService\INodeCreator;
+use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class ModelScheduleGroup
  * @property-read int schedule_group_id
  * @property-read string schedule_group_type
  * @property-read int event_id
@@ -22,7 +21,7 @@ use Nette\Security\IResource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModelSingle implements IResource, INodeCreator {
+class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
     public const TYPE_ACCOMMODATION = 'accommodation';

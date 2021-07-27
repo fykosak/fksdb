@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
@@ -12,12 +12,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note Works with single column primary keys only.
  * @note Assumes name of the FK column is the same like the referenced PK column.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class TableMerger {
 
@@ -29,9 +25,9 @@ class TableMerger {
     /** @var MergeStrategy[] */
     private array $columnMergeStrategies = [];
     private MergeStrategy $globalMergeStrategy;
-    private ILogger $logger;
+    private Logger $logger;
 
-    public function __construct(string $table, Merger $merger, Explorer $explorer, MergeStrategy $globalMergeStrategy, ILogger $logger) {
+    public function __construct(string $table, Merger $merger, Explorer $explorer, MergeStrategy $globalMergeStrategy, Logger $logger) {
         $this->table = $table;
         $this->merger = $merger;
         $this->explorer = $explorer;
@@ -88,8 +84,6 @@ class TableMerger {
     }
 
     public function merge(?array $mergedParent = null): void {
-        $this->trunkRow->getTable()->accessColumn(null); // stupid touch
-        $this->mergedRow->getTable()->accessColumn(null); // stupid touch
 
         /*
          * We merge child-rows (referencing rows) of the merged rows.
@@ -118,12 +112,10 @@ class TableMerger {
                     /** @var ActiveRow|null $refMerged */
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
-                        $backTrunk = $referencingMerger->trunkRow;
-                        $backMerged = $referencingMerger->mergedRow;
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
-                        if ($backTrunk) {
-                            $referencingMerger->setMergedPair($backTrunk, $backMerged);
+                        if ($referencingMerger->trunkRow) {
+                            $referencingMerger->setMergedPair($referencingMerger->trunkRow, $referencingMerger->mergedRow);
                         }
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
@@ -169,11 +161,6 @@ class TableMerger {
         $this->logTrunk($this->trunkRow);
     }
 
-    /**
-     * @param mixed $rows
-     * @param mixed $parentColumn
-     * @return array
-     */
     private function groupBySecondaryKey(iterable $rows, string $parentColumn): array {
         $result = [];
         foreach ($rows as $row) {
@@ -209,29 +196,26 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
+            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), Logger::INFO));
         }
     }
 
     private function logDelete(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
     }
 
     private function logTrunk(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
     }
 
-    /*     * ******************************
+    /* ******************************
      * DB reflection
      * ****************************** */
 
-    private array $refTables;
+    private ?array $refTables;
     private static bool $refreshReferencing = true;
 
-    /**
-     * @return array|null
-     */
-    private function getReferencingTables(): array {
+    private function getReferencingTables(): ?array {
         if (!isset($this->refTables)) {
             $this->refTables = [];
             foreach ($this->explorer->getConnection()->getDriver()->getTables() as $otherTable) {
@@ -247,9 +231,9 @@ class TableMerger {
         return $this->refTables;
     }
 
-    private array $columns;
+    private ?array $columns;
 
-    private function getColumns(): array {
+    private function getColumns(): ?array {
         if (!isset($this->columns)) {
             $this->columns = [];
             foreach ($this->explorer->getConnection()->getDriver()->getColumns($this->table) as $column) {
@@ -286,7 +270,7 @@ class TableMerger {
 
     private array $secondaryKey;
 
-    private function getSecondaryKey(): array {
+    private function getSecondaryKey(): ?array {
         if (!isset($this->secondaryKey)) {
             $this->secondaryKey = [];
             foreach ($this->explorer->getConnection()->getDriver()->getIndexes($this->table) as $index) {

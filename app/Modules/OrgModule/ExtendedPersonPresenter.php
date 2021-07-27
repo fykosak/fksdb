@@ -8,17 +8,18 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\ModelContestYear;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use FKSDB\Models\Persons\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Models\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\ExtendedPersonPresenter as IExtendedPersonPresenter;
 
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
@@ -32,10 +33,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|null|AbstractModelSingle $model
-     * @param Form|IControl[][] $form
+     * @param ModelContestant|null|AbstractModel $model
+     * @param Form|Control[][] $form
      */
-    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
+    protected function setDefaults(?AbstractModel $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -50,16 +51,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws \ReflectionException
      */
     protected function getFieldsDefinition(): array {
-        $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): AbstractServiceSingle;
+    abstract protected function getORMService(): AbstractService;
 
-    protected function getAcYearFromModel(): ?int {
+    protected function getAcYearFromModel(): ?ModelContestYear {
         return null;
     }
 
@@ -76,12 +76,14 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $fieldsDefinition = $this->getFieldsDefinition();
-        $acYear = $this->getAcYearFromModel() ? $this->getAcYearFromModel() : $this->getSelectedAcademicYear();
-        $searchType = PersonSearchContainer::SEARCH_ID;
-        $allowClear = $create;
-        $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getFieldsDefinition(),
+            $this->getAcYearFromModel() ?? $this->getSelectedContestYear(),
+            PersonSearchContainer::SEARCH_ID,
+            $create,
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
+        );
         $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
@@ -89,7 +91,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $this->appendExtendedContainer($form);
 
-        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->getContext()->getParameters()['invitation']['defaultLang']);
+        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContestYear(), $this->getContext()->getParameters()['invitation']['defaultLang']);
 
         $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 
@@ -123,11 +125,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         return $this->createComponentFormControl(false);
     }
 
-    /**
-     * @param int $id
-     * @return AbstractModelSingle
-     */
-    protected function loadModel($id): ?AbstractModelSingle {
+    protected function loadModel(int $id): ?AbstractModel {
         return $this->getORMService()->findByPrimary($id);
     }
 }

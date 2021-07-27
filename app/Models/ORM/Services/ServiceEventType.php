@@ -2,9 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ServiceEventType extends AbstractServiceSingle {
+use Fykosak\NetteORM\AbstractService;
+
+class ServiceEventType extends AbstractService {
 
 }

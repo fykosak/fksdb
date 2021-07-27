@@ -8,10 +8,8 @@ use Nette\Utils\Html;
 /**
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class WriteOnlyInput extends TextInput implements IWriteOnly {
+class WriteOnlyInput extends TextInput implements WriteOnly {
 
     use WriteOnlyTrait;
 

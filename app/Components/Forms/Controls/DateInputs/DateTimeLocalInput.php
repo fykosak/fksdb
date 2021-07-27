@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\DateInputs;
 
-/**
- * Class DateTimeLocalInput
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DateTimeLocalInput extends AbstractDateInput {
     /**
      * DateTimeLocalInput constructor.

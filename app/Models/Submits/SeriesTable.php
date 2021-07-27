@@ -2,20 +2,16 @@
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo Prominent example for necessity of caching.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class SeriesTable {
 
@@ -28,9 +24,7 @@ class SeriesTable {
 
     private ServiceSubmit $serviceSubmit;
 
-    private ModelContest $contest;
-
-    private int $year;
+    private ModelContestYear $contestYear;
 
     private int $series;
 
@@ -46,20 +40,12 @@ class SeriesTable {
         $this->serviceSubmit = $serviceSubmit;
     }
 
-    public function getContest(): ModelContest {
-        return $this->contest;
+    public function setContestYear(ModelContestYear $contestYear): void {
+        $this->contestYear = $contestYear;
     }
 
-    public function setContest(ModelContest $contest): void {
-        $this->contest = $contest;
-    }
-
-    public function getYear(): int {
-        return $this->year;
-    }
-
-    public function setYear(int $year): void {
-        $this->year = $year;
+    public function getContestYear(): ModelContestYear {
+        return $this->contestYear;
     }
 
     public function getSeries(): int {
@@ -80,16 +66,16 @@ class SeriesTable {
 
     public function getContestants(): TypedTableSelection {
         return $this->serviceContestant->getTable()->where([
-            'contest_id' => $this->getContest()->contest_id,
-            'year' => $this->getYear(),
+            'contest_id' => $this->contestYear->contest_id,
+            'year' => $this->contestYear->year,
         ])->order('person.family_name, person.other_name, person.person_id');
     }
 
     public function getTasks(): TypedTableSelection {
         $tasks = $this->serviceTask->getTable()->where([
-            'contest_id' => $this->getContest()->contest_id,
-            'year' => $this->getYear(),
-            'series' => $this->getSeries(),
+            'contest_id' => $this->contestYear->contest_id,
+            'year' => $this->contestYear->year,
+            'series' => $this->series,
         ]);
 
         if ($this->getTaskFilter() !== null) {

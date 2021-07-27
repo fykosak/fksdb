@@ -5,15 +5,13 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\ORM\ModelsMulti\ModelMPostContact;
-use FKSDB\Models\YearCalculator;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int person_id
  * @property-read string other_name
  * @property-read string family_name
@@ -21,7 +19,7 @@ use Nette\Security\IResource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends OldAbstractModelSingle implements IResource {
+class ModelPerson extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'person';
 
@@ -42,24 +40,25 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     public function getInfo(): ?ModelPersonInfo {
         $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
         return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
+
+    }
+
+    public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory {
+        return $this->getHistory($contestYear->ac_year, $extrapolated);
     }
 
     public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
-        $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
+        $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)
             ->fetch();
         if ($history) {
             return ModelPersonHistory::createFromActiveRow($history);
         }
-        if (!$extrapolated) {
-            return null;
+        if ($extrapolated) {
+            $lastHistory = $this->getLastHistory();
+            return $lastHistory ? $lastHistory->extrapolate($acYear) : null;
         }
-        $lastHistory = $this->getLastHistory();
-        if ($lastHistory) {
-            return $lastHistory->extrapolate($acYear);
-        } else {
-            return null;
-        }
+        return null;
     }
 
     /**
@@ -100,66 +99,38 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     public function getPostContacts(): GroupedSelection {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
-
-    /**
-     * @param string|null $type
-     * @return ModelMPostContact[]
-     */
-    public function getMPostContacts(?string $type = null): array {
-        $postContacts = $this->getPostContacts();
-        if ($type !== null) {
-            $postContacts->where(['type' => $type]);
-        }
-
-        if (!$postContacts || count($postContacts) == 0) {
-            return [];
-        }
-
-        $result = [];
-        foreach ($postContacts as $postContact) {
-            $result[] = ModelMPostContact::createFromExistingModels(
-                ModelAddress::createFromActiveRow($postContact->address), ModelPostContact::createFromActiveRow($postContact)
-            );
-        }
-        return $result;
-    }
-
-    /**
-     * Main delivery address of the contestant.
-     *
-     * @return ModelMPostContact|null
-     */
-    public function getDeliveryAddress(): ?ModelMPostContact {
-        $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
-        if (count($dAddresses)) {
-            return reset($dAddresses);
-        } else {
-            return null;
-        }
-    }
-
-    public function getPermanentAddress(bool $noFallback = false): ?ModelMPostContact {
-        $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
-        if (count($pAddresses)) {
-            return reset($pAddresses);
-        } elseif (!$noFallback) {
-            return $this->getDeliveryAddress();
-        } else {
-            return null;
-        }
-    }
-
+    
     public function getDeliveryAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
+        return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
     }
 
     public function getPermanentAddress2(): ?ModelAddress {
-        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+        return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
     }
 
-    public function getAddress2(string $type): ?ModelAddress {
+    public function getAddress(string $type): ?ModelAddress {
+        $postContact = $this->getPostContact($type);
+        return $postContact ? $postContact->getAddress() : null;
+    }
+
+    public function getPostContact(string $type): ?ModelPostContact {
         $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
+    }
+
+    public function getDeliveryPostContact(): ?ModelPostContact {
+        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+    }
+
+    public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
+        $postContact = $this->getPostContact(ModelPostContact::TYPE_PERMANENT);
+        if ($postContact) {
+            return $postContact;
+        } elseif (!$noFallback) {
+            return $this->getDeliveryPostContact();
+        } else {
+            return null;
+        }
     }
 
     public function getEventParticipants(): GroupedSelection {
@@ -196,7 +167,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     public function getFullName(): string {
-        return $this->display_name ?: $this->other_name . ' ' . $this->family_name;
+        return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
     }
 
     public function __toString(): string {
@@ -204,15 +175,14 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
      */
-    public function getActiveOrgs(YearCalculator $yearCalculator): array {
+    public function getActiveOrgs(): array {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
             $org = ModelOrg::createFromActiveRow($org);
-            $year = $yearCalculator->getCurrentYear($org->getContest());
+            $year = $org->getContest()->getCurrentContestYear()->year;
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
             }
@@ -220,24 +190,24 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         return $result;
     }
 
-    public function getActiveOrgsAsQuery(YearCalculator $yearCalculator, ModelContest $contest): GroupedSelection {
-        $year = $yearCalculator->getCurrentYear($contest);
+    public function getActiveOrgsAsQuery(ModelContest $contest): GroupedSelection {
+        $year = $contest->getCurrentContestYear()->year;
         return $this->related(DbNames::TAB_ORG, 'person_id')
             ->where('contest_id', $contest->contest_id)
-            ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
+            ->where('since<=?', $year)
+            ->where('until IS NULL OR until >=?', $year);
     }
 
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
-     * @param YearCalculator $yearCalculator
      * @return ModelContestant[] indexed by contest_id
      */
-    public function getActiveContestants(YearCalculator $yearCalculator): array {
+    public function getActiveContestants(): array {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromActiveRow($contestant);
-            $currentYear = $yearCalculator->getCurrentYear($contestant->getContest());
+            $currentYear = $contestant->getContest()->getCurrentContestYear()->year;
             if ($contestant->year >= $currentYear) { // forward contestant
                 if (isset($result[$contestant->contest_id])) {
                     if ($contestant->year > $result[$contestant->contest_id]->year) {
@@ -267,14 +237,11 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
         ];
     }
 
-    /**
-     * Infers gender from name.
-     */
-    public function inferGender(): void {
-        if (mb_substr($this->family_name, -1) == 'á') {
-            $this->gender = 'F';
+    public static function inferGender(array $data): string {
+        if (mb_substr($data['family_name'], -1) == 'á') {
+            return 'F';
         } else {
-            $this->gender = 'M';
+            return 'M';
         }
     }
 
@@ -314,7 +281,6 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
      */
     public function removeScheduleForEvent(int $eventId): void {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
-        /** @var ModelPersonSchedule $row */
         foreach ($query as $row) {
             $row->delete();
         }
@@ -333,7 +299,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
      * @param string[] $types
      * @return ModelSchedulePayment[]
      */
-    public function getScheduleRests(ModelEvent $event, array $types = ['accommodation', 'weekend']): array {
+    public function getScheduleRests(ModelEvent $event, array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]): array {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
@@ -350,10 +316,9 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
 
     /**
      * @param ModelEvent $event
-     * @param YearCalculator $yearCalculator
      * @return array[]
      */
-    public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
+    public function getRolesForEvent(ModelEvent $event): array {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeachers()->where('event_id', $eventId);
@@ -380,7 +345,7 @@ class ModelPerson extends OldAbstractModelSingle implements IResource {
                 'participant' => $participant,
             ];
         }
-        if (array_key_exists($event->getEventType()->contest_id, $this->getActiveOrgs($yearCalculator))) {
+        if ($this->getActiveOrgsAsQuery($event->getEventType()->getContest())->fetch()) {
             $roles[] = [
                 'type' => 'contest_org',
             ];

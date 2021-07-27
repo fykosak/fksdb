@@ -4,35 +4,27 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Security\IResource;
-use Nette\Security\IUserStorage;
+use Nette\Security\Resource;
 use Nette\Security\Permission;
+use Nette\Security\User;
 use Nette\SmartObject;
 
 class EventAuthorizator {
 
     use SmartObject;
 
-    private IUserStorage $userStorage;
+    private User $user;
     private Permission $permission;
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->userStorage = $identity;
+        $this->user = $user;
         $this->permission = $acl;
     }
 
-    public function getUser(): IUserStorage {
-        return $this->userStorage;
-    }
-
-    protected function getPermission(): Permission {
-        return $this->permission;
-    }
-
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -43,7 +35,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
@@ -53,13 +45,14 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        $login = $this->user->getIdentity();
+        if (!$login) {
             return false;
         }
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
@@ -69,13 +62,14 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
-        if (!$this->getUser()->isAuthenticated()) {
+        $login = $this->user->getIdentity();
+        if (!$login) {
             return false;
         }
         if (!$this->isEventOrg($resource, $privilege, $event)) {
@@ -85,15 +79,15 @@ class EventAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
-        /** @var ModelLogin $identity */
-        $identity = $this->getUser()->getIdentity();
-        $person = $identity ? $identity->getPerson() : null;
+        $login = $this->user->getIdentity();
+        /** @var ModelLogin $login */
+        $person = $login ? $login->getPerson() : null;
         if (!$person) {
             return false;
         }

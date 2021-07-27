@@ -2,24 +2,20 @@
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\Logging\ILogger;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\Logging\Logger;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Class PhoneRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
 
     protected PhoneNumberFactory $phoneNumberFactory;
@@ -55,7 +51,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         return $control;
     }
 
-    final public function runTest(ILogger $logger, AbstractModelSingle $model): void {
+    final public function runTest(Logger $logger, AbstractModel $model): void {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
@@ -68,7 +64,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         }
     }
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();

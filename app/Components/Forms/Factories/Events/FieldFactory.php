@@ -6,15 +6,11 @@ use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface FieldFactory {
 
     /**
      * @param Field $field field for which it's created
+     * @return BaseControl
      */
     public function createComponent(Field $field): BaseControl;
 

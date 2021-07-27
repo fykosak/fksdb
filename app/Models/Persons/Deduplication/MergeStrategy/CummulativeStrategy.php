@@ -2,21 +2,11 @@
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class CummulativeStrategy implements MergeStrategy {
 
-    /** @var mixed|null */
-    private $precedence;
+    private ?string $precedence;
 
-    /**
-     *
-     * @param null|mixed $precedence trunk|merged
-     */
-    public function __construct($precedence = null) {
+    public function __construct(?string $precedence = null) {
         $this->precedence = $precedence;
     }
 
@@ -57,5 +47,4 @@ class CummulativeStrategy implements MergeStrategy {
             return $trunk == $merged;
         }
     }
-
 }

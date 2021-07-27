@@ -9,11 +9,12 @@ use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class WriteOnlyTraitTest extends DsefTestCase {
+
     /** @var int */
     private $dsefAppId;
 
@@ -70,9 +71,9 @@ class WriteOnlyTraitTest extends DsefTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);
@@ -141,10 +142,10 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $application->lunch_count);
 
-        $addressId = $this->connection->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
+        $addressId = $this->explorer->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
         Assert::notEqual(null, $addressId);
 
-        $address = $this->connection->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
+        $address = $this->explorer->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
         Assert::notEqual(null, $address);
         Assert::equal('PomaláUlice', $address->target);
         Assert::equal('SinCity', $address->city);

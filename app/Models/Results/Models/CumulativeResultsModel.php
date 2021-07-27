@@ -7,8 +7,6 @@ use Nette\InvalidStateException;
 
 /**
  * Cumulative results (sums and percentage) for chosen series.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
@@ -69,15 +67,12 @@ class CumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return array|mixed
-     */
     public function getSeries(): array {
         return $this->series;
     }
 
     /**
-     * @param mixed $series
+     * @param array $series
      */
     public function setSeries($series): void {
         $this->series = $series;
@@ -123,8 +118,8 @@ left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
 
         $conditions = [
-            'ct.year' => $this->year,
-            'ct.contest_id' => $this->contest->contest_id,
+            'ct.year' => $this->contestYear->year,
+            'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
             'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
         ];

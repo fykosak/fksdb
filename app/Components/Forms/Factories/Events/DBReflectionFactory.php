@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\ORMFactory;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -16,19 +16,14 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DBReflectionFactory extends AbstractFactory {
 
     private Connection $connection;
     /** @var array tableName => columnName[] */
     private array $columns = [];
-    private ReflectionFactory $tableReflectionFactory;
+    private ORMFactory $tableReflectionFactory;
 
-    public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -41,10 +36,10 @@ class DBReflectionFactory extends AbstractFactory {
 
             $service->getTable()->getName();
             $tableName = null;
-            if ($service instanceof AbstractServiceSingle) {
+            if ($service instanceof AbstractService) {
                 $tableName = $service->getTable()->getName();
             } elseif ($service instanceof AbstractServiceMulti) {
-                $tableName = $service->getMainService()->getTable()->getName();
+                $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
                 $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
@@ -64,7 +59,7 @@ class DBReflectionFactory extends AbstractFactory {
             } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'));
+                    ->addRule(Form::INTEGER, _('%label must be an integer.'));
                 if ($size) {
                     $element->addRule(Form::MAX_LENGTH, null, $size);
                 }
@@ -88,8 +83,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     protected function setDefaultValue(BaseControl $control, Field $field): void {
-
-        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -103,14 +97,14 @@ class DBReflectionFactory extends AbstractFactory {
         $columnName = $field->getName();
 
         $column = null;
-        if ($service instanceof AbstractServiceSingle) {
+        if ($service instanceof AbstractService) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
         } elseif ($service instanceof AbstractServiceMulti) {
-            $tableName = $service->getMainService()->getTable()->getName();
+            $tableName = $service->mainService->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {
-                $tableName = $service->getJoinedService()->getTable()->getName();
+                $tableName = $service->joinedService->getTable()->getName();
                 $column = $this->getColumnMetadata($tableName, $columnName);
             }
         }

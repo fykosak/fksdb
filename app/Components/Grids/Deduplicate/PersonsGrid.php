@@ -4,19 +4,15 @@ namespace FKSDB\Components\Grids\Deduplicate;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class PersonsGrid extends BaseGrid {
 
     private TypedTableSelection $trunkPersons;
@@ -35,11 +31,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         /***** columns ****/

@@ -3,53 +3,40 @@
 namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Logging\DevNullLogger;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo refactor to ConflictResolver, TableMergerFactory
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Merger {
 
     public const IDX_TRUNK = 'trunk';
     public const IDX_MERGED = 'merged';
     public const IDX_RESOLUTION = 'resolution';
-
     private array $conflicts = [];
-
     private ActiveRow $trunkRow;
-
     private ActiveRow $mergedRow;
 
     private Explorer $explorer;
-
     private array $configuration;
-
-    private ILogger $logger;
-
+    private Logger $logger;
+    /** @var TableMerger[] */
     private array $tableMergers = [];
 
-    /**
-     * Merger constructor.
-     * @param mixed $configuration
-     * @param Explorer $explorer
-     */
     public function __construct(array $configuration, Explorer $explorer) {
         $this->configuration = $configuration;
         $this->explorer = $explorer;
         $this->logger = new DevNullLogger();
     }
 
-    public function getLogger(): ILogger {
+    public function getLogger(): Logger {
         return $this->logger;
     }
 
-    public function setLogger(ILogger $logger): void {
+    public function setLogger(Logger $logger): void {
         $this->logger = $logger;
     }
 
@@ -87,7 +74,6 @@ class Merger {
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = is_null($commit) ? $this->configuration['commit'] : $commit;
-
 
         $this->explorer->getConnection()->beginTransaction();
 
@@ -162,7 +148,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param mixed $column
+     * @param string $column
      * @internal Friend of Merger class.
      */
     public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void {
@@ -174,7 +160,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param mixed $column
+     * @param string $column
      * @return bool
      * @internal Friend of Merger class.
      */
@@ -186,7 +172,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
-     * @param mixed $column
+     * @param string $column
      * @return mixed
      * @internal Friend of Merger class.
      */
@@ -199,24 +185,14 @@ class Merger {
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
-    /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @return mixed
-     */
-    private function & getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow) {
+    private function &getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow): array {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);
 
         return $this->getPairDataById($table, $pairId);
     }
 
-    /**
-     * @param string $table
-     * @param string $pairId
-     * @return mixed
-     */
-    private function & getPairDataById(string $table, string $pairId) {
+    private function &getPairDataById(string $table, string $pairId): array {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];
         }

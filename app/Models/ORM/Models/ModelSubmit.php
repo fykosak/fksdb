@@ -2,13 +2,11 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read \DateTimeInterface submitted_on
  * @property-read int submit_id
  * @property-read string source
@@ -21,7 +19,7 @@ use Nette\Security\IResource;
  * @property-read ActiveRow task
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModel implements Resource {
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';

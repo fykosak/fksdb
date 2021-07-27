@@ -8,10 +8,6 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-/**
- * Class PersonLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonLink extends AbstractValuePrinter {
 
     private LinkGenerator $presenterComponent;
@@ -21,19 +17,19 @@ class PersonLink extends AbstractValuePrinter {
     }
 
     /**
-     * @param ModelPerson|null $person
+     * @param ModelPerson|null $value
      * @return Html
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function getHtml($person): Html {
-        if (!$person instanceof ModelPerson) {
-            throw new BadTypeException(ModelPerson::class, $person);
+    protected function getHtml($value): Html {
+        if (!$value instanceof ModelPerson) {
+            throw new BadTypeException(ModelPerson::class, $value);
         }
         return Html::el('a')
             ->addAttributes(['href' => $this->presenterComponent->link('Org:Person:detail', [
-                'id' => $person->person_id,
+                'id' => $value->person_id,
             ])])
-            ->addText($person->getFullName());
+            ->addText($value->getFullName());
     }
 }

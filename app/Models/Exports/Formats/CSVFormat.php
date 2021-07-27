@@ -2,17 +2,12 @@
 
 namespace FKSDB\Models\Exports\Formats;
 
-use FKSDB\Models\Exports\IExportFormat;
+use FKSDB\Models\Exports\ExportFormat;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\SmartObject;
 use PePa\CSVResponse;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class CSVFormat implements IExportFormat {
+class CSVFormat implements ExportFormat {
     use SmartObject;
 
     public const DEFAULT_DELIMITER = ';';

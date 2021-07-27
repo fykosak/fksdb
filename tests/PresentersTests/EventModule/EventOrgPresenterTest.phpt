@@ -4,7 +4,8 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
+use DateTime;
+use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
@@ -33,8 +34,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPersonId = $this->createPerson('Tester_L', 'Testrovič_L');
@@ -90,7 +91,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
             'id' => (string)$this->eventOrgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->connection->query('SELECT * FROM event_org where e_org_id=?', $this->eventOrgId)->fetch();
+        $org = $this->explorer->query('SELECT * FROM event_org where e_org_id=?', $this->eventOrgId)->fetch();
         Assert::equal('note-edited', $org->note);
     }
 
@@ -118,13 +119,12 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event_org');
-        $this->connection->query('DELETE FROM event');
+         $this->truncateTables([DbNames::TAB_EVENT_ORG,DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
     private function countEventOrgs(): int {
-        return $this->connection->query('SELECT * FROM event_org where person_id=?', $this->personId)->getRowCount();
+        return $this->explorer->query('SELECT * FROM event_org where person_id=?', $this->personId)->getRowCount();
     }
 }
 

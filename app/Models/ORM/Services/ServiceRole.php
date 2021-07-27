@@ -2,10 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ServiceRole extends AbstractServiceSingle {
+use Fykosak\NetteORM\AbstractService;
 
+class ServiceRole extends AbstractService {
 
 }

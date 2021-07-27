@@ -6,7 +6,9 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\Model\ApplicationHandlerException;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\DevNullLogger;
@@ -47,41 +49,37 @@ class ApplicationHandlerTest extends EventTestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
+        $this->explorer->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 
-        $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
         /** @var ModelEvent $event */
         $event = $serviceEvent->findByPrimary(1);
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
         $this->holder = $factory->getDummyHolder($event);
-        $this->fixture = $handlerFactory->create($event, new DevNullLogger());
+        $this->fixture = new ApplicationHandler($event, new DevNullLogger(), $this->getContainer());
 
         $this->mockApplication();
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_fyziklani_participant');
-        $this->connection->query('DELETE FROM e_fyziklani_team');
-
+        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws \FKSDB\Models\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication(): void {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
-        $this->createPersonHistory($id2, 2000, 1, 1);
+        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), 1, 1);
         $id3 = $this->createPerson('Kristína', 'Nešporová', ['email' => 'kiki@fykos.cz']);
-        $this->createPersonHistory($id3, 2000, 1, 1);
+        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), 1, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 
@@ -203,16 +201,17 @@ class ApplicationHandlerTest extends EventTestCase {
             'privacy' => true,
         ];
         $data = ArrayHash::from($data);
-        $this->fixture->storeAndExecuteValues($this->holder, $data);
+        Assert::exception(function () use ($data, $teamName) {
+            $this->fixture->storeAndExecuteValues($this->holder, $data);
+            /** @var ModelFyziklaniTeam $team */
+            $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
+            Assert::notEqual(false, $team);
 
-        /** @var ModelFyziklaniTeam $team */
-        $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
-        Assert::notEqual(false, $team);
+            Assert::equal($teamName, $team->name);
 
-        Assert::equal($teamName, $team->name);
-
-        $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
-        Assert::equal(2, $count);
+            $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2()->getPrimary());
+            Assert::equal(2, $count);
+        }, ApplicationHandlerException::class);
     }
 }
 

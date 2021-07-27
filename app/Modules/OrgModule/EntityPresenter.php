@@ -5,7 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\UI\Form;
 
 /**
@@ -13,19 +13,16 @@ use Nette\Application\UI\Form;
  *   - check ACL
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class EntityPresenter extends BasePresenter {
 
     public const COMP_EDIT_FORM = 'editComponent';
     public const COMP_CREATE_FORM = 'createComponent';
     /**
-     * @var int
      * @persistent
      */
-    public $id;
-    private ?AbstractModelSingle $model;
+    public ?int $id = null;
+    private ?AbstractModel $model;
 
     public function authorizedCreate(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
@@ -39,18 +36,14 @@ abstract class EntityPresenter extends BasePresenter {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @param int $id
-     */
-    public function authorizedDelete($id): void {
+    public function authorizedDelete(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
     /**
-     * @param int $id
      * @throws BadTypeException
      */
-    public function renderEdit($id): void {
+    final public function renderEdit(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();
@@ -60,7 +53,7 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadTypeException
      */
-    public function renderCreate(): void {
+    final public function renderCreate(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = $component->getForm();
@@ -68,28 +61,24 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelSingle|null
+     * @return AbstractModel|null
      * @deprecated
      */
-    final public function getModel(): ?AbstractModelSingle {
+    final public function getModel(): ?AbstractModel {
         if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
     }
 
-    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
+    protected function setDefaults(?AbstractModel $model, Form $form): void {
         if (!$model) {
             return;
         }
         $form->setDefaults($model->toArray());
     }
 
-    /**
-     * @param int $id
-     * @return AbstractModelSingle
-     */
-    abstract protected function loadModel($id): ?AbstractModelSingle;
+    abstract protected function loadModel(int $id): ?AbstractModel;
 
     abstract protected function createComponentEditComponent(): FormControl;
 

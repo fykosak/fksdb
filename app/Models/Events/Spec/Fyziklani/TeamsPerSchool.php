@@ -2,8 +2,7 @@
 
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
-use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -11,14 +10,9 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
+class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private Explorer $explorer;
     /** @var callable|int */
@@ -55,7 +49,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
@@ -63,7 +57,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('A school cannot have more than %d teams in the contest.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls): bool {
+            $control->addRule(function (Control $control) use ($first, $schoolControls, $personControls): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 return $this->checkMulti($first, $control, $schools);
             }, $msgMulti);
@@ -81,8 +75,8 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private array $cache;
 
-    private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
-        $team = $this->getHolder()->getPrimaryHolder()->getModel();
+    private function checkMulti(bool $first, ?Control $control, array $schools): bool {
+        $team = $this->getHolder()->getPrimaryHolder()->getModel2();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
@@ -94,17 +88,16 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
             /*
              * This may not be optimal.
              */
-            $acYear = $event->getContest()->related('contest_year')->where('year', $event->year)->fetch()->ac_year;
             $result = $this->explorer->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
                 ->where($baseHolder->getEventIdColumn(), $event->getPrimary())
-                ->where('person.person_history:ac_year', $acYear)
+                ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
                 ->where('person.person_history:school_id', $schools);
 
             //TODO filter by team status?
-            if ($team && !$team->isNew()) {
-                $result->where('NOT e_fyziklani_participant:e_fyziklani_team_id', $team->getPrimary());
+            if ($team) {
+                $result->where('NOT e_fyziklani_participant:e_fyziklani_team_id', $team->getPrimary(false));
             }
 
             $result->group('person.person_history:school_id', 'COUNT(DISTINCT e_fyziklani_participant:e_fyziklani_team.e_fyziklani_team_id) >= ' . $this->getTeamsPerSchool());

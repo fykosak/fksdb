@@ -2,22 +2,17 @@
 
 namespace FKSDB\Models\ORM\Columns\Types;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
+use Nette\Forms\Controls\SelectBox;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use Nette\Forms\Controls\BaseControl;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class StateRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StateColumnFactory extends ColumnFactory {
 
     protected array $states = [];
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         $state = $model->{$this->getModelAccessKey()};
         if (is_null($state)) {
             return NotSetBadge::getHtml();
@@ -37,7 +32,15 @@ class StateColumnFactory extends ColumnFactory {
         return ['badge' => '', 'label' => ''];
     }
 
-    protected function createFormControl(...$args): BaseControl {
-        throw new OmittedControlException();
+    protected function createFormControl(...$args): SelectBox {
+        return new SelectBox($this->getTitle(), $this->getItems());
+    }
+
+    protected function getItems(): array {
+        $data = [];
+        foreach ($this->states as $key => $state) {
+            $data[$key] = $state['label'];
+        }
+        return $data;
     }
 }

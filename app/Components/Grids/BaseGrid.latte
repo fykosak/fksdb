@@ -1,4 +1,16 @@
 {snippet}
+    {varType FKSDB\Components\Grids\Events\DispatchGrid $control}
+    {varType Nette\ComponentModel\RecursiveComponentIterator $globalButtons}
+    {varType int $results}
+    {varType bool $paginate}
+    {varType int $viewedFrom}
+    {varType int $viewedTo}
+    {varType array $flashes}
+    {varType int $colsCount}
+    {varType Nette\ComponentModel\RecursiveComponentIterator $subGrids}
+    {varType Nette\ComponentModel\RecursiveComponentIterator $columns}
+    {varType Fykosak\NetteORM\TypedTableSelection $rows}
+    {varType Nette\ComponentModel\RecursiveComponentIterator $buttons}
     <div class="row mb-3">
         <div class="col-8">
             <div class="btn-toolbar" n:if="$control->hasGlobalButtons()">

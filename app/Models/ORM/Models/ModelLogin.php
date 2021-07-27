@@ -2,17 +2,14 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read bool active
  * @property-read int login_id
  * @property-read \DateTimeInterface last_login
@@ -20,24 +17,7 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModelSingle implements IIdentity {
-
-    private YearCalculator $yearCalculator;
-
-    /**
-     * @return YearCalculator
-     * @internal
-     */
-    private function getYearCalculator(): YearCalculator {
-        if (!isset($this->yearCalculator)) {
-            throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
-        }
-        return $this->yearCalculator;
-    }
-
-    final public function injectYearCalculator(YearCalculator $yearCalculator): void {
-        $this->yearCalculator = $yearCalculator;
-    }
+class ModelLogin extends AbstractModel implements IIdentity {
 
     public function getPerson(): ?ModelPerson {
         if ($this->person) {
@@ -47,12 +27,11 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
      * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
-    public function getActiveOrgs(YearCalculator $yearCalculator): array {
+    public function getActiveOrgs(): array {
         if ($this->getPerson()) {
-            return $this->getPerson()->getActiveOrgs($yearCalculator);
+            return $this->getPerson()->getActiveOrgs();
         } else {
             $result = [];
             foreach ($this->getRoles() as $grant) {
@@ -64,13 +43,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-    public function isOrg(YearCalculator $yearCalculator): bool {
-        return count($this->getActiveOrgs($yearCalculator)) > 0;
+    public function isOrg(): bool {
+        return count($this->getActiveOrgs()) > 0;
     }
 
-    public function isContestant(YearCalculator $yearCalculator): bool {
+    public function isContestant(): bool {
         $person = $this->getPerson();
-        return $person && count($person->getActiveContestants($yearCalculator)) > 0;
+        return $person && count($person->getActiveContestants()) > 0;
     }
 
     public function __toString(): string {
@@ -98,9 +77,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
 
     // ----- IIdentity implementation ----------
 
-    /**
-     * @return int|mixed
-     */
     public function getId(): int {
         return $this->login_id;
     }
@@ -124,10 +100,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             // roles from other tables
             $person = $this->getPerson();
             if ($person) {
-                foreach ($person->getActiveOrgs($this->getYearCalculator()) as $org) {
+                foreach ($person->getActiveOrgs() as $org) {
                     $this->roles[] = new Grant($org->contest_id, ModelRole::ORG);
                 }
-                foreach ($person->getActiveContestants($this->getYearCalculator()) as $contestant) {
+                foreach ($person->getActiveContestants() as $contestant) {
                     $this->roles[] = new Grant($contestant->contest_id, ModelRole::CONTESTANT);
                 }
             }

@@ -14,29 +14,20 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
     private ModelEvent $event;
     private Holder $holder;
     protected ServiceEvent $serviceEvent;
     protected EventDispatchFactory $eventDispatchFactory;
-
     /**
-     * @var int
      * @persistent
      */
-    public $eventId;
+    public ?int $eventId = null;
 
     final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceEvent = $serviceEvent;
@@ -45,7 +36,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -92,14 +82,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return int
-     * @throws EventNotFoundException
-     */
-    protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
-    }
-
-    /**
      * @return ModelContest
      * @throws EventNotFoundException
      */
@@ -121,7 +103,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* **************** ACL *********************** */
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Standard ACL from acl.neon
@@ -132,7 +114,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Check if is contest and event org
@@ -144,7 +126,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * Check if has contest permission or is Event org
@@ -156,13 +138,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* ********************** GUI ************************ */
     /**
-     * @param PageTitle $pageTitle
-     * @return void
+     * @return string|null
      * @throws EventNotFoundException
      */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
-        parent::setPageTitle($pageTitle);
+    protected function getDefaultSubTitle(): ?string {
+        return $this->getEvent()->__toString();
     }
 
     /**

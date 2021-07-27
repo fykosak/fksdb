@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -17,16 +17,10 @@ use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DeduplicatePresenter extends BasePresenter {
 
     private ServicePerson $servicePerson;
@@ -88,20 +82,19 @@ class DeduplicatePresenter extends BasePresenter {
      * @param int $trunkId
      * @param int $mergedId
      * @return void
-     * @throws AbortException
      * @throws BadTypeException
      * @throws \ReflectionException
      */
     public function actionDontMerge(int $trunkId, int $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
+        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
 
         $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
+        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), Logger::SUCCESS);
         $this->backLinkRedirect(true);
     }
 
@@ -205,7 +198,6 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws AbortException
      * @throws \ReflectionException
      * @throws BadTypeException
      */

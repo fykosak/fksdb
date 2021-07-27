@@ -3,17 +3,17 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- * Class FKSDB\Models\ORM\Models\ModelEventOrg
  * @property-read ActiveRow person
  * @property-read ActiveRow event
  * @property-read string note
  * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource {
+class ModelEventOrg extends AbstractModel implements Resource {
+
     public const RESOURCE_ID = 'event.org';
 
     public function getPerson(): ModelPerson {
@@ -33,9 +33,6 @@ class ModelEventOrg extends AbstractModelSingle implements IResource {
     }
 
     public function __toString(): string {
-        if (!$this->getPerson()) {
-            throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");
-        }
         return $this->getPerson()->__toString();
     }
 }

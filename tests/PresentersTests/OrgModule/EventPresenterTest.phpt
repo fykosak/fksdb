@@ -4,7 +4,8 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\EventFormComponent;
+use DateTime;
+use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -26,8 +27,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'Dummy Event',
         ]);
     }
@@ -48,8 +49,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
                 'event_type_id' => (string)2,
                 'year' => (string)1,
                 'event_year' => (string)1,
-                'begin' => (new \DateTime())->format('c'),
-                'end' => (new \DateTime())->format('c'),
+                'begin' => (new DateTime())->format('c'),
+                'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
             ],
         ]);
@@ -65,8 +66,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
                 'event_type_id' => (string)1,
                 'year' => (string)1,
                 'event_year' => (string)1,
-                'begin' => (new \DateTime())->format('c'),
-                'end' => (new \DateTime())->format('c'),
+                'begin' => (new DateTime())->format('c'),
+                'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event',
             ],
         ]);
@@ -83,15 +84,15 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
                 'event_type_id' => (string)1,
                 'year' => (string)1,
                 'event_year' => (string)1,
-                'begin' => (new \DateTime())->format('c'),
-                'end' => (new \DateTime())->format('c'),
+                'begin' => (new DateTime())->format('c'),
+                'end' => (new DateTime())->format('c'),
                 'name' => 'Dummy Event edited',
             ],
         ], [
             'id' => $this->eventId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->connection->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
+        $org = $this->explorer->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);
     }
 
@@ -100,12 +101,12 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event');
+        $this->truncateTables([DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
     private function countEvents(): int {
-        return $this->connection->query('SELECT * FROM event')->getRowCount();
+        return $this->explorer->query('SELECT * FROM event')->getRowCount();
     }
 }
 

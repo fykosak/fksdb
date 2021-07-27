@@ -2,13 +2,9 @@
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
-/**
- * Class AbstractValuePrinter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractValuePrinter {
     /**
      * @param null $value

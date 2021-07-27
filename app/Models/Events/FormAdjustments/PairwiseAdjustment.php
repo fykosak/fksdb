@@ -2,31 +2,21 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
+abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
 
     private iterable $rules;
 
-    /**
-     * PairwiseAdjustment constructor.
-     * @param iterable $rules
-     */
     public function __construct(iterable $rules) {
         $this->rules = $rules;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisites) {
             if (is_scalar($prerequisites)) {
                 $prerequisites = [$prerequisites];
@@ -62,5 +52,5 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
         }
     }
 
-    abstract protected function processPair(BaseControl $target, IControl $prerequisite): void;
+    abstract protected function processPair(BaseControl $target, Control $prerequisite): void;
 }

@@ -2,43 +2,25 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Factories\Events\FieldFactory;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
-use Nette\ComponentModel\IComponent;
+use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Field {
 
     private string $name;
-
     private bool $determining;
-
     private ?string $label;
-
     private ?string $description;
-
     private BaseHolder $baseHolder;
-
     private ExpressionEvaluator $evaluator;
-
     private FieldFactory $factory;
-
     /** @var mixed */
     private $default;
-
     /** @var bool|callable */
     private $required;
-
     /** @var bool|callable */
     private $modifiable;
-
     /** @var bool|callable */
     private $visible;
 
@@ -152,14 +134,18 @@ class Field {
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getValue() {
-        $model = $this->getBaseHolder()->getModel();
-        if (isset($model[$this->name])) {
-            return $model[$this->name];
+        $model = $this->getBaseHolder()->getModel2();
+        if (isset($this->baseHolder->data[$this->name])) {
+            return $this->baseHolder->data[$this->name];
         }
-        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+        if ($model) {
+            if (isset($model[$this->name])) {
+                return $model[$this->name];
+            }
+        } else {
             return $this->getDefault();
         }
         return null;

@@ -4,18 +4,12 @@ namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\Submits\IStorageProcessing;
-use FKSDB\Models\Submits\ISubmitStorage;
+use FKSDB\Models\Submits\StorageProcessing;
+use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
-use UnexpectedValueException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class CorrectedStorage implements ISubmitStorage {
+class CorrectedStorage implements SubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
 
@@ -36,21 +30,17 @@ class CorrectedStorage implements ISubmitStorage {
      */
     private string $filenameMask;
 
-    /** @var array   contestId => contest name */
-    private array $contestMap;
-
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
     /**
-     * @param IStorageProcessing $processing
+     * @param StorageProcessing $processing
      * @throws NotImplementedException
      */
-    public function addProcessing(IStorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void {
         throw new NotImplementedException();
     }
 
@@ -91,7 +81,7 @@ class CorrectedStorage implements ISubmitStorage {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             /** @var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return null;
         }
 

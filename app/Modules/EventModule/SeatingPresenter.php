@@ -2,61 +2,30 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
+use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SeatingPresenter extends BasePresenter {
 
-    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
-
-    final public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
-
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows'));
+        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa map-marked-alt'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fas fa-pen'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDownload(): void {
         $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
     }
@@ -102,8 +71,7 @@ class SeatingPresenter extends BasePresenter {
         $this->setAuthorized($download || $edit);
     }
 
-
-    public function renderEdit(): void {
+    final public function renderEdit(): void {
         throw new DeprecatedException();
         /* if ($this->isAjax()) {
              $data = $this->getHttpRequest()->getPost('requestData');
@@ -120,7 +88,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->event = $this->getEvent();
         $teams = $this->getEvent()->getTeams();
         $this->template->teams = $teams;
@@ -136,11 +104,11 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderPreview(): void {
+    final public function renderPreview(): void {
         $this->template->event = $this->getEvent();
     }
 
-    protected function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->getContext());
+    protected function createComponentSeating(): SeatingComponent {
+        return new SeatingComponent($this->getContext());
     }
 }

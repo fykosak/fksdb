@@ -2,17 +2,14 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\YearCalculator;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -21,8 +18,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
 
     private int $rulesVersion;
 
-    public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
-        parent::__construct($yearCalculator, $serviceSchool, $servicePerson);
+    public function __construct(int $rulesVersion, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
+        parent::__construct($serviceSchool, $servicePerson);
 
         if (!in_array($rulesVersion, [1, 2])) {
             throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
@@ -30,17 +27,17 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $this->rulesVersion = $rulesVersion;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
-
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $model = $holder->getPrimaryHolder()->getModel2();
+        $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
         }
     }
 
@@ -51,13 +48,13 @@ class CategoryProcessing extends AbstractCategoryProcessing {
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      */
-    protected function getCategory(array $competitors): string {
+    protected function getCategory(array $participants): string {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
         $abroad = 0;
         // calculate stats
-        foreach ($competitors as $competitor) {
+        foreach ($participants as $competitor) {
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {

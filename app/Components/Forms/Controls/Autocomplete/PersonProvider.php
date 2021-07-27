@@ -5,15 +5,9 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use FKSDB\Models\YearCalculator;
+use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class PersonProvider implements IFilteredDataProvider {
+class PersonProvider implements FilteredDataProvider {
 
     private const PLACE = 'place';
 
@@ -29,16 +23,14 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * Syntactic sugar, should be solved more generally.
      * @param ModelContest $contest
-     * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
+    public function filterOrgs(ModelContest $contest): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
-            ])
-            ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
-            ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
-
+                ':org.since <= ?' => $contest->getCurrentContestYear()->year,
+                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentContestYear()->year,
+            ]);
     }
 
     /**
@@ -63,7 +55,6 @@ class PersonProvider implements IFilteredDataProvider {
     public function getItems(): array {
         $persons = $this->searchTable
             ->order('family_name, other_name');
-
 
         $result = [];
         /** @var ModelPerson $person */

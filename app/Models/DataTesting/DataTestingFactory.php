@@ -7,10 +7,6 @@ use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 
-/**
- * Class DataTestingFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DataTestingFactory {
     /** @var PersonTest[][] */
     private array $tests = [];

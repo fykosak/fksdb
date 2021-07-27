@@ -2,33 +2,21 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Fyziklani\FinalResults;
+use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Utils\Html;
 
-/**
- * Class DiplomasPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DiplomasPresenter extends BasePresenter {
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
+
     public function titleResults(): void {
         $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
+        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-calculator'));
     }
 
     /**
@@ -49,15 +37,15 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
+                'closed' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
+                'opened' => $this->getEvent()->getParticipatingTeams()
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),
@@ -68,7 +56,6 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @param string|null $category
-     * @throws AbortException
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
@@ -89,10 +76,10 @@ class DiplomasPresenter extends BasePresenter {
     }
 
     /**
-     * @return FinalResults
+     * @return FinalResultsComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentResults(): FinalResults {
-        return new FinalResults($this->getContext(), $this->getEvent());
+    protected function createComponentResults(): FinalResultsComponent {
+        return new FinalResultsComponent($this->getContext(), $this->getEvent());
     }
 }

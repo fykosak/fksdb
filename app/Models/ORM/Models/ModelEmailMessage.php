@@ -2,13 +2,17 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
+use Nette\InvalidStateException;
 use Nette\Mail\Message;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class ModelEmailMessage
  * @property-read int email_message_id`
  * @property-read string recipient
+ * @property-read int|null recipient_person_id
+ * @property-read ActiveRow|null person
  * @property-read string sender
  * @property-read string reply_to
  * @property-read string subject
@@ -19,7 +23,8 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface sent
  */
-class ModelEmailMessage extends AbstractModelSingle implements IResource {
+class ModelEmailMessage extends AbstractModel implements Resource {
+
     public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const STATE_WAITING = 'waiting'; //čaká na poslanie
     public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
@@ -31,7 +36,17 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
     public function toMessage(): Message {
         $message = new Message();
         $message->setSubject($this->subject);
-        $message->addTo($this->recipient);
+        if (isset($this->recipient_person_id)) {
+            if (isset($this->recipient) && $this->getPerson()->getInfo()->email !== $this->recipient) {
+                throw new InvalidStateException('Recipient and person\'s email not match');
+            }
+            $message->addTo($this->getPerson()->getInfo()->email);
+        } elseif (isset($this->recipient)) {
+            $message->addTo($this->recipient);
+        } else {
+            throw new InvalidStateException('Recipient org person_id is required');
+        }
+
         if (!is_null($this->blind_carbon_copy)) {
             $message->addBcc($this->blind_carbon_copy);
         }
@@ -43,6 +58,10 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
         $message->setHtmlBody($this->text);
 
         return $message;
+    }
+
+    public function getPerson(): ?ModelPerson {
+        return isset($this->recipient_person_id) ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
     public function getResourceId(): string {

@@ -5,10 +5,6 @@ namespace FKSDB\Models\Localization;
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class GettextTranslator implements Translator {
 
     /** @var array[lang] => locale */
@@ -54,7 +50,7 @@ class GettextTranslator implements Translator {
 
     /**
      * @param string $message
-     * @param mixed ...$parameters
+     * @param ...$parameters
      * @return string
      */
     public function translate($message, ...$parameters): string {

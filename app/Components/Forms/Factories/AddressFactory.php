@@ -10,18 +10,9 @@ use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class AddressFactory {
-
-    public const SHOW_EXTENDED_ROWS = 0x1;
-    public const REQUIRED = 0x2;
-    public const NOT_WRITEONLY = 0x4;
 
     private ServiceAddress $serviceAddress;
 
@@ -35,15 +26,15 @@ class AddressFactory {
         $this->container = $container;
     }
 
-    public function createAddress(int $options = 0, ?IControl $conditioningField = null): AddressContainer {
+    public function createAddress(?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): AddressContainer {
         $container = new AddressContainer($this->container);
-        $this->buildAddress($container, $options, $conditioningField);
+        $this->buildAddress2($container, $conditioningField, $required, $notWriteOnly, $showExtendedRows);
         return $container;
     }
 
     public function createAddressContainer(string $type): AddressContainer {
         $container = new AddressContainer($this->container);
-        $this->buildAddress($container, self::NOT_WRITEONLY); // TODO is not safe
+        $this->buildAddress2($container, null, false, true); // TODO is not safe
         switch ($type) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
                 $container->setOption('label', _('Delivery address'));
@@ -55,16 +46,8 @@ class AddressFactory {
         return $container;
     }
 
-    /**
-     * Appends elements to an existing container.
-     * (Created because of KdybyReplicator.)
-     *
-     * @param AddressContainer $container
-     * @param int $options
-     * @param IControl|null $conditioningField
-     */
-    public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
-        if ($options & self::SHOW_EXTENDED_ROWS) {
+    public function buildAddress2(AddressContainer $container, ?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): void {
+        if ($showExtendedRows) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));
 
@@ -75,25 +58,25 @@ class AddressFactory {
         $target = new WriteOnlyInput(_('Place'));
         $container->addComponent($target, 'target');
         $target->setOption('description', _('Typically street and (house) number.'));
-        if ($options & self::REQUIRED) {
+        if ($required) {
             $conditioned = $conditioningField ? $target->addConditionOn($conditioningField, Form::FILLED) : $target;
             $conditioned->addRule(Form::FILLED, _('The place is required.'));
         }
-        if ($options & self::NOT_WRITEONLY) {
+        if ($notWriteOnly) {
             $target->setWriteOnly(false);
         }
 
         $city = new WriteOnlyInput(_('City'));
         $container->addComponent($city, 'city');
-        if ($options & self::REQUIRED) {
+        if ($required) {
             $conditioned = $conditioningField ? $city->addConditionOn($conditioningField, Form::FILLED) : $city;
             $conditioned->addRule(Form::FILLED, _('City is required.'));
         }
-        if ($options & self::NOT_WRITEONLY) {
+        if ($notWriteOnly) {
             $city->setWriteOnly(false);
         }
 
-        $postalCode = $container->addText('postal_code', _('PSČ'))
+        $postalCode = $container->addText('postal_code', _('postal code'))
             ->addRule(Form::MAX_LENGTH, null, 5)
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
 
@@ -111,7 +94,7 @@ class AddressFactory {
             return $this->serviceAddress->tryInferRegion($control->getValue());
         };
 
-        if ($options & self::REQUIRED) {
+        if ($required) {
             $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
             $conditioned->addConditionOn($country, function (BaseControl $control): bool {
                 $value = $control->getValue();
@@ -121,7 +104,7 @@ class AddressFactory {
         $postalCode->addCondition(Form::FILLED)
             ->addRule($validPostalCode, _('Invalid postal code.'));
 
-        if ($options & self::REQUIRED) {
+        if ($required) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
             $conditioned->addConditionOn($postalCode, function (BaseControl $control): bool {
                 return !$this->serviceAddress->tryInferRegion($control->getValue());

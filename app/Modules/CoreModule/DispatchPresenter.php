@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
-/**
- * Class DispatchPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class DispatchPresenter extends BasePresenter {
 
     private array $contestsProperty;
@@ -23,7 +19,7 @@ class DispatchPresenter extends BasePresenter {
     /**
      * @throws InvalidLinkException
      */
-    public function renderDefault(): void {
+    final public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -44,12 +40,12 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllOrganisers(ModelLogin $login): array {
         $results = [];
-        foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
+        foreach ($login->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(':Org:Dashboard:default', [
                     'contestId' => $contestId,
                 ]),
-                'title' => sprintf(_('Organiser %s'), $this->getContestProperty($contestId)['model']->name),
+                'title' => sprintf(_('Organiser %s'), $org->getContest()->name),
             ];
         }
         return $results;
@@ -82,12 +78,12 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllContestants(ModelPerson $person): array {
         $result = [];
-        foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
+        foreach ($person->getActiveContestants() as $contestId => $contestant) {
             $result[$contestId] = [
                 'link' => $this->link(':Public:Dashboard:default', [
                     'contestId' => $contestId,
                 ]),
-                'title' => sprintf(_('Contestant %s'), $this->getContestProperty($contestId)['model']->name),
+                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
             ];
         }
         return $result;

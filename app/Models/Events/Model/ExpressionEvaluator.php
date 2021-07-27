@@ -5,10 +5,6 @@ namespace FKSDB\Models\Events\Model;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ExpressionEvaluator {
 
     use SmartObject;

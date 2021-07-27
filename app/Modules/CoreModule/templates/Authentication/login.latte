@@ -1,5 +1,5 @@
 {layout ./@layout.latte}
-{block #form}
+{block form}
     {form loginForm class => 'form-signin'}
         <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
 

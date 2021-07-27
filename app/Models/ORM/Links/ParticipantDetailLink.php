@@ -2,14 +2,10 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 
-/**
- * Class ParticipantDetailLink
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ParticipantDetailLink extends LinkFactory {
 
     public function getText(): string {
@@ -17,10 +13,10 @@ class ParticipantDetailLink extends LinkFactory {
     }
 
     /**
-     * @param ModelEventParticipant|AbstractModelSingle $model
+     * @param ModelEventParticipant|AbstractModel $model
      * @return string
      */
-    protected function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModel $model): string {
         if ($model->getEvent()->isTeamEvent()) {
             return ':Event:TeamApplication:detail';
         } else {
@@ -29,11 +25,11 @@ class ParticipantDetailLink extends LinkFactory {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @param AbstractModel|ModelEventParticipant $model
      * @return array
      * @throws BadRequestException
      */
-    protected function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModel $model): array {
         if ($model->getEvent()->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,

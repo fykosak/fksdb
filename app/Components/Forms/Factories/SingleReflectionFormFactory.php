@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Class SingleReflectionFactory
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleReflectionFormFactory {
 
     protected ORMFactory $tableReflectionFactory;
@@ -36,7 +32,7 @@ class SingleReflectionFormFactory {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param mixed ...$args
+     * @param ...$args
      * @return BaseControl
      * @throws BadTypeException
      * @throws OmittedControlException
@@ -78,7 +74,7 @@ class SingleReflectionFormFactory {
             $control = $factory->createField();
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
-            if ($control instanceof IWriteOnly) {
+            if ($control instanceof WriteOnly) {
                 $control->setWriteOnly(!$canRead);
             } elseif ($canRead) {
 // do nothing

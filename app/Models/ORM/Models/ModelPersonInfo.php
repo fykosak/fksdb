@@ -2,12 +2,10 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string email
  * @property-read string phone
  * @property-read string phone_parent_m
@@ -38,7 +36,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
  */
-class ModelPersonInfo extends OldAbstractModelSingle {
+class ModelPersonInfo extends AbstractModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

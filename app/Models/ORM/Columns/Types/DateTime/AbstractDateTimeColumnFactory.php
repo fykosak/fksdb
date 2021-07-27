@@ -4,13 +4,9 @@ namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-/**
- * Class AbstractDateTimeRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory {
 
     private string $format;
@@ -19,7 +15,7 @@ abstract class AbstractDateTimeColumnFactory extends ColumnFactory {
         $this->format = $format;
     }
 
-    final protected function createHtmlValue(AbstractModelSingle $model): Html {
+    final protected function createHtmlValue(AbstractModel $model): Html {
         return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->getModelAccessKey()});
     }
 

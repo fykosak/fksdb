@@ -1,16 +1,14 @@
 <?php
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Lukáš Timko <lukast@fykos.cz>
  * @property-read string name
  * @property-read string label
  * @property-read int fyziklani_task_id
  */
-class ModelFyziklaniTask extends AbstractModelSingle {
+class ModelFyziklaniTask extends AbstractModel {
 
     public function __toArray(bool $hideName = false): array {
         return [

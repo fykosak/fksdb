@@ -4,19 +4,14 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
+abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServicePersonHistory $servicePersonHistory;
     private Holder $holder;
@@ -34,8 +29,8 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
     }
 
     /**
-     * @param IControl[] $schoolControls
-     * @param IControl[]|ReferencedId[] $personControls
+     * @param Control[] $schoolControls
+     * @param Control[]|ReferencedId[] $personControls
      * @return array
      */
     final protected function getSchools(array $schoolControls, array $personControls): array {
@@ -43,13 +38,13 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
             try {
                 return $control->getValue();
             } catch (ModelDataConflictException $exception) {
-                $control->addError(sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $control->getLabel()));
+                $control->addError(sprintf(_('Some fields of the group "%s" do not match an existing record.'), $control->getLabel()));
             }
         }, $personControls));
 
         $schools = $this->servicePersonHistory->getTable()
             ->where('person_id', $personIds)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)
             ->fetchPairs('person_id', 'school_id');
 
         $result = [];

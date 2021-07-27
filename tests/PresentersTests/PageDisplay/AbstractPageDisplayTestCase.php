@@ -7,7 +7,7 @@ use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -16,6 +16,7 @@ use Tester\Assert;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
     protected int $personId;
@@ -55,15 +56,15 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * @dataProvider getPages
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void {
-
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $this->authenticate($this->loginId, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
+        /** @var TextResponse $response */
         Assert::type(TextResponse::class, $response);
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         Assert::noError(function () use ($source): string {
             return (string)$source;
@@ -77,10 +78,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM global_session');
-        $this->connection->query('DELETE FROM `grant`');
-        $this->connection->query('DELETE FROM login');
-        $this->connection->query('DELETE FROM person');
+        $this->truncateTables([DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
         parent::tearDown();
     }
 }

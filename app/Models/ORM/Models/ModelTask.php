@@ -6,10 +6,9 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Strings;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int series
  * @property-read string label
  * @property-read string name_cs
@@ -21,7 +20,7 @@ use Nette\Utils\Strings;
  * @property-read \DateTimeInterface submit_deadline
  * @property-read \DateTimeInterface submit_start
  */
-class ModelTask extends AbstractModelSingle {
+class ModelTask extends AbstractModel {
 
     public function getFQName(): string {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);

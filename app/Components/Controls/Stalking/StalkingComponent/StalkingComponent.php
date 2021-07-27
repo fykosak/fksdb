@@ -2,17 +2,13 @@
 
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
-use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
-/**
- * Class StalkingComponent
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class StalkingComponent extends StalkingControl {
+class StalkingComponent extends BaseStalkingComponent {
 
     /**
      * @param string $section
@@ -21,7 +17,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermission): void {
+    final public function render(string $section, ModelPerson $person, int $userPermission): void {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
@@ -44,7 +40,6 @@ class StalkingComponent extends StalkingControl {
      * @throws NotImplementedException
      */
     private function renderSingle(array $definition, ModelPerson $person): void {
-
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
@@ -62,12 +57,11 @@ class StalkingComponent extends StalkingControl {
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     /**
-     * @param mixed[]|AbstractModelSingle[] $definition
+     * @param array|AbstractModel[] $definition
      * @param ModelPerson $person
      * @return void
      */
@@ -81,7 +75,6 @@ class StalkingComponent extends StalkingControl {
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }
 }

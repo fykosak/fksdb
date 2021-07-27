@@ -2,27 +2,19 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 class CloseTeamsGrid extends BaseGrid {
-
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
     private ModelEvent $event;
 
@@ -31,23 +23,19 @@ class CloseTeamsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
     protected function getData(): IDataSource {
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
+        $teams = $this->event->getParticipatingTeams();//->where('points',NULL);
         return new NDataSource($teams);
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

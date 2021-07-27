@@ -3,9 +3,10 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use Nette\Application\IPresenter;
+use FKSDB\Models\ORM\Models\ModelOrg;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -13,13 +14,7 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class OrgsGrid extends BaseGrid {
-
-    private ServiceOrg $serviceOrg;
 
     private ModelContest $contest;
 
@@ -28,13 +23,8 @@ class OrgsGrid extends BaseGrid {
         $this->contest = $contest;
     }
 
-    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
-        $this->serviceOrg = $serviceOrg;
-    }
-
     protected function getData(): IDataSource {
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
-            ->select('org.*, person.family_name AS display_name');
+        $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
@@ -48,13 +38,13 @@ class OrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');
@@ -68,5 +58,9 @@ class OrgsGrid extends BaseGrid {
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelOrg::class;
     }
 }

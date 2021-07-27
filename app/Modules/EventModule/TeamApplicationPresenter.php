@@ -3,11 +3,11 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
+use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * Class ApplicationPresenter
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
@@ -43,9 +42,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         parent::renderDetail();
-        $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
             $rankVisible = $setup->result_hard_display;
@@ -56,8 +54,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentSeating(): SeatingControl {
-        return new SeatingControl($this->getContext());
+    protected function createComponentSeating(): SeatingComponent {
+        return new SeatingComponent($this->getContext());
     }
 
     /**
@@ -65,7 +63,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
-        return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
+        return new SchoolCheckComponent($this->getEvent(), $this->getContext());
     }
 
     /**

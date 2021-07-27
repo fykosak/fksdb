@@ -2,60 +2,42 @@
 
 namespace FKSDB\Models\Events\Spec\Fol;
 
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Events\Processing\AbstractProcessing;
-use FKSDB\Models\Logging\ILogger;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\Events\Spec\WithSchoolProcessing;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\YearCalculator;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class FlagProcessing extends AbstractProcessing {
-
-    private YearCalculator $yearCalculator;
+class FlagProcessing extends WithSchoolProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
-        $this->yearCalculator = $yearCalculator;
+    public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
-        $event = $holder->getPrimaryHolder()->getEvent();
-        $acYear = $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            /** @var BaseControl[][] $formControls */
-            $formControls = [
-                'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
-                'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
-            ];
-            $formControls['school_id'] = reset($formControls['school_id']);
-            $formControls['study_year'] = reset($formControls['study_year']);
-            /** @var BaseControl[] $formControls */
             $formValues = [
-                'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
-                'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
+                'school_id' => $this->getSchoolValue($name),
+                'study_year' => $this->getStudyYearValue($name),
             ];
 
             if (!$formValues['school_id']) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
-                /** @var ModelPerson $person */
-                $person = $baseHolder->getModel()->getMainModel()->getPerson();
-                $history = $person->getHistory($acYear);
+
+                $history = $baseHolder->getModel2()->mainModel->getPersonHistory();
                 $participantData = [
                     'school_id' => $history->school_id,
                     'study_year' => $history->study_year,

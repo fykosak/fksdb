@@ -3,11 +3,10 @@
 namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -18,13 +17,12 @@ use Nette\Utils\ArrayHash;
  *
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class GenKillProcessing implements Processing {
+
     use SmartObject;
 
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): array {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): array {
         $result = [];
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
@@ -43,8 +41,8 @@ class GenKillProcessing implements Processing {
 
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
-                $result[$name] = BaseMachine::STATE_TERMINATED;
-            } elseif ($holder->getBaseHolder($name)->getModelState() == BaseMachine::STATE_INIT) {
+                $result[$name] = \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED;
+            } elseif ($holder->getBaseHolder($name)->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
@@ -56,7 +54,7 @@ class GenKillProcessing implements Processing {
                     } elseif (count($transitions) > 1) {
                         throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
                     } else {
-                        $result[$name] = reset($transitions)->getTarget();
+                        $result[$name] = reset($transitions)->getTargetState();
                     }
                 }
             }

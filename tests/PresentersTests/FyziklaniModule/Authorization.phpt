@@ -20,13 +20,9 @@ class Authorization extends FyziklaniTestCase {
     use MockApplicationTrait;
 
     private int $perPerson;
-
     private int $perOrg;
-
     private int $perOrgOther;
-
     private int $perContestant;
-
     private int $submitId;
 
     /**
@@ -83,7 +79,7 @@ class Authorization extends FyziklaniTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM contestant_base');
+        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
         parent::tearDown();
     }
 
@@ -147,6 +143,7 @@ class Authorization extends FyziklaniTestCase {
                 }
             } elseif (!$forbidden) {
                 Assert::type(RedirectResponse::class, $response);
+                /** @var RedirectResponse $response */
                 $url = $response->getUrl();
                 Assert::contains('login', $url);
             }

@@ -7,13 +7,11 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelEventParticipant getMainModel()
+ * @property-read ModelEventParticipant $mainModel
  */
 class ModelMFyziklaniParticipant extends AbstractModelMulti {
 
     public function getEvent(): ModelEvent {
-        return $this->getMainModel()->getEvent();
+        return $this->mainModel->getEvent();
     }
 }

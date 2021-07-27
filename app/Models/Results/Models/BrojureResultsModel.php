@@ -8,22 +8,17 @@ use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class BrojureResultsModel extends AbstractResultsModel {
 
     public const COL_SERIES_PREFIX = 's';
-
     /** @var int[] */
     protected array $series;
-
     /**
      * Number of (single) series that is listed in detail
      * @var int
      */
-    protected $listedSeries;
-
+    protected int $listedSeries;
     /**
      * Cache
      * @var array
@@ -90,7 +85,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param mixed $series
+     * @param int[] $series
      */
     public function setSeries($series): void {
         $this->series = $series;
@@ -98,18 +93,11 @@ class BrojureResultsModel extends AbstractResultsModel {
         $this->dataColumns = [];
     }
 
-    /**
-     * @return int
-     */
-    public function getListedSeries() {
+    public function getListedSeries(): int {
         return $this->listedSeries;
     }
 
-    /**
-     * @param array $listedSeries
-     * @return void
-     */
-    public function setListedSeries($listedSeries): void {
+    public function setListedSeries(int $listedSeries): void {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -163,8 +151,8 @@ left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
 left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
 
         $conditions = [
-            'ct.year' => $this->year,
-            'ct.contest_id' => $this->contest->contest_id,
+            'ct.year' => $this->contestYear->year,
+            'ct.contest_id' => $this->contestYear->contest_id,
             't.series' => $this->getSeries(),
             'ct.study_year' => $this->evaluationStrategy->categoryToStudyYears($category),
         ];

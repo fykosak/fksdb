@@ -2,10 +2,8 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ModelStudyYear extends AbstractModelSingle {
+use Fykosak\NetteORM\AbstractModel;
+
+class ModelStudyYear extends AbstractModel {
 
 }

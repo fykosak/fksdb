@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\SchoolFormComponent;
+use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -11,10 +11,9 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class SchoolPresenter
  * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {
@@ -27,7 +26,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Schools'), 'fa fa-university');
+        return new PageTitle(_('Schools'), 'fa fa-school');
     }
 
     public function getTitleCreate(): PageTitle {
@@ -41,7 +40,7 @@ class SchoolPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen'));
     }
 
     /**
@@ -58,7 +57,7 @@ class SchoolPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -87,7 +86,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @return bool
      */

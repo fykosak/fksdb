@@ -7,9 +7,12 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
@@ -19,11 +22,12 @@ use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
+
     use MockApplicationTrait;
 
     private ExtendedPersonHandler $fixture;
-
     private ReferencedPersonFactory $referencedPersonFactory;
+    private ModelContestYear $contestYear;
 
     /**
      * ExtendedPersonHandlerTest constructor.
@@ -41,20 +45,17 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
 
         $service = $this->getContainer()->getByType(ServiceContestant::class);
-        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
-        $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
+        $this->contestYear = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS)->getContestYear(1);
+        $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM contestant_base');
-        $this->connection->query('DELETE FROM auth_token');
-        $this->connection->query('DELETE FROM login');
+        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE, DbNames::TAB_AUTH_TOKEN, DbNames::TAB_LOGIN]);
 
         parent::tearDown();
     }
 
     public function testNewPerson(): void {
-
         $presenter = new PersonPresenter();
         // Define a form
 
@@ -94,7 +95,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                     'required' => true,
                 ],
             ],
-        ], 2000);
+        ], YearCalculator::getCurrentAcademicYear());
 
         // Fill user data
         $form->setValues([
@@ -157,7 +158,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
-            $acYear,
+            $this->contestYear,
             PersonSearchContainer::SEARCH_NONE,
             false,
             new TestResolver(),

@@ -5,13 +5,7 @@ namespace FKSDB\Models\Tasks;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TasksFromXML extends Stage {
 
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
@@ -56,9 +50,7 @@ class TasksFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
-        $contest = $this->data->getContest();
-        $year = $this->data->getYear();
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $series = $this->data->getSeries();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -72,6 +64,7 @@ class TasksFromXML extends Stage {
             if (preg_match('/([a-z]*)\[@xml:lang="([a-z]*)"\]/', $xmlElement, $matches)) {
                 $name = $matches[1];
                 $lang = $matches[2];
+                /** @var \SimpleXMLElement[] $elements */
                 $elements = $XMLTask->{$name};
                 $csvalue = null;
 
@@ -97,17 +90,17 @@ class TasksFromXML extends Stage {
         }
 
         // obtain FKSDB\Models\ORM\Models\ModelTask
-        $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
+        $task = $this->taskService->findBySeries($this->data->getContestYear(), $series, $tasknr);
 
         if ($task == null) {
             $task = $this->taskService->createNewModel(array_merge($data, [
-                'contest_id' => $contest->contest_id,
-                'year' => $year,
+                'contest_id' => $this->data->getContestYear()->contest_id,
+                'year' => $this->data->getContestYear()->year,
                 'series' => $series,
                 'tasknr' => $tasknr,
             ]));
         } else {
-            $this->taskService->updateModel2($task, $data);
+            $this->taskService->updateModel($task, $data);
         }
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);

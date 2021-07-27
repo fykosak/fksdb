@@ -4,17 +4,13 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\Transitions\IStateModel;
-use Nette\Database\Conventions;
-use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelPersonSchedule
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -22,7 +18,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
+class ModelPersonSchedule extends AbstractModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -53,7 +49,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
         if (!$payment) {
             return false;
         }
-        if ($payment->getState() == ModelPayment::STATE_CANCELED) {
+        if ($payment->state == ModelPayment::STATE_CANCELED) {
             return false;
         }
         return true;
@@ -78,23 +74,5 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel {
             default:
                 throw new NotImplementedException();
         }
-    }
-
-    public function updateState(?string $newState): void {
-        $this->update(['state' => $newState]);
-    }
-
-    public function getState(): ?string {
-        return $this->state;
-    }
-
-    /**
-     * @param Explorer $explorer
-     * @param Conventions $conventions
-     * @return IStateModel
-     * @throws NotImplementedException
-     */
-    public function refresh(Explorer $explorer, Conventions $conventions): IStateModel {
-        throw new NotImplementedException();
     }
 }

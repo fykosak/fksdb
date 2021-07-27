@@ -10,7 +10,7 @@ use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -28,7 +28,6 @@ class ApplicationPresenterTest extends EventTestCase {
     }
 
     public function test404(): void {
-
         Assert::exception(function (): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
@@ -49,7 +48,7 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::exception(function () use ($eventId): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
-                'lang' => 'cs',
+                'lang' => 'en',
                 'id' => 666,
                 'eventId' => $eventId,
                 'contestId' => 1,
@@ -69,7 +68,7 @@ class ApplicationPresenterTest extends EventTestCase {
 
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
-            'lang' => 'cs',
+            'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $eventId,
@@ -77,9 +76,9 @@ class ApplicationPresenterTest extends EventTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Registration is not open.', $html);

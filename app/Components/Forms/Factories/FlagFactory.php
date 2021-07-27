@@ -7,10 +7,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
-
-/**
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class FlagFactory {
 
     public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl {
@@ -21,7 +17,7 @@ class FlagFactory {
             if ($hiddenField) {
                 $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
             }
-            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+            $conditioned->addRule(Form::FILLED, _('The field %label is required.'));
         }
         $caption = $metadata['caption'] ?? null;
         if ($caption) { // intentionally =
@@ -35,6 +31,6 @@ class FlagFactory {
     }
 
     public function createSpamMff(): PersonFlag {
-        return new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
+        return new PersonFlag(_('I wish to receive information about MFF and the events they organize.'));
     }
 }

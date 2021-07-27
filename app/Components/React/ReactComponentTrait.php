@@ -2,18 +2,14 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\Messages\Message;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Trait ReactField
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ReactComponentTrait {
 
     private MemoryLogger $logger;
@@ -30,6 +26,7 @@ trait ReactComponentTrait {
 
     /**
      * @throws BadRequestException
+     * @note Can be used only with BaseControl
      */
     protected function appendProperty(): void {
         if (!$this instanceof BaseControl) {
@@ -47,7 +44,7 @@ trait ReactComponentTrait {
     }
 
     private function registerMonitor(): void {
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;
                 $collector->registerJSFile('js/bundle.min.js');
@@ -55,7 +52,7 @@ trait ReactComponentTrait {
         });
     }
 
-    protected function getLogger(): ILogger {
+    protected function getLogger(): Logger {
         return $this->logger;
     }
 

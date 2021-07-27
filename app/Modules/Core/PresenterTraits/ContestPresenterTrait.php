@@ -2,37 +2,36 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
+use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Application\BadRequestException;
+use Nette\DI\Container;
+use Nette\Security\User;
 
 /**
  * Trait ContestPresenterTrait
  * @property ServiceContest $serviceContest
+ * @method User getUser()
  */
 trait ContestPresenterTrait {
 
     /**
-     * @var int
      * @persistent
      */
-    public $contestId;
-
+    public ?int $contestId = null;
     private ?ModelContest $contest;
-
-    public function injectServiceContest(ServiceContest $serviceContest): void {
-        $this->serviceContest = $serviceContest;
-    }
 
     /**
      * @return void
      * @throws BadRequestException
      */
     protected function contestTraitStartup(): void {
-        if (!isset($this->contestId) || !$this->isValidContest($this->getSelectedContest())) {
+        $contest = $this->getSelectedContest();
+        if (!isset($contest) || !$this->isValidContest($contest)) {
             $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
         }
     }
@@ -42,53 +41,19 @@ trait ContestPresenterTrait {
      * @throws BadRequestException
      */
     private function selectContest(): ModelContest {
-        $candidates = $this->getAllowedContests();
-        if (count($candidates) === 0) {
+        /** @var ModelContest $candidate */
+        $candidate = $this->getAvailableContests()->fetch();
+        if (!$this->isValidContest($candidate)) {
             throw new BadRequestException(_('No contest available'));
         }
-        return reset($candidates);
+        return $candidate;
     }
 
-    private function isValidContest(ModelContest $contest): bool {
-        foreach ($this->getAllowedContests() as $allowedContest) {
-            if ($allowedContest->contest_id === $contest->contest_id) {
-                return true;
-            }
+    private function isValidContest(?ModelContest $contest): bool {
+        if (!$contest) {
+            return false;
         }
-        return false;
-    }
-
-    /**
-     * @return ModelContest[]
-     */
-    private function getAllowedContests(): array {
-        $contestIds = [];
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-        switch ($this->getRole()) {
-            case YearChooser::ROLE_SELECTED:
-                $contestIds = [$this->contestId];
-                break;
-            case YearChooser::ROLE_ALL:
-                $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
-                break;
-            case YearChooser::ROLE_CONTESTANT:
-                if (!$login || !$login->getPerson()) {
-                    break;
-                }
-                $person = $login->getPerson();
-                $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
-
-                break;
-            case YearChooser::ROLE_ORG:
-                $contestIds = array_keys($login->getActiveOrgs($this->yearCalculator));
-                break;
-        }
-        $contests = [];
-        foreach ($contestIds as $id) {
-            $contests[] = $this->serviceContest->findByPrimary($id);
-        }
-        return $contests;
+        return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
     }
 
     public function getSelectedContest(): ?ModelContest {
@@ -98,9 +63,46 @@ trait ContestPresenterTrait {
         return $this->contest;
     }
 
-    protected function createComponentContestChooser(): ContestChooser {
-        return new ContestChooser($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
+    /**
+     * @return TypedTableSelection|ModelContest[]
+     */
+    private function getAvailableContests(): TypedTableSelection {
+        /** @var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+
+        switch ($this->getRole()) {
+            case YearChooserComponent::ROLE_SELECTED:
+                return $this->serviceContest->getTable()->where('contest_id', $this->contestId);
+            case YearChooserComponent::ROLE_ALL:
+                return $this->serviceContest->getTable();
+            case YearChooserComponent::ROLE_CONTESTANT:
+            default:
+                if (!$login || !$login->getPerson()) {
+                    return $this->serviceContest->getTable()->where('1=0');
+                }
+                $person = $login->getPerson();
+                $contestsIds = [];
+                foreach ($person->getActiveContestants() as $contestant) {
+                    $contestsIds[] = $contestant->contest_id;
+                }
+                return $this->serviceContest->getTable()->where('contest_id', $contestsIds);
+            case YearChooserComponent::ROLE_ORG:
+                if (!$login) {
+                    return $this->serviceContest->getTable()->where('1=0');
+                }
+                $contestsIds = [];
+                foreach ($login->getActiveOrgs() as $org) {
+                    $contestsIds[] = $org->getContest();
+                }
+                return $this->serviceContest->getTable()->where('contest_id', $contestsIds);
+        }
+    }
+
+    protected function createComponentContestChooser(): ContestChooserComponent {
+        return new ContestChooserComponent($this->getContext(), $this->getSelectedContest(), $this->getAvailableContests());
     }
 
     abstract protected function getRole(): string;
+
+    abstract protected function getContext(): Container;
 }

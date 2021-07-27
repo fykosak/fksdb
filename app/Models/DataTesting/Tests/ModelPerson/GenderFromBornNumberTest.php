@@ -3,25 +3,21 @@
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
-use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
-/**
- * Class GenderFromBornNumberTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GenderFromBornNumberTest extends PersonTest {
 
     public function __construct() {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(ILogger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {
-            // $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));
+            $logger->log(new TestLog($this->title, 'Person info is not set', TestLog::LVL_SKIP));
             return;
         }
 
@@ -30,7 +26,7 @@ class GenderFromBornNumberTest extends PersonTest {
             return;
         }
         if (!$info->born_id) {
-            // $logger->log(new TestLog($this->getTitle(), _('Born number is not set'), TestLog::LVL_INFO));
+            $logger->log(new TestLog($this->title, _('Born number is not set'), TestLog::LVL_SKIP));
             return;
         }
 
