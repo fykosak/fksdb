@@ -29,7 +29,7 @@ class AddressContainer extends ModelContainer {
      * @param iterable|null $value
      */
     public function setValue($value): void {
-        $this->setValues($value === null ? [] : $value);
+        $this->setValues($value ?? []);
     }
 
     /**
@@ -69,13 +69,13 @@ class AddressContainer extends ModelContainer {
      * @param array|null $controls
      * @return array|ArrayHash
      */
-    public function getValues($returnType = null, array $controls = null) {
-        $values = parent::getValues($returnType);
+    public function getUnsafeValues($returnType = null, array $controls = null) {
+        $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
                 throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');
             }
-            /** @var ModelRegion|false $region */
+            /** @var ModelRegion|null $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }

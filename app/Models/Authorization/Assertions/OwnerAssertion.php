@@ -10,15 +10,16 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\InvalidStateException;
+use Nette\Security\IIdentity;
 use Nette\Security\Resource;
-use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
+use Nette\Security\UserStorage;
 
 class OwnerAssertion {
 
-    private IUserStorage $userStorage;
+    private UserStorage $userStorage;
 
-    public function __construct(IUserStorage $userStorage) {
+    public function __construct(UserStorage $userStorage) {
         $this->userStorage = $userStorage;
     }
 
@@ -31,7 +32,8 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        [, $login] = $this->userStorage->getState();
+        if (!$login) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelSubmit $submit */
@@ -40,7 +42,7 @@ class OwnerAssertion {
         if (!$submit instanceof Resource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $this->userStorage->getIdentity()->getId();
+        return $submit->getContestant()->getPerson()->getLogin()->login_id === $login->getId();
     }
 
     /**
@@ -53,7 +55,8 @@ class OwnerAssertion {
      * @return bool
      */
     public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        [$state] = $this->userStorage->getState();
+        if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelContestant $contestant */
@@ -74,7 +77,8 @@ class OwnerAssertion {
      * @return bool
      */
     public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        [$state] = $this->userStorage->getState();
+        if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
         /** @var ModelPerson $person */
@@ -99,11 +103,11 @@ class OwnerAssertion {
      * @return bool
      */
     public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
-        if (!$this->userStorage->isAuthenticated()) {
+        /** @var IIdentity $login */
+        [$state, $login] = $this->userStorage->getState();
+        if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
-
-        $loggedPerson = $this->userStorage->getIdentity()->getPerson();
         $model = $acl->getQueriedResource();
         try {
             /** @var ModelContest $contest */
@@ -123,6 +127,6 @@ class OwnerAssertion {
         if (!$person instanceof ModelPerson) {
             return false;
         }
-        return ($loggedPerson && $loggedPerson->person_id == $person->person_id);
+        return ($login->getId() == $person->getLogin()->login_id);
     }
 }

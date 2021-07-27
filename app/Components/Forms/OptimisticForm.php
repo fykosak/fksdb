@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms;
 
-use LogicException;
 use Nette\Application\UI\Form;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\HiddenField;
@@ -36,11 +35,11 @@ class OptimisticForm extends Form {
      * @param null $data Must be always null! Defaults callback is used to produce the values.
      * @param bool $erase
      * @return static
-     * @throws LogicException
+     * @throws \LogicException
      */
-    public function setDefaults($data = null, $erase = false): self {
+    public function setDefaults($data = null, bool $erase = false): self {
         if ($data !== null) {
-            throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
+            throw new \LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
 
         $defaults = ($this->defaultsCallback)();

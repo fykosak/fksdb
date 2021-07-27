@@ -4,21 +4,15 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\UI\PageTitle;
 use Nette\Security\Resource;
 
 abstract class BasePresenter extends AuthenticatedPresenter {
+
     use SeriesPresenterTrait;
 
     protected function startup(): void {
-        $this->seriesTraitStartup();
-        /*  @var ModelLogin $login
-         * $login = $this->getUser()->getIdentity();
-         * if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
-         * throw new ForbiddenRequestException();
-         * }*/
         parent::startup();
+        $this->seriesTraitStartup();
     }
 
     protected function getNavRoots(): array {
@@ -34,9 +28,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = sprintf(_('%d. year, %s. series'), $this->getSelectedYear(), $this->getSelectedSeries()) . ' ' . $pageTitle->subTitle;
-        parent::setPageTitle($pageTitle);
+    protected function getDefaultSubTitle(): ?string {
+        return sprintf(_('%d. year, %s. series'), $this->getSelectedContestYear()->year, $this->getSelectedSeries());
     }
 
     /**

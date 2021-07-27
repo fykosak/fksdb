@@ -14,8 +14,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
@@ -38,7 +36,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -141,13 +138,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* ********************** GUI ************************ */
     /**
-     * @param PageTitle $pageTitle
-     * @return void
+     * @return string|null
      * @throws EventNotFoundException
      */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
-        parent::setPageTitle($pageTitle);
+    protected function getDefaultSubTitle(): ?string {
+        return $this->getEvent()->__toString();
     }
 
     /**

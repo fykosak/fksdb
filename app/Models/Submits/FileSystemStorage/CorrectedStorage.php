@@ -8,7 +8,6 @@ use FKSDB\Models\Submits\StorageProcessing;
 use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
-use UnexpectedValueException;
 
 class CorrectedStorage implements SubmitStorage {
     /** Characters delimiting name and metadata in filename. */
@@ -31,14 +30,10 @@ class CorrectedStorage implements SubmitStorage {
      */
     private string $filenameMask;
 
-    /** @var array   contestId => contest name */
-    private array $contestMap;
-
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
     /**
@@ -86,7 +81,7 @@ class CorrectedStorage implements SubmitStorage {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             /** @var \SplFileInfo[] $files */
             $files = iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return null;
         }
 

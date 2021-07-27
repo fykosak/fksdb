@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\UI\PageTitle;
@@ -18,7 +18,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar-alt'));
     }
 
     protected function beforeRender(): void {

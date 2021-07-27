@@ -94,10 +94,10 @@ class SubmitPresenter extends BasePresenter {
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->getSelectedContest()->getCurrentYear();
-            $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
+            $currentContestYear = $this->getSelectedContest()->getCurrentContestYear();
+            $this->template->canRegister = ($contestant->year < $currentContestYear->year + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->getSelectedContest()->getCurrentYear()) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
@@ -116,7 +116,7 @@ class SubmitPresenter extends BasePresenter {
         $taskIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $personHistory = $login->getPerson()->getHistory($this->getSelectedAcademicYear());
+        $personHistory = $login->getPerson()->getHistoryByContestYear($this->getSelectedContestYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
@@ -259,7 +259,7 @@ class SubmitPresenter extends BasePresenter {
     private function getAvailableTasks(): TypedTableSelection {
         // TODO related
         $tasks = $this->taskService->getTable();
-        $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
+        $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContestYear()->contest_id, $this->getSelectedContestYear()->year);
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');
         $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
         $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');

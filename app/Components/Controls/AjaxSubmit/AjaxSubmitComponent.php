@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -111,10 +110,6 @@ class AjaxSubmitComponent extends AjaxComponent {
         }
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
     public function handleRevoke(): void {
         try {
             $submit = $this->getSubmit(true);
@@ -132,7 +127,6 @@ class AjaxSubmitComponent extends AjaxComponent {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleDownload(): void {

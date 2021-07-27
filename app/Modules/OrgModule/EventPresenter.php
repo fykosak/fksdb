@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\EventFormComponent;
+use FKSDB\Components\EntityForms\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -27,11 +27,11 @@ class EventPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Events'), 'fa fa-calendar');
+        return new PageTitle(_('Events'), 'fa fa-calendar-alt');
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Add event'), 'fa fa-calendar');
+        return new PageTitle(_('Add event'), 'fa fa-calendar-plus');
     }
 
     /**
@@ -40,7 +40,7 @@ class EventPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day'));
     }
 
     /**
@@ -51,11 +51,11 @@ class EventPresenter extends BasePresenter {
     }
 
     protected function createComponentGrid(): EventsGrid {
-        return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+        return new EventsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
     protected function createComponentCreateForm(): EventFormComponent {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), null);
+        return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
     /**
@@ -63,7 +63,7 @@ class EventPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): EventFormComponent {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), $this->getEntity());
+        return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceEvent {

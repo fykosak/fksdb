@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\OrgFormComponent;
+use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -29,7 +29,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     /**
@@ -46,7 +46,7 @@ class OrgPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Organisers'), 'fa fa-address-book');
+        return new PageTitle(_('Organisers'), 'fa fa-user-tie');
     }
 
     /**

@@ -11,6 +11,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string name_abbrev
  * @property-read int school_id
  * @property-read bool|int active
+ * @property-read string izo
  */
 class ModelSchool extends AbstractModel implements Resource {
 

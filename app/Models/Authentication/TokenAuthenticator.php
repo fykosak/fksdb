@@ -74,10 +74,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return false;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getTokenData() {
+    public function getTokenData(): ?string {
         if (!$this->isAuthenticatedByToken()) {
             throw new InvalidStateException('Not authenticated by token.');
         }

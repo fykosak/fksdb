@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\SchoolFormComponent;
+use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -26,7 +26,7 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Schools'), 'fa fa-university');
+        return new PageTitle(_('Schools'), 'fa fa-school');
     }
 
     public function getTitleCreate(): PageTitle {

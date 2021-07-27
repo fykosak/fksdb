@@ -181,7 +181,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
      */
     public function getValue() {
         return $this->value;

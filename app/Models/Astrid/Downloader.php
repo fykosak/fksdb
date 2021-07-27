@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Astrid;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 
 class Downloader {
@@ -17,25 +17,20 @@ class Downloader {
     /** path to directory for temporary data */
     private string $tmpDir;
 
-    /** contestId => contest name */
-    private array $contestMap;
-
     private Container $container;
 
-    public function __construct(string $httpUser, string $httpPassword, string $host, string $tmpDir, array $contestMap, Container $container) {
+    public function __construct(string $httpUser, string $httpPassword, string $host, string $tmpDir, Container $container) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
         $this->host = $host;
         $this->tmpDir = $tmpDir;
-        $this->contestMap = $contestMap;
         $this->container = $container;
     }
 
-    public function downloadSeriesTasks(ModelContest $contest, int $year, int $series): string {
+    public function downloadSeriesTasks(ModelContestYear $contestYear, int $series): string {
         $mask = $this->container->getParameters()['tasks']['paths'];
-        $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;
 
-        $path = sprintf($mask, $contestName, $year, $series);
+        $path = sprintf($mask, $contestYear->getContest()->getContestSymbol(), $contestYear->year, $series);
         return $this->download($path);
     }
 
@@ -43,7 +38,7 @@ class Downloader {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
 
-        if (!@copy($src, $dst)) {
+        if (!copy($src, $dst)) {
             throw new DownloadException("Cannot copy file '$src'.");
         }
         return $dst;

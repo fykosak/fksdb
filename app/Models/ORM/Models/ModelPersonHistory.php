@@ -46,12 +46,7 @@ class ModelPersonHistory extends AbstractModel {
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
-    /**
-     * @param string|null $class
-     * @param int $diff
-     * @return string|string[]|null
-     */
-    private function extrapolateClass(string $class = null, int $diff = 0) {
+    private function extrapolateClass(?string $class = null, int $diff = 0): ?string {
         if (!$class) {
             return null;
         }

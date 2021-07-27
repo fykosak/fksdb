@@ -46,19 +46,19 @@ class InboxPresenter extends BasePresenter {
     /* ***************** TITLES ***********************/
 
     public function titleInbox(): void {
-        $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
+        $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope'));
     }
 
     public function titleHandout(): void {
-        $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-folder-open'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download-alt'));
+        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-list-ul'));
     }
 
     public function titleCorrected(): void {
-        $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-file-signature'));
     }
 
     /* *********** LIVE CYCLE *************/
@@ -68,8 +68,7 @@ class InboxPresenter extends BasePresenter {
      */
     protected function startup(): void {
         parent::startup();
-        $this->seriesTable->setContest($this->getSelectedContest());
-        $this->seriesTable->setYear($this->getSelectedYear());
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 

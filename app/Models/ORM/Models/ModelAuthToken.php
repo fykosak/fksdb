@@ -17,8 +17,6 @@ class ModelAuthToken extends AbstractModel {
 
     /** @const The first login for setting up a password. */
     public const TYPE_INITIAL_LOGIN = 'initial_login';
-    /** @const Single sign-on inter-domain ticket */
-    public const TYPE_SSO = 'sso';
     /** @const Password recovery login */
     public const TYPE_RECOVERY = 'recovery';
     /** @const Notification about an event application. */

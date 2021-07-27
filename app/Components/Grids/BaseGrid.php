@@ -10,10 +10,9 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\SQL\SearchableDataSource;
-use Nette\Application\AbortException;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -50,7 +49,7 @@ abstract class BaseGrid extends Grid {
         $this->setTranslator($translator);
     }
 
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
@@ -181,6 +180,7 @@ abstract class BaseGrid extends Grid {
      * @param string|null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
     public function addGlobalButton(string $name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
@@ -285,7 +285,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateButtonException
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
-        $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId,2));
+        $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {
@@ -316,11 +316,8 @@ abstract class BaseGrid extends Grid {
             ->setLink($this->link('csv!'));
     }
 
-    /**
-     * @throws AbortException
-     */
     public function handleCsv(): void {
-        $columns = $this['columns']->components;
+        $columns = $this->getColumnsContainer()->components;
         $rows = $this->dataSource->getData();
         $data = [];
         foreach ($rows as $row) {

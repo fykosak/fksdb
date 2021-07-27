@@ -10,42 +10,22 @@ use Nette\DeprecatedException;
 
 class SeatingPresenter extends BasePresenter {
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows-alt'));
+        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa map-marked-alt'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Edit routing'), 'fas fa-pen'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDownload(): void {
         $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
     }

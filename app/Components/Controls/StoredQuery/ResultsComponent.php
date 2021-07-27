@@ -13,12 +13,10 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use PDOException;
 
 class ResultsComponent extends BaseComponent {
 
@@ -31,8 +29,7 @@ class ResultsComponent extends BaseComponent {
     private ?StoredQuery $storedQuery = null;
     private ContestAuthorizator $contestAuthorizator;
     private ExportFormatFactory $exportFormatFactory;
-    /** @var null|bool|string */
-    private $error;
+    private ?string $error;
     private bool $showParametrizeForm = true;
 
     final public function injectPrimary(ContestAuthorizator $contestAuthorizator, ExportFormatFactory $exportFormatFactory): void {
@@ -89,15 +86,12 @@ class ResultsComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @return bool|null|string
-     */
-    public function getSqlError() {
-        if ($this->error === null) {
-            $this->error = false;
+    public function getSqlError(): ?string {
+        if (!isset($this->error)) {
+            $this->error = null;
             try {
-                $this->storedQuery->getColumnNames(); // this may throw PDOException in the main query
-            } catch (PDOException $exception) {
+                $this->storedQuery->getColumnNames(); // this may throw \PDOException in the main query
+            } catch (\PDOException $exception) {
                 $this->error = $exception->getMessage();
             }
         }
@@ -125,14 +119,13 @@ class ResultsComponent extends BaseComponent {
         $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
-        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
+        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 
     /**
      * @param string $format
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */

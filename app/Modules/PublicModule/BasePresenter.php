@@ -7,28 +7,28 @@ use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\UI\PageTitle;
 
 abstract class BasePresenter extends AuthenticatedPresenter {
+
     use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
     protected function startup(): void {
-        $this->yearTraitStartup();
         parent::startup();
+        $this->yearTraitStartup();
     }
 
     public function getContestant(): ?ModelContestant {
         if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
-            $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
-                'contest_id' => $this->getSelectedContest()->contest_id,
-                'year' => $this->getSelectedYear(),
+            $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
+                'contest_id' => $this->getSelectedContestYear()->contest_id,
+                'year' => $this->getSelectedContestYear()->year,
             ])->fetch();
 
-            $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;
+            $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
         }
         return $this->contestant;
     }
@@ -46,9 +46,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
-        parent::setPageTitle($pageTitle);
+    protected function getDefaultSubTitle(): ?string {
+        return sprintf(_('%d. year'), $this->year);
     }
 
     protected function getRole(): string {

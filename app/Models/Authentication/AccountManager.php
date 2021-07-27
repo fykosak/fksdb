@@ -68,7 +68,7 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?? $lang, $templateParams);
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;

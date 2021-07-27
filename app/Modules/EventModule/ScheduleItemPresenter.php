@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
+use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -38,7 +38,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendars'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen'));
     }
 
     /**
@@ -56,7 +56,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fas fa-calendar'));
+        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-plus'));
     }
 
     /**

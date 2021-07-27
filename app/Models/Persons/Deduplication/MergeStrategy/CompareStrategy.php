@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-use DateTime;
 use Nette\InvalidArgumentException;
 
 class CompareStrategy implements MergeStrategy {
@@ -44,7 +43,7 @@ class CompareStrategy implements MergeStrategy {
      * @return int|string
      */
     private function compare($trunk, $merged): int {
-        if ($trunk instanceof DateTime && $merged instanceof DateTime) {
+        if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() - $merged->getTimestamp();
         } elseif (is_string($trunk) && is_string($merged)) {
             return strcmp($trunk, $merged);

@@ -18,7 +18,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -38,7 +37,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-users'));
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-address-book'));
     }
 
     /**
@@ -57,7 +56,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     final public function titleTransitions(): void {
-        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-exchange-alt'));
     }
 
     /**
@@ -125,11 +124,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         return new MassTransitionsComponent($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @return AbstractApplicationsGrid
-     * @throws AbortException
-     *
-     */
     abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**

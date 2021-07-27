@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
 class NumberPrinter extends AbstractValuePrinter {

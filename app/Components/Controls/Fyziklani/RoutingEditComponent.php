@@ -6,7 +6,6 @@ use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
 
@@ -16,15 +15,11 @@ class RoutingEditComponent extends AjaxComponent {
 
     private ServiceFyziklaniRoom $serviceFyziklaniRoom;
 
-    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
-
     final public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom
     ): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 

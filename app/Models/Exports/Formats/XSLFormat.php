@@ -2,12 +2,10 @@
 
 namespace FKSDB\Models\Exports\Formats;
 
-use DOMDocument;
 use FKSDB\Models\Exports\ExportFormat;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\SmartObject;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use XSLTProcessor;
 
 class XSLFormat implements ExportFormat {
     use SmartObject;
@@ -40,10 +38,10 @@ class XSLFormat implements ExportFormat {
 
     public function getResponse(): PlainTextResponse {
         // Prepare XSLT processor
-        $xsl = new DOMDocument();
+        $xsl = new \DOMDocument();
         $xsl->load($this->xslFile);
 
-        $proc = new XSLTProcessor();
+        $proc = new \XSLTProcessor();
         $proc->importStylesheet($xsl);
 
         foreach ($this->getParameters() as $key => $value) {
@@ -51,7 +49,7 @@ class XSLFormat implements ExportFormat {
         }
 
         // Render export into XML
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
         $export = $doc->createElement('export');
         $doc->appendChild($export);
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);

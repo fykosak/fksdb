@@ -4,16 +4,16 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 class EventsGrid extends EntityGrid {
 
-    public function __construct(Container $container, ModelContest $contest, int $year) {
+    public function __construct(Container $container, ModelContestYear $contestYear) {
         parent::__construct($container, ServiceEvent::class, [
             'event.event_id',
             'event.event_type',
@@ -21,18 +21,18 @@ class EventsGrid extends EntityGrid {
             'event.year',
             'event.event_year',
         ], [
-            'event_type.contest_id' => $contest->contest_id,
-            'year' => $year,
+            'event_type.contest_id' => $contestYear->contest_id,
+            'year' => $contestYear->year,
         ]);
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 

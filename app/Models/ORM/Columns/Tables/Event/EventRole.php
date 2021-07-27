@@ -10,16 +10,16 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Security\IUserStorage;
+use Nette\Security\User;
 use Nette\Utils\Html;
 
 class EventRole extends ColumnFactory {
 
-    private IUserStorage $userStorage;
+    private User $user;
 
-    public function __construct(IUserStorage $userStorage, MetaDataFactory $metaDataFactory) {
+    public function __construct(User $user, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
-        $this->userStorage = $userStorage;
+        $this->user = $user;
     }
 
     /**
@@ -31,7 +31,8 @@ class EventRole extends ColumnFactory {
         try {
             $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
-            $person = $this->userStorage->getIdentity()->getPerson();
+            $login = $this->user->getIdentity();
+            $person = $login->getPerson();
         }
         /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);

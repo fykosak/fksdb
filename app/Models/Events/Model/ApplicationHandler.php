@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\Events\Model;
 
-use Exception;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
@@ -21,7 +20,6 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
-
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -265,11 +263,11 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Exception $e
+     * @param \Exception $e
      * @return void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(Exception $e): void {
+    private function reRaise(\Exception $e): void {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

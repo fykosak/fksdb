@@ -11,10 +11,9 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -44,11 +43,11 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -80,7 +79,7 @@ class SubmitsGrid extends BaseGrid {
             })
             ->setConfirmationDialog(function (ActiveRow $row): string {
                 $submit = ModelSubmit::createFromActiveRow($row);
-                return \sprintf(_('Do you really want to take the solution of task %s back?'), $submit->getTask()->getFQName());
+                return sprintf(_('Do you really want to take the solution of task %s back?'), $submit->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ActiveRow $row): string {
@@ -123,7 +122,6 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param int $id
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
@@ -137,7 +135,6 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param int $id
-     * @throws AbortException
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {

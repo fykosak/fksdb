@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\AbstractService;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -31,12 +31,12 @@ abstract class EntityGrid extends BaseGrid {
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns($this->columns);
     }

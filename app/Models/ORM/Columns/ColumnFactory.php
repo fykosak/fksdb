@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\Badges\PermissionDeniedBadge;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;

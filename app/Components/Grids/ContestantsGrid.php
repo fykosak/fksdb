@@ -4,10 +4,10 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -18,23 +18,19 @@ use NiftyGrid\DuplicateGlobalButtonException;
 
 class ContestantsGrid extends BaseGrid {
 
-    private int $year;
+    private ModelContestYear $contestYear;
 
-    private ModelContest $contest;
-
-    public function __construct(Container $container, ModelContest $contest, int $year) {
+    public function __construct(Container $container, ModelContestYear $contestYear) {
         parent::__construct($container);
-        $this->contest = $contest;
-        $this->year = $year;
+        $this->contestYear = $contestYear;
     }
 
     protected function getData(): IDataSource {
-        $contestants = $this->contest->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->year);
-        return new NDataSource($contestants);
+        return new NDataSource($this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->contestYear->year));
     }
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -42,7 +38,7 @@ class ContestantsGrid extends BaseGrid {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('person.other_name ASC');

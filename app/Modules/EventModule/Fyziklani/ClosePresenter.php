@@ -31,7 +31,7 @@ class ClosePresenter extends BasePresenter {
 
     /* ******* TITLE ***********/
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Sealing of the scoring'), 'fas fa-check');
+        return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -42,7 +42,7 @@ class ClosePresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-check'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-stamp'));
     }
 
     /**

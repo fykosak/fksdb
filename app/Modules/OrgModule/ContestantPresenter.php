@@ -4,6 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
@@ -22,7 +23,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     public function titleCreate(): void {
@@ -30,11 +31,11 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-user-graduate'));
     }
 
     protected function createComponentGrid(): ContestantsGrid {
-        return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+        return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
     protected function appendExtendedContainer(Form $form): void {
@@ -45,12 +46,12 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return $this->serviceContestant;
     }
 
-    protected function getAcYearFromModel(): ?int {
+    protected function getAcYearFromModel(): ?ModelContestYear {
         $model = $this->getModel();
         if (!$model) {
             return null;
         }
-        return $model->getContestYear()->ac_year;
+        return $model->getContestYear();
     }
 
     public function messageCreate(): string {

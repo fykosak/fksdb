@@ -4,8 +4,6 @@
 
 services:
     ## extends nette
-    security.legacyUserStorage: FKSDB\Models\Authentication\LoginUserStorage
-    security.userStorage: false
     nette.mailer:
         factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
@@ -14,25 +12,19 @@ services:
         factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
     ## need setUp
-    globalSession:
-        factory: FKSDB\Models\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
-        setup:
-            - start()
     submitUploatedStorage:
-        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
         setup:
             - addProcessing(@PDFStamper)
     soapServer:
-        factory: SoapServer(%wsdlUrl%)
+        factory: SoapServer(%wsdlUrl%,{encoding: UTF-8})
         setup:
             - setObject(@webServiceModel)
 
     ## Anonymous
     # astrid
-    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
-    - FKSDB\Models\Authentication\SSO\TokenGlobalSessionIdHolder
-    - FKSDB\Models\Authentication\FacebookAuthenticator
     - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
@@ -73,7 +65,7 @@ services:
     #phone
     - FKSDB\Models\PhoneNumber\PhoneNumberFactory
     #submits
-    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%)
     - FKSDB\Models\Submits\SubmitHandlerFactory
     PDFStamper: FKSDB\Models\Submits\PDFStamper(%stamper.fontSize%)
     - FKSDB\Models\Submits\SeriesTable
@@ -89,8 +81,7 @@ services:
     - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
 
     #webservice
-    - FKSDB\Models\WebService\EventSoapFactory
-    webServiceModel: FKSDB\Models\WebService\WebServiceModel(%inverseContestMapping%, ...)
+    webServiceModel: FKSDB\Models\WebService\WebServiceModel
 
     - FKSDB\Models\YearCalculator
     - FKSDB\Models\SeriesCalculator
@@ -115,7 +106,5 @@ services:
     #handlers
     - FKSDB\Components\Forms\Controls\Schedule\Handler
 
-    ## external
-    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
 includes:
     - merger.neon

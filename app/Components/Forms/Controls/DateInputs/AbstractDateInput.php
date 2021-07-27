@@ -8,9 +8,6 @@ use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-/**
- * @property DateTimeInterface $value
- */
 abstract class AbstractDateInput extends TextInput {
 
     protected string $format;

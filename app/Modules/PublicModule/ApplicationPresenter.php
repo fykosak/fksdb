@@ -5,7 +5,6 @@ namespace FKSDB\Modules\PublicModule;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -17,6 +16,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -72,11 +72,9 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
      * @throws GoneException
      */
-    public function authorizedDefault($eventId, $id): void {
+    public function authorizedDefault(): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
@@ -96,9 +94,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault(): void {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-alt'));
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
         }
     }
 
@@ -123,16 +121,14 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
+     * @param int|null $eventId
+     * @param int|null $id
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
-     * @throws ConfigurationNotFoundException
-     * @throws CannotAccessModelException
      */
-    public function actionDefault($eventId, $id): void {
+    public function actionDefault(?int $eventId, ?int $id): void {
         if (!$this->getEvent()) {
             throw new EventNotFoundException();
         }
@@ -170,7 +166,10 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                $this->loginRedirect();
+                $this->redirect(':Core:Authentication:login', [
+                    'backlink' => $this->storeRequest(),
+                    AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+                ]);
             }
         }
     }
@@ -190,7 +189,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
-        $handler = new ApplicationHandler($this->getEvent(), $logger,$this->getContext());
+        $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
@@ -214,7 +213,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ?: $this->getParameter('eventId');
+            $eventId = $eventId ?? $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 

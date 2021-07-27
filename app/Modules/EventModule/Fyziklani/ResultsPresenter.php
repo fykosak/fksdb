@@ -7,50 +7,27 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
 class ResultsPresenter extends BasePresenter {
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
+
     public function titleCorrelationStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fas fa-chart-area'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleTable(): void {
-        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-trophy'));
+        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-info'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titlePresentation(): void {
         $this->setPageTitle(new PageTitle(_('Results presentation'), 'fas fa-chalkboard'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleTeamStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fas fa-chart-line'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleTaskStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar'));
     }

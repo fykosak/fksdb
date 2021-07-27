@@ -41,8 +41,9 @@ class ServiceSubmit extends AbstractService {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
-            'taskId' => $task->task_id,
             'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'taskId' => $task->task_id,
+            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
             'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
         ];
     }

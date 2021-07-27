@@ -4,12 +4,13 @@ namespace FKSDB\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Utils\DateTime;
 
 class SeriesCalculator {
 
-    public function getCurrentSeries(ModelContest $contest): int {
-        $year = $contest->getCurrentYear();
+    public static function getCurrentSeries(ModelContest $contest): int {
+        $year = $contest->getCurrentContestYear()->year;
         $currentSeries = $contest->related(DbNames::TAB_TASK)->where([
             'year' => $year,
             '(submit_deadline < ? OR submit_deadline IS NULL)' => new DateTime(),
@@ -17,23 +18,30 @@ class SeriesCalculator {
         return $currentSeries ?? 1;
     }
 
-    public function getLastSeries(ModelContest $contest, int $year): int {
-        return $contest->related(DbNames::TAB_TASK)->where([
-            'year' => $year,
-        ])->max('series') ?: 1;
+    public static function getLastSeries(ModelContestYear $contestYear): int {
+        return $contestYear->getContest()->related(DbNames::TAB_TASK)->where([
+            'year' => $contestYear->year,
+        ])->max('series') ?? 1;
     }
 
-    public function getAllowedSeries(ModelContest $contest, int $year): array {
-        $lastSeries = $this->getLastSeries($contest, $year);
-        return range(1, $lastSeries);
-    }
-
-    public function getTotalSeries(ModelContest $contest, int $year): int {
-        //TODO allow variance?
-        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
+    public static function getTotalSeries(ModelContestYear $contestYear): int {
+        //TODO Think of better way of getting series count (maybe year schema?)
+        if (static::hasHolidaySeries($contestYear)) {
             return 9;
-        } else {
-            return 6;
         }
+        return 6;
+    }
+
+    /**
+     * Check if specific year has a holiday series.
+     * Made primarly for Výfuk contest.
+     * @param ModelContestYear $contestYear
+     * @return bool
+     */
+    public static function hasHolidaySeries(ModelContestYear $contestYear): bool {
+        if ($contestYear->contest_id === ModelContest::ID_VYFUK && $contestYear->year >= 9) {
+            return true;
+        }
+        return false;
     }
 }

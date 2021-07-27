@@ -2,10 +2,11 @@
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Components\Controls\Entity\PersonFormComponent;
+use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\AbstractModel;
@@ -43,7 +44,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
     private ServicePostContact $servicePostContact;
 
     private ServicePersonHasFlag $servicePersonHasFlag;
-    private int $acYear;
+    private ModelContestYear $contestYear;
     private Handler $eventScheduleHandler;
     private ServiceFlag $serviceFlag;
 
@@ -51,16 +52,11 @@ class ReferencedPersonHandler implements ReferencedHandler {
 
     private string $resolution;
 
-    /**
-     * ReferencedPersonHandler constructor.
-     * @param int $acYear
-     * @param string $resolution
-     */
     public function __construct(
-        int $acYear,
+        ModelContestYear $contestYear,
         string $resolution
     ) {
-        $this->acYear = $acYear;
+        $this->contestYear = $contestYear;
         $this->resolution = $resolution;
     }
 
@@ -154,7 +150,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
             $models = [
                 'person' => &$person,
                 'person_info' => $person->getInfo(),
-                'person_history' => $person->getHistory($this->acYear),
+                'person_history' => $person->getHistoryByContestYear($this->contestYear),
                 'person_schedule' => ((isset($this->event) && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
                 self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
@@ -201,7 +197,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                         continue 2;
                     case 'person_history':
                         $this->servicePersonHistory->storeModel(array_merge((array)$data['person_history'], [
-                            'ac_year' => $this->acYear,
+                            'ac_year' => $this->contestYear->ac_year,
                             'person_id' => $person->person_id,
                         ]), $model);
                         continue 2;
@@ -356,7 +352,7 @@ class ReferencedPersonHandler implements ReferencedHandler {
                 unset($data['person_has_flag'][$fid]);
                 continue;
             }
-            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid) ?: null;
+            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid);
         }
     }
 

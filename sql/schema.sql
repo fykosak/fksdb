@@ -863,29 +863,6 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter` (
   ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `global_session`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `global_session` (
-  `session_id` CHAR(32)    NOT NULL,
-  `login_id`   INT(11)     NOT NULL
-  COMMENT 'the only data\nfield of the session',
-  `since`      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `until`      TIMESTAMP   NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `remote_ip`  VARCHAR(45) NULL     DEFAULT NULL
-  COMMENT 'IP adresa klienta',
-  PRIMARY KEY (`session_id`),
-  INDEX `fk_auth_token_login1_idx` (`login_id` ASC),
-  CONSTRAINT `fk_auth_token_login10`
-  FOREIGN KEY (`login_id`)
-  REFERENCES `login` (`login_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COMMENT = 'Stores global sessions for SSO (single sign-on/off)';
-
--- -----------------------------------------------------
 -- Table `flag`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `flag` (
@@ -1162,32 +1139,34 @@ CREATE TABLE IF NOT EXISTS `fyziklani_task` (
 -- -----------------------------------------------------
 -- Table `fyziklani_submit`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_submit` (
-  `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `fyziklani_task_id`   INT         NOT NULL,
-  `e_fyziklani_team_id` INT         NOT NULL,
-  `points`              TINYINT     NOT NULL,
-  `state`       VARCHAR(64) NULL     DEFAULT NULL,
-  `created`             DATETIME    NULL     DEFAULT CURRENT_TIMESTAMP,
-  `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
-  ON UPDATE CURRENT_TIMESTAMP,
-  INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
-  INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
-  UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
+CREATE TABLE IF NOT EXISTS `fyziklani_submit`
+(
+    `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `fyziklani_task_id`   INT         NOT NULL,
+    `e_fyziklani_team_id` INT         NOT NULL,
+    `points`              TINYINT     NULL     DEFAULT NULL,
+    `skipped`             BOOLEAN     NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
+    `state`               VARCHAR(64) NULL     DEFAULT NULL,
+    `created`             DATETIME    NULL     DEFAULT CURRENT_TIMESTAMP,
+    `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+    INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
+    INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
 
-  CONSTRAINT `fk_fyziklani_submit_1`
-  FOREIGN KEY (`fyziklani_task_id`)
-  REFERENCES `fyziklani_task` (`fyziklani_task_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_fyziklani_submit_1`
+        FOREIGN KEY (`fyziklani_task_id`)
+            REFERENCES `fyziklani_task` (`fyziklani_task_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
 
-  CONSTRAINT `fk_fyziklani_submit_2`
-  FOREIGN KEY (`e_fyziklani_team_id`)
-  REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    CONSTRAINT `fk_fyziklani_submit_2`
+        FOREIGN KEY (`e_fyziklani_team_id`)
+            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-  ENGINE = 'InnoDB';
+    ENGINE = 'InnoDB';
 
 
 -- -----------------------------------------------------
@@ -1316,7 +1295,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info') NOT NULL,
+    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info','dsef_morning','dsef_afternoon') NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,
@@ -1401,17 +1380,23 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `email_message`
 (
-    `email_message_id` INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `recipient`         VARCHAR(128) NOT NULL,
-    `sender`           VARCHAR(128) NOT NULL,
-    `reply_to`         VARCHAR(128) NOT NULL,
-    `subject`          VARCHAR(128) NOT NULL,
-    `carbon_copy`      VARCHAR(128) NULL     DEFAULT NULL,
-    `blind_carbon_copy` VARCHAR(128) NULL     DEFAULT NULL,
-    `text`             TEXT         NOT NULL,
-    `state`            ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
-    `created`          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `sent`             DATETIME     NULL DEFAULT NULL
+    `email_message_id`    INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `recipient`           VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `recipient_person_id` INT(11)      NULl                                                        DEFAULT NULL,
+    `sender`              VARCHAR(128) NOT NULL,
+    `reply_to`            VARCHAR(128) NOT NULL,
+    `subject`             VARCHAR(128) NOT NULL,
+    `carbon_copy`         VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `blind_carbon_copy`   VARCHAR(128) NULL                                                        DEFAULT NULL,
+    `text`                TEXT         NOT NULL,
+    `state`               ENUM ('saved','waiting','sent','failed','canceled') CHARACTER SET 'utf8' DEFAULT 'saved',
+    `created`             DATETIME     NOT NULL                                                    DEFAULT CURRENT_TIMESTAMP,
+    `sent`                DATETIME     NULL                                                        DEFAULT NULL,
+    INDEX `email_message_person` (`recipient_person_id` ASC),
+    CHECK ( `recipient_person_id` IS NULL XOR `recipient` IS NULL ),
+    CONSTRAINT `email_message_ibfk_1`
+        FOREIGN KEY (`recipient_person_id`)
+            REFERENCES `person` (`person_id`)
 )
     ENGINE = 'InnoDB';
 -- -----------------------------------------------------

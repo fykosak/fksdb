@@ -9,8 +9,6 @@ use Nette\Forms\Form;
 
 class SchoolFactory {
 
-    private const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
-
     private SchoolProvider $schoolProvider;
 
     public function __construct(SchoolProvider $schoolProvider) {
@@ -51,10 +49,10 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect(int $options = 0): AutocompleteSelectBox {
+    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
-        if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
+        if ($showUnknownSchoolHint) {
             $schoolElement->setOption('description', sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz'));
         }
         return $schoolElement;

@@ -4,8 +4,8 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\Results\ModelCategory;
-use Nette;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidArgumentException;
 
 /**
  * Introduced in FYKOS 1987?? but data are only from 15 th year (2001).
@@ -39,7 +39,7 @@ class EvaluationFykos2001 extends EvaluationStrategy {
             case ModelCategory::CAT_HS_4:
                 return [null, 4];
             default:
-                throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->id);
         }
     }
 

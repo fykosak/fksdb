@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\IPresenter;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use NiftyGrid\DuplicateButtonException;
@@ -17,7 +17,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
 class TeamApplicationsGrid extends AbstractApplicationsGrid {
 
     /**
-     * @param IPresenter $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
@@ -25,7 +25,7 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(IPresenter $presenter): void {
+    protected function configure(Presenter $presenter): void {
 
         $this->paginate = false;
 

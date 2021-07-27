@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\React;
 
-use Nette;
+use Nette\Application\Response;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\SmartObject;
 
-final class AjaxResponse implements Nette\Application\Response {
+final class AjaxResponse implements Response {
 
     use SmartObject;
 

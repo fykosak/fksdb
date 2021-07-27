@@ -8,6 +8,8 @@ use Nette\Database\Table\ActiveRow;
 /**
  * @property-read int flag_id
  * @property-read ActiveRow flag
+ * @property-read int value
+ * @property-read \DateTimeInterface modified
  */
 class ModelPersonHasFlag extends AbstractModel {
 

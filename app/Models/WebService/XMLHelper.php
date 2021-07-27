@@ -5,6 +5,7 @@ namespace FKSDB\Models\WebService;
 use Nette\InvalidArgumentException;
 
 class XMLHelper {
+
     public function __construct() {
         throw new InvalidArgumentException();
     }
@@ -12,7 +13,7 @@ class XMLHelper {
     public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void {
         foreach ($data as $key => $datum) {
             $childNode = $doc->createElement($key);
-            $childNode->nodeValue = $datum;
+            $childNode->nodeValue = htmlspecialchars($datum);
             $parentNode->appendChild($childNode);
         }
     }
@@ -22,7 +23,7 @@ class XMLHelper {
             foreach ($datum as $attrValue => $value) {
                 $childNode = $doc->createElement($key);
                 $childNode->setAttribute($attrName, $attrValue);
-                $childNode->nodeValue = $value;
+                $childNode->nodeValue = htmlspecialchars($value);
                 $parentNode->appendChild($childNode);
             }
         }

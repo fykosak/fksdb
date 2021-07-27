@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
+use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
@@ -34,11 +34,11 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen'));
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create query')), 'fas fa-pen');
+        return new PageTitle(sprintf(_('Create query')), 'fa fa-plus');
     }
 
     /**
@@ -46,7 +46,7 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
+        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-file-csv'));
     }
 
     /**
@@ -61,7 +61,7 @@ class StoredQueryPresenter extends BasePresenter {
             $title .= " ($qid)";
         }
 
-        $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
+        $this->setPageTitle(new PageTitle($title, 'fa fa-file-csv'));
     }
 
     protected function startup(): void {

@@ -3,11 +3,8 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\Models\News;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
 
 /**
  * Just proof of concept.
@@ -20,25 +17,13 @@ class DashboardPresenter extends BasePresenter {
         $this->news = $news;
     }
 
-    /**
-     * @throws AbortException
-     * @throws ForbiddenRequestException
-     */
-    protected function unauthorizedAccess(): void {
-        if ($this->getParameter(AuthenticationPresenter::PARAM_DISPATCH)) {
-            parent::unauthorizedAccess();
-        } else {
-            $this->redirect(':Core:Authentication:login'); // ask for a central dispatch
-        }
-    }
-
     public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
         $this->setAuthorized((bool)$login);
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Dashboard'), 'fas fa-chalkboard-teacher'));
+        $this->setPageTitle(new PageTitle(_('Dashboard'), 'fas fa-chalkboard'));
     }
 
     /**

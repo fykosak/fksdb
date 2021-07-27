@@ -14,7 +14,6 @@ class DbNames {
     public const TAB_EVENT_PARTICIPANT = 'event_participant';
     public const TAB_EVENT_TYPE = 'event_type';
     public const TAB_FLAG = 'flag';
-    public const TAB_GLOBAL_SESSION = 'global_session';
     public const TAB_GRANT = 'grant';
     public const TAB_LOGIN = 'login';
     public const TAB_ORG = 'org';

@@ -2,13 +2,11 @@
 
 namespace FKSDB\Models\Transitions\Machine;
 
-use Exception;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use LogicException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
@@ -76,7 +74,7 @@ abstract class Machine {
     /**
      * @param Transition[] $transitions
      * @return Transition
-     * @throws LogicException
+     * @throws \LogicException
      * @throws UnavailableTransitionsException
      * Protect more that one transition between nodes
      */
@@ -98,7 +96,7 @@ abstract class Machine {
      * @param ModelHolder $holder
      * @return void
      * @throws UnavailableTransitionsException
-     * @throws Exception
+     * @throws \Exception
      */
     final public function executeTransitionById(string $id, ModelHolder $holder): void {
         $transition = $this->getTransitionById($id);
@@ -113,7 +111,7 @@ abstract class Machine {
      * @param array $data
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
-     * @throws Exception
+     * @throws \Exception
      */
 
     final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void {
@@ -144,7 +142,7 @@ abstract class Machine {
      * @param ModelHolder|null $holder
      * @return void
      * @throws ForbiddenRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function execute(Transition $transition, ModelHolder $holder): void {
         if (!$this->canExecute($transition, $holder)) {
@@ -155,7 +153,7 @@ abstract class Machine {
         }
         try {
             $transition->callBeforeExecute($holder);
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }

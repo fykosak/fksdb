@@ -99,11 +99,7 @@ abstract class AbstractProcessing implements Processing {
         return false;
     }
 
-    /**
-     * @param ArrayHash $values
-     * @param string $prefix
-     */
-    private function setValues(ArrayHash $values, $prefix = ''): void {
+    private function setValues(ArrayHash $values, string $prefix = ''): void {
         if (!$prefix) {
             $this->valuesPathCache = [];
         }

@@ -11,10 +11,6 @@ use FKSDB\Models\UI\PageTitle;
 class GameSetupPresenter extends BasePresenter {
     private ModelFyziklaniGameSetup $gameSetup;
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }

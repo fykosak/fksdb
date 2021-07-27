@@ -2,8 +2,6 @@
 
 namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
-use DateTime;
-use Exception;
 use FKSDB\Models\Transitions\Transition\Statements\Statement;
 
 class DateBetween extends Statement {
@@ -16,11 +14,11 @@ class DateBetween extends Statement {
      * DateBetween constructor.
      * @param string $from
      * @param string $to
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(string $from, string $to) {
-        $this->from = new DateTime($from);
-        $this->to = new DateTime($to);
+        $this->from = new \DateTime($from);
+        $this->to = new \DateTime($to);
     }
 
     /**

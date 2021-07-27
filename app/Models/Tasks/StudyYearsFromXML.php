@@ -7,7 +7,6 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -54,7 +53,7 @@ class StudyYearsFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -89,7 +88,7 @@ class StudyYearsFromXML extends Stage {
             if ($hasYears) {
                 $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO));
             }
-            $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
+            $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }
 
         // delete old contributions

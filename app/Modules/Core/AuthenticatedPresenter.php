@@ -7,15 +7,10 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
-use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
-use Nette\Security\IUserStorage;
-use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 
@@ -30,10 +25,11 @@ use Nette\Security\AuthenticationException;
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
-    public const AUTH_ALLOW_LOGIN = 0x1;
-    public const AUTH_ALLOW_HTTP = 0x2;
-    public const AUTH_ALLOW_TOKEN = 0x4;
-    public const AUTH_ALLOW_GITHUB = 0x8;
+    public const AUTH_LOGIN = 'login';
+    public const AUTH_HTTP = 'http';
+    public const AUTH_TOKEN = 'token';
+    public const AUTH_GITHUB = 'github';
+
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected GithubAuthenticator $githubAuthenticator;
@@ -65,7 +61,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     public function checkRequirements($element): void {
         parent::checkRequirements($element);
-        if ($element instanceof ReflectionClass) {
+        if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
             if ($this->isAuthorized()) { // check authorization
                 $method = $this->formatAuthorizedMethod($this->getAction());
@@ -76,58 +72,41 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws ForbiddenRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     protected function startup(): void {
         parent::startup();
 
         $methods = $this->getAllowedAuthMethods();
 
-        if ($methods & self::AUTH_ALLOW_TOKEN) {
+        if ($methods[self::AUTH_TOKEN]) {
             // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
         }
 
-        if ($methods & self::AUTH_ALLOW_HTTP) {
+        if ($methods[self::AUTH_HTTP]) {
             $this->tryHttpAuth();
         }
 
-        if ($methods & self::AUTH_ALLOW_GITHUB) {
+        if ($methods[self::AUTH_GITHUB]) {
             $this->tryGithub();
         }
         // if token did nod succeed redirect to login credentials page
-        if (!$this->getUser()->isLoggedIn() && ($methods & self::AUTH_ALLOW_LOGIN)) {
+        if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
         } elseif (!$this->isAuthorized()) {
             $this->unauthorizedAccess();
         }
     }
 
-    /**
-     * @throws AbortException
-     */
     private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
         }
-        $this->loginRedirect();
-    }
-
-    /**
-     * @throws AbortException
-     */
-    final protected function loginRedirect(): void {
-        if ($this->user->logoutReason === IUserStorage::INACTIVITY) {
-            $reason = AuthenticationPresenter::REASON_TIMEOUT;
-        } else {
-            $reason = AuthenticationPresenter::REASON_AUTH;
-        }
-
         $this->redirect(':Core:Authentication:login', [
             'backlink' => $this->storeRequest(),
-            AuthenticationPresenter::PARAM_REASON => $reason,
+            AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
         ]);
     }
 
@@ -142,12 +121,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return true;
     }
 
-    /**
-     * It may be override (should return realm).
-     * @return int
-     */
-    public function getAllowedAuthMethods(): int {
-        return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
+    public function getAllowedAuthMethods(): array {
+        return [
+            self::AUTH_GITHUB => false,
+            self::AUTH_HTTP => false,
+            self::AUTH_LOGIN => true,
+            self::AUTH_TOKEN => true,
+        ];
     }
 
     protected function getHttpRealm(): ?string {
@@ -162,7 +142,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryAuthToken(): void {
         $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
@@ -174,11 +154,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log("$login signed in using token $tokenData.", 'token-login');
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
-                $this->tokenAuthenticator->disposeAuthToken();
-            } else {
-                $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
-            }
+            $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
 
             $this->getUser()->login($login);
             $this->redirect('this');
@@ -189,7 +165,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -222,7 +198,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws ForbiddenRequestException|BadRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

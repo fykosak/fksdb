@@ -2,24 +2,21 @@
 
 namespace FKSDB\Models\Stats;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Database\Connection;
 use Nette\Database\Row;
 
 class TaskStatsModel {
 
-    protected int $year;
-
-    protected ModelContest $contest;
+    protected ModelContestYear $contestYear;
 
     protected Connection $connection;
 
     protected int $series;
 
-    public function __construct(ModelContest $contest, int $year, Connection $connection) {
-        $this->contest = $contest;
+    public function __construct(ModelContestYear $contestYear, Connection $connection) {
+        $this->contestYear = $contestYear;
         $this->connection = $connection;
-        $this->year = $year;
     }
 
     public function getSeries(): int {
@@ -40,7 +37,7 @@ class TaskStatsModel {
             'contest_id = ? AND year = ? ' .
             "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
 
-        $stmt = $this->connection->query($sql, $this->contest->contest_id, $this->year, $this->series);
+        $stmt = $this->connection->query($sql, $this->contestYear->contest_id, $this->contestYear->year, $this->series);
         return $stmt->fetchAll();
     }
 }

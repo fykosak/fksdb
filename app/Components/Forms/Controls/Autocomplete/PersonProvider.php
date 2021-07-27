@@ -28,8 +28,8 @@ class PersonProvider implements FilteredDataProvider {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
-                ':org.since <= ?' => $contest->getCurrentYear(),
-                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentYear(),
+                ':org.since <= ?' => $contest->getCurrentContestYear()->year,
+                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentContestYear()->year,
             ]);
     }
 

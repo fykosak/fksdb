@@ -4,7 +4,6 @@ namespace FKSDB\Models\SQL;
 
 use NiftyGrid\DataSource\NDataSource;
 
-
 class SearchableDataSource extends NDataSource {
 
     /** @var callback(Selection $table, string $searchTerm) */

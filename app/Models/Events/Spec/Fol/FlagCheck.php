@@ -90,7 +90,7 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         /** @var ModelPersonHistory $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)
             ->fetch();
         return $personHistory->study_year;
     }
@@ -104,7 +104,7 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();
         return $school->school_id;
     }
 

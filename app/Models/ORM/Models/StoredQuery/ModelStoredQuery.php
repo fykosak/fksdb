@@ -9,7 +9,6 @@ use Nette\Security\Resource;
 
 /**
  * @todo Better (general) support for related collection setter.
- * @property-read string php_post_proc
  * @property-read int query_id
  * @property-read string qid
  * @property-read string sql

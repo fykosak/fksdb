@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
@@ -23,8 +23,8 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     private array $dataColumns = [];
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
-        parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection) {
+        parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 

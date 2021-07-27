@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0ff2bbef5040443d0fe7cc3315fd5db",
+    "content-hash": "4da90f06ac16993ba214c8081ea396c0",
     "packages": [
         {
             "name": "fykosak/nette-orm",
@@ -191,16 +191,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.1",
+            "version": "1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1"
+                "reference": "dc960a912984efb74d0a90222870c72c87f10c91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/35ea11d335fd638b5882ff1725228b3d35496ab1",
-                "reference": "35ea11d335fd638b5882ff1725228b3d35496ab1",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/dc960a912984efb74d0a90222870c72c87f10c91",
+                "reference": "dc960a912984efb74d0a90222870c72c87f10c91",
                 "shasum": ""
             },
             "require": {
@@ -258,7 +258,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2021-03-21T16:25:00+00:00"
+            "time": "2021-04-26T09:17:50+00:00"
         },
         {
             "name": "latte/latte",
@@ -456,16 +456,16 @@
         },
         {
             "name": "nette/application",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/application.git",
-                "reference": "f817a0b738a3190efe1e573a099d1a80797e156b"
+                "reference": "c1229f66210a7a4a7dd62cf9f1757a393d3c8067"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/application/zipball/f817a0b738a3190efe1e573a099d1a80797e156b",
-                "reference": "f817a0b738a3190efe1e573a099d1a80797e156b",
+                "url": "https://api.github.com/repos/nette/application/zipball/c1229f66210a7a4a7dd62cf9f1757a393d3c8067",
+                "reference": "c1229f66210a7a4a7dd62cf9f1757a393d3c8067",
                 "shasum": ""
             },
             "require": {
@@ -539,7 +539,7 @@
                 "routing",
                 "seo"
             ],
-            "time": "2021-02-08T05:57:00+00:00"
+            "time": "2021-06-02T15:02:17+00:00"
         },
         {
             "name": "nette/bootstrap",
@@ -745,16 +745,16 @@
         },
         {
             "name": "nette/database",
-            "version": "v3.1.1",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/database.git",
-                "reference": "17bc9b2b5a5cd57ab089bc1a5982bc6c3b3790e3"
+                "reference": "08aff4d62c80873752254b0b655027211f501c4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/database/zipball/17bc9b2b5a5cd57ab089bc1a5982bc6c3b3790e3",
-                "reference": "17bc9b2b5a5cd57ab089bc1a5982bc6c3b3790e3",
+                "url": "https://api.github.com/repos/nette/database/zipball/08aff4d62c80873752254b0b655027211f501c4d",
+                "reference": "08aff4d62c80873752254b0b655027211f501c4d",
                 "shasum": ""
             },
             "require": {
@@ -767,9 +767,9 @@
                 "nette/di": "<3.0-stable"
             },
             "require-dev": {
-                "mockery/mockery": "^1.0.0",
+                "mockery/mockery": "^1.3.4",
                 "nette/di": "^v3.0",
-                "nette/tester": "^2.0",
+                "nette/tester": "^2.4",
                 "phpstan/phpstan-nette": "^0.12",
                 "tracy/tracy": "^2.4"
             },
@@ -814,7 +814,7 @@
                 "queries",
                 "sqlite"
             ],
-            "time": "2021-01-12T12:24:12+00:00"
+            "time": "2021-05-31T15:33:33+00:00"
         },
         {
             "name": "nette/di",
@@ -1097,16 +1097,16 @@
         },
         {
             "name": "nette/mail",
-            "version": "v3.1.6",
+            "version": "v3.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/mail.git",
-                "reference": "d5035afcb733ff76b353b8a126a1a6fd560005de"
+                "reference": "0825a071b896c2ed8cbe1af776c2539acd7bb976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/mail/zipball/d5035afcb733ff76b353b8a126a1a6fd560005de",
-                "reference": "d5035afcb733ff76b353b8a126a1a6fd560005de",
+                "url": "https://api.github.com/repos/nette/mail/zipball/0825a071b896c2ed8cbe1af776c2539acd7bb976",
+                "reference": "0825a071b896c2ed8cbe1af776c2539acd7bb976",
                 "shasum": ""
             },
             "require": {
@@ -1163,7 +1163,7 @@
                 "nette",
                 "smtp"
             ],
-            "time": "2021-02-24T20:29:52+00:00"
+            "time": "2021-06-02T15:56:39+00:00"
         },
         {
             "name": "nette/neon",
@@ -1482,16 +1482,16 @@
         },
         {
             "name": "nette/safe-stream",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/safe-stream.git",
-                "reference": "ae6f314041892138cb38b4ff8782e92e03750918"
+                "reference": "921bd889860cf697a022642e628d086c9048ca67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/safe-stream/zipball/ae6f314041892138cb38b4ff8782e92e03750918",
-                "reference": "ae6f314041892138cb38b4ff8782e92e03750918",
+                "url": "https://api.github.com/repos/nette/safe-stream/zipball/921bd889860cf697a022642e628d086c9048ca67",
+                "reference": "921bd889860cf697a022642e628d086c9048ca67",
                 "shasum": ""
             },
             "require": {
@@ -1537,7 +1537,7 @@
                 "nette",
                 "safe"
             ],
-            "time": "2020-03-16T14:26:30+00:00"
+            "time": "2021-06-02T14:42:24+00:00"
         },
         {
             "name": "nette/schema",
@@ -2136,16 +2136,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.3",
+            "version": "v2.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "342674bbf72365e8456de9855a8cd839ca695933"
+                "reference": "b23da41363546aa750d9f698f21e14815bd78913"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/342674bbf72365e8456de9855a8cd839ca695933",
-                "reference": "342674bbf72365e8456de9855a8cd839ca695933",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/b23da41363546aa750d9f698f21e14815bd78913",
+                "reference": "b23da41363546aa750d9f698f21e14815bd78913",
                 "shasum": ""
             },
             "require": {
@@ -2202,7 +2202,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2021-01-31T23:07:09+00:00"
+            "time": "2021-06-02T15:42:54+00:00"
         }
     ],
     "packages-dev": [],
@@ -2214,7 +2214,15 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4.0"
+        "php": ">=7.4.0 <8.0.0",
+        "ext-gettext": "*",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-soap": "*",
+        "ext-dom": "*",
+        "ext-xsl": "*"
     },
     "platform-dev": []
 }

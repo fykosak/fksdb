@@ -5,7 +5,7 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Template;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -24,9 +24,9 @@ class PrimaryLimit extends ResourceAvailabilityTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
