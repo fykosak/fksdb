@@ -4,10 +4,6 @@ namespace FKSDB\Models\Github;
 
 use Nette\SmartObject;
 
-/**
- * Class Repository
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Repository {
 
     use SmartObject;

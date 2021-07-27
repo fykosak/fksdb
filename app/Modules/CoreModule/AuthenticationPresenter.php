@@ -24,9 +24,6 @@ use Nette\Http\SessionSection;
 use Nette\Security\AuthenticationException;
 use Nette\Security\UserStorage;
 
-/**
- * Class AuthenticationPresenter
- */
 final class AuthenticationPresenter extends BasePresenter {
 
     /** @const Reason why the user has been logged out. */

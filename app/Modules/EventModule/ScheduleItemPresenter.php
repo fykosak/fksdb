@@ -18,7 +18,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class ScheduleItemPresenter
  * @method ModelScheduleItem getEntity()
  */
 class ScheduleItemPresenter extends BasePresenter {

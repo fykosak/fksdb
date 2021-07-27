@@ -9,10 +9,6 @@ use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
-/**
- * Web service provider for fksdb.wdsl
- * @author michal
- */
 class WebServiceModel {
 
     private ModelLogin $authenticatedLogin;

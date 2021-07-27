@@ -48,7 +48,7 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::exception(function () use ($eventId): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
-                'lang' => 'cs',
+                'lang' => 'en',
                 'id' => 666,
                 'eventId' => $eventId,
                 'contestId' => 1,
@@ -68,7 +68,7 @@ class ApplicationPresenterTest extends EventTestCase {
 
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
-            'lang' => 'cs',
+            'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
             'eventId' => $eventId,

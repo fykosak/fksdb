@@ -9,11 +9,6 @@ use FKSDB\Models\Submits\SubmitStorage;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class CorrectedStorage implements SubmitStorage {
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';

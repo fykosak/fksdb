@@ -9,15 +9,11 @@ use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceAuthToken extends AbstractService {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**
-     *
      * @param ModelLogin $login
      * @param string $type
      * @param \DateTimeInterface|null $until

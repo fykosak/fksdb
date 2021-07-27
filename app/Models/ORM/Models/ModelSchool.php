@@ -7,8 +7,6 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow address
  * @property-read string name_abbrev
  * @property-read int school_id

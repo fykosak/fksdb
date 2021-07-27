@@ -12,9 +12,6 @@ use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceAddress extends AbstractService {
 
     private const PATTERN = '/[0-9]{5}/';

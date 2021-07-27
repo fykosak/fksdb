@@ -21,8 +21,6 @@ use Nette\Utils\ArrayHash;
  * A bit bloated class.
  *
  * It takes care of data loading/storing and also provides event's metadata.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Holder {
 

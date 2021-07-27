@@ -6,6 +6,7 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
@@ -71,7 +72,6 @@ class ApplicationHandlerTest extends EventTestCase {
 
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
-     * @throws \FKSDB\Models\Events\Model\ApplicationHandlerException
      */
     public function testNewApplication(): void {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
@@ -201,16 +201,17 @@ class ApplicationHandlerTest extends EventTestCase {
             'privacy' => true,
         ];
         $data = ArrayHash::from($data);
-        $this->fixture->storeAndExecuteValues($this->holder, $data);
+        Assert::exception(function () use ($data, $teamName) {
+            $this->fixture->storeAndExecuteValues($this->holder, $data);
+            /** @var ModelFyziklaniTeam $team */
+            $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
+            Assert::notEqual(false, $team);
 
-        /** @var ModelFyziklaniTeam $team */
-        $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
-        Assert::notEqual(false, $team);
+            Assert::equal($teamName, $team->name);
 
-        Assert::equal($teamName, $team->name);
-
-        $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2()->getPrimary());
-        Assert::equal(2, $count);
+            $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2()->getPrimary());
+            Assert::equal(2, $count);
+        }, ApplicationHandlerException::class);
     }
 }
 

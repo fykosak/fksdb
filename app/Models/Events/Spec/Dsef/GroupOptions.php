@@ -14,8 +14,6 @@ use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated
  */
 class GroupOptions implements OptionsProvider {

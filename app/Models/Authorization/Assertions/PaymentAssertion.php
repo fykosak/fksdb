@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Security\Permission;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PaymentAssertion {
 
     /**

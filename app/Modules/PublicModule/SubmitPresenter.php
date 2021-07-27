@@ -29,11 +29,6 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;

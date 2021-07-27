@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\Utils;
 
-/**
- * Description of Utils
- *
- * @author michal
- */
 class Utils {
 
     public static function toRoman(int $arabic): string {

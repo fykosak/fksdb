@@ -48,8 +48,6 @@ use FKSDB\Models\Persons\SelfResolver;
  *     - otherwise use last contestant from any contest (Vyfuk <= FYKOS)
  *
  * Just proof of concept (obsoleted due to ReferencedPerson).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter {
 

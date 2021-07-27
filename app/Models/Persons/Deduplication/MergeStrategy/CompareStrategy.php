@@ -4,11 +4,6 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class CompareStrategy implements MergeStrategy {
 
     private int $sign;

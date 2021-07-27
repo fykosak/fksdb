@@ -21,6 +21,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
+use Throwable;
 
 abstract class AbstractApplicationPresenter extends BasePresenter {
 
@@ -44,7 +45,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws \Throwable
+     * @throws Throwable
      */
     final public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));

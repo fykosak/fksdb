@@ -37,6 +37,17 @@
     "league/oauth2-google": "3.0.3",
     "fykosak/nette-orm": "dev-dev-0.2.3"
   },
+  "authors": [
+    {
+      "name": "Michal Koutny",
+      "email": "michal@fykos.cz",
+      "role": "FKSDB Creator"
+    },
+    {
+      "name": "Organisers of FYKOS.cz",
+      "email": "webmaster@fykos.cz"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "FKSDB\\": "app/",

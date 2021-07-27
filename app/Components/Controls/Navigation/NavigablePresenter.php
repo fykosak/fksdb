@@ -11,8 +11,6 @@ use Nette\Application\IPresenter;
  * call control's method setBacklink.
  *
  * @note navigable == splavný :-)
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 interface NavigablePresenter extends IPresenter {
 

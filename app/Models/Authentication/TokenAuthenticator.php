@@ -11,9 +11,6 @@ use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
 
-/**
- * Users authenticator.
- */
 class TokenAuthenticator extends AbstractAuthenticator {
 
     public const PARAM_AUTH_TOKEN = 'at';

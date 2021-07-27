@@ -8,10 +8,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
     use YearPresenterTrait;

@@ -1,10 +1,7 @@
 <?php
 
 namespace FKSDB\Models\ORM;
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
+
 class DbNames {
 
     public const TAB_ADDRESS = 'address';

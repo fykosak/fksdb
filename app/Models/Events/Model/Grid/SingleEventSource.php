@@ -18,13 +18,9 @@ use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- *
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count()
+ * @method int count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
 class SingleEventSource implements HolderSource {

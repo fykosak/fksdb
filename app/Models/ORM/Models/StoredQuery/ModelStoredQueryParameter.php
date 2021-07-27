@@ -6,7 +6,6 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\InvalidStateException;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string type
  * @property-read int default_integer
  * @property-read string default_string

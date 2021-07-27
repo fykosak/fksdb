@@ -16,11 +16,6 @@ use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PersonFactory extends AbstractFactory {
 
     private const VALUE_LOGIN = 'fromLogin';

@@ -29,8 +29,6 @@ use Nette\Utils\Strings;
  * Sends email with given template name (in standard template directory)
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class MailSender {
 

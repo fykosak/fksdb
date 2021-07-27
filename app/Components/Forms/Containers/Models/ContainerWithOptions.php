@@ -7,7 +7,6 @@ use Nette\DI\Container as DIContainer;
 
 /**
  * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
- * @author Michal Koutný <michal@fykos.cz>
  */
 class ContainerWithOptions extends Container {
 

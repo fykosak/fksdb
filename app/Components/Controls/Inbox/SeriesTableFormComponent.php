@@ -7,9 +7,6 @@ use FKSDB\Models\Logging\Logger;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
-/**
- * @author Michal Koutny
- */
 abstract class SeriesTableFormComponent extends SeriesTableComponent {
 
     protected function createComponentForm(): OptimisticForm {

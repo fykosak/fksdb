@@ -14,7 +14,6 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * Class ModelScheduleItem
  * @property-read ActiveRow schedule_group
  * @property-read float price_eur
  * @property-read float price_czk

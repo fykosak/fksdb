@@ -7,9 +7,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceEventParticipant extends OldAbstractServiceSingle {
 
     public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {

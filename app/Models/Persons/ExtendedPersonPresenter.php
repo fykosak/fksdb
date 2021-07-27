@@ -4,10 +4,6 @@ namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\AbstractModel;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface ExtendedPersonPresenter {
 
     public function getModel(): ?AbstractModel;

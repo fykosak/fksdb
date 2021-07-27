@@ -22,8 +22,6 @@ use Nette\Forms\Form;
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
  * it should always be run inside a transaction.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedId extends HiddenField {
 

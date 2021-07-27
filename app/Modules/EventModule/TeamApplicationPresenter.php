@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * Class ApplicationPresenter
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {

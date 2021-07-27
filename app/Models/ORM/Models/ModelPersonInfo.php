@@ -6,8 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string email
  * @property-read string phone
  * @property-read string phone_parent_m

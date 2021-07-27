@@ -4,11 +4,6 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class LogicAnd extends VariadicExpression {
 
     protected function evaluate(...$args): bool {

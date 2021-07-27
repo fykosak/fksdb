@@ -7,9 +7,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 abstract class SearchContainer extends ContainerWithOptions {
 
     protected const CSS_AJAX = 'ajax';

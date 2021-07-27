@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface DataProvider {
 
     public const LABEL = 'label';

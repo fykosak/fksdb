@@ -7,8 +7,6 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 /**
  * Storage for signle file for each submit. Storage must keep original file
  * which can be modified by processings for later use.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 interface SubmitStorage {
 

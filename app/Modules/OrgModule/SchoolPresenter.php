@@ -14,7 +14,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class SchoolPresenter
  * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {

@@ -6,10 +6,7 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\Request as AppRequest;
 
 /**
- *
  * POD to be stored in the session
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Request {
 

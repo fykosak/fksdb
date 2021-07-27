@@ -8,9 +8,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
 use Nette\DeprecatedException;
 
-/**
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SeatingPresenter extends BasePresenter {
 
     public function titleDefault(): void {

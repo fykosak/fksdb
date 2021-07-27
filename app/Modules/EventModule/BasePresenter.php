@@ -18,9 +18,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
-/**
- * @author Lukáš Timko
- */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
     private ModelEvent $event;

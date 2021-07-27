@@ -14,10 +14,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class OrgsGrid extends BaseGrid {
 
     private ModelContest $contest;

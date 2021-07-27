@@ -1,17 +1,17 @@
 {layout './@layout.latte'}
-{block #places}
+{block places}
     {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $place}
     {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
     {foreach $places as $place}
         {if $place->getTeam() && $place->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
-            {include #place 'place'=>$place ,'className'=>'occupied'}
+            {include place 'place'=>$place ,'className'=>'occupied'}
             <circle
                     style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
                     r="100"
                     cx="{$place->x_coordinate}"
                     cy="{-$place->y_coordinate}"/>
         {else}
-            {include #place 'place'=>$place ,'className'=>'free'}
+            {include place 'place'=>$place ,'className'=>'free'}
         {/if}
     {/foreach}
 {/block}

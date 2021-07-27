@@ -12,11 +12,6 @@ use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GithubAuthenticator extends AbstractAuthenticator {
 
     public const PARAM_AUTH_TOKEN = 'at';

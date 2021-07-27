@@ -8,8 +8,6 @@ use Nette\Utils\Strings;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int series
  * @property-read string label
  * @property-read string name_cs

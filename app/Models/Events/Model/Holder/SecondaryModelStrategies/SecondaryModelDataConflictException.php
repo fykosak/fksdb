@@ -4,9 +4,6 @@ namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 
-/**
- * Class SecondaryModelDataConflictException
- */
 class SecondaryModelDataConflictException extends SecondaryModelConflictException {
 
     private array $conflictData;

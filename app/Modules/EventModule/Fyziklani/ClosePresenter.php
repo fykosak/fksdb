@@ -22,7 +22,6 @@ use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * Class ClosePresenter
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  */

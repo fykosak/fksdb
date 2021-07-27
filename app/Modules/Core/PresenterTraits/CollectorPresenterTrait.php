@@ -5,9 +5,6 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoaderComponent;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoaderComponent;
 
-/**
- * @author Michal Koutny
- */
 trait CollectorPresenterTrait {
 
     /*	 * ******************************

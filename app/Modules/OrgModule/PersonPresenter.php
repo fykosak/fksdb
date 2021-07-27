@@ -23,13 +23,10 @@ use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @author Michal Koutný <michal@fykos.cz>
  * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {

@@ -6,8 +6,6 @@ use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Miroslav Jarý <mira.jary@gmail.com>
  * @property-read int submit_question_id
  * @property-read int ct_id
  * @property-read int question_id

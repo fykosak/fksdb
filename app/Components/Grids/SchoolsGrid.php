@@ -15,10 +15,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class SchoolsGrid extends EntityGrid {
 
     public function __construct(Container $container) {

@@ -7,11 +7,6 @@ use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 use FKSDB\Models\WebService\SoapResponse;
 
-/**
- * Description of WebServicePresenter
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class WebServicePresenter extends BasePresenter {
 
     private \SoapServer $server;

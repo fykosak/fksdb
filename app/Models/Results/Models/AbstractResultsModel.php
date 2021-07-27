@@ -12,8 +12,6 @@ use Nette\Database\Row;
 
 /**
  * General results sheet with contestants and their ranks.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractResultsModel {
 

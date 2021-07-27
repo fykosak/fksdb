@@ -7,7 +7,6 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- * Class FKSDB\Models\ORM\Models\ModelEventOrg
  * @property-read ActiveRow person
  * @property-read ActiveRow event
  * @property-read string note

@@ -5,9 +5,6 @@ namespace FKSDB\Models\Events\Spec\Sous;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated since 34 year is not supported
  */
 class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */

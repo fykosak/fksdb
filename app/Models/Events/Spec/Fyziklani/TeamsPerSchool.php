@@ -12,11 +12,6 @@ use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private Explorer $explorer;

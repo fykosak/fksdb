@@ -20,7 +20,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * Class SubmitPresenter
  * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {

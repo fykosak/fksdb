@@ -14,7 +14,7 @@
                 {block flashes}
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
-                {include #form}
+                {include form}
                 <div class="text-center">{control languageChooser}</div>
             </div>
         </div>

@@ -14,8 +14,6 @@ use Nette\SmartObject;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editations).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Captcha implements FormAdjustment {
     use SmartObject;

@@ -12,12 +12,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note Works with single column primary keys only.
  * @note Assumes name of the FK column is the same like the referenced PK column.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class TableMerger {
 

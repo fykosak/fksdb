@@ -20,7 +20,6 @@ use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
 
 /**
- * Class PaymentPresenter
  * @method ModelPayment getEntity
  */
 class PaymentPresenter extends BasePresenter {

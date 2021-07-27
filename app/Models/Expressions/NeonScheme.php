@@ -8,8 +8,6 @@ use Nette\Utils\Arrays;
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
  * The scheme (metamodel) for the configuration is Neon-encoded as well.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class NeonScheme {
 

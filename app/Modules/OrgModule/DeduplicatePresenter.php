@@ -21,11 +21,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DeduplicatePresenter extends BasePresenter {
 
     private ServicePerson $servicePerson;

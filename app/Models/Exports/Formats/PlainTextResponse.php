@@ -7,11 +7,6 @@ use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PlainTextResponse implements Response {
     use SmartObject;
 

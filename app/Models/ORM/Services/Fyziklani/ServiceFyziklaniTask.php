@@ -6,9 +6,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class ServiceFyziklaniTask extends AbstractService {
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {

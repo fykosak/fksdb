@@ -9,7 +9,6 @@ use Nette\Mail\Message;
 use Nette\Security\Resource;
 
 /**
- * Class ModelEmailMessage
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read int|null recipient_person_id

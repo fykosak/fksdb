@@ -18,11 +18,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class ReferencedContainer extends ContainerWithOptions {
 
     public const ID_MASK = 'frm%s-%s';

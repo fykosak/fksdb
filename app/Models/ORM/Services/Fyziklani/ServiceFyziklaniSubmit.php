@@ -10,7 +10,6 @@ use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 
 /**
- * @author Lukáš Timko <lukast@fykos.cz>
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractService {

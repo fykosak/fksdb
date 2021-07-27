@@ -7,9 +7,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
-/**
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class FlagFactory {
 
     public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl {

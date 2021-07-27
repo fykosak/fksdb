@@ -7,11 +7,6 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\SmartObject;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class XSLFormat implements ExportFormat {
     use SmartObject;
 

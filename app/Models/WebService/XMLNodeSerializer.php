@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\WebService;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface XMLNodeSerializer {
 
     public const EXPORT_FORMAT_1 = 1;

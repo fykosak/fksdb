@@ -7,8 +7,6 @@ use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int contribution_id
  * @property-read int task_id
  * @property-read int person_id

@@ -22,10 +22,6 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use Tracy\Debugger;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class SubmitsGrid extends BaseGrid {
 
     private ModelContestant $contestant;

@@ -6,11 +6,6 @@ use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PresenterBuilder {
 
     private IPresenterFactory $presenterFactory;

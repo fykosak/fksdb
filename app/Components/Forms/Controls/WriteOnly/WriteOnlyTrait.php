@@ -15,8 +15,6 @@ use Nette\Utils\Html;
  *           writeOnlyAdjustControl in getControl
  *           writeOnlyLoadHttpData in loadHttpData after original loadHttpData
  *       and writeOnlyAttached in attached.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 trait WriteOnlyTrait {
 

@@ -7,8 +7,6 @@ use Nette\SmartObject;
 /**
  * Pseudopromise where we want to evaluate a value (provided as callback)
  * later than promise creation.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Promise {
     use SmartObject;

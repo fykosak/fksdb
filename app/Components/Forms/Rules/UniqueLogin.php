@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class UniqueLogin {
 
     private ServiceLogin $serviceLogin;
