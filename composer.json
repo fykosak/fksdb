@@ -35,7 +35,7 @@
     "setasign/fpdf": "1.8.2",
     "setasign/fpdi": "1.5.4",
     "league/oauth2-google": "3.0.3",
-    "fykosak/nette-orm": "dev-dev-0.2.3",
+    "fykosak/nette-orm": "dev-dev-0.2.3"
   },
   "authors": [
     {
