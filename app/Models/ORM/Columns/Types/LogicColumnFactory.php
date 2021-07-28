@@ -4,18 +4,14 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\BinaryPrinter;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * Class StringRow
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class LogicColumnFactory extends ColumnFactory {
 
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html {
         return (new BinaryPrinter())($model->{$this->getModelAccessKey()});
     }
 

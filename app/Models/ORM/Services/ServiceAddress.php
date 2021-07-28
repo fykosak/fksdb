@@ -2,20 +2,17 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelAddress;
-use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class ServiceAddress extends OldAbstractServiceSingle {
+class ServiceAddress extends AbstractService {
 
     private const PATTERN = '/[0-9]{5}/';
 
@@ -31,11 +28,11 @@ class ServiceAddress extends OldAbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
-        return parent::updateModel2($model, $data);
+        return parent::updateModel($model, $data);
     }
 
     /**
@@ -53,7 +50,7 @@ class ServiceAddress extends OldAbstractServiceSingle {
             throw new InvalidPostalCode($postalCode);
         }
         /** @var ActiveRow|ModelRegion $row */
-        $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->explorer->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {

@@ -3,21 +3,15 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\Events\Machine\BaseMachine;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
  */
 class TransitionButtonsComponent extends BaseComponent {
@@ -38,17 +32,12 @@ class TransitionButtonsComponent extends BaseComponent {
         $this->holder = $holder;
     }
 
-    public function render(): void {
-        $this->template->transitions = $this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE or BaseMachine::VISIBLE);
+    final public function render(): void {
+        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true);
         $this->template->holder = $this->holder;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }
 
-    /**
-     * @param string $transitionName
-     * @throws AbortException
-     */
     public function handleTransition(string $transitionName): void {
         try {
             $this->handler->onlyExecute($this->holder, $transitionName);
@@ -58,9 +47,5 @@ class TransitionButtonsComponent extends BaseComponent {
             /* handled elsewhere, here it's to just prevent redirect */
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
         }
-    }
-
-    private function getMachine(): Machine {
-        return $this->handler->getMachine();
     }
 }

@@ -9,8 +9,6 @@ use Nette\Application\UI\Control;
  *
  * @note If mapping from ILogger level to flash message type is not specified,
  * message is ignored.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class FlashMessageDump {
 

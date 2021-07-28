@@ -3,18 +3,12 @@
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
-use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
+use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
 
     /** @var callable|int */
@@ -49,14 +43,14 @@ class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
         $msgMixture = sprintf(_('Only %d different schools can be represented in the team.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture): bool {
+            $control->addRule(function (Control $control) use ($schoolControls, $personControls, $form, $msgMixture): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 if (!$this->checkMixture($schools)) {
                     $form->addError($msgMixture);

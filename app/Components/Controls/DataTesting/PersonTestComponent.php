@@ -14,10 +14,6 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
-/**
- * Class PersonTestControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PersonTestComponent extends BaseComponent {
 
     /**
@@ -37,6 +33,7 @@ class PersonTestComponent extends BaseComponent {
      * @persistent
      */
     public ?array $levels = [];
+
     private ServicePerson $servicePerson;
     private DataTestingFactory $dataTestingFactory;
 
@@ -124,9 +121,8 @@ class PersonTestComponent extends BaseComponent {
         return $logs;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->logs = $this->calculateProblems();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

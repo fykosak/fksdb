@@ -7,20 +7,17 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use NiftyGrid\DataSource\IDataSource;
 
 /**
- * Represents instantiotion (in term of parameters) of FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Represents instantiotion (in term of parameters) of \FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
  */
-class StoredQuery implements IDataSource, IResource {
+class StoredQuery implements IDataSource, Resource {
 
     private const INNER_QUERY = 'sub';
     private ?ModelStoredQuery $queryPattern = null;
     private ?string $qid = null;
-    private ?StoredQueryPostProcessing $postProcessing = null;
     private string $sql;
     private ?string $name = null;
     private array $queryParameters = [];
@@ -32,7 +29,7 @@ class StoredQuery implements IDataSource, IResource {
     /** default parameter of ModelStoredQueryParameter     */
     private array $parameterDefaultValues = [];
     private ?int $count = null;
-    private ?iterable $data = null;
+    private ?\PDOStatement $data = null;
     private ?int $limit = null;
     private ?int $offset = null;
     private array $orders = [];
@@ -43,16 +40,15 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self {
-        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters(), $queryPattern->php_post_proc ?: null);
+        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters());
         $storedQuery->queryPattern = $queryPattern;
         $storedQuery->name = $queryPattern->name;
         return $storedQuery;
     }
 
-    public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters, ?string $postProcessingClass): self {
+    public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self {
         $storedQuery = new StoredQuery($connection);
         $storedQuery->setSQL($sql);
-        $storedQuery->setPostProcessing($postProcessingClass);
         $storedQuery->setQueryParameters($parameters);
         return $storedQuery;
     }
@@ -79,21 +75,6 @@ class StoredQuery implements IDataSource, IResource {
                 $this->implicitParameterValues[$key] = $value;
                 $this->invalidateAll();
             }
-        }
-    }
-
-    public function getPostProcessing(): ?StoredQueryPostProcessing {
-        return $this->postProcessing;
-    }
-
-    private function setPostProcessing(?string $className): void {
-        if (is_null($className)) {
-            $this->postProcessing = null;
-        } else {
-            if (!class_exists($className)) {
-                throw new InvalidArgumentException("Expected class name, got '$className'.");
-            }
-            $this->postProcessing = new $className();
         }
     }
 
@@ -158,7 +139,6 @@ class StoredQuery implements IDataSource, IResource {
     // return true if pattern query is real ORM model, it means is already stored in DB
     public function hasQueryPattern(): bool {
         return (bool)$this->queryPattern ?? false;
-        // return isset($this->queryPattern) && !is_null($this->queryPattern) && !$this->queryPattern->isNew();
     }
 
     public function getColumnNames(): array {
@@ -186,15 +166,9 @@ class StoredQuery implements IDataSource, IResource {
 
     private function bindParams(string $sql): \PDOStatement {
         $statement = $this->connection->getPdo()->prepare($sql);
-        if ($this->postProcessing) {
-            $this->postProcessing->resetParameters();
-        }
 
         // bind implicit parameters
         foreach ($this->implicitParameterValues as $key => $value) {
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
-            }
             if (!preg_match("/:$key/", $sql)) { // this ain't foolproof
                 continue;
             }
@@ -213,9 +187,6 @@ class StoredQuery implements IDataSource, IResource {
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
-            if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value);
-            }
         }
         return $statement;
     }
@@ -243,30 +214,25 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param string $column
+     * @return int
      * @throws \PDOException
-     * @return int|null
      */
-    public function getCount($column = '*'): ?int {
+    public function getCount(string $column = '*'): int {
         if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->count = (int)$statement->fetchColumn();
-            if ($this->postProcessing) {
-                if (!$this->postProcessing->keepsCount()) {
-                    $this->count = count($this->getData());
-                }
-            }
         }
         return $this->count;
     }
 
     /**
-     * @return mixed|\PDOStatement|null
+     * @return \PDOStatement
      * @throws \PDOException
      */
-    public function getData() {
+    public function getData(): \PDOStatement {
         if (!isset($this->data)) {
             $innerSql = $this->getSQL();
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
@@ -286,26 +252,15 @@ class StoredQuery implements IDataSource, IResource {
             $statement = $this->bindParams($sql);
             $statement->execute();
             $this->data = $statement;
-            if ($this->postProcessing) {
-                $this->data = $this->postProcessing->processData($this->data);
-            }
         }
         return $this->data; // lazy load during iteration?
     }
 
-    /**
-     * @return null
-     */
-    public function getPrimaryKey() {
+    public function getPrimaryKey(): ?string {
         return null;
-        //throw new NotImplementedException();
     }
 
-    /**
-     * @param int $limit
-     * @param int $offset
-     */
-    public function limitData($limit, $offset): void {
+    public function limitData(int $limit, ?int $offset = null): void {
         $this->limit = $limit;
         $this->offset = $offset;
         $this->invalidateData();
@@ -314,10 +269,10 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * Implements only single column sorting.
      *
-     * @param string $by column name
-     * @param string $way DESC|ASC
+     * @param string|null $by column name
+     * @param string|null $way DESC|ASC
      */
-    public function orderData($by, $way): void {
+    public function orderData(?string $by, ?string $way): void {
         if (!is_numeric($by)) {
             $by = "`$by`";
         }

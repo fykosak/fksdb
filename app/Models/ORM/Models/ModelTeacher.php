@@ -3,11 +3,10 @@
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Červeňák <miso@fykos.cz>
  * @property-read \DateTimeInterface until
  * @property-read \DateTimeInterface since
  * @property-read int school_id
@@ -19,7 +18,7 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int teacher_id
  */
-class ModelTeacher extends AbstractModelSingle implements IResource {
+class ModelTeacher extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'teacher';
 

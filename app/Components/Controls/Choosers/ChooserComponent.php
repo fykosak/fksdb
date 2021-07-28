@@ -5,10 +5,6 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\UI\Title;
 
-/**
- * Class Chooser
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class ChooserComponent extends BaseComponent {
 
     protected function beforeRender(): void {
@@ -18,8 +14,7 @@ abstract class ChooserComponent extends BaseComponent {
 
     public function render(): void {
         $this->beforeRender();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
     }
 
     abstract protected function getTitle(): Title;

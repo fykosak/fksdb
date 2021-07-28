@@ -11,15 +11,10 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-/**
- * Class ResultsAndStatistics
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ResultsAndStatisticsComponent extends AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
@@ -50,11 +45,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    /**
-     * @param string $lastUpdated
-     * @return void
-     * @throws AbortException
-     */
     public function handleRefresh(string $lastUpdated): void {
         $this->lastUpdated = $lastUpdated;
         $this->sendAjaxResponse();

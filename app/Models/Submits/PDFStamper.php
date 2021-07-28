@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PDFStamper implements StorageProcessing {
 
     private string $inputFile;
@@ -21,7 +16,6 @@ class PDFStamper implements StorageProcessing {
     private int $fontSize;
 
     /**
-     *
      * @var string printf mask for arguments: series, label, contestant's name
      */
     private const STAMP_MASK = 'S%dU%s, %s, %s';
@@ -34,16 +28,16 @@ class PDFStamper implements StorageProcessing {
         return $this->inputFile;
     }
 
-    public function setInputFile(string $inputFile): void {
-        $this->inputFile = $inputFile;
+    public function setInputFile(string $filename): void {
+        $this->inputFile = $filename;
     }
 
     public function getOutputFile(): string {
         return $this->outputFile;
     }
 
-    public function setOutputFile(string $outputFile): void {
-        $this->outputFile = $outputFile;
+    public function setOutputFile(string $filename): void {
+        $this->outputFile = $filename;
     }
 
     public function getFontSize(): int {

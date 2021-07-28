@@ -11,21 +11,16 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\YearCalculator;
 use Nette\Security\AuthenticationException;
 
-/**
- * Class GoogleAuthenticator
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class GoogleAuthenticator extends AbstractAuthenticator {
 
     private ServiceOrg $serviceOrg;
     private AccountManager $accountManager;
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
+        parent::__construct($serviceLogin);
         $this->serviceOrg = $serviceOrg;
         $this->accountManager = $accountManager;
         $this->servicePerson = $servicePerson;
@@ -64,7 +59,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      */
     private function findPerson(array $user): ?ModelPerson {
         if (!$user['email']) {
-            throw new AuthenticationException(_('V profilu Google nebyl nalezen e-mail.'));
+            throw new AuthenticationException(_('Email not found in the google account.'));
         }
         return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
     }

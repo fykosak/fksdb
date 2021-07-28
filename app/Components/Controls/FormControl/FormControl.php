@@ -9,8 +9,6 @@ use Nette\Application\UI\Form;
 /**
  * Bootstrap compatible form control with support for AJAX in terms
  * of form/container groups.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class FormControl extends BaseComponent {
 
@@ -32,11 +30,10 @@ class FormControl extends BaseComponent {
         return $component;
     }
 
-    public function render(): void {
+    final public function render(): void {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 }

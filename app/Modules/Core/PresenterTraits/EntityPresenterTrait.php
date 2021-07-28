@@ -6,26 +6,22 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Exceptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\UI\PageTitle;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
-/**
- * Trait EntityTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait EntityPresenterTrait {
 
     /**
      * @persistent
      */
     public ?int $id = null;
-    protected ?AbstractModelSingle $model;
+    protected ?AbstractModel $model;
 
     public function authorizedList(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
@@ -109,16 +105,13 @@ trait EntityPresenterTrait {
 
     /**
      * @param bool $throw
-     * @return AbstractModelSingle|null
+     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
-    public function getEntity(bool $throw = true): ?AbstractModelSingle {
+    public function getEntity(bool $throw = true): ?AbstractModel {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
-        if (
-            (isset($this->model) && $id !== $this->model->getPrimary())
-            || !isset($this->model)
-        ) {
+        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
             $this->model = $this->loadModel($throw);
         }
         return $this->model;
@@ -126,10 +119,10 @@ trait EntityPresenterTrait {
 
     /**
      * @param bool $throw
-     * @return AbstractModelSingle|null
+     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
-    private function loadModel(bool $throw = true): ?AbstractModelSingle {
+    private function loadModel(bool $throw = true): ?AbstractModel {
         $id = $this->getParameter($this->getPrimaryParameterName());
         $candidate = $this->getORMService()->findByPrimary($id);
         if ($candidate) {
@@ -143,13 +136,13 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws Exceptions\ModelException
+     * @throws ModelException
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void {
         $success = $this->getEntity()->delete();
         if (!$success) {
-            throw new Exceptions\ModelException(_('Error during deleting'));
+            throw new ModelException(_('Error during deleting'));
         }
     }
 
@@ -168,7 +161,7 @@ trait EntityPresenterTrait {
      */
     abstract protected function createComponentGrid(): BaseGrid;
 
-    abstract protected function getORMService(): AbstractServiceSingle;
+    abstract protected function getORMService(): AbstractService;
 
     protected function getModelResource(): string {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
@@ -179,7 +172,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

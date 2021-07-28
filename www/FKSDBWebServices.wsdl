@@ -13,6 +13,11 @@
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         name="FKSDBWebServices" targetNamespace="http://fykos.cz/xml/ws/service">
 
+    <wsdl:import namespace="https://fykos.cz/xml/signatures/definitions" location="./xml/signatures.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/event/definitions" location="./xml/event.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/eventList/definitions" location="./xml/eventList.wsdl"/>
+    <wsdl:import namespace="https://fykos.cz/xml/organizers/definitions" location="./xml/organizers.wsdl"/>
+
     <!-- wsdl:types encapsulates schema definitions of communication types -->
     <wsdl:types>
         <xsd:schema targetNamespace="http://fykos.cz/xml/ws/schema">
@@ -54,44 +59,6 @@
                             </xsd:sequence>
                         </xsd:complexType>
                     </xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="GetEventRequestType">
-                <xsd:sequence>
-                    <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
-                    <xsd:element name="teamsList" minOccurs="0">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="schedule" minOccurs="0">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="personSchedule" minOccurs="0">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="participantsList" minOccurs="0">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="GetEventsListRequestType">
-                <xsd:sequence>
-                    <xsd:element name="eventTypeIds" type="xsd:nonNegativeInteger" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="GetStatsRequestType">
@@ -138,22 +105,6 @@
         <wsdl:part name="GetResultsResponse" element="fksres:results"/>
     </wsdl:message>
 
-    <wsdl:message name="GetEventRequest">
-        <wsdl:part name="GetEventRequest" type="xsd1:GetEventRequestType"/>
-    </wsdl:message>
-
-    <wsdl:message name="GetEventResponse">
-        <wsdl:part name="GetEventResponse"/>
-    </wsdl:message>
-
-    <wsdl:message name="GetEventsListRequest">
-        <wsdl:part name="GetEventsListRequest" type="xsd1:GetEventsListRequestType"/>
-    </wsdl:message>
-
-    <wsdl:message name="GetEventsListResponse">
-        <wsdl:part name="GetEventsListResponse"/>
-    </wsdl:message>
-
     <wsdl:message name="GetStatsRequest">
         <wsdl:part name="GetStatsRequest" type="xsd1:GetStatsRequestType"/>
     </wsdl:message>
@@ -170,6 +121,7 @@
         <wsdl:part name="GetExportResponse" element="fksex:export"/>
     </wsdl:message>
 
+
     <wsdl:portType name="FKSDBPortType">
         <wsdl:operation name="GetResults">
             <wsdl:input message="tns:GetResultsRequest"/>
@@ -179,9 +131,9 @@
             <wsdl:input message="tns:GetEventRequest"/>
             <wsdl:output message="tns:GetEventResponse"/>
         </wsdl:operation>
-        <wsdl:operation name="GetEventsList">
-            <wsdl:input message="tns:GetEventsListRequest"/>
-            <wsdl:output message="tns:GetEventsListResponse"/>
+        <wsdl:operation name="GetEventList">
+            <wsdl:input message="tns:GetEventListRequest"/>
+            <wsdl:output message="tns:GetEventListResponse"/>
         </wsdl:operation>
         <wsdl:operation name="GetStats">
             <wsdl:input message="tns:GetStatsRequest"/>
@@ -190,6 +142,14 @@
         <wsdl:operation name="GetExport">
             <wsdl:input message="tns:GetExportRequest"/>
             <wsdl:output message="tns:GetExportResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetSignatures">
+            <wsdl:input message="tns:GetSignaturesRequest"/>
+            <wsdl:output message="tns:GetSignaturesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <wsdl:input message="tns:GetOrganizersRequest"/>
+            <wsdl:output message="tns:GetOrganizersResponse"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -215,8 +175,8 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="GetEventsList">
-            <soap:operation soapAction="GetEventsList"/>
+        <wsdl:operation name="GetEventList">
+            <soap:operation soapAction="GetEventList"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>
@@ -237,6 +197,26 @@
         </wsdl:operation>
         <wsdl:operation name="GetExport">
             <soap:operation soapAction="GetExport"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetSignatures">
+            <soap:operation soapAction="GetSignatures"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOrganizers">
+            <soap:operation soapAction="GetOrganizers"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>

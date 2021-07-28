@@ -1,4 +1,7 @@
-{block #content}
+{block content}
+    {varType array $contestants}
+    {varType array $contestsProperty}
+    {varType array $orgs}
     <h2>{_'Contestant'}</h2>
     <p>
         <a href="{plink :Public:Register:contest}" class="btn btn-primary">{_'Register'}</a>
@@ -50,7 +53,5 @@
         </nav>
         <hr/>
         {*control navigationChooser:board 'Core.Dispatch.default' *}{*for relevant activites*}
-
     {/if}
-
 {/block}

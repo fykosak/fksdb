@@ -2,17 +2,13 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti\Events;
 
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
@@ -21,11 +17,11 @@ class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param IModel|AbstractModelMulti $model
+     * @param AbstractModelMulti $model
      * @throws ModelException
      */
     public function dispose(AbstractModelMulti $model): void {
         parent::dispose($model);
-        $this->getMainService()->dispose($model->getMainModel());
+        $this->mainService->dispose($model->mainModel);
     }
 }

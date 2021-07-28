@@ -2,32 +2,28 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Chart\Chart;
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
-/**
- * Trait ChartPresenterTrait
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ChartPresenterTrait {
 
     protected Chart $selectedChart;
     private array $chartComponents;
 
     public function titleChart(): void {
-        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
+        $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
     }
 
-    public function renderChart(): void {
+    final public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 

@@ -4,18 +4,15 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\PaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidStateException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
  * @property-read int event_participant_id
  * @property-read int event_id
@@ -42,21 +39,18 @@ use Nette\Security\IResource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends OldAbstractModelSingle implements
-    PaymentModel,
-    IResource,
-    NodeCreator {
+class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-    public function getPerson(): ?ModelPerson {
-        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    public function getPerson(): ModelPerson {
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     public function getPersonHistory(): ?ModelPersonHistory {
-        return $this->getPerson()->getHistory($this->getEvent()->getAcYear());
+        return $this->getPerson()->getHistoryByContestYear($this->getEvent()->getContestYear());
     }
 
     public function getContest(): ModelContest {
@@ -64,9 +58,6 @@ class ModelEventParticipant extends OldAbstractModelSingle implements
     }
 
     public function __toString(): string {
-        if (!$this->getPerson()) {
-            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
-        }
         return $this->getPerson()->__toString();
     }
 

@@ -11,13 +11,7 @@ use Tracy\Debugger;
 use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
-use UnexpectedValueException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class UploadedStorage implements SubmitStorage {
 
     /** Characters delimiting name and metadata in filename. */
@@ -45,16 +39,13 @@ class UploadedStorage implements SubmitStorage {
      * @var string
      */
     private string $filenameMask;
-    /** @var array   contestId => contest name */
-    private array $contestMap;
     /** @var StorageProcessing[] */
     private array $processings = [];
 
-    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
-        $this->contestMap = $contestMap;
     }
 
     public function addProcessing(StorageProcessing $processing): void {
@@ -193,7 +184,7 @@ class UploadedStorage implements SubmitStorage {
         try {
             $it = Finder::findFiles('*' . self::DELIMITER . $submit->submit_id . '*')->in($dir);
             return iterator_to_array($it, false);
-        } catch (UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             return [];
         }
     }

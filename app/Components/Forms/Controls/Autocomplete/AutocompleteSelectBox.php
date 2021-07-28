@@ -9,12 +9,8 @@ use Nette\Utils\Arrays;
 use Nette\Utils\Html;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo Implement AJAX loading
  *       Should return school_id or null.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class AutocompleteSelectBox extends TextBase {
 
@@ -185,7 +181,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
      */
     public function getValue() {
         return $this->value;

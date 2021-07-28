@@ -14,29 +14,18 @@ use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\DI\MissingServiceException;
 
-/**
- * Class TaskPresenter
- */
 class TaskPresenter extends BasePresenter {
 
     public const IMPORT_STATE_UPDATE_N_INSERT = 1;
     public const IMPORT_STATE_REMOVE_N_INSERT = 2;
     public const IMPORT_STATE_INSERT = 3;
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks'), 'fa fa-tasks'));
+        $this->setPageTitle(new PageTitle(_('Tasks'), 'fas fa-tasks'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-download'));
     }
 
     /**
@@ -63,7 +52,7 @@ class TaskPresenter extends BasePresenter {
 
         $form->addUpload('csvfile')->setRequired();
         $form->addSelect('state', _('Select action'), [
-            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exists.'),
+            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exist.'),
             self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
             self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
         ]);

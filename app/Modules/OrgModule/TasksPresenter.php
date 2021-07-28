@@ -5,7 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\SeriesCalculator;
@@ -15,30 +15,22 @@ use FKSDB\Models\Tasks\SeriesData;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
-use SimpleXMLElement;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class TasksPresenter extends BasePresenter {
 
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
 
-    private SeriesCalculator $seriesCalculator;
     private PipelineFactory $pipelineFactory;
     private Downloader $downloader;
 
     final public function injectQuarterly(
-        SeriesCalculator $seriesCalculator,
         PipelineFactory $pipelineFactory,
         Downloader $downloader
     ): void {
-        $this->seriesCalculator = $seriesCalculator;
         $this->pipelineFactory = $pipelineFactory;
         $this->downloader = $downloader;
     }
@@ -48,7 +40,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Task import'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Task import'), 'fas fa-download'));
     }
 
     /**
@@ -66,7 +58,11 @@ class TasksPresenter extends BasePresenter {
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
-        $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
+        $seriesItems = range(1, SeriesCalculator::getTotalSeries($this->getSelectedContestYear()));
+        if (SeriesCalculator::hasHolidaySeries($this->getSelectedContestYear())) {
+            $key = array_search('7', $seriesItems);
+            unset($seriesItems[$key]);
+        }
         $form->addSelect('series', _('Series'))
             ->setItems($seriesItems, false);
 
@@ -82,7 +78,7 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
-    private function isLegacyXml(SimpleXMLElement $xml): bool {
+    private function isLegacyXml(\SimpleXMLElement $xml): bool {
         return $xml->getName() === 'problems';
     }
 
@@ -92,13 +88,14 @@ class TasksPresenter extends BasePresenter {
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void {
+        /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $file = null;
 
         switch ($values['source']) {
             case self::SOURCE_ASTRID:
-                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContest(), $this->getSelectedYear(), $series);
+                $file = $this->downloader->downloadSeriesTasks($this->getSelectedContestYear(), $series);
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
@@ -116,7 +113,7 @@ class TasksPresenter extends BasePresenter {
             if ($this->isLegacyXml($xml)) {
                 throw new DeprecatedException();
             } else {
-                $data = new SeriesData($this->getSelectedContest(), $this->getSelectedYear(), $series, $xml);
+                $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
                 $pipeline = $this->pipelineFactory->create();
                 $pipeline->setInput($data);
                 $pipeline->run();

@@ -9,11 +9,6 @@ use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
-/**
- *
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 abstract class BasePresenter extends EventBasePresenter {
 
     protected ServiceFyziklaniTeam $serviceFyziklaniTeam;

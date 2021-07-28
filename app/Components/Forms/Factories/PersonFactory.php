@@ -5,11 +5,6 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\DataProvider;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PersonFactory {
 
     public function createPersonSelect(bool $ajax, string $label, DataProvider $dataProvider, ?string $renderMethod = null): AutocompleteSelectBox {

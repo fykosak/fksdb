@@ -3,12 +3,7 @@
 namespace FKSDB\Models\Payment;
 
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
-use LogicException;
 
-/**
- * Class Price
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Price {
 
     public const CURRENCY_EUR = 'eur';
@@ -25,11 +20,11 @@ class Price {
 
     /**
      * @param Price $price
-     * @throws LogicException
+     * @throws \LogicException
      */
     public function add(Price $price): void {
         if ($this->currency !== $price->getCurrency()) {
-            throw new LogicException('Currencies are not a same');
+            throw new \LogicException('Currencies are not a same');
         }
         $this->amount += $price->getAmount();
     }

@@ -6,16 +6,11 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelRole;
 use Nette\Database\Table\ActiveRow;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ContestAuthorizator {
 
     use SmartObject;
@@ -41,7 +36,7 @@ class ContestAuthorizator {
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
      *
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @param int|ModelContest $contest queried contest
      * @return bool
@@ -57,7 +52,7 @@ class ContestAuthorizator {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */
@@ -82,7 +77,7 @@ class ContestAuthorizator {
 
     /**
      * @param ModelLogin $login
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * @param ModelContest|int $contest
      * @return bool

@@ -5,26 +5,11 @@ namespace FKSDB\Models\Events\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class BaseMachine {
 
-    public const STATE_INIT = '__init';
-    public const STATE_TERMINATED = '__terminated';
-    public const STATE_ANY = '*';
-
-    public const EXECUTABLE = 0x1;
-    public const VISIBLE = 0x2;
-
     private string $name;
-
     private array $states;
-
     private array $transitions = [];
-
     private Machine $machine;
 
     public function __construct(string $name) {
@@ -75,9 +60,9 @@ class BaseMachine {
      */
     public function getStateName(string $state): string {
         switch ($state) {
-            case self::STATE_INIT:
+            case \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT:
                 return _('initial');
-            case self::STATE_TERMINATED:
+            case \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED:
                 return _('terminated');
             default:
                 return _($state);
@@ -94,19 +79,20 @@ class BaseMachine {
     /**
      * @param Holder $holder
      * @param string $sourceState
-     * @param int $mode
+     * @param bool $visible
+     * @param bool $executable
      * @return Transition[]
      */
-    public function getAvailableTransitions(Holder $holder, string $sourceState, int $mode = self::EXECUTABLE): array {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) : bool {
+    public function getAvailableTransitions(Holder $holder, string $sourceState, bool $visible = false, bool $executable = true): array {
+        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($holder, $executable, $visible): bool {
             return
-                (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
+                (!$executable || $transition->canExecute($holder)) && (!$visible || $transition->isVisible($holder));
         });
     }
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
         $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState): bool {
-            return $transition->getTarget() == $targetState;
+            return $transition->getTargetState() == $targetState;
         });
         if (count($candidates) == 0) {
             return null;

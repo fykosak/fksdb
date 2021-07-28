@@ -2,10 +2,9 @@
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 
 /**
- * Class ModelFyziklaniGameSetup
  * @property-read int event_id
  * @property-read \DateTimeInterface game_start
  * @property-read \DateTimeInterface game_end
@@ -16,7 +15,7 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
-class ModelFyziklaniGameSetup extends AbstractModelSingle {
+class ModelFyziklaniGameSetup extends AbstractModel {
     /**
      * @return int[]
      */
@@ -27,7 +26,7 @@ class ModelFyziklaniGameSetup extends AbstractModelSingle {
     }
 
     /**
-     *  Take care, this function is not state-less!!!
+     * @note Take care, this function is not state-less!!!
      */
     public function isResultsVisible(): bool {
         if ($this->result_hard_display) {

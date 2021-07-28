@@ -6,18 +6,12 @@ use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use FKSDB\Models\Github\Events\Event;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class GithubAuthenticator extends AbstractAuthenticator {
 
     public const PARAM_AUTH_TOKEN = 'at';
@@ -26,8 +20,8 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     private Container $container;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
-        parent::__construct($serviceLogin, $yearCalculator);
+    public function __construct(ServiceLogin $serviceLogin, Container $container) {
+        parent::__construct($serviceLogin);
         $this->container = $container;
     }
 
@@ -44,12 +38,12 @@ class GithubAuthenticator extends AbstractAuthenticator {
         $secret = $this->container->getParameters()['github']['secret'];
 
         if (!$request->getHeader(Event::HTTP_HEADER)) {
-            throw new InvalidArgumentException(_('Očekávána hlavička X-Github-Event'));
+            throw new InvalidArgumentException(_('Expected header X-Github-Event'));
         }
 
         $signature = $request->getHeader(self::HTTP_AUTH_HEADER);
         if (!$signature) {
-            throw new AuthenticationException(_('Očekávána hlavička X-Hub-Signature.'));
+            throw new AuthenticationException(_('Expected header X-Hub-Signature.'));
         }
 
         $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getRawBody(), $secret, false);

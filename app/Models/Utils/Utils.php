@@ -2,13 +2,6 @@
 
 namespace FKSDB\Models\Utils;
 
-use DateTimeInterface;
-
-/**
- * Description of Utils
- *
- * @author michal
- */
 class Utils {
 
     public static function toRoman(int $arabic): string {
@@ -105,7 +98,7 @@ class Utils {
                 $raw .= self::getFingerprint($item);
             }
             return md5($raw);
-        } elseif ($object instanceof DateTimeInterface) {
+        } elseif ($object instanceof \DateTimeInterface) {
             return $object->format('c');
         } else {
             try {
@@ -129,7 +122,7 @@ class Utils {
                 $items[] = "$key: " . self::getRepresentation($item);
             }
             return '{' . implode(', ', $items) . '}';
-        } elseif ($object instanceof DateTimeInterface) {
+        } elseif ($object instanceof \DateTimeInterface) {
             return $object->format('c');
         } else {
             try {

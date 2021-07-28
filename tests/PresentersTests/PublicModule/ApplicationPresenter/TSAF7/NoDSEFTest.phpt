@@ -11,7 +11,7 @@ use Tester\Assert;
 
 class NoDSEFTest extends TsafTestCase {
 
-    private int $tsafAppId;
+    protected int $tsafAppId;
 
     protected function setUp(): void {
         parent::setUp();

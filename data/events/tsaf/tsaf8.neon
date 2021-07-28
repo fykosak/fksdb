@@ -153,19 +153,6 @@ events:
                         modifiable: false
                         description: "Cena v spočtená dle pravidel (http://fykos.cz/rocnik29/tsaf/pozvanka)."
 
-#            PARTICIPANT_DSEF:
-#                prototype: dsef20.PARTICIPANT_DSEF
-#                joinOn: person_id
-#                joinTo: person_id
-#                fields:
-#                    person_id:
-#                        modifiable: false
-#                        visible: false
-#                        required: false
-#                    e_dsef_group_id:
-#                        required: or(state('applied'),state('spare')) # state of the TSAF machine
-
-
 
         #
         #   MACHINE

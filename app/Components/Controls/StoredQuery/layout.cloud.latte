@@ -1,7 +1,13 @@
 {layout ../@layout.latte}
 {block content}
+    {varType string $mode}
+    {varType FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent $control}
+    {varType Fykosak\NetteORM\TypedTableSelection $tags}
+    {varType array $activeTagIds}
+    {varType array $nextActiveTagIds}
     <p class="stored-query-tags">
         {var $isListMode = ($mode == $control::MODE_LIST)}
+        {varType FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType $tagType}
         {foreach $tags as $tagType}
             {var $active = ($isListMode && array_key_exists($tagType->tag_type_id, $activeTagIds))?'active':''}
             <a n:tag-if="$isListMode" href="{link onClick! $nextActiveTagIds[$tagType->tag_type_id]}">

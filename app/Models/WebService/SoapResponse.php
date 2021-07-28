@@ -2,15 +2,12 @@
 
 namespace FKSDB\Models\WebService;
 
+use Nette\Application\Response;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-class SoapResponse implements \Nette\Application\IResponse {
+class SoapResponse implements Response {
 
     private \SoapServer $soapServer;
 
@@ -21,7 +18,7 @@ class SoapResponse implements \Nette\Application\IResponse {
     public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         try {
             $this->soapServer->handle();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Debugger::log($e);
         }
     }

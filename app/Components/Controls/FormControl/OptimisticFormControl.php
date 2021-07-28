@@ -5,10 +5,6 @@ namespace FKSDB\Components\Controls\FormControl;
 use FKSDB\Components\Forms\OptimisticForm;
 use Nette\DI\Container;
 
-/**
- * Class OptimisticFormControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class OptimisticFormControl extends FormControl {
 
     /** @var callable */

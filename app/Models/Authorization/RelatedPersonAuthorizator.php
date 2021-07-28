@@ -2,28 +2,19 @@
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Nette\Security\IUserStorage;
+use FKSDB\Models\Transitions\Machine\Machine;
+use Nette\Security\User;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    private IUserStorage $user;
+    private User $user;
 
-    public function __construct(IUserStorage $user) {
+    public function __construct(User $user) {
         $this->user = $user;
-    }
-
-    public function getUser(): IUserStorage {
-        return $this->user;
     }
 
     /**
@@ -35,26 +26,25 @@ class RelatedPersonAuthorizator {
      */
     public function isRelatedPerson(Holder $holder): bool {
         // everyone is related
-        if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() == Machine::STATE_INIT) {
             return true;
         }
-
+        $login= $this->user->getIdentity();
         // further on only logged users can be related person
-        if (!$this->getUser()->isAuthenticated()) {
+        if (!$login) {
             return false;
         }
 
-        $person = $this->getUser()->getIdentity()->getPerson();
+        $person = $login->getPerson();
         if (!$person) {
             return false;
         }
 
         foreach ($holder->getBaseHolders() as $baseHolder) {
-            if ($baseHolder->getPersonId() == $person->person_id) {
+            if ($baseHolder->getPerson()->person_id == $person->person_id) {
                 return true;
             }
         }
-
         return false;
     }
 }

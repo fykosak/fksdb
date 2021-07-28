@@ -4,11 +4,6 @@ namespace FKSDB\Components\Controls\Loaders;
 
 use FKSDB\Components\Controls\BaseComponent;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class WebLoaderComponent extends BaseComponent {
 
     public const FILENAME = 'file';
@@ -46,7 +41,7 @@ abstract class WebLoaderComponent extends BaseComponent {
         $this->redrawControl();
     }
 
-    public function render(...$args): void {
+    final public function render(...$args): void {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
@@ -64,17 +59,13 @@ abstract class WebLoaderComponent extends BaseComponent {
             }
         }
 
-        $template = $this->createTemplate();
-        $template->setFile($this->getDir() . 'layout.files.latte');
-        $template->files = array_merge($files, $this->getFiles());
-        $template->render();
+        $this->template->files = array_merge($files, $this->getFiles());
+        $this->template->render($this->getDir() . 'layout.files.latte');
     }
 
-    public function renderInline(): void {
-        $template = $this->createTemplate();
-        $template->setFile($this->getDir() . 'layout.inlines.latte');
-        $template->inlines = $this->getInLines();
-        $template->render();
+    final public function renderInline(): void {
+        $this->template->inlines = $this->getInLines();
+        $this->template->render($this->getDir() . 'layout.inlines.latte');
     }
 
     public static function isRelative(string $file): bool {

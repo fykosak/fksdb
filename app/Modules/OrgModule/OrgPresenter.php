@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\OrgFormComponent;
+use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 class OrgPresenter extends BasePresenter {
     use EntityPresenterTrait {
@@ -29,7 +29,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     /**
@@ -46,7 +46,7 @@ class OrgPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Organisers'), 'fa fa-address-book');
+        return new PageTitle(_('Organisers'), 'fa fa-user-tie');
     }
 
     /**
@@ -68,7 +68,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -97,9 +97,8 @@ class OrgPresenter extends BasePresenter {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

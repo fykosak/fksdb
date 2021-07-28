@@ -7,10 +7,6 @@ use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 
-/**
- * Class PersonFileLevelTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class PersonFileLevelTest extends PersonTest {
 
     private TestedColumnFactory $rowFactory;

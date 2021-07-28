@@ -4,15 +4,14 @@ namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class ContributionsFromXML extends Stage {
 
@@ -51,12 +50,12 @@ class ContributionsFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
-        $this->taskContributionService->getConnection()->beginTransaction();
+        $this->taskContributionService->explorer->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
             [$parent, $child] = explode('/', $xmlElement);
@@ -73,13 +72,16 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-                $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
+                $row = $this->data->getContestYear()->getContest()
+                    ->related(DbNames::TAB_ORG)
+                    ->where('tex_signature', $signature)
+                    ->fetch();
 
-                if (!$org) {
+                if (!$row) {
                     $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));
                     continue;
                 }
-                $contributors[] = $org;
+                $contributors[] = ModelOrg::createFromActiveRow($row);
             }
 
             // delete old contributions
@@ -96,8 +98,6 @@ class ContributionsFromXML extends Stage {
                 ]);
             }
         }
-
-        $this->taskContributionService->getConnection()->commit();
+        $this->taskContributionService->explorer->getConnection()->commit();
     }
-
 }

@@ -8,9 +8,6 @@ use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class MultiTableSelection extends Selection {
 
     private AbstractServiceMulti $service;
@@ -27,8 +24,8 @@ class MultiTableSelection extends Selection {
      * @return AbstractModelMulti
      */
     protected function createRow(array $row): AbstractModelMulti {
-        $mainModel = $this->service->getMainService()->createFromArray($row);
-        $joinedModel = $this->service->getJoinedService()->createFromArray($row);
+        $mainModel = $this->service->mainService->createFromArray($row);
+        $joinedModel = $this->service->joinedService->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);
     }
 }

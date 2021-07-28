@@ -7,12 +7,9 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Models\Pipeline\Stage;
-use SimpleXMLElement;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class StudyYearsFromXML extends Stage {
 
@@ -56,12 +53,12 @@ class StudyYearsFromXML extends Stage {
         return $this->data;
     }
 
-    private function processTask(SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
         $task = $tasks[$tasknr];
-        $this->serviceTaskStudyYear->getConnection()->beginTransaction();
+        $this->serviceTaskStudyYear->explorer->getConnection()->beginTransaction();
 
         // parse contributors
         $studyYears = [];
@@ -89,9 +86,9 @@ class StudyYearsFromXML extends Stage {
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Doplnění defaultních ročníků i přes nesprávnou specifikaci.'), Logger::INFO));
+                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO));
             }
-            $studyYears = $this->defaultStudyYears[$this->data->getContest()->contest_id];
+            $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }
 
         // delete old contributions
@@ -106,6 +103,6 @@ class StudyYearsFromXML extends Stage {
                 'study_year' => $studyYear,
             ]);
         }
-        $this->serviceTaskStudyYear->getConnection()->commit();
+        $this->serviceTaskStudyYear->explorer->getConnection()->commit();
     }
 }

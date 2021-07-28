@@ -1,6 +1,6 @@
 {block content}
-    {do $presenter->registerJSFile('js/codemirror.min.js')}
-    {do $presenter->registerJSFile('js/sqlconsole.js')}
+    {*do $presenter->registerJSFile('js/codemirror.min.js')*}
+    {*do $presenter->registerJSFile('js/sqlconsole.js')*}
     {do $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
     <hr/>
@@ -9,7 +9,7 @@
     {control valuePrinter:row 'stored_query.php_post_proc', $model,1024}
     <hr/>
     {if count($model->getParameters())}
-        <h3>{_'Parametry'}</h3>
+        <h3>{_'Parameters'}</h3>
         <table class="table table-hover table-striped">
             <tr>
                 <th>{_'Name'}</th>

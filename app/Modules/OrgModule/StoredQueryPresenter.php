@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
+use FKSDB\Components\EntityForms\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
@@ -13,11 +13,9 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class StoredQueryPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
 class StoredQueryPresenter extends BasePresenter {
@@ -36,11 +34,11 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen'));
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
+        return new PageTitle(sprintf(_('Create query')), 'fa fa-plus');
     }
 
     /**
@@ -48,7 +46,7 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
+        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-file-csv'));
     }
 
     /**
@@ -63,7 +61,7 @@ class StoredQueryPresenter extends BasePresenter {
             $title .= " ($qid)";
         }
 
-        $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
+        $this->setPageTitle(new PageTitle($title, 'fa fa-file-csv'));
     }
 
     protected function startup(): void {
@@ -78,7 +76,7 @@ class StoredQueryPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -109,7 +107,7 @@ class StoredQueryPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

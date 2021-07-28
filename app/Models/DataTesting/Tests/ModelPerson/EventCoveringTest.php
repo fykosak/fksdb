@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-/**
- * Class EventCoveringTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventCoveringTest extends PersonTest {
 
     public function __construct() {
@@ -74,7 +70,7 @@ class EventCoveringTest extends PersonTest {
     }
 
     private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
-        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
+        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s.'), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 
     private function getEventOrgYears(ModelPerson $person): array {

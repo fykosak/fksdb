@@ -5,16 +5,11 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FyziklaniChooserComponent extends ChooserComponent {
 
     private ModelEvent $event;

@@ -9,10 +9,6 @@ use FKSDB\Models\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 
-/**
- * Class NavigationChooser
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class NavigationChooserComponent extends ChooserComponent {
 
     private NavigationFactory $navigationFactory;
@@ -23,16 +19,15 @@ class NavigationChooserComponent extends ChooserComponent {
         $this->navigationFactory = $navigationFactory;
     }
 
-    public function render(string $root = ''): void {
+    final public function render(string $root = ''): void {
         $this->structure = $this->navigationFactory->getStructure($root);
         parent::render();
     }
 
-    public function renderBoard(string $root): void {
+    final public function renderBoard(string $root): void {
         $this->structure = $this->navigationFactory->getStructure($root);
         $this->beforeRender();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
     /**

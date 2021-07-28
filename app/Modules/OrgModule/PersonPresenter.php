@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\PersonFormComponent;
+use FKSDB\Components\EntityForms\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaComponent;
 use FKSDB\Components\Controls\Stalking\StalkingContainer;
@@ -19,17 +19,14 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @author Michal Koutný <michal@fykos.cz>
  * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
@@ -73,7 +70,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit'));
     }
 
     public function getTitleCreate(): PageTitle {
@@ -85,7 +82,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
+        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
     }
 
     /* *********** AUTH ***************/
@@ -115,7 +112,7 @@ class PersonPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail(): void {
+    final public function renderDetail(): void {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
@@ -219,9 +216,10 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
+     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);

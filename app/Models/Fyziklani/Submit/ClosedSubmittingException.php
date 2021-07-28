@@ -6,10 +6,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
-/**
- * Class ClosedSubmittingException
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ClosedSubmittingException extends BadRequestException {
 
     public function __construct(ModelFyziklaniTeam $team, ?\Throwable $previous = null) {

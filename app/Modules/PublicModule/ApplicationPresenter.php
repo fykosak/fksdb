@@ -4,12 +4,11 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
-use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -17,46 +16,39 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\ReferencedFactory;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
     private ?ModelEvent $event;
-    private ?IModel $eventApplication = null;
+    private ?ActiveRow $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
     private ServiceEvent $serviceEvent;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
-    private ApplicationHandlerFactory $handlerFactory;
     private EventDispatchFactory $eventDispatchFactory;
 
     final public function injectTernary(
         ServiceEvent $serviceEvent,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
-        ApplicationHandlerFactory $handlerFactory,
         EventDispatchFactory $eventDispatchFactory
     ): void {
         $this->serviceEvent = $serviceEvent;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
-        $this->handlerFactory = $handlerFactory;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -80,11 +72,9 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
      * @throws GoneException
      */
-    public function authorizedDefault($eventId, $id): void {
+    public function authorizedDefault(): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
@@ -104,9 +94,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault(): void {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o'));
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fa fa-calendar-check-o'));
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
         }
     }
 
@@ -131,16 +121,14 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $eventId
-     * @param int $id
+     * @param int|null $eventId
+     * @param int|null $id
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
-     * @throws ConfigurationNotFoundException
-     * @throws CannotAccessModelException
      */
-    public function actionDefault($eventId, $id): void {
+    public function actionDefault(?int $eventId, ?int $id): void {
         if (!$this->getEvent()) {
             throw new EventNotFoundException();
         }
@@ -149,7 +137,7 @@ class ApplicationPresenter extends BasePresenter {
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            $event = ReferencedFactory::accessModel($eventApplication, ModelEvent::class);
+            $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }
@@ -178,7 +166,10 @@ class ApplicationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                $this->loginRedirect();
+                $this->redirect(':Core:Authentication:login', [
+                    'backlink' => $this->storeRequest(),
+                    AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+                ]);
             }
         }
     }
@@ -198,7 +189,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getEvent(), $logger);
+        $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
@@ -222,7 +213,7 @@ class ApplicationPresenter extends BasePresenter {
                     $eventId = $data['eventId'];
                 }
             }
-            $eventId = $eventId ?: $this->getParameter('eventId');
+            $eventId = $eventId ?? $this->getParameter('eventId');
             $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
@@ -230,10 +221,10 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|null
+     * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?IModel {
+    private function getEventApplication(): ?ActiveRow {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();

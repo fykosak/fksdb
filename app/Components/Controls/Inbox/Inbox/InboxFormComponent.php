@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
@@ -13,11 +13,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class InboxFormComponent extends SeriesTableFormComponent {
 
     private ServiceSubmit $serviceSubmit;
@@ -42,9 +37,9 @@ class InboxFormComponent extends SeriesTableFormComponent {
                     // secure check for rewrite ct_id.
                     throw new ForbiddenRequestException();
                 }
-                $submit = $this->serviceSubmit->findByContestant($ctId, $taskNo);
+                $submit = $this->serviceSubmit->findByContestantId($ctId, $taskNo);
                 if ($submittedOn && $submit) {
-                    //   $serviceSubmit->updateModel2($submit, ['submitted_on' => $submittedOn]);
+                    //   $serviceSubmit->updateModel($submit, ['submitted_on' => $submittedOn]);
                     //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), ILogger::INFO);
                 } elseif (!$submittedOn && $submit) {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Logger::WARNING);
@@ -66,12 +61,11 @@ class InboxFormComponent extends SeriesTableFormComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render(): void {
+    final public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 }

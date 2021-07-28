@@ -1,5 +1,5 @@
 {layout './@layout.latte'}
-{block #places}
+{block places}
     {foreach $places as $place}
         {var $team = $place->getTeam()}
         {if $team}
@@ -7,9 +7,9 @@
             <g transform="{$cor}">
                 <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
             </g>
-            {include #place 'place'=>$place ,'className'=>'occupied'}
+            {include place 'place'=>$place ,'className'=>'occupied'}
         {else}
-            {include #place 'place'=>$place ,'className'=>'free'}
+            {include place 'place'=>$place ,'className'=>'free'}
         {/if}
     {/foreach}
 {/block}

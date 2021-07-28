@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Security\Permission;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PaymentAssertion {
 
     /**
@@ -24,6 +19,6 @@ class PaymentAssertion {
     public function isPaymentEditable(Permission $acl, $role, $resourceId, $privilege): bool {
         /** @var ModelPayment $payment */
         $payment = $acl->getQueriedResource();
-        return \in_array($payment->getState(), [Machine\Machine::STATE_INIT, ModelPayment::STATE_NEW]);
+        return \in_array($payment->state, [Machine\Machine::STATE_INIT, ModelPayment::STATE_NEW]);
     }
 }

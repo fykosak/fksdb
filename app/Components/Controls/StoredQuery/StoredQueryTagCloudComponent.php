@@ -7,11 +7,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class StoredQueryTagCloudComponent extends BaseComponent {
 
     public const MODE_LIST = 'mode-list';
@@ -20,7 +15,7 @@ class StoredQueryTagCloudComponent extends BaseComponent {
     /**
      * @persistent
      */
-    public ?array $activeTagIds = [];
+    public array $activeTagIds = [];
 
     final public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
@@ -30,20 +25,19 @@ class StoredQueryTagCloudComponent extends BaseComponent {
         $this->activeTagIds = $activeTagIds;
     }
 
-    public function render(string $mode): void {
+    final public function render(string $mode): void {
         $this->template->mode = $mode;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
     }
 
-    public function renderList(): void {
+    final public function renderList(): void {
         $this->template->tags = $this->serviceStoredQueryTagType->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
     }
 
-    public function renderDetail(ModelStoredQuery $query): void {
+    final public function renderDetail(ModelStoredQuery $query): void {
         $this->template->tags = $query->getStoredQueryTagTypes();
         $this->render(self::MODE_DETAIL);
     }

@@ -4,13 +4,12 @@ namespace FKSDB\Tests\PresentersTests\PublicModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\Authentication\LoginUserStorage;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Application\UI\ITemplate;
+use Nette\Bridges\ApplicationLatte\Template;
 use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {
@@ -23,8 +22,6 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $this->fixture = $presenterFactory->createPresenter('Public:Register');
         $this->fixture->autoCanonicalize = false;
-
-        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
     public function testDispatch(): void {
@@ -35,9 +32,9 @@ class RegisterPresenterTest extends DatabaseTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = (string)$source;
         Assert::contains('Select contest', $html);
@@ -53,9 +50,9 @@ class RegisterPresenterTest extends DatabaseTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-        /** @var ITemplate $source */
+        /** @var TextResponse $response */
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(Template::class, $source);
 
         $html = $source->__toString();
         Assert::contains('contestant application', $html);

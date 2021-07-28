@@ -4,25 +4,20 @@ namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\YearCalculator;
 use Nette\Utils\DateTime;
+use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note IAuthenticator interface is not explicitly implemented due to 'array'
  * type hint at authenticate method.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
-    protected ServiceLogin $serviceLogin;
-    protected YearCalculator $yearCalculator;
 
-    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    protected ServiceLogin $serviceLogin;
+
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
-        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -30,6 +25,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @throws \Exception
      */
     protected function logAuthentication(ModelLogin $login): void {
-        $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
+        Debugger::log(sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()), 'auth-log');
+        $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

@@ -10,10 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\DI\Container;
 use FKSDB\Components\Controls\Stalking\Components;
 
-/**
- * Class StalkingContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class StalkingContainer extends BaseComponent {
 
     private ModelPerson $person;
@@ -26,11 +22,10 @@ class StalkingContainer extends BaseComponent {
         $this->userPermission = $userPermission;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->userPermissions = $this->userPermission;
         $this->template->person = $this->person;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
     }
 
     protected function createComponentPersonHistoryGrid(): PersonRelatedGrid {
@@ -61,6 +56,14 @@ class StalkingContainer extends BaseComponent {
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
     }
 
+    protected function createComponentEventScheduleGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());
+    }
+
+    protected function createComponentEmailMessageGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('email_message', $this->person, $this->userPermission, $this->getContext());
+    }
+
     protected function createComponentStalkingComponent(): StalkingComponent {
         return new StalkingComponent($this->getContext());
     }
@@ -75,10 +78,6 @@ class StalkingContainer extends BaseComponent {
 
     protected function createComponentFlag(): Components\FlagComponent {
         return new Components\FlagComponent($this->getContext());
-    }
-
-    protected function createComponentSchedule(): Components\ScheduleComponent {
-        return new Components\ScheduleComponent($this->getContext());
     }
 
     protected function createComponentValidation(): Components\ValidationComponent {

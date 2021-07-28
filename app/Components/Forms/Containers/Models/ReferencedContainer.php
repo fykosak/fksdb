@@ -7,22 +7,17 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
-use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
+use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class ReferencedContainer extends ContainerWithOptions {
 
     public const ID_MASK = 'frm%s-%s';
@@ -131,5 +126,5 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?IModel $model, string $mode): void;
+    abstract public function setModel(?ActiveRow $model, string $mode): void;
 }

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
@@ -12,8 +12,6 @@ use Nette\Database\Row;
 
 /**
  * General results sheet with contestants and their ranks.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractResultsModel {
 
@@ -36,17 +34,15 @@ abstract class AbstractResultsModel {
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected int $year;
-    protected ModelContest $contest;
+    protected ModelContestYear $contestYear;
     protected ServiceTask $serviceTask;
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
-    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
-        $this->contest = $contest;
+    public function __construct(ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection, EvaluationStrategy $evaluationStrategy) {
+        $this->contestYear = $contestYear;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;
-        $this->year = $year;
         $this->evaluationStrategy = $evaluationStrategy;
     }
 
@@ -127,8 +123,8 @@ abstract class AbstractResultsModel {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
             ->where([
-                'contest_id' => $this->contest->contest_id,
-                'year' => $this->year,
+                'contest_id' => $this->contestYear->contest_id,
+                'year' => $this->contestYear->year,
                 'series' => $series,
             ])
             ->order('tasknr');

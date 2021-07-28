@@ -2,17 +2,16 @@
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelSchedulePayment
  * @property-read ActiveRow payment
  * @property-read ActiveRow person_schedule
  * @property-read int person_schedule_id
  */
-class ModelSchedulePayment extends AbstractModelSingle {
+class ModelSchedulePayment extends AbstractModel {
 
     public function getPayment(): ModelPayment {
         return ModelPayment::createFromActiveRow($this->payment);

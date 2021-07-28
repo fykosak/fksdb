@@ -5,19 +5,15 @@ namespace FKSDB\Tests\ModelsTests\Export\Formats;
 $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\Exports\ExportFormatFactory;
-use FKSDB\Models\Exports\Formats\AESOPFormat;
-use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
-use Tester\Assert;
+use Tester\Environment;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
     private ExportFormatFactory $exportFactory;
     private StoredQueryFactory $queryFactory;
-
-    private AESOPFormat $fixture;
 
     public function __construct(Container $container) {
         parent::__construct($container);
@@ -26,7 +22,8 @@ class AESOPFormatTest extends DatabaseTestCase {
     }
 
     protected function setUp(): void {
-        global $container;
+        Environment::skip();
+        /*global $container;
         parent::setUp();
 
         //$queryFactory->setPresenter(new MockSeriesPresenter());
@@ -39,7 +36,7 @@ class AESOPFormatTest extends DatabaseTestCase {
         // AESOP format requires QID
         $storedQuery->setQId('aesop.ct');
 
-        $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
+        $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);*/
     }
 
     protected function tearDown(): void {
@@ -47,8 +44,8 @@ class AESOPFormatTest extends DatabaseTestCase {
     }
 
     public function testResponse(): void {
-        $response = $this->fixture->getResponse();
-        Assert::type(PlainTextResponse::class, $response);
+        /*  $response = $this->fixture->getResponse();
+          Assert::type(PlainTextResponse::class, $response);*/
     }
 }
 

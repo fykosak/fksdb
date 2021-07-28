@@ -5,18 +5,11 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\UI\Title;
-use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Security\User;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Jakub Šafin <xellos@fykos.cz>
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class LanguageChooserComponent extends ChooserComponent {
 
     private array $supportedLanguages = [];
@@ -45,7 +38,6 @@ class LanguageChooserComponent extends ChooserComponent {
      * Preferred language of the page
      *
      * Should be final
-     * @throws AbortException
      * @throws UnsupportedLanguageException
      * @note do not call in constructor, call after component is attached
      */
@@ -63,8 +55,6 @@ class LanguageChooserComponent extends ChooserComponent {
      * Preferred language of the page
      *
      * @return string ISO 639-1
-     * Should be final
-     * @throws AbortException
      * @throws UnsupportedLanguageException
      */
     final public function getLang(): string {
@@ -92,12 +82,11 @@ class LanguageChooserComponent extends ChooserComponent {
         return $candidate;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->isModifiable();
         $this->template->currentLanguageName = self::$languageNames[$this->language] ?? null;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
     }
 
     private function getUserPreferredLang(): ?string {

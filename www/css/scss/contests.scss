@@ -35,12 +35,8 @@
   background-color: darken($vyfukMainColor, 5%);
 }
 
-.bg-vyfuk-alt {
-  background-color: $vyfukMainColor;
-}
-
 .bg-vyfuk {
-  background-color: $vyfukAltColor;
+  background-color: $vyfukMainColor;
 }
 
 .bg-fykos {

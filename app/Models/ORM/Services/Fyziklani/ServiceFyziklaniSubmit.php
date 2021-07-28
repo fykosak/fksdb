@@ -6,22 +6,17 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 
 /**
- * @author Lukáš Timko <lukast@fykos.cz>
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
-class ServiceFyziklaniSubmit extends AbstractServiceSingle {
+class ServiceFyziklaniSubmit extends AbstractService {
 
     public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
-        /** @var ModelFyziklaniSubmit $row */
-        $row = $this->getTable()->where([
-            'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
-        ])->fetch();
-        return $row;
+        $row = $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
+        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
     }
 
     public function findAll(ModelEvent $event): TypedTableSelection {
@@ -29,6 +24,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     }
 
     public function getSubmitsAsArray(ModelEvent $event, ?string $lastUpdated): array {
+        // TODO to related
         $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {

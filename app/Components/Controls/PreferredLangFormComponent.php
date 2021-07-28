@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\ModelException;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
@@ -13,10 +13,6 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 
-/**
- * Class PreferredLangForm
- * @package FKSDB\Components\Forms\Controls
- */
 class PreferredLangFormComponent extends FormComponent {
 
     protected ModelPerson $person;
@@ -41,7 +37,7 @@ class PreferredLangFormComponent extends FormComponent {
         $values = $form->getValues();
         $lang = $values['preferred_lang'];
         try {
-            $this->servicePersonInfo->store($this->person, $this->person->getInfo(), ['preferred_lang' => $lang]);
+            $this->servicePersonInfo->storeModel(['preferred_lang' => $lang, 'person_id' => $this->person->person_id], $this->person->getInfo());
             $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
@@ -61,7 +57,7 @@ class PreferredLangFormComponent extends FormComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render(): void {
+    final public function render(): void {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);
         parent::render();
     }

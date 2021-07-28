@@ -4,11 +4,6 @@ namespace FKSDB\Models\Expressions\Comparison;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
 
-/**
- * Less or equal.
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Le extends EvaluatedExpression {
 
     /** @var callable|mixed */

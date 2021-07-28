@@ -5,25 +5,22 @@ namespace FKSDB\Models\Events\Model\Grid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\IModel;
-use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- *
  * @method SingleEventSource order()
  * @method SingleEventSource limit()
- * @method SingleEventSource count()
+ * @method int count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
 class SingleEventSource implements HolderSource {
@@ -35,12 +32,12 @@ class SingleEventSource implements HolderSource {
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private Holder $dummyHolder;
-    /** @var IModel[] */
+    /** @var ActiveRow[] */
     private ?array $primaryModels = null;
-    /** @var IModel[][] */
+    /** @var ActiveRow[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
-    private ?array $holders = [];
+    private array $holders = [];
 
     /**
      * SingleEventSource constructor.
@@ -55,9 +52,10 @@ class SingleEventSource implements HolderSource {
         $this->container = $container;
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
-        $primaryHolder = $this->dummyHolder->getPrimaryHolder();
-        $eventIdColumn = $primaryHolder->getEventIdColumn();
-        $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
+        $this->primarySelection = $this->dummyHolder->getPrimaryHolder()
+            ->getService()
+            ->getTable()
+            ->where($this->dummyHolder->getPrimaryHolder()->getEventIdColumn(), $this->event->getPrimary());
     }
 
     public function getEvent(): ModelEvent {
@@ -84,7 +82,7 @@ class SingleEventSource implements HolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[][] $group */
+        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
@@ -139,7 +137,7 @@ class SingleEventSource implements HolderSource {
      * @param array $args
      * @return SingleEventSource|int
      */
-    public function __call($name, $args) {
+    public function __call(string $name, array $args) {
         static $delegated = [
             'where' => false,
             'order' => false,
@@ -162,10 +160,30 @@ class SingleEventSource implements HolderSource {
      * @throws NeonSchemaException
      */
     public function getHolders(): array {
-        if ($this->primaryModels === null) {
+        if (!isset($this->primaryModels)) {
             $this->loadData();
             $this->createHolders();
         }
         return $this->holders;
+    }
+
+    /**
+     * @param int $primaryKey
+     * @return Holder
+     * @throws NeonSchemaException
+     */
+    public function getHolder(int $primaryKey): Holder {
+        $primaryModel = $this->dummyHolder->getPrimaryHolder()->getService()->findByPrimary($primaryKey);
+
+        $cache = [];
+        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+            $secondaryModel = $group['service']->findByPrimary($primaryModel->{$group['joinOn']});
+            $cache[$key] = $cache[$key] ?? [];
+            $cache[$key][] = $secondaryModel;
+        }
+
+        $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
+        $holder->setModel($primaryModel, $cache);
+        return $holder;
     }
 }

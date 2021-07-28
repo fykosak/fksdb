@@ -10,10 +10,6 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-/**
- * Trait ReactField
- * @author Michal Červeňák <miso@fykos.cz>
- */
 trait ReactComponentTrait {
 
     private MemoryLogger $logger;
@@ -30,6 +26,7 @@ trait ReactComponentTrait {
 
     /**
      * @throws BadRequestException
+     * @note Can be used only with BaseControl
      */
     protected function appendProperty(): void {
         if (!$this instanceof BaseControl) {

@@ -7,13 +7,8 @@ use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
-use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 
-/**
- * Class CorrectedControl
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CorrectedComponent extends SeriesTableComponent {
 
     private CorrectedStorage $correctedStorage;
@@ -22,10 +17,9 @@ class CorrectedComponent extends SeriesTableComponent {
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render(): void {
+    final public function render(): void {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
     /**
@@ -43,10 +37,6 @@ class CorrectedComponent extends SeriesTableComponent {
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];

@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\Expressions;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class VariadicExpression extends EvaluatedExpression {
 
     protected array $arguments;

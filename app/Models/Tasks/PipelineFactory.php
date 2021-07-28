@@ -13,8 +13,6 @@ use FKSDB\Models\Pipeline\Pipeline;
 /**
  * This is not real factory, it's only used as an internode for defining
  * pipelines inside Neon and inject them into presenters at once.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class PipelineFactory {
 

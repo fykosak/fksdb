@@ -5,7 +5,7 @@ import json
 import os
 import sys
 
-output_path = '../typescript/src/i18n/i18n-data.ts'
+output_path = './i18n-data.ts'
 js_pattern = re.compile('^#: .*\.tsx')
 
 # TODO add support for context and plurals

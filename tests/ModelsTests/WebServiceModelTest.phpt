@@ -49,7 +49,7 @@ class WebServiceModelTest extends DatabaseTestCase {
             'year' => 1,
             'brojure' => '1 2 3 4 5 6',
         ];
-        $result = $this->fixture->getResults((object)$resultsReq);
+        $result = $this->fixture->GetResults((object)$resultsReq);
 
         Assert::type(SoapVar::class, $result);
     }

@@ -10,8 +10,6 @@ use FKSDB\Models\Pipeline\Stage;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class DeadlineFromXML extends Stage {
 
@@ -36,7 +34,7 @@ class DeadlineFromXML extends Stage {
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
         foreach ($this->data->getTasks() as $task) {
-            $this->taskService->updateModel2($task, ['submit_deadline' => $datetime]);
+            $this->taskService->updateModel($task, ['submit_deadline' => $datetime]);
         }
     }
 

@@ -6,10 +6,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 
-/**
- * Class ScheduleContainer
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ScheduleContainer extends ContainerWithOptions {
 
     private bool $isAttached = false;

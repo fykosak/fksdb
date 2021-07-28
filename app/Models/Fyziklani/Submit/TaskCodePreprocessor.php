@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 
-/**
- * @author Michal Červeňák
- * @author Lukáš Timko
- */
 final class TaskCodePreprocessor {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
@@ -73,11 +69,11 @@ final class TaskCodePreprocessor {
         $fullCode = self::createFullCode($code);
 
         $teamId = self::extractTeamId($fullCode);
-
-        if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
+        $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        if (!$team || ($team->event_id !== $this->event->event_id)) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
-        return $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        return $team;
     }
 
     /**

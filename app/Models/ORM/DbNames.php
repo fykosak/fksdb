@@ -1,10 +1,7 @@
 <?php
 
 namespace FKSDB\Models\ORM;
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
+
 class DbNames {
 
     public const TAB_ADDRESS = 'address';
@@ -17,7 +14,6 @@ class DbNames {
     public const TAB_EVENT_PARTICIPANT = 'event_participant';
     public const TAB_EVENT_TYPE = 'event_type';
     public const TAB_FLAG = 'flag';
-    public const TAB_GLOBAL_SESSION = 'global_session';
     public const TAB_GRANT = 'grant';
     public const TAB_LOGIN = 'login';
     public const TAB_ORG = 'org';
@@ -44,7 +40,6 @@ class DbNames {
     public const TAB_TASK_CONTRIBUTION = 'task_contribution';
     public const TAB_TASK_STUDY_YEAR = 'task_study_year';
     public const TAB_TEACHER = 'teacher';
-    public const VIEW_CONTESTANT = 'v_contestant';
     /* payment */
     public const TAB_PAYMENT = 'payment';
 
@@ -66,4 +61,10 @@ class DbNames {
     public const TAB_SCHEDULE_ITEM = 'schedule_item';
     public const TAB_PERSON_SCHEDULE = 'person_schedule';
     public const TAB_SCHEDULE_PAYMENT = 'schedule_payment';
+
+    /* warehouse */
+    public const TAB_WAREHOUSE_PRODUCER = 'warehouse_producer';
+    public const TAB_WAREHOUSE_PRODUCT = 'warehouse_product';
+    public const TAB_WAREHOUSE_ITEM = 'warehouse_item';
+
 }

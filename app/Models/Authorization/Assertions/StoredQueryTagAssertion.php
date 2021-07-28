@@ -4,16 +4,11 @@ namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
-use Nette\Security\IResource;
-use Nette\Security\IRole;
+use Nette\Security\Resource;
+use Nette\Security\Role;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class StoredQueryTagAssertion {
 
     use SmartObject;
@@ -33,8 +28,8 @@ class StoredQueryTagAssertion {
 
     /**
      * @param Permission $acl
-     * @param IRole $role
-     * @param IResource|string|null $resourceId
+     * @param Role $role
+     * @param Resource|string|null $resourceId
      * @param string|null $privilege
      * @return bool
      */
@@ -50,5 +45,4 @@ class StoredQueryTagAssertion {
         }
         return false;
     }
-
 }

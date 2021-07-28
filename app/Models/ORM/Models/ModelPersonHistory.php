@@ -2,24 +2,26 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int ac_year
- * @property-read int school_id
+ * @property-read int|null school_id
+ * @property-read ActiveRow|null school
+ * @property-read ActiveRow person
+ * @property-read int person_id
  * @property-read string class
  * @property-read int study_year
  */
-class ModelPersonHistory extends OldAbstractModelSingle {
+class ModelPersonHistory extends AbstractModel {
 
     public function getPerson(): ModelPerson {
-        return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getSchool(): ModelSchool {
-        return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
+    public function getSchool(): ?ModelSchool {
+        return $this->school ? ModelSchool::createFromActiveRow($this->school) : null;
     }
 
     public function extrapolate(int $acYear): ModelPersonHistory {
@@ -30,11 +32,12 @@ class ModelPersonHistory extends OldAbstractModelSingle {
             'class' => $this->extrapolateClass($this->class, $diff),
             'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
-        $result = new self([], $this->getTable());
+
+        $tmpData = [];
         foreach ($data as $key => $value) {
-            $result->$key = $value; // this is workaround to properly set modfified flag
+            $tmpData[$key] = $value; // this is workaround to properly set modfified flag
         }
-        return $result;
+        return new self($tmpData, $this->getTable());
     }
 
     /** @var string[][] */
@@ -44,12 +47,7 @@ class ModelPersonHistory extends OldAbstractModelSingle {
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
-    /**
-     * @param string|null $class
-     * @param int $diff
-     * @return string|string[]|null
-     */
-    private function extrapolateClass(string $class = null, int $diff = 0) {
+    private function extrapolateClass(?string $class = null, int $diff = 0): ?string {
         if (!$class) {
             return null;
         }

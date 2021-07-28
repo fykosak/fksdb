@@ -4,13 +4,11 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\Results\ModelCategory;
-use Nette;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2011 extends EvaluationStrategy {
 
@@ -38,7 +36,7 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
             case ModelCategory::CAT_ES_9:
                 return [null, 9];
             default:
-                throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->id);
         }
     }
 

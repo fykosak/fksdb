@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
@@ -14,14 +13,13 @@ use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * Class ExportPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
 class ExportPresenter extends BasePresenter {
@@ -67,7 +65,7 @@ class ExportPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
     }
 
     /**
@@ -84,6 +82,12 @@ class ExportPresenter extends BasePresenter {
                     $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
             }
+            $this->getStoredQuery()->setParameters($parameters);
+            if ($this->getParameter('format')) {
+                /** @var ResultsComponent $resultsComponent */
+                $resultsComponent = $this->getComponent('resultsComponent');
+                $resultsComponent->handleFormat($this->getParameter('format'));
+            }
         }
     }
 
@@ -92,14 +96,14 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function renderExecute(): void {
+    final public function renderExecute(): void {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): int {
+    public function getAllowedAuthMethods(): array {
         $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
+            $methods[self::AUTH_HTTP] = true;
         }
         return $methods;
     }
@@ -160,7 +164,7 @@ class ExportPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

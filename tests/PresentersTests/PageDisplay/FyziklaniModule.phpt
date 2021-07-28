@@ -2,6 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
+use DateTime;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
@@ -18,8 +19,8 @@ class FyziklaniModule extends EventModuleTestCase {
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new \DateTime(),
-            'end' => new \DateTime(),
+            'begin' => new DateTime(),
+            'end' => new DateTime(),
             'name' => 'TEST FOF',
         ];
     }
@@ -28,10 +29,10 @@ class FyziklaniModule extends EventModuleTestCase {
         parent::setUp();
         $this->insert(DbNames::TAB_FYZIKLANI_GAME_SETUP, [
             'event_id' => $this->eventId,
-            'game_start' => new \DateTime(),
-            'result_display' => new \DateTime(),
-            'result_hide' => new \DateTime(),
-            'game_end' => new \DateTime(),
+            'game_start' => new DateTime(),
+            'result_display' => new DateTime(),
+            'result_hide' => new DateTime(),
+            'game_end' => new DateTime(),
             'refresh_delay' => 1000,
             'tasks_on_board' => 7,
             'result_hard_display' => false,

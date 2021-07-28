@@ -7,7 +7,8 @@ use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\ModelContestYear;
+use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -18,11 +19,9 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\InvalidStateException;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
@@ -49,8 +48,6 @@ use FKSDB\Models\Persons\SelfResolver;
  *     - otherwise use last contestant from any contest (Vyfuk <= FYKOS)
  *
  * Just proof of concept (obsoleted due to ReferencedPerson).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter {
 
@@ -94,23 +91,18 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     public function titleEmail(): void {
-        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
+        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name));
     }
 
     public function titleContestant(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
-    /**
-     * @throws AbortException
-     */
+
     public function actionDefault(): void {
         $this->redirect('contest');
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionContestant(): void {
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
@@ -124,14 +116,14 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $person = $this->servicePerson->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {
-                    $this->flashMessage(_('Byl nalezen existující účet, pro pokračování se přihlaste.'));
+                    $this->flashMessage(_('An existing account found. To continue, please sign in.'));
                     $this->redirect(':Core:Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }
         }
 
         if ($this->getSelectedContest() && $person) {
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants();
             $contest = $this->getSelectedContest();
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
@@ -142,26 +134,22 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    public function renderContest(): void {
+    final public function renderContest(): void {
         $this->template->contests = $this->serviceContest->getTable();
     }
 
-    /**
-     * @return void
-     * @throws AbortException
-     */
-    public function renderYear(): void {
+    final public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
             $years = [
-                $this->yearCalculator->getCurrentYear($contest),
-                $this->yearCalculator->getCurrentYear($contest) + $forward,
+                $contest->getCurrentContestYear()->year,
+                $contest->getCurrentContestYear()->year + $forward,
             ];
 
             $this->template->years = $years;
         } else {
-            $this->redirect('email', ['year' => $this->yearCalculator->getCurrentYear($contest),]);
+            $this->redirect('email', ['year' => $contest->getCurrentContestYear()->year,]);
         }
     }
 
@@ -169,7 +157,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return void
      * @throws BadTypeException
      */
-    public function renderContestant(): void {
+    final public function renderContestant(): void {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
@@ -190,11 +178,13 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $this->year;
     }
 
-    public function getSelectedAcademicYear(): int {
-        if (!$this->getSelectedContest()) {
-            throw new InvalidStateException(_('Cannot get academic year without selected contest.'));
+    public function getSelectedContestYear(): ?ModelContestYear {
+        $contest = $this->getSelectedContest();
+        if (is_null($contest)) {
+            return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        $row = $contest->getContestYears()->where('year', $this->year)->fetch();
+        return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
     private function getPerson(): ?ModelPerson {
@@ -223,10 +213,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
     private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);
@@ -237,8 +223,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @throws \ReflectionException
      */
     private function getFieldsDefinition(): array {
-        $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
 
@@ -256,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
-            $this->getSelectedAcademicYear(),
+            $this->getSelectedContestYear(),
             PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),
@@ -273,7 +258,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $form->addComponent($captcha, 'captcha');
         }
 
-        $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
+        $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContestYear(), $this->getLang());
 
         $submit = $form->addSubmit('register', _('Register'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
@@ -296,7 +281,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    public function getModel(): ?AbstractModelSingle {
+    public function getModel(): ?AbstractModel {
         return null; //we always create new contestant
     }
 

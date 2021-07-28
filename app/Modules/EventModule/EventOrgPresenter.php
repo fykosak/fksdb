@@ -2,9 +2,9 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
+use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
-use FKSDB\Models\Entity\CannotAccessModelException;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Messages\Message;
@@ -12,14 +12,11 @@ use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\UI\PageTitle;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Security\IResource;
+use Nette\Security\Resource;
 
 /**
- * Class EventOrgPresenter
- * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelEventOrg getEntity()
  */
 class EventOrgPresenter extends BasePresenter {
@@ -32,11 +29,11 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-users');
+        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
+        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
     }
 
     /**
@@ -47,11 +44,11 @@ class EventOrgPresenter extends BasePresenter {
      * @throws CannotAccessModelException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
     /**
-     * @param IResource|string|null $resource
+     * @param Resource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
@@ -60,9 +57,6 @@ class EventOrgPresenter extends BasePresenter {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
-    /**
-     * @throws AbortException
-     */
     public function actionDelete(): void {
         try {
             $this->traitHandleDelete();

@@ -7,10 +7,6 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Class ModelPresenter
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ModelPresenter extends BasePresenter {
 
     /**
@@ -21,12 +17,8 @@ class ModelPresenter extends BasePresenter {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
     }
 
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-cubes'));
+        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-project-diagram'));
     }
 
     /**

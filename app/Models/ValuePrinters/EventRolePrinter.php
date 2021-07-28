@@ -5,21 +5,13 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
-/**
- * Class EventRole
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventRolePrinter {
 
-    private YearCalculator $yearCalculator;
-
-    public function __construct(YearCalculator $yearCalculator) {
-        $this->yearCalculator = $yearCalculator;
-    }
+    use SmartObject;
 
     public function __invoke(ModelPerson $person, ModelEvent $event): Html {
         if (!$person) {
@@ -28,7 +20,7 @@ class EventRolePrinter {
                 ->addText(_('No user found'));
         }
         $container = Html::el('span');
-        $roles = $person->getRolesForEvent($event, $this->yearCalculator);
+        $roles = $person->getRolesForEvent($event);
         if (!\count($roles)) {
             $container->addHtml(Html::el('span')
                 ->addAttributes(['class' => 'badge badge-danger'])

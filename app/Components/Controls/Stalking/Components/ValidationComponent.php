@@ -8,10 +8,6 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 
-/**
- * Class Validation
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class ValidationComponent extends BaseStalkingComponent {
 
     private DataTestingFactory $validationFactory;
@@ -20,7 +16,7 @@ class ValidationComponent extends BaseStalkingComponent {
         $this->validationFactory = $factory;
     }
 
-    public function render(ModelPerson $person, int $userPermissions): void {
+    final public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
@@ -28,7 +24,6 @@ class ValidationComponent extends BaseStalkingComponent {
         }
 
         $this->template->logs = $logger->getMessages();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
-        $this->template->render();
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
     }
 }

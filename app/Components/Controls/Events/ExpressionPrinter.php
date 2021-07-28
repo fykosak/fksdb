@@ -5,15 +5,11 @@ namespace FKSDB\Components\Controls\Events;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ExpressionPrinter {
     use SmartObject;
 
     /**
-     * @param callable|mixed $expression
+     * @param mixed $expression
      * @return string
      */
     public function printExpression($expression): string {

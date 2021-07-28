@@ -7,10 +7,6 @@ use FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use Nette\DI\CompilerExtension;
 
-/**
- * Class PaymentExtension
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PaymentExtension extends CompilerExtension {
     public const MACHINE_PREFIX = 'machine.';
 

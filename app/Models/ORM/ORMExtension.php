@@ -3,8 +3,8 @@
 namespace FKSDB\Models\ORM;
 
 use FKSDB\Models\ORM\Columns\Types\{
-    DateTime\DateRow,
-    DateTime\DateTimeRow,
+    DateTime\DateColumnFactory,
+    DateTime\DateTimeColumnFactory,
     EmailColumnFactory,
     IntColumnFactory,
     LogicColumnFactory,
@@ -13,18 +13,14 @@ use FKSDB\Models\ORM\Columns\Types\{
     StringColumnFactory,
     PhoneColumnFactory,
     TextColumnFactory,
-    DateTime\TimeRow
+    DateTime\TimeColumnFactory,
 };
 use FKSDB\Models\ORM\Links\Link;
-use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
-use Nette\DI\Definitions\Statement;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Nette\DI\Definitions\Statement;
 
-/**
- * @author Michal Červeňák <miso@fykos.cz>
- */
-class ORMExtension extends CompilerExtension {
+class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
 
     /**
      * @throws NotImplementedException
@@ -33,19 +29,19 @@ class ORMExtension extends CompilerExtension {
         foreach ($this->config as $tableName => $fieldDefinitions) {
             $this->tryRegisterORMService($tableName, $fieldDefinitions);
             foreach ($fieldDefinitions['columnFactories'] as $fieldName => $field) {
-                $this->createColumnFactory($tableName, $fieldDefinitions['modelClassName'], $fieldName, $field);
+                $this->createColumnFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
             foreach ($fieldDefinitions['linkFactories'] as $fieldName => $field) {
-                $this->createLinkFactory($tableName, $fieldDefinitions['modelClassName'], $fieldName, $field);
+                $this->createLinkFactory($tableName, $fieldDefinitions['model'], $fieldName, $field);
             }
         }
     }
 
     private function tryRegisterORMService(string $tableName, array $fieldDefinitions): void {
-        if (isset($fieldDefinitions['serviceClassName'])) {
+        if (isset($fieldDefinitions['service'])) {
             $builder = $this->getContainerBuilder();
             $factory = $builder->addDefinition($this->prefix($tableName . '.service'));
-            $factory->setFactory($fieldDefinitions['serviceClassName'], [$tableName, $fieldDefinitions['modelClassName']]);
+            $factory->setFactory($fieldDefinitions['service'], [$tableName, $fieldDefinitions['model']]);
         }
     }
 
@@ -160,15 +156,15 @@ class ORMExtension extends CompilerExtension {
     }
 
     private function registerDateTimeRow(ServiceDefinition $factory, string $tableName, string $modelClassName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, DateTimeRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, DateTimeColumnFactory::class, $field);
     }
 
     private function registerDateRow(ServiceDefinition $factory, string $tableName, string $modelClassName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, DateRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, DateColumnFactory::class, $field);
     }
 
     private function registerTimeRow(ServiceDefinition $factory, string $tableName, string $modelClassName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, TimeRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $modelClassName, $fieldName, TimeColumnFactory::class, $field);
     }
 
     private function registerAbstractDateTimeRow(ServiceDefinition $factory, string $tableName, string $modelClassName, string $fieldName, string $factoryClassName, array $field): void {

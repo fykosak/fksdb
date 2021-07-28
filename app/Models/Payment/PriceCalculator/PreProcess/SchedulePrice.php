@@ -7,10 +7,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 
-/**
- * Class SchedulePrice
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SchedulePrice implements Preprocess {
     /**
      * @param ModelPayment $modelPayment

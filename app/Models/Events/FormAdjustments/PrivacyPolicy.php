@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\Processing;
@@ -19,17 +18,13 @@ use Nette\Utils\ArrayHash;
 /**
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class PrivacyPolicy implements Processing, FormAdjustment {
 
     use SmartObject;
 
     protected const CONTROL_NAME = 'privacy';
-
     private ServicePersonInfo $servicePersonInfo;
-
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
@@ -39,14 +34,13 @@ class PrivacyPolicy implements Processing, FormAdjustment {
 
     /**
      * @param Form $form
-     * @param Machine $machine
      * @param Holder $holder
      * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function adjust(Form $form, Machine $machine, Holder $holder): void {
-        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
+    public function adjust(Form $form, Holder $holder): void {
+        if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return;
         }
 
@@ -70,11 +64,8 @@ class PrivacyPolicy implements Processing, FormAdjustment {
                 $personId = $value;
                 $personInfo = $this->servicePersonInfo->findByPrimary($personId);
                 if ($personInfo) {
+                    $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
 
-                    $this->servicePersonInfo->updateModel2($personInfo, ['agreed' => 1]);
-
-                    // This is done in ApplicationHandler transaction, still can be rolled back.
-                    //$this->servicePersonInfo->save($personInfo);
                     $values[$key . '_1']['person_info']['agreed'] = 1;
                 }
             }
