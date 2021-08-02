@@ -289,7 +289,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
             return true;
         }
 
-        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source);
+        return (bool)preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source);
     }
 
     /**

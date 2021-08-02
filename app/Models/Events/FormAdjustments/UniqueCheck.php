@@ -31,11 +31,9 @@ class UniqueCheck extends AbstractAdjustment
         }
 
         foreach ($controls as $name => $control) {
-            $name = $holder->hasBaseHolder($name) ? $name : substr(
-                $this->field,
-                0,
-                strpos($this->field, self::DELIMITER)
-            );
+            $name = $holder->hasBaseHolder((string)$name)
+                ? $name
+                : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
             $control->addRule(
                 function (Control $control) use ($baseHolder): bool {
