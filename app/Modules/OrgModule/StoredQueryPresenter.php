@@ -18,13 +18,15 @@ use Nette\Security\Resource;
 /**
  * @method ModelStoredQuery getEntity()
  */
-class StoredQueryPresenter extends BasePresenter {
+class StoredQueryPresenter extends BasePresenter
+{
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 
     private ServiceStoredQuery $serviceStoredQuery;
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void
+    {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -33,11 +35,13 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen'));
     }
 
-    public function getTitleCreate(): PageTitle {
+    public function getTitleCreate(): PageTitle
+    {
         return new PageTitle(sprintf(_('Create query')), 'fa fa-plus');
     }
 
@@ -45,7 +49,8 @@ class StoredQueryPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-file-csv'));
     }
 
@@ -54,7 +59,8 @@ class StoredQueryPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void {
+    public function titleDetail(): void
+    {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
         if ($qid) {
@@ -64,7 +70,8 @@ class StoredQueryPresenter extends BasePresenter {
         $this->setPageTitle(new PageTitle($title, 'fa fa-file-csv'));
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         switch ($this->getAction()) {
             case 'execute':
                 $this->redirect(':Org:Export:execute', $this->getParameters());
@@ -76,11 +83,13 @@ class StoredQueryPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentCreateForm(): StoredQueryFormComponent {
+    protected function createComponentCreateForm(): StoredQueryFormComponent
+    {
         return new StoredQueryFormComponent($this->getContext(), null);
     }
 
@@ -88,21 +97,25 @@ class StoredQueryPresenter extends BasePresenter {
      * @return StoredQueryFormComponent
      * @throws ModelNotFoundException
      */
-    protected function createComponentEditForm(): StoredQueryFormComponent {
+    protected function createComponentEditForm(): StoredQueryFormComponent
+    {
         return new StoredQueryFormComponent($this->getContext(), $this->getEntity());
     }
 
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');
         return new StoredQueriesGrid($this->getContext(), $cloud->activeTagIds);
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent
+    {
         return new StoredQueryTagCloudComponent($this->getContext());
     }
 
-    protected function getORMService(): ServiceStoredQuery {
+    protected function getORMService(): ServiceStoredQuery
+    {
         return $this->serviceStoredQuery;
     }
 
@@ -111,7 +124,8 @@ class StoredQueryPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

@@ -13,7 +13,8 @@ use Fykosak\NetteORM\TypedTableSelection;
 /**
  * @todo Prominent example for necessity of caching.
  */
-class SeriesTable {
+class SeriesTable
+{
 
     public const FORM_SUBMIT = 'submit';
     public const FORM_CONTESTANT = 'contestant';
@@ -34,44 +35,53 @@ class SeriesTable {
      */
     private ?array $taskFilter = null;
 
-    public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
+    public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit)
+    {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
         $this->serviceSubmit = $serviceSubmit;
     }
 
-    public function setContestYear(ModelContestYear $contestYear): void {
+    public function setContestYear(ModelContestYear $contestYear): void
+    {
         $this->contestYear = $contestYear;
     }
 
-    public function getContestYear(): ModelContestYear {
+    public function getContestYear(): ModelContestYear
+    {
         return $this->contestYear;
     }
 
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
-    public function setSeries(int $series): void {
+    public function setSeries(int $series): void
+    {
         $this->series = $series;
     }
 
-    public function getTaskFilter(): ?array {
+    public function getTaskFilter(): ?array
+    {
         return $this->taskFilter;
     }
 
-    public function setTaskFilter(?array $taskFilter): void {
+    public function setTaskFilter(?array $taskFilter): void
+    {
         $this->taskFilter = $taskFilter;
     }
 
-    public function getContestants(): TypedTableSelection {
+    public function getContestants(): TypedTableSelection
+    {
         return $this->serviceContestant->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
             'year' => $this->contestYear->year,
         ])->order('person.family_name, person.other_name, person.person_id');
     }
 
-    public function getTasks(): TypedTableSelection {
+    public function getTasks(): TypedTableSelection
+    {
         $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
             'year' => $this->contestYear->year,
@@ -84,13 +94,15 @@ class SeriesTable {
         return $tasks->order('tasknr');
     }
 
-    public function getSubmits(): TypedTableSelection {
+    public function getSubmits(): TypedTableSelection
+    {
         return $this->serviceSubmit->getTable()
             ->where('ct_id', $this->getContestants())
             ->where('task_id', $this->getTasks());
     }
 
-    public function getSubmitsTable(): array {
+    public function getSubmitsTable(): array
+    {
         $submits = $this->getSubmits();
 
         // store submits in 2D hash for better access
@@ -105,7 +117,8 @@ class SeriesTable {
         return $submitsTable;
     }
 
-    public function formatAsFormValues(): array {
+    public function formatAsFormValues(): array
+    {
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
@@ -123,7 +136,8 @@ class SeriesTable {
         ];
     }
 
-    public function getFingerprint(): string {
+    public function getFingerprint(): string
+    {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {

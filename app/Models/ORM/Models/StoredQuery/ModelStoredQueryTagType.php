@@ -11,5 +11,6 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string description
  * @property-read int color
  */
-class ModelStoredQueryTagType extends AbstractModel {
+class ModelStoredQueryTagType extends AbstractModel
+{
 }

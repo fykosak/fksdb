@@ -6,7 +6,8 @@ use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 
-class TasksFromXML extends Stage {
+class TasksFromXML extends Stage
+{
 
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
@@ -22,18 +23,21 @@ class TasksFromXML extends Stage {
 
     private ServiceTask $taskService;
 
-    public function __construct(ServiceTask $taskService) {
+    public function __construct(ServiceTask $taskService)
+    {
         $this->taskService = $taskService;
     }
 
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
@@ -46,11 +50,13 @@ class TasksFromXML extends Stage {
         }
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void
+    {
         $series = $this->data->getSeries();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -105,5 +111,4 @@ class TasksFromXML extends Stage {
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);
     }
-
 }

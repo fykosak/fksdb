@@ -22,22 +22,26 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use Tracy\Debugger;
 
-class SubmitsGrid extends BaseGrid {
+class SubmitsGrid extends BaseGrid
+{
 
     private ModelContestant $contestant;
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function __construct(Container $container, ModelContestant $contestant) {
+    public function __construct(Container $container, ModelContestant $contestant)
+    {
         parent::__construct($container);
         $this->contestant = $contestant;
     }
 
-    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void
+    {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $submits = $this->contestant->related(DbNames::TAB_SUBMIT);
         return new NDataSource($submits);
     }
@@ -47,7 +51,8 @@ class SubmitsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');
@@ -107,7 +112,8 @@ class SubmitsGrid extends BaseGrid {
         $this->enableSorting = false;
     }
 
-    public function handleRevoke(int $id): void {
+    public function handleRevoke(int $id): void
+    {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
@@ -124,7 +130,8 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id): void {
+    public function handleDownloadUploaded(int $id): void
+    {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
@@ -137,7 +144,8 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id): void {
+    public function handleDownloadCorrected(int $id): void
+    {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
@@ -146,7 +154,8 @@ class SubmitsGrid extends BaseGrid {
         }
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelSubmit::class;
     }
 }

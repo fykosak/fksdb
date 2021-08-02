@@ -8,12 +8,14 @@ use Nette\Database\Table\ActiveRow;
 /**
  * @property-read ActiveRow address
  */
-class ModelPostContact extends AbstractModel {
+class ModelPostContact extends AbstractModel
+{
 
     public const TYPE_DELIVERY = 'D';
     public const TYPE_PERMANENT = 'P';
 
-    public function getAddress(): ?ModelAddress {
+    public function getAddress(): ?ModelAddress
+    {
         return $this->address ? ModelAddress::createFromActiveRow($this->address) : null;
     }
 }

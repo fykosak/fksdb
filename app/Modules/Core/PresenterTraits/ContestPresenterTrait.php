@@ -17,7 +17,8 @@ use Nette\Security\User;
  * @property ServiceContest $serviceContest
  * @method User getUser()
  */
-trait ContestPresenterTrait {
+trait ContestPresenterTrait
+{
 
     /**
      * @persistent
@@ -29,7 +30,8 @@ trait ContestPresenterTrait {
      * @return void
      * @throws BadRequestException
      */
-    protected function contestTraitStartup(): void {
+    protected function contestTraitStartup(): void
+    {
         $contest = $this->getSelectedContest();
         if (!isset($contest) || !$this->isValidContest($contest)) {
             $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
@@ -40,7 +42,8 @@ trait ContestPresenterTrait {
      * @return ModelContest
      * @throws BadRequestException
      */
-    private function selectContest(): ModelContest {
+    private function selectContest(): ModelContest
+    {
         /** @var ModelContest $candidate */
         $candidate = $this->getAvailableContests()->fetch();
         if (!$this->isValidContest($candidate)) {
@@ -49,14 +52,16 @@ trait ContestPresenterTrait {
         return $candidate;
     }
 
-    private function isValidContest(?ModelContest $contest): bool {
+    private function isValidContest(?ModelContest $contest): bool
+    {
         if (!$contest) {
             return false;
         }
         return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
     }
 
-    public function getSelectedContest(): ?ModelContest {
+    public function getSelectedContest(): ?ModelContest
+    {
         if (!isset($this->contest)) {
             $this->contest = $this->serviceContest->findByPrimary($this->contestId);
         }
@@ -66,7 +71,8 @@ trait ContestPresenterTrait {
     /**
      * @return TypedTableSelection|ModelContest[]
      */
-    private function getAvailableContests(): TypedTableSelection {
+    private function getAvailableContests(): TypedTableSelection
+    {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -98,7 +104,8 @@ trait ContestPresenterTrait {
         }
     }
 
-    protected function createComponentContestChooser(): ContestChooserComponent {
+    protected function createComponentContestChooser(): ContestChooserComponent
+    {
         return new ContestChooserComponent($this->getContext(), $this->getSelectedContest(), $this->getAvailableContests());
     }
 

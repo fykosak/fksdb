@@ -8,7 +8,8 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
 
-class ExportWebModel extends WebModel {
+class ExportWebModel extends WebModel
+{
 
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
@@ -27,7 +28,8 @@ class ExportWebModel extends WebModel {
      * @throws BadRequestException
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         // parse arguments
         if (!isset($args->qid)) {
             throw new \SoapFault('Sender', 'QId is not present');
@@ -76,7 +78,8 @@ class ExportWebModel extends WebModel {
         return new \SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
     }
 
-    private function isAuthorizedExport(StoredQuery $query): bool {
+    private function isAuthorizedExport(StoredQuery $query): bool
+    {
         $implicitParameters = $query->getImplicitParameters();
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
             return false;

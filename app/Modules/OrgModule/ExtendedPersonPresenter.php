@@ -21,13 +21,15 @@ use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter as IExtendedPersonPresenter;
 
-abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
+abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter
+{
 
     protected bool $sendEmail = true;
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory, ExtendedPersonHandlerFactory $handlerFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory, ExtendedPersonHandlerFactory $handlerFactory): void
+    {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->handlerFactory = $handlerFactory;
     }
@@ -36,7 +38,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param ModelContestant|null|AbstractModel $model
      * @param Form|Control[][] $form
      */
-    protected function setDefaults(?AbstractModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModel $model, Form $form): void
+    {
         if (!$model) {
             return;
         }
@@ -50,7 +53,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return array
      * @throws \ReflectionException
      */
-    protected function getFieldsDefinition(): array {
+    protected function getFieldsDefinition(): array
+    {
         $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
@@ -59,7 +63,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function getORMService(): AbstractService;
 
-    protected function getAcYearFromModel(): ?ModelContestYear {
+    protected function getAcYearFromModel(): ?ModelContestYear
+    {
         return null;
     }
 
@@ -69,7 +74,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    private function createComponentFormControl(bool $create): FormControl {
+    private function createComponentFormControl(bool $create): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -111,7 +117,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final protected function createComponentCreateComponent(): FormControl {
+    final protected function createComponentCreateComponent(): FormControl
+    {
         return $this->createComponentFormControl(true);
     }
 
@@ -121,11 +128,13 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final protected function createComponentEditComponent(): FormControl {
+    final protected function createComponentEditComponent(): FormControl
+    {
         return $this->createComponentFormControl(false);
     }
 
-    protected function loadModel(int $id): ?AbstractModel {
+    protected function loadModel(int $id): ?AbstractModel
+    {
         return $this->getORMService()->findByPrimary($id);
     }
 }

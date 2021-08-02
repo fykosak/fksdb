@@ -4,7 +4,8 @@ namespace FKSDB\Components\Charts\Core;
 
 use Nette\ComponentModel\IComponent;
 
-interface Chart {
+interface Chart
+{
 
     public function getTitle(): string;
 

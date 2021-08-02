@@ -16,21 +16,24 @@ use Nette\Security\Resource;
 /**
  * @method ModelEvent getEntity()
  */
-class EventPresenter extends BasePresenter {
-
+class EventPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private ServiceEvent $serviceEvent;
 
-    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void
+    {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function getTitleList(): PageTitle {
+    public function getTitleList(): PageTitle
+    {
         return new PageTitle(_('Events'), 'fa fa-calendar-alt');
     }
 
-    public function getTitleCreate(): PageTitle {
+    public function getTitleCreate(): PageTitle
+    {
         return new PageTitle(_('Add event'), 'fa fa-calendar-plus');
     }
 
@@ -39,22 +42,26 @@ class EventPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-calendar-day'));
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function actionDelete(): void {
+    public function actionDelete(): void
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): EventsGrid {
+    protected function createComponentGrid(): EventsGrid
+    {
         return new EventsGrid($this->getContext(), $this->getSelectedContestYear());
     }
 
-    protected function createComponentCreateForm(): EventFormComponent {
+    protected function createComponentCreateForm(): EventFormComponent
+    {
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), null);
     }
 
@@ -62,11 +69,13 @@ class EventPresenter extends BasePresenter {
      * @return EventFormComponent
      * @throws ModelNotFoundException
      */
-    protected function createComponentEditForm(): EventFormComponent {
+    protected function createComponentEditForm(): EventFormComponent
+    {
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceEvent {
+    protected function getORMService(): ServiceEvent
+    {
         return $this->serviceEvent;
     }
 
@@ -75,7 +84,8 @@ class EventPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

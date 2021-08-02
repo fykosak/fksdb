@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Controls\Loaders;
 
-interface StylesheetCollector {
+interface StylesheetCollector
+{
 
     /**
      * @param string $file path relative to webroot

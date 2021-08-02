@@ -13,16 +13,19 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\YearCalculator;
 use Nette\DI\Container;
 
-class TimelineComponent extends ReactComponent {
+class TimelineComponent extends ReactComponent
+{
 
     private ModelPerson $person;
 
-    public function __construct(Container $container, ModelPerson $person) {
+    public function __construct(Container $container, ModelPerson $person)
+    {
         parent::__construct($container, 'person.detail.timeline');
         $this->person = $person;
     }
 
-    private function eventToArray(ModelEvent $event): array {
+    private function eventToArray(ModelEvent $event): array
+    {
         return [
             'eventId' => $event->event_id,
             'name' => $event->name,
@@ -36,7 +39,8 @@ class TimelineComponent extends ReactComponent {
      * @return \array[][]
      * @throws \Exception
      */
-    private function calculateData(): array {
+    private function calculateData(): array
+    {
         $dates = [
             'since' => [],
             'until' => [],
@@ -79,7 +83,8 @@ class TimelineComponent extends ReactComponent {
         ]];
     }
 
-    private function calculateEvents(): array {
+    private function calculateEvents(): array
+    {
         $events = [];
         $eventParticipants = [];
         foreach ($this->person->getEventParticipants() as $row) {
@@ -111,7 +116,8 @@ class TimelineComponent extends ReactComponent {
      * @param array $dates
      * @return \DateTimeInterface[]
      */
-    private function calculateFirstAndLast(array $events, array $dates): array {
+    private function calculateFirstAndLast(array $events, array $dates): array
+    {
         $first = $this->person->created;
         $last = new \DateTime();
         foreach ($events as $event) {
@@ -147,7 +153,8 @@ class TimelineComponent extends ReactComponent {
      * @return array
      * @throws \Exception
      */
-    public function getData(): array {
+    public function getData(): array
+    {
         [$events, $calculatedEvents] = $this->calculateEvents();
         [$dates, $longTimeEvents] = $this->calculateData();
         [$first, $last] = $this->calculateFirstAndLast($events, $dates);

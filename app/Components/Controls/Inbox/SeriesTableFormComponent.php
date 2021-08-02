@@ -7,9 +7,11 @@ use FKSDB\Models\Logging\Logger;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
-abstract class SeriesTableFormComponent extends SeriesTableComponent {
+abstract class SeriesTableFormComponent extends SeriesTableComponent
+{
 
-    protected function createComponentForm(): OptimisticForm {
+    protected function createComponentForm(): OptimisticForm
+    {
         $form = new OptimisticForm(
             function (): string {
                 return $this->getSeriesTable()->getFingerprint();

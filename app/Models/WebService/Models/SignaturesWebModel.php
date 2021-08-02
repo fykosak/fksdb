@@ -8,13 +8,14 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
 
-class SignaturesWebModel extends WebModel {
-
+class SignaturesWebModel extends WebModel
+{
     use SmartObject;
 
     private ServiceContest $serviceContest;
 
-    public function inject(ServiceContest $serviceContest): void {
+    public function inject(ServiceContest $serviceContest): void
+    {
         $this->serviceContest = $serviceContest;
     }
 
@@ -23,7 +24,8 @@ class SignaturesWebModel extends WebModel {
      * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }

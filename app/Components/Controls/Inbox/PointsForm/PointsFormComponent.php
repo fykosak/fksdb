@@ -11,19 +11,22 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-class PointsFormComponent extends SeriesTableFormComponent {
+class PointsFormComponent extends SeriesTableFormComponent
+{
 
     /** @var callable */
     private $invalidCacheCallback;
 
     private ServiceSubmit $serviceSubmit;
 
-    public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
+    public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false)
+    {
         parent::__construct($context, $seriesTable, $displayAll);
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
-    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void
+    {
         $this->serviceSubmit = $serviceSubmit;
     }
 
@@ -32,7 +35,8 @@ class PointsFormComponent extends SeriesTableFormComponent {
      * @throws ForbiddenRequestException
      * @throws ModelException
      */
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
                 // secure check for rewrite submitId.
@@ -50,7 +54,8 @@ class PointsFormComponent extends SeriesTableFormComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

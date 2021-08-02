@@ -19,7 +19,8 @@ use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
 
-class TasksPresenter extends BasePresenter {
+class TasksPresenter extends BasePresenter
+{
 
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
@@ -35,11 +36,13 @@ class TasksPresenter extends BasePresenter {
         $this->downloader = $downloader;
     }
 
-    public function authorizedImport(): void {
+    public function authorizedImport(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport(): void {
+    public function titleImport(): void
+    {
         $this->setPageTitle(new PageTitle(_('Task import'), 'fas fa-download'));
     }
 
@@ -47,7 +50,8 @@ class TasksPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSeriesForm(): FormControl {
+    protected function createComponentSeriesForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -78,7 +82,8 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
-    private function isLegacyXml(\SimpleXMLElement $xml): bool {
+    private function isLegacyXml(\SimpleXMLElement $xml): bool
+    {
         return $xml->getName() === 'problems';
     }
 
@@ -87,7 +92,8 @@ class TasksPresenter extends BasePresenter {
      * @return void
      * @throws UploadException
      */
-    private function validSubmitSeriesForm(Form $seriesForm): void {
+    private function validSubmitSeriesForm(Form $seriesForm): void
+    {
         /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];

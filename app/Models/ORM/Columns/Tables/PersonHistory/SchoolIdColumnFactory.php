@@ -10,11 +10,13 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-class SchoolIdColumnFactory extends ColumnFactory {
+class SchoolIdColumnFactory extends ColumnFactory
+{
 
     private SchoolFactory $schoolFactory;
 
-    public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory) {
+    public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory)
+    {
         parent::__construct($metaDataFactory);
         $this->schoolFactory = $schoolFactory;
     }
@@ -24,11 +26,13 @@ class SchoolIdColumnFactory extends ColumnFactory {
      * @return Html
      * @throws NotImplementedException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         throw new NotImplementedException();
     }
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         return $this->schoolFactory->createSchoolSelect();
     }
 }

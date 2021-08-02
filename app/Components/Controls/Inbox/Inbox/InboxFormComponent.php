@@ -13,15 +13,18 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-class InboxFormComponent extends SeriesTableFormComponent {
+class InboxFormComponent extends SeriesTableFormComponent
+{
 
     private ServiceSubmit $serviceSubmit;
 
-    public function __construct(Container $context, SeriesTable $seriesTable) {
+    public function __construct(Container $context, SeriesTable $seriesTable)
+    {
         parent::__construct($context, $seriesTable, true);
     }
 
-    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void
+    {
         $this->serviceSubmit = $serviceSubmit;
     }
 
@@ -30,7 +33,8 @@ class InboxFormComponent extends SeriesTableFormComponent {
      * @throws ForbiddenRequestException
      * @throws ModelException
      */
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
                 if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
@@ -61,7 +65,8 @@ class InboxFormComponent extends SeriesTableFormComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

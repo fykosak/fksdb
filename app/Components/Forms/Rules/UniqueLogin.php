@@ -6,21 +6,25 @@ use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Forms\Controls\BaseControl;
 
-class UniqueLogin {
+class UniqueLogin
+{
 
     private ServiceLogin $serviceLogin;
 
     private ?ModelLogin $ignoredLogin;
 
-    public function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin)
+    {
         $this->serviceLogin = $serviceLogin;
     }
 
-    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void {
+    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void
+    {
         $this->ignoredLogin = $ignoredLogin;
     }
 
-    public function __invoke(BaseControl $control): bool {
+    public function __invoke(BaseControl $control): bool
+    {
         $login = $control->getValue();
 
         if (!$login) {

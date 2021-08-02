@@ -2,5 +2,6 @@
 
 namespace FKSDB\Models\Events\Exceptions;
 
-class SubmitProcessingException extends \RuntimeException {
+class SubmitProcessingException extends \RuntimeException
+{
 }

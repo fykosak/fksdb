@@ -6,7 +6,8 @@ use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 
-interface FieldFactory {
+interface FieldFactory
+{
 
     /**
      * @param Field $field field for which it's created

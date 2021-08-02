@@ -10,13 +10,15 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-class TeamColumnFactory extends ColumnFactory {
+class TeamColumnFactory extends ColumnFactory
+{
 
     /**
      * @param ModelEventParticipant|AbstractModel $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         try {
             $team = $model->getFyziklaniTeam();
             return (new StringPrinter())($team->name);

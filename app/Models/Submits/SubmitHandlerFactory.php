@@ -18,7 +18,8 @@ use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 
-class SubmitHandlerFactory {
+class SubmitHandlerFactory
+{
 
     public CorrectedStorage $correctedStorage;
     public UploadedStorage $uploadedStorage;
@@ -45,7 +46,8 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws StorageException
      */
-    public function handleDownloadUploaded(Presenter $presenter, ModelSubmit $submit): void {
+    public function handleDownloadUploaded(Presenter $presenter, ModelSubmit $submit): void
+    {
         $this->checkPrivilege($submit, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
@@ -66,7 +68,8 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws StorageException
      */
-    public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void {
+    public function handleDownloadCorrected(Presenter $presenter, ModelSubmit $submit): void
+    {
         $this->checkPrivilege($submit, 'download.corrected');
         if (!$submit->corrected) {
             throw new StorageException(_('Corrected solution is not uploaded'));
@@ -86,7 +89,8 @@ class SubmitHandlerFactory {
      * @throws StorageException
      * @throws ModelException
      */
-    public function handleRevoke(ModelSubmit $submit): void {
+    public function handleRevoke(ModelSubmit $submit): void
+    {
         $this->checkPrivilege($submit, 'revoke');
         if (!$submit->canRevoke()) {
             throw new StorageException(_('Submit cannot be revoked.'));
@@ -95,24 +99,28 @@ class SubmitHandlerFactory {
         $this->serviceSubmit->dispose($submit);
     }
 
-    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
+    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit
+    {
         $submit = $this->storeSubmit($task, $contestant, ModelSubmit::SOURCE_UPLOAD);
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
-    public function getUserStudyYear(ModelContestant $contestant): ?int {
+    public function getUserStudyYear(ModelContestant $contestant): ?int
+    {
         // TODO AC_year from contestant
         $personHistory = $contestant->getPersonHistory();
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 
-    public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit {
+    public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit
+    {
         return $this->storeSubmit($task, $contestant, ModelSubmit::SOURCE_QUIZ);
     }
 
-    private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
+    private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit
+    {
         $submit = $this->serviceSubmit->findByContestant($contestant, $task);
         $data = [
             'submitted_on' => new DateTime(),
@@ -129,7 +137,8 @@ class SubmitHandlerFactory {
      * @return ModelSubmit|null
      * @throws NotFoundException
      */
-    public function getSubmit(int $id, bool $throw = true): ?ModelSubmit {
+    public function getSubmit(int $id, bool $throw = true): ?ModelSubmit
+    {
         $submit = $this->serviceSubmit->findByPrimary($id);
         if ($throw && !$submit) {
             throw new NotFoundException(_('Submit does not exists.'));
@@ -143,7 +152,8 @@ class SubmitHandlerFactory {
      * @return void
      * @throws ForbiddenRequestException
      */
-    private function checkPrivilege(ModelSubmit $submit, string $privilege): void {
+    private function checkPrivilege(ModelSubmit $submit, string $privilege): void
+    {
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
             throw new ForbiddenRequestException(_('Access denied'));
         }

@@ -7,13 +7,14 @@ use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-class RelatedPersonAuthorizator {
-
+class RelatedPersonAuthorizator
+{
     use SmartObject;
 
     private User $user;
 
-    public function __construct(User $user) {
+    public function __construct(User $user)
+    {
         $this->user = $user;
     }
 
@@ -24,12 +25,13 @@ class RelatedPersonAuthorizator {
      * @param Holder $holder
      * @return bool
      */
-    public function isRelatedPerson(Holder $holder): bool {
+    public function isRelatedPerson(Holder $holder): bool
+    {
         // everyone is related
         if ($holder->getPrimaryHolder()->getModelState() == Machine::STATE_INIT) {
             return true;
         }
-        $login= $this->user->getIdentity();
+        $login = $this->user->getIdentity();
         // further on only logged users can be related person
         if (!$login) {
             return false;

@@ -5,8 +5,8 @@ namespace FKSDB\Models\Events\Model;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-class ExpressionEvaluator {
-
+class ExpressionEvaluator
+{
     use SmartObject;
 
     /**
@@ -14,7 +14,8 @@ class ExpressionEvaluator {
      * @param mixed $context
      * @return mixed
      */
-    public function evaluate($condition, $context) {
+    public function evaluate($condition, $context)
+    {
         if (is_scalar($condition)) {
             return $condition;
         } elseif (is_callable($condition)) {
@@ -24,5 +25,4 @@ class ExpressionEvaluator {
             throw new InvalidArgumentException("Cannot evaluate condition $condition.");
         }
     }
-
 }

@@ -29,7 +29,8 @@ use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-class SubmitPresenter extends BasePresenter {
+class SubmitPresenter extends BasePresenter
+{
 
     private ServiceSubmit $submitService;
     private ServiceSubmitQuiz $submitQuizQuestionService;
@@ -56,24 +57,29 @@ class SubmitPresenter extends BasePresenter {
 
     /* ******************* AUTH ************************/
 
-    public function authorizedDefault(): void {
+    public function authorizedDefault(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
-    public function authorizedAjax(): void {
+    public function authorizedAjax(): void
+    {
         $this->authorizedDefault();
     }
 
     /* ********************** TITLE **********************/
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         $this->setPageTitle(new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt'));
     }
 
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt'));
     }
 
-    public function titleAjax(): void {
+    public function titleAjax(): void
+    {
         $this->titleDefault();
     }
 
@@ -81,11 +87,13 @@ class SubmitPresenter extends BasePresenter {
      * @throws GoneException
      * @deprecated
      */
-    public function actionDownload(): void {
+    public function actionDownload(): void
+    {
         throw new GoneException('');
     }
 
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
@@ -101,7 +109,8 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    final public function renderAjax(): void {
+    final public function renderAjax(): void
+    {
         $this->template->availableTasks = $this->getAvailableTasks();
     }
 
@@ -109,7 +118,8 @@ class SubmitPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentUploadForm(): FormControl {
+    protected function createComponentUploadForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -185,11 +195,13 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    protected function createComponentSubmitsGrid(): SubmitsGrid {
+    protected function createComponentSubmitsGrid(): SubmitsGrid
+    {
         return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
-    protected function createComponentSubmitContainer(): SubmitContainer {
+    protected function createComponentSubmitContainer(): SubmitContainer
+    {
         return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 
@@ -198,7 +210,8 @@ class SubmitPresenter extends BasePresenter {
      * @return void
      * @throws StorageException
      */
-    private function handleUploadFormSuccess(Form $form): void {
+    private function handleUploadFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
 
         Debugger::log(\sprintf('Contestant %d upload %s', $this->getContestant()->ct_id, $values['tasks']), 'old-submit');
@@ -256,7 +269,8 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    private function getAvailableTasks(): TypedTableSelection {
+    private function getAvailableTasks(): TypedTableSelection
+    {
         // TODO related
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContestYear()->contest_id, $this->getSelectedContestYear()->year);

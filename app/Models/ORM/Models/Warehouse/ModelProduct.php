@@ -18,7 +18,8 @@ use Nette\Security\Resource;
  * @property-read string note neverejná poznámka
  * @property-read string url URL k objednaniu produktu
  */
-class ModelProduct extends AbstractModel implements Resource {
+class ModelProduct extends AbstractModel implements Resource
+{
 
     public const CATEGORY_APPAREL = 'apparel';
     public const CATEGORY_GAME = 'game';
@@ -28,11 +29,13 @@ class ModelProduct extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'warehouse.product';
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function getProducer(): ?ModelProducer {
+    public function getProducer(): ?ModelProducer
+    {
         return $this->producer ? ModelProducer::createFromActiveRow($this->producer) : null;
     }
 }

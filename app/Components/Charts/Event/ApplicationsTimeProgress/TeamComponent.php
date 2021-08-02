@@ -9,16 +9,19 @@ use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
-class TeamComponent extends ReactComponent implements Chart {
+class TeamComponent extends ReactComponent implements Chart
+{
 
     private ModelEventType $eventType;
 
-    public function __construct(Container $context, ModelEvent $event) {
+    public function __construct(Container $context, ModelEvent $event)
+    {
         parent::__construct($context, 'chart.events.teams.time-progress');
         $this->eventType = $event->getEventType();
     }
 
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $data = [
             'teams' => [],
             'events' => [],
@@ -31,15 +34,18 @@ class TeamComponent extends ReactComponent implements Chart {
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Team applications time progress');
     }
 
-    public function getControl(): self {
+    public function getControl(): self
+    {
         return $this;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

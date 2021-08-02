@@ -9,12 +9,14 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
-class PriceColumnFactory extends ColumnFactory {
+class PriceColumnFactory extends ColumnFactory
+{
     /**
      * @param AbstractModel|ModelEventParticipant $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         if (\is_null($model->price)) {
             return NotSetBadge::getHtml();
         }

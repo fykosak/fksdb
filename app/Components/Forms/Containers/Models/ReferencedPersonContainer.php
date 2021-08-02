@@ -29,7 +29,8 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
-class ReferencedPersonContainer extends ReferencedContainer {
+class ReferencedPersonContainer extends ReferencedContainer
+{
 
     public ModifiabilityResolver $modifiabilityResolver;
 
@@ -96,7 +97,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    protected function configure(): void {
+    protected function configure(): void
+    {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -118,7 +120,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function (): bool { // we use this workaround not to call getValue inside validation out of transaction
+                    $control->addCondition(function (): bool {
+ // we use this workaround not to call getValue inside validation out of transaction
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
@@ -145,7 +148,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $mode
      * @return void
      */
-    public function setModel(?ActiveRow $model, string $mode): void {
+    public function setModel(?ActiveRow $model, string $mode): void
+    {
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);
         $visible = $this->visibilityResolver->isVisible($model);
@@ -188,8 +192,10 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
-                    if ($this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
-                        || ($mode === ReferencedId::MODE_FORCE)) {
+                    if (
+                        $this->getReferencedId()->getSearchContainer()->isSearchSubmitted()
+                        || ($mode === ReferencedId::MODE_FORCE)
+                    ) {
                         $component->setValue($value);
                     } else {
                         $component->setDefaultValue($value);
@@ -212,7 +218,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws OmittedControlException
      * @throws BadRequestException
      */
-    public function createField(string $sub, string $fieldName, array $metadata): IComponent {
+    public function createField(string $sub, string $fieldName, array $metadata): IComponent
+    {
         $control = null;
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
@@ -242,7 +249,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
         return $control;
     }
 
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {
+    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void
+    {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -269,7 +277,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    protected function setWriteOnly(IComponent $component, bool $value): void {
+    protected function setWriteOnly(IComponent $component, bool $value): void
+    {
         if ($component instanceof WriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {
@@ -279,7 +288,8 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    protected function isWriteOnly(IComponent $component): bool {
+    protected function isWriteOnly(IComponent $component): bool
+    {
         if ($component instanceof WriteOnly) {
             return true;
         } elseif ($component instanceof IContainer) {
@@ -301,11 +311,17 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param bool $targetValidation
      * @return mixed
      */
-    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false) {
-        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->contestYear,
+    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false)
+    {
+        return ReferencedPersonFactory::getPersonValue(
+            $person,
+            $sub,
+            $field,
+            $this->contestYear,
             $extrapolate,
             $hasDelivery,
             $targetValidation,
-            $this->event);
+            $this->event
+        );
     }
 }

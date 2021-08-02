@@ -9,5 +9,6 @@ use Fykosak\NetteORM\AbstractService;
  * @method ModelScheduleItem|null findByPrimary($key)
  * @method ModelScheduleItem createNewModel(array $data)
  */
-class ServiceScheduleItem extends AbstractService {
+class ServiceScheduleItem extends AbstractService
+{
 }

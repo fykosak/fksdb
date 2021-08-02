@@ -18,7 +18,8 @@ use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
-class PointsPresenter extends BasePresenter {
+class PointsPresenter extends BasePresenter
+{
 
     /**
      * Show all tasks?
@@ -39,33 +40,40 @@ class PointsPresenter extends BasePresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->seriesTable->setContestYear($this->getSelectedContestYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function titleEntry(): void {
+    public function titleEntry(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen'));
     }
 
-    public function titlePreview(): void {
+    public function titlePreview(): void
+    {
         $this->setPageTitle(new PageTitle(_('Points list'), 'fas fa-clipboard-list'));
     }
 
-    public function authorizedEntry(): void {
+    public function authorizedEntry(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
-    public function authorizedPreview(): void {
+    public function authorizedPreview(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
-    public function actionEntry(): void {
+    public function actionEntry(): void
+    {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
-    final public function renderEntry(): void {
+    final public function renderEntry(): void
+    {
         $this->template->showAll = (bool)$this->all;
         if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
             $this->template->hasQuizTask = true;
@@ -74,17 +82,20 @@ class PointsPresenter extends BasePresenter {
         }
     }
 
-    protected function createComponentPointsForm(): PointsFormComponent {
+    protected function createComponentPointsForm(): PointsFormComponent
+    {
         return new PointsFormComponent(function () {
             $this->SQLResultsCache->recalculate($this->getSelectedContestYear());
         }, $this->getContext(), $this->seriesTable);
     }
 
-    protected function createComponentPointsTableControl(): PointsPreviewComponent {
+    protected function createComponentPointsTableControl(): PointsPreviewComponent
+    {
         return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
-    public function handleInvalidate(): void {
+    public function handleInvalidate(): void
+    {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContestYear());
             $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
@@ -100,7 +111,8 @@ class PointsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function handleRecalculateAll(): void {
+    public function handleRecalculateAll(): void
+    {
         try {
             $years = $this->getSelectedContestYear()->getContest()->related(DbNames::TAB_TASK)
                 ->select('year')
@@ -119,7 +131,8 @@ class PointsPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    public function handleCalculateQuizPoints(): void {
+    public function handleCalculateQuizPoints(): void
+    {
         try {
             $this->SQLResultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
@@ -129,7 +142,8 @@ class PointsPresenter extends BasePresenter {
         }
     }
 
-    private function getGradedTasks(): array {
+    private function getGradedTasks(): array
+    {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -151,7 +165,8 @@ class PointsPresenter extends BasePresenter {
         return array_values($gradedTasks);
     }
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }

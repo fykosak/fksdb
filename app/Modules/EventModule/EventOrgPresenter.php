@@ -19,20 +19,24 @@ use Nette\Security\Resource;
 /**
  * @method ModelEventOrg getEntity()
  */
-class EventOrgPresenter extends BasePresenter {
+class EventOrgPresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     private ServiceEventOrg $serviceEventOrg;
 
-    final public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
+    final public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void
+    {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    public function getTitleList(): PageTitle {
+    public function getTitleList(): PageTitle
+    {
         return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
     }
 
-    public function getTitleCreate(): PageTitle {
+    public function getTitleCreate(): PageTitle
+    {
         return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
     }
 
@@ -43,7 +47,8 @@ class EventOrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
     }
 
@@ -53,11 +58,13 @@ class EventOrgPresenter extends BasePresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
-    public function actionDelete(): void {
+    public function actionDelete(): void
+    {
         try {
             $this->traitHandleDelete();
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
@@ -68,7 +75,8 @@ class EventOrgPresenter extends BasePresenter {
         }
     }
 
-    protected function getORMService(): ServiceEventOrg {
+    protected function getORMService(): ServiceEventOrg
+    {
         return $this->serviceEventOrg;
     }
 
@@ -76,7 +84,8 @@ class EventOrgPresenter extends BasePresenter {
      * @return EventOrgsGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): EventOrgsGrid {
+    protected function createComponentGrid(): EventOrgsGrid
+    {
         return new EventOrgsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -84,7 +93,8 @@ class EventOrgPresenter extends BasePresenter {
      * @return EventOrgFormComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): EventOrgFormComponent {
+    protected function createComponentCreateForm(): EventOrgFormComponent
+    {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), null);
     }
 
@@ -95,8 +105,8 @@ class EventOrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentEditForm(): EventOrgFormComponent {
+    protected function createComponentEditForm(): EventOrgFormComponent
+    {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
-
 }

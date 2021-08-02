@@ -9,7 +9,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
-class DuplicateFinder {
+class DuplicateFinder
+{
 
     public const IDX_PERSON = 'person';
     public const IDX_SCORE = 'score';
@@ -19,12 +20,14 @@ class DuplicateFinder {
 
     private array $parameters;
 
-    public function __construct(ServicePerson $servicePerson, Container $container) {
+    public function __construct(ServicePerson $servicePerson, Container $container)
+    {
         $this->servicePerson = $servicePerson;
         $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
-    public function getPairs(): array {
+    public function getPairs(): array
+    {
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var ModelPerson $person */
@@ -61,7 +64,8 @@ class DuplicateFinder {
         return $pairs;
     }
 
-    private function getBucketKey(ModelPerson $row): string {
+    private function getBucketKey(ModelPerson $row): string
+    {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);
@@ -73,7 +77,8 @@ class DuplicateFinder {
      * @return float
      * @todo Implement more than binary score.
      */
-    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
+    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float
+    {
         /*
          * Check explicit difference
          */
@@ -105,7 +110,8 @@ class DuplicateFinder {
      * @param ActiveRow|ModelPersonInfo $person
      * @return array
      */
-    private function getDifferentPersons(ActiveRow $person): array {
+    private function getDifferentPersons(ActiveRow $person): array
+    {
         if (!isset($person->duplicates)) {
             return [];
         }
@@ -118,16 +124,17 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
-    private function stringScore(string $a, string $b): float {
+    private function stringScore(string $a, string $b): float
+    {
         return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
-    private function relativeDistance(string $a, string $b): float {
+    private function relativeDistance(string $a, string $b): float
+    {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
             return 0.0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }
-
 }

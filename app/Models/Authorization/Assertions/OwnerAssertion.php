@@ -15,11 +15,13 @@ use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\UserStorage;
 
-class OwnerAssertion {
+class OwnerAssertion
+{
 
     private UserStorage $userStorage;
 
-    public function __construct(UserStorage $userStorage) {
+    public function __construct(UserStorage $userStorage)
+    {
         $this->userStorage = $userStorage;
     }
 
@@ -31,7 +33,8 @@ class OwnerAssertion {
      * @param string $privilege
      * @return bool
      */
-    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool
+    {
         [, $login] = $this->userStorage->getState();
         if (!$login) {
             throw new InvalidStateException('Expecting logged user.');
@@ -54,7 +57,8 @@ class OwnerAssertion {
      * @param string $privilege
      * @return bool
      */
-    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool
+    {
         [$state] = $this->userStorage->getState();
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
@@ -76,7 +80,8 @@ class OwnerAssertion {
      * @param string $privilege
      * @return bool
      */
-    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool
+    {
         [$state] = $this->userStorage->getState();
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
@@ -102,7 +107,8 @@ class OwnerAssertion {
      * @param string $privilege
      * @return bool
      */
-    public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool
+    {
         /** @var IIdentity $login */
         [$state, $login] = $this->userStorage->getState();
         if (!$state) {

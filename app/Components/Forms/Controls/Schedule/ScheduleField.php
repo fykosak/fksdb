@@ -11,8 +11,8 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 
-class ScheduleField extends TextInput {
-
+class ScheduleField extends TextInput
+{
     use ReactComponentTrait;
 
     private ModelEvent $event;
@@ -28,7 +28,8 @@ class ScheduleField extends TextInput {
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label) {
+    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label)
+    {
         parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
@@ -42,7 +43,8 @@ class ScheduleField extends TextInput {
      * @return string
      * @throws NotImplementedException
      */
-    private function getDefaultLabel(string $type): string {
+    private function getDefaultLabel(string $type): string
+    {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
@@ -61,7 +63,8 @@ class ScheduleField extends TextInput {
         }
     }
 
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {
@@ -72,7 +75,8 @@ class ScheduleField extends TextInput {
         return ['groups' => $groupList, 'options' => $options];
     }
 
-    private function getRenderOptions(): array {
+    private function getRenderOptions(): array
+    {
         $params = [
             'display' => [
                 'capacity' => true,
@@ -99,7 +103,8 @@ class ScheduleField extends TextInput {
         return $params;
     }
 
-    private function serializeGroup(ModelScheduleGroup $group): array {
+    private function serializeGroup(ModelScheduleGroup $group): array
+    {
         $groupArray = $group->__toArray();
         $itemList = [];
         foreach ($group->getItems() as $row) {

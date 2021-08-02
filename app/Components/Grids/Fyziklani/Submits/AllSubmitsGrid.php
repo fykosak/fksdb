@@ -25,21 +25,25 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-class AllSubmitsGrid extends SubmitsGrid {
+class AllSubmitsGrid extends SubmitsGrid
+{
 
     private ModelEvent $event;
     private HandlerFactory $handlerFactory;
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(HandlerFactory $handlerFactory): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory): void
+    {
         $this->handlerFactory = $handlerFactory;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
         ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
         $dataSource = new SearchableDataSource($submits);
@@ -54,7 +58,8 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -80,7 +85,8 @@ class AllSubmitsGrid extends SubmitsGrid {
             });
     }
 
-    private function getFilterCallBack(): callable {
+    private function getFilterCallBack(): callable
+    {
         return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
@@ -111,7 +117,8 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
     }
 
-    public function handleDelete(int $id): void {
+    public function handleDelete(int $id): void
+    {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
@@ -134,7 +141,8 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSearchForm(): FormControl {
+    protected function createComponentSearchForm(): FormControl
+    {
         if (!$this->isSearchable()) {
             throw new InvalidStateException('Cannot create search form without searchable data source.');
         }

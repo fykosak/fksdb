@@ -6,9 +6,11 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 
-class ServiceFyziklaniTeamPosition extends AbstractService {
+class ServiceFyziklaniTeamPosition extends AbstractService
+{
 
-    public function updateRouting(array $data): array {
+    public function updateRouting(array $data): array
+    {
         $updatedTeams = [];
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
@@ -38,11 +40,13 @@ class ServiceFyziklaniTeamPosition extends AbstractService {
         return $updatedTeams;
     }
 
-    public function getAllPlaces(array $roomIds): TypedTableSelection {
+    public function getAllPlaces(array $roomIds): TypedTableSelection
+    {
         return $this->getTable()->where('room_id', $roomIds);
     }
 
-    public function getFreePlaces(array $roomIds): TypedTableSelection {
+    public function getFreePlaces(array $roomIds): TypedTableSelection
+    {
         return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
     }
 }

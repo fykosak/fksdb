@@ -12,7 +12,8 @@ use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
+class TeamsPerSchool extends SchoolCheck implements FormAdjustment
+{
 
     private Explorer $explorer;
     /** @var callable|int */
@@ -27,14 +28,16 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
      * @param Explorer $explorer
      * @param ServicePersonHistory $servicePersonHistory
      */
-    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Explorer $explorer, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Explorer $explorer, ServicePersonHistory $servicePersonHistory)
+    {
         parent::__construct($servicePersonHistory);
         $this->explorer = $explorer;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);
     }
 
-    public function getTeamsPerSchool(): int {
+    public function getTeamsPerSchool(): int
+    {
         if (!isset($this->teamsPerSchoolValue)) {
             $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
         }
@@ -45,11 +48,13 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
      * @param callable|int $teamsPerSchool
      * @return void
      */
-    public function setTeamsPerSchool($teamsPerSchool): void {
+    public function setTeamsPerSchool($teamsPerSchool): void
+    {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
@@ -75,7 +80,8 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     private array $cache;
 
-    private function checkMulti(bool $first, ?Control $control, array $schools): bool {
+    private function checkMulti(bool $first, ?Control $control, array $schools): bool
+    {
         $team = $this->getHolder()->getPrimaryHolder()->getModel2();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();

@@ -27,7 +27,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelStoredQuery|null $model
  */
-class StoredQueryFormComponent extends AbstractEntityFormComponent {
+class StoredQueryFormComponent extends AbstractEntityFormComponent
+{
 
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
@@ -57,7 +58,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws ModelException
      */
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
         $connection = $this->serviceStoredQuery->explorer->getConnection();
         $connection->beginTransaction();
@@ -85,7 +87,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $group = $form->addGroup(_('SQL'));
         $form->addComponent($this->createConsole($group), self::CONT_SQL);
 
@@ -111,7 +114,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createMetadata(?ControlGroup $group = null): ModelContainer {
+    private function createMetadata(?ControlGroup $group = null): ModelContainer
+    {
         $container = $this->reflectionFormFactory->createContainer('stored_query', ['name', 'qid', 'tags', 'description']);
         $container->setCurrentGroup($group);
         return $container;
@@ -123,7 +127,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createConsole(?ControlGroup $group = null): ModelContainer {
+    private function createConsole(?ControlGroup $group = null): ModelContainer
+    {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
         $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
@@ -131,7 +136,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         return $container;
     }
 
-    private function saveTags(array $tags, ModelStoredQuery $query): void {
+    private function saveTags(array $tags, ModelStoredQuery $query): void
+    {
         $this->serviceStoredQueryTag->getTable()->where([
             'query_id' => $query->query_id,
         ])->delete();
@@ -143,7 +149,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    private function createParametersMetadata(?ControlGroup $group = null): Replicator {
+    private function createParametersMetadata(?ControlGroup $group = null): Replicator
+    {
         $replicator = new Replicator(function (Container $replContainer) use ($group) {
             $this->buildParameterMetadata($replContainer, $group);
 
@@ -162,7 +169,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         return $replicator;
     }
 
-    private function buildParameterMetadata(Container $container, ControlGroup $group): void {
+    private function buildParameterMetadata(Container $container, ControlGroup $group): void
+    {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Parameter name'))
@@ -182,7 +190,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $container->addText('default', _('Default value'));
     }
 
-    private function saveParameters(array $parameters, ModelStoredQuery $query): void {
+    private function saveParameters(array $parameters, ModelStoredQuery $query): void
+    {
         $this->serviceStoredQueryParameter->getTable()
             ->where(['query_id' => $query->query_id])->delete();
 
@@ -198,7 +207,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $values = [];
             $values[self::CONT_SQL] = $this->model;
@@ -214,13 +224,15 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    protected function createComponentQueryResultsComponent(): ResultsComponent {
+    protected function createComponentQueryResultsComponent(): ResultsComponent
+    {
         $grid = new ResultsComponent($this->getContext());
         $grid->setShowParametrizeForm(false);
         return $grid;
     }
 
-    private function handleComposeExecute(Form $form): void {
+    private function handleComposeExecute(Form $form): void
+    {
         $data = $form->getValues(true);
         $parameters = [];
         foreach ($data[self::CONT_PARAMS] as $paramMetaData) {
@@ -240,7 +252,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $control->setStoredQuery($query);
     }
 
-    protected function getTemplatePath(): string {
+    protected function getTemplatePath(): string
+    {
         return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
     }
 }

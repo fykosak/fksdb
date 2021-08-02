@@ -8,16 +8,19 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\DI\Container;
 
-class ParticipantAcquaintanceChart extends ReactComponent implements Chart {
+class ParticipantAcquaintanceChart extends ReactComponent implements Chart
+{
 
     private ModelEvent $event;
 
-    public function __construct(Container $context, ModelEvent $event) {
+    public function __construct(Container $context, ModelEvent $event)
+    {
         parent::__construct($context, 'chart.events.participants.acquaintance');
         $this->event = $event;
     }
 
-    public function getData(): array {
+    public function getData(): array
+    {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
@@ -39,15 +42,18 @@ class ParticipantAcquaintanceChart extends ReactComponent implements Chart {
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Participant acquaintance');
     }
 
-    public function getControl(): self {
+    public function getControl(): self
+    {
         return $this;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

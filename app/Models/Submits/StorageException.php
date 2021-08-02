@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Submits;
 
-class StorageException extends \RuntimeException {
+class StorageException extends \RuntimeException
+{
 
 }

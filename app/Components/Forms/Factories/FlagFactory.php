@@ -7,9 +7,11 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
-class FlagFactory {
+class FlagFactory
+{
 
-    public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl {
+    public function createFlag(?HiddenField $hiddenField = null, array $metadata = []): BaseControl
+    {
         $control = $this->createSpamMff();
 
         if ($metadata['required'] ?? false) {
@@ -30,7 +32,8 @@ class FlagFactory {
         return $control;
     }
 
-    public function createSpamMff(): PersonFlag {
+    public function createSpamMff(): PersonFlag
+    {
         return new PersonFlag(_('I wish to receive information about MFF and the events they organize.'));
     }
 }

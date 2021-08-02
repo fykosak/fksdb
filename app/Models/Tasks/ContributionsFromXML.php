@@ -13,7 +13,8 @@ use FKSDB\Models\Pipeline\Stage;
 /**
  * @note Assumes TasksFromXML has been run previously.
  */
-class ContributionsFromXML extends Stage {
+class ContributionsFromXML extends Stage
+{
 
     private SeriesData $data;
 
@@ -27,7 +28,8 @@ class ContributionsFromXML extends Stage {
 
     private ServiceOrg $serviceOrg;
 
-    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
+    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg)
+    {
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
     }
@@ -35,22 +37,26 @@ class ContributionsFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void
+    {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 

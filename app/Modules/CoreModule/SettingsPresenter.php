@@ -21,7 +21,8 @@ use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
-class SettingsPresenter extends BasePresenter {
+class SettingsPresenter extends BasePresenter
+{
 
     public const CONT_LOGIN = 'login';
 
@@ -36,7 +37,8 @@ class SettingsPresenter extends BasePresenter {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
@@ -44,7 +46,8 @@ class SettingsPresenter extends BasePresenter {
      * @return void
      * @throws BadTypeException
      */
-    public function actionDefault(): void {
+    public function actionDefault(): void
+    {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -56,7 +59,8 @@ class SettingsPresenter extends BasePresenter {
         $control->getForm()->setDefaults($defaults);
     }
 
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
         }
@@ -66,7 +70,8 @@ class SettingsPresenter extends BasePresenter {
         }
     }
 
-    protected function createComponentPreferredLangForm(): PreferredLangFormComponent {
+    protected function createComponentPreferredLangForm(): PreferredLangFormComponent
+    {
         return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->getPerson());
     }
 
@@ -74,7 +79,8 @@ class SettingsPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSettingsForm(): FormControl {
+    protected function createComponentSettingsForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         /** @var ModelLogin $login */
@@ -116,7 +122,8 @@ class SettingsPresenter extends BasePresenter {
         return $control;
     }
 
-    private function createLogin(ControlGroup $group, callable $loginRule, bool $showPassword = true, bool $verifyOldPassword = false, bool $requirePassword = false): ModelContainer {
+    private function createLogin(ControlGroup $group, callable $loginRule, bool $showPassword = true, bool $verifyOldPassword = false, bool $requirePassword = false): ModelContainer
+    {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -154,7 +161,8 @@ class SettingsPresenter extends BasePresenter {
      * @param Form $form
      * @throws ModelException
      */
-    private function handleSettingsFormSuccess(Form $form): void {
+    private function handleSettingsFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

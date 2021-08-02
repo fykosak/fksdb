@@ -8,15 +8,18 @@ use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 
-class ValidationComponent extends BaseStalkingComponent {
+class ValidationComponent extends BaseStalkingComponent
+{
 
     private DataTestingFactory $validationFactory;
 
-    final public function injectDataTestingFactory(DataTestingFactory $factory): void {
+    final public function injectDataTestingFactory(DataTestingFactory $factory): void
+    {
         $this->validationFactory = $factory;
     }
 
-    final public function render(ModelPerson $person, int $userPermissions): void {
+    final public function render(ModelPerson $person, int $userPermissions): void
+    {
         $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {

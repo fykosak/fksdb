@@ -11,7 +11,8 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 
-class MailCallback implements TransitionCallback {
+class MailCallback implements TransitionCallback
+{
 
     protected ServiceEmailMessage $serviceEmailMessage;
     protected MailTemplateFactory $mailTemplateFactory;
@@ -44,7 +45,8 @@ class MailCallback implements TransitionCallback {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException|CannotAccessModelException
      */
-    public function __invoke(ModelHolder $holder, ...$args): void {
+    public function __invoke(ModelHolder $holder, ...$args): void
+    {
         $this->invoke($holder, ...$args);
     }
 
@@ -56,7 +58,8 @@ class MailCallback implements TransitionCallback {
      * @throws UnsupportedLanguageException
      * @throws CannotAccessModelException
      */
-    public function invoke(ModelHolder $holder, ...$args): void {
+    public function invoke(ModelHolder $holder, ...$args): void
+    {
         $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
         if (is_null($person)) {
             throw new BadTypeException(ModelPerson::class, $person);

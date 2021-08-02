@@ -6,9 +6,11 @@ use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use Nette\DI\Container;
 
-class ProductsGrid extends EntityGrid {
+class ProductsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container, ServiceProduct::class, [
             'warehouse_product.product_id',
             'warehouse_product.name_cs',

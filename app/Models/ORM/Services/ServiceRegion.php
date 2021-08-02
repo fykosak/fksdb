@@ -9,9 +9,11 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @method ModelRegion findByPrimary($key)
  */
-class ServiceRegion extends AbstractService {
+class ServiceRegion extends AbstractService
+{
 
-    public function getCountries(): TypedTableSelection {
+    public function getCountries(): TypedTableSelection
+    {
         return $this->getTable()->where('country_iso = nuts');
     }
 }

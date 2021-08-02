@@ -9,7 +9,8 @@ use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
-class WebServiceModel {
+class WebServiceModel
+{
 
     private ModelLogin $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
@@ -25,7 +26,8 @@ class WebServiceModel {
         'GetStats' => Models\StatsWebModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator) {
+    public function __construct(Container $container, PasswordAuthenticator $authenticator)
+    {
         $this->authenticator = $authenticator;
         $this->container = $container;
     }
@@ -37,7 +39,8 @@ class WebServiceModel {
      * @throws \SoapFault
      * @throws \Exception
      */
-    public function authenticationCredentials(\stdClass $args): void {
+    public function authenticationCredentials(\stdClass $args): void
+    {
         if (!isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new \SoapFault('Sender', 'Missing credentials.');
@@ -58,7 +61,8 @@ class WebServiceModel {
      * @throws \SoapFault
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments): \SoapVar {
+    public function __call(string $name, array $arguments): \SoapVar
+    {
         $this->checkAuthentication(__FUNCTION__);
         if (isset(self::WEB_MODELS[$name])) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
@@ -77,7 +81,8 @@ class WebServiceModel {
      * @param string $serviceName
      * @throws \SoapFault
      */
-    private function checkAuthentication(string $serviceName): void {
+    private function checkAuthentication(string $serviceName): void
+    {
         if (!isset($this->authenticatedLogin)) {
             $msg = sprintf('Unauthenticated access to %s.', $serviceName);
             $this->log($msg);
@@ -87,7 +92,8 @@ class WebServiceModel {
         }
     }
 
-    private function log(string $msg): void {
+    private function log(string $msg): void
+    {
         if (!isset($this->authenticatedLogin)) {
             $message = 'unauthenticated@';
         } else {

@@ -12,8 +12,8 @@ use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-abstract class AESOPModel {
-
+abstract class AESOPModel
+{
     use SmartObject;
 
     protected const ID_SCOPE = 'fksdb.person_id';
@@ -26,16 +26,19 @@ abstract class AESOPModel {
 
     protected Explorer $explorer;
 
-    public function __construct(Container $container, ModelContestYear $contestYear) {
+    public function __construct(Container $container, ModelContestYear $contestYear)
+    {
         $this->contestYear = $contestYear;
         $container->callInjects($this);
     }
 
-    public function injectExplorer(Explorer $explorer): void {
+    public function injectExplorer(Explorer $explorer): void
+    {
         $this->explorer = $explorer;
     }
 
-    protected function getDefaultParams(): array {
+    protected function getDefaultParams(): array
+    {
         return [
             'version' => 1,
             'event' => $this->getMask(),
@@ -46,7 +49,8 @@ abstract class AESOPModel {
         ];
     }
 
-    private function formatSchool(?ModelSchool $school): ?string {
+    private function formatSchool(?ModelSchool $school): ?string
+    {
         if (!$school) {
             return null;
         }
@@ -60,7 +64,8 @@ abstract class AESOPModel {
         return 'ufo';
     }
 
-    public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse {
+    public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
+    {
         $text = '';
 
         foreach ($params as $key => $value) {
@@ -77,7 +82,8 @@ abstract class AESOPModel {
         return $response;
     }
 
-    protected function getAESOPContestant(ModelPerson $person): array {
+    protected function getAESOPContestant(ModelPerson $person): array
+    {
         $postContact = $person->getPermanentPostContact(false);
         $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->getSchool();
@@ -112,5 +118,4 @@ abstract class AESOPModel {
     abstract public function createResponse(): PlainTextResponse;
 
     abstract protected function getMask(): string;
-
 }

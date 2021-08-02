@@ -13,16 +13,19 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class ResultsGrid extends BaseGrid {
+class ResultsGrid extends BaseGrid
+{
 
     private StoredQuery $storedQuery;
 
-    public function __construct(StoredQuery $storedQuery, Container $container) {
+    public function __construct(StoredQuery $storedQuery, Container $container)
+    {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         return $this->storedQuery;
     }
 
@@ -32,7 +35,8 @@ class ResultsGrid extends BaseGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->paginate = false;
         try {

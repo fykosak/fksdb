@@ -14,7 +14,8 @@ use Nette\DI\Definitions\Statement;
 use Nette\DI\ServiceCreationException;
 use Nette\NotImplementedException;
 
-class Helpers {
+class Helpers
+{
 
     /** @var string[] */
     private static array $semanticMap = [
@@ -27,7 +28,8 @@ class Helpers {
         'leq' => Leq::class,
     ];
 
-    public static function registerSemantic(array $semanticMap): void {
+    public static function registerSemantic(array $semanticMap): void
+    {
         self::$semanticMap += $semanticMap;
     }
 
@@ -37,7 +39,8 @@ class Helpers {
      * @param Statement|mixed $expression
      * @return array|Statement|mixed
      */
-    public static function statementFromExpression($expression) {
+    public static function statementFromExpression($expression)
+    {
         if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
@@ -70,7 +73,8 @@ class Helpers {
      * @throws ServiceCreationException
      * @throws \ReflectionException
      */
-    public static function evalExpression($expression, Container $container) {
+    public static function evalExpression($expression, Container $container)
+    {
         if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
@@ -101,7 +105,8 @@ class Helpers {
      * @return mixed
      * @throws \ReflectionException
      */
-    public static function evalExpressionArray($expressionArray, Container $container) {
+    public static function evalExpressionArray($expressionArray, Container $container)
+    {
         if (is_iterable($expressionArray)) {
             $result = [];
             foreach ($expressionArray as $key => $expression) {
@@ -116,7 +121,8 @@ class Helpers {
      * @param $statement
      * @return Statement|string
      */
-    public static function translate($statement) {
+    public static function translate($statement)
+    {
         if ($statement instanceof Statement && $statement->entity === '_') {
             return _(...$statement->arguments);
         }

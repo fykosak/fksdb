@@ -15,13 +15,16 @@ use Nette\Database\Table\ActiveRow;
  * @property-read double x_coordinate
  * @property-read double y_coordinate
  */
-class ModelFyziklaniTeamPosition extends AbstractModel {
+class ModelFyziklaniTeamPosition extends AbstractModel
+{
 
-    public function getRoom(): ModelFyziklaniRoom {
+    public function getRoom(): ModelFyziklaniRoom
+    {
         return ModelFyziklaniRoom::createFromActiveRow($this->room);
     }
 
-    public function getTeam(): ?ModelFyziklaniTeam {
+    public function getTeam(): ?ModelFyziklaniTeam
+    {
         if ($this->e_fyziklani_team_id) {
             return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
         }

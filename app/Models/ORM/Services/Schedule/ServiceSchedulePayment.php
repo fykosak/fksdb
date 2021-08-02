@@ -12,7 +12,8 @@ use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 
-class ServiceSchedulePayment extends AbstractService {
+class ServiceSchedulePayment extends AbstractService
+{
 
     /**
      * @param array $data
@@ -24,7 +25,8 @@ class ServiceSchedulePayment extends AbstractService {
      * @throws StorageException
      * @throws ModelException
      */
-    public function storeItems(array $data, ModelPayment $payment): void {
+    public function storeItems(array $data, ModelPayment $payment): void
+    {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
@@ -49,7 +51,8 @@ class ServiceSchedulePayment extends AbstractService {
         }
     }
 
-    private function filerData(array $data): array {
+    private function filerData(array $data): array
+    {
         $results = [];
         foreach ($data as $person => $values) {
             foreach ($values as $id => $value) {

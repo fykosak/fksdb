@@ -3,12 +3,12 @@
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -26,16 +26,19 @@ use Nette\Security\Resource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
+class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
+{
 
     public const RESOURCE_ID = 'event.scheduleItem';
 
-    public function getScheduleGroup(): ModelScheduleGroup {
-        return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
+    public function getEvent(): ModelEvent
+    {
+        return $this->getScheduleGroup()->getEvent();
     }
 
-    public function getEvent(): ModelEvent {
-        return $this->getScheduleGroup()->getEvent();
+    public function getScheduleGroup(): ModelScheduleGroup
+    {
+        return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
     }
 
     /**
@@ -43,7 +46,8 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
      * @return Price
      * @throws UnsupportedCurrencyException
      */
-    public function getPrice(string $currency): Price {
+    public function getPrice(string $currency): Price
+    {
         switch ($currency) {
             case Price::CURRENCY_EUR:
                 return new Price(+$this->price_eur, $currency);
@@ -54,55 +58,65 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
         }
     }
 
-    public function getInterested(): GroupedSelection {
-        return $this->related(DbNames::TAB_PERSON_SCHEDULE);
-    }
-
-    /* ****** CAPACITY CALCULATION *******/
-
-    public function getCapacity(): ?int {
-        return $this->capacity;
-    }
-
-    public function isUnlimitedCapacity(): bool {
-        return is_null($this->getCapacity());
-    }
-
-    public function getUsedCapacity(): int {
-        return $this->getInterested()->count();
-    }
-
-    private function calculateAvailableCapacity(): int {
-        return ($this->getCapacity() - $this->getUsedCapacity());
-    }
-
-    public function hasFreeCapacity(): bool {
+    public function hasFreeCapacity(): bool
+    {
         if ($this->isUnlimitedCapacity()) {
             return true;
         }
         return $this->calculateAvailableCapacity() > 0;
     }
 
+    /* ****** CAPACITY CALCULATION *******/
+
+    public function isUnlimitedCapacity(): bool
+    {
+        return is_null($this->getCapacity());
+    }
+
+    public function getCapacity(): ?int
+    {
+        return $this->capacity;
+    }
+
+    private function calculateAvailableCapacity(): int
+    {
+        return ($this->getCapacity() - $this->getUsedCapacity());
+    }
+
+    public function getUsedCapacity(): int
+    {
+        return $this->getInterested()->count();
+    }
+
+    public function getInterested(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_PERSON_SCHEDULE);
+    }
+
     /**
      * @return int
      * @throws \LogicException
      */
-    public function getAvailableCapacity(): int {
+    public function getAvailableCapacity(): int
+    {
         if ($this->isUnlimitedCapacity()) {
             throw new \LogicException(_('Unlimited capacity'));
         }
         return $this->calculateAvailableCapacity();
     }
 
-    public function getLabel(): string {
-        return $this->name_cs . '/' . $this->name_en;
-    }
-
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->getLabel();
     }
 
-    public function __toArray(): array {
+    public function getLabel(): string
+    {
+        return $this->name_cs . '/' . $this->name_en;
+    }
+
+    public function __toArray(): array
+    {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'price' => [
@@ -124,7 +138,8 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
         ];
     }
 
-    public function createXMLNode(\DOMDocument $document): \DOMElement {
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', $this->schedule_item_id);
         XMLHelper::fillArrayToNode([
@@ -153,7 +168,8 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator {
         return $node;
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

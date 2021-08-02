@@ -10,7 +10,8 @@ use FKSDB\Models\Utils\CSVParser;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 
-class RoomsFromCSV extends Stage {
+class RoomsFromCSV extends Stage
+{
 
     private string $data;
 
@@ -18,7 +19,8 @@ class RoomsFromCSV extends Stage {
 
     private ServiceFyziklaniTeam $serviceTeam;
 
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam)
+    {
         $this->event = $event;
         $this->serviceTeam = $serviceTeam;
     }
@@ -26,11 +28,13 @@ class RoomsFromCSV extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         if (!file_exists($this->data)) {
             throw new PipelineException(sprintf('File %s doesn\'t exist.', $this->data));
         }
@@ -71,8 +75,8 @@ class RoomsFromCSV extends Stage {
     /**
      * @return mixed
      */
-    public function getOutput() {
+    public function getOutput()
+    {
         return null;
     }
 }
-

@@ -17,18 +17,21 @@ use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-abstract class AbstractApplicationsGrid extends BaseGrid {
+abstract class AbstractApplicationsGrid extends BaseGrid
+{
 
     protected ModelEvent $event;
     private Holder $holder;
 
-    public function __construct(ModelEvent $event, Holder $holder, Container $container) {
+    public function __construct(ModelEvent $event, Holder $holder, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
         $this->holder = $holder;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $participants = $this->getSource();
         $source = new SearchableDataSource($participants);
         $source->setFilterCallback($this->getFilterCallBack());
@@ -41,7 +44,8 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSearchForm(): FormControl {
+    protected function createComponentSearchForm(): FormControl
+    {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
 
         $states = [];
@@ -83,12 +87,14 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addHolderColumns();
     }
 
-    public function getFilterCallBack(): callable {
+    public function getFilterCallBack(): callable
+    {
         return function (Selection $table, $value): void {
             $states = [];
             foreach ($value->status as $state => $value) {
@@ -109,7 +115,8 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addHolderColumns(): void {
+    protected function addHolderColumns(): void
+    {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
         $fields = [];
         foreach ($holderFields as $name => $def) {

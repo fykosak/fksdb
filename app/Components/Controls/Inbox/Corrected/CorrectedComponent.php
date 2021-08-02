@@ -9,15 +9,18 @@ use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\UI\Form;
 
-class CorrectedComponent extends SeriesTableComponent {
+class CorrectedComponent extends SeriesTableComponent
+{
 
     private CorrectedStorage $correctedStorage;
 
-    final public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
+    final public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void
+    {
         $this->correctedStorage = $correctedStorage;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
@@ -26,7 +29,8 @@ class CorrectedComponent extends SeriesTableComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addTextArea('submits', _('Submits'))->setOption('description', _('Comma separated submitIDs'));
@@ -37,7 +41,8 @@ class CorrectedComponent extends SeriesTableComponent {
         return $control;
     }
 
-    private function handleSuccess(Form $form): void {
+    private function handleSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

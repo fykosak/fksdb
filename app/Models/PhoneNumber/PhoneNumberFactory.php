@@ -7,22 +7,26 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\Html;
 
-class PhoneNumberFactory {
+class PhoneNumberFactory
+{
 
     private ServiceRegion $serviceRegion;
 
     private TypedTableSelection $table;
 
-    public function __construct(ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion)
+    {
         $this->serviceRegion = $serviceRegion;
         $this->table = $this->serviceRegion->getTable();
     }
 
-    private function getAllRegions(): TypedTableSelection {
+    private function getAllRegions(): TypedTableSelection
+    {
         return $this->table;
     }
 
-    public function formatPhone(string $number): Html {
+    public function formatPhone(string $number): Html
+    {
         try {
             $region = $this->getRegion($number);
             if ($region) {
@@ -37,7 +41,8 @@ class PhoneNumberFactory {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?ModelRegion {
+    private function getRegion(string $number): ?ModelRegion
+    {
         /** @var ModelRegion $region */
         foreach ($this->getAllRegions() as $region) {
             if ($region->matchPhone($number)) {
@@ -47,7 +52,8 @@ class PhoneNumberFactory {
         return null;
     }
 
-    public function isValid(string $number): bool {
+    public function isValid(string $number): bool
+    {
         return !!$this->getRegion($number);
     }
 }

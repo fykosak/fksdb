@@ -10,16 +10,19 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use Nette\DI\Container;
 
-class SchoolCheckComponent extends BaseComponent {
+class SchoolCheckComponent extends BaseComponent
+{
 
     private ModelEvent $event;
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function render(ModelFyziklaniTeam $currentTeam): void {
+    final public function render(ModelFyziklaniTeam $currentTeam): void
+    {
         $schools = [];
         foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
             $schools[$schoolId] = [
@@ -40,7 +43,8 @@ class SchoolCheckComponent extends BaseComponent {
      * @param ModelFyziklaniTeam $team
      * @return ModelSchool[]
      */
-    private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array {
+    private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array
+    {
         $schools = [];
         foreach ($team->getParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row->event_participant);
@@ -50,7 +54,8 @@ class SchoolCheckComponent extends BaseComponent {
         return $schools;
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    {
         return new ColumnPrinterComponent($this->getContext());
     }
 }

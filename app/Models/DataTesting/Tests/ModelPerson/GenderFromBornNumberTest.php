@@ -7,13 +7,16 @@ use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
-class GenderFromBornNumberTest extends PersonTest {
+class GenderFromBornNumberTest extends PersonTest
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void
+    {
         $info = $person->getInfo();
 
         if (!$info) {

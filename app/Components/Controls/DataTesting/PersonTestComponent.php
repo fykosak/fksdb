@@ -14,7 +14,8 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
-class PersonTestComponent extends BaseComponent {
+class PersonTestComponent extends BaseComponent
+{
 
     /**
      * @persistent
@@ -37,7 +38,8 @@ class PersonTestComponent extends BaseComponent {
     private ServicePerson $servicePerson;
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void
+    {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -46,7 +48,8 @@ class PersonTestComponent extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
@@ -101,7 +104,8 @@ class PersonTestComponent extends BaseComponent {
     /**
      * @return array[]
      */
-    private function calculateProblems(): array {
+    private function calculateProblems(): array
+    {
         $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
         /** @var ModelPerson $model */
@@ -121,7 +125,8 @@ class PersonTestComponent extends BaseComponent {
         return $logs;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->logs = $this->calculateProblems();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }

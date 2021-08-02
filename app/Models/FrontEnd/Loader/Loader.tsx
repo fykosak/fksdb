@@ -4,7 +4,7 @@ import { NetteActions } from './netteActions';
 
 export type App = (element: Element, reactId: string, rawData: string, actions: NetteActions) => boolean;
 
-class Loader {
+export class Loader {
     public hashMapLoader: MapRegister;
 
     private items: App[] = [];
@@ -39,5 +39,3 @@ class Loader {
         });
     }
 }
-
-export const appsLoader = new Loader();

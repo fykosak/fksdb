@@ -7,7 +7,8 @@ use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
-class SQLConsole extends TextArea {
+class SQLConsole extends TextArea
+{
 
     protected const CSS_CLASS = 'sqlConsole';
 
@@ -19,7 +20,8 @@ class SQLConsole extends TextArea {
      * SQLConsole constructor.
      * @param null $label
      */
-    public function __construct($label = null) {
+    public function __construct($label = null)
+    {
         parent::__construct($label);
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
@@ -36,10 +38,10 @@ class SQLConsole extends TextArea {
         });
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $control = parent::getControl();
         $control->class = self::CSS_CLASS;
         return $control;
     }
-
 }

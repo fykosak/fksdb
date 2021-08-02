@@ -4,15 +4,18 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use Nette\Database\Explorer;
 
-class AggregatedSeriesChart extends AbstractPerSeriesChart {
+class AggregatedSeriesChart extends AbstractPerSeriesChart
+{
 
     private Explorer $explorer;
 
-    public function injectSecondary(Explorer $explorer): void {
+    public function injectSecondary(Explorer $explorer): void
+    {
         $this->explorer = $explorer;
     }
 
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $query = $this->explorer->query('select ts.year,
        ts.series,
        (
@@ -36,11 +39,13 @@ group by year, series', $this->contest->contest_id);
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Total contestants per series');
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

@@ -22,7 +22,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
-class BaseHolder {
+class BaseHolder
+{
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
@@ -53,11 +54,13 @@ class BaseHolder {
 
     public array $data = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->name = $name;
     }
 
-    public function addField(Field $field): void {
+    public function addField(Field $field): void
+    {
         $field->setBaseHolder($this);
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -66,15 +69,18 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getFields(): array {
+    public function getFields(): array
+    {
         return $this->fields;
     }
 
-    public function getHolder(): Holder {
+    public function getHolder(): Holder
+    {
         return $this->holder;
     }
 
-    public function setHolder(Holder $holder): void {
+    public function setHolder(Holder $holder): void
+    {
         $this->holder = $holder;
     }
 
@@ -82,7 +88,8 @@ class BaseHolder {
      * @param bool|callable $modifiable
      * @return void
      */
-    public function setModifiable($modifiable): void {
+    public function setModifiable($modifiable): void
+    {
         $this->modifiable = $modifiable;
     }
 
@@ -90,15 +97,18 @@ class BaseHolder {
      * @param bool|callable $visible
      * @return void
      */
-    public function setVisible($visible): void {
+    public function setVisible($visible): void
+    {
         $this->visible = $visible;
     }
 
-    public function setEventRelation(?EventRelation $eventRelation): void {
+    public function setEventRelation(?EventRelation $eventRelation): void
+    {
         $this->eventRelation = $eventRelation;
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->event;
     }
 
@@ -106,7 +116,8 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    private function setEvent(ModelEvent $event): void {
+    private function setEvent(ModelEvent $event): void
+    {
         $this->event = $event;
         $this->data[self::EVENT_COLUMN] = $this->event->getPrimary();
         $this->cacheParameters();
@@ -116,7 +127,8 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): void {
+    public function inferEvent(ModelEvent $event): void
+    {
         if ($this->eventRelation instanceof EventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
         } else {
@@ -124,50 +136,61 @@ class BaseHolder {
         }
     }
 
-    public function getParamScheme(): array {
+    public function getParamScheme(): array
+    {
         return $this->paramScheme;
     }
 
-    public function setParamScheme(array $paramScheme): void {
+    public function setParamScheme(array $paramScheme): void
+    {
         $this->paramScheme = $paramScheme;
     }
 
-    public function getEvaluator(): ExpressionEvaluator {
+    public function getEvaluator(): ExpressionEvaluator
+    {
         return $this->evaluator;
     }
 
-    public function setEvaluator(ExpressionEvaluator $evaluator): void {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void
+    {
         $this->evaluator = $evaluator;
     }
 
-    public function getValidator(): DataValidator {
+    public function getValidator(): DataValidator
+    {
         return $this->validator;
     }
 
-    public function setValidator(DataValidator $validator): void {
+    public function setValidator(DataValidator $validator): void
+    {
         $this->validator = $validator;
     }
 
-    public function isVisible(): bool {
+    public function isVisible(): bool
+    {
         return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
-    public function isModifiable(): bool {
+    public function isModifiable(): bool
+    {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
     /**
      * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
      */
-    public function getModel2(): ?ActiveRow {
+    public function getModel2(): ?ActiveRow
+    {
         return $this->model ?? null;
     }
 
-    public function setModel(?ActiveRow $model): void {
+    public function setModel(?ActiveRow $model): void
+    {
         $this->model = $model;
     }
 
-    public function saveModel(): void {
+    public function saveModel(): void
+    {
         if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $model = $this->getModel2();
             if ($model) {
@@ -178,7 +201,8 @@ class BaseHolder {
         }
     }
 
-    public function getModelState(): string {
+    public function getModelState(): string
+    {
         $model = $this->getModel2();
         if (isset($this->data[self::STATE_COLUMN])) {
             return $this->data[self::STATE_COLUMN];
@@ -190,76 +214,92 @@ class BaseHolder {
         return Machine::STATE_INIT;
     }
 
-    public function setModelState(string $state): void {
+    public function setModelState(string $state): void
+    {
         $this->data[self::STATE_COLUMN] = $state;
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
     /**
      * @return AbstractService|AbstractServiceMulti
      */
-    public function getService() {
+    public function getService()
+    {
         return $this->service;
     }
 
     /**
      * @param AbstractService|AbstractServiceMulti $service
      */
-    public function setService($service): void {
+    public function setService($service): void
+    {
         $this->service = $service;
     }
 
-    public function getLabel(): string {
+    public function getLabel(): string
+    {
         return $this->label;
     }
 
-    public function setLabel(string $label): void {
+    public function setLabel(string $label): void
+    {
         $this->label = $label;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return $this->description;
     }
 
-    public function setDescription(?string $description): void {
+    public function setDescription(?string $description): void
+    {
         $this->description = $description;
     }
 
-    public function getJoinOn(): ?string {
+    public function getJoinOn(): ?string
+    {
         return $this->joinOn;
     }
 
-    public function setJoinOn(?string $joinOn): void {
+    public function setJoinOn(?string $joinOn): void
+    {
         $this->joinOn = $joinOn;
     }
 
-    public function getJoinTo(): ?string {
+    public function getJoinTo(): ?string
+    {
         return $this->joinTo;
     }
 
-    public function setJoinTo(?string $joinTo): void {
+    public function setJoinTo(?string $joinTo): void
+    {
         $this->joinTo = $joinTo;
     }
 
-    public function getEventIdColumn(): string {
+    public function getEventIdColumn(): string
+    {
         return $this->eventIdColumn;
     }
 
-    public function setEventIdColumn(string $eventId): void {
+    public function setEventIdColumn(string $eventId): void
+    {
         $this->eventIdColumn = $this->resolveColumnJoins($eventId);
     }
 
-    private function resolveColumnJoins(string $column): string {
+    private function resolveColumnJoins(string $column): string
+    {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
         }
         return $column;
     }
 
-    public static function getBareColumn(string $column): ?string {
+    public static function getBareColumn(string $column): ?string
+    {
         $column = str_replace(':', '.', $column);
         $pos = strrpos($column, '.');
         return $pos === false ? $column : substr($column, $pos + 1);
@@ -268,13 +308,15 @@ class BaseHolder {
     /**
      * @return Field[]
      */
-    public function getDeterminingFields(): array {
+    public function getDeterminingFields(): array
+    {
         return array_filter($this->fields, function (Field $field): bool {
             return $field->isDetermining();
         });
     }
 
-    public function createFormContainer(): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions
+    {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -290,7 +332,8 @@ class BaseHolder {
         return $container;
     }
 
-    public function getPerson(): ?ModelPerson {
+    public function getPerson(): ?ModelPerson
+    {
         /** @var ModelPerson $model */
         try {
             $app = $this->getModel2();
@@ -304,7 +347,8 @@ class BaseHolder {
         }
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->name;
     }
 
@@ -314,7 +358,8 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private function cacheParameters(): void {
+    private function cacheParameters(): void
+    {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         if (is_string($parameters)) {
@@ -328,7 +373,8 @@ class BaseHolder {
      * @param mixed $default
      * @return mixed
      */
-    public function getParameter($name, $default = null) {
+    public function getParameter($name, $default = null)
+    {
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {

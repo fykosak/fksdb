@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Payment\Handler;
 
-class EmptyDataException extends \Exception {
+class EmptyDataException extends \Exception
+{
 
 }

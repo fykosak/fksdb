@@ -16,7 +16,8 @@ use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
-class PersonFactory extends AbstractFactory {
+class PersonFactory extends AbstractFactory
+{
 
     private const VALUE_LOGIN = 'fromLogin';
     /** @var callable */
@@ -81,7 +82,8 @@ class PersonFactory extends AbstractFactory {
      * @return ReferencedId
      * @throws \ReflectionException
      */
-    public function createComponent(Field $field): ReferencedId {
+    public function createComponent(Field $field): ReferencedId
+    {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
@@ -96,7 +98,8 @@ class PersonFactory extends AbstractFactory {
         return $referencedId;
     }
 
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void
+    {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -114,7 +117,8 @@ class PersonFactory extends AbstractFactory {
      * @return void
      * @throws \ReflectionException
      */
-    public function validate(Field $field, DataValidator $validator): void {
+    public function validate(Field $field, DataValidator $validator): void
+    {
         // check person ID itself
         parent::validate($field, $validator);
 
@@ -145,7 +149,8 @@ class PersonFactory extends AbstractFactory {
      * @return array
      * @throws \ReflectionException
      */
-    private function evaluateFieldsDefinition(Field $field): array {
+    private function evaluateFieldsDefinition(Field $field): array
+    {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 

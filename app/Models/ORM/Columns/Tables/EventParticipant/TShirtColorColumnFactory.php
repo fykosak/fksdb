@@ -8,12 +8,14 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
-class TShirtColorColumnFactory extends ColumnFactory {
+class TShirtColorColumnFactory extends ColumnFactory
+{
     /**
      * @param AbstractModel|ModelEventParticipant $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         $value = $model->tshirt_color;
         if (\is_null($value)) {
             return NotSetBadge::getHtml();
@@ -26,5 +28,4 @@ class TShirtColorColumnFactory extends ColumnFactory {
         $container->addText($value);
         return $container;
     }
-
 }

@@ -10,7 +10,8 @@ use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\SeriesTable;
 use Nette\DI\Container;
 
-class SubmitCheckComponent extends BaseComponent {
+class SubmitCheckComponent extends BaseComponent
+{
 
     private SeriesTable $seriesTable;
 
@@ -18,21 +19,25 @@ class SubmitCheckComponent extends BaseComponent {
 
     private UploadedStorage $uploadedStorage;
 
-    public function __construct(Container $context, SeriesTable $seriesTable) {
+    public function __construct(Container $context, SeriesTable $seriesTable)
+    {
         parent::__construct($context);
         $this->seriesTable = $seriesTable;
     }
 
-    final public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
+    final public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void
+    {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
-    public function handleCheck(): void {
+    public function handleCheck(): void
+    {
         /** @var ModelSubmit $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {

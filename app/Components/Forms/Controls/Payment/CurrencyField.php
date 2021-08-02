@@ -6,12 +6,14 @@ use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Forms\Controls\SelectBox;
 
-class CurrencyField extends SelectBox {
+class CurrencyField extends SelectBox
+{
     /**
      * CurrencyField constructor.
      * @throws UnsupportedCurrencyException
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(_('Currency'));
         $items = [];
         foreach (Price::getAllCurrencies() as $currency) {

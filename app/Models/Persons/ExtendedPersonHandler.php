@@ -23,8 +23,8 @@ use Nette\SmartObject;
 use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
-class ExtendedPersonHandler {
-
+class ExtendedPersonHandler
+{
     use SmartObject;
 
     public const CONT_AGGR = 'aggr';
@@ -57,11 +57,13 @@ class ExtendedPersonHandler {
         $this->invitationLang = $invitationLang;
     }
 
-    public function getInvitationLang(): string {
+    public function getInvitationLang(): string
+    {
         return $this->invitationLang;
     }
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return $this->person;
     }
 
@@ -69,7 +71,8 @@ class ExtendedPersonHandler {
      * @param Form $form
      * @return ModelPerson|null|AbstractModel|ActiveRow
      */
-    final protected function getReferencedPerson(Form $form): ?ActiveRow {
+    final protected function getReferencedPerson(Form $form): ?ActiveRow
+    {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
         return $input->getModel();
@@ -83,7 +86,8 @@ class ExtendedPersonHandler {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int {
+    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int
+    {
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -137,7 +141,8 @@ class ExtendedPersonHandler {
         }
     }
 
-    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
+    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void
+    {
         if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }

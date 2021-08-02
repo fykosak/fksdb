@@ -34,16 +34,11 @@ class ScheduleField extends React.Component<OwnProps, {}> {
         return <StoreCreator app={app}>
             <>
                 <NetteInputConnector input={this.props.input}/>
-                {this.getComponentByMode()}
+                {this.props.scheduleDef.groups.length === 0
+                    ? <span className="text text-muted">{translator.getText('No items found.')}</span>
+                    : <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>}
             </>
         </StoreCreator>;
-    }
-
-    private getComponentByMode(): JSX.Element {
-        if (this.props.scheduleDef.groups.length === 0) {
-            return <span className="text text-muted">{translator.getText('No items found.')}</span>;
-        }
-        return <Container groups={this.props.scheduleDef.groups} params={this.props.scheduleDef.options}/>;
     }
 }
 

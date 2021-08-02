@@ -7,7 +7,8 @@ use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\SmartObject;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-class XSLFormat implements ExportFormat {
+class XSLFormat implements ExportFormat
+{
     use SmartObject;
 
     private StoredQuery $storedQuery;
@@ -18,25 +19,30 @@ class XSLFormat implements ExportFormat {
 
     private XMLNodeSerializer $xmlSerializer;
 
-    public function __construct(StoredQuery $storedQuery, string $xslFile, XMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, string $xslFile, XMLNodeSerializer $xmlSerializer)
+    {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
     }
 
-    public function getParameters(): array {
+    public function getParameters(): array
+    {
         return $this->parameters;
     }
 
-    public function setParameters(array $parameters): void {
+    public function setParameters(array $parameters): void
+    {
         $this->parameters = $parameters;
     }
 
-    public function addParameters(array $parameters): void {
+    public function addParameters(array $parameters): void
+    {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    public function getResponse(): PlainTextResponse {
+    public function getResponse(): PlainTextResponse
+    {
         // Prepare XSLT processor
         $xsl = new \DOMDocument();
         $xsl->load($this->xslFile);

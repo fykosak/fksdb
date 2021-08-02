@@ -5,13 +5,14 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\SmartObject;
 
-class ArrayOptions implements OptionsProvider {
-
+class ArrayOptions implements OptionsProvider
+{
     use SmartObject;
 
     private array $options;
 
-    public function __construct(array $options, bool $useKeys = true) {
+    public function __construct(array $options, bool $useKeys = true)
+    {
         if (!$useKeys) {
             $this->options = array_combine($options, $options);
         } else {
@@ -19,7 +20,8 @@ class ArrayOptions implements OptionsProvider {
         }
     }
 
-    public function getOptions(Field $field): array {
+    public function getOptions(Field $field): array
+    {
         return $this->options;
     }
 }

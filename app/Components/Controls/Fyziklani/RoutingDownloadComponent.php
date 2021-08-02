@@ -8,7 +8,8 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
-class RoutingDownloadComponent extends BaseComponent {
+class RoutingDownloadComponent extends BaseComponent
+{
 
     private static bool $attachedJS = false;
 
@@ -16,7 +17,8 @@ class RoutingDownloadComponent extends BaseComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event)
+    {
         parent::__construct($container);
         $this->event = $event;
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
@@ -29,11 +31,13 @@ class RoutingDownloadComponent extends BaseComponent {
         });
     }
 
-    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void
+    {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $rooms = [];// $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
 
         $this->template->rooms = $rooms;

@@ -7,7 +7,9 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 /**
  * @deprecated since 34 year is not supported
  */
-class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
+class Heuristics /*extends StoredQueryPostProcessing */
+{
+ /* uncomment to use */
 
     public const RESERVE_1 = 8;
     public const ABS_INV = 3;
@@ -23,7 +25,8 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
     public const RULE4MW = '4WM';
     public const RULE4FW = '4WF';
 
-    public function getDescription(): string {
+    public function getDescription(): string
+    {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
             Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.';
     }
@@ -32,7 +35,8 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
      * @param \PDOStatement $data
      * @return iterable
      */
-    public function processData(\PDOStatement $data) {
+    public function processData(\PDOStatement $data)
+    {
 
         $result = iterator_to_array($data);
         $p = $this->findP($result);
@@ -169,7 +173,6 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
                     $row['spare'] = self::RULE4M2;
                     $spareK += 1;
                 } elseif ($row['gender'] == 'F' && $spareH < $nH) {
-
                     $row['spare'] = self::RULE4F2;
                     $spareH += 1;
                 }
@@ -192,7 +195,8 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
         return $result;
     }
 
-    private function findP(array $data): float {
+    private function findP(array $data): float
+    {
         $parameterZ = $this->parameters['par_z'];
         $parameterP = ceil(($parameterZ - self::RESERVE_1) / self::CAT_COUNT) + 1;
         do {
@@ -207,15 +211,18 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
         return $parameterP;
     }
 
-    private function inviting(array $row, float $parameterP): bool {
+    private function inviting(array $row, float $parameterP): bool
+    {
         return $row['category'] == 4 ? ($row['cat_rank'] <= $parameterP - self::P_4) : ($row['cat_rank'] <= $parameterP);
     }
 
-    private function checkInvMin(array $row): bool {
+    private function checkInvMin(array $row): bool
+    {
         return $row['points'] >= $this->parameters['min_z'];
     }
 
-    private function checkSpMin(array $row): bool {
+    private function checkSpMin(array $row): bool
+    {
         return $row['points'] >= $this->parameters['min_n'];
     }
 }

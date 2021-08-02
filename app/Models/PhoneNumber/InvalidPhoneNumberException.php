@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\PhoneNumber;
 
-class InvalidPhoneNumberException extends \Exception {
+class InvalidPhoneNumberException extends \Exception
+{
 
 }

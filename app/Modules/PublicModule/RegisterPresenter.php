@@ -49,7 +49,8 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * Just proof of concept (obsoleted due to ReferencedPerson).
  */
-class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter {
+class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPresenter
+{
 
     /**
      * @persistent
@@ -82,28 +83,34 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /* ********************* TITLE ***************** */
-    public function titleContest(): void {
+    public function titleContest(): void
+    {
         $this->setPageTitle(new PageTitle(_('Select contest')));
     }
 
-    public function titleYear(): void {
+    public function titleYear(): void
+    {
         $this->setPageTitle(new PageTitle(_('Select year'), '', $this->getSelectedContest()->name));
     }
 
-    public function titleEmail(): void {
+    public function titleEmail(): void
+    {
         $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name));
     }
 
-    public function titleContestant(): void {
+    public function titleContestant(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
 
-    public function actionDefault(): void {
+    public function actionDefault(): void
+    {
         $this->redirect('contest');
     }
 
-    public function actionContestant(): void {
+    public function actionContestant(): void
+    {
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
 
@@ -134,11 +141,13 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    final public function renderContest(): void {
+    final public function renderContest(): void
+    {
         $this->template->contests = $this->serviceContest->getTable();
     }
 
-    final public function renderYear(): void {
+    final public function renderYear(): void
+    {
         $contest = $this->getSelectedContest();
         $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
@@ -157,7 +166,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return void
      * @throws BadTypeException
      */
-    final public function renderContestant(): void {
+    final public function renderContestant(): void
+    {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
@@ -170,15 +180,18 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    public function getSelectedContest(): ?ModelContest {
+    public function getSelectedContest(): ?ModelContest
+    {
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
 
-    public function getSelectedYear(): ?int {
+    public function getSelectedYear(): ?int
+    {
         return $this->year;
     }
 
-    public function getSelectedContestYear(): ?ModelContestYear {
+    public function getSelectedContestYear(): ?ModelContestYear
+    {
         $contest = $this->getSelectedContest();
         if (is_null($contest)) {
             return null;
@@ -187,7 +200,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
-    private function getPerson(): ?ModelPerson {
+    private function getPerson(): ?ModelPerson
+    {
         if (!isset($this->person)) {
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
@@ -202,7 +216,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentEmailForm(): FormControl {
+    protected function createComponentEmailForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
@@ -213,7 +228,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    private function emailFormSucceeded(Form $form): void {
+    private function emailFormSucceeded(Form $form): void
+    {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);
     }
@@ -222,7 +238,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @return array
      * @throws \ReflectionException
      */
-    private function getFieldsDefinition(): array {
+    private function getFieldsDefinition(): array
+    {
         $contestName = $this->getSelectedContest()->getContestSymbol();
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
@@ -233,7 +250,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function createComponentContestantForm(): FormControl {
+    protected function createComponentContestantForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -281,23 +299,28 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    public function getModel(): ?AbstractModel {
+    public function getModel(): ?AbstractModel
+    {
         return null; //we always create new contestant
     }
 
-    public function messageCreate(): string {
+    public function messageCreate(): string
+    {
         return _('Contestant %s registered.');
     }
 
-    public function messageEdit(): string {
+    public function messageEdit(): string
+    {
         return _('Contestant %s modified.');
     }
 
-    public function messageError(): string {
+    public function messageError(): string
+    {
         return _('Error while registering.');
     }
 
-    public function messageExists(): string {
+    public function messageExists(): string
+    {
         return _('Contestant already registered.');
     }
 
@@ -308,7 +331,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @throws BadRequestException
      * @throws \ReflectionException
      */
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $contest = $this->getSelectedContest();
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');

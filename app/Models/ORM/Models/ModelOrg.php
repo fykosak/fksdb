@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
 
 /**
  * @property-read ActiveRow contest
@@ -20,19 +20,23 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string tex_signature
  * @property-read string domain_alias
  */
-class ModelOrg extends AbstractModel implements Resource {
+class ModelOrg extends AbstractModel implements Resource
+{
 
     public const RESOURCE_ID = 'org';
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return ModelContest::createFromActiveRow($this->contest);
     }
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

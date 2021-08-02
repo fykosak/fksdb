@@ -25,14 +25,15 @@ use Nette\SmartObject;
 use Tracy\Debugger;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-class ResultsModelFactory implements XMLNodeSerializer {
-
+class ResultsModelFactory implements XMLNodeSerializer
+{
     use SmartObject;
 
     private Connection $connection;
     private ServiceTask $serviceTask;
 
-    public function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask)
+    {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
@@ -43,7 +44,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return CumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel {
+    public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel
+    {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
@@ -57,7 +59,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return DetailResultsModel
      * @throws BadRequestException
      */
-    public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel {
+    public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel
+    {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
@@ -71,7 +74,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return BrojureResultsModel
      * @throws BadRequestException
      */
-    public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel {
+    public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel
+    {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
@@ -85,7 +89,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return SchoolCumulativeResultsModel
      * @throws BadRequestException
      */
-    public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel {
+    public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel
+    {
         $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
         return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contestYear, $this->serviceTask, $this->connection);
     }
@@ -95,7 +100,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    public static function findEvaluationStrategy(ModelContestYear $contestYear): EvaluationStrategy {
+    public static function findEvaluationStrategy(ModelContestYear $contestYear): EvaluationStrategy
+    {
         switch ($contestYear->contest_id) {
             case ModelContest::ID_FYKOS:
                 if ($contestYear->year >= 25) {
@@ -124,7 +130,8 @@ class ResultsModelFactory implements XMLNodeSerializer {
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
+    {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new BadTypeException(AbstractModel::class, $dataSource);
         }

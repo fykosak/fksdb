@@ -10,15 +10,18 @@ use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-class SubmitsPreviewComponent extends SeriesTableComponent {
+class SubmitsPreviewComponent extends SeriesTableComponent
+{
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    final public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitHandlerFactory): void
+    {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
@@ -27,7 +30,8 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id): void {
+    public function handleDownloadUploaded(int $id): void
+    {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
@@ -40,7 +44,8 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
      * @param int $id
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id): void {
+    public function handleDownloadCorrected(int $id): void
+    {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);

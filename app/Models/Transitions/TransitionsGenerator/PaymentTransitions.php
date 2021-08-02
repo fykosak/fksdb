@@ -16,7 +16,8 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Tracy\Debugger;
 
-abstract class PaymentTransitions implements TransitionsDecorator {
+abstract class PaymentTransitions implements TransitionsDecorator
+{
 
     protected EventAuthorizator $eventAuthorizator;
     protected ServicePersonSchedule $servicePersonSchedule;
@@ -40,7 +41,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function decorate(Machine $machine): void {
+    public function decorate(Machine $machine): void
+    {
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
@@ -57,7 +59,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @param PaymentMachine $machine
      * @throws \Exception
      */
-    private function decorateTransitionInitToNew(PaymentMachine $machine): void {
+    private function decorateTransitionInitToNew(PaymentMachine $machine): void
+    {
         $transition = $machine->getTransitionById(Transition::createId(Machine::STATE_INIT, ModelPayment::STATE_NEW));
         $transition->setCondition($this->getDatesCondition());
     }
@@ -67,7 +70,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @return void
      * @throws \Exception
      */
-    private function decorateTransitionNewToWaiting(PaymentMachine $machine): void {
+    private function decorateTransitionNewToWaiting(PaymentMachine $machine): void
+    {
         $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING));
         $transition->setCondition($this->getDatesCondition());
     }
@@ -79,7 +83,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @return void
      * @throws UnavailableTransitionsException
      */
-    private function decorateTransitionAllToCanceled(PaymentMachine $machine): void {
+    private function decorateTransitionAllToCanceled(PaymentMachine $machine): void
+    {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
             $transition = $machine->getTransitionById(Transition::createId($state, ModelPayment::STATE_CANCELED));
             $transition->setCondition(true);
@@ -95,7 +100,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @return void
      * @throws UnavailableTransitionsException
      */
-    private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void {
+    private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void
+    {
         $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED));
         $transition->beforeExecuteCallbacks[] = function (ModelHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
@@ -105,7 +111,8 @@ abstract class PaymentTransitions implements TransitionsDecorator {
         $transition->setCondition(false);
     }
 
-    private function getClosureDeleteRows(): callable {
+    private function getClosureDeleteRows(): callable
+    {
         return function (ModelHolder $holder) {
             Debugger::log('payment-deleted--' . \json_encode($holder->getModel()->toArray()), 'payment-info');
             foreach ($holder->getModel()->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {

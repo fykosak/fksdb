@@ -11,15 +11,18 @@ use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-abstract class BaseStalkingComponent extends BaseComponent {
+abstract class BaseStalkingComponent extends BaseComponent
+{
 
     protected ORMFactory $tableReflectionFactory;
 
-    final public function injectPrimary(ORMFactory $tableReflectionFactory): void {
+    final public function injectPrimary(ORMFactory $tableReflectionFactory): void
+    {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void
+    {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {
@@ -27,23 +30,28 @@ abstract class BaseStalkingComponent extends BaseComponent {
         }
     }
 
-    protected function createComponentContestBadge(): ContestBadge {
+    protected function createComponentContestBadge(): ContestBadge
+    {
         return new ContestBadge($this->getContext());
     }
 
-    protected function createComponentPermissionDenied(): PermissionDeniedBadge {
+    protected function createComponentPermissionDenied(): PermissionDeniedBadge
+    {
         return new PermissionDeniedBadge($this->getContext());
     }
 
-    protected function createComponentNoRecords(): NoRecordsBadge {
+    protected function createComponentNoRecords(): NoRecordsBadge
+    {
         return new NoRecordsBadge($this->getContext());
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    {
         return new ColumnPrinterComponent($this->getContext());
     }
 
-    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+    protected function createComponentLinkPrinter(): LinkPrinterComponent
+    {
         return new LinkPrinterComponent($this->getContext());
     }
 }

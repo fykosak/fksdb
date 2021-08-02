@@ -5,7 +5,8 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\SelectBox;
 
-class ChooserFactory extends AbstractFactory {
+class ChooserFactory extends AbstractFactory
+{
 
     public const FORMAT_KEY_VALUE = 'key-value';
     public const FORMAT_VALUE_META = 'value-meta';
@@ -15,12 +16,14 @@ class ChooserFactory extends AbstractFactory {
 
     private OptionsProvider $optionsProvider;
 
-    public function __construct(string $prompt, OptionsProvider $optionsProvider) {
+    public function __construct(string $prompt, OptionsProvider $optionsProvider)
+    {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
 
-    public function createComponent(Field $field): SelectBox {
+    public function createComponent(Field $field): SelectBox
+    {
 
         $component = new SelectBox($field->getLabel());
         $component->setOption('description', $field->getDescription());

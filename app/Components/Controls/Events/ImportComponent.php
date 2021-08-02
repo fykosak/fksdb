@@ -21,7 +21,8 @@ use Nette\DI\MissingServiceException;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
-class ImportComponent extends BaseComponent {
+class ImportComponent extends BaseComponent
+{
 
     private Machine $machine;
 
@@ -29,7 +30,8 @@ class ImportComponent extends BaseComponent {
 
     private ApplicationHandler $handler;
 
-    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
+    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container)
+    {
         parent::__construct($container);
         $this->machine = $machine;
         $this->source = $source;
@@ -40,7 +42,8 @@ class ImportComponent extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentFormImport(): FormControl {
+    protected function createComponentFormImport(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -71,7 +74,8 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
     }
 
@@ -81,7 +85,8 @@ class ImportComponent extends BaseComponent {
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    private function handleFormImport(Form $form): void {
+    private function handleFormImport(Form $form): void
+    {
         /** @var FileUpload[] $values */
         $values = $form->getValues();
         try {

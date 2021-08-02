@@ -15,11 +15,13 @@ use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
 use Nette\Security\SimpleIdentity;
 
-class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler {
+class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler
+{
 
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
+    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson)
+    {
         parent::__construct($serviceLogin);
         $this->servicePerson = $servicePerson;
     }
@@ -35,7 +37,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      * @throws UnknownLoginException
      * @throws \Exception
      */
-    public function authenticate(string $user, string $password): ModelLogin {
+    public function authenticate(string $user, string $password): ModelLogin
+    {
         $login = $this->findLogin($user);
 
         if ($login->hash !== $this->calculateHash($password, $login)) {
@@ -54,7 +57,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function findLogin(string $id): ModelLogin {
+    public function findLogin(string $id): ModelLogin
+    {
         /** @var ModelPerson $person */
         $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
@@ -84,18 +88,21 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      * @param ModelLogin|object $login
      * @return string
      */
-    public static function calculateHash(string $password, $login): string {
+    public static function calculateHash(string $password, $login): string
+    {
         return sha1($login->login_id . md5($password));
     }
 
-    public function sleepIdentity(IIdentity $identity): IIdentity {
+    public function sleepIdentity(IIdentity $identity): IIdentity
+    {
         if ($identity instanceof ModelLogin) {
             $identity = new SimpleIdentity($identity->getId());
         }
         return $identity;
     }
 
-    public function wakeupIdentity(IIdentity $identity): ?ModelLogin {
+    public function wakeupIdentity(IIdentity $identity): ?ModelLogin
+    {
         // Find login
         /** @var ModelLogin|null $login */
         $login = $this->serviceLogin->findByPrimary($identity->getId());

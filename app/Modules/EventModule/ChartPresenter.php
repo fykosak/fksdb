@@ -11,25 +11,28 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 
-class ChartPresenter extends BasePresenter {
-
+class ChartPresenter extends BasePresenter
+{
     use ChartPresenterTrait;
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): void {
+    public function authorizedList(): void
+    {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedChart(): void {
+    public function authorizedChart(): void
+    {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->selectChart();
     }
@@ -38,7 +41,8 @@ class ChartPresenter extends BasePresenter {
      * @return array
      * @throws EventNotFoundException
      */
-    protected function registerCharts(): array {
+    protected function registerCharts(): array
+    {
         return [
             'participantAcquaintance' => new ParticipantAcquaintanceChart($this->getContext(), $this->getEvent()),
             'singleApplicationProgress' => new SingleComponent($this->getContext(), $this->getEvent()),
@@ -49,7 +53,8 @@ class ChartPresenter extends BasePresenter {
         ];
     }
 
-    protected function getModelResource(): string {
+    protected function getModelResource(): string
+    {
         return 'event.chart';
     }
 }

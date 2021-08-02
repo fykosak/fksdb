@@ -13,7 +13,8 @@ use NiftyGrid\DataSource\IDataSource;
 /**
  * Represents instantiotion (in term of parameters) of \FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery. *
  */
-class StoredQuery implements IDataSource, Resource {
+class StoredQuery implements IDataSource, Resource
+{
 
     private const INNER_QUERY = 'sub';
     private ?ModelStoredQuery $queryPattern = null;
@@ -35,37 +36,44 @@ class StoredQuery implements IDataSource, Resource {
     private array $orders = [];
     private ?array $columnNames = null;
 
-    private function __construct(Connection $connection) {
+    private function __construct(Connection $connection)
+    {
         $this->connection = $connection;
     }
 
-    public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self {
+    public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self
+    {
         $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters());
         $storedQuery->queryPattern = $queryPattern;
         $storedQuery->name = $queryPattern->name;
         return $storedQuery;
     }
 
-    public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self {
+    public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self
+    {
         $storedQuery = new StoredQuery($connection);
         $storedQuery->setSQL($sql);
         $storedQuery->setQueryParameters($parameters);
         return $storedQuery;
     }
 
-    public function getQueryPattern(): ?ModelStoredQuery {
+    public function getQueryPattern(): ?ModelStoredQuery
+    {
         return $this->queryPattern;
     }
 
-    public function getSQL(): string {
+    public function getSQL(): string
+    {
         return $this->sql;
     }
 
-    private function setSQL(string $sql): void {
+    private function setSQL(string $sql): void
+    {
         $this->sql = $sql;
     }
 
-    public function setContextParameters(array $parameters, bool $strict = true): void {
+    public function setContextParameters(array $parameters, bool $strict = true): void
+    {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
@@ -78,11 +86,13 @@ class StoredQuery implements IDataSource, Resource {
         }
     }
 
-    public function getImplicitParameters(): array {
+    public function getImplicitParameters(): array
+    {
         return $this->implicitParameterValues;
     }
 
-    public function setParameters(iterable $parameters): void {
+    public function setParameters(iterable $parameters): void
+    {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
@@ -95,7 +105,8 @@ class StoredQuery implements IDataSource, Resource {
         }
     }
 
-    public function getParameters(bool $all = false): array {
+    public function getParameters(bool $all = false): array
+    {
         if ($all) {
             return array_merge($this->parameterDefaultValues, $this->parameterValues, $this->implicitParameterValues);
         } else {
@@ -103,26 +114,31 @@ class StoredQuery implements IDataSource, Resource {
         }
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name ?? 'adhoc';
     }
 
-    public function getQId(): ?string {
+    public function getQId(): ?string
+    {
         return $this->qid ?? ($this->hasQueryPattern() ? $this->queryPattern->qid : null);
     }
 
-    public function setQId(string $qid): void {
+    public function setQId(string $qid): void
+    {
         $this->qid = $qid;
     }
 
     /**
      * @return StoredQueryParameter[]
      */
-    public function getQueryParameters(): array {
+    public function getQueryParameters(): array
+    {
         return $this->queryParameters;
     }
 
-    private function setQueryParameters(array $queryParameters): void {
+    private function setQueryParameters(array $queryParameters): void
+    {
         $this->parameterDefaultValues = [];
 
         foreach ($queryParameters as $parameter) {
@@ -137,11 +153,13 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     // return true if pattern query is real ORM model, it means is already stored in DB
-    public function hasQueryPattern(): bool {
+    public function hasQueryPattern(): bool
+    {
         return (bool)$this->queryPattern ?? false;
     }
 
-    public function getColumnNames(): array {
+    public function getColumnNames(): array
+    {
         if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
@@ -160,11 +178,13 @@ class StoredQuery implements IDataSource, Resource {
         return $this->columnNames;
     }
 
-    public function getParameterNames(): array {
+    public function getParameterNames(): array
+    {
         return array_keys($this->parameterDefaultValues);
     }
 
-    private function bindParams(string $sql): \PDOStatement {
+    private function bindParams(string $sql): \PDOStatement
+    {
         $statement = $this->connection->getPdo()->prepare($sql);
 
         // bind implicit parameters
@@ -191,12 +211,14 @@ class StoredQuery implements IDataSource, Resource {
         return $statement;
     }
 
-    private function invalidateAll(): void {
+    private function invalidateAll(): void
+    {
         $this->count = null;
         $this->data = null;
     }
 
-    private function invalidateData(): void {
+    private function invalidateData(): void
+    {
         $this->data = null;
     }
 
@@ -208,7 +230,8 @@ class StoredQuery implements IDataSource, Resource {
      * @param array $filters
      * @throws NotImplementedException
      */
-    public function filterData(array $filters): void {
+    public function filterData(array $filters): void
+    {
         throw new NotImplementedException();
     }
 
@@ -217,7 +240,8 @@ class StoredQuery implements IDataSource, Resource {
      * @return int
      * @throws \PDOException
      */
-    public function getCount(string $column = '*'): int {
+    public function getCount(string $column = '*'): int
+    {
         if (!isset($this->count)) {
             $innerSql = $this->getSQL();
             $sql = "SELECT COUNT(1) FROM ($innerSql) " . self::INNER_QUERY;
@@ -232,7 +256,8 @@ class StoredQuery implements IDataSource, Resource {
      * @return \PDOStatement
      * @throws \PDOException
      */
-    public function getData(): \PDOStatement {
+    public function getData(): \PDOStatement
+    {
         if (!isset($this->data)) {
             $innerSql = $this->getSQL();
             if ($this->orders || $this->limit !== null || $this->offset !== null) {
@@ -256,11 +281,13 @@ class StoredQuery implements IDataSource, Resource {
         return $this->data; // lazy load during iteration?
     }
 
-    public function getPrimaryKey(): ?string {
+    public function getPrimaryKey(): ?string
+    {
         return null;
     }
 
-    public function limitData(int $limit, ?int $offset = null): void {
+    public function limitData(int $limit, ?int $offset = null): void
+    {
         $this->limit = $limit;
         $this->offset = $offset;
         $this->invalidateData();
@@ -272,7 +299,8 @@ class StoredQuery implements IDataSource, Resource {
      * @param string|null $by column name
      * @param string|null $way DESC|ASC
      */
-    public function orderData(?string $by, ?string $way): void {
+    public function orderData(?string $by, ?string $way): void
+    {
         if (!is_numeric($by)) {
             $by = "`$by`";
         }
@@ -280,7 +308,8 @@ class StoredQuery implements IDataSource, Resource {
         $this->invalidateData();
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return 'export';
     }
 }

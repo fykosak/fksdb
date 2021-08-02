@@ -14,17 +14,28 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string class
  * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModel {
+class ModelPersonHistory extends AbstractModel
+{
 
-    public function getPerson(): ModelPerson {
+    /** @var string[][] */
+    private static array $classProgress = [
+        ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
+        ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
+        ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
+    ];
+
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getSchool(): ?ModelSchool {
+    public function getSchool(): ?ModelSchool
+    {
         return $this->school ? ModelSchool::createFromActiveRow($this->school) : null;
     }
 
-    public function extrapolate(int $acYear): ModelPersonHistory {
+    public function extrapolate(int $acYear): ModelPersonHistory
+    {
         $diff = $acYear - $this->ac_year;
         $data = [
             'ac_year' => $acYear,
@@ -40,14 +51,8 @@ class ModelPersonHistory extends AbstractModel {
         return new self($tmpData, $this->getTable());
     }
 
-    /** @var string[][] */
-    private static array $classProgress = [
-        ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
-        ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
-        ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
-    ];
-
-    private function extrapolateClass(?string $class = null, int $diff = 0): ?string {
+    private function extrapolateClass(?string $class = null, int $diff = 0): ?string
+    {
         if (!$class) {
             return null;
         }
@@ -66,7 +71,8 @@ class ModelPersonHistory extends AbstractModel {
         return $class;
     }
 
-    private function extrapolateStudyYear(?int $studyYear = null, int $diff = 0): ?int {
+    private function extrapolateStudyYear(?int $studyYear = null, int $diff = 0): ?int
+    {
         if (!$studyYear) {
             return null;
         }

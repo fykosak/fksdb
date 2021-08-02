@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-class ExistingPaymentException extends \Exception {
+class ExistingPaymentException extends \Exception
+{
 
 }

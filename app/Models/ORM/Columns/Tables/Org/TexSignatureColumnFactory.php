@@ -7,9 +7,11 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-class TexSignatureColumnFactory extends ColumnFactory {
+class TexSignatureColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new TextInput($this->getTitle());
 
         $control->addRule(Form::MAX_LENGTH, null, 32);

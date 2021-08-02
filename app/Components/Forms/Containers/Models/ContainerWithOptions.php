@@ -8,11 +8,13 @@ use Nette\DI\Container as DIContainer;
 /**
  * @note Code is copy+pasted from Nette\Forms\Controls\BaseControl.
  */
-class ContainerWithOptions extends Container {
+class ContainerWithOptions extends Container
+{
 
     private array $options = [];
 
-    public function __construct(?DIContainer $container = null) {
+    public function __construct(?DIContainer $container = null)
+    {
         if ($container) {
             $container->callInjects($this);
         }
@@ -27,7 +29,8 @@ class ContainerWithOptions extends Container {
      * @param mixed value
      * @return static
      */
-    public function setOption(string $key, $value): self {
+    public function setOption(string $key, $value): self
+    {
         if ($value === null) {
             unset($this->options[$key]);
         } else {
@@ -42,7 +45,8 @@ class ContainerWithOptions extends Container {
      * @param mixed  default value
      * @return mixed
      */
-    final public function getOption(string $key, $default = null) {
+    final public function getOption(string $key, $default = null)
+    {
         return $this->options[$key] ?? $default;
     }
 
@@ -50,7 +54,8 @@ class ContainerWithOptions extends Container {
      * Returns user-specific options.
      * @return array
      */
-    final public function getOptions(): array {
+    final public function getOptions(): array
+    {
         return $this->options;
     }
 }

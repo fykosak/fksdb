@@ -16,8 +16,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelTeacher|null $model
  */
-class TeacherFormComponent extends AbstractEntityFormComponent {
-
+class TeacherFormComponent extends AbstractEntityFormComponent
+{
     use ReferencedPersonTrait;
 
     private const CONTAINER = 'teacher';
@@ -25,7 +25,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private ServiceTeacher $serviceTeacher;
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
+    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void
+    {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
@@ -37,7 +38,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = $this->createTeacherContainer();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
@@ -49,7 +51,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         $this->serviceTeacher->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'), Message::LVL_SUCCESS);
@@ -60,7 +63,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
@@ -71,7 +75,8 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createTeacherContainer(): ModelContainer {
+    private function createTeacherContainer(): ModelContainer
+    {
         return $this->singleReflectionFormFactory->createContainer('teacher', ['state', 'since', 'until', 'number_brochures', 'note']);
     }
 }

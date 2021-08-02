@@ -11,11 +11,13 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
 use Nette\Forms\Controls\BaseControl;
 
-class SingleReflectionFormFactory {
+class SingleReflectionFormFactory
+{
 
     protected ORMFactory $tableReflectionFactory;
 
-    public function __construct(ORMFactory $tableReflectionFactory) {
+    public function __construct(ORMFactory $tableReflectionFactory)
+    {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -25,7 +27,8 @@ class SingleReflectionFormFactory {
      * @return ColumnFactory
      * @throws BadTypeException
      */
-    protected function loadFactory(string $tableName, string $fieldName): ColumnFactory {
+    protected function loadFactory(string $tableName, string $fieldName): ColumnFactory
+    {
         return $this->tableReflectionFactory->loadColumnFactory($tableName, $fieldName);
     }
 
@@ -37,7 +40,8 @@ class SingleReflectionFormFactory {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createField(string $tableName, string $fieldName, ...$args): BaseControl {
+    public function createField(string $tableName, string $fieldName, ...$args): BaseControl
+    {
         return $this->loadFactory($tableName, $fieldName)->createField(...$args);
     }
 
@@ -49,7 +53,8 @@ class SingleReflectionFormFactory {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createContainer(string $table, array $fields, ...$args): ModelContainer {
+    public function createContainer(string $table, array $fields, ...$args): ModelContainer
+    {
         $container = new ModelContainer();
 
         foreach ($fields as $field) {
@@ -67,7 +72,8 @@ class SingleReflectionFormFactory {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer {
+    public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer
+    {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);
@@ -89,7 +95,8 @@ class SingleReflectionFormFactory {
         return $container;
     }
 
-    protected function appendMetadata(BaseControl $control, array $metadata): void {
+    protected function appendMetadata(BaseControl $control, array $metadata): void
+    {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':

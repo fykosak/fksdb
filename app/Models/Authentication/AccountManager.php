@@ -16,7 +16,8 @@ use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
-class AccountManager {
+class AccountManager
+{
 
     private ServiceLogin $serviceLogin;
     private ServiceAuthToken $serviceAuthToken;
@@ -55,7 +56,8 @@ class AccountManager {
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin
+    {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
@@ -84,7 +86,8 @@ class AccountManager {
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, string $lang): void {
+    public function sendRecovery(ModelLogin $login, string $lang): void
+    {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -113,13 +116,15 @@ class AccountManager {
         $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    public function cancelRecovery(ModelLogin $login): void {
+    public function cancelRecovery(ModelLogin $login): void
+    {
         $login->related(DbNames::TAB_AUTH_TOKEN)->where([
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])->delete();
     }
 
-    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin {
+    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin
+    {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

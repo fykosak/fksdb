@@ -8,13 +8,15 @@ use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
-class GraphComponent extends BaseComponent {
+class GraphComponent extends BaseComponent
+{
 
     private BaseMachine $baseMachine;
     private ExpressionPrinter $expressionPrinter;
     private bool $attachedJS = false;
 
-    public function __construct(Container $container, BaseMachine $baseMachine) {
+    public function __construct(Container $container, BaseMachine $baseMachine)
+    {
         parent::__construct($container);
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
@@ -28,32 +30,37 @@ class GraphComponent extends BaseComponent {
         $this->baseMachine = $baseMachine;
     }
 
-    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
+    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void
+    {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
         $this->template->id = $this->getHtmlId();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
     }
 
-    private function getHtmlId(): string {
+    private function getHtmlId(): string
+    {
         return 'graph-' . $this->getUniqueId();
     }
 
     /**
      * @return string[]
      */
-    private function getAllStates(): array {
+    private function getAllStates(): array
+    {
         return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
     }
 
     /**
      * @return array[]
      */
-    private function prepareNodes(): array {
+    private function prepareNodes(): array
+    {
         $states = $this->getAllStates();
         $nodes = [];
         foreach ($states as $state) {
@@ -69,7 +76,8 @@ class GraphComponent extends BaseComponent {
     /**
      * @return array[]
      */
-    private function prepareTransitions(): array {
+    private function prepareTransitions(): array
+    {
         $states = $this->getAllStates();
         $edges = [];
         foreach ($this->baseMachine->getTransitions() as $transition) {

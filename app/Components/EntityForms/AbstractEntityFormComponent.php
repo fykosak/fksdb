@@ -13,25 +13,30 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
-abstract class AbstractEntityFormComponent extends FormComponent {
+abstract class AbstractEntityFormComponent extends FormComponent
+{
 
     protected ?AbstractModel $model;
 
-    public function __construct(Container $container, ?AbstractModel $model) {
+    public function __construct(Container $container, ?AbstractModel $model)
+    {
         parent::__construct($container);
         $this->model = $model;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->setDefaults();
         parent::render();
     }
 
-    final protected function isCreating(): bool {
+    final protected function isCreating(): bool
+    {
         return !isset($this->model);
     }
 
-    final protected function handleSuccess(SubmitButton $button): void {
+    final protected function handleSuccess(SubmitButton $button): void
+    {
         try {
             $this->handleFormSuccess($button->getForm());
         } catch (ModelException $exception) {
@@ -50,11 +55,13 @@ abstract class AbstractEntityFormComponent extends FormComponent {
         }
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton {
+    protected function appendSubmitButton(Form $form): SubmitButton
+    {
         return $form->addSubmit('send', $this->isCreating() ? _('Create') : _('Save'));
     }
 
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
     }
 
     /**

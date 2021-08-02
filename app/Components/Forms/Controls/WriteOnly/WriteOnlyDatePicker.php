@@ -9,20 +9,22 @@ use Nette\Utils\Html;
  * When user doesn't fill it (i.e. desires original value), it behaves like disabled.
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
  */
-class WriteOnlyDatePicker extends DateInput implements WriteOnly {
-
+class WriteOnlyDatePicker extends DateInput implements WriteOnly
+{
     use WriteOnlyTrait;
 
     /**
      * WriteOnlyDatePicker constructor.
      * @param null $label
      */
-    public function __construct($label = null) {
+    public function __construct($label = null)
+    {
         parent::__construct($label);
         $this->writeOnlyAppendMonitors();
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
         return $control;
@@ -33,7 +35,8 @@ class WriteOnlyDatePicker extends DateInput implements WriteOnly {
      * @return static
      * @throws \Exception
      */
-    public function setValue($value): self {
+    public function setValue($value): self
+    {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
         } else {
@@ -42,7 +45,8 @@ class WriteOnlyDatePicker extends DateInput implements WriteOnly {
         return $this;
     }
 
-    public function loadHttpData(): void {
+    public function loadHttpData(): void
+    {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }

@@ -10,21 +10,25 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 
-class CloseTeamComponent extends BaseComponent {
+class CloseTeamComponent extends BaseComponent
+{
 
     private ModelFyziklaniTeam $team;
     private Connection $connection;
 
-    public function __construct(Container $container, ModelFyziklaniTeam $team) {
+    public function __construct(Container $container, ModelFyziklaniTeam $team)
+    {
         parent::__construct($container);
         $this->team = $team;
     }
 
-    final public function injectServiceFyziklaniTask(Connection $connection): void {
+    final public function injectServiceFyziklaniTask(Connection $connection): void
+    {
         $this->connection = $connection;
     }
 
-    public function handleClose(): void {
+    public function handleClose(): void
+    {
         $this->connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
         $this->team->update([
@@ -39,7 +43,8 @@ class CloseTeamComponent extends BaseComponent {
      * @return void
      * @throws NotSetGameParametersException
      */
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->task = $this->getNextTask();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
     }
@@ -48,7 +53,8 @@ class CloseTeamComponent extends BaseComponent {
      * @return string
      * @throws NotSetGameParametersException
      */
-    private function getNextTask(): string {
+    private function getNextTask(): string
+    {
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->team->getEvent()->getFyziklaniGameSetup()->tasks_on_board;
         /** @var ModelFyziklaniTask|null $nextTask */

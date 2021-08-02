@@ -15,13 +15,16 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-class SchoolsGrid extends EntityGrid {
+class SchoolsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container, ServiceSchool::class, [], []);
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $schools = $this->service->getTable();
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
@@ -40,7 +43,8 @@ class SchoolsGrid extends EntityGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         //

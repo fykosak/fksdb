@@ -2,17 +2,19 @@
 
 namespace FKSDB\Models\ORM\Links;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\ReferencedAccessor;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
-abstract class LinkFactory {
+abstract class LinkFactory
+{
 
     protected string $modelClassName;
 
-    public function __construct(?string $modelClassName = null) {
+    public function __construct(?string $modelClassName = null)
+    {
         if ($modelClassName) {
             $this->modelClassName = $modelClassName;
         }
@@ -25,20 +27,9 @@ abstract class LinkFactory {
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
-    public function create(Presenter $presenter, AbstractModel $model): string {
+    public function create(Presenter $presenter, AbstractModel $model): string
+    {
         return $presenter->link(...$this->createLinkParameters($model));
-    }
-
-    /**
-     * @param AbstractModel $modelSingle
-     * @return AbstractModel|null
-     * @throws CannotAccessModelException
-     */
-    protected function getModel(AbstractModel $modelSingle): ?AbstractModel {
-        if (!isset($this->modelClassName)) {
-            return $modelSingle;
-        }
-        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     /**
@@ -47,7 +38,8 @@ abstract class LinkFactory {
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function createLinkParameters(AbstractModel $model): array {
+    public function createLinkParameters(AbstractModel $model): array
+    {
         $model = $this->getModel($model);
         if (is_null($model)) {
             throw new InvalidLinkException();
@@ -56,6 +48,19 @@ abstract class LinkFactory {
             $this->getDestination($model),
             $this->prepareParams($model),
         ];
+    }
+
+    /**
+     * @param AbstractModel $modelSingle
+     * @return AbstractModel|null
+     * @throws CannotAccessModelException
+     */
+    protected function getModel(AbstractModel $modelSingle): ?AbstractModel
+    {
+        if (!isset($this->modelClassName)) {
+            return $modelSingle;
+        }
+        return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
     abstract protected function getDestination(AbstractModel $model): string;

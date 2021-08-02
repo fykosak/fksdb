@@ -17,8 +17,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelOrg|null $model
  */
-class OrgFormComponent extends AbstractEntityFormComponent {
-
+class OrgFormComponent extends AbstractEntityFormComponent
+{
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'org';
@@ -27,12 +27,14 @@ class OrgFormComponent extends AbstractEntityFormComponent {
     private ModelContest $contest;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(Container $container, ModelContest $contest, ?ModelOrg $model) {
+    public function __construct(Container $container, ModelContest $contest, ?ModelOrg $model)
+    {
         parent::__construct($container, $model);
         $this->contest = $contest;
     }
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg): void {
+    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg): void
+    {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
     }
@@ -43,7 +45,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = $this->createOrgContainer();
         $personInput = $this->createPersonSelect();
         if (!$this->isCreating()) {
@@ -53,7 +56,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
@@ -67,7 +71,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
@@ -78,7 +83,8 @@ class OrgFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createOrgContainer(): ModelContainer {
+    private function createOrgContainer(): ModelContainer
+    {
         $container = new ModelContainer();
 
         foreach (['since', 'until'] as $field) {

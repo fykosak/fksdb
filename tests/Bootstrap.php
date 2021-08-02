@@ -9,13 +9,12 @@ use Tester\Environment;
 use Tracy\Debugger;
 
 // absolute filesystem path to this web root
-define('TESTS_DIR', dirname(__FILE__));
+define('TESTS_DIR', __DIR__);
 
 // absolute filesystem path to the application root
 define('APP_DIR', TESTS_DIR . '/../app');
 
-// absolute filesystem path to the libraries
-define('LIBS_DIR', TESTS_DIR . '/../libs');
+// absolute filesystem path to the libraries;
 
 define('TEMP_DIR', TESTS_DIR . '/../temp/tester');
 @mkdir(TEMP_DIR);
@@ -24,7 +23,7 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 @mkdir(LOG_DIR);
 
 // Load Nette Framework
-require LIBS_DIR . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 class Bootstrap {
     public static function boot(): Configurator {
@@ -41,7 +40,7 @@ class Bootstrap {
         error_reporting(/*~E_USER_DEPRECATED &*/ ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
         $configurator->createRobotLoader()
             ->addDirectory(APP_DIR)
-            ->addDirectory(LIBS_DIR)
+            ->addDirectory(APP_DIR.'/../libs')
             ->addDirectory(TESTS_DIR)
             ->register();
 
@@ -51,11 +50,11 @@ class Bootstrap {
         $configurator->addConfig(APP_DIR . '/config/config.tester.neon');
 
         // Load all .neon files in events data directory
-        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+        foreach (Finder::findFiles('*.neon')->from(__DIR__. '/../data/events') as $filename => $file) {
             $configurator->addConfig($filename);
         }
         // Load .neon files for tests
-        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
+        foreach (Finder::findFiles('*.neon')->from(__DIR__. '/neon') as $filename => $file) {
             $configurator->addConfig($filename);
         }
         return $configurator;

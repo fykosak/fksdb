@@ -12,7 +12,8 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class StoredQueriesGrid extends BaseGrid {
+class StoredQueriesGrid extends BaseGrid
+{
 
     /** @const No. of characters that are showed from query description. */
 
@@ -22,12 +23,14 @@ class StoredQueriesGrid extends BaseGrid {
 
     private array $activeTagIds;
 
-    public function __construct(Container $container, array $activeTagIds) {
+    public function __construct(Container $container, array $activeTagIds)
+    {
         parent::__construct($container);
         $this->activeTagIds = $activeTagIds;
     }
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void
+    {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -38,7 +41,8 @@ class StoredQueriesGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         if (count($this->activeTagIds)) {
@@ -61,7 +65,8 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id']);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelStoredQuery::class;
     }
 }

@@ -12,7 +12,8 @@ use Nette\InvalidStateException;
 use Nette\Utils\Finder;
 use Nette\Utils\Strings;
 
-class UploadedStorage implements SubmitStorage {
+class UploadedStorage implements SubmitStorage
+{
 
     /** Characters delimiting name and metadata in filename. */
     public const DELIMITER = '__';
@@ -42,24 +43,28 @@ class UploadedStorage implements SubmitStorage {
     /** @var StorageProcessing[] */
     private array $processings = [];
 
-    public function __construct(string $root, string $directoryMask, string $filenameMask) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask)
+    {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
     }
 
-    public function addProcessing(StorageProcessing $processing): void {
+    public function addProcessing(StorageProcessing $processing): void
+    {
         $this->processings[] = $processing;
     }
 
-    public function beginTransaction(): void {
+    public function beginTransaction(): void
+    {
         $this->todo = [];
     }
 
     /**
      * @throws StorageException for unsuccessful commit
      */
-    public function commit(): void {
+    public function commit(): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot commit out of transaction.');
         }
@@ -108,7 +113,8 @@ class UploadedStorage implements SubmitStorage {
         $this->todo = null;
     }
 
-    public function rollback(): void {
+    public function rollback(): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
         }
@@ -116,7 +122,8 @@ class UploadedStorage implements SubmitStorage {
         $this->todo = null;
     }
 
-    public function storeFile(string $filename, ModelSubmit $submit): void {
+    public function storeFile(string $filename, ModelSubmit $submit): void
+    {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
@@ -127,7 +134,8 @@ class UploadedStorage implements SubmitStorage {
         ];
     }
 
-    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string {
+    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string
+    {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
             $files = array_filter($files, function (\SplFileInfo $file): bool {
@@ -156,11 +164,13 @@ class UploadedStorage implements SubmitStorage {
      * @param ModelSubmit $submit
      * @return bool
      */
-    public function fileExists(ModelSubmit $submit): bool {
+    public function fileExists(ModelSubmit $submit): bool
+    {
         return (bool)$this->retrieveFile($submit);
     }
 
-    public function deleteFile(ModelSubmit $submit): void {
+    public function deleteFile(ModelSubmit $submit): void
+    {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {
@@ -178,7 +188,8 @@ class UploadedStorage implements SubmitStorage {
      * @param ModelSubmit $submit
      * @return \SplFileInfo[]
      */
-    private function retrieveFiles(ModelSubmit $submit): array {
+    private function retrieveFiles(ModelSubmit $submit): array
+    {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
@@ -193,12 +204,14 @@ class UploadedStorage implements SubmitStorage {
      * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
-    private function createDirname(ModelSubmit $submit): string {
+    private function createDirname(ModelSubmit $submit): string
+    {
         $task = $submit->getTask();
         return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
     }
 
-    private function createFilename(ModelSubmit $submit): string {
+    private function createFilename(ModelSubmit $submit): string
+    {
         $task = $submit->getTask();
 
         $contestantName = $submit->getContestant()->getPerson()->getFullName();

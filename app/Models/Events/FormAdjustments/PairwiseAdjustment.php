@@ -8,15 +8,18 @@ use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
-abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment {
+abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment
+{
 
     private iterable $rules;
 
-    public function __construct(iterable $rules) {
+    public function __construct(iterable $rules)
+    {
         $this->rules = $rules;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         foreach ($this->rules as $target => $prerequisites) {
             if (is_scalar($prerequisites)) {
                 $prerequisites = [$prerequisites];

@@ -11,9 +11,11 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class ItemsGrid extends RelatedGrid {
+class ItemsGrid extends RelatedGrid
+{
 
-    public function __construct(Container $container, ModelScheduleGroup $group) {
+    public function __construct(Container $container, ModelScheduleGroup $group)
+    {
         parent::__construct($container, $group, 'schedule_item');
     }
 
@@ -24,7 +26,8 @@ class ItemsGrid extends RelatedGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addColumns([
             'schedule_item.schedule_item_id',
@@ -41,7 +44,8 @@ class ItemsGrid extends RelatedGrid {
         $this->addLinkButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelScheduleItem::class;
     }
 }

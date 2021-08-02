@@ -26,7 +26,8 @@ use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-class ApplicationHandler {
+class ApplicationHandler
+{
 
     public const ERROR_ROLLBACK = 'rollback';
     public const ERROR_SKIP = 'skip';
@@ -42,48 +43,58 @@ class ApplicationHandler {
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Container $container) {
+    public function __construct(ModelEvent $event, Logger $logger, Container $container)
+    {
         $this->event = $event;
         $this->logger = $logger;
         $this->container = $container;
         $container->callInjects($this);
     }
 
-    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void {
+    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void
+    {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->connection = $connection;
     }
 
-    public function getErrorMode(): string {
+    public function getErrorMode(): string
+    {
         return $this->errorMode;
     }
 
-    public function setErrorMode(string $errorMode): void {
+    public function setErrorMode(string $errorMode): void
+    {
         $this->errorMode = $errorMode;
     }
 
-    public function getMachine(): Machine {
+    public function getMachine(): Machine
+    {
         $this->initializeMachine();
         return $this->machine;
     }
 
-    public function getLogger(): Logger {
+    public function getLogger(): Logger
+    {
         return $this->logger;
     }
 
-    final public function store(Holder $holder, ArrayHash $data): void {
+    final public function store(Holder $holder, ArrayHash $data): void
+    {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
-    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void {
+    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void
+    {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
-    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void {
+    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void
+    {
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
-    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void {
+    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void
+    {
         $this->initializeMachine();
 
         try {
@@ -124,7 +135,8 @@ class ApplicationHandler {
         }
     }
 
-    private function innerStoreAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void {
+    private function innerStoreAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void
+    {
         $this->initializeMachine();
 
         try {
@@ -191,7 +203,8 @@ class ApplicationHandler {
         }
     }
 
-    private function processData(?ArrayHash $data, ?Form $form, array $transitions, Holder $holder, ?string $execute): array {
+    private function processData(?ArrayHash $data, ?Form $form, array $transitions, Holder $holder, ?string $execute): array
+    {
         if ($form) {
             $values = FormUtils::emptyStrToNull($form->getValues());
         } else {
@@ -228,13 +241,15 @@ class ApplicationHandler {
         return $transitions;
     }
 
-    private function initializeMachine(): void {
+    private function initializeMachine(): void
+    {
         if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
     }
 
-    private function formRollback(?Form $form): void {
+    private function formRollback(?Form $form): void
+    {
         if ($form) {
             /** @var ReferencedId $referencedId */
             foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
@@ -244,19 +259,22 @@ class ApplicationHandler {
         $this->rollback();
     }
 
-    public function beginTransaction(): void {
+    public function beginTransaction(): void
+    {
         if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
 
-    private function rollback(): void {
+    private function rollback(): void
+    {
         if ($this->errorMode == self::ERROR_ROLLBACK) {
             $this->connection->rollBack();
         }
     }
 
-    public function commit(bool $final = false): void {
+    public function commit(bool $final = false): void
+    {
         if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
@@ -267,7 +285,8 @@ class ApplicationHandler {
      * @return void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(\Exception $e): void {
+    private function reRaise(\Exception $e): void
+    {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

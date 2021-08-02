@@ -16,11 +16,13 @@ use Nette\Forms\Form;
 /**
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
+class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
+{
 
     private HandlerFactory $handlerFactory;
 
-    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void
+    {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -29,7 +31,8 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws NotSetGameParametersException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $form->addComponent($this->createPointsField(), 'points');
     }
 
@@ -37,7 +40,8 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 'team_id' => $this->model->e_fyziklani_team_id,
@@ -46,7 +50,8 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
@@ -65,7 +70,8 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent {
      * TODO to table-reflection factory
      * @throws NotSetGameParametersException
      */
-    private function createPointsField(): RadioList {
+    private function createPointsField(): RadioList
+    {
         $field = new RadioList(_('Number of points'));
         $items = [];
         foreach ($this->model->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {

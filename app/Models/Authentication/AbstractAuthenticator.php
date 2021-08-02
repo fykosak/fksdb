@@ -16,7 +16,8 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
 
     protected ServiceLogin $serviceLogin;
 
-    public function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin)
+    {
         $this->serviceLogin = $serviceLogin;
     }
 
@@ -24,8 +25,12 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @param ModelLogin $login
      * @throws \Exception
      */
-    protected function logAuthentication(ModelLogin $login): void {
-        Debugger::log(sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()), 'auth-log');
+    protected function logAuthentication(ModelLogin $login): void
+    {
+        Debugger::log(
+            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()),
+            'auth-log',
+        );
         $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

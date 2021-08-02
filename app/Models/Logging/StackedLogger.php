@@ -4,19 +4,23 @@ namespace FKSDB\Models\Logging;
 
 use FKSDB\Models\Messages\Message;
 
-abstract class StackedLogger implements Logger {
+abstract class StackedLogger implements Logger
+{
 
     private ?Logger $child = null;
 
-    public function getChild(): ?Logger {
+    public function getChild(): ?Logger
+    {
         return $this->child;
     }
 
-    public function setChild(Logger $child): void {
+    public function setChild(Logger $child): void
+    {
         $this->child = $child;
     }
 
-    final public function log(Message $message): void {
+    final public function log(Message $message): void
+    {
         $this->doLog($message);
         if ($this->getChild()) {
             $this->getChild()->log($message);

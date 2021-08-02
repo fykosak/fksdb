@@ -12,13 +12,14 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class SpamPresenter extends BasePresenter {
-
+class SpamPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private ServiceEmailMessage $serviceEmailMessage;
 
-    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
+    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void
+    {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
@@ -27,15 +28,18 @@ class SpamPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void {
+    public function titleDetail(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fas fa-envelope-open'));
     }
 
-    public function getTitleList(): PageTitle {
+    public function getTitleList(): PageTitle
+    {
         return new PageTitle(_('List of emails'), 'fas fa-mail-bulk');
     }
 
-    public function authorizedDetail(): void {
+    public function authorizedDetail(): void
+    {
         $authorized = true;
         foreach ($this->serviceContest->getTable() as $contest) {
             $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
@@ -47,23 +51,28 @@ class SpamPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): ServiceEmailMessage {
+    protected function getORMService(): ServiceEmailMessage
+    {
         return $this->serviceEmailMessage;
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): EmailsGrid {
+    protected function createComponentGrid(): EmailsGrid
+    {
         return new EmailsGrid($this->getContext());
     }
 
@@ -72,7 +81,8 @@ class SpamPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

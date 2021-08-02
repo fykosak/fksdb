@@ -8,7 +8,8 @@ use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
-abstract class AbstractDateInput extends TextInput {
+abstract class AbstractDateInput extends TextInput
+{
 
     protected string $format;
 
@@ -19,13 +20,15 @@ abstract class AbstractDateInput extends TextInput {
      * @param null $label
      * @param null $maxLength
      */
-    public function __construct(string $type, string $format, $label = null, $maxLength = null) {
+    public function __construct(string $type, string $format, $label = null, $maxLength = null)
+    {
         $this->format = $format;
         parent::__construct($label, $maxLength);
         $this->setHtmlType($type);
     }
 
-    public function getControl(): Html {
+    public function getControl(): Html
+    {
         $control = parent::getControl();
         if ($this->value) {
             $control->value = $this->value->format($this->format);
@@ -38,7 +41,8 @@ abstract class AbstractDateInput extends TextInput {
      * @return static
      * @throws \Exception
      */
-    public function setValue($value): self {
+    public function setValue($value): self
+    {
         if ($value instanceof DateTimeInterface) {
             $this->value = $value;
         } elseif ($value instanceof DateInterval) {

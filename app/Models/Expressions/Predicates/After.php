@@ -5,7 +5,8 @@ namespace FKSDB\Models\Expressions\Predicates;
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
 
-class After extends EvaluatedExpression {
+class After extends EvaluatedExpression
+{
 
     /** @var mixed */
     private $datetime;
@@ -14,7 +15,8 @@ class After extends EvaluatedExpression {
      * After constructor.
      * @param \DateTimeInterface|callable $datetime
      */
-    public function __construct($datetime) {
+    public function __construct($datetime)
+    {
         $this->datetime = $datetime;
     }
 
@@ -22,7 +24,8 @@ class After extends EvaluatedExpression {
      * @param array $args
      * @return bool
      */
-    public function __invoke(...$args): bool {
+    public function __invoke(...$args): bool
+    {
         $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {
             throw new InvalidStateException();
@@ -30,8 +33,8 @@ class After extends EvaluatedExpression {
         return $datetime->getTimestamp() <= time();
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return "now >= {$this->datetime}";
     }
-
 }

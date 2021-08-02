@@ -8,7 +8,8 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
-class StalkingComponent extends BaseStalkingComponent {
+class StalkingComponent extends BaseStalkingComponent
+{
 
     /**
      * @param string $section
@@ -17,7 +18,8 @@ class StalkingComponent extends BaseStalkingComponent {
      * @return void
      * @throws NotImplementedException
      */
-    final public function render(string $section, ModelPerson $person, int $userPermission): void {
+    final public function render(string $section, ModelPerson $person, int $userPermission): void
+    {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
@@ -39,7 +41,8 @@ class StalkingComponent extends BaseStalkingComponent {
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person): void {
+    private function renderSingle(array $definition, ModelPerson $person): void
+    {
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
@@ -65,7 +68,8 @@ class StalkingComponent extends BaseStalkingComponent {
      * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition, ModelPerson $person): void {
+    private function renderMulti(array $definition, ModelPerson $person): void
+    {
         $models = [];
         $query = $person->related($definition['table']);
         foreach ($query as $datum) {

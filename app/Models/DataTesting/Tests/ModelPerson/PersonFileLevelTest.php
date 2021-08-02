@@ -7,7 +7,8 @@ use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 
-abstract class PersonFileLevelTest extends PersonTest {
+abstract class PersonFileLevelTest extends PersonTest
+{
 
     private TestedColumnFactory $rowFactory;
     private string $fieldName;
@@ -19,7 +20,8 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @param string $fieldName
      * @throws BadTypeException
      */
-    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName) {
+    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName)
+    {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
         parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
@@ -29,7 +31,8 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @return TestedColumnFactory|ColumnFactory
      * @throws BadTypeException
      */
-    final protected function getRowFactory(): TestedColumnFactory {
+    final protected function getRowFactory(): TestedColumnFactory
+    {
         if (!isset($this->rowFactory)) {
             $rowFactory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $this->fieldName));
             if (!$rowFactory instanceof TestedColumnFactory) {

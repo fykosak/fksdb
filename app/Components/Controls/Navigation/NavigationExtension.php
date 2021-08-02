@@ -4,9 +4,11 @@ namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\DI\CompilerExtension;
 
-class NavigationExtension extends CompilerExtension {
+class NavigationExtension extends CompilerExtension
+{
 
-    public function loadConfiguration(): void {
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
 
         $config = $this->getConfig();
@@ -16,11 +18,13 @@ class NavigationExtension extends CompilerExtension {
         $navbar->addSetup('setStructure', [$this->createFromStructure($config['structure'])]);
     }
 
-    private function createNode(string $nodeId, array $arguments): array {
+    private function createNode(string $nodeId, array $arguments): array
+    {
         return $this->parseIdAsLink($nodeId, $arguments);
     }
 
-    private function createFromStructure(array $structure): array {
+    private function createFromStructure(array $structure): array
+    {
         $structureData = [];
         foreach ($structure as $nodeId => $children) {
             $structureData[$nodeId] = $this->createNode($nodeId, []);
@@ -32,7 +36,8 @@ class NavigationExtension extends CompilerExtension {
         return $structureData;
     }
 
-    private function parseIdAsLink(string $nodeId, array $arguments): array {
+    private function parseIdAsLink(string $nodeId, array $arguments): array
+    {
         $data = $arguments;
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');
@@ -44,5 +49,4 @@ class NavigationExtension extends CompilerExtension {
         unset($data['params']);
         return $data;
     }
-
 }

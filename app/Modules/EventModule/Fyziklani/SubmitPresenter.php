@@ -22,13 +22,14 @@ use Nette\Security\Resource;
 /**
  * @method ModelFyziklaniSubmit getEntity()
  */
-class SubmitPresenter extends BasePresenter {
-
+class SubmitPresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     protected HandlerFactory $handlerFactory;
 
-    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void
+    {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -37,7 +38,8 @@ class SubmitPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleCreate(): void {
+    public function titleCreate(): void
+    {
         $this->setPageTitle(new PageTitle(_('Scoring'), 'fas fa-pen'));
     }
 
@@ -45,7 +47,8 @@ class SubmitPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Submits'), 'fa fa-table'));
     }
 
@@ -53,7 +56,8 @@ class SubmitPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fas fa-pen'));
     }
 
@@ -64,7 +68,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleDetail(): void {
+    public function titleDetail(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fas fa-search'));
     }
 
@@ -76,7 +81,8 @@ class SubmitPresenter extends BasePresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
 
@@ -89,7 +95,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
@@ -100,7 +107,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    final public function renderEdit(): void {
+    final public function renderEdit(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
@@ -109,7 +117,8 @@ class SubmitPresenter extends BasePresenter {
      * @return AllSubmitsGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): AllSubmitsGrid {
+    protected function createComponentGrid(): AllSubmitsGrid
+    {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -117,7 +126,8 @@ class SubmitPresenter extends BasePresenter {
      * @return PointsEntryComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): PointsEntryComponent {
+    protected function createComponentCreateForm(): PointsEntryComponent
+    {
         return new PointsEntryComponent($this->getContext(), $this->getEvent());
     }
 
@@ -128,7 +138,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentEditForm(): FyziklaniSubmitFormComponent {
+    protected function createComponentEditForm(): FyziklaniSubmitFormComponent
+    {
         return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
     }
 
@@ -140,7 +151,8 @@ class SubmitPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function handleCheck(): void {
+    public function handleCheck(): void
+    {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent());
         $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
@@ -148,7 +160,8 @@ class SubmitPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    protected function getORMService(): ServiceFyziklaniSubmit {
+    protected function getORMService(): ServiceFyziklaniSubmit
+    {
         return $this->serviceFyziklaniSubmit;
     }
 }

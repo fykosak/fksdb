@@ -13,8 +13,8 @@ use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-abstract class AbstractProcessing implements Processing {
-
+abstract class AbstractProcessing implements Processing
+{
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -24,7 +24,8 @@ abstract class AbstractProcessing implements Processing {
     private array $states;
     private Holder $holder;
 
-    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array
+    {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
@@ -35,7 +36,8 @@ abstract class AbstractProcessing implements Processing {
 
     abstract protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void;
 
-    final protected function hasWildCart(string $mask): bool {
+    final protected function hasWildCart(string $mask): bool
+    {
         return strpos($mask, self::WILD_CART) !== false;
     }
 
@@ -44,7 +46,8 @@ abstract class AbstractProcessing implements Processing {
      * @param string $mask
      * @return FormControl[]
      */
-    final protected function getValue(string $mask): array {
+    final protected function getValue(string $mask): array
+    {
         $keys = array_keys($this->valuesPathCache);
         $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -64,7 +67,8 @@ abstract class AbstractProcessing implements Processing {
      * @param string $mask
      * @return FormControl[]
      */
-    final protected function getControl(string $mask): array {
+    final protected function getControl(string $mask): array
+    {
         $keys = array_keys($this->formPathCache);
         $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -88,7 +92,8 @@ abstract class AbstractProcessing implements Processing {
      * @param string $name
      * @return bool
      */
-    protected function isBaseReallyEmpty(string $name): bool {
+    protected function isBaseReallyEmpty(string $name): bool
+    {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return true; // it was empty since beginning
@@ -99,7 +104,8 @@ abstract class AbstractProcessing implements Processing {
         return false;
     }
 
-    private function setValues(ArrayHash $values, string $prefix = ''): void {
+    private function setValues(ArrayHash $values, string $prefix = ''): void
+    {
         if (!$prefix) {
             $this->valuesPathCache = [];
         }
@@ -114,7 +120,8 @@ abstract class AbstractProcessing implements Processing {
         }
     }
 
-    private function setForm(?Form $form): void {
+    private function setForm(?Form $form): void
+    {
         $this->formPathCache = [];
         if (!$form) {
             return;

@@ -10,9 +10,11 @@ use Nette\OutOfRangeException;
  * @author David Grudl
  * @see http://latrine.dgx.cz/jak-overit-platne-ic-a-rodne-cislo
  */
-class BornNumber {
+class BornNumber
+{
 
-    public function __invoke(BaseControl $control): bool {
+    public function __invoke(BaseControl $control): bool
+    {
         $rc = $control->getValue();
         // suppose once validated is always valid
         if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
@@ -70,7 +72,8 @@ class BornNumber {
      * @return array [year,month,day,extension,control]
      * @throws OutOfRangeException
      */
-    private static function parseBornNumber(string $bornNumber): array {
+    private static function parseBornNumber(string $bornNumber): array
+    {
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $bornNumber, $matches)) {
             throw new OutOfRangeException('Born number not match');
         }
@@ -84,7 +87,8 @@ class BornNumber {
      * @return string
      * @throws OutOfRangeException
      */
-    public static function getGender(string $bornNumber): string {
+    public static function getGender(string $bornNumber): string
+    {
         [, $month, , , $control] = self::parseBornNumber($bornNumber);
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit

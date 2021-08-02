@@ -27,7 +27,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelPayment|null $model
  */
-class PaymentFormComponent extends AbstractEntityFormComponent {
+class PaymentFormComponent extends AbstractEntityFormComponent
+{
 
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
@@ -59,11 +60,13 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton {
+    protected function appendSubmitButton(Form $form): SubmitButton
+    {
         return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
     }
 
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         if ($this->isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         } else {
@@ -84,7 +87,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
      * @throws ModelException
      * @throws StorageException
      */
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = [
             'currency' => $values['currency'],
@@ -123,7 +127,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $values = $this->model->toArray();
             $query = $this->model->getRelatedPersonSchedule();

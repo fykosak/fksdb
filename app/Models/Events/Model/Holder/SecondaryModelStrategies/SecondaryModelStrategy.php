@@ -8,14 +8,16 @@ use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
-abstract class SecondaryModelStrategy {
+abstract class SecondaryModelStrategy
+{
 
     /**
      * @param BaseHolder[] $holders
      * @param ActiveRow[] $models
      * @return void
      */
-    public function setSecondaryModels(array $holders, iterable $models): void {
+    public function setSecondaryModels(array $holders, iterable $models): void
+    {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHolders]->setModel($secondaryModel);
@@ -36,7 +38,8 @@ abstract class SecondaryModelStrategy {
      * @param ActiveRow|null $primaryModel
      * @return void
      */
-    public function loadSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void {
+    public function loadSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void
+    {
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
             $secondary = $service->getTable()->where($joinOn, $joinValue);
@@ -58,7 +61,8 @@ abstract class SecondaryModelStrategy {
      * @param ActiveRow $primaryModel
      * @return void
      */
-    public function updateSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void {
+    public function updateSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void
+    {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];

@@ -14,7 +14,8 @@ use FKSDB\Models\Pipeline\Pipeline;
  * This is not real factory, it's only used as an internode for defining
  * pipelines inside Neon and inject them into presenters at once.
  */
-class PipelineFactory {
+class PipelineFactory
+{
 
     /**
      * @see TasksFromXML
@@ -40,7 +41,8 @@ class PipelineFactory {
     private ServiceStudyYear $serviceStudyYear;
     private ServiceOrg $serviceOrg;
 
-    public function __construct(array $columnMappings, array $contributionMappings, array $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    public function __construct(array $columnMappings, array $contributionMappings, array $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg)
+    {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -51,7 +53,8 @@ class PipelineFactory {
         $this->serviceOrg = $serviceOrg;
     }
 
-    public function create(): Pipeline {
+    public function create(): Pipeline
+    {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 

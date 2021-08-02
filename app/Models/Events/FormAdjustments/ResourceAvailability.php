@@ -14,7 +14,8 @@ use Nette\Forms\Control;
 /**
  * @deprecated use person_schedule UC
  */
-class ResourceAvailability extends AbstractAdjustment {
+class ResourceAvailability extends AbstractAdjustment
+{
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
@@ -33,7 +34,8 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled'])
+    {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -41,7 +43,8 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),

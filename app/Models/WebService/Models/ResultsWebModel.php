@@ -11,7 +11,8 @@ use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
 use Nette\DI\Container;
 
-class ResultsWebModel extends WebModel {
+class ResultsWebModel extends WebModel
+{
 
     private ServiceContest $serviceContest;
     private ResultsModelFactory $resultsModelFactory;
@@ -33,7 +34,8 @@ class ResultsWebModel extends WebModel {
      * @throws BadTypeException
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
@@ -122,7 +124,8 @@ class ResultsWebModel extends WebModel {
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $detailNode = $doc->createElement('detail');
         $detailNode->setAttribute('series', $resultsModel->getSeries());
 
@@ -137,7 +140,8 @@ class ResultsWebModel extends WebModel {
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -152,7 +156,8 @@ class ResultsWebModel extends WebModel {
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -167,7 +172,8 @@ class ResultsWebModel extends WebModel {
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $brojureNode = $doc->createElement('brojure');
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
         $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());

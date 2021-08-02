@@ -4,23 +4,26 @@ namespace FKSDB\Models\Logging;
 
 use FKSDB\Models\Messages\Message;
 
-class MemoryLogger extends StackedLogger {
+class MemoryLogger extends StackedLogger
+{
 
     private array $messages = [];
 
     /**
      * @return Message[]
      */
-    public function getMessages(): array {
+    public function getMessages(): array
+    {
         return $this->messages;
     }
 
-    public function clear(): void {
+    public function clear(): void
+    {
         $this->messages = [];
     }
 
-    protected function doLog(Message $message): void {
+    protected function doLog(Message $message): void
+    {
         $this->messages[] = $message;
     }
-
 }

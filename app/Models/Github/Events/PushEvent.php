@@ -2,7 +2,8 @@
 
 namespace FKSDB\Models\Github\Events;
 
-class PushEvent extends Event {
+class PushEvent extends Event
+{
 
     public const REFS_HEADS = 'refs/heads/';
 

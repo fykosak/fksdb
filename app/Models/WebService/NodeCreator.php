@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\WebService;
 
-interface NodeCreator {
+interface NodeCreator
+{
     public function createXMLNode(\DOMDocument $document): \DOMElement;
 }

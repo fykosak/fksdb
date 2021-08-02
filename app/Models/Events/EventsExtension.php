@@ -34,7 +34,8 @@ use Nette\Utils\Strings;
 /**
  * It's a f**** magic!
  */
-class EventsExtension extends CompilerExtension {
+class EventsExtension extends CompilerExtension
+{
 
     public const FIELD_FACTORY = 'Field_';
     public const MACHINE_PREFIX = 'Machine_';
@@ -69,7 +70,8 @@ class EventsExtension extends CompilerExtension {
 
     private string $schemeFile;
 
-    public function __construct(string $schemaFile) {
+    public function __construct(string $schemaFile)
+    {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
     }
@@ -79,7 +81,8 @@ class EventsExtension extends CompilerExtension {
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
-    public function loadConfiguration(): void {
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
 
         $this->loadScheme();
@@ -110,13 +113,15 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
-    private function loadScheme(): void {
+    private function loadScheme(): void
+    {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
         $this->scheme = $loader->load($this->schemeFile);
     }
 
-    private function getBaseMachineConfig(string $definitionName, string $baseName): array {
+    private function getBaseMachineConfig(string $definitionName, string $baseName): array
+    {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
             $config = $this->getConfig();
@@ -149,13 +154,15 @@ class EventsExtension extends CompilerExtension {
         return $this->baseMachineConfig[$key];
     }
 
-    private function validateConfigName(string $name): void {
+    private function validateConfigName(string $name): void
+    {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
     }
 
-    private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
+    private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition
+    {
         if (!Transition::validateTransition($mask, $states)) {
             throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
         }
@@ -187,7 +194,8 @@ class EventsExtension extends CompilerExtension {
         return $factory;
     }
 
-    private function createFieldService(array $fieldDefinition): ServiceDefinition {
+    private function createFieldService(array $fieldDefinition): ServiceDefinition
+    {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->getFieldName())
             ->setFactory(Field::class, [$fieldDefinition['0'], $fieldDefinition['label']]);
@@ -213,7 +221,8 @@ class EventsExtension extends CompilerExtension {
      * @param string[][] $definition
      * @return string[]
      */
-    private function createAccessKeys(array $eventTypeIds, array $definition): array {
+    private function createAccessKeys(array $eventTypeIds, array $definition): array
+    {
         $keys = [];
         foreach ($eventTypeIds as $eventTypeId) {
             if ($definition['eventYears'] === true) {
@@ -238,7 +247,8 @@ class EventsExtension extends CompilerExtension {
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
-    private function createMachineFactory(string $name, array $definition): ServiceDefinition {
+    private function createMachineFactory(string $name, array $definition): ServiceDefinition
+    {
         $machinesDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getMachineName($name);
@@ -285,7 +295,8 @@ class EventsExtension extends CompilerExtension {
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
-    private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition {
+    private function createBaseMachineFactory(string $eventName, string $baseName, string $instanceName): ServiceDefinition
+    {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseMachineName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
@@ -330,7 +341,8 @@ class EventsExtension extends CompilerExtension {
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
-    private function createHolderFactory(string $name, array $definition): void {
+    private function createHolderFactory(string $name, array $definition): void
+    {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
@@ -375,7 +387,8 @@ class EventsExtension extends CompilerExtension {
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
-    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
+    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition
+    {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseHolderName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
@@ -435,27 +448,33 @@ class EventsExtension extends CompilerExtension {
 
     /* **************** Naming **************** */
 
-    private function getMachineName(string $name): string {
+    private function getMachineName(string $name): string
+    {
         return $this->prefix(self::MACHINE_PREFIX . $name);
     }
 
-    private function getHolderName(string $name): string {
+    private function getHolderName(string $name): string
+    {
         return $this->prefix(self::HOLDER_PREFIX . $name);
     }
 
-    private function getBaseMachineName(string $name, string $baseName): string {
+    private function getBaseMachineName(string $name, string $baseName): string
+    {
         return $this->prefix(self::BASE_MACHINE_PREFIX . $name . '_' . $baseName);
     }
 
-    private function getBaseHolderName(string $name, string $baseName): string {
+    private function getBaseHolderName(string $name, string $baseName): string
+    {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
-    private function getTransitionName(string $baseName, string $mask): string {
+    private function getTransitionName(string $baseName, string $mask): string
+    {
         return uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
 
-    private function getFieldName(): string {
+    private function getFieldName(): string
+    {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
 }

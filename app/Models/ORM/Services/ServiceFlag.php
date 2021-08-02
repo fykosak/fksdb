@@ -5,9 +5,11 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Models\ModelFlag;
 use Fykosak\NetteORM\AbstractService;
 
-class ServiceFlag extends AbstractService {
+class ServiceFlag extends AbstractService
+{
 
-    public function findByFid(?string $fid): ?ModelFlag {
+    public function findByFid(?string $fid): ?ModelFlag
+    {
         if (!$fid) {
             return null;
         }

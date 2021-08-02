@@ -18,7 +18,8 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 
-abstract class ReferencedContainer extends ContainerWithOptions {
+abstract class ReferencedContainer extends ContainerWithOptions
+{
 
     public const ID_MASK = 'frm%s-%s';
     public const CSS_AJAX = 'ajax';
@@ -31,7 +32,8 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     private bool $attachedJS = false;
 
-    public function __construct(DIContainer $container, bool $allowClear) {
+    public function __construct(DIContainer $container, bool $allowClear)
+    {
         parent::__construct($container);
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!$this->attachedJS) {
@@ -47,38 +49,43 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $this->createCompactValue();
 
         $this->setAllowClear($allowClear);
-
     }
 
-    public function getReferencedId(): ReferencedId {
+    public function getReferencedId(): ReferencedId
+    {
         return $this->referencedId;
     }
 
-    public function setReferencedId(ReferencedId $referencedId): void {
+    public function setReferencedId(ReferencedId $referencedId): void
+    {
         $this->referencedId = $referencedId;
     }
 
-    public function setDisabled(bool $value = true): void {
+    public function setDisabled(bool $value = true): void
+    {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
         }
     }
 
-    protected function setAllowClear(bool $allowClear): void {
+    protected function setAllowClear(bool $allowClear): void
+    {
         $this->allowClear = $allowClear;
         /** @var SubmitButton $control */
         $control = $this->getComponent(self::SUBMIT_CLEAR);
         $control->setOption('visible', $allowClear);
     }
 
-    protected function validateChildComponent(IComponent $child): void {
+    protected function validateChildComponent(IComponent $child): void
+    {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
         }
     }
 
-    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void {
+    public function setConflicts(iterable $conflicts, ?IContainer $container = null): void
+    {
         $container = $container ?? $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
@@ -90,7 +97,8 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    private function createClearButton(): void {
+    private function createClearButton(): void
+    {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(null);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
@@ -102,14 +110,16 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         };
     }
 
-    private function createCompactValue(): void {
+    private function createCompactValue(): void
+    {
         $this->addHidden(self::CONTROL_COMPACT);
     }
 
     /**
      * @note Must be called after a form is attached.
      */
-    private function updateHtmlData(): void {
+    private function updateHtmlData(): void
+    {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
         $this->setOption('data-referenced-id', $referencedId);

@@ -12,7 +12,8 @@ use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-class StoredQueryFactory implements XMLNodeSerializer {
+class StoredQueryFactory implements XMLNodeSerializer
+{
 
     public const PARAM_CONTEST_ID = 'contest_id';
     public const PARAM_CONTEST = 'contest';
@@ -22,7 +23,8 @@ class StoredQueryFactory implements XMLNodeSerializer {
     private Connection $connection;
     private ServiceStoredQuery $serviceStoredQuery;
 
-    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
+    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery)
+    {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
@@ -33,19 +35,22 @@ class StoredQueryFactory implements XMLNodeSerializer {
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
      * @return StoredQuery
      */
-    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery {
+    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
+    {
         $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
-    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
+    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery
+    {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
-    public function createQueryFromQid(string $qid, array $parameters): StoredQuery {
+    public function createQueryFromQid(string $qid, array $parameters): StoredQuery
+    {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
@@ -55,7 +60,8 @@ class StoredQueryFactory implements XMLNodeSerializer {
         return $storedQuery;
     }
 
-    private function presenterContextParameters(BasePresenter $presenter): array {
+    private function presenterContextParameters(BasePresenter $presenter): array
+    {
         return [
             self::PARAM_CONTEST_ID => $presenter->getSelectedContestYear()->contest_id,
             self::PARAM_CONTEST => $presenter->getSelectedContestYear()->contest_id,
@@ -73,7 +79,8 @@ class StoredQueryFactory implements XMLNodeSerializer {
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
+    {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }
@@ -122,7 +129,8 @@ class StoredQueryFactory implements XMLNodeSerializer {
         }
     }
 
-    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter {
+    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter
+    {
         return new StoredQueryParameter($model->name, $model->getDefaultValue(), $model->getPDOType(), $model->description);
     }
 }

@@ -13,26 +13,31 @@ use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 
-class PreferredLangFormComponent extends FormComponent {
+class PreferredLangFormComponent extends FormComponent
+{
 
     protected ModelPerson $person;
 
     protected ServicePersonInfo $servicePersonInfo;
 
-    public function __construct(Container $container, ModelPerson $person) {
+    public function __construct(Container $container, ModelPerson $person)
+    {
         parent::__construct($container);
         $this->person = $person;
     }
 
-    final public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
+    final public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void
+    {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton {
+    protected function appendSubmitButton(Form $form): SubmitButton
+    {
         return $form->addSubmit('submit', _('Save'));
     }
 
-    protected function handleSuccess(SubmitButton $button): void {
+    protected function handleSuccess(SubmitButton $button): void
+    {
         $form = $button->getForm();
         $values = $form->getValues();
         $lang = $values['preferred_lang'];
@@ -45,7 +50,8 @@ class PreferredLangFormComponent extends FormComponent {
         }
     }
 
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $items = [];
         foreach ($this->getTranslator()->getSupportedLanguages() as $lang) {
             $items[$lang] = LanguageChooserComponent::$languageNames[$lang];
@@ -57,7 +63,8 @@ class PreferredLangFormComponent extends FormComponent {
      * @return void
      * @throws BadTypeException
      */
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->getForm()->setDefaults(['preferred_lang' => $this->person->getPreferredLang()]);
         parent::render();
     }

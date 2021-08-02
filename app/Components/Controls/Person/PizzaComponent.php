@@ -11,7 +11,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Form;
 
-class PizzaComponent extends BaseComponent {
+class PizzaComponent extends BaseComponent
+{
 
     private array $persons = [];
 
@@ -19,7 +20,8 @@ class PizzaComponent extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void
+    {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
     }
@@ -28,7 +30,8 @@ class PizzaComponent extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
@@ -44,12 +47,14 @@ class PizzaComponent extends BaseComponent {
         return $control;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->persons = $this->persons;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }
 
-    protected function createComponentValuePrinter(): ColumnPrinterComponent {
+    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    {
         return new ColumnPrinterComponent($this->getContext());
     }
 }

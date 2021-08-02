@@ -6,7 +6,8 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
-interface ReferencedHandler {
+interface ReferencedHandler
+{
 
     public const RESOLUTION_OVERWRITE = 'overwrite';
     public const RESOLUTION_KEEP = 'keep';

@@ -7,9 +7,11 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Utils\DateTime;
 
-class SeriesCalculator {
+class SeriesCalculator
+{
 
-    public static function getCurrentSeries(ModelContest $contest): int {
+    public static function getCurrentSeries(ModelContest $contest): int
+    {
         $year = $contest->getCurrentContestYear()->year;
         $currentSeries = $contest->related(DbNames::TAB_TASK)->where([
             'year' => $year,
@@ -18,13 +20,15 @@ class SeriesCalculator {
         return $currentSeries ?? 1;
     }
 
-    public static function getLastSeries(ModelContestYear $contestYear): int {
+    public static function getLastSeries(ModelContestYear $contestYear): int
+    {
         return $contestYear->getContest()->related(DbNames::TAB_TASK)->where([
             'year' => $contestYear->year,
         ])->max('series') ?? 1;
     }
 
-    public static function getTotalSeries(ModelContestYear $contestYear): int {
+    public static function getTotalSeries(ModelContestYear $contestYear): int
+    {
         //TODO Think of better way of getting series count (maybe year schema?)
         if (static::hasHolidaySeries($contestYear)) {
             return 9;
@@ -38,7 +42,8 @@ class SeriesCalculator {
      * @param ModelContestYear $contestYear
      * @return bool
      */
-    public static function hasHolidaySeries(ModelContestYear $contestYear): bool {
+    public static function hasHolidaySeries(ModelContestYear $contestYear): bool
+    {
         if ($contestYear->contest_id === ModelContest::ID_VYFUK && $contestYear->year >= 9) {
             return true;
         }

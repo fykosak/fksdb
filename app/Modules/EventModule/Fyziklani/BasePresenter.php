@@ -9,12 +9,14 @@ use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 
-abstract class BasePresenter extends EventBasePresenter {
+abstract class BasePresenter extends EventBasePresenter
+{
 
     protected ServiceFyziklaniTeam $serviceFyziklaniTeam;
     protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    final public function injectFyziklaniBase(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectFyziklaniBase(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam): void
+    {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -23,7 +25,8 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return FyziklaniChooserComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent {
+    protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent
+    {
         return new FyziklaniChooserComponent($this->getContext(), $this->getEvent());
     }
 
@@ -31,14 +34,16 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function isEnabled(): bool {
+    protected function isEnabled(): bool
+    {
         return $this->getEvent()->event_type_id === ModelEventType::FYZIKLANI;
     }
 
     /**
      * @return string[]
      */
-    protected function getNavRoots(): array {
+    protected function getNavRoots(): array
+    {
         return ['Fyziklani.Dashboard.default'];
     }
 }

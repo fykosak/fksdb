@@ -15,8 +15,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelEventOrg|null $model
  */
-class EventOrgFormComponent extends AbstractEntityFormComponent {
-
+class EventOrgFormComponent extends AbstractEntityFormComponent
+{
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'event_org';
@@ -24,16 +24,19 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
     private ServiceEventOrg $serviceEventOrg;
     private ModelEvent $event;
 
-    public function __construct(Container $container, ModelEvent $event, ?ModelEventOrg $model) {
+    public function __construct(Container $container, ModelEvent $event, ?ModelEventOrg $model)
+    {
         parent::__construct($container, $model);
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceEventOrg $serviceEventOrg): void {
+    final public function injectPrimary(ServiceEventOrg $serviceEventOrg): void
+    {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
         $personInput->setDisabled(isset($this->model));
@@ -42,7 +45,8 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
         $form->addComponent($container, self::CONTAINER);
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
@@ -56,7 +60,8 @@ class EventOrgFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }

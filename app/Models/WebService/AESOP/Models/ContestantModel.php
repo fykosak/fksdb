@@ -12,7 +12,8 @@ use Nette\Application\BadRequestException;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-class ContestantModel extends AESOPModel {
+class ContestantModel extends AESOPModel
+{
 
     protected ServiceTask $serviceTask;
 
@@ -25,13 +26,15 @@ class ContestantModel extends AESOPModel {
      * @param string|null $category
      * @throws BadRequestException
      */
-    public function __construct(Container $container, ModelContestYear $contestYear, ?string $category) {
+    public function __construct(Container $container, ModelContestYear $contestYear, ?string $category)
+    {
         parent::__construct($container, $contestYear);
         $this->category = $this->getCategory($category);
         $container->callInjects($this);
     }
 
-    public function injectTaskService(ServiceTask $serviceTask): void {
+    public function injectTaskService(ServiceTask $serviceTask): void
+    {
         $this->serviceTask = $serviceTask;
     }
 
@@ -39,8 +42,10 @@ class ContestantModel extends AESOPModel {
      * @return PlainTextResponse
      * @throws BadRequestException
      */
-    public function createResponse(): PlainTextResponse {
-        $query = $this->explorer->query("select ac.*, IF(ac.`x-points_ratio` >= 0.5, 'Y', 'N') AS `successful`
+    public function createResponse(): PlainTextResponse
+    {
+        $query = $this->explorer->query(
+            "select ac.*, IF(ac.`x-points_ratio` >= 0.5, 'Y', 'N') AS `successful`
          FROM v_aesop_contestant ac
 WHERE
 	ac.`x-contest_id` = ?
@@ -63,7 +68,8 @@ WHERE
         );
     }
 
-    protected function getMask(): string {
+    protected function getMask(): string
+    {
         return $this->contestYear->getContest()->getContestSymbol() . '.rocnik.' . $this->category->id;
     }
 
@@ -73,7 +79,8 @@ WHERE
      * @return int|double|null
      * @throws BadRequestException
      */
-    public function getMaxPoints(): ?int {
+    public function getMaxPoints(): ?int
+    {
         $evalutationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
         if (!$this->category) {
             return null;
@@ -95,7 +102,8 @@ WHERE
      * @return ModelCategory|null
      * @throws BadRequestException
      */
-    private function getCategory(?string $stringCategory): ?ModelCategory {
+    private function getCategory(?string $stringCategory): ?ModelCategory
+    {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
             if ($category->id == $stringCategory) {
@@ -110,7 +118,8 @@ WHERE
      * @return array
      * @throws BadRequestException
      */
-    private function filterCategory(ResultSet $data): array {
+    private function filterCategory(ResultSet $data): array
+    {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
 
         $studyYears = [];
@@ -134,7 +143,8 @@ WHERE
         return $result;
     }
 
-    private function calculateRank(array $data): array {
+    private function calculateRank(array $data): array
+    {
         $points = [];
         foreach ($data as $row) {
             if (!isset($points[$row[self::POINTS]])) {
@@ -159,7 +169,8 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ModelContestYear $contestYear): ?int {
+    private function studyYearToGraduation(?int $studyYear, ModelContestYear $contestYear): ?int
+    {
         if (is_null($studyYear)) {
             return null;
         }

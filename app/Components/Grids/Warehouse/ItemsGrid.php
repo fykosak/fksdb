@@ -7,9 +7,11 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceItem;
 use Nette\DI\Container;
 
-class ItemsGrid extends EntityGrid {
+class ItemsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container, ModelContest $contest) {
+    public function __construct(Container $container, ModelContest $contest)
+    {
         parent::__construct($container, ServiceItem::class, [
             'contest.contest',
         ], [

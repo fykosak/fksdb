@@ -7,7 +7,8 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
-class StoredQueryTagCloudComponent extends BaseComponent {
+class StoredQueryTagCloudComponent extends BaseComponent
+{
 
     public const MODE_LIST = 'mode-list';
     public const MODE_DETAIL = 'mode-detail';
@@ -17,32 +18,38 @@ class StoredQueryTagCloudComponent extends BaseComponent {
      */
     public array $activeTagIds = [];
 
-    final public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void {
+    final public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void
+    {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
-    public function handleOnClick(array $activeTagIds): void {
+    public function handleOnClick(array $activeTagIds): void
+    {
         $this->activeTagIds = $activeTagIds;
     }
 
-    final public function render(string $mode): void {
+    final public function render(string $mode): void
+    {
         $this->template->mode = $mode;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
     }
 
-    final public function renderList(): void {
+    final public function renderList(): void
+    {
         $this->template->tags = $this->serviceStoredQueryTagType->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
     }
 
-    final public function renderDetail(ModelStoredQuery $query): void {
+    final public function renderDetail(ModelStoredQuery $query): void
+    {
         $this->template->tags = $query->getStoredQueryTagTypes();
         $this->render(self::MODE_DETAIL);
     }
 
-    private function createNextActiveTagIds(): array {
+    private function createNextActiveTagIds(): array
+    {
         $tags = $this->serviceStoredQueryTagType->getTable();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */

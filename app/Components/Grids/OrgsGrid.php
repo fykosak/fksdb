@@ -14,16 +14,19 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use FKSDB\Models\SQL\SearchableDataSource;
 
-class OrgsGrid extends BaseGrid {
+class OrgsGrid extends BaseGrid
+{
 
     private ModelContest $contest;
 
-    public function __construct(Container $container, ModelContest $contest) {
+    public function __construct(Container $container, ModelContest $contest)
+    {
         parent::__construct($container);
         $this->contest = $contest;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
@@ -44,7 +47,8 @@ class OrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');
@@ -60,7 +64,8 @@ class OrgsGrid extends BaseGrid {
         $this->addLink('org.detail', true);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelOrg::class;
     }
 }

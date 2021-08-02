@@ -8,18 +8,21 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 
-class ParticipantsDurationTest extends PersonTest {
+class ParticipantsDurationTest extends PersonTest
+{
 
     private const CONTESTS = [
         ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
         ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('participants_duration', _('Participate events'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void
+    {
         foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;
@@ -44,7 +47,8 @@ class ParticipantsDurationTest extends PersonTest {
         }
     }
 
-    final private function evaluateThresholds(int $delta, array $thresholds): string {
+    final private function evaluateThresholds(int $delta, array $thresholds): string
+    {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
         }

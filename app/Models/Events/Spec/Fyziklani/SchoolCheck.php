@@ -11,20 +11,24 @@ use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
 
-abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment {
+abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment
+{
 
     private ServicePersonHistory $servicePersonHistory;
     private Holder $holder;
 
-    public function __construct(ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServicePersonHistory $servicePersonHistory)
+    {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    public function getHolder(): Holder {
+    public function getHolder(): Holder
+    {
         return $this->holder;
     }
 
-    public function setHolder(Holder $holder): void {
+    public function setHolder(Holder $holder): void
+    {
         $this->holder = $holder;
     }
 
@@ -33,7 +37,8 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment 
      * @param Control[]|ReferencedId[] $personControls
      * @return array
      */
-    final protected function getSchools(array $schoolControls, array $personControls): array {
+    final protected function getSchools(array $schoolControls, array $personControls): array
+    {
         $personIds = array_filter(array_map(function (BaseControl $control) {
             try {
                 return $control->getValue();

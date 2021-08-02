@@ -12,7 +12,8 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
 
-class AddressFactory {
+class AddressFactory
+{
 
     private ServiceAddress $serviceAddress;
 
@@ -20,19 +21,22 @@ class AddressFactory {
 
     private Container $container;
 
-    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion)
+    {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
         $this->container = $container;
     }
 
-    public function createAddress(?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): AddressContainer {
+    public function createAddress(?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): AddressContainer
+    {
         $container = new AddressContainer($this->container);
         $this->buildAddress2($container, $conditioningField, $required, $notWriteOnly, $showExtendedRows);
         return $container;
     }
 
-    public function createAddressContainer(string $type): AddressContainer {
+    public function createAddressContainer(string $type): AddressContainer
+    {
         $container = new AddressContainer($this->container);
         $this->buildAddress2($container, null, false, true); // TODO is not safe
         switch ($type) {
@@ -46,7 +50,8 @@ class AddressFactory {
         return $container;
     }
 
-    public function buildAddress2(AddressContainer $container, ?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): void {
+    public function buildAddress2(AddressContainer $container, ?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): void
+    {
         if ($showExtendedRows) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));

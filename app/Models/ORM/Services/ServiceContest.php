@@ -8,6 +8,7 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @method ModelContest findByPrimary($key)
  */
-class ServiceContest extends AbstractService {
+class ServiceContest extends AbstractService
+{
 
 }

@@ -14,9 +14,11 @@ use Nette\Utils\ArrayHash;
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
  */
-class CategoryProcessing extends AbstractCategoryProcessing {
+class CategoryProcessing extends AbstractCategoryProcessing
+{
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -35,7 +37,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         }
     }
 
-    protected function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string
+    {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;

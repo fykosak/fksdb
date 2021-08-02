@@ -8,6 +8,7 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @method ModelPersonHistory createNewModel(array $data)
  */
-class ServicePersonHistory extends AbstractService {
+class ServicePersonHistory extends AbstractService
+{
 
 }

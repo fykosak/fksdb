@@ -11,9 +11,11 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class EventOrgsGrid extends RelatedGrid {
+class EventOrgsGrid extends RelatedGrid
+{
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container, $event, 'event_org');
     }
 
@@ -24,7 +26,8 @@ class EventOrgsGrid extends RelatedGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addColumns([
             'person.full_name',
@@ -36,7 +39,8 @@ class EventOrgsGrid extends RelatedGrid {
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelEventOrg::class;
     }
 }

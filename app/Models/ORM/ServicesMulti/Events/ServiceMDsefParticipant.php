@@ -9,9 +9,11 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 
-class ServiceMDsefParticipant extends AbstractServiceMulti {
+class ServiceMDsefParticipant extends AbstractServiceMulti
+{
 
-    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
+    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService)
+    {
         parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMDsefParticipant::class);
     }
 
@@ -20,7 +22,8 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
      * @param AbstractModelMulti $model
      * @throws ModelException
      */
-    public function dispose(AbstractModelMulti $model): void {
+    public function dispose(AbstractModelMulti $model): void
+    {
         parent::dispose($model);
         $this->mainService->dispose($model->mainModel);
     }

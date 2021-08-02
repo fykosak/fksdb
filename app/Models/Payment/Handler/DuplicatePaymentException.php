@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Payment\Handler;
 
-class DuplicatePaymentException extends \Exception {
+class DuplicatePaymentException extends \Exception
+{
 
 }

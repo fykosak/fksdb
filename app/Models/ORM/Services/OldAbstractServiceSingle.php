@@ -16,7 +16,8 @@ use Fykosak\NetteORM\AbstractModel;
  * @use AbstractServiceSingle
  * @method AbstractModel storeModel(array $data, ?AbstractModel $model = null)
  */
-abstract class OldAbstractServiceSingle extends AbstractService {
+abstract class OldAbstractServiceSingle extends AbstractService
+{
 
     /**
      * @param array $data
@@ -24,7 +25,8 @@ abstract class OldAbstractServiceSingle extends AbstractService {
      * @deprecated
      * @internal Used also in MultiTableSelection.
      */
-    public function createFromArray(array $data): AbstractModel {
+    public function createFromArray(array $data): AbstractModel
+    {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);
         return new $className($data, $this->getTable());

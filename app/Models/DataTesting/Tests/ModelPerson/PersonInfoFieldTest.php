@@ -7,7 +7,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-class PersonInfoFieldTest extends PersonFileLevelTest {
+class PersonInfoFieldTest extends PersonFileLevelTest
+{
 
     /**
      * @param Logger $logger
@@ -15,7 +16,8 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
      * @return void
      * @throws BadTypeException
      */
-    final public function run(Logger $logger, ModelPerson $person): void {
+    final public function run(Logger $logger, ModelPerson $person): void
+    {
         $info = $person->getInfo();
         if (!$info) {
             $logger->log(new TestLog($this->title, 'Person info is not set', TestLog::LVL_INFO));

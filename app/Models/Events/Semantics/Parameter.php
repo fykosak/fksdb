@@ -4,7 +4,8 @@ namespace FKSDB\Models\Events\Semantics;
 
 use Nette\SmartObject;
 
-class Parameter {
+class Parameter
+{
     use SmartObject;
     use WithEventTrait;
 
@@ -14,7 +15,8 @@ class Parameter {
      * Parameter constructor.
      * @param string $parameter
      */
-    public function __construct(string $parameter) {
+    public function __construct(string $parameter)
+    {
         $this->parameter = $parameter;
     }
 
@@ -22,12 +24,13 @@ class Parameter {
      * @param ...$args
      * @return mixed
      */
-    public function __invoke(...$args) {
+    public function __invoke(...$args)
+    {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return "param({$this->parameter})";
     }
-
 }

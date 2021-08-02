@@ -7,7 +7,8 @@ use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 
-class DataTestingFactory {
+class DataTestingFactory
+{
     /** @var PersonTest[][] */
     private array $tests = [];
     private ServiceContest $serviceContest;
@@ -19,7 +20,8 @@ class DataTestingFactory {
      * @param ORMFactory $tableReflectionFactory
      * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, ORMFactory $tableReflectionFactory) {
+    public function __construct(ServiceContest $serviceContest, ORMFactory $tableReflectionFactory)
+    {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
@@ -29,7 +31,8 @@ class DataTestingFactory {
      * @return void
      * @throws BadTypeException
      */
-    private function registersTests(): void {
+    private function registersTests(): void
+    {
         $tests = [
             new Tests\ModelPerson\GenderFromBornNumberTest(),
             new Tests\ModelPerson\ParticipantsDurationTest(),
@@ -45,7 +48,8 @@ class DataTestingFactory {
      * @param string $section
      * @return PersonTest[]
      */
-    public function getTests(string $section): array {
+    public function getTests(string $section): array
+    {
         return $this->tests[$section] ?? [];
     }
 }

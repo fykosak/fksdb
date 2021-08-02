@@ -12,7 +12,8 @@ use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
 
-class Handler {
+class Handler
+{
 
     private ServicePersonSchedule $servicePersonSchedule;
     private ServiceScheduleItem $serviceScheduleItem;
@@ -34,7 +35,8 @@ class Handler {
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event): void {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event): void
+    {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
             $this->updateDataType($newScheduleData, $type, $person, $event);
         }
@@ -52,7 +54,8 @@ class Handler {
      * @throws \PDOException
      * @throws ModelException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void
+    {
         $oldRows = $person->getScheduleForEvent($event)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
@@ -69,7 +72,8 @@ class Handler {
                     if (\preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(\sprintf(
                             _('The item "%s" has already a payment generated, so it cannot be deleted.'),
-                            $modelPersonSchedule->getLabel()));
+                            $modelPersonSchedule->getLabel()
+                        ));
                     } else {
                         throw $exception;
                     }
@@ -92,7 +96,8 @@ class Handler {
         }
     }
 
-    private function prepareData(ArrayHash $data): array {
+    private function prepareData(ArrayHash $data): array
+    {
         $newData = [];
         foreach ($data as $type => $datum) {
             $newData[$type] = \array_values((array)\json_decode($datum));

@@ -18,11 +18,12 @@ use Nette\Utils\ArrayHash;
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
  */
-class GenKillProcessing implements Processing {
-
+class GenKillProcessing implements Processing
+{
     use SmartObject;
 
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): array {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): array
+    {
         $result = [];
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible

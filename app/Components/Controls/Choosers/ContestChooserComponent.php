@@ -8,22 +8,26 @@ use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-class ContestChooserComponent extends ChooserComponent {
+class ContestChooserComponent extends ChooserComponent
+{
 
     private TypedTableSelection $availableContests;
     private ModelContest $contest;
 
-    public function __construct(Container $container, ModelContest $contest, TypedTableSelection $availableContests) {
+    public function __construct(Container $container, ModelContest $contest, TypedTableSelection $availableContests)
+    {
         parent::__construct($container);
         $this->contest = $contest;
         $this->availableContests = $availableContests;
     }
 
-    protected function getTitle(): Title {
+    protected function getTitle(): Title
+    {
         return new Title($this->contest->name);
     }
 
-    protected function getItems(): iterable {
+    protected function getItems(): iterable
+    {
         return $this->availableContests;
     }
 
@@ -31,7 +35,8 @@ class ContestChooserComponent extends ChooserComponent {
      * @param ModelContest $item
      * @return bool
      */
-    public function isItemActive($item): bool {
+    public function isItemActive($item): bool
+    {
         return $this->contest->contest_id === $item->contest_id;
     }
 
@@ -39,7 +44,8 @@ class ContestChooserComponent extends ChooserComponent {
      * @param ModelContest $item
      * @return Title
      */
-    public function getItemTitle($item): Title {
+    public function getItemTitle($item): Title
+    {
         return new Title($item->name);
     }
 
@@ -48,7 +54,8 @@ class ContestChooserComponent extends ChooserComponent {
      * @return string
      * @throws InvalidLinkException
      */
-    public function getItemLink($item): string {
+    public function getItemLink($item): string
+    {
         return $this->getPresenter()->link('this', ['contestId' => $item->contest_id]);
     }
 }

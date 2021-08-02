@@ -22,8 +22,8 @@ use Nette\Utils\Strings;
 /**
  * @method ModelStoredQuery getEntity()
  */
-class ExportPresenter extends BasePresenter {
-
+class ExportPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
@@ -31,12 +31,14 @@ class ExportPresenter extends BasePresenter {
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery, StoredQueryFactory $storedQueryFactory): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery, StoredQueryFactory $storedQueryFactory): void
+    {
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
@@ -55,7 +57,8 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute(): void {
+    public function authorizedExecute(): void
+    {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
@@ -64,7 +67,8 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function titleExecute(): void {
+    public function titleExecute(): void
+    {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
     }
 
@@ -73,7 +77,8 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function actionExecute(): void {
+    public function actionExecute(): void
+    {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery && $this->getParameter('qid')) {
             $parameters = [];
@@ -96,11 +101,13 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    final public function renderExecute(): void {
+    final public function renderExecute(): void
+    {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): array {
+    public function getAllowedAuthMethods(): array
+    {
         $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
             $methods[self::AUTH_HTTP] = true;
@@ -108,7 +115,8 @@ class ExportPresenter extends BasePresenter {
         return $methods;
     }
 
-    protected function getHttpRealm(): ?string {
+    protected function getHttpRealm(): ?string
+    {
         return 'FKSDB-export';
     }
 
@@ -117,7 +125,8 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function getStoredQuery(): StoredQuery {
+    public function getStoredQuery(): StoredQuery
+    {
         if (!isset($this->storedQuery)) {
             $model = $this->getQueryByQId();
             if (!$model) {
@@ -128,7 +137,8 @@ class ExportPresenter extends BasePresenter {
         return $this->storedQuery;
     }
 
-    public function getQueryByQId(): ?ModelStoredQuery {
+    public function getQueryByQId(): ?ModelStoredQuery
+    {
         $qid = $this->getParameter('qid');
         if ($qid) {
             return $this->serviceStoredQuery->findByQid($qid);
@@ -141,25 +151,30 @@ class ExportPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    protected function createComponentResultsComponent(): ResultsComponent {
+    protected function createComponentResultsComponent(): ResultsComponent
+    {
         $control = new ResultsComponent($this->getContext());
         $control->setStoredQuery($this->getStoredQuery());
         return $control;
     }
 
-    protected function createComponentTagCloud(): StoredQueryTagCloudComponent {
+    protected function createComponentTagCloud(): StoredQueryTagCloudComponent
+    {
         return new StoredQueryTagCloudComponent($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function getORMService(): ServiceStoredQuery {
+    protected function getORMService(): ServiceStoredQuery
+    {
         return $this->serviceStoredQuery;
     }
 
@@ -168,11 +183,13 @@ class ExportPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return false;
     }
 
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         throw new NotImplementedException();
     }
 }

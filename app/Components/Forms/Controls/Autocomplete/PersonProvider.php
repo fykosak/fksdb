@@ -7,7 +7,8 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteORM\TypedTableSelection;
 
-class PersonProvider implements FilteredDataProvider {
+class PersonProvider implements FilteredDataProvider
+{
 
     private const PLACE = 'place';
 
@@ -15,7 +16,8 @@ class PersonProvider implements FilteredDataProvider {
 
     private TypedTableSelection $searchTable;
 
-    public function __construct(ServicePerson $servicePerson) {
+    public function __construct(ServicePerson $servicePerson)
+    {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
     }
@@ -24,7 +26,8 @@ class PersonProvider implements FilteredDataProvider {
      * Syntactic sugar, should be solved more generally.
      * @param ModelContest $contest
      */
-    public function filterOrgs(ModelContest $contest): void {
+    public function filterOrgs(ModelContest $contest): void
+    {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
@@ -39,7 +42,8 @@ class PersonProvider implements FilteredDataProvider {
      * @param string|null $search
      * @return array
      */
-    public function getFilteredItems(?string $search): array {
+    public function getFilteredItems(?string $search): array
+    {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -47,12 +51,14 @@ class PersonProvider implements FilteredDataProvider {
         return $this->getItems();
     }
 
-    public function getItemLabel(int $id): string {
+    public function getItemLabel(int $id): string
+    {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
 
-    public function getItems(): array {
+    public function getItems(): array
+    {
         $persons = $this->searchTable
             ->order('family_name, other_name');
 
@@ -64,7 +70,8 @@ class PersonProvider implements FilteredDataProvider {
         return $result;
     }
 
-    private function getItem(ModelPerson $person): array {
+    private function getItem(ModelPerson $person): array
+    {
         $place = null;
         $address = $person->getDeliveryAddress2();
         if ($address) {
@@ -80,8 +87,8 @@ class PersonProvider implements FilteredDataProvider {
     /**
      * @param mixed $id
      */
-    public function setDefaultValue($id): void {
+    public function setDefaultValue($id): void
+    {
         /* intentionally blank */
     }
-
 }

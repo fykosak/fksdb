@@ -4,7 +4,8 @@ namespace FKSDB\Models\Transitions\Holder;
 
 use Fykosak\NetteORM\AbstractModel;
 
-interface ModelHolder {
+interface ModelHolder
+{
 
     public function updateState(string $newState): void;
 

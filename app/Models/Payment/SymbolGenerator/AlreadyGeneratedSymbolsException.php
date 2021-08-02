@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Payment\SymbolGenerator;
 
-class AlreadyGeneratedSymbolsException extends \Exception {
+class AlreadyGeneratedSymbolsException extends \Exception
+{
 
 }

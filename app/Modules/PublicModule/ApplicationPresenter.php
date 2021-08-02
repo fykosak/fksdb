@@ -31,7 +31,8 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
-class ApplicationPresenter extends BasePresenter {
+class ApplicationPresenter extends BasePresenter
+{
 
     public const PARAM_AFTER = 'a';
     private ?ModelEvent $event;
@@ -52,7 +53,8 @@ class ApplicationPresenter extends BasePresenter {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
@@ -74,11 +76,14 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @throws GoneException
      */
-    public function authorizedDefault(): void {
+    public function authorizedDefault(): void
+    {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
-        if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
-            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())) {
+        if (
+            $this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
+            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())
+        ) {
             $this->setAuthorized(true);
             return;
         }
@@ -92,7 +97,8 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws \Throwable
      */
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         if ($this->getEventApplication()) {
             $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
         } else {
@@ -105,7 +111,8 @@ class ApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
-    protected function unauthorizedAccess(): void {
+    protected function unauthorizedAccess(): void
+    {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
@@ -116,7 +123,8 @@ class ApplicationPresenter extends BasePresenter {
         parent::unauthorizedAccess();
     }
 
-    public function requiresLogin(): bool {
+    public function requiresLogin(): bool
+    {
         return $this->getAction() != 'default';
     }
 
@@ -128,7 +136,8 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws NotFoundException
      */
-    public function actionDefault(?int $eventId, ?int $id): void {
+    public function actionDefault(?int $eventId, ?int $id): void
+    {
         if (!$this->getEvent()) {
             throw new EventNotFoundException();
         }
@@ -178,7 +187,8 @@ class ApplicationPresenter extends BasePresenter {
      * @return void
      * @throws NeonSchemaException
      */
-    private function initializeMachine(): void {
+    private function initializeMachine(): void
+    {
         $this->getHolder()->setModel($this->getEventApplication());
     }
 
@@ -187,7 +197,8 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function createComponentApplication(): ApplicationComponent {
+    protected function createComponentApplication(): ApplicationComponent
+    {
         $logger = new MemoryLogger();
         $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
@@ -203,7 +214,8 @@ class ApplicationPresenter extends BasePresenter {
         return $component;
     }
 
-    private function getEvent(): ?ModelEvent {
+    private function getEvent(): ?ModelEvent
+    {
         if (!isset($this->event)) {
             $eventId = null;
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
@@ -224,7 +236,8 @@ class ApplicationPresenter extends BasePresenter {
      * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?ActiveRow {
+    private function getEventApplication(): ?ActiveRow
+    {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
@@ -240,25 +253,29 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    private function getHolder(): Holder {
+    private function getHolder(): Holder
+    {
         if (!isset($this->holder)) {
             $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
-    private function getMachine(): Machine {
+    private function getMachine(): Machine
+    {
         if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }
 
-    public static function encodeParameters(int $eventId, int $id): string {
+    public static function encodeParameters(int $eventId, int $id): string
+    {
         return "$eventId:$id";
     }
 
-    public static function decodeParameters(string $data): array {
+    public static function decodeParameters(string $data): array
+    {
         $parts = explode(':', $data);
         if (count($parts) != 2) {
             throw new InvalidArgumentException("Cannot decode '$data'.");
@@ -276,7 +293,8 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \ReflectionException
      */
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $event = $this->getEvent();
         if ($event) {
             $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;
@@ -284,7 +302,8 @@ class ApplicationPresenter extends BasePresenter {
         parent::beforeRender();
     }
 
-    protected function getRole(): string {
+    protected function getRole(): string
+    {
         if ($this->getAction() === 'default') {
             return 'selected';
         }

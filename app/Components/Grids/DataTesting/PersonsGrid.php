@@ -15,18 +15,21 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-class PersonsGrid extends BaseGrid {
+class PersonsGrid extends BaseGrid
+{
 
     private ServicePerson $servicePerson;
 
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void
+    {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $persons = $this->servicePerson->getTable();
         return new NDataSource($persons);
     }
@@ -37,7 +40,8 @@ class PersonsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->addColumns(['person.person_link']);
@@ -57,7 +61,8 @@ class PersonsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws NotImplementedException
      */
-    protected static function createHtmlLog(array $logs): Html {
+    protected static function createHtmlLog(array $logs): Html
+    {
         $container = Html::el('span');
         foreach ($logs as $log) {
             if ($log instanceof TestLog) {

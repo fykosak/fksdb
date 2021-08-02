@@ -14,9 +14,10 @@ import PointsEntryComponent from 'FKSDB/Components/Controls/Fyziklani/Submit/Poi
 import TimelineComponent from 'FKSDB/Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from 'FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
 import Attendance from 'FKSDB/Models/FrontEnd/apps/events/attendance/Index';
-import { appsLoader } from 'FKSDB/Models/FrontEnd/Loader/Loader';
+import { Loader } from 'FKSDB/Models/FrontEnd/Loader/Loader';
 import * as React from 'react';
 
+const appsLoader = new Loader();
 appsLoader.register(eventSchedule);
 
 appsLoader.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);

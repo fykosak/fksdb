@@ -7,15 +7,18 @@ use FKSDB\Models\ValuePrinters\DatePrinter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-abstract class AbstractDateTimeColumnFactory extends ColumnFactory {
+abstract class AbstractDateTimeColumnFactory extends ColumnFactory
+{
 
     private string $format;
 
-    final public function setFormat(string $format): void {
+    final public function setFormat(string $format): void
+    {
         $this->format = $format;
     }
 
-    final protected function createHtmlValue(AbstractModel $model): Html {
+    final protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->getModelAccessKey()});
     }
 

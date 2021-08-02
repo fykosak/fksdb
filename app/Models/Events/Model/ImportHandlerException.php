@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Events\Model;
 
-class ImportHandlerException extends \RuntimeException {
+class ImportHandlerException extends \RuntimeException
+{
 
 }

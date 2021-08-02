@@ -8,11 +8,13 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-class PersonLink extends AbstractValuePrinter {
+class PersonLink extends AbstractValuePrinter
+{
 
     private LinkGenerator $presenterComponent;
 
-    public function __construct(LinkGenerator $presenterComponent) {
+    public function __construct(LinkGenerator $presenterComponent)
+    {
         $this->presenterComponent = $presenterComponent;
     }
 
@@ -22,7 +24,8 @@ class PersonLink extends AbstractValuePrinter {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function getHtml($value): Html {
+    protected function getHtml($value): Html
+    {
         if (!$value instanceof ModelPerson) {
             throw new BadTypeException(ModelPerson::class, $value);
         }

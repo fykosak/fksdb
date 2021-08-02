@@ -7,13 +7,15 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 
-class SchedulePrice implements Preprocess {
+class SchedulePrice implements Preprocess
+{
     /**
      * @param ModelPayment $modelPayment
      * @return Price
      * @throws UnsupportedCurrencyException
      */
-    public static function calculate(ModelPayment $modelPayment): Price {
+    public static function calculate(ModelPayment $modelPayment): Price
+    {
         $price = new Price(0, $modelPayment->currency);
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
             $modelPrice = $model->getScheduleItem()->getPrice($modelPayment->currency);
@@ -28,7 +30,8 @@ class SchedulePrice implements Preprocess {
      * @throws UnsupportedCurrencyException
      * @throws NotImplementedException
      */
-    public static function getGridItems(ModelPayment $modelPayment): array {
+    public static function getGridItems(ModelPayment $modelPayment): array
+    {
         $items = [];
 
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {

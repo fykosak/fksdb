@@ -11,9 +11,11 @@ use Nette\InvalidArgumentException;
  * First two categories have doubled points for the first two problems.
  * Introduced in FYKOS 2011 (25 th year).
  */
-class EvaluationFykos2011 extends EvaluationStrategy {
+class EvaluationFykos2011 extends EvaluationStrategy
+{
 
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return [
             new ModelCategory(ModelCategory::CAT_HS_1),
             new ModelCategory(ModelCategory::CAT_HS_2),
@@ -22,7 +24,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         ];
     }
 
-    public function categoryToStudyYears(ModelCategory $category): array {
+    public function categoryToStudyYears(ModelCategory $category): array
+    {
         switch ($category->id) {
             case ModelCategory::CAT_HS_1:
                 return [6, 7, 8, 9, 1];
@@ -41,7 +44,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      * @param ActiveRow|ModelTask $task
      * @return string
      */
-    public function getPointsColumn(ActiveRow $task): string {
+    public function getPointsColumn(ActiveRow $task): string
+    {
         if ($task->label == '1' || $task->label == '2') {
             return 'IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)';
         } else {
@@ -49,7 +53,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         }
     }
 
-    public function getSumColumn(): string {
+    public function getSumColumn(): string
+    {
         return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
     }
 
@@ -58,7 +63,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return float|int
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int
+    {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
@@ -76,7 +82,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         }
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string {
+    public function getTaskPointsColumn(ModelCategory $category): string
+    {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:

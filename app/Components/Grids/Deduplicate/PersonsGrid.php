@@ -13,20 +13,23 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class PersonsGrid extends BaseGrid {
+class PersonsGrid extends BaseGrid
+{
 
     private TypedTableSelection $trunkPersons;
 
     /** @var ModelPerson[] trunkId => ModelPerson */
     private array $pairs;
 
-    public function __construct(TypedTableSelection $trunkPersons, array $pairs, Container $container) {
+    public function __construct(TypedTableSelection $trunkPersons, array $pairs, Container $container)
+    {
         parent::__construct($container);
         $this->trunkPersons = $trunkPersons;
         $this->pairs = $pairs;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         return new NDataSource($this->trunkPersons);
     }
 
@@ -35,7 +38,8 @@ class PersonsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         /***** columns ****/
@@ -101,7 +105,8 @@ class PersonsGrid extends BaseGrid {
             });
     }
 
-    private function renderPerson(ModelPerson $person): string {
+    private function renderPerson(ModelPerson $person): string
+    {
         return $person->getFullName();
         // return (new PersonLink($this->getPresenter()))($person);
     }

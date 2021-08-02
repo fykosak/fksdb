@@ -4,8 +4,8 @@ namespace FKSDB\Models\Github;
 
 use Nette\SmartObject;
 
-class Repository {
-
+class Repository
+{
     use SmartObject;
 
     public string $id;

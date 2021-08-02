@@ -7,7 +7,8 @@ use FKSDB\Models\Messages\Message;
 /**
  * Implementations may define their own message levels.
  */
-interface Logger {
+interface Logger
+{
 
     public const ERROR = 'danger';
     public const WARNING = 'warning';

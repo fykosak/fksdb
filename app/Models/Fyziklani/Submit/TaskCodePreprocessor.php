@@ -9,7 +9,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 
-final class TaskCodePreprocessor {
+final class TaskCodePreprocessor
+{
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
@@ -25,7 +26,8 @@ final class TaskCodePreprocessor {
         $this->event = $event;
     }
 
-    public static function checkControlNumber(string $code): bool {
+    public static function checkControlNumber(string $code): bool
+    {
         if (strlen($code) != 9) {
             return false;
         }
@@ -34,15 +36,18 @@ final class TaskCodePreprocessor {
         return $sum % 10 == 0;
     }
 
-    public static function extractTeamId(string $code): int {
+    public static function extractTeamId(string $code): int
+    {
         return (int)substr($code, 0, 6);
     }
 
-    public static function extractTaskLabel(string $code): string {
+    public static function extractTaskLabel(string $code): string
+    {
         return (string)substr($code, 6, 2);
     }
 
-    public static function getNumLabel(string $code): string {
+    public static function getNumLabel(string $code): string
+    {
         return str_replace(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], [1, 2, 3, 4, 5, 6, 7, 8], $code);
     }
 
@@ -51,7 +56,8 @@ final class TaskCodePreprocessor {
      * @return string
      * @throws TaskCodeException
      */
-    public static function createFullCode(string $code): string {
+    public static function createFullCode(string $code): string
+    {
         $length = strlen($code);
         if ($length > 9) {
             throw new TaskCodeException(_('Code is too long'));
@@ -65,7 +71,8 @@ final class TaskCodePreprocessor {
      * @return ModelFyziklaniTeam|ActiveRow
      * @throws TaskCodeException
      */
-    public function getTeam(string $code): ModelFyziklaniTeam {
+    public function getTeam(string $code): ModelFyziklaniTeam
+    {
         $fullCode = self::createFullCode($code);
 
         $teamId = self::extractTeamId($fullCode);
@@ -81,7 +88,8 @@ final class TaskCodePreprocessor {
      * @return ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTask(string $code): ModelFyziklaniTask {
+    public function getTask(string $code): ModelFyziklaniTask
+    {
         $fullCode = self::createFullCode($code);
         /* correct label */
         $taskLabel = self::extractTaskLabel($fullCode);

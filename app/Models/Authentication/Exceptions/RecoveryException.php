@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Authentication\Exceptions;
 
-abstract class RecoveryException extends \RuntimeException {
+abstract class RecoveryException extends \RuntimeException
+{
 
 }

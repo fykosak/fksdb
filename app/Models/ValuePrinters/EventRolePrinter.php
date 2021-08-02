@@ -9,11 +9,12 @@ use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-class EventRolePrinter {
-
+class EventRolePrinter
+{
     use SmartObject;
 
-    public function __invoke(ModelPerson $person, ModelEvent $event): Html {
+    public function __invoke(ModelPerson $person, ModelEvent $event): Html
+    {
         if (!$person) {
             Html::el('span')
                 ->addAttributes(['class' => 'badge badge-danger'])
@@ -30,7 +31,8 @@ class EventRolePrinter {
         return $this->getHtml($roles);
     }
 
-    private function getHtml(array $roles): Html {
+    private function getHtml(array $roles): Html
+    {
         $container = Html::el('span');
 
         foreach ($roles as $role) {
@@ -40,12 +42,12 @@ class EventRolePrinter {
                         ->addAttributes(['class' => 'badge badge-9'])
                         ->addText(_('Teacher') . ' - ' . $role['team']->name));
                     break;
-                case'org':
+                case 'org':
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-7'])
                         ->addText(_('Event org') . ($role['org']->note ? (' - ' . $role['org']->note) : '')));
                     break;
-                case'participant':
+                case 'participant':
                     $team = null;
                     /** @var ModelEventParticipant $participant */
                     $participant = $role['participant'];
@@ -56,8 +58,7 @@ class EventRolePrinter {
                     $container->addHtml(Html::el('span')
                         ->addAttributes(['class' => 'badge badge-10'])
                         ->addText(_('Participant') . ' - ' . _($participant->status) .
-                            ($team ? (' - team: ' . $team->name) : '')
-                        ));
+                            ($team ? (' - team: ' . $team->name) : '')));
                     break;
                 case 'contest_org':
                     $container->addHtml(Html::el('span')

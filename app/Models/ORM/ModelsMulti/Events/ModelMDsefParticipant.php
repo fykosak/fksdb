@@ -10,17 +10,21 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 /**
  * @property-read  ModelEventParticipant $mainModel
  */
-class ModelMDsefParticipant extends AbstractModelMulti {
+class ModelMDsefParticipant extends AbstractModelMulti
+{
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->mainModel->getPerson()->getFullName();
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->mainModel->getEvent();
     }
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return $this->mainModel->getPerson();
     }
 }

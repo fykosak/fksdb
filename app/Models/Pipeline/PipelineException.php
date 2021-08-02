@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Pipeline;
 
-class PipelineException extends \RuntimeException {
+class PipelineException extends \RuntimeException
+{
 
 }

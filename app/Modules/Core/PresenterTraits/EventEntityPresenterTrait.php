@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\ForbiddenRequestException;
 
-trait EventEntityPresenterTrait {
-
+trait EventEntityPresenterTrait
+{
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -23,7 +23,8 @@ trait EventEntityPresenterTrait {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function getEntity(): AbstractModel {
+    protected function getEntity(): AbstractModel
+    {
         $model = $this->getBaseEntity();
         /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);

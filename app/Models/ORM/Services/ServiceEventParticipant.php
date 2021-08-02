@@ -7,9 +7,11 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
 
-class ServiceEventParticipant extends OldAbstractServiceSingle {
+class ServiceEventParticipant extends OldAbstractServiceSingle
+{
 
-    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {
+    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel
+    {
         try {
             return parent::storeModel($data, $model);
         } catch (ModelException $exception) {
@@ -20,7 +22,8 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
         }
     }
 
-    public function createNewModel(array $data): ModelEventParticipant {
+    public function createNewModel(array $data): ModelEventParticipant
+    {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {
@@ -34,7 +37,8 @@ class ServiceEventParticipant extends OldAbstractServiceSingle {
     /**
      * @param AbstractModel|ModelEventParticipant $model
      */
-    public function dispose(AbstractModel $model): void {
+    public function dispose(AbstractModel $model): void
+    {
         $person = $model->getPerson();
         if ($person) {
             $person->removeScheduleForEvent($model->event_id);

@@ -2,11 +2,13 @@
 
 namespace FKSDB\Models\Events\Exceptions;
 
-class TransitionUnsatisfiedTargetException extends MachineExecutionException {
+class TransitionUnsatisfiedTargetException extends MachineExecutionException
+{
 
     private array $validationResult;
 
-    public function __construct(array $validationResult, int $code = 0, ?\Throwable $previous = null) {
+    public function __construct(array $validationResult, int $code = 0, ?\Throwable $previous = null)
+    {
         $message = '';
         foreach ($validationResult as $result) {
             $message .= $result;

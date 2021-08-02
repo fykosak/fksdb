@@ -6,13 +6,10 @@ use FKSDB\Models\Exceptions\ContestNotFoundException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
-class ContestBadge extends Badge {
-    /**
-     * @param ...$args
-     * @return Html
-     * @throws ContestNotFoundException
-     */
-    public static function getHtml(...$args): Html {
+class ContestBadge extends Badge
+{
+    public static function getHtml(...$args): Html
+    {
         [$contest] = $args;
         $contestId = $contest;
         if ($contest instanceof ModelContest) {

@@ -5,12 +5,14 @@ namespace FKSDB\Components\Forms\Controls;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
-class CaptchaBox extends SelectBox {
+class CaptchaBox extends SelectBox
+{
 
     private const VALUE_YES = 'xyz';
     private const VALUE_NO = 'pqrt';
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(_('Are you a robot?'), [
             self::VALUE_NO => _('No'),
             self::VALUE_YES => _('Yes'),

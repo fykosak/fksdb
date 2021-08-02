@@ -8,19 +8,23 @@ use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-class ErrorPresenter extends BasePresenter {
+class ErrorPresenter extends BasePresenter
+{
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $this->getPageStyleContainer()->styleId = 'error';
         $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
         parent::beforeRender();
     }
 
-    protected function putIntoBreadcrumbs(): void {
+    protected function putIntoBreadcrumbs(): void
+    {
         /* empty */
     }
 
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         $this->setPageTitle(new PageTitle(_('Error')));
     }
 
@@ -28,7 +32,8 @@ class ErrorPresenter extends BasePresenter {
      * @param \Exception
      * @return void
      */
-    final public function renderDefault($exception): void {
+    final public function renderDefault($exception): void
+    {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = true;
             $this->terminate();

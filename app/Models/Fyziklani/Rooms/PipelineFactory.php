@@ -7,15 +7,18 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\Pipeline\Pipeline;
 
-class PipelineFactory {
+class PipelineFactory
+{
 
     private ServiceFyziklaniTeam $serviceTeam;
 
-    public function __construct(ServiceFyziklaniTeam $serviceTeam) {
+    public function __construct(ServiceFyziklaniTeam $serviceTeam)
+    {
         $this->serviceTeam = $serviceTeam;
     }
 
-    public function create(ModelEvent $event): Pipeline {
+    public function create(ModelEvent $event): Pipeline
+    {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 
@@ -25,5 +28,4 @@ class PipelineFactory {
 
         return $pipeline;
     }
-
 }

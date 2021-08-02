@@ -11,7 +11,8 @@ use FKSDB\Models\Pipeline\Stage;
 /**
  * @note Assumes TasksFromXML has been run previously.
  */
-class StudyYearsFromXML extends Stage {
+class StudyYearsFromXML extends Stage
+{
 
     public const XML_ELEMENT_PARENT = 'study-years';
 
@@ -29,7 +30,8 @@ class StudyYearsFromXML extends Stage {
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
-    public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
+    public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear)
+    {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
@@ -38,22 +40,26 @@ class StudyYearsFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void
+    {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 

@@ -16,8 +16,8 @@ use Nette\InvalidStateException;
  * Trait YearPresenterTrait
  * @property YearCalculator $yearCalculator
  */
-trait YearPresenterTrait {
-
+trait YearPresenterTrait
+{
     use ContestPresenterTrait;
 
     /**
@@ -31,7 +31,8 @@ trait YearPresenterTrait {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function yearTraitStartup(): void {
+    protected function yearTraitStartup(): void
+    {
         $this->contestTraitStartup();
         $contestYear = $this->getSelectedContestYear();
         if (!isset($contestYear) || !$this->isValidContestYear($contestYear)) {
@@ -43,7 +44,8 @@ trait YearPresenterTrait {
      * @return ModelContestYear
      * @throws ForbiddenRequestException
      */
-    private function selectYear(): ModelContestYear {
+    private function selectYear(): ModelContestYear
+    {
         $candidate = $this->getSelectedContest()->getCurrentContestYear();
         if (!$this->isValidContestYear($candidate)) {
             throw new ForbiddenRequestException();
@@ -51,21 +53,24 @@ trait YearPresenterTrait {
         return $candidate;
     }
 
-    private function isValidContestYear(?ModelContestYear $contestYear): bool {
+    private function isValidContestYear(?ModelContestYear $contestYear): bool
+    {
         if (!$contestYear) {
             return false;
         }
         return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
     }
 
-    public function getSelectedContestYear(): ?ModelContestYear {
+    public function getSelectedContestYear(): ?ModelContestYear
+    {
         if (!isset($this->contestYear)) {
             $this->contestYear = $this->getSelectedContest()->getContestYear($this->year);
         }
         return $this->contestYear;
     }
 
-    protected function getAvailableYears(): GroupedSelection {
+    protected function getAvailableYears(): GroupedSelection
+    {
         $contest = $this->getSelectedContest();
         switch ($this->getRole()) {
             case YearChooserComponent::ROLE_ORG:
@@ -89,7 +94,8 @@ trait YearPresenterTrait {
         }
     }
 
-    protected function createComponentYearChooser(): YearChooserComponent {
+    protected function createComponentYearChooser(): YearChooserComponent
+    {
         return new YearChooserComponent($this->getContext(), $this->getSelectedContestYear(), $this->getAvailableYears());
     }
 }

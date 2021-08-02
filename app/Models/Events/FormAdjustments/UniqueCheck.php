@@ -8,18 +8,21 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-class UniqueCheck extends AbstractAdjustment {
+class UniqueCheck extends AbstractAdjustment
+{
 
     private string $field;
 
     private string $message;
 
-    public function __construct(string $field, string $message) {
+    public function __construct(string $field, string $message)
+    {
         $this->field = $field;
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;

@@ -8,18 +8,20 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-abstract class BasePresenter extends AuthenticatedPresenter {
-
+abstract class BasePresenter extends AuthenticatedPresenter
+{
     use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->yearTraitStartup();
     }
 
-    public function getContestant(): ?ModelContestant {
+    public function getContestant(): ?ModelContestant
+    {
         if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
@@ -33,11 +35,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->contestant;
     }
 
-    protected function getNavRoots(): array {
+    protected function getNavRoots(): array
+    {
         return ['Public.Dashboard.default'];
     }
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $contest = $this->getSelectedContest();
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
@@ -46,11 +50,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    protected function getDefaultSubTitle(): ?string {
+    protected function getDefaultSubTitle(): ?string
+    {
         return sprintf(_('%d. year'), $this->year);
     }
 
-    protected function getRole(): string {
+    protected function getRole(): string
+    {
         return 'contestant';
     }
 }

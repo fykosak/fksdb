@@ -10,9 +10,11 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class CategoryProcessing2 extends AbstractCategoryProcessing {
+class CategoryProcessing2 extends AbstractCategoryProcessing
+{
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -36,7 +38,8 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
      * @param array $participants
      * @return string
      */
-    protected function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string
+    {
         // init stats
         $olds = 0;
         $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ

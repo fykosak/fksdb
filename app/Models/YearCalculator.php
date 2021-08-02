@@ -7,8 +7,8 @@ use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-class YearCalculator {
-
+class YearCalculator
+{
     use SmartObject;
 
     /**
@@ -23,7 +23,8 @@ class YearCalculator {
 
     private Container $container;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
@@ -31,7 +32,8 @@ class YearCalculator {
      * The academic year starts at 1st day of self::FIRST_AC_MONTH.
      * @return int
      */
-    public static function getCurrentAcademicYear(): int {
+    public static function getCurrentAcademicYear(): int
+    {
         $calYear = date('Y');
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
@@ -40,7 +42,8 @@ class YearCalculator {
         return $calYear;
     }
 
-    public static function getGraduationYear(int $studyYear, ?ModelContestYear $contestYear): int {
+    public static function getGraduationYear(int $studyYear, ?ModelContestYear $contestYear): int
+    {
         $acYear = is_null($contestYear) ? self::getCurrentAcademicYear() : $contestYear->ac_year;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
@@ -57,7 +60,8 @@ class YearCalculator {
      * @return int
      * @see getCurrentAcademicYear
      */
-    public function getForwardShift(ModelContest $contest): int {
+    public function getForwardShift(ModelContest $contest): int
+    {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
             $forwardYear = $contest->getCurrentContestYear()->year + self::FORWARD_SHIFT;

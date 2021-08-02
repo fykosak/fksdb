@@ -4,19 +4,21 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEventType;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-class EventTypeColumnFactory extends ColumnFactory {
+class EventTypeColumnFactory extends ColumnFactory
+{
 
     private ServiceEventType $serviceEventType;
 
-    public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory) {
+    public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory)
+    {
         parent::__construct($metaDataFactory);
         $this->serviceEventType = $serviceEventType;
     }
@@ -26,7 +28,8 @@ class EventTypeColumnFactory extends ColumnFactory {
      * @return BaseControl
      * @throws \InvalidArgumentException
      */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         [$contest] = $args;
         if (\is_null($contest) || !$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
@@ -45,7 +48,8 @@ class EventTypeColumnFactory extends ColumnFactory {
      * @param AbstractModel|ModelEvent $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return Html::el('span')->addText($model->getEventType()->name);
     }
 }

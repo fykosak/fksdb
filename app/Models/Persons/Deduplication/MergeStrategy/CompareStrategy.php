@@ -4,11 +4,13 @@ namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 
-class CompareStrategy implements MergeStrategy {
+class CompareStrategy implements MergeStrategy
+{
 
     private int $sign;
 
-    public function __construct(string $compare) {
+    public function __construct(string $compare)
+    {
         if ($compare == 'greater') {
             $this->sign = 1;
         } elseif ($compare == 'less') {
@@ -23,7 +25,8 @@ class CompareStrategy implements MergeStrategy {
      * @param mixed $merged
      * @return mixed
      */
-    public function mergeValues($trunk, $merged) {
+    public function mergeValues($trunk, $merged)
+    {
         if (is_null($merged)) {
             return $trunk;
         }
@@ -42,7 +45,8 @@ class CompareStrategy implements MergeStrategy {
      * @param mixed $merged
      * @return int|string
      */
-    private function compare($trunk, $merged): int {
+    private function compare($trunk, $merged): int
+    {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() - $merged->getTimestamp();
         } elseif (is_string($trunk) && is_string($merged)) {
@@ -53,5 +57,4 @@ class CompareStrategy implements MergeStrategy {
             throw new CannotMergeException();
         }
     }
-
 }

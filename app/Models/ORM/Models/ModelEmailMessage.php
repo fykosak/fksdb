@@ -23,7 +23,8 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface sent
  */
-class ModelEmailMessage extends AbstractModel implements Resource {
+class ModelEmailMessage extends AbstractModel implements Resource
+{
 
     public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const STATE_WAITING = 'waiting'; //čaká na poslanie
@@ -33,7 +34,8 @@ class ModelEmailMessage extends AbstractModel implements Resource {
 
     public const RESOURCE_ID = 'emailMessage';
 
-    public function toMessage(): Message {
+    public function toMessage(): Message
+    {
         $message = new Message();
         $message->setSubject($this->subject);
         if (isset($this->recipient_person_id)) {
@@ -60,11 +62,13 @@ class ModelEmailMessage extends AbstractModel implements Resource {
         return $message;
     }
 
-    public function getPerson(): ?ModelPerson {
+    public function getPerson(): ?ModelPerson
+    {
         return isset($this->recipient_person_id) ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return static::RESOURCE_ID;
     }
 }

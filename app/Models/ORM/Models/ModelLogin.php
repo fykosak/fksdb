@@ -2,10 +2,10 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IIdentity;
 
@@ -17,19 +17,22 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModel implements IIdentity {
+class ModelLogin extends AbstractModel implements IIdentity
+{
 
-    public function getPerson(): ?ModelPerson {
-        if ($this->person) {
-            return ModelPerson::createFromActiveRow($this->person);
-        }
-        return null;
+    /** @var Grant[]   cache */
+    private array $roles;
+
+    public function isOrg(): bool
+    {
+        return count($this->getActiveOrgs()) > 0;
     }
 
     /**
      * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
-    public function getActiveOrgs(): array {
+    public function getActiveOrgs(): array
+    {
         if ($this->getPerson()) {
             return $this->getPerson()->getActiveOrgs();
         } else {
@@ -43,51 +46,19 @@ class ModelLogin extends AbstractModel implements IIdentity {
         }
     }
 
-    public function isOrg(): bool {
-        return count($this->getActiveOrgs()) > 0;
-    }
-
-    public function isContestant(): bool {
-        $person = $this->getPerson();
-        return $person && count($person->getActiveContestants()) > 0;
-    }
-
-    public function __toString(): string {
-        $person = $this->getPerson();
-        if ($person) {
-            return $person->__toString();
+    public function getPerson(): ?ModelPerson
+    {
+        if ($this->person) {
+            return ModelPerson::createFromActiveRow($this->person);
         }
-        if ($this->login) {
-            return $this->login;
-        } else {
-            return 'NAMELESS LOGIN';
-        }
+        return null;
     }
-
-    /**
-     * Sets hash of the instance with correct hashing function.
-     *
-     * @note Must be called after setting login_id.
-     * @param string $password
-     * @return string
-     */
-    public function createHash(string $password): string {
-        return PasswordAuthenticator::calculateHash($password, $this);
-    }
-
-    // ----- IIdentity implementation ----------
-
-    public function getId(): int {
-        return $this->login_id;
-    }
-
-    /** @var Grant[]   cache */
-    private array $roles;
 
     /**
      * @return Grant[]
      */
-    public function getRoles(): array {
+    public function getRoles(): array
+    {
         if (!isset($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
@@ -109,5 +80,43 @@ class ModelLogin extends AbstractModel implements IIdentity {
             }
         }
         return $this->roles;
+    }
+
+    public function isContestant(): bool
+    {
+        $person = $this->getPerson();
+        return $person && count($person->getActiveContestants()) > 0;
+    }
+
+    // ----- IIdentity implementation ----------
+
+    public function __toString(): string
+    {
+        $person = $this->getPerson();
+        if ($person) {
+            return $person->__toString();
+        }
+        if ($this->login) {
+            return $this->login;
+        } else {
+            return 'NAMELESS LOGIN';
+        }
+    }
+
+    /**
+     * Sets hash of the instance with correct hashing function.
+     *
+     * @note Must be called after setting login_id.
+     * @param string $password
+     * @return string
+     */
+    public function createHash(string $password): string
+    {
+        return PasswordAuthenticator::calculateHash($password, $this);
+    }
+
+    public function getId(): int
+    {
+        return $this->login_id;
     }
 }

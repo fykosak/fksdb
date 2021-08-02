@@ -4,7 +4,8 @@ namespace FKSDB\Models\Events\Model\Grid;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 
-interface HolderSource {
+interface HolderSource
+{
     /**
      * @return Holder[]
      */

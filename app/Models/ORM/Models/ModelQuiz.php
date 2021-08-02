@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read ActiveRow task
@@ -11,17 +11,21 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int question_id
  * @property-read int question_nr
  */
-class ModelQuiz extends AbstractModel {
+class ModelQuiz extends AbstractModel
+{
 
-    public function getFQName(): string {
+    public function getFQName(): string
+    {
         return sprintf(_('%s. question'), $this->question_nr);
     }
 
-    public function getTask(): ModelTask {
-        return ModelTask::createFromActiveRow($this->task);
+    public function getContest(): ModelContest
+    {
+        return $this->getTask()->getContest();
     }
 
-    public function getContest(): ModelContest {
-        return $this->getTask()->getContest();
+    public function getTask(): ModelTask
+    {
+        return ModelTask::createFromActiveRow($this->task);
     }
 }

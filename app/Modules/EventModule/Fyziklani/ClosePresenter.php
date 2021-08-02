@@ -25,12 +25,13 @@ use Nette\Security\Resource;
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  */
-class ClosePresenter extends BasePresenter {
-
+class ClosePresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
-    public function getTitleList(): PageTitle {
+    public function getTitleList(): PageTitle
+    {
         return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
     }
 
@@ -41,7 +42,8 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleTeam(): void {
+    public function titleTeam(): void
+    {
         $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-stamp'));
     }
 
@@ -52,7 +54,8 @@ class ClosePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleHard(): void {
+    public function titleHard(): void
+    {
         $this->titleTeam();
     }
 
@@ -61,14 +64,16 @@ class ClosePresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedTeam(): void {
+    public function authorizedTeam(): void
+    {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizeHard(): void {
+    public function authorizeHard(): void
+    {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
     }
 
@@ -78,7 +83,8 @@ class ClosePresenter extends BasePresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
     /* *********** ACTIONS **************** */
@@ -89,7 +95,8 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function actionTeam(): void {
+    public function actionTeam(): void
+    {
         try {
             $this->getEntity()->canClose();
         } catch (AlreadyClosedException | NotCheckedSubmitsException $exception) {
@@ -106,7 +113,8 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentCloseTeamControl(): CloseTeamComponent {
+    protected function createComponentCloseTeamControl(): CloseTeamComponent
+    {
         return new CloseTeamComponent($this->getContext(), $this->getEntity());
     }
 
@@ -117,15 +125,18 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
+    protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
+    {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    protected function getORMService(): ServiceFyziklaniTeam {
+    protected function getORMService(): ServiceFyziklaniTeam
+    {
         return $this->serviceFyziklaniTeam;
     }
 
-    protected function getModelResource(): string {
+    protected function getModelResource(): string
+    {
         return 'fyziklani.close';
     }
 
@@ -133,7 +144,8 @@ class ClosePresenter extends BasePresenter {
      * @return BaseGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -141,7 +153,8 @@ class ClosePresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
@@ -149,7 +162,8 @@ class ClosePresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 }

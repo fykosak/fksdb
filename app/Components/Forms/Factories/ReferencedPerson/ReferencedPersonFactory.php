@@ -19,8 +19,8 @@ use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
-class ReferencedPersonFactory {
-
+class ReferencedPersonFactory
+{
     use SmartObject;
 
     private ServicePerson $servicePerson;
@@ -69,7 +69,8 @@ class ReferencedPersonFactory {
         );
     }
 
-    final public static function isFilled(ModelPerson $person, string $sub, string $field, ModelContestYear $contestYear, ?ModelEvent $event = null): bool {
+    final public static function isFilled(ModelPerson $person, string $sub, string $field, ModelContestYear $contestYear, ?ModelEvent $event = null): bool
+    {
         $value = self::getPersonValue($person, $sub, $field, $contestYear, false, false, true, $event);
         return !($value === null || $value === '');
     }
@@ -85,7 +86,8 @@ class ReferencedPersonFactory {
      * @param ModelEvent|null $event
      * @return mixed
      */
-    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, ModelContestYear $contestYear, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false, ?ModelEvent $event = null) {
+    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, ModelContestYear $contestYear, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false, ?ModelEvent $event = null)
+    {
         if (!$person) {
             return null;
         }

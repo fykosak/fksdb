@@ -11,15 +11,18 @@ use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
-class AddressContainer extends ModelContainer {
+class AddressContainer extends ModelContainer
+{
 
     private ServiceRegion $serviceRegion;
 
-    public function __construct(DIContainer $container) {
+    public function __construct(DIContainer $container)
+    {
         parent::__construct($container);
     }
 
-    final public function injectServiceRegion(ServiceRegion $serviceRegion): void {
+    final public function injectServiceRegion(ServiceRegion $serviceRegion): void
+    {
         $this->serviceRegion = $serviceRegion;
     }
 
@@ -28,7 +31,8 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable|null $value
      */
-    public function setValue($value): void {
+    public function setValue($value): void
+    {
         $this->setValues($value ?? []);
     }
 
@@ -37,7 +41,8 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setDefaultValue($value): void {
+    public function setDefaultValue($value): void
+    {
         $this->setDefaults($value === null ? [] : $value);
     }
 
@@ -46,7 +51,8 @@ class AddressContainer extends ModelContainer {
      * @param bool $erase
      * @return static
      */
-    public function setValues($data, bool $erase = false): self {
+    public function setValues($data, bool $erase = false): self
+    {
         if ($data instanceof ActiveRow) { //assert its from address table
             if ($data instanceof ModelPostContact) {
                 $address = $data->getAddress();
@@ -69,7 +75,8 @@ class AddressContainer extends ModelContainer {
      * @param array|null $controls
      * @return array|ArrayHash
      */
-    public function getUnsafeValues($returnType = null, array $controls = null) {
+    public function getUnsafeValues($returnType = null, array $controls = null)
+    {
         $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {

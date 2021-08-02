@@ -7,9 +7,11 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 
-class SinceColumnFactory extends ColumnFactory {
+class SinceColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         [$min, $max] = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new \InvalidArgumentException();

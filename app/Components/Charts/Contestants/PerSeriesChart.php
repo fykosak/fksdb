@@ -4,15 +4,18 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 
-class PerSeriesChart extends AbstractPerSeriesChart {
+class PerSeriesChart extends AbstractPerSeriesChart
+{
 
     private ServiceSubmit $serviceSubmit;
 
-    public function injectSecondary(ServiceSubmit $serviceSubmit): void {
+    public function injectSecondary(ServiceSubmit $serviceSubmit): void
+    {
         $this->serviceSubmit = $serviceSubmit;
     }
 
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $query = $this->serviceSubmit->getTable()
             ->where('task.contest_id', $this->contest->contest_id)
             ->group('task.series, task.year')
@@ -27,11 +30,13 @@ class PerSeriesChart extends AbstractPerSeriesChart {
         return $data;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return _('Contestants per series');
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

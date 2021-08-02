@@ -9,9 +9,11 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 /**
  * @property-read ModelEventParticipant $mainModel
  */
-class ModelMFyziklaniParticipant extends AbstractModelMulti {
+class ModelMFyziklaniParticipant extends AbstractModelMulti
+{
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->mainModel->getEvent();
     }
 }

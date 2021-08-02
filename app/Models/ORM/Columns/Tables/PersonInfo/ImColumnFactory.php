@@ -7,9 +7,11 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
-class ImColumnFactory extends ColumnFactory {
+class ImColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new  WriteOnlyInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         return $control;

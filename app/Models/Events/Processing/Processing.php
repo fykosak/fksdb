@@ -8,7 +8,8 @@ use FKSDB\Models\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-interface Processing {
+interface Processing
+{
     /**
      * @param array $states
      * @param ArrayHash $values

@@ -10,9 +10,11 @@ use Nette\Application\UI\Control;
  * @note If mapping from ILogger level to flash message type is not specified,
  * message is ignored.
  */
-class FlashMessageDump {
+class FlashMessageDump
+{
 
-    public static function dump(Logger $logger, Control $control, bool $clear = true): void {
+    public static function dump(Logger $logger, Control $control, bool $clear = true): void
+    {
         if ($logger instanceof MemoryLogger) {
             foreach ($logger->getMessages() as $message) {
                 $control->flashMessage($message->text, $message->level);

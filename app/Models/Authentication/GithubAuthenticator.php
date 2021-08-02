@@ -12,7 +12,8 @@ use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
-class GithubAuthenticator extends AbstractAuthenticator {
+class GithubAuthenticator extends AbstractAuthenticator
+{
 
     public const PARAM_AUTH_TOKEN = 'at';
     public const SESSION_NS = 'auth';
@@ -20,7 +21,8 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     private Container $container;
 
-    public function __construct(ServiceLogin $serviceLogin, Container $container) {
+    public function __construct(ServiceLogin $serviceLogin, Container $container)
+    {
         parent::__construct($serviceLogin);
         $this->container = $container;
     }
@@ -33,7 +35,8 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * @throws NoLoginException
      * @throws \Exception
      */
-    public function authenticate(IRequest $request): ModelLogin {
+    public function authenticate(IRequest $request): ModelLogin
+    {
         $loginName = $this->container->getParameters()['github']['login'];
         $secret = $this->container->getParameters()['github']['secret'];
 

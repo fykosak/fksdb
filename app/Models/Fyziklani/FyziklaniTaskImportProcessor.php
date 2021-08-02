@@ -12,18 +12,21 @@ use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-class FyziklaniTaskImportProcessor {
+class FyziklaniTaskImportProcessor
+{
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     private ModelEvent $event;
 
-    public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
+    public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event)
+    {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    public function process(ArrayHash $values, Logger $logger): void {
+    public function process(ArrayHash $values, Logger $logger): void
+    {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->explorer->getConnection();
         $connection->beginTransaction();
@@ -50,7 +53,9 @@ class FyziklaniTaskImportProcessor {
                     $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {
                     $logger->log(new Message(
-                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Logger::WARNING));
+                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']),
+                        Logger::WARNING
+                    ));
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));

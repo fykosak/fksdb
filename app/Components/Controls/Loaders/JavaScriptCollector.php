@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Controls\Loaders;
 
-interface JavaScriptCollector {
+interface JavaScriptCollector
+{
 
     /**
      * @param string $file path relative to webroot

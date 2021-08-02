@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models;
 
-interface ArrayAble {
+interface ArrayAble
+{
     public function __toArray(): array;
 }

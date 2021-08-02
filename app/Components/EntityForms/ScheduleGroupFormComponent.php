@@ -16,7 +16,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelScheduleGroup|null $model
  */
-class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
+class ScheduleGroupFormComponent extends AbstractEntityFormComponent
+{
 
     public const CONTAINER = 'container';
 
@@ -24,17 +25,20 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
     private ModelEvent $event;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleGroup $model) {
+    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleGroup $model)
+    {
         parent::__construct($container, $model);
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceScheduleGroup $serviceScheduleGroup, SingleReflectionFormFactory $singleReflectionFormFactory): void {
+    final public function injectPrimary(ServiceScheduleGroup $serviceScheduleGroup, SingleReflectionFormFactory $singleReflectionFormFactory): void
+    {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
@@ -47,7 +51,8 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONTAINER => $this->model->toArray(),
@@ -61,7 +66,8 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']);
         $form->addComponent($container, self::CONTAINER);
     }

@@ -6,7 +6,8 @@ use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
-class TestLog extends Message {
+class TestLog extends Message
+{
 
     public const LVL_SKIP = 'secondary';
 
@@ -14,7 +15,8 @@ class TestLog extends Message {
 
     public string $testName;
 
-    public function __construct(string $testName, string $message, string $level, ?Html $detail = null) {
+    public function __construct(string $testName, string $message, string $level, ?Html $detail = null)
+    {
         parent::__construct($message, $level);
         $this->detail = $detail;
         $this->testName = $testName;
@@ -23,7 +25,8 @@ class TestLog extends Message {
     /**
      * @return string[]
      */
-    public static function getAvailableLevels(): array {
+    public static function getAvailableLevels(): array
+    {
         return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
     }
 
@@ -31,7 +34,8 @@ class TestLog extends Message {
      * @return string
      * @throws NotImplementedException
      */
-    public function mapLevelToIcon(): string {
+    public function mapLevelToIcon(): string
+    {
         switch ($this->level) {
             case self::LVL_DANGER:
                 return 'fas fa-times';
@@ -52,7 +56,8 @@ class TestLog extends Message {
      * @return Html
      * @throws NotImplementedException
      */
-    public function createHtmlIcon(): Html {
+    public function createHtmlIcon(): Html
+    {
         $icon = Html::el('span');
         $icon->addAttributes([
             'class' => $this->mapLevelToIcon(),

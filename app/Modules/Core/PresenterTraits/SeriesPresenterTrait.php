@@ -7,8 +7,8 @@ use FKSDB\Models\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
-trait SeriesPresenterTrait {
-
+trait SeriesPresenterTrait
+{
     use YearPresenterTrait;
 
     /**
@@ -21,7 +21,8 @@ trait SeriesPresenterTrait {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function seriesTraitStartup(): void {
+    protected function seriesTraitStartup(): void
+    {
         $this->yearTraitStartup();
         if (!isset($this->series) || !$this->isValidSeries($this->series)) {
             $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
@@ -32,7 +33,8 @@ trait SeriesPresenterTrait {
      * @return int
      * @throws ForbiddenRequestException
      */
-    private function selectSeries(): int {
+    private function selectSeries(): int
+    {
         $candidate = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
         if (!$this->isValidSeries($candidate)) {
             throw new ForbiddenRequestException();
@@ -40,11 +42,13 @@ trait SeriesPresenterTrait {
         return $candidate;
     }
 
-    private function isValidSeries(?int $series): bool {
+    private function isValidSeries(?int $series): bool
+    {
         return in_array($series, $this->getAllowedSeries());
     }
 
-    private function getAllowedSeries(): array {
+    private function getAllowedSeries(): array
+    {
         $lastSeries = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
         $range = range(1, $lastSeries);
 
@@ -57,11 +61,13 @@ trait SeriesPresenterTrait {
         return $range;
     }
 
-    public function getSelectedSeries(): ?int {
+    public function getSelectedSeries(): ?int
+    {
         return $this->series;
     }
 
-    protected function createComponentSeriesChooser(): SeriesChooserComponent {
+    protected function createComponentSeriesChooser(): SeriesChooserComponent
+    {
         return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
 }

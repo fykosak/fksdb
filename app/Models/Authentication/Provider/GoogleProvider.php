@@ -7,7 +7,8 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\SmartObject;
 
-class GoogleProvider extends Google {
+class GoogleProvider extends Google
+{
     use SmartObject;
 
     /**
@@ -17,7 +18,8 @@ class GoogleProvider extends Google {
      * @param LinkGenerator $linkGenerator
      * @throws InvalidLinkException
      */
-    public function __construct(string $clientId, string $clientSecret, LinkGenerator $linkGenerator) {
+    public function __construct(string $clientId, string $clientSecret, LinkGenerator $linkGenerator)
+    {
         parent::__construct([
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,

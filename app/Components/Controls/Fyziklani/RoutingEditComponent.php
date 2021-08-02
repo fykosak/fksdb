@@ -9,7 +9,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
 
-class RoutingEditComponent extends AjaxComponent {
+class RoutingEditComponent extends AjaxComponent
+{
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
@@ -23,26 +24,30 @@ class RoutingEditComponent extends AjaxComponent {
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
-    public function getData(...$args): string {
+    public function getData(...$args): string
+    {
         return json_encode([
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
             'rooms' => $this->getRooms(),
         ]);
     }
 
-    public function getReactId(...$args): string {
+    public function getReactId(...$args): string
+    {
         return 'fyziklani.routing';
     }
 
     /**
      * @throws InvalidLinkException
      */
-    protected function configure(): void {
+    protected function configure(): void
+    {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
 
-    public function handleSave(): void {
+    public function handleSave(): void
+    {
         throw new DeprecatedException();
         /*$data = $this->getHttpRequest()->getPost('requestData');
         $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
@@ -57,7 +62,8 @@ class RoutingEditComponent extends AjaxComponent {
      * @return ModelFyziklaniRoom[]
      * TODO fix getParameter
      */
-    protected function getRooms(): array {
+    protected function getRooms(): array
+    {
         return $this->serviceFyziklaniRoom->getRoomsByIds([]/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/);
     }
 }

@@ -8,21 +8,25 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-abstract class ApplicationsPerCountryChart extends GeoChart {
+abstract class ApplicationsPerCountryChart extends GeoChart
+{
 
     protected ModelEvent $event;
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    public function __construct(Container $context, ModelEvent $event, string $scale) {
+    public function __construct(Container $context, ModelEvent $event, string $scale)
+    {
         parent::__construct($context, $scale);
         $this->event = $event;
     }
 
-    public function injectSecondary(ServiceEventParticipant $serviceEventParticipant): void {
+    public function injectSecondary(ServiceEventParticipant $serviceEventParticipant): void
+    {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    final protected function getTeams(): ResultSet {
+    final protected function getTeams(): ResultSet
+    {
         return $this->serviceEventParticipant->explorer->query('SELECT 
 region.country_iso3 as `country` ,
 COUNT(distinct e_fyziklani_team_id) as `t`, 
@@ -38,7 +42,8 @@ WHERE ep.event_id in (?)
 GROUP BY  region.country_iso3', $this->event->getContestYear()->ac_year, $this->event->event_id);
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

@@ -11,9 +11,11 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @method ModelEmailMessage createNewModel(array $data)
  */
-class ServiceEmailMessage extends AbstractService {
+class ServiceEmailMessage extends AbstractService
+{
 
-    public function getMessagesToSend(int $limit): TypedTableSelection {
+    public function getMessagesToSend(int $limit): TypedTableSelection
+    {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }
 
@@ -22,7 +24,8 @@ class ServiceEmailMessage extends AbstractService {
      * @return ModelEmailMessage|ActiveRow
      * @throws ModelException
      */
-    public function addMessageToSend(array $data): ModelEmailMessage {
+    public function addMessageToSend(array $data): ModelEmailMessage
+    {
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];

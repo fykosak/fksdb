@@ -11,8 +11,8 @@ use Nette\SmartObject;
 /**
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  */
-class Role extends EvaluatedExpression {
-
+class Role extends EvaluatedExpression
+{
     use SmartObject;
     use WithEventTrait;
 
@@ -29,14 +29,16 @@ class Role extends EvaluatedExpression {
 
     private RelatedPersonAuthorizator $relatedAuthorizator;
 
-    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator)
+    {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
-    public function __invoke(...$args): bool {
+    public function __invoke(...$args): bool
+    {
         switch ($this->role) {
             case self::ADMIN:
                 $event = $this->getEvent($args[0]);
@@ -52,8 +54,8 @@ class Role extends EvaluatedExpression {
         }
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return "role({$this->role})";
     }
-
 }

@@ -21,20 +21,23 @@ use Nette\Http\FileUpload;
 use Nette\Http\Response;
 use Tracy\Debugger;
 
-class AjaxSubmitComponent extends AjaxComponent {
+class AjaxSubmitComponent extends AjaxComponent
+{
 
     private ServiceSubmit $serviceSubmit;
     private ModelTask $task;
     private ModelContestant $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant) {
+    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant)
+    {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
     }
 
-    final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void
+    {
         $this->serviceSubmit = $serviceSubmit;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
@@ -44,7 +47,8 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @return ModelSubmit|null
      * @throws NotFoundException
      */
-    private function getSubmit(bool $throw = false): ?ModelSubmit {
+    private function getSubmit(bool $throw = false): ?ModelSubmit
+    {
         $submit = $this->serviceSubmit->findByContestant($this->contestant, $this->task, false);
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
@@ -56,7 +60,8 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @return array
      * @throws InvalidLinkException
      */
-    protected function getActions(): array {
+    protected function getActions(): array
+    {
         /* if ($this->getSubmit()) {
              return [
                  'revoke' => $this->link('revoke!'),
@@ -78,7 +83,8 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @return array
      * @throws NotFoundException
      */
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
         return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
@@ -87,7 +93,8 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @return void
      * @throws StorageException
      */
-    public function handleUpload(): void {
+    public function handleUpload(): void
+    {
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
@@ -110,7 +117,8 @@ class AjaxSubmitComponent extends AjaxComponent {
         }
     }
 
-    public function handleRevoke(): void {
+    public function handleRevoke(): void
+    {
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
@@ -129,7 +137,8 @@ class AjaxSubmitComponent extends AjaxComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function handleDownload(): void {
+    public function handleDownload(): void
+    {
         try {
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $this->getSubmit(true));
         } catch (ForbiddenRequestException | StorageException | NotFoundException$exception) {

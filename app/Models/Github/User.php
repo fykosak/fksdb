@@ -4,7 +4,8 @@ namespace FKSDB\Models\Github;
 
 use Nette\SmartObject;
 
-class User {
+class User
+{
     use SmartObject;
 
     public string $id;

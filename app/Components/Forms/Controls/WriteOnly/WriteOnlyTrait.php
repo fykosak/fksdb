@@ -16,7 +16,8 @@ use Nette\Utils\Html;
  *           writeOnlyLoadHttpData in loadHttpData after original loadHttpData
  *       and writeOnlyAttached in attached.
  */
-trait WriteOnlyTrait {
+trait WriteOnlyTrait
+{
 
     private bool $writeOnly = true;
 
@@ -28,7 +29,8 @@ trait WriteOnlyTrait {
 
     private bool $writeOnlyAttachedJS = false;
 
-    private function writeOnlyAppendMonitors(): void {
+    private function writeOnlyAppendMonitors(): void
+    {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {
                 $form->onValidate = $form->onValidate ?: [];
@@ -48,15 +50,18 @@ trait WriteOnlyTrait {
         });
     }
 
-    public function getWriteOnly(): bool {
+    public function getWriteOnly(): bool
+    {
         return $this->writeOnly;
     }
 
-    public function setWriteOnly(bool $writeOnly = true): void {
+    public function setWriteOnly(bool $writeOnly = true): void
+    {
         $this->writeOnly = $writeOnly;
     }
 
-    private function writeOnlyAdjustControl(Html $control): Html {
+    private function writeOnlyAdjustControl(Html $control): Html
+    {
 // rendered control may not disabled
         $control->addAttributes([
             'disabled' => $this->actuallyDisabled,
@@ -75,13 +80,15 @@ trait WriteOnlyTrait {
         return $control;
     }
 
-    protected function writeOnlyLoadHttpData(): void {
+    protected function writeOnlyLoadHttpData(): void
+    {
         if ($this->getValue() != self::VALUE_ORIGINAL) {
             $this->hasManualValue = true;
         }
     }
 
-    private function writeOnlyDisable(): void {
+    private function writeOnlyDisable(): void
+    {
         $this->actuallyDisabled = $this->isDisabled();
         $this->setDisabled();
     }

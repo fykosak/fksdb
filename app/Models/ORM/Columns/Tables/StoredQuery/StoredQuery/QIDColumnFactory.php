@@ -7,9 +7,11 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 
-class QIDColumnFactory extends ColumnFactory {
+class QIDColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new TextInput($this->getTitle());
         $control->setOption('description', _('The queries with QID cannot be deleted and QID can be used for permissions and permanent reference.'))
             ->addCondition(Form::FILLED)

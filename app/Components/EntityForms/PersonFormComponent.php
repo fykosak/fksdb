@@ -24,7 +24,8 @@ use Nette\InvalidArgumentException;
 /**
  * @property ModelPerson|null $model
  */
-class PersonFormComponent extends AbstractEntityFormComponent {
+class PersonFormComponent extends AbstractEntityFormComponent
+{
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
@@ -41,7 +42,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
-    public function __construct(Container $container, int $userPermission, ?ModelPerson $person) {
+    public function __construct(Container $container, int $userPermission, ?ModelPerson $person)
+    {
         parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
         $this->logger = new MemoryLogger();
@@ -63,7 +65,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $this->serviceAddress = $serviceAddress;
     }
 
-    public static function mapAddressContainerNameToType(string $containerName): string {
+    public static function mapAddressContainerNameToType(string $containerName): string
+    {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
                 return ModelPostContact::TYPE_PERMANENT;
@@ -80,7 +83,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
@@ -99,7 +103,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
@@ -120,7 +125,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
@@ -131,7 +137,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    private function storeAddresses(ModelPerson $person, array $data): void {
+    private function storeAddresses(ModelPerson $person, array $data): void
+    {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);

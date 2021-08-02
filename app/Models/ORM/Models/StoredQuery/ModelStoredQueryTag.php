@@ -13,9 +13,11 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int color
  * @property-read ActiveRow tag_type
  */
-class ModelStoredQueryTag extends AbstractModel {
+class ModelStoredQueryTag extends AbstractModel
+{
 
-    public function getTagType(): ModelStoredQueryTagType {
+    public function getTagType(): ModelStoredQueryTagType
+    {
         return ModelStoredQueryTagType::createFromActiveRow($this->tag_type);
     }
 }

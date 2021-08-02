@@ -9,15 +9,16 @@ use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-class EventAuthorizator {
-
+class EventAuthorizator
+{
     use SmartObject;
 
     private User $user;
     private Permission $permission;
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(User $user, Permission $acl, ContestAuthorizator $contestAuthorizator)
+    {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $user;
         $this->permission = $acl;
@@ -30,7 +31,8 @@ class EventAuthorizator {
      * @return bool
      * @deprecated
      */
-    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool {
+    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
@@ -40,7 +42,8 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
+    public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
@@ -50,7 +53,8 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
+    public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    {
         $login = $this->user->getIdentity();
         if (!$login) {
             return false;
@@ -67,7 +71,8 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
+    public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    {
         $login = $this->user->getIdentity();
         if (!$login) {
             return false;
@@ -84,7 +89,8 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
+    private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool
+    {
         $login = $this->user->getIdentity();
         /** @var ModelLogin $login */
         $person = $login ? $login->getPerson() : null;

@@ -1,10 +1,12 @@
 <?php
 
 namespace FKSDB\Models\Results;
+
 /**
  * POD, not represented in database
  */
-class ModelCategory {
+class ModelCategory
+{
 
     public const CAT_HS_4 = '4';
     public const CAT_HS_3 = '3';
@@ -19,7 +21,8 @@ class ModelCategory {
 
     public string $id;
 
-    public function __construct(string $id) {
+    public function __construct(string $id)
+    {
         $this->id = $id;
     }
 }

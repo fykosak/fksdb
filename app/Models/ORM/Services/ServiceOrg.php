@@ -8,5 +8,6 @@ use Fykosak\NetteORM\AbstractService;
 /**
  * @method ModelOrg createNewModel(array $data)
  */
-class ServiceOrg extends AbstractService {
+class ServiceOrg extends AbstractService
+{
 }

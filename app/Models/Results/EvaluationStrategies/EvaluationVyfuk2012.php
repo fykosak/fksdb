@@ -10,9 +10,11 @@ use Nette\InvalidArgumentException;
 /**
  * Introduced in Výfuk 2011 (1st official year).
  */
-class EvaluationVyfuk2012 extends EvaluationStrategy {
+class EvaluationVyfuk2012 extends EvaluationStrategy
+{
 
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
             new ModelCategory(ModelCategory::CAT_ES_7),
@@ -22,7 +24,8 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
         ];
     }
 
-    public function categoryToStudyYears(ModelCategory $category): array {
+    public function categoryToStudyYears(ModelCategory $category): array
+    {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
                 return [6];
@@ -39,11 +42,13 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
         }
     }
 
-    public function getPointsColumn(ActiveRow $task): string {
+    public function getPointsColumn(ActiveRow $task): string
+    {
         return 's.raw_points';
     }
 
-    public function getSumColumn(): string {
+    public function getSumColumn(): string
+    {
         return 's.raw_points';
     }
 
@@ -52,11 +57,13 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return int
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int
+    {
         return $task->points;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string {
+    public function getTaskPointsColumn(ModelCategory $category): string
+    {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }
 }

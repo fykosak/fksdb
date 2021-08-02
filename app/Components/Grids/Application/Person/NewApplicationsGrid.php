@@ -14,18 +14,21 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class NewApplicationsGrid extends BaseGrid {
+class NewApplicationsGrid extends BaseGrid
+{
 
     protected ServiceEvent $serviceEvent;
 
     protected EventDispatchFactory $eventDispatchFactory;
 
-    final public function injectPrimary(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void {
+    final public function injectPrimary(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void
+    {
         $this->serviceEvent = $serviceEvent;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $events = $this->serviceEvent->getTable()
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
@@ -39,7 +42,8 @@ class NewApplicationsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumns([

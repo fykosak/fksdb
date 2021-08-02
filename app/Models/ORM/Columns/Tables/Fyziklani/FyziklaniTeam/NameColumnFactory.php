@@ -7,7 +7,8 @@ use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
-class NameColumnFactory extends ColumnFactory {
+class NameColumnFactory extends ColumnFactory
+{
 
     /* TODO fix it
      *   public function createField(...$args): BaseControl {
@@ -16,7 +17,8 @@ class NameColumnFactory extends ColumnFactory {
      *       return $control;
      *   }
      * */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

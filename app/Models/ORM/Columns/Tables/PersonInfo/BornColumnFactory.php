@@ -10,9 +10,11 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-class BornColumnFactory extends ColumnFactory {
+class BornColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new WriteOnlyDatePicker($this->getTitle());
         $control->setDefaultValue((new \DateTime())->modify('-16 years'));
         return $control;
@@ -22,7 +24,8 @@ class BornColumnFactory extends ColumnFactory {
      * @param AbstractModel|ModelPersonInfo $model
      * @return Html
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new DatePrinter('d.m.Y'))($model->born);
     }
 }

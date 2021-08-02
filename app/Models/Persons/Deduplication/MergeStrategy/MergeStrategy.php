@@ -2,7 +2,8 @@
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-interface MergeStrategy {
+interface MergeStrategy
+{
 
     /**
      * @param mixed $trunk

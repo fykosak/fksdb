@@ -9,17 +9,20 @@ use FKSDB\Models\Github\Events\PushEvent;
 use FKSDB\Models\Maintenance\Updater;
 use Nette\Application\Responses\TextResponse;
 
-class GithubPresenter extends AuthenticatedPresenter {
+class GithubPresenter extends AuthenticatedPresenter
+{
 
     private Updater $updater;
     private EventFactory $eventFactory;
 
-    final public function injectQuarterly(EventFactory $eventFactory, Updater $updater): void {
+    final public function injectQuarterly(EventFactory $eventFactory, Updater $updater): void
+    {
         $this->eventFactory = $eventFactory;
         $this->updater = $updater;
     }
 
-    public function getAllowedAuthMethods(): array {
+    public function getAllowedAuthMethods(): array
+    {
         return [
             self::AUTH_GITHUB => true,
             self::AUTH_HTTP => false,
@@ -28,12 +31,14 @@ class GithubPresenter extends AuthenticatedPresenter {
         ];
     }
 
-    public function authorizedApi(): void {
+    public function authorizedApi(): void
+    {
         /* Already authenticated user has ultimate access to this presenter. */
         $this->setAuthorized(true);
     }
 
-    public function actionApi(): void {
+    public function actionApi(): void
+    {
         $type = $this->getHttpRequest()->getHeader(Event::HTTP_HEADER);
         $payload = $this->getHttpRequest()->getRawBody();
         $data = json_decode($payload, true);
@@ -47,7 +52,8 @@ class GithubPresenter extends AuthenticatedPresenter {
         }
     }
 
-    final public function renderApi(): void {
+    final public function renderApi(): void
+    {
         $response = new TextResponse('Thank you, Github.');
         $this->sendResponse($response);
     }

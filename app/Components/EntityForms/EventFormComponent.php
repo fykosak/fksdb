@@ -28,7 +28,8 @@ use Nette\Utils\Html;
 /**
  * @property ModelEvent|null $model
  */
-class EventFormComponent extends AbstractEntityFormComponent {
+class EventFormComponent extends AbstractEntityFormComponent
+{
 
     public const CONT_EVENT = 'event';
 
@@ -38,7 +39,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
     private ServiceEvent $serviceEvent;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model) {
+    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model)
+    {
         parent::__construct($container, $model);
         $this->contestYear = $contestYear;
     }
@@ -61,12 +63,14 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->contestYear->year;
@@ -83,7 +87,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONT_EVENT => $this->model->toArray(),
@@ -116,7 +121,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createEventContainer(): ModelContainer {
+    private function createEventContainer(): ModelContainer
+    {
         return $this->singleReflectionFormFactory->createContainer('event', [
             'event_type_id',
             'event_year',
@@ -130,7 +136,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
         ], $this->contestYear->getContest());
     }
 
-    private function createParamDescription(Holder $holder): Html {
+    private function createParamDescription(Holder $holder): Html
+    {
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -146,7 +153,8 @@ class EventFormComponent extends AbstractEntityFormComponent {
         return $result;
     }
 
-    private function updateTokens(ModelEvent $event): void {
+    private function updateTokens(ModelEvent $event): void
+    {
         $connection = $this->serviceAuthToken->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
@@ -156,5 +164,4 @@ class EventFormComponent extends AbstractEntityFormComponent {
         }
         $connection->commit();
     }
-
 }

@@ -14,8 +14,8 @@ use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-class ImportHandler {
-
+class ImportHandler
+{
     use SmartObject;
 
     public const STATELESS_IGNORE = 'ignore';
@@ -29,7 +29,8 @@ class ImportHandler {
 
     private CSVParser $parser;
 
-    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source)
+    {
         $this->container = $container;
         $this->parser = $parser;
         $this->source = $source;
@@ -45,7 +46,8 @@ class ImportHandler {
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool
+    {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
@@ -80,7 +82,8 @@ class ImportHandler {
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
+    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
+    {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
             return [$baseHolder->getName(), $parts[0]];
@@ -94,7 +97,8 @@ class ImportHandler {
      * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues(iterable $row): array {
+    private function rowToValues(iterable $row): array
+    {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = [];
         $fieldExists = false;
@@ -123,7 +127,8 @@ class ImportHandler {
      * @return Holder[]
      * @throws NeonSchemaException
      */
-    private function createHoldersMap(): array {
+    private function createHoldersMap(): array
+    {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 

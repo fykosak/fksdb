@@ -13,7 +13,8 @@ use Nette\InvalidStateException;
  *
  * @todo Implement generic ILogger.
  */
-class Pipeline {
+class Pipeline
+{
 
     /** @var Stage[] */
     private array $stages = [];
@@ -25,14 +26,16 @@ class Pipeline {
 
     private ?Logger $logger = null;
 
-    public function setLogger(Logger $logger): void {
+    public function setLogger(Logger $logger): void
+    {
         $this->logger = $logger;
     }
 
     /**
      * @return MemoryLogger
      */
-    public function getLogger(): Logger {
+    public function getLogger(): Logger
+    {
         return $this->logger;
     }
 
@@ -41,7 +44,8 @@ class Pipeline {
      *
      * @param Stage $stage
      */
-    public function addStage(Stage $stage): void {
+    public function addStage(Stage $stage): void
+    {
         if ($this->fixedStages) {
             throw new InvalidStateException('Cannot modify pipeline after loading data.');
         }
@@ -54,7 +58,8 @@ class Pipeline {
      *
      * @param mixed $input
      */
-    public function setInput($input): void {
+    public function setInput($input): void
+    {
         $this->fixedStages = true;
         $this->input = $input;
     }
@@ -64,7 +69,8 @@ class Pipeline {
      *
      * @return mixed    output of the last stage
      */
-    public function run() {
+    public function run()
+    {
         $data = $this->input;
         foreach ($this->stages as $stage) {
             $stage->setInput($data);
@@ -75,7 +81,8 @@ class Pipeline {
         return $data;
     }
 
-    public function log(Message $message): void {
+    public function log(Message $message): void
+    {
         if ($this->logger) {
             $this->logger->log($message);
         }

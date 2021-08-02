@@ -7,15 +7,18 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\Form;
 
-class SchoolFactory {
+class SchoolFactory
+{
 
     private SchoolProvider $schoolProvider;
 
-    public function __construct(SchoolProvider $schoolProvider) {
+    public function __construct(SchoolProvider $schoolProvider)
+    {
         $this->schoolProvider = $schoolProvider;
     }
 
-    public function createContainer(): ModelContainer {
+    public function createContainer(): ModelContainer
+    {
         $container = new ModelContainer();
         $container->addText('name_full', _('Full name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
@@ -49,7 +52,8 @@ class SchoolFactory {
         return $container;
     }
 
-    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox {
+    public function createSchoolSelect(bool $showUnknownSchoolHint = false): AutocompleteSelectBox
+    {
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($showUnknownSchoolHint) {

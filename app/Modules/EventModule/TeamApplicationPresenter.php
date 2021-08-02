@@ -19,11 +19,13 @@ use Nette\Application\ForbiddenRequestException;
 /**
  * @method ModelFyziklaniTeam getEntity()
  */
-class TeamApplicationPresenter extends AbstractApplicationPresenter {
+class TeamApplicationPresenter extends AbstractApplicationPresenter
+{
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void
+    {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -31,7 +33,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function isEnabled(): bool {
+    protected function isEnabled(): bool
+    {
         return $this->isTeamEvent();
     }
 
@@ -42,7 +45,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         parent::renderDetail();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -54,7 +58,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentSeating(): SeatingComponent {
+    protected function createComponentSeating(): SeatingComponent
+    {
         return new SeatingComponent($this->getContext());
     }
 
@@ -62,7 +67,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @return SchoolCheckComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentSchoolCheck(): SchoolCheckComponent {
+    protected function createComponentSchoolCheck(): SchoolCheckComponent
+    {
         return new SchoolCheckComponent($this->getEvent(), $this->getContext());
     }
 
@@ -71,15 +77,18 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
-    protected function createComponentGrid(): AbstractApplicationsGrid {
+    protected function createComponentGrid(): AbstractApplicationsGrid
+    {
         return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
-    protected function createComponentTeamRestsControl(): TeamRestsComponent {
+    protected function createComponentTeamRestsControl(): TeamRestsComponent
+    {
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function getORMService(): ServiceFyziklaniTeam {
+    protected function getORMService(): ServiceFyziklaniTeam
+    {
         return $this->serviceFyziklaniTeam;
     }
 }

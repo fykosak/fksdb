@@ -7,19 +7,22 @@ use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\Utils\Strings;
 
-class RegexpCheck extends AbstractAdjustment implements FormAdjustment {
+class RegexpCheck extends AbstractAdjustment implements FormAdjustment
+{
 
     private string $field;
     private string $message;
     private string $pattern;
 
-    public function __construct(string $field, string $message, string $pattern) {
+    public function __construct(string $field, string $message, string $pattern)
+    {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;

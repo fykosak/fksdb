@@ -35,7 +35,8 @@ use Nette\Security\Resource;
  * @property-read int rank_total
  * @property-read ActiveRow person
  */
-class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator {
+class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
+{
 
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';
@@ -44,51 +45,37 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
     public const CATEGORY_ABROAD = 'F';
     public const CATEGORY_OPEN = 'O';
 
-    public function __toString(): string {
+    public static function mapCategoryToName(string $category): string
+    {
+        switch ($category) {
+            case self::CATEGORY_HIGH_SCHOOL_A:
+                return _('High-school students A');
+            case self::CATEGORY_HIGH_SCHOOL_B:
+                return _('High-school students B');
+            case self::CATEGORY_HIGH_SCHOOL_C:
+                return _('High-school students C');
+            case self::CATEGORY_ABROAD:
+                return _('Abroad high-school students');
+            case self::CATEGORY_OPEN:
+                return _('Open');
+            default:
+                throw new \InvalidArgumentException();
+        }
+    }
+
+    public function __toString(): string
+    {
         return $this->name;
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return $this->getEvent()->getContest();
     }
 
-    public function getTeacher(): ?ModelPerson {
-        return isset($this->person) ? ModelPerson::createFromActiveRow($this->person) : null;
-    }
-
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
-    }
-
-    public function getParticipants(): GroupedSelection {
-        return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
-    }
-
-    public function getPosition(): ?ModelFyziklaniTeamPosition {
-        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
-    }
-
-    /* ******************** SUBMITS ******************************* */
-
-    public function getAllSubmits(): GroupedSelection {
-        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
-    }
-
-    public function getNonRevokedSubmits(): GroupedSelection {
-        return $this->getAllSubmits()->where('points IS NOT NULL');
-    }
-
-    public function getNonCheckedSubmits(): GroupedSelection {
-        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
-    }
-
-    public function hasAllSubmitsChecked(): bool {
-        return $this->getNonCheckedSubmits()->count() === 0;
-    }
-
-    public function hasOpenSubmitting(): bool {
-        return !isset($this->points);
     }
 
     /**
@@ -97,7 +84,8 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
      * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(bool $throws = true): bool {
+    public function canClose(bool $throws = true): bool
+    {
         if (!$this->hasOpenSubmitting()) {
             if (!$throws) {
                 return false;
@@ -113,11 +101,39 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
         return true;
     }
 
+    public function hasOpenSubmitting(): bool
+    {
+        return !isset($this->points);
+    }
+
+    /* ******************** SUBMITS ******************************* */
+
+    public function hasAllSubmitsChecked(): bool
+    {
+        return $this->getNonCheckedSubmits()->count() === 0;
+    }
+
+    public function getNonCheckedSubmits(): GroupedSelection
+    {
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
+    }
+
+    public function getNonRevokedSubmits(): GroupedSelection
+    {
+        return $this->getAllSubmits()->where('points IS NOT NULL');
+    }
+
+    public function getAllSubmits(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'e_fyziklani_team_id');
+    }
+
     /**
      * @param array $types
      * @return ModelPersonSchedule[]
      */
-    public function getScheduleRest(array $types = ['accommodation', 'weekend']): array {
+    public function getScheduleRest(array $types = ['accommodation', 'weekend']): array
+    {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
             $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
@@ -128,7 +144,8 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
     /**
      * @return ModelPerson[]
      */
-    public function getPersons(): array {
+    public function getPersons(): array
+    {
         $persons = [];
         /** @var ModelFyziklaniParticipant $pRow */
         foreach ($this->getParticipants() as $pRow) {
@@ -141,7 +158,18 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
         return $persons;
     }
 
-    public function __toArray(bool $includePosition = false, bool $includePassword = false): array {
+    public function getParticipants(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
+    }
+
+    public function getTeacher(): ?ModelPerson
+    {
+        return isset($this->person) ? ModelPerson::createFromActiveRow($this->person) : null;
+    }
+
+    public function __toArray(bool $includePosition = false, bool $includePassword = false): array
+    {
         $data = [
             'created' => $this->created->format('c'),
             'category' => $this->category,
@@ -163,7 +191,14 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
         return $data;
     }
 
-    public function createXMLNode(\DOMDocument $document): \DOMElement {
+    public function getPosition(): ?ModelFyziklaniTeamPosition
+    {
+        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
+        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
         $node = $document->createElement('team');
         $node->setAttribute('teamId', $this->e_fyziklani_team_id);
         XMLHelper::fillArrayToNode([
@@ -189,24 +224,8 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator 
         // `note`                 TEXT        NULL     DEFAULT NULL,
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
-    }
-
-    public static function mapCategoryToName(string $category): string {
-        switch ($category) {
-            case self::CATEGORY_HIGH_SCHOOL_A :
-                return _('High-school students A');
-            case self::CATEGORY_HIGH_SCHOOL_B :
-                return _('High-school students B');
-            case self::CATEGORY_HIGH_SCHOOL_C :
-                return _('High-school students C');
-            case self::CATEGORY_ABROAD :
-                return _('Abroad high-school students');
-            case self::CATEGORY_OPEN :
-                return _('Open');
-            default:
-                throw new \InvalidArgumentException();
-        }
     }
 }

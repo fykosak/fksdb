@@ -18,7 +18,8 @@ use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-class ResultsComponent extends BaseComponent {
+class ResultsComponent extends BaseComponent
+{
 
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
@@ -32,35 +33,42 @@ class ResultsComponent extends BaseComponent {
     private ?string $error;
     private bool $showParametrizeForm = true;
 
-    final public function injectPrimary(ContestAuthorizator $contestAuthorizator, ExportFormatFactory $exportFormatFactory): void {
+    final public function injectPrimary(ContestAuthorizator $contestAuthorizator, ExportFormatFactory $exportFormatFactory): void
+    {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    public function setShowParametrizeForm(bool $showParametersForm): void {
+    public function setShowParametrizeForm(bool $showParametersForm): void
+    {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    public function setStoredQuery(StoredQuery $storedQuery): void {
+    public function setStoredQuery(StoredQuery $storedQuery): void
+    {
         $this->storedQuery = $storedQuery;
     }
 
-    private function hasStoredQuery(): bool {
+    private function hasStoredQuery(): bool
+    {
         return isset($this->storedQuery);
     }
 
-    public function setParameters(array $parameters): void {
+    public function setParameters(array $parameters): void
+    {
         $this->parameters = $parameters;
     }
 
-    public function updateParameters(array $parameters): void {
+    public function updateParameters(array $parameters): void
+    {
         if (!$this->parameters) {
             $this->parameters = [];
         }
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    protected function createComponentGrid(): ResultsGrid {
+    protected function createComponentGrid(): ResultsGrid
+    {
         return new ResultsGrid($this->storedQuery, $this->getContext());
     }
 
@@ -68,7 +76,8 @@ class ResultsComponent extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentParametrizeForm(): FormControl {
+    protected function createComponentParametrizeForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -86,7 +95,8 @@ class ResultsComponent extends BaseComponent {
         return $control;
     }
 
-    public function getSqlError(): ?string {
+    public function getSqlError(): ?string
+    {
         if (!isset($this->error)) {
             $this->error = null;
             try {
@@ -103,7 +113,8 @@ class ResultsComponent extends BaseComponent {
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final public function render(): void {
+    final public function render(): void
+    {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
@@ -129,7 +140,8 @@ class ResultsComponent extends BaseComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleFormat(string $format): void {
+    public function handleFormat(string $format): void
+    {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }
@@ -147,7 +159,8 @@ class ResultsComponent extends BaseComponent {
     /**
      * TODO is this really need?
      * G*/
-    private function isAuthorized(): bool {
+    private function isAuthorized(): bool
+    {
         if (!$this->hasStoredQuery()) {
             return false;
         }
@@ -167,7 +180,8 @@ class ResultsComponent extends BaseComponent {
      * @return ModelContainer
      * TODO
      */
-    private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer {
+    private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer
+    {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 

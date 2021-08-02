@@ -2,7 +2,8 @@
 
 namespace FKSDB\Models\ORM;
 
-class FieldLevelPermission {
+class FieldLevelPermission
+{
 
     public const ALLOW_ANYBODY = 1;
     public const ALLOW_BASIC = 16;
@@ -13,7 +14,8 @@ class FieldLevelPermission {
 
     public int $write;
 
-    public function __construct(int $read, int $write) {
+    public function __construct(int $read, int $write)
+    {
         $this->read = $read;
         $this->write = $write;
     }

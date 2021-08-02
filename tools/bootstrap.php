@@ -4,7 +4,6 @@ namespace FKSDB\Tools;
 
 use FKSDB\Bootstrap;
 
-define('LIBS_DIR', __DIR__ . '/../libs');
 define('APP_DIR', __DIR__ . '/../app');
 
 // Load Nette Framework

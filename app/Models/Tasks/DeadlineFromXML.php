@@ -11,20 +11,24 @@ use FKSDB\Models\Pipeline\Stage;
 /**
  * @note Assumes TasksFromXML has been run previously.
  */
-class DeadlineFromXML extends Stage {
+class DeadlineFromXML extends Stage
+{
 
     private SeriesData $data;
     private ServiceTask $taskService;
 
-    public function __construct(ServiceTask $taskService) {
+    public function __construct(ServiceTask $taskService)
+    {
         $this->taskService = $taskService;
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
@@ -41,7 +45,8 @@ class DeadlineFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 }

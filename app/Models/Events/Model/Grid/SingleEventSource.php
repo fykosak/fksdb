@@ -23,8 +23,8 @@ use Nette\SmartObject;
  * @method int count()
  * @method SingleEventSource where(string $cond, ...$args)
  */
-class SingleEventSource implements HolderSource {
-
+class SingleEventSource implements HolderSource
+{
     use SmartObject;
 
     private ModelEvent $event;
@@ -47,7 +47,8 @@ class SingleEventSource implements HolderSource {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
+    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory)
+    {
         $this->event = $event;
         $this->container = $container;
         $this->eventDispatchFactory = $eventDispatchFactory;
@@ -58,15 +59,18 @@ class SingleEventSource implements HolderSource {
             ->where($this->dummyHolder->getPrimaryHolder()->getEventIdColumn(), $this->event->getPrimary());
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->event;
     }
 
-    public function getDummyHolder(): Holder {
+    public function getDummyHolder(): Holder
+    {
         return $this->dummyHolder;
     }
 
-    private function loadData(): void {
+    private function loadData(): void
+    {
         $joinToCheck = false;
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             if ($joinToCheck === false) {
@@ -108,7 +112,8 @@ class SingleEventSource implements HolderSource {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    private function createHolders(): void {
+    private function createHolders(): void
+    {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
@@ -137,7 +142,8 @@ class SingleEventSource implements HolderSource {
      * @param array $args
      * @return SingleEventSource|int
      */
-    public function __call(string $name, array $args) {
+    public function __call(string $name, array $args)
+    {
         static $delegated = [
             'where' => false,
             'order' => false,
@@ -159,7 +165,8 @@ class SingleEventSource implements HolderSource {
      * @return Holder[]
      * @throws NeonSchemaException
      */
-    public function getHolders(): array {
+    public function getHolders(): array
+    {
         if (!isset($this->primaryModels)) {
             $this->loadData();
             $this->createHolders();
@@ -172,7 +179,8 @@ class SingleEventSource implements HolderSource {
      * @return Holder
      * @throws NeonSchemaException
      */
-    public function getHolder(int $primaryKey): Holder {
+    public function getHolder(int $primaryKey): Holder
+    {
         $primaryModel = $this->dummyHolder->getPrimaryHolder()->getService()->findByPrimary($primaryKey);
 
         $cache = [];

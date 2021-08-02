@@ -5,12 +5,12 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
-use Nette\Forms\Form;
 use Nette\Forms\Control as FormControl;
+use Nette\Forms\Form;
 use Nette\SmartObject;
 
-abstract class AbstractAdjustment implements FormAdjustment {
-
+abstract class AbstractAdjustment implements FormAdjustment
+{
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -18,14 +18,16 @@ abstract class AbstractAdjustment implements FormAdjustment {
 
     private array $pathCache;
 
-    final public function adjust(Form $form, Holder $holder): void {
+    final public function adjust(Form $form, Holder $holder): void
+    {
         $this->setForm($form);
         $this->innerAdjust($form, $holder);
     }
 
     abstract protected function innerAdjust(Form $form, Holder $holder): void;
 
-    final protected function hasWildCart(string $mask): bool {
+    final protected function hasWildCart(string $mask): bool
+    {
         return strpos($mask, self::WILD_CART) !== false;
     }
 
@@ -33,7 +35,8 @@ abstract class AbstractAdjustment implements FormAdjustment {
      * @param string $mask
      * @return FormControl[]
      */
-    final protected function getControl(string $mask): array {
+    final protected function getControl(string $mask): array
+    {
         $keys = array_keys($this->pathCache);
         $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
 
@@ -53,7 +56,8 @@ abstract class AbstractAdjustment implements FormAdjustment {
         return $result;
     }
 
-    private function setForm(Form $form): void {
+    private function setForm(Form $form): void
+    {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe
