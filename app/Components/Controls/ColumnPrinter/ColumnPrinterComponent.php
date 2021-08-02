@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\ColumnPrinter;
 
 use FKSDB\Components\Controls\BaseComponent;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
@@ -34,7 +36,9 @@ class ExportWebModel extends WebModel
         if (!isset($args->qid)) {
             throw new \SoapFault('Sender', 'QId is not present');
         }
-        $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : XMLNodeSerializer::EXPORT_FORMAT_1;
+        $format = isset($args->{'format-version'})
+            ? ((int)$args->{'format-version'})
+            : XMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = [];
 
         // stupid PHP deserialization
@@ -49,7 +53,8 @@ class ExportWebModel extends WebModel
                     $this->log($msg);
                     throw new \SoapFault('Sender', $msg);
                 }
-                $parameters[$parameter->name] = $this->container->getParameters()['inverseContestMapping'][$parameters[$parameter->name]];
+                $parameters[$parameter->name] = $this->container->getParameters(
+                )['inverseContestMapping'][$parameters[$parameter->name]];
             }
         }
 
@@ -84,6 +89,11 @@ class ExportWebModel extends WebModel
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
+        return $this->contestAuthorizator->isAllowedForLogin(
+            $this->authenticatedLogin,
+            $query,
+            'execute',
+            $implicitParameters[StoredQueryFactory::PARAM_CONTEST]
+        );
     }
 }

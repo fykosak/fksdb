@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -59,7 +61,10 @@ class ImportHandler
         foreach ($this->parser as $row) {
             $values = ArrayHash::from($this->rowToValues($row));
             $keyValue = $values[$baseHolderName][self::KEY_NAME];
-            if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
+            if (
+                !isset($values[$baseHolderName][BaseHolder::STATE_COLUMN])
+                || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]
+            ) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
                 } elseif ($stateless == self::STATELESS_KEEP) {

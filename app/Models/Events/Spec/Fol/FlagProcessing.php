@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -48,9 +50,11 @@ class FlagProcessing extends WithSchoolProcessing
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent(
+            if (
+                !($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent(
                     $participantData['study_year']
-                ))) {
+                ))
+            ) {
                 /** @var ModelPersonHasFlag $personHasFlag */
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');

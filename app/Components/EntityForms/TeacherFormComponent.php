@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -25,8 +27,11 @@ class TeacherFormComponent extends AbstractEntityFormComponent
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private ServiceTeacher $serviceTeacher;
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void
-    {
+    final public function injectPrimary(
+        SingleReflectionFormFactory $singleReflectionFormFactory,
+        SchoolFactory $schoolFactory,
+        ServiceTeacher $serviceTeacher
+    ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
@@ -55,7 +60,10 @@ class TeacherFormComponent extends AbstractEntityFormComponent
     {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         $this->serviceTeacher->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 
@@ -77,6 +85,9 @@ class TeacherFormComponent extends AbstractEntityFormComponent
      */
     private function createTeacherContainer(): ModelContainer
     {
-        return $this->singleReflectionFormFactory->createContainer('teacher', ['state', 'since', 'until', 'number_brochures', 'note']);
+        return $this->singleReflectionFormFactory->createContainer(
+            'teacher',
+            ['state', 'since', 'until', 'number_brochures', 'note']
+        );
     }
 }

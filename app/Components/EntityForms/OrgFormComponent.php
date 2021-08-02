@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -33,8 +35,10 @@ class OrgFormComponent extends AbstractEntityFormComponent
         $this->contest = $contest;
     }
 
-    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg): void
-    {
+    final public function injectPrimary(
+        SingleReflectionFormFactory $singleReflectionFormFactory,
+        ServiceOrg $serviceOrg
+    ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
     }
@@ -63,7 +67,10 @@ class OrgFormComponent extends AbstractEntityFormComponent
             $data['contest_id'] = $this->contest->contest_id;
         }
         $this->serviceOrg->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('Org has been updated.') : _('Org has been created.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 

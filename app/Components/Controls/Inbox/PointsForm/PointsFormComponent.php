@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\PointsForm;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
@@ -19,8 +21,12 @@ class PointsFormComponent extends SeriesTableFormComponent
 
     private ServiceSubmit $serviceSubmit;
 
-    public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false)
-    {
+    public function __construct(
+        callable $invalidCacheCallback,
+        Container $context,
+        SeriesTable $seriesTable,
+        bool $displayAll = false
+    ) {
         parent::__construct($context, $seriesTable, $displayAll);
         $this->invalidCacheCallback = $invalidCacheCallback;
     }

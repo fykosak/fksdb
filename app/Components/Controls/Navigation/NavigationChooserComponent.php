@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\Choosers\ChooserComponent;
@@ -42,7 +44,12 @@ class NavigationChooserComponent extends ChooserComponent
     protected function getTitle(): Title
     {
         if (isset($this->structure['linkPresenter'])) {
-            $presenter = $this->navigationFactory->preparePresenter($this->getPresenter(), $this->structure['linkPresenter'], $this->structure['linkAction'], $this->structure['linkParams']);
+            $presenter = $this->navigationFactory->preparePresenter(
+                $this->getPresenter(),
+                $this->structure['linkPresenter'],
+                $this->structure['linkAction'],
+                $this->structure['linkParams']
+            );
             $presenter->setView($presenter->getView()); // to force update the title
             return $presenter->getTitle();
         }
@@ -83,7 +90,12 @@ class NavigationChooserComponent extends ChooserComponent
     public function getItemTitle($item): Title
     {
         if (isset($item['linkPresenter'])) {
-            $presenter = $this->navigationFactory->preparePresenter($this->getPresenter(), $item['linkPresenter'], $item['linkAction'], $item['linkParams']);
+            $presenter = $this->navigationFactory->preparePresenter(
+                $this->getPresenter(),
+                $item['linkPresenter'],
+                $item['linkAction'],
+                $item['linkParams']
+            );
             $presenter->setView($presenter->getView()); // to force update the title
 
             return $presenter->getTitle();

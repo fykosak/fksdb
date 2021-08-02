@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Services\ServiceContest;
@@ -26,10 +28,15 @@ class StatsWebModel extends WebModel
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
-        if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
+        if (
+            !isset($args->contest)
+            || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])
+        ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest]);
+        $contest = $this->serviceContest->findByPrimary(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest]
+        );
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }

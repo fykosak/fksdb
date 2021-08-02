@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -122,7 +124,7 @@ class ResourceAvailability extends AbstractAdjustment
                 }
             );
 
-            $column = BaseHolder::getBareColumn($serviceData['field']);
+            $column = BaseHolder::getBareColumn((string)$serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
             if ($primaries) {
                 $table->where("NOT $pk IN", $primaries);

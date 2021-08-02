@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
@@ -44,8 +46,12 @@ class TransitionsExtension extends CompilerExtension
         }
     }
 
-    private function createTransition(string $machineName, string $source, string $target, array $transitionConfig): void
-    {
+    private function createTransition(
+        string $machineName,
+        string $source,
+        string $target,
+        array $transitionConfig
+    ): void {
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
             ->addTag($machineName)

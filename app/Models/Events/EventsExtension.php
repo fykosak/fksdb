@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events;
 
 use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
@@ -262,6 +264,7 @@ class EventsExtension extends CompilerExtension
 
         return $factory;
     }
+
     /*
      * Specialized machine factories
      */
@@ -269,7 +272,8 @@ class EventsExtension extends CompilerExtension
     private function getBaseMachineConfig(string $definitionName, string $baseName): array
     {
         $key = "$definitionName.$baseName";
-        while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
+        while (!isset($this->baseMachineConfig[$key])) {
+            // 'while' instead of 'if' so that 'break' can be used instead of return
             $config = $this->getConfig();
             $baseMachineDef = $config[$definitionName]['baseMachines'][$baseName];
 
@@ -283,7 +287,10 @@ class EventsExtension extends CompilerExtension
                 break;
             }
             [$protoDefinitionName, $protoBaseName] = explode('.', $prototype);
-            if (!isset($config[$protoDefinitionName]) || !isset($config[$protoDefinitionName]['baseMachines'][$protoBaseName])) {
+            if (
+                !isset($config[$protoDefinitionName])
+                || !isset($config[$protoDefinitionName]['baseMachines'][$protoBaseName])
+            ) {
                 throw new MachineDefinitionException("Prototype '$prototype' not found.");
             }
 
@@ -452,7 +459,9 @@ class EventsExtension extends CompilerExtension
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);
 
         $config = $this->getConfig();
-        $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$eventName]['paramScheme'];
+        $paramScheme = isset($definition['paramScheme'])
+            ? $definition['paramScheme']
+            : $config[$eventName]['paramScheme'];
         foreach (array_keys($paramScheme) as $paramKey) {
             $this->validateConfigName($paramKey);
         }

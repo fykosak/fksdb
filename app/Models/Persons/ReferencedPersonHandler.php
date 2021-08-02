@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Components\EntityForms\PersonFormComponent;
@@ -157,7 +159,12 @@ class ReferencedPersonHandler implements ReferencedHandler
                 'person' => &$person,
                 'person_info' => $person->getInfo(),
                 'person_history' => $person->getHistoryByContestYear($this->contestYear),
-                'person_schedule' => ((isset($this->event) && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
+                'person_schedule' => ((isset($this->event)
+                    && isset($data['person_schedule'])
+                    && $person->getSerializedSchedule(
+                        $this->event->event_id,
+                        \array_keys((array)$data['person_schedule'])[0]
+                    )) ?: null),
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
                 self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
             ];
@@ -183,7 +190,10 @@ class ReferencedPersonHandler implements ReferencedHandler
             /** @var ModelPostContact|ModelPerson|AbstractModel|ModelPersonInfo|ModelPersonHistory $model */
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
-                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
+                    if (
+                        \in_array($t, $originalModels)
+                        && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])
+                    ) {
                         // delete only post contacts, other "children" could be left all-nulls
 
                         if ($model) {
@@ -199,13 +209,22 @@ class ReferencedPersonHandler implements ReferencedHandler
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->storeModel(array_merge((array)$data['person_info'], ['person_id' => $person->person_id]), $model);
+                        $this->servicePersonInfo->storeModel(
+                            array_merge((array)$data['person_info'], ['person_id' => $person->person_id]),
+                            $model
+                        );
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->storeModel(array_merge((array)$data['person_history'], [
-                            'ac_year' => $this->contestYear->ac_year,
-                            'person_id' => $person->person_id,
-                        ]), $model);
+                        $this->servicePersonHistory->storeModel(
+                            array_merge(
+                                (array)$data['person_history'],
+                                [
+                                    'ac_year' => $this->contestYear->ac_year,
+                                    'person_id' => $person->person_id,
+                                ]
+                            ),
+                            $model
+                        );
                         continue 2;
                     case 'person_schedule':
                         $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
@@ -217,11 +236,14 @@ class ReferencedPersonHandler implements ReferencedHandler
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
                             $flag = $this->serviceFlag->findByFid($flagId);
-                            $this->servicePersonHasFlag->storeModel([
-                                'value' => $flagValue,
-                                'flag_id' => $flag->flag_id,
-                                'person_id' => $person->person_id,
-                            ], $model[$flagId]);
+                            $this->servicePersonHasFlag->storeModel(
+                                [
+                                    'value' => $flagValue,
+                                    'flag_id' => $flag->flag_id,
+                                    'person_id' => $person->person_id,
+                                ],
+                                $model[$flagId]
+                            );
                         }
                         continue 2;
                 }
@@ -239,10 +261,13 @@ class ReferencedPersonHandler implements ReferencedHandler
             $this->serviceAddress->updateModel($model->getAddress(), $data);
             $this->servicePostContact->updateModel($model, $data);
         } else {
-            $data = array_merge((array)$data, [
-                'person_id' => $person->person_id,
-                'type' => PersonFormComponent::mapAddressContainerNameToType($type),
-            ]);
+            $data = array_merge(
+                (array)$data,
+                [
+                    'person_id' => $person->person_id,
+                    'type' => PersonFormComponent::mapAddressContainerNameToType($type),
+                ]
+            );
             $mainModel = $this->serviceAddress->createNewModel($data);
             $data['address_id'] = $mainModel->address_id;
             $this->servicePostContact->createNewModel($data);

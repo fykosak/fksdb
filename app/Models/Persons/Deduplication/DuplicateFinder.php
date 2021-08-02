@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -31,9 +33,11 @@ class DuplicateFinder
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var ModelPerson $person */
-        foreach ($this->servicePerson->getTable()->select(
-            "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
-        ) as $person) {
+        foreach (
+            $this->servicePerson->getTable()->select(
+                "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
+            ) as $person
+        ) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -105,7 +109,9 @@ class DuplicateFinder
         $familyScore = $this->stringScore($a->family_name, $b->family_name);
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
-        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
+        return $this->parameters['familyWeight'] * $familyScore
+            + $this->parameters['otherWeight'] * $otherScore
+            + $this->parameters['emailWeight'] * $emailScore;
     }
 
     /**

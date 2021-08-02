@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
@@ -45,6 +47,7 @@ order by surname, name",
             'setkani.j' => 'setkani.jaro',
             'setkani.p' => 'setkani.podzim',
         ];
-        return $this->contestYear->getContest()->getContestSymbol() . '.' . $maskMapping[$this->eventName] ?? $this->eventName;
+        return $this->contestYear->getContest()
+                ->getContestSymbol() . '.' . $maskMapping[$this->eventName] ?? $this->eventName;
     }
 }

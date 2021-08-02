@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
@@ -38,7 +40,8 @@ class CategoryProcessing extends AbstractCategoryProcessing
                     sprintf(
                         _('Team inserted to category %s.'),
                         ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])
-                    ), Logger::INFO
+                    ),
+                    Logger::INFO
                 )
             );
         }

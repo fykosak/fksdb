@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -47,14 +49,18 @@ class SQLResultsCache
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
+            throw new InvalidArgumentException(
+                'Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+            );
         }
 // TODO related
         $tasks = $this->serviceTask->getTable()
-            ->where([
-                'contest_id' => $contestYear->getContest()->contest_id,
-                'year' => $contestYear->year,
-            ]);
+            ->where(
+                [
+                    'contest_id' => $contestYear->getContest()->contest_id,
+                    'year' => $contestYear->year,
+                ]
+            );
 
         $this->serviceTask->explorer->getConnection()->beginTransaction();
         /** @var ModelTask $task */

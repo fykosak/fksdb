@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\PriceCalculator;
 
 use FKSDB\Models\ORM\Models\ModelPayment;

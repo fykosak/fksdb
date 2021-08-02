@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
@@ -35,16 +37,20 @@ abstract class ReferencedContainer extends ContainerWithOptions
     public function __construct(DIContainer $container, bool $allowClear)
     {
         parent::__construct($container);
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/referencedContainer.js');
-                $this->updateHtmlData();
+        $this->monitor(
+            JavaScriptCollector::class,
+            function (JavaScriptCollector $collector) {
+                if (!$this->attachedJS) {
+                    $this->attachedJS = true;
+                    $collector->registerJSFile('js/referencedContainer.js');
+                    $this->updateHtmlData();
+                }
+            },
+            function (JavaScriptCollector $collector) {
+                $this->attachedJS = false;
+                $collector->unregisterJSFile('js/referencedContainer.js');
             }
-        }, function (JavaScriptCollector $collector) {
-            $this->attachedJS = false;
-            $collector->unregisterJSFile('js/referencedContainer.js');
-        });
+        );
         $this->createClearButton();
         $this->createCompactValue();
 
@@ -80,7 +86,11 @@ abstract class ReferencedContainer extends ContainerWithOptions
     protected function validateChildComponent(IComponent $child): void
     {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
-            throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
+            throw new InvalidStateException(
+                __CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class(
+                    $child
+                ) . ' given.'
+            );
         }
     }
 
@@ -120,7 +130,10 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     private function updateHtmlData(): void
     {
-        $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
+        $this->setOption(
+            'id',
+            sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form'))
+        );
         $referencedId = $this->referencedId->getHtmlId();
         $this->setOption('data-referenced-id', $referencedId);
         $this->setOption('data-referenced', 1);

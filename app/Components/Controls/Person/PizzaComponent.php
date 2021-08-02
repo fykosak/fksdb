@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Person;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -34,7 +36,11 @@ class PizzaComponent extends BaseComponent
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
+        $personsField = $this->personFactory->createPersonSelect(
+            true,
+            _('Persons'),
+            new PersonProvider($this->servicePerson)
+        );
         $personsField->setMultiSelect(true);
         $form->addComponent($personsField, 'persons');
         $form->addSubmit('submit', _('Get pizza!'));

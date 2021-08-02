@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -30,7 +32,11 @@ class SchoolFactory
             ->setOption('description', _('Envelope name.'));
 
         $container->addText('name_abbrev', _('Abbreviated name'))
-            ->addRule(Form::MAX_LENGTH, _('The length of the abbreviated name is restricted to a maximum %d characters.'), 32)
+            ->addRule(
+                Form::MAX_LENGTH,
+                _('The length of the abbreviated name is restricted to a maximum %d characters.'),
+                32
+            )
             ->addRule(Form::FILLED, _('Short name is required.'))
             ->setOption('description', _('Very short name.'));
 
@@ -57,7 +63,10 @@ class SchoolFactory
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($showUnknownSchoolHint) {
-            $schoolElement->setOption('description', sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz'));
+            $schoolElement->setOption(
+                'description',
+                sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz')
+            );
         }
         return $schoolElement;
     }

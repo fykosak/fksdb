@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -40,7 +42,11 @@ class SchoolProvider implements FilteredDataProvider
 
         $schools = $this->serviceSchool->getTable();
         foreach ($tokens as $token) {
-            $schools->where('name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')', $token, $token);
+            $schools->where(
+                'name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')',
+                $token,
+                $token
+            );
         }
         // For backwards compatibility consider NULLs active
         if ($this->defaultValue != null) {

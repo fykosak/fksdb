@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -52,7 +54,10 @@ class EventOrgFormComponent extends AbstractEntityFormComponent
             $data['event_id'] = $this->event->event_id;
         }
         $this->serviceEventOrg->storeModel($data, $this->model);
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('Event org has been updated') : _('Event org has been created'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('Event org has been updated') : _('Event org has been created'),
+            Message::LVL_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 

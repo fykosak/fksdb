@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\PersonFormComponent;
@@ -63,7 +65,9 @@ class PersonPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye')
+        );
     }
 
     /**
@@ -74,7 +78,9 @@ class PersonPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit')
+        );
     }
 
     public function getTitleCreate(): PageTitle
@@ -127,13 +133,16 @@ class PersonPresenter extends BasePresenter
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
         $userPerson = $this->getUser()->getIdentity()->getPerson();
-        Debugger::log(sprintf(
-            '%s (%d) stalk %s (%d)',
-            $userPerson->getFullName(),
-            $userPerson->person_id,
-            $person->getFullName(),
-            $person->person_id
-        ), 'stalking-log');
+        Debugger::log(
+            sprintf(
+                '%s (%d) stalk %s (%d)',
+                $userPerson->getFullName(),
+                $userPerson->person_id,
+                $person->getFullName(),
+                $person->person_id
+            ),
+            'stalking-log'
+        );
     }
 
     /* ******************* COMPONENTS *******************/
@@ -145,18 +154,19 @@ class PersonPresenter extends BasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
+        $form->addComponent(
+            $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)),
+            'person_id'
+        );
 
-        $form->addSubmit('stalk', _('Let\'s stalk'))
-            ->onClick[] = function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
-                $this->redirect('detail', ['id' => $values['person_id']]);
-            };
-        $form->addSubmit('edit', _('Edit'))
-            ->onClick[] = function (SubmitButton $button) {
-                $values = $button->getForm()->getValues();
-                $this->redirect('edit', ['id' => $values['person_id']]);
-            };
+        $form->addSubmit('stalk', _('Let\'s stalk'))->onClick[] = function (SubmitButton $button) {
+            $values = $button->getForm()->getValues();
+            $this->redirect('detail', ['id' => $values['person_id']]);
+        };
+        $form->addSubmit('edit', _('Edit'))->onClick[] = function (SubmitButton $button) {
+            $values = $button->getForm()->getValues();
+            $this->redirect('edit', ['id' => $values['person_id']]);
+        };
 
         return $control;
     }

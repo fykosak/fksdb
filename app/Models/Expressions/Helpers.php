@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions;
 
 use FKSDB\Models\Expressions\Comparison\Le;
@@ -56,9 +58,12 @@ class Helpers
 
             return new Statement($class, $arguments);
         } elseif (is_array($expression)) {
-            return array_map(function ($subExpresion) {
-                return self::statementFromExpression($subExpresion);
-            }, $expression);
+            return array_map(
+                function ($subExpresion) {
+                    return self::statementFromExpression($subExpresion);
+                },
+                $expression
+            );
         } else {
             return $expression;
         }
@@ -88,10 +93,11 @@ class Helpers
                 return $entity(...$arguments);
             } else {
                 throw new NotImplementedException();
-              /*  $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
-                    return $this->getByType($type);
-                }));*/
+                /*  $rc = ClassType::from($entity);
+                return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(),
+                * $arguments, function (string $type, bool $single) use ($container) {
+                      return $this->getByType($type);
+                  }));*/
                 // TODO!!!
             }
         } else {
@@ -117,6 +123,7 @@ class Helpers
             return self::evalExpression($expressionArray, $container);
         }
     }
+
     /**
      * @param $statement
      * @return Statement|string

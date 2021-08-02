@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -158,8 +160,9 @@ class ApplicationHandler
                 );
             }
             if (
-                $data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating(
-                    ))
+                $data
+                && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating()
+                )
             ) {
                 $this->logger->log(
                     new Message(
@@ -355,12 +358,12 @@ class ApplicationHandler
             $this->logger->log(new Message($message, Logger::ERROR));
             $this->reRaise($exception);
         } catch (
-        DuplicateApplicationException |
-        MachineExecutionException |
-        SubmitProcessingException |
-        FullCapacityException |
-        ExistingPaymentException |
-        UnavailableTransitionException $exception
+            DuplicateApplicationException |
+            MachineExecutionException |
+            SubmitProcessingException |
+            FullCapacityException |
+            ExistingPaymentException |
+            UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Logger::ERROR));
             $this->reRaise($exception);

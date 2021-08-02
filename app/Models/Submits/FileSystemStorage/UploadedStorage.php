@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -80,7 +82,8 @@ class UploadedStorage implements SubmitStorage
 
                 $filename = $todo['file'];
 
-                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
+                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit)
+                    . DIRECTORY_SEPARATOR . $this->createFilename($submit);
                 mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {
@@ -138,14 +141,20 @@ class UploadedStorage implements SubmitStorage
     {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
-            $files = array_filter($files, function (\SplFileInfo $file): bool {
-                return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
-            });
+            $files = array_filter(
+                $files,
+                function (\SplFileInfo $file): bool {
+                    return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
+                }
+            );
         } else {
-            $files = array_filter($files, function (\SplFileInfo $file): bool {
-                return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
-                    !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
-            });
+            $files = array_filter(
+                $files,
+                function (\SplFileInfo $file): bool {
+                    return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
+                        !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
+                }
+            );
         }
 
         if (count($files) == 0) {
@@ -207,7 +216,13 @@ class UploadedStorage implements SubmitStorage
     private function createDirname(ModelSubmit $submit): string
     {
         $task = $submit->getTask();
-        return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
+        return sprintf(
+            $this->directoryMask,
+            $task->getContest()->getContestSymbol(),
+            $task->year,
+            $task->series,
+            $task->webalizeLabel()
+        );
     }
 
     private function createFilename(ModelSubmit $submit): string
@@ -218,7 +233,14 @@ class UploadedStorage implements SubmitStorage
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 
-        $filename = sprintf($this->filenameMask, $contestantName, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
+        $filename = sprintf(
+            $this->filenameMask,
+            $contestantName,
+            $task->getContest()->getContestSymbol(),
+            $task->year,
+            $task->series,
+            $task->webalizeLabel()
+        );
 
         // append metadata
         return $filename . self::DELIMITER . $submit->submit_id . self::FINAL_EXT;

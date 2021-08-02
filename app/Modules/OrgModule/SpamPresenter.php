@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
@@ -30,7 +32,9 @@ class SpamPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fas fa-envelope-open'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fas fa-envelope-open')
+        );
     }
 
     public function getTitleList(): PageTitle
@@ -42,7 +46,12 @@ class SpamPresenter extends BasePresenter
     {
         $authorized = true;
         foreach ($this->serviceContest->getTable() as $contest) {
-            $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
+            $authorized = $authorized
+                && $this->contestAuthorizator->isAllowed(
+                    $this->getORMService()->getModelClassName()::RESOURCE_ID,
+                    'detail',
+                    $contest,
+                );
         }
         $this->setAuthorized($authorized);
     }

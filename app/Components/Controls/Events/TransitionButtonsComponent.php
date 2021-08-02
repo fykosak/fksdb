@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -36,7 +38,12 @@ class TransitionButtonsComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true);
+        $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions(
+            $this->holder,
+            $this->holder->getPrimaryHolder()->getModelState(),
+            true,
+            true
+        );
         $this->template->holder = $this->holder;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
     }

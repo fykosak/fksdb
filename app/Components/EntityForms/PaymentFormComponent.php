@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
@@ -68,14 +70,25 @@ class PaymentFormComponent extends AbstractEntityFormComponent
     protected function configureForm(Form $form): void
     {
         if ($this->isOrg) {
-            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
+            $form->addComponent(
+                $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
+                'person_id'
+            );
         } else {
             $form->addHidden('person_id');
         }
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->isCreating()), 'payment_accommodation');
+        $form->addComponent(
+            new PersonPaymentContainer(
+                $this->getContext(),
+                $this->machine->getEvent(),
+                $this->machine->getScheduleGroupTypes(),
+                !$this->isCreating()
+            ),
+            'payment_accommodation'
+        );
     }
 
     /**
@@ -100,9 +113,15 @@ class PaymentFormComponent extends AbstractEntityFormComponent
             $model = $this->model;
         } else {
             $holder = $this->machine->createHolder(null);
-            $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [
-                'event_id' => $this->machine->getEvent()->event_id,
-            ]));
+            $this->machine->saveAndExecuteImplicitTransition(
+                $holder,
+                array_merge(
+                    $data,
+                    [
+                        'event_id' => $this->machine->getEvent()->event_id,
+                    ]
+                )
+            );
             $model = $holder->getModel();
         }
 
@@ -119,7 +138,9 @@ class PaymentFormComponent extends AbstractEntityFormComponent
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.'));
+        $this->getPresenter()->flashMessage(
+            !isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.')
+        );
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
@@ -143,9 +164,11 @@ class PaymentFormComponent extends AbstractEntityFormComponent
         } else {
             /** @var ModelLogin $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
-                'person_id' => $login->getPerson()->person_id,
-            ]);
+            $this->getForm()->setDefaults(
+                [
+                    'person_id' => $login->getPerson()->person_id,
+                ]
+            );
         }
     }
 }

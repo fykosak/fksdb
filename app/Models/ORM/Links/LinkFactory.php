@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Links;
 
 use FKSDB\Models\ORM\ReferencedAccessor;

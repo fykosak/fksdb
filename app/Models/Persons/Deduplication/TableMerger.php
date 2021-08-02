@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Logging\Logger;
@@ -239,7 +241,8 @@ class TableMerger
                         $row->getTable()->getName(),
                         $row->getPrimary(),
                         implode(', ', $msg)
-                    ), Logger::INFO
+                    ),
+                    Logger::INFO
                 )
             );
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Transitions;
 
 use FKSDB\Models\Authentication\AccountManager;
@@ -179,10 +181,10 @@ class MailSender
     private function hasBcc(): bool
     {
         return !is_array($this->addressees) && substr(
-                $this->addressees,
-                0,
-                strlen(self::BCC_PREFIX)
-            ) == self::BCC_PREFIX;
+            $this->addressees,
+            0,
+            strlen(self::BCC_PREFIX)
+        ) == self::BCC_PREFIX;
     }
 
     /**
@@ -271,7 +273,7 @@ class MailSender
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application . ' ' . mb_strtolower(
-                $machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState())
-            );
+            $machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState())
+        );
     }
 }

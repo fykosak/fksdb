@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;

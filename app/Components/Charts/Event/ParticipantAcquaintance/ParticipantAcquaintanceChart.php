@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Event\ParticipantAcquaintance;
 
 use FKSDB\Components\Charts\Core\Chart;

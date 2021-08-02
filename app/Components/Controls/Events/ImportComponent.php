@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -30,8 +32,12 @@ class ImportComponent extends BaseComponent
 
     private ApplicationHandler $handler;
 
-    public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container)
-    {
+    public function __construct(
+        Machine $machine,
+        SingleEventSource $source,
+        ApplicationHandler $handler,
+        Container $container
+    ) {
         parent::__construct($container);
         $this->machine = $machine;
         $this->source = $source;
@@ -49,20 +55,28 @@ class ImportComponent extends BaseComponent
 
         $form->addUpload('file', _('File with applications'))
             ->addRule(Form::FILLED)
-            ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(
+                Form::MIME_TYPE,
+                _('Only CSV files are accepted.'),
+                'text/plain'
+            ); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Error mode'))
-            ->setItems([
-                ApplicationHandler::ERROR_ROLLBACK => _('Stop import and rollback.'),
-                ApplicationHandler::ERROR_SKIP => _('Skip the application and continue.'),
-            ])
+            ->setItems(
+                [
+                    ApplicationHandler::ERROR_ROLLBACK => _('Stop import and rollback.'),
+                    ApplicationHandler::ERROR_SKIP => _('Skip the application and continue.'),
+                ]
+            )
             ->setDefaultValue(ApplicationHandler::ERROR_SKIP);
 
         $form->addRadioList('stateless', _('Stateless applications.'))
-            ->setItems([
-                ImportHandler::STATELESS_IGNORE => _('Ignore.'),
-                ImportHandler::STATELESS_KEEP => _('Keep original state.'),
-            ])
+            ->setItems(
+                [
+                    ImportHandler::STATELESS_IGNORE => _('Ignore.'),
+                    ImportHandler::STATELESS_KEEP => _('Keep original state.'),
+                ]
+            )
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
         $form->addSubmit('import', _('Import'));
@@ -87,7 +101,7 @@ class ImportComponent extends BaseComponent
      */
     private function handleFormImport(Form $form): void
     {
-        /** @var FileUpload[] $values */
+        /** @var FileUpload[]|string[] $values */
         $values = $form->getValues();
         try {
             // process form values
@@ -106,9 +120,15 @@ class ImportComponent extends BaseComponent
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Import succesfull (%.2f s).'), $elapsedTime),
+                    BasePresenter::FLASH_SUCCESS
+                );
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(
+                    sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime),
+                    BasePresenter::FLASH_WARNING
+                );
             }
 
             $this->redirect('this');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\SchoolFormComponent;
@@ -56,7 +58,9 @@ class SchoolPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university')
+        );
     }
 
     /**

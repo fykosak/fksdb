@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -24,8 +26,12 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     private array $dataColumns = [];
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection)
-    {
+    public function __construct(
+        CumulativeResultsModel $cumulativeResultsModel,
+        ModelContestYear $contestYear,
+        ServiceTask $serviceTask,
+        Connection $connection
+    ) {
         parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
@@ -134,17 +140,23 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
         }
         $result = [];
         foreach ($data as $schoolName => $dataRow) {
-            usort($dataRow, function ($a, $b) {
-                return ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1;
-            });
+            usort(
+                $dataRow,
+                function ($a, $b) {
+                    return ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1;
+                }
+            );
             $resultRow = $this->createResultRow($dataRow, $category);
             $resultRow[self::DATA_NAME] = $schoolName;
             $resultRow[self::DATA_SCHOOL] = $schoolName;
             $result[] = $resultRow;
         }
-        usort($result, function ($a, $b) {
-            return ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1;
-        });
+        usort(
+            $result,
+            function ($a, $b) {
+                return ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1;
+            }
+        );
 
         $prevSum = false;
         for ($i = 0; $i < count($result); $i++) {
@@ -202,7 +214,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
             }
             $resultRow[self::ALIAS_UNWEIGHTED_SUM] += $schoolContestants[$i][self::ALIAS_SUM];
         }
-        $resultRow[self::ALIAS_PERCENTAGE] = ($resultRow[self::ALIAS_CONTESTANTS_COUNT] > 0) ? round($resultRow[self::ALIAS_PERCENTAGE] / (float)$resultRow[self::ALIAS_CONTESTANTS_COUNT]) : null;
+        $resultRow[self::ALIAS_PERCENTAGE] = ($resultRow[self::ALIAS_CONTESTANTS_COUNT] > 0) ? round(
+            $resultRow[self::ALIAS_PERCENTAGE] / (float)$resultRow[self::ALIAS_CONTESTANTS_COUNT]
+        ) : null;
         foreach ($resultRow as $key => $value) {
             if (is_float($value)) {
                 $resultRow[$key] = round($value);

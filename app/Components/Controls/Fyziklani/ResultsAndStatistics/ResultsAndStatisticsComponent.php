@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
@@ -87,7 +89,10 @@ class ResultsAndStatisticsComponent extends AjaxComponent
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray(
+                $this->getEvent(),
+                $this->lastUpdated
+            );
         }
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {

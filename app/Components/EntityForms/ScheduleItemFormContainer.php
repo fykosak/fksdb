@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -32,8 +34,10 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceScheduleItem $serviceScheduleItem, SingleReflectionFormFactory $singleReflectionFormFactory): void
-    {
+    final public function injectPrimary(
+        ServiceScheduleItem $serviceScheduleItem,
+        SingleReflectionFormFactory $singleReflectionFormFactory
+    ): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
@@ -56,9 +60,11 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
-                self::CONTAINER => $this->model->toArray(),
-            ]);
+            $this->getForm()->setDefaults(
+                [
+                    self::CONTAINER => $this->model->toArray(),
+                ]
+            );
         }
     }
 
@@ -70,16 +76,19 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('schedule_item', [
-            'name_cs',
-            'name_en',
-            'description_cs',
-            'description_en',
-            'require_id_number',
-            'capacity',
-            'price_czk',
-            'price_eur',
-        ]);
+        $container = $this->singleReflectionFormFactory->createContainer(
+            'schedule_item',
+            [
+                'name_cs',
+                'name_en',
+                'description_cs',
+                'description_en',
+                'require_id_number',
+                'capacity',
+                'price_czk',
+                'price_eur',
+            ]
+        );
         $items = [];
         foreach ($this->event->getScheduleGroups() as $row) {
             $group = ModelScheduleGroup::createFromActiveRow($row);

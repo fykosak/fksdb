@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\Application\IPresenterFactory;
@@ -25,12 +27,18 @@ class PresenterBuilder
      * @param string $action
      * @param array|null $params
      * @param array|null $baseParams
-     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
+     * @param bool $newInstance when false all instances of the same class will
+     * be the same and only initilization methods are called
      * @return Presenter
      * @throws BadRequestException
      */
-    public function preparePresenter(string $presenterName, string $action, ?array $params = [], ?array $baseParams = [], bool $newInstance = false): Presenter
-    {
+    public function preparePresenter(
+        string $presenterName,
+        string $action,
+        ?array $params = [],
+        ?array $baseParams = [],
+        bool $newInstance = false
+    ): Presenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {

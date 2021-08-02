@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec;
 
 use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
@@ -26,14 +28,15 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     public function getOptions(Field $field): array
     {
         $results = [];
-        foreach ([
-                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A,
-                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B,
-                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C,
-                     ModelFyziklaniTeam::CATEGORY_ABROAD,
-                     ModelFyziklaniTeam::CATEGORY_OPEN,
-                 ]
-                 as $category) {
+        foreach (
+            [
+                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A,
+                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B,
+                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C,
+                ModelFyziklaniTeam::CATEGORY_ABROAD,
+                ModelFyziklaniTeam::CATEGORY_OPEN,
+            ] as $category
+        ) {
             $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
         }
         return $results;

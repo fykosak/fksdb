@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -56,7 +58,10 @@ class StoredQueryFactory implements XMLNodeSerializer
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
-        $storedQuery->setContextParameters($parameters, false); // treat all parameters as implicit (better API for web service)
+        $storedQuery->setContextParameters(
+            $parameters,
+            false
+        ); // treat all parameters as implicit (better API for web service)
         return $storedQuery;
     }
 
@@ -131,6 +136,11 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter
     {
-        return new StoredQueryParameter($model->name, $model->getDefaultValue(), $model->getPDOType(), $model->description);
+        return new StoredQueryParameter(
+            $model->name,
+            $model->getDefaultValue(),
+            $model->getPDOType(),
+            $model->description
+        );
     }
 }

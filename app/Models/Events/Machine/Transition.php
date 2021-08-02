@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
@@ -39,16 +41,12 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array(
-                $source,
-                array_merge(
-                    $states,
-                    [
-                        \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY,
-                        \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT,
-                    ]
-                )
-            )) {
+            $sourceState = [
+                ...$states,
+                \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY,
+                \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT,
+            ];
+            if (!in_array($source, $sourceState)) {
                 return false;
             }
         }
@@ -279,11 +277,14 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
          * Star matches any state but meta-states (initial and terminal)
          */
         if (
-            strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(
-                    \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY,
-                    $this->source
-                ) !== false &&
-                ($mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED))
+            strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false
+            || (
+                strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false
+                && (
+                    $mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                    && $mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED
+                )
+            )
         ) {
             return true;
         }

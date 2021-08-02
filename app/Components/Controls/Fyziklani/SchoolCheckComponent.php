@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -29,7 +31,10 @@ class SchoolCheckComponent extends BaseComponent
                 'school' => $school,
             ];
             $query = $this->event->getTeams()
-                ->where(':e_fyziklani_participant.event_participant.person:person_history.ac_year', $this->event->getContestYear()->ac_year)
+                ->where(
+                    ':e_fyziklani_participant.event_participant.person:person_history.ac_year',
+                    $this->event->getContestYear()->ac_year
+                )
                 ->where(':e_fyziklani_participant.event_participant.person:person_history.school_id', $schoolId);
             foreach ($query as $team) {
                 $schools[$schoolId][] = ModelFyziklaniTeam::createFromActiveRow($team);

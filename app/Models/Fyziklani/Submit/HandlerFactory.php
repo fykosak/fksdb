@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -30,6 +32,12 @@ class HandlerFactory
 
     public function create(ModelEvent $event): Handler
     {
-        return new Handler($event, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit, $this->user);
+        return new Handler(
+            $event,
+            $this->serviceFyziklaniTeam,
+            $this->serviceFyziklaniTask,
+            $this->serviceFyziklaniSubmit,
+            $this->user
+        );
     }
 }

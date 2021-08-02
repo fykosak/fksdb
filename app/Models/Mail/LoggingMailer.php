@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Utils\Utils;
@@ -57,8 +59,10 @@ class LoggingMailer implements Mailer
     public function send(Message $mail): void
     {
         try {
-            if (!$this->container->getParameters(
-                )['email']['disabled'] ?? false) {// do not really send emails when debugging
+            if (
+                !$this->container->getParameters(
+                )['email']['disabled'] ?? false
+            ) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);

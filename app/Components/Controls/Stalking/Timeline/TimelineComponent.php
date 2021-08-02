@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
 use FKSDB\Components\React\ReactComponent;
@@ -48,10 +50,16 @@ class TimelineComponent extends ReactComponent
         $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
-            $since = new \DateTime($org->getContest()->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+            $since = new \DateTime(
+                $org->getContest()->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+            );
             $until = new \DateTime();
             if ($org->until) {
-                $until = new \DateTime($org->getContest()->getContestYear($org->until)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+                $until = new \DateTime(
+                    $org->getContest()->getContestYear(
+                        $org->until
+                    )->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+                );
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;

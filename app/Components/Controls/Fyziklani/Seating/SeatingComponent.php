@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\Seating;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -15,8 +17,10 @@ class SeatingComponent extends BaseComponent
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    final public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void
-    {
+    final public function injectServicePrimary(
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        EventDispatchFactory $eventDispatchFactory
+    ): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }

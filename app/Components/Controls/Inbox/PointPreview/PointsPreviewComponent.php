@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\PointPreview;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;

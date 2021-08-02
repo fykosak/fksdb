@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\React;
 
 use Nette\Application\Response;
@@ -29,7 +31,7 @@ final class AjaxResponse implements Response
     {
         $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
-        $httpResponse->setExpiration(false);
+        $httpResponse->setExpiration(null);
         echo json_encode($this->content);
     }
 

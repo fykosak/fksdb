@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
@@ -88,7 +90,9 @@ trait YearPresenterTrait
                         $years[] = $contestant->year;
                     }
                 }
-                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear());
+                return count($years)
+                    ? $contest->getContestYears()->where('year', $years)
+                    : $contest->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear());
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
@@ -96,6 +100,10 @@ trait YearPresenterTrait
 
     protected function createComponentYearChooser(): YearChooserComponent
     {
-        return new YearChooserComponent($this->getContext(), $this->getSelectedContestYear(), $this->getAvailableYears());
+        return new YearChooserComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getAvailableYears(),
+        );
     }
 }

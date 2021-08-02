@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\Localization\UnsupportedLanguageException;

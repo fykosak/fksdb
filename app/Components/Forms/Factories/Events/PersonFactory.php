@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -89,10 +91,23 @@ class PersonFactory extends AbstractFactory
 
         $event = $field->getBaseHolder()->getEvent();
 
-        $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
+        $modifiableResolver = new PersonContainerResolver(
+            $field,
+            $this->modifiable,
+            $this->selfResolver,
+            $this->evaluator
+        );
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getContestYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $fieldsDefinition,
+            $event->getContestYear(),
+            $searchType,
+            $allowClear,
+            $modifiableResolver,
+            $visibleResolver,
+            $event
+        );
         $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
         $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
         return $referencedId;
@@ -137,8 +152,17 @@ class PersonFactory extends AbstractFactory
                 if (!is_array($metadata)) {
                     $metadata = ['required' => $metadata];
                 }
-                if ($metadata['required'] && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $contestYear)) {
-                    $validator->addError(sprintf(_('%s: %s is a required field.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
+                if (
+                    $metadata['required']
+                    && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $contestYear)
+                ) {
+                    $validator->addError(
+                        sprintf(
+                            _('%s: %s is a required field.'),
+                            $field->getBaseHolder()->getLabel(),
+                            $field->getLabel() . '.' . $subName . '.' . $fieldName
+                        )
+                    ); //TODO better GUI name than DB identifier
                 }
             }
         }

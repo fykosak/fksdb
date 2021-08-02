@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -32,7 +34,9 @@ final class TaskCodePreprocessor
             return false;
         }
         $subCode = str_split(self::getNumLabel($code));
-        $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6]) + 7 * ($subCode[1] + $subCode[4] + $subCode[7]) + ($subCode[2] + $subCode[5] + $subCode[8]);
+        $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6])
+            + 7 * ($subCode[1] + $subCode[4] + $subCode[7])
+            + ($subCode[2] + $subCode[5] + $subCode[8]);
         return $sum % 10 == 0;
     }
 

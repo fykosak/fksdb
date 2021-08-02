@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedComponent;
@@ -30,7 +32,9 @@ class InboxPresenter extends BasePresenter
 
     public function authorizedInbox(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest())
+        );
     }
 
     public function authorizedList(): void

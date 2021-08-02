@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions\Predicates;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;

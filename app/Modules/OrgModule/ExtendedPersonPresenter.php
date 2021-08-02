@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -28,8 +30,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory, ExtendedPersonHandlerFactory $handlerFactory): void
-    {
+    final public function injectExtendedPerson(
+        ReferencedPersonFactory $referencedPersonFactory,
+        ExtendedPersonHandlerFactory $handlerFactory
+    ): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->handlerFactory = $handlerFactory;
     }
@@ -56,7 +60,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected function getFieldsDefinition(): array
     {
         $contestName = $this->getSelectedContest()->getContestSymbol();
-        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
+        return Helpers::evalExpressionArray(
+            $this->getContext()->getParameters()[$contestName][$this->fieldsDefinition],
+            $this->getContext()
+        );
     }
 
     abstract protected function appendExtendedContainer(Form $form): void;
@@ -97,7 +104,11 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $this->appendExtendedContainer($form);
 
-        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContestYear(), $this->getContext()->getParameters()['invitation']['defaultLang']);
+        $handler = $this->handlerFactory->create(
+            $this->getORMService(),
+            $this->getSelectedContestYear(),
+            $this->getContext()->getParameters()['invitation']['defaultLang']
+        );
 
         $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 

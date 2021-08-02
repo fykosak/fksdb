@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -27,12 +29,14 @@ class SchoolsGrid extends EntityGrid
     {
         $schools = $this->service->getTable();
         $dataSource = new SearchableDataSource($schools);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+        $dataSource->setFilterCallback(
+            function (Selection $table, $value) {
+                $tokens = preg_split('/\s+/', $value);
+                foreach ($tokens as $token) {
+                    $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+                }
             }
-        });
+        );
         return $dataSource;
     }
 
@@ -51,13 +55,19 @@ class SchoolsGrid extends EntityGrid
         // columns
         //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
-            $school = ModelSchool::createFromActiveRow($row);
-            return $school->getAddress()->city;
-        });
-        $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row): Html {
-            return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
-        });
+        $this->addColumn('city', _('City'))->setRenderer(
+            function (ActiveRow $row) {
+                $school = ModelSchool::createFromActiveRow($row);
+                return $school->getAddress()->city;
+            }
+        );
+        $this->addColumn('active', _('Active?'))->setRenderer(
+            function (ModelSchool $row): Html {
+                return Html::el('span')->addAttributes(
+                    ['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))]
+                )->addText(($row->active));
+            }
+        );
 
         $this->addLink('school.edit');
         $this->addLink('school.detail');

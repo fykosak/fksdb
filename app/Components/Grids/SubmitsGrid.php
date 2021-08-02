@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\ORM\DbNames;
@@ -61,10 +63,12 @@ class SubmitsGrid extends BaseGrid
         // columns
         //
         $this->addColumn('task', _('Task'))
-            ->setRenderer(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return $submit->getTask()->getFQName();
-            });
+            ->setRenderer(
+                function (ActiveRow $row): string {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return $submit->getTask()->getFQName();
+                }
+            );
         $this->addColumn('submitted_on', _('Timestamp'));
         $this->addColumn('source', _('Method of handing'));
 
@@ -74,39 +78,56 @@ class SubmitsGrid extends BaseGrid
         $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
-            ->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return $submit->canRevoke();
-            })
-            ->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return $this->link('revoke!', $submit->submit_id);
-            })
-            ->setConfirmationDialog(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return sprintf(_('Do you really want to take the solution of task %s back?'), $submit->getTask()->getFQName());
-            });
-        $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return $this->link('downloadUploaded!', $submit->submit_id);
-            })
-            ->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return !$submit->isQuiz();
-            });
-        $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                return $this->link('downloadCorrected!', $submit->submit_id);
-            })->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
-                if (!$submit->isQuiz()) {
-                    return $submit->corrected;
-                } else {
-                    return false;
+            ->setShow(
+                function (ActiveRow $row): bool {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return $submit->canRevoke();
                 }
-            });
+            )
+            ->setLink(
+                function (ActiveRow $row): string {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return $this->link('revoke!', $submit->submit_id);
+                }
+            )
+            ->setConfirmationDialog(
+                function (ActiveRow $row): string {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return sprintf(
+                        _('Do you really want to take the solution of task %s back?'),
+                        $submit->getTask()->getFQName()
+                    );
+                }
+            );
+        $this->addButton('download_uploaded')
+            ->setText(_('Download original'))->setLink(
+                function (ActiveRow $row): string {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return $this->link('downloadUploaded!', $submit->submit_id);
+                }
+            )
+            ->setShow(
+                function (ActiveRow $row): bool {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return !$submit->isQuiz();
+                }
+            );
+        $this->addButton('download_corrected')
+            ->setText(_('Download corrected'))->setLink(
+                function (ActiveRow $row): string {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    return $this->link('downloadCorrected!', $submit->submit_id);
+                }
+            )->setShow(
+                function (ActiveRow $row): bool {
+                    $submit = ModelSubmit::createFromActiveRow($row);
+                    if (!$submit->isQuiz()) {
+                        return $submit->corrected;
+                    } else {
+                        return false;
+                    }
+                }
+            );
 
         $this->paginate = false;
         $this->enableSorting = false;
@@ -117,7 +138,10 @@ class SubmitsGrid extends BaseGrid
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->flashMessage(sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()), Logger::WARNING);
+            $this->flashMessage(
+                sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()),
+                Logger::WARNING
+            );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (StorageException | ModelException$exception) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\Inbox;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
@@ -49,13 +51,18 @@ class InboxFormComponent extends SeriesTableFormComponent
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Logger::WARNING);
                     $submit->delete();
                 } elseif ($submittedOn && !$submit) {
-                    $this->serviceSubmit->createNewModel([
-                        'task_id' => $taskNo,
-                        'ct_id' => $ctId,
-                        'submitted_on' => $submittedOn,
-                        'source' => ModelSubmit::SOURCE_POST,
-                    ]);
-                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), Logger::SUCCESS);
+                    $this->serviceSubmit->createNewModel(
+                        [
+                            'task_id' => $taskNo,
+                            'ct_id' => $ctId,
+                            'submitted_on' => $submittedOn,
+                            'source' => ModelSubmit::SOURCE_POST,
+                        ]
+                    );
+                    $this->flashMessage(
+                        \sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo),
+                        Logger::SUCCESS
+                    );
                 } else {
                     // do nothing
                 }

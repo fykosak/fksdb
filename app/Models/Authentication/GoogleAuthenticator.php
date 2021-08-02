@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
@@ -20,8 +22,12 @@ class GoogleAuthenticator extends AbstractAuthenticator
     private AccountManager $accountManager;
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, ServicePerson $servicePerson)
-    {
+    public function __construct(
+        ServiceOrg $serviceOrg,
+        AccountManager $accountManager,
+        ServiceLogin $serviceLogin,
+        ServicePerson $servicePerson
+    ) {
         parent::__construct($serviceLogin);
         $this->serviceOrg = $serviceOrg;
         $this->accountManager = $accountManager;
@@ -82,7 +88,9 @@ class GoogleAuthenticator extends AbstractAuthenticator
                 return null;
         }
         /** @var ModelOrg|null $org */
-        $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
+        $org = $this->serviceOrg->getTable()->where(
+            ['domain_alias' => $domainAlias, 'contest_id' => $contestId]
+        )->fetch();
         return $org ? $org->getPerson() : null;
     }
 }

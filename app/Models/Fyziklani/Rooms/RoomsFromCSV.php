@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Rooms;
 
 use FKSDB\Models\Logging\Logger;
@@ -52,14 +54,19 @@ class RoomsFromCSV extends Stage
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), Logger::WARNING));
+                $this->getPipeline()->log(
+                    new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), Logger::WARNING)
+                );
 
                 continue;
             }
             $team = $teams[$teamId];
-            $this->serviceTeam->updateModel($team, [
-                'room' => $room,
-            ]);
+            $this->serviceTeam->updateModel(
+                $team,
+                [
+                    'room' => $room,
+                ]
+            );
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);
@@ -68,7 +75,17 @@ class RoomsFromCSV extends Stage
         $this->serviceTeam->explorer->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), Logger::WARNING));
+            $this->getPipeline()->log(
+                new Message(
+                    sprintf(
+                        _('Team %s (%d, %s) does not have an assigned room.'),
+                        $team->name,
+                        $team->e_fyziklani_team_id,
+                        $team->status
+                    ),
+                    Logger::WARNING
+                )
+            );
         }
     }
 

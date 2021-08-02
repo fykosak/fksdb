@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
@@ -108,7 +110,11 @@ class ResultsPresenter extends BasePresenter
      */
     protected function createComponentPresentation(): ResultsAndStatisticsComponent
     {
-        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
+        return new ResultsAndStatisticsComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            'fyziklani.results.presentation'
+        );
     }
 
     /**
@@ -135,7 +141,11 @@ class ResultsPresenter extends BasePresenter
      */
     protected function createComponentCorrelationStatistics(): ResultsAndStatisticsComponent
     {
-        return new ResultsAndStatisticsComponent($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
+        return new ResultsAndStatisticsComponent(
+            $this->getContext(),
+            $this->getEvent(),
+            'fyziklani.statistics.correlation'
+        );
     }
 
     protected function beforeRender(): void

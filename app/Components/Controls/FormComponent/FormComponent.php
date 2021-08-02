@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Components\Controls\BaseComponent;

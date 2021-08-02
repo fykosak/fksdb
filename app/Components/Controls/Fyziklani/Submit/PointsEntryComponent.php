@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
@@ -31,13 +33,19 @@ class PointsEntryComponent extends AjaxComponent
     {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
-        });
+        $this->monitor(
+            JavaScriptCollector::class,
+            function (JavaScriptCollector $collector) {
+                $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+            }
+        );
     }
 
-    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void
-    {
+    final public function injectPrimary(
+        HandlerFactory $handlerFactory,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->handlerFactory = $handlerFactory;

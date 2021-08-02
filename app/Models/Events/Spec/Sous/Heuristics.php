@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Sous;
 
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -27,8 +29,10 @@ class Heuristics /*extends StoredQueryPostProcessing */
 
     public function getDescription(): string
     {
-        return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
-            Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.';
+        return 'Z výsledkovky vybere zvance a náhradníky na soustředění 
+        (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
+            Hierarchický kód určuje pravidlo a případně podpravidlo, 
+            dle nějž je osoba zvaná/náhradníkovaná.';
     }
 
     /**
@@ -213,7 +217,9 @@ class Heuristics /*extends StoredQueryPostProcessing */
 
     private function inviting(array $row, float $parameterP): bool
     {
-        return $row['category'] == 4 ? ($row['cat_rank'] <= $parameterP - self::P_4) : ($row['cat_rank'] <= $parameterP);
+        return $row['category'] == 4
+            ? ($row['cat_rank'] <= $parameterP - self::P_4)
+            : ($row['cat_rank'] <= $parameterP);
     }
 
     private function checkInvMin(array $row): bool

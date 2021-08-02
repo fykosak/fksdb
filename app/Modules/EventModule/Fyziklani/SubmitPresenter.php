@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
@@ -70,7 +72,12 @@ class SubmitPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fas fa-search'));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id),
+                'fas fa-search'
+            )
+        );
     }
 
     /* ***** Authorized methods *****/

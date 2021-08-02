@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -118,10 +120,10 @@ class BaseMachine
         return array_filter(
             $this->getMatchingTransitions($sourceState),
             fn(Transition $transition): bool => (!$executable || $transition->canExecute(
-                        $holder
-                    )) && (!$visible || $transition->isVisible(
-                        $holder
-                    ))
+                $holder
+            )) && (!$visible || $transition->isVisible(
+                $holder
+            ))
         );
     }
 

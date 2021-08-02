@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -41,9 +43,11 @@ class ResultsGrid extends BaseGrid
         $this->paginate = false;
         try {
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (\stdClass $row) use ($name) {
-                    return ((array)$row)[$name];
-                });
+                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(
+                    function (\stdClass $row) use ($name) {
+                        return ((array)$row)[$name];
+                    }
+                );
             }
         } catch (\PDOException $exception) {
             // pass, exception should be handled inn parent components

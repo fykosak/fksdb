@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani;
 
 use FKSDB\Models\Logging\Logger;
@@ -38,24 +40,41 @@ class FyziklaniTaskImportProcessor
             try {
                 $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
-                    $this->serviceFyziklaniTask->createNewModel([
-                        'label' => $row['label'],
-                        'name' => $row['name'],
-                        'event_id' => $this->event->event_id,
-                    ]);
+                    $this->serviceFyziklaniTask->createNewModel(
+                        [
+                            'label' => $row['label'],
+                            'name' => $row['name'],
+                            'event_id' => $this->event->event_id,
+                        ]
+                    );
 
-                    $logger->log(new Message(sprintf(_('Task %s "%s" added'), $row['label'], $row['name']), BasePresenter::FLASH_SUCCESS));
+                    $logger->log(
+                        new Message(
+                            sprintf(_('Task %s "%s" added'), $row['label'], $row['name']),
+                            BasePresenter::FLASH_SUCCESS
+                        )
+                    );
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                    $this->serviceFyziklaniTask->updateModel($task, [
-                        'label' => $row['label'],
-                        'name' => $row['name'],
-                    ]);
-                    $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
+                    $this->serviceFyziklaniTask->updateModel(
+                        $task,
+                        [
+                            'label' => $row['label'],
+                            'name' => $row['name'],
+                        ]
+                    );
+                    $logger->log(
+                        new Message(
+                            sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']),
+                            BasePresenter::FLASH_INFO
+                        )
+                    );
                 } else {
-                    $logger->log(new Message(
-                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']),
-                        Logger::WARNING
-                    ));
+                    $logger->log(
+                        new Message(
+                            sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']),
+                            Logger::WARNING
+                        )
+                    );
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));

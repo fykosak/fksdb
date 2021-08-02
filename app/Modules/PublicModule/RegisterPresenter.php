@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
@@ -100,8 +102,17 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function titleContestant(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(
+                    _('%s – contestant application (year %s)'),
+                    $this->getSelectedContest()->name,
+                    $this->getSelectedYear()
+                )
+            )
+        );
     }
+
     /* ********************* ACTIONS ***************** */
 
     public function actionDefault(): void
@@ -124,7 +135,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             if ($person) {
                 if ($person->getLogin()) {
                     $this->flashMessage(_('An existing account found. To continue, please sign in.'));
-                    $this->redirect(':Core:Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
+                    $this->redirect(
+                        ':Core:Authentication:login',
+                        ['login' => $email, 'backlink' => $this->storeRequest()]
+                    );
                 }
             }
         }
@@ -135,7 +149,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
-                $this->flashMessage(sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name), self::FLASH_INFO);
+                $this->flashMessage(
+                    sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name),
+                    self::FLASH_INFO
+                );
                 $this->redirect(':Core:Authentication:login');
             }
         }
@@ -172,7 +189,9 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
         /** @var ReferencedId $referencedId */
-        $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
+        $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(
+            ExtendedPersonHandler::EL_PERSON
+        );
         if ($person) {
             $referencedId->setDefaultValue($person);
         } else {
@@ -241,7 +260,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     private function getFieldsDefinition(): array
     {
         $contestName = $this->getSelectedContest()->getContestSymbol();
-        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
+        return Helpers::evalExpressionArray(
+            $this->getContext()->getParameters()[$contestName]['registerContestant'],
+            $this->getContext()
+        );
     }
 
     /**
@@ -276,7 +298,11 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $form->addComponent($captcha, 'captcha');
         }
 
-        $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContestYear(), $this->getLang());
+        $handler = $this->handlerFactory->create(
+            $this->serviceContestant,
+            $this->getSelectedContestYear(),
+            $this->getLang()
+        );
 
         $submit = $form->addSubmit('register', _('Register'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {

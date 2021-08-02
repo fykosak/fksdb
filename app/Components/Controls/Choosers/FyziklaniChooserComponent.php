@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -30,7 +32,9 @@ class FyziklaniChooserComponent extends ChooserComponent
 
     protected function getItems(): TypedTableSelection
     {
-        return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
+        return $this->serviceEvent->getTable()
+            ->where('event_type_id=?', ModelEventType::FYZIKLANI)
+            ->order('event_year DESC');
     }
 
     /**

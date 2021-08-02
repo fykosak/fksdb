@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\PaymentFormComponent;
@@ -52,7 +54,9 @@ class PaymentPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
+        );
     }
 
     /**
@@ -63,7 +67,9 @@ class PaymentPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
+        );
     }
 
     /**
@@ -103,7 +109,10 @@ class PaymentPresenter extends BasePresenter
     public function actionEdit(): void
     {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
+            $this->flashMessage(
+                \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
+                \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR
+            );
             $this->redirect(':Core:MyPayments:');
         }
     }
@@ -171,7 +180,9 @@ class PaymentPresenter extends BasePresenter
     private function getMachine(): PaymentMachine
     {
         if (!isset($this->machine)) {
-            $machine = $this->getContext()->getService(sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year));
+            $machine = $this->getContext()->getService(
+                sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year)
+            );
             if (!$machine instanceof PaymentMachine) {
                 throw new BadTypeException(PaymentMachine::class, $this->machine);
             }
@@ -205,7 +216,11 @@ class PaymentPresenter extends BasePresenter
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
-        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getMachine()->createHolder($this->getEntity()));
+        return new TransitionButtonsComponent(
+            $this->getMachine(),
+            $this->getContext(),
+            $this->getMachine()->createHolder($this->getEntity())
+        );
     }
 
     /**

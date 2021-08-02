@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ValuePrinters;
 
 use FKSDB\Components\Badges\NotSetBadge;
@@ -19,8 +21,12 @@ class NumberPrinter extends AbstractValuePrinter
 
     private int $decimal;
 
-    public function __construct(?string $prefix, ?string $suffix, int $decimal = 2, ?string $nullValueMode = self::NULL_VALUE_NOT_SET)
-    {
+    public function __construct(
+        ?string $prefix,
+        ?string $suffix,
+        int $decimal = 2,
+        ?string $nullValueMode = self::NULL_VALUE_NOT_SET
+    ) {
         $this->nullValueMode = $nullValueMode;
         $this->prefix = $prefix;
         $this->suffix = $suffix;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authentication\AccountManager;
@@ -22,8 +24,18 @@ class ExtendedPersonHandlerFactory
         $this->accountManager = $accountManager;
     }
 
-    public function create(AbstractService $service, ModelContestYear $contestYear, string $invitationLang): ExtendedPersonHandler
-    {
-        return new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->accountManager, $contestYear, $invitationLang);
+    public function create(
+        AbstractService $service,
+        ModelContestYear $contestYear,
+        string $invitationLang
+    ): ExtendedPersonHandler {
+        return new ExtendedPersonHandler(
+            $service,
+            $this->servicePerson,
+            $this->connection,
+            $this->accountManager,
+            $contestYear,
+            $invitationLang
+        );
     }
 }

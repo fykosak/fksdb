@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\PreferredLangFormComponent;
@@ -99,17 +101,26 @@ class SettingsPresenter extends BasePresenter
 
             return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
         };
-        $loginContainer = $this->createLogin($group, $rule, true, $login->hash && (!$tokenAuthentication), (bool)$tokenAuthentication);
+        $loginContainer = $this->createLogin(
+            $group,
+            $rule,
+            true,
+            $login->hash && (!$tokenAuthentication),
+            (bool)$tokenAuthentication
+        );
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */
         $oldPasswordControl = $loginContainer->getComponent('old_password', false);
         if ($oldPasswordControl) {
             $oldPasswordControl
                 ->addCondition(Form::FILLED)
-                ->addRule(function (BaseControl $control) use ($login): bool {
-                    $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
-                    return $hash == $login->hash;
-                }, _('Incorrect old password.'));
+                ->addRule(
+                    function (BaseControl $control) use ($login): bool {
+                        $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
+                        return $hash == $login->hash;
+                    },
+                    _('Incorrect old password.')
+                );
         }
 
         $form->setCurrentGroup();
@@ -122,8 +133,13 @@ class SettingsPresenter extends BasePresenter
         return $control;
     }
 
-    private function createLogin(ControlGroup $group, callable $loginRule, bool $showPassword = true, bool $verifyOldPassword = false, bool $requirePassword = false): ModelContainer
-    {
+    private function createLogin(
+        ControlGroup $group,
+        callable $loginRule,
+        bool $showPassword = true,
+        bool $verifyOldPassword = false,
+        bool $requirePassword = false
+    ): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -136,11 +152,18 @@ class SettingsPresenter extends BasePresenter
 
         if ($showPassword) {
             if ($verifyOldPassword) {
-                $container->addPassword('old_password', _('Old password'))->setHtmlAttribute('autocomplete', 'current-password');
+                $container->addPassword('old_password', _('Old password'))->setHtmlAttribute(
+                    'autocomplete',
+                    'current-password'
+                );
             }
             $newPwd = $container->addPassword('password', _('Password'));
             $newPwd->setHtmlAttribute('autocomplete', 'new-password');
-            $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('The password must have at least %d characters.'), 6);
+            $newPwd->addCondition(Form::FILLED)->addRule(
+                Form::MIN_LENGTH,
+                _('The password must have at least %d characters.'),
+                6
+            );
 
             if ($verifyOldPassword) {
                 $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -18,15 +20,18 @@ class GraphComponent extends BaseComponent
     public function __construct(Container $container, BaseMachine $baseMachine)
     {
         parent::__construct($container);
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/graph/raphael.js');
-                $collector->registerJSFile('js/graph/dracula_graffle.js');
-                $collector->registerJSFile('js/graph/dracula_graph.js');
-                $collector->registerJSFile('js/eventModelGraph.js');
+        $this->monitor(
+            JavaScriptCollector::class,
+            function (JavaScriptCollector $collector) {
+                if (!$this->attachedJS) {
+                    $this->attachedJS = true;
+                    $collector->registerJSFile('js/graph/raphael.js');
+                    $collector->registerJSFile('js/graph/dracula_graffle.js');
+                    $collector->registerJSFile('js/graph/dracula_graph.js');
+                    $collector->registerJSFile('js/eventModelGraph.js');
+                }
             }
-        });
+        );
         $this->baseMachine = $baseMachine;
     }
 
@@ -67,7 +72,9 @@ class GraphComponent extends BaseComponent
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === Machine::STATE_INIT
+                    ? 'init'
+                    : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

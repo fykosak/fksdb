@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\Schedule;
 
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;

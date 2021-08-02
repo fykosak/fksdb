@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
@@ -122,7 +124,7 @@ class ApplicationPresenter extends BasePresenter
                 )
             );
         } else {
-            $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
+            $this->setPageTitle(new PageTitle($this->getEvent()->__toString(), 'fas fa-calendar-plus'));
         }
     }
 
@@ -165,7 +167,8 @@ class ApplicationPresenter extends BasePresenter
             throw new EventNotFoundException();
         }
         $eventApplication = $this->getEventApplication();
-        if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
+        if ($id) {
+            // test if there is a new application, case is set there are a edit od application, empty => new application
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -52,10 +54,16 @@ class SubmitCheckComponent extends BaseComponent
             }
             if (!$submit->corrected && $this->correctedStorage->fileExists($submit)) {
                 $errors++;
-                $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), Logger::ERROR);
+                $this->flashMessage(
+                    sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id),
+                    Logger::ERROR
+                );
             }
         }
-        $this->flashMessage(sprintf(_('Test done, found %d errors'), $errors), $errors ? Logger::WARNING : Logger::SUCCESS);
+        $this->flashMessage(
+            sprintf(_('Test done, found %d errors'), $errors),
+            $errors ? Logger::WARNING : Logger::SUCCESS
+        );
         $this->getPresenter()->redirect('this');
     }
 }

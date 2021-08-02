@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\RelatedGrid;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
@@ -42,7 +44,10 @@ class PreferredLangFormComponent extends FormComponent
         $values = $form->getValues();
         $lang = $values['preferred_lang'];
         try {
-            $this->servicePersonInfo->storeModel(['preferred_lang' => $lang, 'person_id' => $this->person->person_id], $this->person->getInfo());
+            $this->servicePersonInfo->storeModel(
+                ['preferred_lang' => $lang, 'person_id' => $this->person->person_id],
+                $this->person->getInfo()
+            );
             $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {

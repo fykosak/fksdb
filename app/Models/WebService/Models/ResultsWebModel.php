@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -36,13 +38,18 @@ class ResultsWebModel extends WebModel
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
-        if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
+        if (
+            !isset($args->contest)
+            || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])
+        ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
-        $contestYear = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest])->getContestYear($args->year);
+        $contestYear = $this->serviceContest->findByPrimary(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest]
+        )->getContestYear($args->year);
         $doc = new \DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -74,7 +81,9 @@ class ResultsWebModel extends WebModel
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+                $args->{'school-cumulatives'}->{'school-cumulative'} = [
+                    $args->{'school-cumulatives'}->{'school-cumulative'},
+                ];
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {

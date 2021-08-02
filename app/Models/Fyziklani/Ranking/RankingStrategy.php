@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Ranking;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -62,8 +64,14 @@ class RankingStrategy
             } else {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
-            $log->addHtml(Html::el('li')
-                ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Rank') . ': ' . ($index + 1)));
+            $log->addHtml(
+                Html::el('li')
+                    ->addText(
+                        _('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _(
+                            'Rank'
+                        ) . ': ' . ($index + 1)
+                    )
+            );
         }
         return $log;
     }

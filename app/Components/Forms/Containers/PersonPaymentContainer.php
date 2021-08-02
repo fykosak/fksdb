@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -66,7 +68,7 @@ class PersonPaymentContainer extends ContainerWithOptions
                     $container->setOption('label', $model->getPerson()->getFullName());
                     $lastPersonId = $model->person_id;
                 }
-                $container->addCheckbox($model->person_schedule_id, $model->getLabel());
+                $container->addCheckbox((string)$model->person_schedule_id, $model->getLabel());
             }
         }
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -57,11 +59,15 @@ class TaskPresenter extends BasePresenter
         $form = $control->getForm();
 
         $form->addUpload('csvfile')->setRequired();
-        $form->addSelect('state', _('Select action'), [
-            self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exist.'),
-            self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
-            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
-        ]);
+        $form->addSelect(
+            'state',
+            _('Select action'),
+            [
+                self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exist.'),
+                self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
+                self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
+            ]
+        );
         $form->addSubmit('import', _('Import'));
         $form->onSuccess[] = function (Form $form) {
             $this->taskImportFormSucceeded($form);
@@ -78,7 +84,10 @@ class TaskPresenter extends BasePresenter
     private function taskImportFormSucceeded(Form $form): void
     {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext()->getByType(ServiceFyziklaniTask::class), $this->getEvent());
+        $taskImportProcessor = new FyziklaniTaskImportProcessor(
+            $this->getContext()->getByType(ServiceFyziklaniTask::class),
+            $this->getEvent(),
+        );
         $logger = new MemoryLogger();
         $taskImportProcessor->process($values, $logger);
         FlashMessageDump::dump($logger, $this);

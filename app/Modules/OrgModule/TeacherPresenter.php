@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\TeacherFormComponent;
@@ -33,7 +35,12 @@ class TeacherPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fas fa-user-edit'));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
+                'fas fa-user-edit'
+            )
+        );
     }
 
     public function getTitleCreate(): PageTitle

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -41,8 +43,12 @@ class ReferencedId extends HiddenField
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, AbstractService $service, ReferencedHandler $handler)
-    {
+    public function __construct(
+        SearchContainer $searchContainer,
+        ReferencedContainer $referencedContainer,
+        AbstractService $service,
+        ReferencedHandler $handler
+    ) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -53,21 +59,27 @@ class ReferencedId extends HiddenField
 
         parent::__construct();
 
-        $this->monitor(Form::class, function (Form $form) {
-            if (!$this->attachedOnValidate) {
-                $form->onValidate[] = function () {
-                    $this->createPromise();
-                };
-                $this->attachedOnValidate = true;
+        $this->monitor(
+            Form::class,
+            function (Form $form) {
+                if (!$this->attachedOnValidate) {
+                    $form->onValidate[] = function () {
+                        $this->createPromise();
+                    };
+                    $this->attachedOnValidate = true;
+                }
             }
-        });
-        $this->monitor(IContainer::class, function (IContainer $container) {
-            if (!$this->attachedSearch) {
-                $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
-                $container->addComponent($this->getSearchContainer(), $this->getName() . '_2');
-                $this->attachedSearch = true;
+        );
+        $this->monitor(
+            IContainer::class,
+            function (IContainer $container) {
+                if (!$this->attachedSearch) {
+                    $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
+                    $container->addComponent($this->getSearchContainer(), $this->getName() . '_2');
+                    $this->attachedSearch = true;
+                }
             }
-        });
+        );
     }
 
     public function getReferencedContainer(): ReferencedContainer
@@ -184,31 +196,34 @@ class ReferencedId extends HiddenField
     {
         $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();
-        $promise = new Promise(function () use ($values, $referencedId) {
-            try {
-                if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues($values);
-                    $this->setValue($model, self::MODE_FORCE);
-                    $this->setModelCreated(true);
-                    return $model->getPrimary();
-                } elseif ($referencedId) {
-                    $model = $this->service->findByPrimary($referencedId);
-                    $this->handler->update($model, $values);
-                    // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-                    $model = $this->service->findByPrimary($model->getPrimary());
-                    $this->setValue($model, self::MODE_FORCE);
-                    return $referencedId;
-                } else {
-                    $this->setValue(null, self::MODE_FORCE);
+        $promise = new Promise(
+            function () use ($values, $referencedId) {
+                try {
+                    if ($referencedId === self::VALUE_PROMISE) {
+                        $model = $this->handler->createFromValues($values);
+                        $this->setValue($model, (bool)self::MODE_FORCE);
+                        $this->setModelCreated(true);
+                        return $model->getPrimary();
+                    } elseif ($referencedId) {
+                        $model = $this->service->findByPrimary($referencedId);
+                        $this->handler->update($model, $values);
+                        // reload the model (this is workaround to avoid caching of empty
+                        // but newly created referenced/related models)
+                        $model = $this->service->findByPrimary($model->getPrimary());
+                        $this->setValue($model, (bool)self::MODE_FORCE);
+                        return $referencedId;
+                    } else {
+                        $this->setValue(null, (bool)self::MODE_FORCE);
+                    }
+                } catch (ModelDataConflictException $exception) {
+                    $exception->setReferencedId($this);
+                    throw $exception;
+                } catch (ExistingPaymentException $exception) {
+                    $this->addError($exception->getMessage());
+                    $this->rollback();
                 }
-            } catch (ModelDataConflictException $exception) {
-                $exception->setReferencedId($this);
-                throw $exception;
-            } catch (ExistingPaymentException $exception) {
-                $this->addError($exception->getMessage());
-                $this->rollback();
             }
-        });
+        );
         $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->setPromise($promise);

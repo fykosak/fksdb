@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -30,13 +32,21 @@ class OrgsGrid extends BaseGrid
         $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))
-                            LIKE CONCAT(\'%\', ? , \'%\')', $token);
+        $dataSource->setFilterCallback(
+            function (Selection $table, $value) {
+                $tokens = preg_split('/\s+/', $value);
+                foreach ($tokens as $token) {
+                    $table->where(
+                        'CONCAT(
+                        person.family_name, 
+                        person.other_name, 
+                        IFNULL(org.role,\'\'), 
+                        IFNULL(org.contribution,\'\')) LIKE CONCAT(\'%\', ? , \'%\')',
+                        $token
+                    );
+                }
             }
-        });
+        );
         return $dataSource;
     }
 
@@ -53,12 +63,14 @@ class OrgsGrid extends BaseGrid
 
         $this->setDefaultOrder('since DESC');
 
-        $this->addColumns([
-            'person.full_name',
-            'org.since',
-            'org.until',
-            'org.role',
-        ]);
+        $this->addColumns(
+            [
+                'person.full_name',
+                'org.since',
+                'org.until',
+                'org.role',
+            ]
+        );
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);

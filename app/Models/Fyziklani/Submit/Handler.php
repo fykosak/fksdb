@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -115,24 +117,32 @@ class Handler
         if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'points' => $points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'state' => ModelFyziklaniSubmit::STATE_CHECKED,
-            'modified' => null,
-        ]);
+        $this->serviceFyziklaniSubmit->updateModel(
+            $submit,
+            [
+                'points' => $points,
+                /* ugly, exclude previous value of `modified` from query
+                 * so that `modified` is set automatically by DB
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'state' => ModelFyziklaniSubmit::STATE_CHECKED,
+                'modified' => null,
+            ]
+        );
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
-        $logger->log(new Message(\sprintf(
-            _('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
-            $points,
-            $submit->getFyziklaniTeam()->name,
-            $submit->getFyziklaniTeam()->e_fyziklani_team_id,
-            $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name
-        ), Logger::SUCCESS));
+        $logger->log(
+            new Message(
+                \sprintf(
+                    _('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
+                    $points,
+                    $submit->getFyziklaniTeam()->name,
+                    $submit->getFyziklaniTeam()->e_fyziklani_team_id,
+                    $submit->getFyziklaniTask()->label,
+                    $submit->getFyziklaniTask()->name
+                ),
+                Logger::SUCCESS
+            )
+        );
     }
 
     /**
@@ -146,17 +156,22 @@ class Handler
     public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void
     {
         if ($submit->canRevoke(true)) {
-            $this->serviceFyziklaniSubmit->updateModel($submit, [
-                'points' => null,
-                'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
-                /* ugly, exclude previous value of `modified` from query
-                 * so that `modified` is set automatically by DB
-                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-                 */
-                'modified' => null,
-            ]);
+            $this->serviceFyziklaniSubmit->updateModel(
+                $submit,
+                [
+                    'points' => null,
+                    'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+                    /* ugly, exclude previous value of `modified` from query
+                     * so that `modified` is set automatically by DB
+                     * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                     */
+                    'modified' => null,
+                ]
+            );
             $this->logEvent($submit, 'revoked');
-            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Logger::SUCCESS));
+            $logger->log(
+                new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Logger::SUCCESS)
+            );
         }
     }
 
@@ -177,52 +192,75 @@ class Handler
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'state' => ModelFyziklaniSubmit::STATE_CHECKED,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null,
-        ]);
+        $this->serviceFyziklaniSubmit->updateModel(
+            $submit,
+            [
+                'state' => ModelFyziklaniSubmit::STATE_CHECKED,
+                /* ugly, exclude previous value of `modified` from query
+                 * so that `modified` is set automatically by DB
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                'modified' => null,
+            ]
+        );
         $this->logEvent($submit, 'checked');
 
-        $logger->log(new Message(\sprintf(
-            _('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
-            $points,
-            $submit->getFyziklaniTeam()->name,
-            $submit->getFyziklaniTeam()->e_fyziklani_team_id,
-            $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name
-        ), Logger::SUCCESS));
+        $logger->log(
+            new Message(
+                \sprintf(
+                    _('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
+                    $points,
+                    $submit->getFyziklaniTeam()->name,
+                    $submit->getFyziklaniTeam()->e_fyziklani_team_id,
+                    $submit->getFyziklaniTask()->label,
+                    $submit->getFyziklaniTask()->name
+                ),
+                Logger::SUCCESS
+            )
+        );
     }
 
     public function createSubmit(Logger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void
     {
-        $submit = $this->serviceFyziklaniSubmit->createNewModel([
-            'points' => $points,
-            'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
-            /* ugly, force current timestamp in database
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            //'created' => null, TODO!!!
-        ]);
+        $submit = $this->serviceFyziklaniSubmit->createNewModel(
+            [
+                'points' => $points,
+                'fyziklani_task_id' => $task->fyziklani_task_id,
+                'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
+                'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+                /* ugly, force current timestamp in database
+                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
+                 */
+                //'created' => null, TODO!!!
+            ]
+        );
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 
-        $logger->log(new Message(\sprintf(
-            _('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
-            $points,
-            $team->name,
-            $team->e_fyziklani_team_id,
-            $task->label,
-            $task->name
-        ), Logger::SUCCESS));
+        $logger->log(
+            new Message(
+                \sprintf(
+                    _('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
+                    $points,
+                    $team->name,
+                    $team->e_fyziklani_team_id,
+                    $task->label,
+                    $task->name
+                ),
+                Logger::SUCCESS
+            )
+        );
     }
 
     private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void
     {
-        Debugger::log(\sprintf(self::LOG_FORMAT . $appendLog, $submit->getPrimary(), $action, $this->user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
+        Debugger::log(
+            \sprintf(
+                self::LOG_FORMAT . $appendLog,
+                $submit->getPrimary(),
+                $action,
+                $this->user->getIdentity()->getId()
+            ),
+            self::DEBUGGER_LOG_PRIORITY
+        );
     }
 }

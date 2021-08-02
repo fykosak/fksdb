@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -75,7 +77,10 @@ class SchoolFormComponent extends AbstractEntityFormComponent
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(isset($this->model) ? _('School has been updated') : _('School has been created'), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(
+            isset($this->model) ? _('School has been updated') : _('School has been created'),
+            BasePresenter::FLASH_SUCCESS
+        );
         $this->getPresenter()->redirect('list');
     }
 
@@ -86,10 +91,12 @@ class SchoolFormComponent extends AbstractEntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
-                self::CONT_SCHOOL => $this->model->toArray(),
-                self::CONT_ADDRESS => $this->model->getAddress() ? $this->model->getAddress()->toArray() : null,
-            ]);
+            $this->getForm()->setDefaults(
+                [
+                    self::CONT_SCHOOL => $this->model->toArray(),
+                    self::CONT_ADDRESS => $this->model->getAddress() ? $this->model->getAddress()->toArray() : null,
+                ]
+            );
         }
     }
 }

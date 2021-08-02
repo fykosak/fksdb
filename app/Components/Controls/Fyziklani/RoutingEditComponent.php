@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\AjaxComponent;
@@ -26,10 +28,12 @@ class RoutingEditComponent extends AjaxComponent
 
     public function getData(...$args): string
     {
-        return json_encode([
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
-            'rooms' => $this->getRooms(),
-        ]);
+        return json_encode(
+            [
+                'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
+                'rooms' => $this->getRooms(),
+            ]
+        );
     }
 
     public function getReactId(...$args): string
@@ -64,6 +68,8 @@ class RoutingEditComponent extends AjaxComponent
      */
     protected function getRooms(): array
     {
-        return $this->serviceFyziklaniRoom->getRoomsByIds([]/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/);
+        return $this->serviceFyziklaniRoom->getRoomsByIds(
+            []/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/
+        );
     }
 }

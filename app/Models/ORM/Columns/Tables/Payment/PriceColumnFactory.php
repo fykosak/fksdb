@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Components\Badges\NotSetBadge;

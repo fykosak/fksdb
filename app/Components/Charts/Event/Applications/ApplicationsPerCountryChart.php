@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\GeoCharts\GeoChart;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\ORM\Services\ServiceTask;
@@ -69,9 +71,11 @@ class TasksFromXML extends Stage
                 $csvalue = null;
 
                 if (count($elements) == 1) {
-                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(
+                    if (
+                        count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(
                             self::XML_NAMESPACE
-                        )->lang == 'cs') {
+                        )->lang == 'cs'
+                    ) {
                         $csvalue = (string)$elements[0];
                     }
                 }

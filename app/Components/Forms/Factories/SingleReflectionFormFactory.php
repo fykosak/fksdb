@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
@@ -72,8 +74,11 @@ class SingleReflectionFormFactory
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer
-    {
+    public function createContainerWithMetadata(
+        string $table,
+        array $fields,
+        FieldLevelPermission $userPermissions
+    ): ModelContainer {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
             $factory = $this->loadFactory($table, $field);

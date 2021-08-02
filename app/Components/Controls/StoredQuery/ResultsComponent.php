@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\StoredQuery;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -33,8 +35,10 @@ class ResultsComponent extends BaseComponent
     private ?string $error;
     private bool $showParametrizeForm = true;
 
-    final public function injectPrimary(ContestAuthorizator $contestAuthorizator, ExportFormatFactory $exportFormatFactory): void
-    {
+    final public function injectPrimary(
+        ContestAuthorizator $contestAuthorizator,
+        ExportFormatFactory $exportFormatFactory
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->exportFormatFactory = $exportFormatFactory;
     }
@@ -171,7 +175,11 @@ class ResultsComponent extends BaseComponent
         if (!isset($implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowed($this->storedQuery, 'execute', $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]);
+        return $this->contestAuthorizator->isAllowed(
+            $this->storedQuery,
+            'execute',
+            $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]
+        );
     }
 
     /**

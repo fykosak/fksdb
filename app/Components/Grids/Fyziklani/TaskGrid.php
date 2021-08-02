@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -27,12 +29,18 @@ class TaskGrid extends BaseGrid
     {
         $submits = $this->event->getFyziklaniTasks();
         $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+        $dataSource->setFilterCallback(
+            function (Selection $table, $value) {
+                $tokens = preg_split('/\s+/', $value);
+                foreach ($tokens as $token) {
+                    $table->where(
+                        'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',
+                        $token,
+                        $token,
+                    );
+                }
             }
-        });
+        );
         return $dataSource;
     }
 

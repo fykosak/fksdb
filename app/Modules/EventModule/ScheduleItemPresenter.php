@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\ScheduleItemFormContainer;
@@ -41,7 +43,9 @@ class ScheduleItemPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard'));
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard')
+        );
     }
 
     /**
@@ -52,7 +56,9 @@ class ScheduleItemPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen'));
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen')
+        );
     }
 
     /**

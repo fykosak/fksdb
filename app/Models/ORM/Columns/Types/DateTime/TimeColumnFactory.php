@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;

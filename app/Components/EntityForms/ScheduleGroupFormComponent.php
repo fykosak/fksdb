@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
@@ -31,8 +33,10 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceScheduleGroup $serviceScheduleGroup, SingleReflectionFormFactory $singleReflectionFormFactory): void
-    {
+    final public function injectPrimary(
+        ServiceScheduleGroup $serviceScheduleGroup,
+        SingleReflectionFormFactory $singleReflectionFormFactory
+    ): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
@@ -54,9 +58,11 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
-                self::CONTAINER => $this->model->toArray(),
-            ]);
+            $this->getForm()->setDefaults(
+                [
+                    self::CONTAINER => $this->model->toArray(),
+                ]
+            );
         }
     }
 
@@ -68,7 +74,10 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
      */
     protected function configureForm(Form $form): void
     {
-        $container = $this->singleReflectionFormFactory->createContainer('schedule_group', ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']);
+        $container = $this->singleReflectionFormFactory->createContainer(
+            'schedule_group',
+            ['name_cs', 'name_en', 'start', 'end', 'schedule_group_type']
+        );
         $form->addComponent($container, self::CONTAINER);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
@@ -11,8 +13,12 @@ class TeamParticipantModel extends EventModel
 
     private string $category;
 
-    public function __construct(Container $container, ModelContestYear $contestYear, string $eventName, string $category)
-    {
+    public function __construct(
+        Container $container,
+        ModelContestYear $contestYear,
+        string $eventName,
+        string $category
+    ) {
         parent::__construct($container, $contestYear, $eventName);
         $this->category = $category;
     }
@@ -69,6 +75,8 @@ order by surname, name;",
             'fol' => 'Fol',
             'klani' => 'fyziklani',
         ];
-        return $this->contestYear->getContest()->getContestSymbol() . '.' . $mapping[$this->eventName] . '.' . $this->category;
+        return $this->contestYear->getContest()->getContestSymbol()
+            . '.' . $mapping[$this->eventName]
+            . '.' . $this->category;
     }
 }

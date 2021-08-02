@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -142,10 +144,12 @@ class DeduplicatePresenter extends BasePresenter
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
-                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists(
+                    if (
+                        isset($data[Merger::IDX_RESOLUTION]) && array_key_exists(
                             $column,
                             $data[Merger::IDX_RESOLUTION]
-                        )) {
+                        )
+                    ) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
                     } else {
                         $default = $value; // default is trunk

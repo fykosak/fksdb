@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
@@ -49,7 +51,12 @@ class EventOrgPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
+                'fa fa-user-edit'
+            )
+        );
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication\Provider;
 
 use League\OAuth2\Client\Provider\Google;

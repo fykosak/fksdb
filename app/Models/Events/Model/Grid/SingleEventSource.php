@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Grid;
 
 use FKSDB\Models\Events\EventDispatchFactory;
@@ -118,9 +120,10 @@ class SingleEventSource implements HolderSource
             } elseif ($group['joinTo'] !== $joinToCheck) {
                 throw new InvalidStateException(
                     sprintf(
-                        "SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.",
+                        "SingleEventSource needs all secondary holders to be joined to the same column. 
+                        Conflict '%s' and '%s'.",
                         $group['joinTo'],
-                        $joinToCheck
+                        $joinToCheck,
                     )
                 );
             }

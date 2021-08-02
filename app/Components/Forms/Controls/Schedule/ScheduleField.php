@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Components\React\ReactComponentTrait;
@@ -28,8 +30,12 @@ class ScheduleField extends TextInput
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label)
-    {
+    public function __construct(
+        ModelEvent $event,
+        string $type,
+        ServiceScheduleItem $serviceScheduleItem,
+        ?string $label
+    ) {
         parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\Localization\UnsupportedLanguageException;
@@ -114,7 +116,10 @@ class LanguageChooserComponent extends ChooserComponent
     /* ************ CHOOSER METHODS *************** */
     protected function getTitle(): Title
     {
-        return new Title(isset(self::$languageNames[$this->language]) ? self::$languageNames[$this->language] : _('Language'), 'fa fa-language');
+        return new Title(
+            isset(self::$languageNames[$this->language]) ? self::$languageNames[$this->language] : _('Language'),
+            'fa fa-language'
+        );
     }
 
     protected function getItems(): array

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -31,8 +33,10 @@ class ExportPresenter extends BasePresenter
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery, StoredQueryFactory $storedQueryFactory): void
-    {
+    final public function injectServiceStoredQuery(
+        ServiceStoredQuery $serviceStoredQuery,
+        StoredQueryFactory $storedQueryFactory
+    ): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->storedQueryFactory = $storedQueryFactory;
     }
@@ -42,8 +46,10 @@ class ExportPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
+                break;
             case 'compose':
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
+                break;
             case 'list':
                 $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
             case 'show':

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -23,7 +25,10 @@ class SubmitContainer extends BaseComponent
         $this->contestant = $contestant;
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $this->addComponent(new AjaxSubmitComponent($this->getContext(), $task, $contestant), 'task_' . $task->task_id);
+            $this->addComponent(
+                new AjaxSubmitComponent($this->getContext(), $task, $contestant),
+                'task_' . $task->task_id
+            );
         }
     }
 

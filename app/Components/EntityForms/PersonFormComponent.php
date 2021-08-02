@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -90,7 +92,11 @@ class PersonFormComponent extends AbstractEntityFormComponent
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
                 case self::PERSON_CONTAINER:
-                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata($table, $rows, $this->userPermission);
+                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata(
+                        $table,
+                        $rows,
+                        $this->userPermission
+                    );
                     break;
                 case self::POST_CONTACT_DELIVERY:
                 case self::POST_CONTACT_PERMANENT:
@@ -112,11 +118,19 @@ class PersonFormComponent extends AbstractEntityFormComponent
         $this->logger->clear();
         /** @var ModelPerson $person */
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
-        $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
+        $this->servicePersonInfo->storeModel(
+            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),
+            $person->getInfo()
+        );
         $this->storeAddresses($person, $data);
 
         $connection->commit();
-        $this->logger->log(new Message(isset($this->model) ? _('Data has been updated') : _('Person has been created'), Message::LVL_SUCCESS));
+        $this->logger->log(
+            new Message(
+                isset($this->model) ? _('Data has been updated') : _('Person has been created'),
+                Message::LVL_SUCCESS
+            )
+        );
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
         $this->getPresenter()->redirect('this');
     }
@@ -128,12 +142,14 @@ class PersonFormComponent extends AbstractEntityFormComponent
     protected function setDefaults(): void
     {
         if (isset($this->model)) {
-            $this->getForm()->setDefaults([
-                self::PERSON_CONTAINER => $this->model->toArray(),
-                self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?? [],
-                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?? [],
-            ]);
+            $this->getForm()->setDefaults(
+                [
+                    self::PERSON_CONTAINER => $this->model->toArray(),
+                    self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
+                    self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?? [],
+                    self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?? [],
+                ]
+            );
         }
     }
 
@@ -158,10 +174,12 @@ class PersonFormComponent extends AbstractEntityFormComponent
                     $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
                 }
             } elseif ($oldAddress) {
-                $this->servicePostContact->getTable()->where([
-                    'type' => $shortType,
-                    'person_id' => $person->person_id,
-                ])->delete();
+                $this->servicePostContact->getTable()->where(
+                    [
+                        'type' => $shortType,
+                        'person_id' => $person->person_id,
+                    ]
+                )->delete();
                 $oldAddress->delete();
                 $this->logger->log(new Message(_('Address has been deleted'), Message::LVL_INFO));
             }

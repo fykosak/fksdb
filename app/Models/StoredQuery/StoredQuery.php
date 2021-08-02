@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -43,7 +45,11 @@ class StoredQuery implements IDataSource, Resource
 
     public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self
     {
-        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters());
+        $storedQuery = static::createWithoutQueryPattern(
+            $connection,
+            $queryPattern->sql,
+            $queryPattern->getParameters()
+        );
         $storedQuery->queryPattern = $queryPattern;
         $storedQuery->name = $queryPattern->name;
         return $storedQuery;
@@ -77,7 +83,9 @@ class StoredQuery implements IDataSource, Resource
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
-                throw new InvalidArgumentException("Implicit parameter name '$key' collides with an explicit parameter.");
+                throw new InvalidArgumentException(
+                    "Implicit parameter name '$key' collides with an explicit parameter."
+                );
             }
             if (isset($this->implicitParameterValues[$key]) || $this->implicitParameterValues[$key] != $value) {
                 $this->implicitParameterValues[$key] = $value;
@@ -144,7 +152,11 @@ class StoredQuery implements IDataSource, Resource
         foreach ($queryParameters as $parameter) {
             if ($parameter instanceof ModelStoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
-                $this->queryParameters[] = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
+                $this->queryParameters[] = new StoredQueryParameter(
+                    $parameter->name,
+                    $parameter->getDefaultValue(),
+                    $parameter->getPDOType()
+                );
             } elseif ($parameter instanceof StoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
                 $this->queryParameters[] = $parameter;

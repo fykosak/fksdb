@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Models\ORM\Models\ModelAddress;

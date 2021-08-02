@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls;
 
 use FKSDB\Models\Localization\GettextTranslator;

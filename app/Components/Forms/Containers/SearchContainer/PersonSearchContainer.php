@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -32,8 +34,11 @@ class PersonSearchContainer extends SearchContainer
         $this->searchType = $searchType;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void
-    {
+    final public function injectPrimary(
+        PersonFactory $personFactory,
+        ServicePerson $servicePerson,
+        PersonProvider $provider
+    ): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;
@@ -46,7 +51,10 @@ class PersonSearchContainer extends SearchContainer
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Invalid e-mail.'));
-                $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
+                $control->setOption(
+                    'description',
+                    _('First of all try to find the person in our database using e-mail address')
+                );
                 $control->setHtmlAttribute('placeholder', 'your-email@exmaple.com');
                 $control->setHtmlAttribute('autocomplete', 'email');
                 return $control;

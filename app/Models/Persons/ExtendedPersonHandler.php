@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authentication\AccountManager;
@@ -107,7 +109,8 @@ class ExtendedPersonHandler
                     $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
                 }
             }
-            // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
+            // reload the model (this is workaround to avoid caching of empty but newly created
+            // referenced/related models)
             $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
@@ -115,7 +118,13 @@ class ExtendedPersonHandler
              */
             $this->connection->commit();
 
-            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(
+                sprintf(
+                    $create ? $presenter->messageCreate() : $presenter->messageEdit(),
+                    $this->person->getFullName()
+                ),
+                ContestantPresenter::FLASH_SUCCESS
+            );
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -141,8 +150,11 @@ class ExtendedPersonHandler
         }
     }
 
-    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void
-    {
+    protected function storeExtendedModel(
+        ModelPerson $person,
+        iterable $values,
+        ExtendedPersonPresenter $presenter
+    ): void {
         if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }

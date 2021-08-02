@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
@@ -28,12 +30,22 @@ class MyApplicationsPresenter extends BasePresenter
 
     protected function createComponentMyEventTeachersGrid(): PersonRelatedGrid
     {
-        return new PersonRelatedGrid('event_teacher', $this->getPerson(), FieldLevelPermission::ALLOW_FULL, $this->getContext());
+        return new PersonRelatedGrid(
+            'event_teacher',
+            $this->getPerson(),
+            FieldLevelPermission::ALLOW_FULL,
+            $this->getContext()
+        );
     }
 
     protected function createComponentMyApplicationsGrid(): PersonRelatedGrid
     {
-        return new PersonRelatedGrid('event_participant', $this->getPerson(), FieldLevelPermission::ALLOW_FULL, $this->getContext());
+        return new PersonRelatedGrid(
+            'event_participant',
+            $this->getPerson(),
+            FieldLevelPermission::ALLOW_FULL,
+            $this->getContext()
+        );
     }
 
     private function getPerson(): ?ModelPerson

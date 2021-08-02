@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\TransitionsGenerator;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
@@ -46,7 +48,9 @@ abstract class PaymentTransitions implements TransitionsDecorator
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
-        $machine->setImplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
+        $machine->setImplicitCondition(
+            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID)
+        );
 
         $this->decorateTransitionInitToNew($machine);
         $this->decorateTransitionNewToWaiting($machine);
@@ -72,7 +76,9 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionNewToWaiting(PaymentMachine $machine): void
     {
-        $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING));
+        $transition = $machine->getTransitionById(
+            Transition::createId(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING)
+        );
         $transition->setCondition($this->getDatesCondition());
     }
 
@@ -102,7 +108,9 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void
     {
-        $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED));
+        $transition = $machine->getTransitionById(
+            Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED)
+        );
         $transition->beforeExecuteCallbacks[] = function (ModelHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
                 $this->servicePersonSchedule->updateModel($personSchedule, [$personSchedule->state => 'received']);

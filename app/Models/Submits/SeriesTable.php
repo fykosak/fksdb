@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\ModelContestant;
@@ -35,8 +37,11 @@ class SeriesTable
      */
     private ?array $taskFilter = null;
 
-    public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit)
-    {
+    public function __construct(
+        ServiceContestant $serviceContestant,
+        ServiceTask $serviceTask,
+        ServiceSubmit $serviceSubmit
+    ) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
         $this->serviceSubmit = $serviceSubmit;
@@ -74,19 +79,23 @@ class SeriesTable
 
     public function getContestants(): TypedTableSelection
     {
-        return $this->serviceContestant->getTable()->where([
-            'contest_id' => $this->contestYear->contest_id,
-            'year' => $this->contestYear->year,
-        ])->order('person.family_name, person.other_name, person.person_id');
+        return $this->serviceContestant->getTable()->where(
+            [
+                'contest_id' => $this->contestYear->contest_id,
+                'year' => $this->contestYear->year,
+            ]
+        )->order('person.family_name, person.other_name, person.person_id');
     }
 
     public function getTasks(): TypedTableSelection
     {
-        $tasks = $this->serviceTask->getTable()->where([
-            'contest_id' => $this->contestYear->contest_id,
-            'year' => $this->contestYear->year,
-            'series' => $this->series,
-        ]);
+        $tasks = $this->serviceTask->getTable()->where(
+            [
+                'contest_id' => $this->contestYear->contest_id,
+                'year' => $this->contestYear->year,
+                'series' => $this->series,
+            ]
+        );
 
         if ($this->getTaskFilter() !== null) {
             $tasks->where('task_id', $this->getTaskFilter());

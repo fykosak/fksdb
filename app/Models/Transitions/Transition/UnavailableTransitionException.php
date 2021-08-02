@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Machine\Transition as EventTransition;

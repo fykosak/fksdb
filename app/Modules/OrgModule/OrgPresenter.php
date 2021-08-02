@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\EntityForms\OrgFormComponent;
@@ -32,7 +34,12 @@ class OrgPresenter extends BasePresenter
      */
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user-edit'));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()),
+                'fa fa-user-edit'
+            )
+        );
     }
 
     /**
@@ -42,7 +49,9 @@ class OrgPresenter extends BasePresenter
      */
     public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user')
+        );
     }
 
     public function getTitleCreate(): PageTitle

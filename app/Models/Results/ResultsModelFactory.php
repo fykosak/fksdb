@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -48,7 +50,9 @@ class ResultsModelFactory implements XMLNodeSerializer
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+            );
         }
         return new CumulativeResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
@@ -63,7 +67,9 @@ class ResultsModelFactory implements XMLNodeSerializer
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+            );
         }
         return new DetailResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
@@ -78,7 +84,9 @@ class ResultsModelFactory implements XMLNodeSerializer
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
+            throw new InvalidArgumentException(
+                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+            );
         }
         return new BrojureResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
     }
@@ -92,7 +100,12 @@ class ResultsModelFactory implements XMLNodeSerializer
     public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel
     {
         $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
-        return new SchoolCumulativeResultsModel($cumulativeResultsModel, $contestYear, $this->serviceTask, $this->connection);
+        return new SchoolCumulativeResultsModel(
+            $cumulativeResultsModel,
+            $contestYear,
+            $this->serviceTask,
+            $this->connection
+        );
     }
 
     /**
@@ -118,7 +131,9 @@ class ResultsModelFactory implements XMLNodeSerializer
                     return new EvaluationVyfuk2011();
                 }
         }
-        throw new BadRequestException(\sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->getContest()->name));
+        throw new BadRequestException(
+            \sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->getContest()->name)
+        );
     }
 
     /**
@@ -174,7 +189,10 @@ class ResultsModelFactory implements XMLNodeSerializer
                     $rankNode = $doc->createElement('rank');
                     $contestantNode->appendChild($rankNode);
                     $rankNode->setAttribute('from', $row[AbstractResultsModel::DATA_RANK_FROM]);
-                    if (isset($row[AbstractResultsModel::DATA_RANK_TO]) && $row[AbstractResultsModel::DATA_RANK_FROM] != $row[AbstractResultsModel::DATA_RANK_TO]) {
+                    if (
+                        isset($row[AbstractResultsModel::DATA_RANK_TO])
+                        && $row[AbstractResultsModel::DATA_RANK_FROM] != $row[AbstractResultsModel::DATA_RANK_TO]
+                    ) {
                         $rankNode->setAttribute('to', $row[AbstractResultsModel::DATA_RANK_TO]);
                     }
 

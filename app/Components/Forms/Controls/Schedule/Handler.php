@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -56,7 +58,8 @@ class Handler
      */
     private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void
     {
-        $oldRows = $person->getScheduleForEvent($event)->where('schedule_item.schedule_group.schedule_group_type', $type);
+        $oldRows = $person->getScheduleForEvent($event)
+            ->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
         foreach ($oldRows as $oldRow) {
@@ -70,10 +73,12 @@ class Handler
                     $modelPersonSchedule->delete();
                 } catch (\PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(
-                            _('The item "%s" has already a payment generated, so it cannot be deleted.'),
-                            $modelPersonSchedule->getLabel()
-                        ));
+                        throw new ExistingPaymentException(
+                            \sprintf(
+                                _('The item "%s" has already a payment generated, so it cannot be deleted.'),
+                                $modelPersonSchedule->getLabel()
+                            )
+                        );
                     } else {
                         throw $exception;
                     }
@@ -85,13 +90,20 @@ class Handler
             /** @var ModelScheduleItem $modelScheduleItem */
             $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
+                $this->servicePersonSchedule->createNewModel(
+                    [
+                        'person_id' => $person->person_id,
+                        'schedule_item_id' => $id,
+                    ]
+                );
             } else {
-                throw new FullCapacityException(\sprintf(
-                    _('The person %s could not be registered for "%s" because of full capacity.'),
-                    $person->getFullName(),
-                    $modelScheduleItem->getLabel()
-                ));
+                throw new FullCapacityException(
+                    \sprintf(
+                        _('The person %s could not be registered for "%s" because of full capacity.'),
+                        $person->getFullName(),
+                        $modelScheduleItem->getLabel()
+                    )
+                );
             }
         }
     }

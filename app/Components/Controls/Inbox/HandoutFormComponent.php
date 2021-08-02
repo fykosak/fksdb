@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -37,8 +39,11 @@ class HandoutFormComponent extends BaseComponent
         $this->seriesTable = $seriesTable;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, ServiceTaskContribution $serviceTaskContribution): void
-    {
+    final public function injectPrimary(
+        PersonFactory $personFactory,
+        ServicePerson $servicePerson,
+        ServiceTaskContribution $serviceTaskContribution
+    ): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -82,9 +87,11 @@ class HandoutFormComponent extends BaseComponent
         $connection->beginTransaction();
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
-            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => ModelTaskContribution::TYPE_GRADE,
-            ])->delete();
+            $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where(
+                [
+                    'type' => ModelTaskContribution::TYPE_GRADE,
+                ]
+            )->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
@@ -118,10 +125,12 @@ class HandoutFormComponent extends BaseComponent
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
-        $contributions = $this->serviceTaskContribution->getTable()->where([
-            'type' => ModelTaskContribution::TYPE_GRADE,
-            'task_id' => $taskIds,
-        ]);
+        $contributions = $this->serviceTaskContribution->getTable()->where(
+            [
+                'type' => ModelTaskContribution::TYPE_GRADE,
+                'task_id' => $taskIds,
+            ]
+        );
 
         $values = [];
         /** @var ModelTaskContribution $contribution */

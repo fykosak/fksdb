@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -46,20 +48,31 @@ class NewApplicationsGrid extends BaseGrid
     {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumns([
-            'event.name',
-            'contest.contest',
-        ]);
+        $this->addColumns(
+            [
+                'event.name',
+                'contest.contest',
+            ]
+        );
         $this->addButton('create')
             ->setText(_('Create application'))
-            ->setLink(function (ModelEvent $row): string {
-                return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $row->event_id]);
-            })
-            ->setShow(function (ModelEvent $modelEvent): bool {
-                $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
-                $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
-                $transitions = $machine->getPrimaryMachine()->getAvailableTransitions($holder, Machine::STATE_INIT, true, true);
-                return (bool)count($transitions);
-            });
+            ->setLink(
+                function (ModelEvent $row): string {
+                    return $this->getPresenter()->link(':Public:Application:default', ['eventId' => $row->event_id]);
+                }
+            )
+            ->setShow(
+                function (ModelEvent $modelEvent): bool {
+                    $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
+                    $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
+                    $transitions = $machine->getPrimaryMachine()->getAvailableTransitions(
+                        $holder,
+                        Machine::STATE_INIT,
+                        true,
+                        true
+                    );
+                    return (bool)count($transitions);
+                }
+            );
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\ModelContest;
@@ -29,11 +31,13 @@ class PersonProvider implements FilteredDataProvider
     public function filterOrgs(ModelContest $contest): void
     {
         $this->searchTable = $this->servicePerson->getTable()
-            ->where([
-                ':org.contest_id' => $contest->contest_id,
-                ':org.since <= ?' => $contest->getCurrentContestYear()->year,
-                ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentContestYear()->year,
-            ]);
+            ->where(
+                [
+                    ':org.contest_id' => $contest->contest_id,
+                    ':org.since <= ?' => $contest->getCurrentContestYear()->year,
+                    ':org.until IS NULL OR :org.until <= ?' => $contest->getCurrentContestYear()->year,
+                ]
+            );
     }
 
     /**
@@ -47,7 +51,14 @@ class PersonProvider implements FilteredDataProvider
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
-            ->where('family_name LIKE concat(?, \'%\') OR other_name LIKE concat(?, \'%\') OR concat(other_name, family_name) LIKE concat(?,  \'%\')', $search, $search, $search);
+            ->where(
+                'family_name LIKE concat(?, \'%\')
+                OR other_name LIKE concat(?, \'%\') 
+                OR concat(other_name, family_name) LIKE concat(?,  \'%\')',
+                $search,
+                $search,
+                $search
+            );
         return $this->getItems();
     }
 
