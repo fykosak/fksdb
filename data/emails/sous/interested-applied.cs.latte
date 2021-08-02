@@ -4,7 +4,7 @@
 
 <p>
     {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo a tys projevil{if $person->gender == 'F'}a{/if} zájem o {$event->event_type->name} v
+    protože se uvolnilo místo a ty jsi projevil{if $person->gender == 'F'}a{/if} zájem o {$event->event_type->name} v
     {$holder->getParameter('letterWhere')} od {$event->begin|date:'j. n.'} do {$event->end|date:'j. n. Y'}, jsi
     nyní mezi pozvanými. Gratulujeme.
 </p>
