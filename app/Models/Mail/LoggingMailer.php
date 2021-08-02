@@ -57,7 +57,8 @@ class LoggingMailer implements Mailer
     public function send(Message $mail): void
     {
         try {
-            if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
+            if (!$this->container->getParameters(
+                )['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
@@ -65,11 +66,6 @@ class LoggingMailer implements Mailer
             $this->logMessage($mail, $exception);
             throw $exception;
         }
-    }
-
-    public function getSentMessages(): int
-    {
-        return $this->sentMessages;
     }
 
     private function logMessage(Message $mail, ?\Exception $exception = null): void
@@ -89,5 +85,10 @@ class LoggingMailer implements Mailer
         fclose($f);
 
         $this->sentMessages += 1;
+    }
+
+    public function getSentMessages(): int
+    {
+        return $this->sentMessages;
     }
 }

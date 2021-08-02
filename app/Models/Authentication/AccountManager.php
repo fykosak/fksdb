@@ -6,6 +6,7 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -13,7 +14,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
 class AccountManager
@@ -70,7 +70,10 @@ class AccountManager
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?? $lang, $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
+            $person->getPreferredLang() ?? $lang,
+            $templateParams,
+        );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;
@@ -118,19 +121,23 @@ class AccountManager
 
     public function cancelRecovery(ModelLogin $login): void
     {
-        $login->related(DbNames::TAB_AUTH_TOKEN)->where([
-            'type' => ModelAuthToken::TYPE_RECOVERY,
-        ])->delete();
+        $login->related(DbNames::TAB_AUTH_TOKEN)->where(
+            [
+                'type' => ModelAuthToken::TYPE_RECOVERY,
+            ]
+        )->delete();
     }
 
     final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin
     {
         /** @var ModelLogin $login */
-        $login = $this->serviceLogin->createNewModel([
-            'person_id' => $person->person_id,
-            'login' => $login,
-            'active' => 1,
-        ]);
+        $login = $this->serviceLogin->createNewModel(
+            [
+                'person_id' => $person->person_id,
+                'login' => $login,
+                'active' => 1,
+            ]
+        );
 
         /* Must be done after login_id is allocated. */
         if ($password) {

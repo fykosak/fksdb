@@ -66,10 +66,13 @@ class EvaluationVyfuk2014 extends EvaluationStrategy
     {
         if ($task->label == '1' && $task->series < 7) {
             if (
-                in_array($category->id, [
-                ModelCategory::CAT_ES_6,
-                ModelCategory::CAT_ES_7,
-                ])
+                in_array(
+                    $category->id,
+                    [
+                    ModelCategory::CAT_ES_6,
+                    ModelCategory::CAT_ES_7,
+                    ]
+                )
             ) {
                 return $task->points;
             } else {

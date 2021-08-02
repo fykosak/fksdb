@@ -148,7 +148,9 @@ class BrojureResultsModel extends AbstractResultsModel
         $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
         $studentPilnySumLimitInversed = $studentPilnySumLimit != 0 ? 1.0 / $studentPilnySumLimit : 0;
 
-        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn(
+                $category
+            ) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 

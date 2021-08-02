@@ -25,6 +25,33 @@ class DefaultGenerator extends AbstractSymbolGenerator
         $this->info = $info;
     }
 
+    /**
+     * @param ModelPayment $modelPayment
+     * @param mixed ...$args
+     * @return array
+     * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
+     */
+    protected function create(ModelPayment $modelPayment, ...$args): array
+    {
+
+        if ($modelPayment->hasGeneratedSymbols()) {
+            throw new AlreadyGeneratedSymbolsException(
+                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId())
+            );
+        }
+        $maxVariableSymbol = $modelPayment->getEvent()->related(DbNames::TAB_PAYMENT)
+            ->where('variable_symbol>=?', $this->getVariableSymbolStart())
+            ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
+            ->max('variable_symbol');
+
+        $variableNumber = ($maxVariableSymbol == 0) ? $this->getVariableSymbolStart() : ($maxVariableSymbol + 1);
+        if ($variableNumber > $this->getVariableSymbolEnd()) {
+            throw new OutOfRangeException(_('variable_symbol overflow'));
+        }
+        return $this->createPaymentInfo($modelPayment, $variableNumber);
+    }
+
     protected function getVariableSymbolStart(): int
     {
         return $this->variableSymbolStart;
@@ -49,30 +76,5 @@ class DefaultGenerator extends AbstractSymbolGenerator
             return $info;
         }
         throw new UnsupportedCurrencyException($modelPayment->currency, Response::S501_NOT_IMPLEMENTED);
-    }
-
-    /**
-     * @param ModelPayment $modelPayment
-     * @param mixed ...$args
-     * @return array
-     * @throws AlreadyGeneratedSymbolsException
-     * @throws UnsupportedCurrencyException
-     */
-    protected function create(ModelPayment $modelPayment, ...$args): array
-    {
-
-        if ($modelPayment->hasGeneratedSymbols()) {
-            throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
-        }
-        $maxVariableSymbol = $modelPayment->getEvent()->related(DbNames::TAB_PAYMENT)
-            ->where('variable_symbol>=?', $this->getVariableSymbolStart())
-            ->where('variable_symbol<=?', $this->getVariableSymbolEnd())
-            ->max('variable_symbol');
-
-        $variableNumber = ($maxVariableSymbol == 0) ? $this->getVariableSymbolStart() : ($maxVariableSymbol + 1);
-        if ($variableNumber > $this->getVariableSymbolEnd()) {
-            throw new OutOfRangeException(_('variable_symbol overflow'));
-        }
-        return $this->createPaymentInfo($modelPayment, $variableNumber);
     }
 }

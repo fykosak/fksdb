@@ -37,7 +37,10 @@ class EventTypeColumnFactory extends ColumnFactory
 
         $element = new SelectBox($this->getTitle());
 
-        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs('event_type_id', 'name');
+        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
+            'event_type_id',
+            'name'
+        );
         $element->setItems($types);
         $element->setPrompt(_('Select event type'));
 

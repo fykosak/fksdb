@@ -12,6 +12,34 @@ abstract class SecondaryModelStrategy
 {
 
     /**
+     * @param AbstractService|AbstractServiceMulti $service
+     * @param string|null $joinOn
+     * @param string|null $joinTo
+     * @param BaseHolder[] $holders
+     * @param ActiveRow|null $primaryModel
+     * @return void
+     */
+    public function loadSecondaryModels(
+        $service,
+        ?string $joinOn,
+        ?string $joinTo,
+        array $holders,
+        ?ActiveRow $primaryModel = null
+    ): void {
+        if ($primaryModel) {
+            $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
+            $secondary = $service->getTable()->where($joinOn, $joinValue);
+            if ($joinTo) {
+                $event = reset($holders)->getEvent();
+                $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
+            }
+        } else {
+            $secondary = [];
+        }
+        $this->setSecondaryModels($holders, $secondary);
+    }
+
+    /**
      * @param BaseHolder[] $holders
      * @param ActiveRow[] $models
      * @return void
@@ -35,39 +63,24 @@ abstract class SecondaryModelStrategy
      * @param string|null $joinOn
      * @param string|null $joinTo
      * @param BaseHolder[] $holders
-     * @param ActiveRow|null $primaryModel
-     * @return void
-     */
-    public function loadSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void
-    {
-        if ($primaryModel) {
-            $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $service->getTable()->where($joinOn, $joinValue);
-            if ($joinTo) {
-                $event = reset($holders)->getEvent();
-                $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
-            }
-        } else {
-            $secondary = [];
-        }
-        $this->setSecondaryModels($holders, $secondary);
-    }
-
-    /**
-     * @param AbstractService|AbstractServiceMulti $service
-     * @param string|null $joinOn
-     * @param string|null $joinTo
-     * @param BaseHolder[] $holders
      * @param ActiveRow $primaryModel
      * @return void
      */
-    public function updateSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void
-    {
+    public function updateSecondaryModels(
+        $service,
+        ?string $joinOn,
+        ?string $joinTo,
+        array $holders,
+        ActiveRow $primaryModel
+    ): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];
             if ($joinTo) {
-                $existing = $service->getTable()->where($joinData)->where(BaseHolder::EVENT_COLUMN, $baseHolder->getEvent()->getPrimary());
+                $existing = $service->getTable()->where($joinData)->where(
+                    BaseHolder::EVENT_COLUMN,
+                    $baseHolder->getEvent()->getPrimary()
+                );
                 $conflicts = [];
                 foreach ($existing as $secondaryModel) {
                     // if ($baseModel && ($baseModel->getPrimary(false) !== $secondaryModel->getPrimary())) { TODO WTF?
@@ -83,5 +96,9 @@ abstract class SecondaryModelStrategy
         }
     }
 
-    abstract protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void;
+    abstract protected function resolveMultipleSecondaries(
+        BaseHolder $holder,
+        array $secondaries,
+        array $joinData
+    ): void;
 }

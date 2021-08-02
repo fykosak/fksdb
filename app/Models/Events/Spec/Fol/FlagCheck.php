@@ -9,9 +9,9 @@ use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control;
 
 class FlagCheck extends AbstractAdjustment implements FormAdjustment
 {
@@ -24,16 +24,6 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment
     {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
-    }
-
-    public function getHolder(): Holder
-    {
-        return $this->holder;
-    }
-
-    public function setHolder(Holder $holder): void
-    {
-        $this->holder = $holder;
     }
 
     protected function innerAdjust(Form $form, Holder $holder): void
@@ -55,22 +45,28 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition($form::FILLED)
-                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign): bool {
-                    $schoolId = $this->getSchoolId($schoolControl, $personControl);
-                    if (!$this->serviceSchool->isCzSkSchool($schoolId)) {
-                        $form->addError($msgForeign);
-                        return false;
-                    }
-                    return true;
-                }, $msgForeign)
-                ->addRule(function () use ($studyYearControl, $personControl, $form, $msgOld): bool {
-                    $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if (!$this->isStudent($studyYear)) {
-                        $form->addError($msgOld);
-                        return false;
-                    }
-                    return true;
-                }, $msgOld);
+                ->addRule(
+                    function () use ($schoolControl, $personControl, $form, $msgForeign): bool {
+                        $schoolId = $this->getSchoolId($schoolControl, $personControl);
+                        if (!$this->serviceSchool->isCzSkSchool($schoolId)) {
+                            $form->addError($msgForeign);
+                            return false;
+                        }
+                        return true;
+                    },
+                    $msgForeign
+                )
+                ->addRule(
+                    function () use ($studyYearControl, $personControl, $form, $msgOld): bool {
+                        $studyYear = $this->getStudyYear($studyYearControl, $personControl);
+                        if (!$this->isStudent($studyYear)) {
+                            $form->addError($msgOld);
+                            return false;
+                        }
+                        return true;
+                    },
+                    $msgOld
+                );
         }
 //        $form->onValidate[] = function(Form $form) use($schoolControls, $spamControls, $studyYearControls, $message) {
 //                    if ($form->isValid()) { // it means that all schools may have been disabled
@@ -86,6 +82,30 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment
 //                };
     }
 
+    private function getSchoolId(Control $schoolControl, Control $personControl): int
+    {
+        if ($schoolControl->getValue()) {
+            return $schoolControl->getValue();
+        }
+
+        $personId = $personControl->getValue();
+        /** @var ModelSchool|null $school */
+        $school = $this->servicePersonHistory->getTable()
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();
+        return $school->school_id;
+    }
+
+    public function getHolder(): Holder
+    {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void
+    {
+        $this->holder = $holder;
+    }
+
     private function getStudyYear(Control $studyYearControl, Control $personControl): ?int
     {
         if ($studyYearControl->getValue()) {
@@ -99,20 +119,6 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)
             ->fetch();
         return $personHistory->study_year;
-    }
-
-    private function getSchoolId(Control $schoolControl, Control $personControl): int
-    {
-        if ($schoolControl->getValue()) {
-            return $schoolControl->getValue();
-        }
-
-        $personId = $personControl->getValue();
-        /** @var ModelSchool|null $school */
-        $school = $this->servicePersonHistory->getTable()
-            ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();
-        return $school->school_id;
     }
 
     private function isStudent(?int $studyYear): bool

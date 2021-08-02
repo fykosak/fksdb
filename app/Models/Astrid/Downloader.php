@@ -20,8 +20,13 @@ class Downloader
 
     private Container $container;
 
-    public function __construct(string $httpUser, string $httpPassword, string $host, string $tmpDir, Container $container)
-    {
+    public function __construct(
+        string $httpUser,
+        string $httpPassword,
+        string $host,
+        string $tmpDir,
+        Container $container
+    ) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;
         $this->host = $host;

@@ -34,7 +34,10 @@ trait ContestPresenterTrait
     {
         $contest = $this->getSelectedContest();
         if (!isset($contest) || !$this->isValidContest($contest)) {
-            $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
+            $this->redirect(
+                'this',
+                array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id])
+            );
         }
     }
 
@@ -106,7 +109,11 @@ trait ContestPresenterTrait
 
     protected function createComponentContestChooser(): ContestChooserComponent
     {
-        return new ContestChooserComponent($this->getContext(), $this->getSelectedContest(), $this->getAvailableContests());
+        return new ContestChooserComponent(
+            $this->getContext(),
+            $this->getSelectedContest(),
+            $this->getAvailableContests()
+        );
     }
 
     abstract protected function getRole(): string;

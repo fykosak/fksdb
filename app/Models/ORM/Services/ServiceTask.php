@@ -12,11 +12,13 @@ class ServiceTask extends AbstractService
 
     public function findBySeries(ModelContestYear $contestYear, int $series, int $taskNumber): ?ModelTask
     {
-        $row = $contestYear->getContest()->related(DbNames::TAB_TASK)->where([
-            'year' => $contestYear->year,
-            'series' => $series,
-            'tasknr' => $taskNumber,
-        ])->fetch();
+        $row = $contestYear->getContest()->related(DbNames::TAB_TASK)->where(
+            [
+                'year' => $contestYear->year,
+                'series' => $series,
+                'tasknr' => $taskNumber,
+            ]
+        )->fetch();
         return $row ? ModelTask::createFromActiveRow($row) : null;
     }
 }

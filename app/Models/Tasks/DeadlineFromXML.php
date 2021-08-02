@@ -5,8 +5,8 @@ namespace FKSDB\Models\Tasks;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use Nette\Utils\DateTime;
 use FKSDB\Models\Pipeline\Stage;
+use Nette\Utils\DateTime;
 
 /**
  * @note Assumes TasksFromXML has been run previously.

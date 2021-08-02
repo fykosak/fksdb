@@ -2,14 +2,14 @@
 
 namespace FKSDB\Models\Payment\Transition;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\TransitionsDecorator;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Explorer;
 
 class PaymentMachine extends Machine
@@ -41,24 +41,24 @@ class PaymentMachine extends Machine
         }
     }
 
-    final public function setScheduleGroupTypes(array $types): void
-    {
-        $this->scheduleGroupTypes = $types;
-    }
-
     public function getScheduleGroupTypes(): array
     {
         return $this->scheduleGroupTypes;
     }
 
-    final public function setPriceCalculator(PriceCalculator $priceCalculator): void
+    final public function setScheduleGroupTypes(array $types): void
     {
-        $this->priceCalculator = $priceCalculator;
+        $this->scheduleGroupTypes = $types;
     }
 
     public function getPriceCalculator(): PriceCalculator
     {
         return $this->priceCalculator;
+    }
+
+    final public function setPriceCalculator(PriceCalculator $priceCalculator): void
+    {
+        $this->priceCalculator = $priceCalculator;
     }
 
     public function getEvent(): ModelEvent

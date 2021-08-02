@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\Events\FormAdjustments;
 
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control;
 
 class DependentVisibility extends PairwiseAdjustment
 {

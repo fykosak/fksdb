@@ -142,29 +142,43 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
     {
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', $this->schedule_item_id);
-        XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'totalCapacity' => $this->capacity,
-            'usedCapacity' => $this->getUsedCapacity(),
-            'scheduleItemId' => $this->schedule_item_id,
-            'requireIdNumber' => $this->require_id_number,
-        ], $document, $node);
-        XMLHelper::fillArrayArgumentsToNode('lang', [
-            'description' => [
-                'cs' => $this->description_cs,
-                'en' => $this->description_en,
+        XMLHelper::fillArrayToNode(
+            [
+                'scheduleGroupId' => $this->schedule_group_id,
+                'totalCapacity' => $this->capacity,
+                'usedCapacity' => $this->getUsedCapacity(),
+                'scheduleItemId' => $this->schedule_item_id,
+                'requireIdNumber' => $this->require_id_number,
             ],
-            'name' => [
-                'cs' => $this->name_cs,
-                'en' => $this->name_en,
+            $document,
+            $node
+        );
+        XMLHelper::fillArrayArgumentsToNode(
+            'lang',
+            [
+                'description' => [
+                    'cs' => $this->description_cs,
+                    'en' => $this->description_en,
+                ],
+                'name' => [
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ],
             ],
-        ], $document, $node);
-        XMLHelper::fillArrayArgumentsToNode('currency', [
-            'price' => [
-                'eur' => $this->price_eur,
-                'czk' => $this->price_czk,
+            $document,
+            $node
+        );
+        XMLHelper::fillArrayArgumentsToNode(
+            'currency',
+            [
+                'price' => [
+                    'eur' => $this->price_eur,
+                    'czk' => $this->price_czk,
+                ],
             ],
-        ], $document, $node);
+            $document,
+            $node
+        );
         return $node;
     }
 

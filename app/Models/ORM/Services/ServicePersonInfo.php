@@ -2,10 +2,10 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 
 /**
  * @method ModelPersonInfo findByPrimary($key)

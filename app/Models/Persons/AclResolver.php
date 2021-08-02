@@ -27,19 +27,6 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
         return !$person || $this->isAllowed($person, 'edit');
     }
 
-    public function getResolutionMode(?ModelPerson $person): string
-    {
-        if (!$person) {
-            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
-        }
-        return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
-    }
-
-    public function isModifiable(?ModelPerson $person): bool
-    {
-        return !$person || $this->isAllowed($person, 'edit');
-    }
-
     /**
      * @param ModelPerson $person
      * @param string|Resource $privilege
@@ -48,5 +35,20 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
     private function isAllowed(ModelPerson $person, $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
+    }
+
+    public function getResolutionMode(?ModelPerson $person): string
+    {
+        if (!$person) {
+            return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        }
+        return $this->isAllowed($person, 'edit')
+            ? ReferencedPersonHandler::RESOLUTION_OVERWRITE
+            : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+    }
+
+    public function isModifiable(?ModelPerson $person): bool
+    {
+        return !$person || $this->isAllowed($person, 'edit');
     }
 }

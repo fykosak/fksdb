@@ -2,21 +2,21 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
-use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
+use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -44,7 +44,12 @@ class ClosePresenter extends BasePresenter
      */
     public function titleTeam(): void
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fas fa-stamp'));
+        $this->setPageTitle(
+            new PageTitle(
+                \sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name),
+                'fas fa-stamp'
+            )
+        );
     }
 
     /**

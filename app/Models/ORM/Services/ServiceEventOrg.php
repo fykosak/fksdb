@@ -2,10 +2,10 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
 use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 
 class ServiceEventOrg extends AbstractService
 {

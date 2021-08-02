@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services\Exceptions;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\NetteORM\Exceptions\ModelException;
 
 class DuplicateOrgException extends ModelException
 {

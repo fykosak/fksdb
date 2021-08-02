@@ -4,8 +4,8 @@ namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Components\Forms\Controls\SQLConsole;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Utils\Html;
 
 class SQLColumnFactory extends ColumnFactory

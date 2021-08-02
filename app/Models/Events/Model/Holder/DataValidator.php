@@ -17,19 +17,19 @@ class DataValidator
         $this->validateFields($baseHolder);
     }
 
+    private function validateFields(BaseHolder $baseHolder): void
+    {
+        foreach ($baseHolder->getFields() as $field) {
+            $field->validate($this);
+        }
+    }
+
     /**
      * @return null|string[]
      */
     public function getValidationResult(): ?array
     {
         return $this->validationErrors ?? null;
-    }
-
-    private function validateFields(BaseHolder $baseHolder): void
-    {
-        foreach ($baseHolder->getFields() as $field) {
-            $field->validate($this);
-        }
     }
 
     public function addError(string $error): void

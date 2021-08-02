@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 
@@ -31,11 +31,16 @@ class CloseTeamComponent extends BaseComponent
     {
         $this->connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
-        $this->team->update([
-            'points' => $sum,
-        ]);
+        $this->team->update(
+            [
+                'points' => $sum,
+            ]
+        );
         $this->connection->commit();
-        $this->getPresenter()->flashMessage(\sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(
+            \sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum),
+            BasePresenter::FLASH_SUCCESS
+        );
         $this->getPresenter()->redirect('list', ['id' => null]);
     }
 
@@ -58,7 +63,10 @@ class CloseTeamComponent extends BaseComponent
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->team->getEvent()->getFyziklaniGameSetup()->tasks_on_board;
         /** @var ModelFyziklaniTask|null $nextTask */
-        $nextTask = $this->team->getEvent()->getFyziklaniTasks()->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
+        $nextTask = $this->team->getEvent()->getFyziklaniTasks()->order('label')->limit(
+            1,
+            $submits + $tasksOnBoard
+        )->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }
 }

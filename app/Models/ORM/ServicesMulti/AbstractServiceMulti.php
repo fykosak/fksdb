@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
@@ -24,8 +24,12 @@ abstract class AbstractServiceMulti
     public string $joiningColumn;
     private string $modelClassName;
 
-    public function __construct(OldAbstractServiceSingle $mainService, OldAbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName)
-    {
+    public function __construct(
+        OldAbstractServiceSingle $mainService,
+        OldAbstractServiceSingle $joinedService,
+        string $joiningColumn,
+        string $modelClassName
+    ) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
         $this->modelClassName = $modelClassName;
@@ -54,6 +58,14 @@ abstract class AbstractServiceMulti
     }
 
     /**
+     * @return string|AbstractModelMulti
+     */
+    final public function getModelClassName(): string
+    {
+        return $this->modelClassName;
+    }
+
+    /**
      * @param ActiveRow|AbstractModelMulti $model
      * @param array $data
      * @return bool
@@ -74,7 +86,9 @@ abstract class AbstractServiceMulti
     {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
-            throw new \InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+            throw new \InvalidArgumentException(
+                'Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model)
+            );
         }
     }
 
@@ -90,9 +104,15 @@ abstract class AbstractServiceMulti
     {
         $mainModel = $this->mainService->storeModel($data, $model ? $model->mainModel : null);
 
-        $joinedModel = $this->joinedService->storeModel(array_merge($data, [
-            $this->joiningColumn => $mainModel->getPrimary(),
-        ]), $model ? $model->joinedModel : null);
+        $joinedModel = $this->joinedService->storeModel(
+            array_merge(
+                $data,
+                [
+                    $this->joiningColumn => $mainModel->getPrimary(),
+                ]
+            ),
+            $model ? $model->joinedModel : null
+        );
         return $this->composeModel($mainModel, $joinedModel);
     }
 
@@ -133,18 +153,15 @@ abstract class AbstractServiceMulti
         $joinedTable = $this->joinedService->getTable()->getName();
         $mainTable = $this->mainService->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->joinedService->explorer, $this->joinedService->explorer->getConventions());
+        $selection = new MultiTableSelection(
+            $this,
+            $joinedTable,
+            $this->joinedService->explorer,
+            $this->joinedService->explorer->getConventions(),
+        );
         $selection->select("$joinedTable.*");
         $selection->select("$mainTable.*");
 
         return $selection;
-    }
-
-    /**
-     * @return string|AbstractModelMulti
-     */
-    final public function getModelClassName(): string
-    {
-        return $this->modelClassName;
     }
 }

@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
@@ -28,14 +28,6 @@ class ServiceAddress extends AbstractService
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
-    }
-
-    public function updateModel(AbstractModel $model, array $data): bool
-    {
-        if (!isset($data['region_id'])) {
-            $data['region_id'] = $this->inferRegion($data['postal_code']);
-        }
-        return parent::updateModel($model, $data);
     }
 
     /**
@@ -72,6 +64,14 @@ class ServiceAddress extends AbstractService
                 throw new InvalidPostalCode($postalCode);
             }
         }
+    }
+
+    public function updateModel(AbstractModel $model, array $data): bool
+    {
+        if (!isset($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::updateModel($model, $data);
     }
 
     public function tryInferRegion(?string $postalCode): bool

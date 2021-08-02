@@ -40,13 +40,13 @@ class ServiceFyziklaniTeamPosition extends AbstractService
         return $updatedTeams;
     }
 
-    public function getAllPlaces(array $roomIds): TypedTableSelection
-    {
-        return $this->getTable()->where('room_id', $roomIds);
-    }
-
     public function getFreePlaces(array $roomIds): TypedTableSelection
     {
         return $this->getAllPlaces($roomIds)->where('e_fyziklani_team IS NULL');
+    }
+
+    public function getAllPlaces(array $roomIds): TypedTableSelection
+    {
+        return $this->getTable()->where('room_id', $roomIds);
     }
 }

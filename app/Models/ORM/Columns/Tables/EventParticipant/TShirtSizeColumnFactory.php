@@ -12,7 +12,13 @@ class TShirtSizeColumnFactory extends ColumnFactory
 {
 
     public const SIZE_MAP = [
-        'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL',
+        'XS',
+        'S',
+        'M',
+        'L',
+        'XL',
+        'XXL',
+        'XXXL',
     ];
     public const GENDER_MAP = [
         'M' => 'male',

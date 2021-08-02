@@ -22,8 +22,12 @@ class MailTemplateFactory
     private Translator $translator;
     private IRequest $request;
 
-    public function __construct(string $templateDir, Application $application, Translator $translator, IRequest $request)
-    {
+    public function __construct(
+        string $templateDir,
+        Application $application,
+        Translator $translator,
+        IRequest $request
+    ) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
@@ -51,18 +55,6 @@ class MailTemplateFactory
     public function createLoginInvitation(?string $lang, array $data): Template
     {
         return $this->createWithParameters('loginInvitation', $lang, $data);
-    }
-
-    /**
-     * @param string $lang ISO 639-1
-     * @param array $data
-     * @return Template
-     * @throws BadTypeException
-     * @throws UnsupportedLanguageException
-     */
-    public function createPasswordRecovery(string $lang, array $data): Template
-    {
-        return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
@@ -114,5 +106,17 @@ class MailTemplateFactory
         $template->control = $control;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
+    }
+
+    /**
+     * @param string $lang ISO 639-1
+     * @param array $data
+     * @return Template
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
+     */
+    public function createPasswordRecovery(string $lang, array $data): Template
+    {
+        return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 }

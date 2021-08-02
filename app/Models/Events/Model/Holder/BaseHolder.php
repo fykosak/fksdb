@@ -3,20 +3,20 @@
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\Models\ORM\ReferencedAccessor;
-use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
+use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
@@ -27,6 +27,7 @@ class BaseHolder
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
+    public array $data = [];
     private string $name;
     private ?string $description;
     private ExpressionEvaluator $evaluator;
@@ -52,11 +53,16 @@ class BaseHolder
     /** @var bool|callable */
     private $visible;
 
-    public array $data = [];
-
     public function __construct(string $name)
     {
         $this->name = $name;
+    }
+
+    public static function getBareColumn(string $column): ?string
+    {
+        $column = str_replace(':', '.', $column);
+        $pos = strrpos($column, '.');
+        return $pos === false ? $column : substr($column, $pos + 1);
     }
 
     public function addField(Field $field): void
@@ -107,9 +113,17 @@ class BaseHolder
         $this->eventRelation = $eventRelation;
     }
 
-    public function getEvent(): ModelEvent
+    /**
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
+     */
+    public function inferEvent(ModelEvent $event): void
     {
-        return $this->event;
+        if ($this->eventRelation instanceof EventRelation) {
+            $this->setEvent($this->eventRelation->getEvent($event));
+        } else {
+            $this->setEvent($event);
+        }
     }
 
     /**
@@ -124,16 +138,21 @@ class BaseHolder
     }
 
     /**
-     * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): void
+    private function cacheParameters(): void
     {
-        if ($this->eventRelation instanceof EventRelation) {
-            $this->setEvent($this->eventRelation->getEvent($event));
-        } else {
-            $this->setEvent($event);
+        $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
+        $parameters = $parameters ? Neon::decode($parameters) : [];
+        if (is_string($parameters)) {
+            throw new NeonSchemaException('Parameters must be an array string given');
         }
+        $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
+    }
+
+    public function getEvent(): ModelEvent
+    {
+        return $this->event;
     }
 
     public function getParamScheme(): array
@@ -144,16 +163,6 @@ class BaseHolder
     public function setParamScheme(array $paramScheme): void
     {
         $this->paramScheme = $paramScheme;
-    }
-
-    public function getEvaluator(): ExpressionEvaluator
-    {
-        return $this->evaluator;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void
-    {
-        $this->evaluator = $evaluator;
     }
 
     public function getValidator(): DataValidator
@@ -171,17 +180,19 @@ class BaseHolder
         return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
+    public function getEvaluator(): ExpressionEvaluator
+    {
+        return $this->evaluator;
+    }
+
+    public function setEvaluator(ExpressionEvaluator $evaluator): void
+    {
+        $this->evaluator = $evaluator;
+    }
+
     public function isModifiable(): bool
     {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
-    }
-
-    /**
-     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
-     */
-    public function getModel2(): ?ActiveRow
-    {
-        return $this->model ?? null;
     }
 
     public function setModel(?ActiveRow $model): void
@@ -197,7 +208,7 @@ class BaseHolder
                 $this->service->dispose($model);
             }
         } elseif ($this->getModelState() != Machine::STATE_INIT) {
-                $this->model = $this->service->storeModel($this->data, $this->getModel2());
+            $this->model = $this->service->storeModel($this->data, $this->getModel2());
         }
     }
 
@@ -214,6 +225,14 @@ class BaseHolder
         return Machine::STATE_INIT;
     }
 
+    /**
+     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
+     */
+    public function getModel2(): ?ActiveRow
+    {
+        return $this->model ?? null;
+    }
+
     public function setModelState(string $state): void
     {
         $this->data[self::STATE_COLUMN] = $state;
@@ -222,42 +241,6 @@ class BaseHolder
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return AbstractService|AbstractServiceMulti
-     */
-    public function getService()
-    {
-        return $this->service;
-    }
-
-    /**
-     * @param AbstractService|AbstractServiceMulti $service
-     */
-    public function setService($service): void
-    {
-        $this->service = $service;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): void
-    {
-        $this->label = $label;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
     }
 
     public function getJoinOn(): ?string
@@ -298,11 +281,20 @@ class BaseHolder
         return $column;
     }
 
-    public static function getBareColumn(string $column): ?string
+    /**
+     * @return AbstractService|AbstractServiceMulti
+     */
+    public function getService()
     {
-        $column = str_replace(':', '.', $column);
-        $pos = strrpos($column, '.');
-        return $pos === false ? $column : substr($column, $pos + 1);
+        return $this->service;
+    }
+
+    /**
+     * @param AbstractService|AbstractServiceMulti $service
+     */
+    public function setService($service): void
+    {
+        $this->service = $service;
     }
 
     /**
@@ -310,9 +302,12 @@ class BaseHolder
      */
     public function getDeterminingFields(): array
     {
-        return array_filter($this->fields, function (Field $field): bool {
-            return $field->isDetermining();
-        });
+        return array_filter(
+            $this->fields,
+            function (Field $field): bool {
+                return $field->isDetermining();
+            }
+        );
     }
 
     public function createFormContainer(): ContainerWithOptions
@@ -332,6 +327,26 @@ class BaseHolder
         return $container;
     }
 
+    public function getLabel(): string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(string $label): void
+    {
+        $this->label = $label;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
     public function getPerson(): ?ModelPerson
     {
         /** @var ModelPerson $model */
@@ -347,25 +362,13 @@ class BaseHolder
         }
     }
 
-    public function __toString(): string
-    {
-        return $this->name;
-    }
-
     /*
      * Parameter handling
      */
-    /**
-     * @throws NeonSchemaException
-     */
-    private function cacheParameters(): void
+
+    public function __toString(): string
     {
-        $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
-        $parameters = $parameters ? Neon::decode($parameters) : [];
-        if (is_string($parameters)) {
-            throw new NeonSchemaException('Parameters must be an array string given');
-        }
-        $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
+        return $this->name;
     }
 
     /**
@@ -378,7 +381,11 @@ class BaseHolder
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
-            throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . '.', null, $exception);
+            throw new InvalidArgumentException(
+                "No parameter '$name' for event " . $this->getEvent() . '.',
+                null,
+                $exception
+            );
         }
     }
 }

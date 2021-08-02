@@ -9,9 +9,9 @@ use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control;
 
 class BornCheck extends AbstractAdjustment implements FormAdjustment
 {
@@ -24,16 +24,6 @@ class BornCheck extends AbstractAdjustment implements FormAdjustment
     {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
-    }
-
-    public function getHolder(): Holder
-    {
-        return $this->holder;
-    }
-
-    public function setHolder(Holder $holder): void
-    {
-        $this->holder = $holder;
     }
 
     protected function innerAdjust(Form $form, Holder $holder): void
@@ -51,18 +41,21 @@ class BornCheck extends AbstractAdjustment implements FormAdjustment
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition(Form::BLANK)
-                ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg): bool {
-                    if (!$personControl->getValue()) {
+                ->addRule(
+                    function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg): bool {
+                        if (!$personControl->getValue()) {
+                            return true;
+                        }
+                        $schoolId = $this->getSchoolId($schoolControl, $personControl);
+                        $studyYear = $this->getStudyYear($studyYearControl, $personControl);
+                        if ($this->serviceSchool->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
+                            $form->addError($msg);
+                            return false;
+                        }
                         return true;
-                    }
-                    $schoolId = $this->getSchoolId($schoolControl, $personControl);
-                    $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if ($this->serviceSchool->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
-                        $form->addError($msg);
-                        return false;
-                    }
-                    return true;
-                }, $msg);
+                    },
+                    $msg
+                );
         }
 //        $form->onValidate[] = function(Form $form) use($schoolControls, $spamControls, $studyYearControls, $message) {
 //                    if ($form->isValid()) { // it means that all schools may have been disabled
@@ -78,6 +71,29 @@ class BornCheck extends AbstractAdjustment implements FormAdjustment
 //                };
     }
 
+    private function getSchoolId(Control $schoolControl, Control $personControl): int
+    {
+        if ($schoolControl->getValue()) {
+            return $schoolControl->getValue();
+        }
+        $personId = $personControl->getValue();
+        /** @var ModelSchool|null $school */
+        $school = $this->servicePersonHistory->getTable()
+            ->where('person_id', $personId)
+            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();
+        return $school->school_id;
+    }
+
+    public function getHolder(): Holder
+    {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void
+    {
+        $this->holder = $holder;
+    }
+
     private function getStudyYear(Control $studyYearControl, Control $personControl): ?int
     {
         if ($studyYearControl->getValue()) {
@@ -91,19 +107,6 @@ class BornCheck extends AbstractAdjustment implements FormAdjustment
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)
             ->fetch();
         return $personHistory ? $personHistory->study_year : null;
-    }
-
-    private function getSchoolId(Control $schoolControl, Control $personControl): int
-    {
-        if ($schoolControl->getValue()) {
-            return $schoolControl->getValue();
-        }
-        $personId = $personControl->getValue();
-        /** @var ModelSchool|null $school */
-        $school = $this->servicePersonHistory->getTable()
-            ->where('person_id', $personId)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();
-        return $school->school_id;
     }
 
     private function isStudent(?int $studyYear): bool

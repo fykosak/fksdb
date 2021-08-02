@@ -27,8 +27,10 @@ class PrivacyPolicy implements Processing, FormAdjustment
     private ServicePersonInfo $servicePersonInfo;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory)
-    {
+    public function __construct(
+        ServicePersonInfo $servicePersonInfo,
+        SingleReflectionFormFactory $singleReflectionFormFactory
+    ) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
@@ -53,8 +55,14 @@ class PrivacyPolicy implements Processing, FormAdjustment
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array
-    {
+    public function process(
+        array $states,
+        ArrayHash $values,
+        Machine $machine,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form = null
+    ): ?array {
         $this->trySetAgreed($values);
         return null;
     }

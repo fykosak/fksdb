@@ -41,8 +41,16 @@ class PipelineFactory
     private ServiceStudyYear $serviceStudyYear;
     private ServiceOrg $serviceOrg;
 
-    public function __construct(array $columnMappings, array $contributionMappings, array $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg)
-    {
+    public function __construct(
+        array $columnMappings,
+        array $contributionMappings,
+        array $defaultStudyYears,
+        ServiceTask $serviceTask,
+        ServiceTaskContribution $serviceTaskContribution,
+        ServiceTaskStudyYear $serviceTaskStudyYear,
+        ServiceStudyYear $serviceStudyYear,
+        ServiceOrg $serviceOrg
+    ) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -62,7 +70,9 @@ class PipelineFactory
         $pipeline->addStage(new TasksFromXML($this->serviceTask));
         $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
         $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
-        $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
+        $pipeline->addStage(
+            new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear)
+        );
 
         return $pipeline;
     }

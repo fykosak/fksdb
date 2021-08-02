@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -68,7 +68,9 @@ class ImportHandler
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder(
+                $this->source->getEvent()
+            );
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -82,14 +84,26 @@ class ImportHandler
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
+    /**
+     * @return Holder[]
+     * @throws NeonSchemaException
+     */
+    private function createHoldersMap(): array
     {
-        $parts = explode('.', $columnName);
-        if (count($parts) == 1) {
-            return [$baseHolder->getName(), $parts[0]];
-        } else {
-            return $parts;
+        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+        $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
+
+        $result = [];
+        foreach ($this->source->getHolders() as $pkValue => $holder) {
+            if (self::KEY_NAME == $pkName) {
+                $keyValue = $pkValue;
+            } else {
+                $fields = $holder->getPrimaryHolder()->getFields();
+                $keyValue = $fields[self::KEY_NAME]->getValue();
+            }
+            $result[$keyValue] = $holder;
         }
+        return $result;
     }
 
     /**
@@ -123,25 +137,13 @@ class ImportHandler
         return $values;
     }
 
-    /**
-     * @return Holder[]
-     * @throws NeonSchemaException
-     */
-    private function createHoldersMap(): array
+    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
     {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
-
-        $result = [];
-        foreach ($this->source->getHolders() as $pkValue => $holder) {
-            if (self::KEY_NAME == $pkName) {
-                $keyValue = $pkValue;
-            } else {
-                $fields = $holder->getPrimaryHolder()->getFields();
-                $keyValue = $fields[self::KEY_NAME]->getValue();
-            }
-            $result[$keyValue] = $holder;
+        $parts = explode('.', $columnName);
+        if (count($parts) == 1) {
+            return [$baseHolder->getName(), $parts[0]];
+        } else {
+            return $parts;
         }
-        return $result;
     }
 }

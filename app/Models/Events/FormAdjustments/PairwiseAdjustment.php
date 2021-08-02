@@ -3,9 +3,9 @@
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
+use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
 abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment
@@ -49,7 +49,9 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdju
                 } else {
                     $sTarget = count($cTarget);
                     $sPrerequisite = count($cPrerequisite);
-                    throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'.");
+                    throw new InvalidArgumentException(
+                        "Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'."
+                    );
                 }
             }
         }

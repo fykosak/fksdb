@@ -5,12 +5,12 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Explorer;
-use Nette\Forms\Form;
 use Nette\Forms\Control;
+use Nette\Forms\Form;
 use Nette\Utils\Html;
 
 /**
@@ -41,8 +41,14 @@ class MultiResourceAvailability extends AbstractAdjustment
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled'])
-    {
+    public function __construct(
+        array $fields,
+        $paramCapacity,
+        string $message,
+        Explorer $explorer,
+        array $includeStates = [Machine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
@@ -110,13 +116,19 @@ class MultiResourceAvailability extends AbstractAdjustment
                 $table->where('1=0');
             }
 
-            $primaries = array_map(function (BaseHolder $baseHolder) {
-                $model = $baseHolder->getModel2();
-                return $model ? $model->getPrimary(false) : null;
-            }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+            $primaries = array_map(
+                function (BaseHolder $baseHolder) {
+                    $model = $baseHolder->getModel2();
+                    return $model ? $model->getPrimary(false) : null;
+                },
+                $serviceData['holders']
+            );
+            $primaries = array_filter(
+                $primaries,
+                function ($primary): bool {
+                    return (bool)$primary;
+                }
+            );
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\FieldFactory;
+use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use Nette\Forms\Controls\BaseControl;
 
 class Field
@@ -41,16 +41,6 @@ class Field
         return $this->label;
     }
 
-    public function getBaseHolder(): BaseHolder
-    {
-        return $this->baseHolder;
-    }
-
-    public function setBaseHolder(BaseHolder $baseHolder): void
-    {
-        $this->baseHolder = $baseHolder;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -71,21 +61,6 @@ class Field
         $this->determining = $determining;
     }
 
-    /** @return mixed */
-    public function getDefault()
-    {
-        return $this->default;
-    }
-
-    /**
-     * @param mixed $default
-     * @return void
-     */
-    public function setDefault($default): void
-    {
-        $this->default = $default;
-    }
-
     public function setEvaluator(ExpressionEvaluator $evaluator): void
     {
         $this->evaluator = $evaluator;
@@ -96,9 +71,6 @@ class Field
         $this->factory = $factory;
     }
 
-    /*
-     * Forms
-     */
     public function createFormComponent(): BaseControl
     {
         return $this->factory->createComponent($this);
@@ -108,8 +80,6 @@ class Field
     {
         $this->factory->setFieldDefaultValue($control, $this);
     }
-
-    /* ********* "Runtime" operations *********     */
 
     public function isRequired(): bool
     {
@@ -122,11 +92,25 @@ class Field
         $this->required = $required;
     }
 
-    /* ** MODIFIABLE ** */
+    /*
+     * Forms
+     */
 
     public function isModifiable(): bool
     {
         return $this->getBaseHolder()->isModifiable() && (bool)$this->evaluator->evaluate($this->modifiable, $this);
+    }
+
+    public function getBaseHolder(): BaseHolder
+    {
+        return $this->baseHolder;
+    }
+
+    /* ********* "Runtime" operations *********     */
+
+    public function setBaseHolder(BaseHolder $baseHolder): void
+    {
+        $this->baseHolder = $baseHolder;
     }
 
     /** @param bool|callable $modifiable */
@@ -135,7 +119,7 @@ class Field
         $this->modifiable = $modifiable;
     }
 
-    /* ** VISIBLE ** */
+    /* ** MODIFIABLE ** */
 
     public function isVisible(): bool
     {
@@ -150,6 +134,8 @@ class Field
     {
         $this->visible = $visible;
     }
+
+    /* ** VISIBLE ** */
 
     public function validate(DataValidator $validator): void
     {
@@ -173,6 +159,21 @@ class Field
             return $this->getDefault();
         }
         return null;
+    }
+
+    /** @return mixed */
+    public function getDefault()
+    {
+        return $this->default;
+    }
+
+    /**
+     * @param mixed $default
+     * @return void
+     */
+    public function setDefault($default): void
+    {
+        $this->default = $default;
     }
 
     public function __toString(): string

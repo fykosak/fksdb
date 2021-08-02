@@ -12,8 +12,12 @@ class SecondaryModelConflictException extends \RuntimeException
 
     private iterable $conflicts;
 
-    public function __construct(BaseHolder $baseHolder, iterable $conflicts, ?int $code = null, ?\Throwable $previous = null)
-    {
+    public function __construct(
+        BaseHolder $baseHolder,
+        iterable $conflicts,
+        ?int $code = null,
+        ?\Throwable $previous = null
+    ) {
         parent::__construct($this->createMessage($baseHolder->getModel2(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;

@@ -3,8 +3,8 @@
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;

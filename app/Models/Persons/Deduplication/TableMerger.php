@@ -18,6 +18,8 @@ use Nette\InvalidStateException;
 class TableMerger
 {
 
+    private static bool $refreshReferencing = true;
+    private static bool $refreshReferenced = true;
     private string $table;
     private Merger $merger;
     private Explorer $explorer;
@@ -26,10 +28,24 @@ class TableMerger
     /** @var MergeStrategy[] */
     private array $columnMergeStrategies = [];
     private MergeStrategy $globalMergeStrategy;
-    private Logger $logger;
 
-    public function __construct(string $table, Merger $merger, Explorer $explorer, MergeStrategy $globalMergeStrategy, Logger $logger)
-    {
+    /*     * ******************************
+     * Merging
+     * ****************************** */
+    private Logger $logger;
+    private ?array $refTables;
+    private ?array $columns;
+    private string $primaryKey;
+    private array $referencedTables = [];
+    private array $secondaryKey;
+
+    public function __construct(
+        string $table,
+        Merger $merger,
+        Explorer $explorer,
+        MergeStrategy $globalMergeStrategy,
+        Logger $logger
+    ) {
         $this->table = $table;
         $this->merger = $merger;
         $this->explorer = $explorer;
@@ -38,14 +54,8 @@ class TableMerger
     }
 
     /*     * ******************************
-     * Merging
+     * Logging sugar
      * ****************************** */
-
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
-    {
-        $this->trunkRow = $trunkRow;
-        $this->mergedRow = $mergedRow;
-    }
 
     public function setColumnMergeStrategy(string $column, ?MergeStrategy $mergeStrategy = null): void
     {
@@ -54,39 +64,6 @@ class TableMerger
         } else {
             $this->columnMergeStrategies[$column] = $mergeStrategy;
         }
-    }
-
-    private function tryColumnMerge(string $column): bool
-    {
-        if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
-            $values = [
-                $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
-            ];
-            $this->logUpdate($this->trunkRow, $values);
-            $this->trunkRow->update($values);
-            return true;
-        } else {
-            if (isset($this->columnMergeStrategies[$column])) {
-                $strategy = $this->columnMergeStrategies[$column];
-            } else {
-                $strategy = $this->globalMergeStrategy;
-            }
-            try {
-                $values = [
-                    $column => $strategy->mergeValues($this->trunkRow[$column], $this->mergedRow[$column]),
-                ];
-                $this->logUpdate($this->trunkRow, $values);
-                $this->trunkRow->update($values);
-                return true;
-            } catch (CannotMergeException $exception) {
-                return false;
-            }
-        }
-    }
-
-    private function getMerger(): Merger
-    {
-        return $this->merger;
     }
 
     public function merge(?array $mergedParent = null): void
@@ -122,7 +99,10 @@ class TableMerger
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
                         if ($referencingMerger->trunkRow) {
-                            $referencingMerger->setMergedPair($referencingMerger->trunkRow, $referencingMerger->mergedRow);
+                            $referencingMerger->setMergedPair(
+                                $referencingMerger->trunkRow,
+                                $referencingMerger->mergedRow
+                            );
                         }
                     } elseif ($refMerged) {
                         $this->logUpdate($refMerged, $newParent);
@@ -168,6 +148,50 @@ class TableMerger
         $this->logTrunk($this->trunkRow);
     }
 
+    private function getReferencingTables(): ?array
+    {
+        if (!isset($this->refTables)) {
+            $this->refTables = [];
+            foreach ($this->explorer->getConnection()->getDriver()->getTables() as $otherTable) {
+                try {
+                    [$table, $refColumn] = $this->explorer->getConventions()->getHasManyReference(
+                        $this->table,
+                        $otherTable['name']
+                    );
+                    self::$refreshReferencing = false;
+                    $this->refTables[$table] = $refColumn;
+                } catch (AmbiguousReferenceKeyException $exception) {
+                    /* empty */
+                }
+            }
+        }
+        return $this->refTables;
+    }
+
+    /* ******************************
+     * DB reflection
+     * ****************************** */
+
+    private function getMerger(): Merger
+    {
+        return $this->merger;
+    }
+
+    private function getSecondaryKey(): ?array
+    {
+        if (!isset($this->secondaryKey)) {
+            $this->secondaryKey = [];
+            foreach ($this->explorer->getConnection()->getDriver()->getIndexes($this->table) as $index) {
+                if ($index['unique']) {
+                    $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);
+                }
+            }
+            $this->secondaryKey = array_unique($this->secondaryKey);
+        }
+
+        return $this->secondaryKey;
+    }
+
     private function groupBySecondaryKey(iterable $rows, string $parentColumn): array
     {
         $result = [];
@@ -193,9 +217,11 @@ class TableMerger
         return implode('_', $key);
     }
 
-    /*     * ******************************
-     * Logging sugar
-     * ****************************** */
+    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
+    {
+        $this->trunkRow = $trunkRow;
+        $this->mergedRow = $mergedRow;
+    }
 
     private function logUpdate(ActiveRow $row, iterable $changes): void
     {
@@ -206,45 +232,18 @@ class TableMerger
             }
         }
         if ($msg) {
-            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), Logger::INFO));
+            $this->logger->log(
+                new Message(
+                    sprintf(
+                        _('%s(%s) new values: %s'),
+                        $row->getTable()->getName(),
+                        $row->getPrimary(),
+                        implode(', ', $msg)
+                    ), Logger::INFO
+                )
+            );
         }
     }
-
-    private function logDelete(ActiveRow $row): void
-    {
-        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
-    }
-
-    private function logTrunk(ActiveRow $row): void
-    {
-        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
-    }
-
-    /* ******************************
-     * DB reflection
-     * ****************************** */
-
-    private ?array $refTables;
-    private static bool $refreshReferencing = true;
-
-    private function getReferencingTables(): ?array
-    {
-        if (!isset($this->refTables)) {
-            $this->refTables = [];
-            foreach ($this->explorer->getConnection()->getDriver()->getTables() as $otherTable) {
-                try {
-                    [$table, $refColumn] = $this->explorer->getConventions()->getHasManyReference($this->table, $otherTable['name']);
-                    self::$refreshReferencing = false;
-                    $this->refTables[$table] = $refColumn;
-                } catch (AmbiguousReferenceKeyException $exception) {
-                    /* empty */
-                }
-            }
-        }
-        return $this->refTables;
-    }
-
-    private ?array $columns;
 
     private function getColumns(): ?array
     {
@@ -257,8 +256,6 @@ class TableMerger
         return $this->columns;
     }
 
-    private string $primaryKey;
-
     private function isPrimaryKey(string $column): bool
     {
         if (!isset($this->primaryKey)) {
@@ -267,8 +264,58 @@ class TableMerger
         return $column == $this->primaryKey;
     }
 
-    private array $referencedTables = [];
-    private static bool $refreshReferenced = true;
+    private function tryColumnMerge(string $column): bool
+    {
+        if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
+            $values = [
+                $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
+            ];
+            $this->logUpdate($this->trunkRow, $values);
+            $this->trunkRow->update($values);
+            return true;
+        } else {
+            if (isset($this->columnMergeStrategies[$column])) {
+                $strategy = $this->columnMergeStrategies[$column];
+            } else {
+                $strategy = $this->globalMergeStrategy;
+            }
+            try {
+                $values = [
+                    $column => $strategy->mergeValues($this->trunkRow[$column], $this->mergedRow[$column]),
+                ];
+                $this->logUpdate($this->trunkRow, $values);
+                $this->trunkRow->update($values);
+                return true;
+            } catch (CannotMergeException $exception) {
+                return false;
+            }
+        }
+    }
+
+    private function logDelete(ActiveRow $row): void
+    {
+        $this->logger->log(
+            new Message(
+                sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()),
+                Logger::INFO
+            )
+        );
+    }
+
+    private function logTrunk(ActiveRow $row): void
+    {
+        $this->logger->log(
+            new Message(
+                sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()),
+                Logger::INFO
+            )
+        );
+    }
+
+    public function setSecondaryKey(array $secondaryKey): void
+    {
+        $this->secondaryKey = $secondaryKey;
+    }
 
     private function getReferencedTable(string $column): string
     {
@@ -282,27 +329,5 @@ class TableMerger
             }
         }
         return $this->referencedTables[$column];
-    }
-
-    private array $secondaryKey;
-
-    private function getSecondaryKey(): ?array
-    {
-        if (!isset($this->secondaryKey)) {
-            $this->secondaryKey = [];
-            foreach ($this->explorer->getConnection()->getDriver()->getIndexes($this->table) as $index) {
-                if ($index['unique']) {
-                    $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);
-                }
-            }
-            $this->secondaryKey = array_unique($this->secondaryKey);
-        }
-
-        return $this->secondaryKey;
-    }
-
-    public function setSecondaryKey(array $secondaryKey): void
-    {
-        $this->secondaryKey = $secondaryKey;
     }
 }

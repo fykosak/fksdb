@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooserComponent;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 
 abstract class BasePresenter extends EventBasePresenter
 {
@@ -15,8 +15,10 @@ abstract class BasePresenter extends EventBasePresenter
     protected ServiceFyziklaniTeam $serviceFyziklaniTeam;
     protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    final public function injectFyziklaniBase(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam): void
-    {
+    final public function injectFyziklaniBase(
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }

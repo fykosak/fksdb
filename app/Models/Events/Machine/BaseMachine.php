@@ -33,16 +33,6 @@ class BaseMachine
         return $this->states;
     }
 
-    public function getMachine(): Machine
-    {
-        return $this->machine;
-    }
-
-    public function setMachine(Machine $machine): void
-    {
-        $this->machine = $machine;
-    }
-
     public function addTransition(Transition $transition): void
     {
         $transition->setBaseMachine($this);
@@ -62,6 +52,30 @@ class BaseMachine
                 $transition->addInducedTransition($targetMachine, $state);
             }
         }
+    }
+
+    /**
+     * @param string $sourceStateMask
+     * @return Transition[]
+     */
+    private function getMatchingTransitions(string $sourceStateMask): array
+    {
+        return array_filter(
+            $this->transitions,
+            function (Transition $transition) use ($sourceStateMask): bool {
+                return $transition->matches($sourceStateMask);
+            }
+        );
+    }
+
+    public function getMachine(): Machine
+    {
+        return $this->machine;
+    }
+
+    public function setMachine(Machine $machine): void
+    {
+        $this->machine = $machine;
     }
 
     /**
@@ -95,36 +109,36 @@ class BaseMachine
      * @param bool $executable
      * @return Transition[]
      */
-    public function getAvailableTransitions(Holder $holder, string $sourceState, bool $visible = false, bool $executable = true): array
-    {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($holder, $executable, $visible): bool {
-            return
-                (!$executable || $transition->canExecute($holder)) && (!$visible || $transition->isVisible($holder));
-        });
+    public function getAvailableTransitions(
+        Holder $holder,
+        string $sourceState,
+        bool $visible = false,
+        bool $executable = true
+    ): array {
+        return array_filter(
+            $this->getMatchingTransitions($sourceState),
+            fn(Transition $transition): bool => (!$executable || $transition->canExecute(
+                        $holder
+                    )) && (!$visible || $transition->isVisible(
+                        $holder
+                    ))
+        );
     }
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition
     {
-        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState): bool {
-            return $transition->getTargetState() == $targetState;
-        });
+        $candidates = array_filter(
+            $this->getMatchingTransitions($sourceState),
+            fn(Transition $transition): bool => $transition->getTargetState() == $targetState
+        );
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
-            throw new InvalidArgumentException(sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState));
+            throw new InvalidArgumentException(
+                sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState)
+            );
         } else {
             return reset($candidates);
         }
-    }
-
-    /**
-     * @param string $sourceStateMask
-     * @return Transition[]
-     */
-    private function getMatchingTransitions(string $sourceStateMask): array
-    {
-        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask): bool {
-            return $transition->matches($sourceStateMask);
-        });
     }
 }

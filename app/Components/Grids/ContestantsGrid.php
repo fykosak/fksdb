@@ -29,7 +29,12 @@ class ContestantsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        return new NDataSource($this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->contestYear->year));
+        return new NDataSource(
+            $this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where(
+                'year',
+                $this->contestYear->year
+            )
+        );
     }
 
     /**
@@ -46,14 +51,18 @@ class ContestantsGrid extends BaseGrid
         parent::configure($presenter);
 
         $this->setDefaultOrder('person.other_name ASC');
-        $this->addColumns([
-            'person.full_name',
-            'person_history.study_year',
-        ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
-            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
-        });
+        $this->addColumns(
+            [
+                'person.full_name',
+                'person_history.study_year',
+            ]
+        );
+        $this->addColumn('school_name', _('School'))->setRenderer(
+            function (ActiveRow $row) {
+                $contestant = ModelContestant::createFromActiveRow($row);
+                return $contestant->getPersonHistory()->getSchool()->name_abbrev;
+            }
+        );
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);

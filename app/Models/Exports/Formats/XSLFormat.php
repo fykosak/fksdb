@@ -4,8 +4,8 @@ namespace FKSDB\Models\Exports\Formats;
 
 use FKSDB\Models\Exports\ExportFormat;
 use FKSDB\Models\StoredQuery\StoredQuery;
-use Nette\SmartObject;
 use FKSDB\Models\WebService\XMLNodeSerializer;
+use Nette\SmartObject;
 
 class XSLFormat implements ExportFormat
 {
@@ -24,16 +24,6 @@ class XSLFormat implements ExportFormat
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
-    }
-
-    public function getParameters(): array
-    {
-        return $this->parameters;
-    }
-
-    public function setParameters(array $parameters): void
-    {
-        $this->parameters = $parameters;
     }
 
     public function addParameters(array $parameters): void
@@ -62,5 +52,15 @@ class XSLFormat implements ExportFormat
 
         // Prepare response
         return new PlainTextResponse($proc->transformToXml($doc));
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function setParameters(array $parameters): void
+    {
+        $this->parameters = $parameters;
     }
 }

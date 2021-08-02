@@ -18,8 +18,11 @@ class ReferencedPersonHandlerFactory
         $this->container = $container;
     }
 
-    public function create(ModelContestYear $contestYear, ?string $resolution, ?ModelEvent $event = null): ReferencedPersonHandler
-    {
+    public function create(
+        ModelContestYear $contestYear,
+        ?string $resolution,
+        ?ModelEvent $event = null
+    ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $contestYear,
             $resolution ?? ReferencedPersonHandler::RESOLUTION_EXCEPTION

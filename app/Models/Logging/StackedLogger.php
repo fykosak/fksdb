@@ -9,16 +9,6 @@ abstract class StackedLogger implements Logger
 
     private ?Logger $child = null;
 
-    public function getChild(): ?Logger
-    {
-        return $this->child;
-    }
-
-    public function setChild(Logger $child): void
-    {
-        $this->child = $child;
-    }
-
     final public function log(Message $message): void
     {
         $this->doLog($message);
@@ -28,4 +18,14 @@ abstract class StackedLogger implements Logger
     }
 
     abstract protected function doLog(Message $message): void;
+
+    public function getChild(): ?Logger
+    {
+        return $this->child;
+    }
+
+    public function setChild(Logger $child): void
+    {
+        $this->child = $child;
+    }
 }

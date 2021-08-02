@@ -30,8 +30,11 @@ class StudyYearsFromXML extends Stage
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
-    public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear)
-    {
+    public function __construct(
+        array $defaultStudyYears,
+        ServiceTaskStudyYear $serviceTaskStudyYear,
+        ServiceStudyYear $serviceStudyYear
+    ) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
@@ -51,11 +54,6 @@ class StudyYearsFromXML extends Stage
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
-    }
-
-    public function getOutput(): SeriesData
-    {
-        return $this->data;
     }
 
     private function processTask(\SimpleXMLElement $XMLTask): void
@@ -92,7 +90,9 @@ class StudyYearsFromXML extends Stage
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO));
+                $this->log(
+                    new Message(_('Filling in default study years despite incorrect specification.'), Logger::INFO)
+                );
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }
@@ -104,11 +104,18 @@ class StudyYearsFromXML extends Stage
 
         // store new contributions
         foreach ($studyYears as $studyYear) {
-            $this->serviceTaskStudyYear->createNewModel([
-                'task_id' => $task->task_id,
-                'study_year' => $studyYear,
-            ]);
+            $this->serviceTaskStudyYear->createNewModel(
+                [
+                    'task_id' => $task->task_id,
+                    'study_year' => $studyYear,
+                ]
+            );
         }
         $this->serviceTaskStudyYear->explorer->getConnection()->commit();
+    }
+
+    public function getOutput(): SeriesData
+    {
+        return $this->data;
     }
 }

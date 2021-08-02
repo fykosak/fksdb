@@ -2,22 +2,22 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
-use FKSDB\Models\Events\Model\ApplicationHandler;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Components\Controls\Events\MassTransitionsComponent;
+use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
-use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -51,7 +51,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     final public function titleDetail(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
+        $this->setPageTitle(
+            new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'),
+        );
     }
 
     /**
@@ -109,7 +111,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        return new ApplicationComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
+        return new ApplicationComponent(
+            $this->getContext(),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $source->getHolder($this->getEntity()->getPrimary()),
+        );
     }
 
     /**
@@ -123,7 +129,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent
     {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        return new TransitionButtonsComponent($this->getContext(), new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()), $source->getHolder($this->getEntity()->getPrimary()));
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $source->getHolder($this->getEntity()->getPrimary()),
+        );
     }
 
     /**

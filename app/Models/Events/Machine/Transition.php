@@ -12,6 +12,7 @@ use Nette\InvalidArgumentException;
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition
 {
 
+    public array $onExecuted = [];
     private BaseMachine $baseMachine;
     private array $inducedTransitions = [];
     private string $mask;
@@ -19,7 +20,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     private string $source;
     /** @var bool|callable */
     private $visible;
-    public array $onExecuted = [];
 
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT)
     {
@@ -28,12 +28,34 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->setBehaviorType($type);
     }
 
-    /**
-     * Meaningless identifier.
-     */
-    public function getName(): string
+    public static function validateTransition(string $mask, array $states): bool
     {
-        return $this->name;
+        $parts = self::parseMask($mask);
+        if (count($parts) != 2) {
+            return false;
+        }
+        [$sources, $target] = $parts;
+
+        $sources = explode('|', $sources);
+
+        foreach ($sources as $source) {
+            if (!in_array(
+                $source,
+                array_merge(
+                    $states,
+                    [
+                        \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY,
+                        \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT,
+                    ]
+                )
+            )) {
+                return false;
+            }
+        }
+        if (!in_array($target, array_merge($states, [\FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED]))) {
+            return false;
+        }
+        return true;
     }
 
     public function getBehaviorType(): string
@@ -47,12 +69,9 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         return parent::getBehaviorType();
     }
 
-    private function setName(string $mask): void
+    public function isCreating(): bool
     {
-        // it's used for component naming
-        $name = str_replace('*', '_any_', $mask);
-        $name = str_replace('|', '_or_', $name);
-        $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
+        return strpos($this->source, \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) !== false;
     }
 
     public function getMask(): string
@@ -68,24 +87,9 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->setName($mask);
     }
 
-    public function getBaseMachine(): BaseMachine
-    {
-        return $this->baseMachine;
-    }
-
-    public function setBaseMachine(BaseMachine $baseMachine): void
-    {
-        $this->baseMachine = $baseMachine;
-    }
-
     public function getSource(): string
     {
         return $this->source;
-    }
-
-    public function isCreating(): bool
-    {
-        return strpos($this->source, \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) !== false;
     }
 
     public function isVisible(Holder $holder): bool
@@ -109,9 +113,47 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         }
         $targetName = $targetMachine->getName();
         if (isset($this->inducedTransitions[$targetName])) {
-            throw new InvalidArgumentException("Induced transition for machine $targetName already defined in " . $this->getName() . '.');
+            throw new InvalidArgumentException(
+                "Induced transition for machine $targetName already defined in " . $this->getName() . '.'
+            );
         }
         $this->inducedTransitions[$targetName] = $targetState;
+    }
+
+    public function getBaseMachine(): BaseMachine
+    {
+        return $this->baseMachine;
+    }
+
+    public function setBaseMachine(BaseMachine $baseMachine): void
+    {
+        $this->baseMachine = $baseMachine;
+    }
+
+    /**
+     * Meaningless identifier.
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    final public function canExecute(Holder $holder): bool
+    {
+        return !$this->getBlockingTransition($holder);
+    }
+
+    private function getBlockingTransition(Holder $holder): ?Transition
+    {
+        foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
+            if ($inducedTransition->getBlockingTransition($holder)) {
+                return $inducedTransition;
+            }
+        }
+        if (!$this->isConditionFulfilled($holder)) {
+            return $this;
+        }
+        return null;
     }
 
     /**
@@ -130,44 +172,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
             }
         }
         return $result;
-    }
-
-    private function getBlockingTransition(Holder $holder): ?Transition
-    {
-        foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
-            if ($inducedTransition->getBlockingTransition($holder)) {
-                return $inducedTransition;
-            }
-        }
-        if (!$this->isConditionFulfilled($holder)) {
-            return $this;
-        }
-        return null;
-    }
-
-    /**
-     * @param Holder $holder
-     * @param Transition[] $inducedTransitions
-     * @return null|array
-     */
-    private function validateTarget(Holder $holder, array $inducedTransitions): ?array
-    {
-        foreach ($inducedTransitions as $inducedTransition) {
-            $result = $inducedTransition->validateTarget($holder, []);
-            if (!is_null($result)) {
-                return $result;
-            }
-        }
-
-        $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
-        $validator = $baseHolder->getValidator();
-        $validator->validate($baseHolder);
-        return $validator->getValidationResult();
-    }
-
-    final public function canExecute(Holder $holder): bool
-    {
-        return !$this->getBlockingTransition($holder);
     }
 
     /**
@@ -211,6 +215,35 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     }
 
     /**
+     * @note Assumes the condition is fulfilled.
+     * @param BaseHolder $holder
+     */
+    private function changeState(BaseHolder $holder): void
+    {
+        $holder->setModelState($this->getTargetState());
+    }
+
+    /**
+     * @param Holder $holder
+     * @param Transition[] $inducedTransitions
+     * @return null|array
+     */
+    private function validateTarget(Holder $holder, array $inducedTransitions): ?array
+    {
+        foreach ($inducedTransitions as $inducedTransition) {
+            $result = $inducedTransition->validateTarget($holder, []);
+            if (!is_null($result)) {
+                return $result;
+            }
+        }
+
+        $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
+        $validator = $baseHolder->getValidator();
+        $validator->validate($baseHolder);
+        return $validator->getValidationResult();
+    }
+
+    /**
      * Triggers onExecuted event.
      *
      * @param Holder $holder
@@ -230,15 +263,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     }
 
     /**
-     * @note Assumes the condition is fulfilled.
-     * @param BaseHolder $holder
-     */
-    private function changeState(BaseHolder $holder): void
-    {
-        $holder->setModelState($this->getTargetState());
-    }
-
-    /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
      * @return bool
      */
@@ -255,7 +279,10 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
          * Star matches any state but meta-states (initial and terminal)
          */
         if (
-            strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false &&
+            strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(
+                    \FKSDB\Models\Transitions\Machine\Machine::STATE_ANY,
+                    $this->source
+                ) !== false &&
                 ($mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED))
         ) {
             return true;
@@ -275,24 +302,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         return explode('->', $mask);
     }
 
-    public static function validateTransition(string $mask, array $states): bool
+    private function setName(string $mask): void
     {
-        $parts = self::parseMask($mask);
-        if (count($parts) != 2) {
-            return false;
-        }
-        [$sources, $target] = $parts;
-
-        $sources = explode('|', $sources);
-
-        foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, [\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT]))) {
-                return false;
-            }
-        }
-        if (!in_array($target, array_merge($states, [\FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED]))) {
-            return false;
-        }
-        return true;
+        // it's used for component naming
+        $name = str_replace('*', '_any_', $mask);
+        $name = str_replace('|', '_or_', $name);
+        $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
     }
 }

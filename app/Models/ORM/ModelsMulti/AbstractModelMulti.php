@@ -37,41 +37,6 @@ abstract class AbstractModelMulti extends ActiveRow
 
     /**
      * @param string|int $key
-     * @return bool|mixed|ActiveRow|Selection|null
-     */
-    public function &__get(string $key)
-    {
-        if ($this->mainModel->__isset($key)) {
-            return $this->mainModel->__get($key);
-        }
-        if ($this->joinedModel->__isset($key)) {
-            return $this->joinedModel->__get($key);
-        }
-        // this reference isn't that important
-        $null = null;
-        return $null;
-    }
-
-    /**
-     * @param string|int $name
-     * @return bool
-     */
-    public function __isset($name): bool
-    {
-        return $this->mainModel->__isset($name) || $this->joinedModel->__isset($name);
-    }
-
-    /**
-     * @param string $column
-     * @param mixed $value
-     */
-    public function __set($column, $value): void
-    {
-        throw new \LogicException('Cannot update multiModel directly.');
-    }
-
-    /**
-     * @param string|int $key
      */
     public function __unset($key): void
     {
@@ -97,12 +62,47 @@ abstract class AbstractModelMulti extends ActiveRow
     }
 
     /**
+     * @param string|int $name
+     * @return bool
+     */
+    public function __isset($name): bool
+    {
+        return $this->mainModel->__isset($name) || $this->joinedModel->__isset($name);
+    }
+
+    /**
      * @param mixed $column
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &offsetGet($column)
     {
         return $this->__get($column);
+    }
+
+    /**
+     * @param string|int $key
+     * @return bool|mixed|ActiveRow|Selection|null
+     */
+    public function &__get(string $key)
+    {
+        if ($this->mainModel->__isset($key)) {
+            return $this->mainModel->__get($key);
+        }
+        if ($this->joinedModel->__isset($key)) {
+            return $this->joinedModel->__get($key);
+        }
+        // this reference isn't that important
+        $null = null;
+        return $null;
+    }
+
+    /**
+     * @param string $column
+     * @param mixed $value
+     */
+    public function __set($column, $value): void
+    {
+        throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**

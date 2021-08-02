@@ -5,37 +5,41 @@ namespace FKSDB\Modules\Core;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\GettextTranslator;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\Logger;
-use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
+use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
-use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter implements JavaScriptCollector, StylesheetCollector, AutocompleteJSONProvider, NavigablePresenter
+abstract class BasePresenter extends Presenter implements
+    JavaScriptCollector,
+    StylesheetCollector,
+    AutocompleteJSONProvider,
+    NavigablePresenter
 {
     use CollectorPresenterTrait;
 

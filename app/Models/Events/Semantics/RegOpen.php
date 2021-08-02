@@ -13,7 +13,8 @@ class RegOpen extends EvaluatedExpression
     public function __invoke(...$args): bool
     {
         $event = $this->getEvent($args[0]);
-        return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time()) && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
+        return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time(
+                )) && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
     }
 
     public function __toString(): string

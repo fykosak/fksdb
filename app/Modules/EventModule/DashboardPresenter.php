@@ -79,7 +79,10 @@ class DashboardPresenter extends BasePresenter
                 return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/jaro%d', $this->getEvent()->begin->format('Y'));
             case 12:
                 // setkani podzim
-                return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/podzim%d', $this->getEvent()->begin->format('Y'));
+                return \sprintf(
+                    'http://vyfuk.mff.cuni.cz/akce/setkani/podzim%d',
+                    $this->getEvent()->begin->format('Y')
+                );
             case 13:
                 // Náboj Junior
                 return \sprintf('#'); // FIXME

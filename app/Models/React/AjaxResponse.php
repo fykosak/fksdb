@@ -15,11 +15,6 @@ final class AjaxResponse implements Response
 
     private int $code = 200;
 
-    final public function getContentType(): string
-    {
-        return 'application/json';
-    }
-
     public function setCode(int $code): void
     {
         $this->code = $code;
@@ -36,5 +31,10 @@ final class AjaxResponse implements Response
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(false);
         echo json_encode($this->content);
+    }
+
+    final public function getContentType(): string
+    {
+        return 'application/json';
     }
 }

@@ -2,15 +2,15 @@
 
 namespace FKSDB\Models\Events\Model\Grid;
 
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
-use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -69,6 +69,46 @@ class SingleEventSource implements HolderSource
         return $this->dummyHolder;
     }
 
+    /**
+     * Method propagates selected calls to internal primary models selection.
+     *
+     * @staticvar array $delegated
+     * @param string $name
+     * @param array $args
+     * @return SingleEventSource|int
+     */
+    public function __call(string $name, array $args)
+    {
+        static $delegated = [
+            'where' => false,
+            'order' => false,
+            'limit' => false,
+            'count' => true,
+        ];
+        $result = $this->primarySelection->{$name}(...$args);
+        // $result = call_user_func_array([$this->primarySelection, $name], $args);
+        $this->primaryModels = null;
+
+        if ($delegated[$name]) {
+            return $result;
+        } else {
+            return $this;
+        }
+    }
+
+    /**
+     * @return Holder[]
+     * @throws NeonSchemaException
+     */
+    public function getHolders(): array
+    {
+        if (!isset($this->primaryModels)) {
+            $this->loadData();
+            $this->createHolders();
+        }
+        return $this->holders;
+    }
+
     private function loadData(): void
     {
         $joinToCheck = false;
@@ -76,7 +116,13 @@ class SingleEventSource implements HolderSource
             if ($joinToCheck === false) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
-                throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
+                throw new InvalidStateException(
+                    sprintf(
+                        "SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.",
+                        $group['joinTo'],
+                        $joinToCheck
+                    )
+                );
             }
         }
         // load primaries
@@ -132,46 +178,6 @@ class SingleEventSource implements HolderSource
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }
-    }
-
-    /**
-     * Method propagates selected calls to internal primary models selection.
-     *
-     * @staticvar array $delegated
-     * @param string $name
-     * @param array $args
-     * @return SingleEventSource|int
-     */
-    public function __call(string $name, array $args)
-    {
-        static $delegated = [
-            'where' => false,
-            'order' => false,
-            'limit' => false,
-            'count' => true,
-        ];
-        $result = $this->primarySelection->{$name}(...$args);
-        // $result = call_user_func_array([$this->primarySelection, $name], $args);
-        $this->primaryModels = null;
-
-        if ($delegated[$name]) {
-            return $result;
-        } else {
-            return $this;
-        }
-    }
-
-    /**
-     * @return Holder[]
-     * @throws NeonSchemaException
-     */
-    public function getHolders(): array
-    {
-        if (!isset($this->primaryModels)) {
-            $this->loadData();
-            $this->createHolders();
-        }
-        return $this->holders;
     }
 
     /**

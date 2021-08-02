@@ -12,22 +12,14 @@ class Machine
 
     private BaseMachine $primaryMachine;
 
-    public function setPrimaryMachine(string $name): void
-    {
-        $this->primaryMachine = $this->getBaseMachine($name);
-    }
-
     public function getPrimaryMachine(): BaseMachine
     {
         return $this->primaryMachine;
     }
 
-    public function addBaseMachine(BaseMachine $baseMachine): void
+    public function setPrimaryMachine(string $name): void
     {
-        $name = $baseMachine->getName();
-        $this->baseMachines[$name] = $baseMachine;
-
-        $baseMachine->setMachine($this);
+        $this->primaryMachine = $this->getBaseMachine($name);
     }
 
     public function getBaseMachine(string $name): BaseMachine
@@ -36,5 +28,13 @@ class Machine
             throw new InvalidArgumentException("Unknown base machine '$name'.");
         }
         return $this->baseMachines[$name];
+    }
+
+    public function addBaseMachine(BaseMachine $baseMachine): void
+    {
+        $name = $baseMachine->getName();
+        $this->baseMachines[$name] = $baseMachine;
+
+        $baseMachine->setMachine($this);
     }
 }

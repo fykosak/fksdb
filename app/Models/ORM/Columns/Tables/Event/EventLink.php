@@ -28,9 +28,13 @@ class EventLink extends ColumnFactory
      */
     protected function createHtmlValue(AbstractModel $model): Html
     {
-        return Html::el('a')->addAttributes(['href' => $this->linkGenerator->link(
-            'Event:Dashboard:default',
-            ['eventId' => $model->event_id]
-        )])->addText($model->name);
+        return Html::el('a')->addAttributes(
+            [
+                'href' => $this->linkGenerator->link(
+                    'Event:Dashboard:default',
+                    ['eventId' => $model->event_id]
+                ),
+            ]
+        )->addText($model->name);
     }
 }

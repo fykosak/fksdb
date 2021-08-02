@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Fykosak\NetteORM\AbstractService;
 
 class ServiceAuthToken extends AbstractService
 {
@@ -24,8 +24,14 @@ class ServiceAuthToken extends AbstractService
      * @return ModelAuthToken
      * @throws ModelException
      */
-    public function createToken(ModelLogin $login, string $type, ?\DateTimeInterface $until, ?string $data = null, bool $refresh = false, ?\DateTimeInterface $since = null): ModelAuthToken
-    {
+    public function createToken(
+        ModelLogin $login,
+        string $type,
+        ?\DateTimeInterface $until,
+        ?string $data = null,
+        bool $refresh = false,
+        ?\DateTimeInterface $since = null
+    ): ModelAuthToken {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -56,14 +62,16 @@ class ServiceAuthToken extends AbstractService
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNewModel([
-                'until' => $until,
-                'login_id' => $login->login_id,
-                'token' => $tokenData,
-                'data' => $data,
-                'since' => $since,
-                'type' => $type,
-            ]);
+            $token = $this->createNewModel(
+                [
+                    'until' => $until,
+                    'login_id' => $login->login_id,
+                    'token' => $tokenData,
+                    'data' => $data,
+                    'since' => $since,
+                    'type' => $type,
+                ]
+            );
         } else {
             $this->updateModel($token, ['until' => $until]);
         }

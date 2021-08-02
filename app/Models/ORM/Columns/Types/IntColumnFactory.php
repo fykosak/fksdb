@@ -36,7 +36,9 @@ class IntColumnFactory extends ColumnFactory
 
     protected function createHtmlValue(AbstractModel $model): Html
     {
-        return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))($model->{$this->getModelAccessKey()});
+        return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))(
+            $model->{$this->getModelAccessKey()}
+        );
     }
 
     protected function createFormControl(...$args): BaseControl

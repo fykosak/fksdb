@@ -4,11 +4,11 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
@@ -16,8 +16,6 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -26,6 +24,8 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -58,15 +58,26 @@ class ApplicationPresenter extends BasePresenter
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
+                break;
             case 'list':
                 $this->forward(':Core:MyApplications:default', $this->getParameters());
+                break;
             case 'default':
                 if (!isset($this->contestId)) {
                     if (!$this->getEvent()) {
                         throw new EventNotFoundException();
                     }
                     // hack if contestId is not present, but there ale a eventId param
-                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->getEventType()->contest_id, 'year' => $this->getEvent()->year]));
+                    $this->forward(
+                        'default',
+                        array_merge(
+                            $this->getParameters(),
+                            [
+                                'contestId' => $this->getEvent()->getEventType()->contest_id,
+                                'year' => $this->getEvent()->year,
+                            ]
+                        )
+                    );
                 }
         }
         $this->yearTraitStartup();
@@ -100,7 +111,16 @@ class ApplicationPresenter extends BasePresenter
     public function titleDefault(): void
     {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fas fa-calendar-day'));
+            $this->setPageTitle(
+                new PageTitle(
+                    \sprintf(
+                        _('Application for %s: %s'),
+                        $this->getEvent()->name,
+                        $this->getEventApplication()->__toString()
+                    ),
+                    'fas fa-calendar-day',
+                )
+            );
         } else {
             $this->setPageTitle(new PageTitle($this->getEvent(), 'fas fa-calendar-plus'));
         }
@@ -115,7 +135,10 @@ class ApplicationPresenter extends BasePresenter
     {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
+            if (
+                $this->getHolder()->getPrimaryHolder()->getModelState(
+                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+            ) {
                 return;
             }
         }
@@ -162,8 +185,16 @@ class ApplicationPresenter extends BasePresenter
             }
         }
 
-        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
+        if (
+            !$this->getMachine()->getPrimaryMachine()->getAvailableTransitions(
+                $this->holder,
+                $this->getHolder()->getPrimaryHolder()->getModelState()
+            )
+        ) {
+            if (
+                $this->getHolder()->getPrimaryHolder()->getModelState(
+                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+            ) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
@@ -171,14 +202,25 @@ class ApplicationPresenter extends BasePresenter
             }
         }
 
-        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->contestAuthorizator->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
+        if (
+            !$this->relatedPersonAuthorizator->isRelatedPerson(
+                $this->getHolder()
+            ) && !$this->contestAuthorizator->isAllowed(
+                $this->getEvent(),
+                'application',
+                $this->getEvent()->getContest()
+            )
+        ) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
-                $this->redirect(':Core:Authentication:login', [
-                    'backlink' => $this->storeRequest(),
-                    AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
-                ]);
+                $this->redirect(
+                    ':Core:Authentication:login',
+                    [
+                        'backlink' => $this->storeRequest(),
+                        AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+                    ]
+                );
             }
         }
     }
@@ -202,14 +244,19 @@ class ApplicationPresenter extends BasePresenter
         $logger = new MemoryLogger();
         $handler = new ApplicationHandler($this->getEvent(), $logger, $this->getContext());
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
-        $component->setRedirectCallback(function ($modelId, $eventId) {
-            $this->backLinkRedirect();
-            $this->redirect('this', [
-                'eventId' => $eventId,
-                'id' => $modelId,
-                self::PARAM_AFTER => true,
-            ]);
-        });
+        $component->setRedirectCallback(
+            function ($modelId, $eventId) {
+                $this->backLinkRedirect();
+                $this->redirect(
+                    'this',
+                    [
+                        'eventId' => $eventId,
+                        'id' => $modelId,
+                        self::PARAM_AFTER => true,
+                    ]
+                );
+            }
+        );
         $component->setTemplate($this->eventDispatchFactory->getFormLayout($this->getEvent()));
         return $component;
     }

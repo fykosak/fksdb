@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 abstract class AbstractSymbolGenerator implements TransitionCallback
 {
@@ -18,15 +18,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback
     {
         $this->servicePayment = $servicePayment;
     }
-
-    /**
-     * @param ModelPayment $modelPayment
-     * @param $args
-     * @return array
-     * @throws AlreadyGeneratedSymbolsException
-     * @throws UnsupportedCurrencyException
-     */
-    abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
      * @param ModelHolder $holder
@@ -41,6 +32,15 @@ abstract class AbstractSymbolGenerator implements TransitionCallback
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel($model, $info);
     }
+
+    /**
+     * @param ModelPayment $modelPayment
+     * @param $args
+     * @return array
+     * @throws AlreadyGeneratedSymbolsException
+     * @throws UnsupportedCurrencyException
+     */
+    abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
      * @param ModelHolder $holder

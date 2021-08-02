@@ -24,6 +24,19 @@ abstract class AbstractAdjustment implements FormAdjustment
         $this->innerAdjust($form, $holder);
     }
 
+    private function setForm(Form $form): void
+    {
+        $this->pathCache = [];
+        /** @var Control $control */
+        // TODO not type safe
+        foreach ($form->getComponents(true, FormControl::class) as $control) {
+            $path = $control->lookupPath(Form::class);
+            $path = str_replace('_1', '', $path);
+            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
+            $this->pathCache[$path] = $control;
+        }
+    }
+
     abstract protected function innerAdjust(Form $form, Holder $holder): void;
 
     final protected function hasWildCart(string $mask): bool
@@ -54,18 +67,5 @@ abstract class AbstractAdjustment implements FormAdjustment
             }
         }
         return $result;
-    }
-
-    private function setForm(Form $form): void
-    {
-        $this->pathCache = [];
-        /** @var Control $control */
-        // TODO not type safe
-        foreach ($form->getComponents(true, FormControl::class) as $control) {
-            $path = $control->lookupPath(Form::class);
-            $path = str_replace('_1', '', $path);
-            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
-            $this->pathCache[$path] = $control;
-        }
     }
 }

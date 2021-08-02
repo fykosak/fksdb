@@ -37,7 +37,9 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
 
     public function getContestYear(): ModelContestYear
     {
-        return ModelContestYear::createFromActiveRow($this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch());
+        return ModelContestYear::createFromActiveRow(
+            $this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch()
+        );
     }
 
     public function getContest(): ModelContest
@@ -139,8 +141,10 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
             'eventYear' => $this->event_year,
             'begin' => $this->begin ? $this->begin->format('c') : null,
             'end' => $this->end ? $this->end->format('c') : null,
-            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null, // TODO remove
-            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null, // TODO remove
+            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
+            // TODO remove
+            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null,
+            // TODO remove
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,

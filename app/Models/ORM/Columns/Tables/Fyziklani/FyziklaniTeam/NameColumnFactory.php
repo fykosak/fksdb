@@ -13,7 +13,9 @@ class NameColumnFactory extends ColumnFactory
     /* TODO fix it
      *   public function createField(...$args): BaseControl {
      *       $control = new TextInput($this->getTitle());
-     *       $control->addRule(Form::PATTERN, _('Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.'), '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u');
+     *       $control->addRule(Form::PATTERN,
+     * _('Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky.'),
+     * '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u');
      *       return $control;
      *   }
      * */

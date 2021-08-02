@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;

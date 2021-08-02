@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use FKSDB\Models\ValuePrinters\DatePrinter;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

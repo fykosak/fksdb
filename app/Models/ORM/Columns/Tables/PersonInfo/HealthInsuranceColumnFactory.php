@@ -3,8 +3,8 @@
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;

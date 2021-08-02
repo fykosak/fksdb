@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
 
 class ServicePersonHasFlag extends AbstractService
 {

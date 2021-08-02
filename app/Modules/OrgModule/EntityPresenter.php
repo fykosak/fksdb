@@ -27,22 +27,30 @@ abstract class EntityPresenter extends BasePresenter
 
     public function authorizedCreate(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest())
+        );
     }
 
     public function authorizedEdit(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest())
+        );
     }
 
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest())
+        );
     }
 
     public function authorizedDelete(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest())
+        );
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
 

@@ -6,10 +6,10 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -34,12 +34,16 @@ class TagsColumnFactory extends ColumnFactory
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
             $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
-            $baseEl->addHtml(Html::el('span')
-                ->addAttributes([
-                    'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
-                    'title' => $tag->description,
-                ])
-                ->addText($tag->name));
+            $baseEl->addHtml(
+                Html::el('span')
+                    ->addAttributes(
+                        [
+                            'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
+                            'title' => $tag->description,
+                        ]
+                    )
+                    ->addText($tag->name)
+            );
         }
         return $baseEl;
     }

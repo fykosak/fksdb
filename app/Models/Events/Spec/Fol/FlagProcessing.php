@@ -48,7 +48,9 @@ class FlagProcessing extends WithSchoolProcessing
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent(
+                    $participantData['study_year']
+                ))) {
                 /** @var ModelPersonHasFlag $personHasFlag */
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');

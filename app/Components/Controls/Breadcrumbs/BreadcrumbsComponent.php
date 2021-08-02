@@ -65,8 +65,12 @@ class BreadcrumbsComponent extends BaseComponent
         $this->getReverseBackLinkMapSection()->setExpiration($expiration);
     }
 
-    final public function injectPrimary(Session $session, Router $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void
-    {
+    final public function injectPrimary(
+        Session $session,
+        Router $router,
+        HttpRequest $httpRequest,
+        IPresenterFactory $presenterFactory
+    ): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -99,11 +103,11 @@ class BreadcrumbsComponent extends BaseComponent
     {
         foreach (
             [
-                     self::SECTION_BACKIDS,
-                     self::SECTION_REQUESTS,
-                     self::SECTION_REVERSE,
-                     self::SECTION_PATH_REVERSE,
-                 ] as $sectionName
+                self::SECTION_BACKIDS,
+                self::SECTION_REQUESTS,
+                self::SECTION_REVERSE,
+                self::SECTION_PATH_REVERSE,
+            ] as $sectionName
         ) {
             $this->session->getSection($sectionName)->remove();
         }

@@ -17,14 +17,28 @@ class ServiceSubmit extends AbstractService
 
     private array $submitCache = [];
 
+    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array
+    {
+        return [
+            'submitId' => $submit ? $submit->submit_id : null,
+            'name' => $task->getFQName(),
+            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'taskId' => $task->task_id,
+            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
+            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
+        ];
+    }
+
     public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit
     {
         $key = $ctId . ':' . $taskId;
         if (!isset($this->submitCache[$key]) || !$useCache) {
-            $result = $this->getTable()->where([
-                'ct_id' => $ctId,
-                'task_id' => $taskId,
-            ])->fetch();
+            $result = $this->getTable()->where(
+                [
+                    'ct_id' => $ctId,
+                    'task_id' => $taskId,
+                ]
+            )->fetch();
             $this->submitCache[$key] = $result ?? null;
         }
         return $this->submitCache[$key];
@@ -38,17 +52,5 @@ class ServiceSubmit extends AbstractService
             $this->submitCache[$key] = $row ? ModelSubmit::createFromActiveRow($row) : null;
         }
         return $this->submitCache[$key];
-    }
-
-    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array
-    {
-        return [
-            'submitId' => $submit ? $submit->submit_id : null,
-            'name' => $task->getFQName(),
-            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
-            'taskId' => $task->task_id,
-            'isQuiz' => count($task->related(DbNames::TAB_QUIZ)) > 0,
-            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
-        ];
     }
 }

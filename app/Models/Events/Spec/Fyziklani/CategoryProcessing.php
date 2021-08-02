@@ -33,7 +33,14 @@ class CategoryProcessing extends AbstractCategoryProcessing
         $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Logger::INFO));
+            $logger->log(
+                new Message(
+                    sprintf(
+                        _('Team inserted to category %s.'),
+                        ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])
+                    ), Logger::INFO
+                )
+            );
         }
     }
 

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\ORM\ServicesMulti\Events;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\Exceptions\ModelException;
 
 class ServiceMFyziklaniParticipant extends AbstractServiceMulti
 {

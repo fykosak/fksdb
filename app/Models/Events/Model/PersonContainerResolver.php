@@ -4,11 +4,11 @@ namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\SmartObject;
 use FKSDB\Models\Persons\ModifiabilityResolver;
-use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\SelfResolver;
+use FKSDB\Models\Persons\VisibilityResolver;
+use Nette\SmartObject;
 
 class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver
 {
@@ -43,7 +43,9 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
         if (!$person) {
             return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
-        return ($this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        return ($this->isModifiable(
+            $person
+        )) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(?ModelPerson $person): bool

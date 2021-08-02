@@ -76,19 +76,28 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
     {
         $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', $this->schedule_group_id);
-        XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'scheduleGroupType' => $this->schedule_group_type,
-            'eventId' => $this->event_id,
-            'start' => $this->start->format('c'),
-            'end' => $this->end->format('c'),
-        ], $document, $node);
-        XMLHelper::fillArrayArgumentsToNode('lang', [
-            'name' => [
-                'cs' => $this->name_cs,
-                'en' => $this->name_en,
+        XMLHelper::fillArrayToNode(
+            [
+                'scheduleGroupId' => $this->schedule_group_id,
+                'scheduleGroupType' => $this->schedule_group_type,
+                'eventId' => $this->event_id,
+                'start' => $this->start->format('c'),
+                'end' => $this->end->format('c'),
             ],
-        ], $document, $node);
+            $document,
+            $node
+        );
+        XMLHelper::fillArrayArgumentsToNode(
+            'lang',
+            [
+                'name' => [
+                    'cs' => $this->name_cs,
+                    'en' => $this->name_en,
+                ],
+            ],
+            $document,
+            $node
+        );
         return $node;
     }
 }

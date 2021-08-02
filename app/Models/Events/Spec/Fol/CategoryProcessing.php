@@ -40,7 +40,12 @@ class CategoryProcessing extends AbstractCategoryProcessing
         $model = $holder->getPrimaryHolder()->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
+            $logger->log(
+                new Message(
+                    sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
+                    Logger::INFO
+                )
+            );
         }
     }
 
@@ -63,7 +68,9 @@ class CategoryProcessing extends AbstractCategoryProcessing
                 $olds += 1;
             } else {
                 /** @var ModelRegion|null $country */
-                $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
+                $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(
+                    ['school_id' => $competitor['school_id']]
+                )->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;
                 }

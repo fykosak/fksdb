@@ -9,7 +9,6 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -21,6 +20,7 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -119,8 +119,70 @@ class MailSender
         }
 
         foreach ($logins as $login) {
-            $this->createMessage($login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
+            $this->createMessage(
+                $login,
+                $transition->getBaseMachine(),
+                $holder->getBaseHolder($transition->getBaseMachine()->getName())
+            );
         }
+    }
+
+    private function resolveAdressees(Transition $transition, Holder $holder): array
+    {
+        if (is_array($this->addressees)) {
+            $names = $this->addressees;
+        } else {
+            if ($this->hasBcc()) {
+                $addressees = substr($this->addressees, strlen(self::BCC_PREFIX));
+            } else {
+                $addressees = $this->addressees;
+            }
+            switch ($addressees) {
+                case self::ADDR_SELF:
+                    $names = [$transition->getBaseMachine()->getName()];
+                    break;
+                case self::ADDR_PRIMARY:
+                    $names = [$holder->getPrimaryHolder()->getName()];
+                    break;
+                case self::ADDR_SECONDARY:
+                    $names = [];
+                    foreach ($holder->getGroupedSecondaryHolders() as $group) {
+                        $names = array_merge(
+                            $names,
+                            array_map(
+                                function (BaseHolder $it): string {
+                                    return $it->getName();
+                                },
+                                $group['holders']
+                            )
+                        );
+                    }
+                    break;
+                case self::ADDR_ALL:
+                    $names = array_keys($holder->getBaseHolders());
+                    break;
+                default:
+                    $names = [];
+            }
+        }
+
+        $persons = [];
+        foreach ($names as $name) {
+            $person = $holder->getBaseHolder($name)->getPerson();
+            if ($person) {
+                $persons[] = $person->person_id;
+            }
+        }
+        return $persons;
+    }
+
+    private function hasBcc(): bool
+    {
+        return !is_array($this->addressees) && substr(
+                $this->addressees,
+                0,
+                strlen(self::BCC_PREFIX)
+            ) == self::BCC_PREFIX;
     }
 
     /**
@@ -132,8 +194,11 @@ class MailSender
      * @throws UnsupportedLanguageException
      * @throws ModelException
      */
-    private function createMessage(ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage
-    {
+    private function createMessage(
+        ModelLogin $login,
+        BaseMachine $baseMachine,
+        BaseHolder $baseHolder
+    ): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->getHolder();
@@ -186,6 +251,11 @@ class MailSender
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
+    private function getUntil(ModelEvent $event): \DateTimeInterface
+    {
+        return $event->registration_end ?? $event->end;
+    }
+
     /**
      * @param ModelEvent $event
      * @param ActiveRow $application
@@ -200,59 +270,8 @@ class MailSender
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
-        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
-    }
-
-    private function getUntil(ModelEvent $event): \DateTimeInterface
-    {
-        return $event->registration_end ?? $event->end;
-    }
-
-    private function hasBcc(): bool
-    {
-        return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
-    }
-
-    private function resolveAdressees(Transition $transition, Holder $holder): array
-    {
-        if (is_array($this->addressees)) {
-            $names = $this->addressees;
-        } else {
-            if ($this->hasBcc()) {
-                $addressees = substr($this->addressees, strlen(self::BCC_PREFIX));
-            } else {
-                $addressees = $this->addressees;
-            }
-            switch ($addressees) {
-                case self::ADDR_SELF:
-                    $names = [$transition->getBaseMachine()->getName()];
-                    break;
-                case self::ADDR_PRIMARY:
-                    $names = [$holder->getPrimaryHolder()->getName()];
-                    break;
-                case self::ADDR_SECONDARY:
-                    $names = [];
-                    foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
-                    }
-                    break;
-                case self::ADDR_ALL:
-                    $names = array_keys($holder->getBaseHolders());
-                    break;
-                default:
-                    $names = [];
-            }
-        }
-
-        $persons = [];
-        foreach ($names as $name) {
-            $person = $holder->getBaseHolder($name)->getPerson();
-            if ($person) {
-                $persons[] = $person->person_id;
-            }
-        }
-        return $persons;
+        return $event->name . ': ' . $application . ' ' . mb_strtolower(
+                $machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState())
+            );
     }
 }

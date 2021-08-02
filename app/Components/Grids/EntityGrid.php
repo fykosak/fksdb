@@ -19,8 +19,12 @@ abstract class EntityGrid extends BaseGrid
 
     private array $columns;
 
-    public function __construct(Container $container, string $serviceClassName, array $columns = [], array $queryParams = [])
-    {
+    public function __construct(
+        Container $container,
+        string $serviceClassName,
+        array $columns = [],
+        array $queryParams = []
+    ) {
         parent::__construct($container);
         $this->service = $container->getByType($serviceClassName);
         $this->queryParams = $queryParams;

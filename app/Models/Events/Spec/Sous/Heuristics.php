@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
  */
 class Heuristics /*extends StoredQueryPostProcessing */
 {
- /* uncomment to use */
+    /* uncomment to use */
 
     public const RESERVE_1 = 8;
     public const ABS_INV = 3;

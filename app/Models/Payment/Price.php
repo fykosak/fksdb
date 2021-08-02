@@ -21,6 +21,14 @@ class Price
     }
 
     /**
+     * @return string[]
+     */
+    public static function getAllCurrencies(): array
+    {
+        return [self::CURRENCY_CZK, self::CURRENCY_EUR];
+    }
+
+    /**
      * @param Price $price
      * @throws \LogicException
      */
@@ -48,11 +56,12 @@ class Price
     }
 
     /**
-     * @return string[]
+     * @return string
+     * @throws UnsupportedCurrencyException
      */
-    public static function getAllCurrencies(): array
+    public function __toString(): string
     {
-        return [self::CURRENCY_CZK, self::CURRENCY_EUR];
+        return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
     }
 
     /**
@@ -70,14 +79,5 @@ class Price
             default:
                 throw new UnsupportedCurrencyException($currency);
         }
-    }
-
-    /**
-     * @return string
-     * @throws UnsupportedCurrencyException
-     */
-    public function __toString(): string
-    {
-        return \sprintf('%1.2f %s', $this->amount, self::getLabel($this->currency));
     }
 }

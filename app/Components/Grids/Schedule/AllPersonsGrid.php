@@ -50,7 +50,17 @@ class AllPersonsGrid extends BaseGrid
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumns(['person.full_name', 'schedule_item.name', 'schedule_group.name', 'schedule_item.price_czk', 'schedule_item.price_eur', 'event.role', 'payment.payment']);
+        $this->addColumns(
+            [
+                'person.full_name',
+                'schedule_item.name',
+                'schedule_group.name',
+                'schedule_item.price_czk',
+                'schedule_item.price_eur',
+                'event.role',
+                'payment.payment',
+            ]
+        );
     }
 
     protected function getModelClassName(): string

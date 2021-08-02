@@ -42,9 +42,17 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
+            $logger->log(
+                new TestLog(
+                    $this->getTitle(),
+                    \sprintf('%s number (%s) is not valid', $this->getTitle(), $value),
+                    TestLog::LVL_DANGER
+                )
+            );
         } else {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
+            $logger->log(
+                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS)
+            );
         }
     }
 
@@ -60,12 +68,15 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule(function (BaseControl $control): bool {
-                if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
-                    return true;
-                }
-                return $this->phoneNumberFactory->isValid($control->getValue());
-            }, _('Phone number is not valid. Please insert a valid number.'));
+            ->addRule(
+                function (BaseControl $control): bool {
+                    if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
+                        return true;
+                    }
+                    return $this->phoneNumberFactory->isValid($control->getValue());
+                },
+                _('Phone number is not valid. Please insert a valid number.')
+            );
         return $control;
     }
 

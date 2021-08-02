@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 
 /**

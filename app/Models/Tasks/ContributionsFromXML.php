@@ -16,14 +16,12 @@ use FKSDB\Models\Pipeline\Stage;
 class ContributionsFromXML extends Stage
 {
 
-    private SeriesData $data;
-
     /** @var array   contribution type => xml element */
     private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
-
+    private SeriesData $data;
     private ServiceTaskContribution $taskContributionService;
 
     private ServiceOrg $serviceOrg;
@@ -48,11 +46,6 @@ class ContributionsFromXML extends Stage
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
-    }
-
-    public function getOutput(): SeriesData
-    {
-        return $this->data;
     }
 
     private function processTask(\SimpleXMLElement $XMLTask): void
@@ -97,13 +90,20 @@ class ContributionsFromXML extends Stage
 
             // store new contributions
             foreach ($contributors as $contributor) {
-                $this->taskContributionService->createNewModel([
-                    'person_id' => $contributor->person_id,
-                    'task_id' => $task->task_id,
-                    'type' => $type,
-                ]);
+                $this->taskContributionService->createNewModel(
+                    [
+                        'person_id' => $contributor->person_id,
+                        'task_id' => $task->task_id,
+                        'type' => $type,
+                    ]
+                );
             }
         }
         $this->taskContributionService->explorer->getConnection()->commit();
+    }
+
+    public function getOutput(): SeriesData
+    {
+        return $this->data;
     }
 }

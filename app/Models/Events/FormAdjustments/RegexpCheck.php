@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Nette\Forms\Form;
 use Nette\Forms\Control;
+use Nette\Forms\Form;
 use Nette\Utils\Strings;
 
 class RegexpCheck extends AbstractAdjustment implements FormAdjustment
@@ -28,9 +28,12 @@ class RegexpCheck extends AbstractAdjustment implements FormAdjustment
             return;
         }
         foreach ($controls as $control) {
-            $control->addRule(function (Control $control): bool {
-                return (bool)Strings::match($control->getValue(), $this->pattern);
-            }, $this->message);
+            $control->addRule(
+                function (Control $control): bool {
+                    return (bool)Strings::match($control->getValue(), $this->pattern);
+                },
+                $this->message
+            );
         }
     }
 }

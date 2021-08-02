@@ -26,17 +26,17 @@ class Pipeline
 
     private ?Logger $logger = null;
 
-    public function setLogger(Logger $logger): void
-    {
-        $this->logger = $logger;
-    }
-
     /**
      * @return MemoryLogger
      */
     public function getLogger(): Logger
     {
         return $this->logger;
+    }
+
+    public function setLogger(Logger $logger): void
+    {
+        $this->logger = $logger;
     }
 
     /**

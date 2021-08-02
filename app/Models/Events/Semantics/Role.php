@@ -29,8 +29,12 @@ class Role extends EvaluatedExpression
 
     private RelatedPersonAuthorizator $relatedAuthorizator;
 
-    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator)
-    {
+    public function __construct(
+        string $role,
+        User $user,
+        ContestAuthorizator $contestAuthorizator,
+        RelatedPersonAuthorizator $relatedAuthorizator
+    ) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;

@@ -45,13 +45,18 @@ class ModelSubmit extends AbstractModel implements Resource
 
     public function getFingerprint(): string
     {
-        return md5(implode(':', [
-            $this->submit_id,
-            $this->submitted_on,
-            $this->source,
-            $this->note,
-            $this->raw_points,
-        ]));
+        return md5(
+            implode(
+                ':',
+                [
+                    $this->submit_id,
+                    $this->submitted_on,
+                    $this->source,
+                    $this->note,
+                    $this->raw_points,
+                ]
+            )
+        );
     }
 
     public function canRevoke(): bool

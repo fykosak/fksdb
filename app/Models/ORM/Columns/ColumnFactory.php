@@ -4,13 +4,13 @@ namespace FKSDB\Models\ORM\Columns;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Badges\PermissionDeniedBadge;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ReferencedAccessor;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ValuePrinters\StringPrinter;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
 use Nette\Utils\Html;
@@ -40,8 +40,13 @@ abstract class ColumnFactory
         $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
-    final public function setUp(string $tableName, string $modelClassName, string $modelAccessKey, string $title, ?string $description): void
-    {
+    final public function setUp(
+        string $tableName,
+        string $modelClassName,
+        string $modelAccessKey,
+        string $title,
+        ?string $description
+    ): void {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
@@ -69,6 +74,21 @@ abstract class ColumnFactory
         return $field;
     }
 
+    /**
+     * @param ...$args
+     * @return BaseControl
+     * @throws OmittedControlException
+     */
+    protected function createFormControl(...$args): BaseControl
+    {
+        throw new OmittedControlException();
+    }
+
+    final public function getDescription(): ?string
+    {
+        return $this->description ? _($this->description) : null;
+    }
+
     final public function setPermissionValue(array $values): void
     {
         $this->permission = new FieldLevelPermission(
@@ -87,52 +107,9 @@ abstract class ColumnFactory
         $this->omitInputField = $omit;
     }
 
-    final public function getPermission(): FieldLevelPermission
-    {
-        return $this->permission;
-    }
-
     final public function getTitle(): string
     {
         return _($this->title);
-    }
-
-    final public function getDescription(): ?string
-    {
-        return $this->description ? _($this->description) : null;
-    }
-
-    final protected function getModelAccessKey(): string
-    {
-        return $this->modelAccessKey;
-    }
-
-    final protected function getTableName(): string
-    {
-        return $this->tableName;
-    }
-
-    final protected function getMetaData(): array
-    {
-        if (!isset($this->metaData)) {
-            $this->metaData = $this->metaDataFactory->getMetaData($this->tableName, $this->modelAccessKey);
-        }
-        return $this->metaData;
-    }
-
-    /**
-     * @param ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
-    protected function createFormControl(...$args): BaseControl
-    {
-        throw new OmittedControlException();
-    }
-
-    protected function createHtmlValue(AbstractModel $model): Html
-    {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
     /**
@@ -153,6 +130,16 @@ abstract class ColumnFactory
         return $this->createHtmlValue($model);
     }
 
+    final public function hasReadPermissions(int $userValue): bool
+    {
+        return $userValue >= $this->getPermission()->read;
+    }
+
+    final public function getPermission(): FieldLevelPermission
+    {
+        return $this->permission;
+    }
+
     /**
      * @param AbstractModel $modelSingle
      * @return AbstractModel|null
@@ -163,9 +150,19 @@ abstract class ColumnFactory
         return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }
 
-    final public function hasReadPermissions(int $userValue): bool
+    protected function renderNullModel(): Html
     {
-        return $userValue >= $this->getPermission()->read;
+        return NotSetBadge::getHtml();
+    }
+
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+    }
+
+    final protected function getModelAccessKey(): string
+    {
+        return $this->modelAccessKey;
     }
 
     final public function hasWritePermissions(int $userValue): bool
@@ -173,8 +170,16 @@ abstract class ColumnFactory
         return $userValue >= $this->getPermission()->write;
     }
 
-    protected function renderNullModel(): Html
+    final protected function getTableName(): string
     {
-        return NotSetBadge::getHtml();
+        return $this->tableName;
+    }
+
+    final protected function getMetaData(): array
+    {
+        if (!isset($this->metaData)) {
+            $this->metaData = $this->metaDataFactory->getMetaData($this->tableName, $this->modelAccessKey);
+        }
+        return $this->metaData;
     }
 }

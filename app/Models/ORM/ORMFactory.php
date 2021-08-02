@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Links\LinkFactory;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;

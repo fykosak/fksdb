@@ -33,12 +33,17 @@ class EventFactory
         return $event;
     }
 
-    private function createPush(array $data): PushEvent
+    private function fillBase(Event $event, array $data): void
     {
-        $event = new PushEvent();
-        $this->fillBase($event, $data);
-        self::fillHelper(['before', 'after', 'ref'], $event, $data);
-        return $event;
+        if (!array_key_exists('repository', $data)) {
+            throw new MissingEventFieldException('repository');
+        }
+        $event->repository = $this->createRepository($data['repository']);
+
+        if (!array_key_exists('sender', $data)) {
+            throw new MissingEventFieldException('sender');
+        }
+        $event->sender = $this->createUser($data['sender']);
     }
 
     private function createRepository(array $data): Repository
@@ -84,19 +89,6 @@ class EventFactory
         return $user;
     }
 
-    private function fillBase(Event $event, array $data): void
-    {
-        if (!array_key_exists('repository', $data)) {
-            throw new MissingEventFieldException('repository');
-        }
-        $event->repository = $this->createRepository($data['repository']);
-
-        if (!array_key_exists('sender', $data)) {
-            throw new MissingEventFieldException('sender');
-        }
-        $event->sender = $this->createUser($data['sender']);
-    }
-
     private static function fillHelper(array $definition, object $object, array $data, bool $strict = false): void
     {
         foreach ($definition as $key) {
@@ -109,5 +101,13 @@ class EventFactory
             }
             $object->$key = $data[$key];
         }
+    }
+
+    private function createPush(array $data): PushEvent
+    {
+        $event = new PushEvent();
+        $this->fillBase($event, $data);
+        self::fillHelper(['before', 'after', 'ref'], $event, $data);
+        return $event;
     }
 }

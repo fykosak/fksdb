@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Forms\Form;
 use Nette\Forms\Control;
+use Nette\Forms\Form;
 
 /**
  * @deprecated use person_schedule UC
@@ -34,8 +34,13 @@ class ResourceAvailability extends AbstractAdjustment
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled'])
-    {
+    public function __construct(
+        array $fields,
+        string $paramCapacity,
+        string $message,
+        array $includeStates = [Machine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -103,13 +108,19 @@ class ResourceAvailability extends AbstractAdjustment
                 $table->where('1=0');
             }
 
-            $primaries = array_map(function (BaseHolder $baseHolder) {
-                $model = $baseHolder->getModel2();
-                return $model ? $model->getPrimary(false) : null;
-            }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+            $primaries = array_map(
+                function (BaseHolder $baseHolder) {
+                    $model = $baseHolder->getModel2();
+                    return $model ? $model->getPrimary(false) : null;
+                },
+                $serviceData['holders']
+            );
+            $primaries = array_filter(
+                $primaries,
+                function ($primary): bool {
+                    return (bool)$primary;
+                }
+            );
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();

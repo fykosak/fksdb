@@ -13,8 +13,12 @@ class MultiTableSelection extends Selection
 
     private AbstractServiceMulti $service;
 
-    public function __construct(AbstractServiceMulti $service, string $table, Explorer $explorer, Conventions $conventions)
-    {
+    public function __construct(
+        AbstractServiceMulti $service,
+        string $table,
+        Explorer $explorer,
+        Conventions $conventions
+    ) {
         parent::__construct($explorer, $conventions, $table);
         $this->service = $service;
     }

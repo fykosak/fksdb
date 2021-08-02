@@ -86,6 +86,11 @@ class ModelPayment extends AbstractModel implements Resource
 
     public function hasGeneratedSymbols(): bool
     {
-        return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
+        return $this->constant_symbol
+            || $this->variable_symbol
+            || $this->specific_symbol
+            || $this->bank_account
+            || $this->bank_name
+            || $this->recipient;
     }
 }

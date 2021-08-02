@@ -2,12 +2,12 @@
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
+use FKSDB\Models\Transitions\Holder\ModelHolder;
 
 class PriceCalculator implements TransitionCallback
 {
@@ -26,16 +26,6 @@ class PriceCalculator implements TransitionCallback
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(ModelHolder $holder, ...$args): void
-    {
-        $price = new Price(0, $holder->getModel()->currency);
-        foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($holder->getModel());
-            $price->add($subPrice);
-        }
-        $this->servicePayment->updateModel($holder->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
-    }
-
     /**
      * @param ModelPayment $modelPayment
      * @return array[]
@@ -52,5 +42,18 @@ class PriceCalculator implements TransitionCallback
     public function invoke(ModelHolder $holder, ...$args): void
     {
         $this->__invoke($holder, ...$args);
+    }
+
+    final public function __invoke(ModelHolder $holder, ...$args): void
+    {
+        $price = new Price(0, $holder->getModel()->currency);
+        foreach ($this->preProcess as $preProcess) {
+            $subPrice = $preProcess->calculate($holder->getModel());
+            $price->add($subPrice);
+        }
+        $this->servicePayment->updateModel(
+            $holder->getModel(),
+            ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]
+        );
     }
 }

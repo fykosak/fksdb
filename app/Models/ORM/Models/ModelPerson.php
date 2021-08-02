@@ -72,8 +72,10 @@ class ModelPerson extends AbstractModel implements Resource
         return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
     }
 
-    public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory
-    {
+    public function getHistoryByContestYear(
+        ModelContestYear $contestYear,
+        bool $extrapolated = false
+    ): ?ModelPersonHistory {
         return $this->getHistory($contestYear->ac_year, $extrapolated);
     }
 
@@ -292,7 +294,10 @@ class ModelPerson extends AbstractModel implements Resource
      */
     public function removeScheduleForEvent(int $eventId): void
     {
-        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
+        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
+            'schedule_item.schedule_group.event_id=?',
+            $eventId
+        );
         foreach ($query as $row) {
             $row->delete();
         }
@@ -303,8 +308,13 @@ class ModelPerson extends AbstractModel implements Resource
      * @param string[] $types
      * @return ModelSchedulePayment[]
      */
-    public function getScheduleRests(ModelEvent $event, array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]): array
-    {
+    public function getScheduleRests(
+        ModelEvent $event,
+        array $types = [
+            ModelScheduleGroup::TYPE_ACCOMMODATION,
+            ModelScheduleGroup::TYPE_WEEKEND,
+        ]
+    ): array {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)

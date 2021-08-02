@@ -11,9 +11,11 @@ class ServiceFyziklaniTask extends AbstractService
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask
     {
-        $result = $event->getFyziklaniTasks()->where([
-            'label' => $label,
-        ])->fetch();
+        $result = $event->getFyziklaniTasks()->where(
+            [
+                'label' => $label,
+            ]
+        )->fetch();
         return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
     }
 

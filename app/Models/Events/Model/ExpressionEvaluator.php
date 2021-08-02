@@ -20,7 +20,7 @@ class ExpressionEvaluator
             return $condition;
         } elseif (is_callable($condition)) {
             return $condition($context);
-           // return call_user_func($condition, $context);
+            // return call_user_func($condition, $context);
         } else {
             throw new InvalidArgumentException("Cannot evaluate condition $condition.");
         }

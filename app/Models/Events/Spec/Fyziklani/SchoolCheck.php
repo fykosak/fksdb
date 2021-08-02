@@ -8,8 +8,8 @@ use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
+use Nette\Forms\Controls\BaseControl;
 
 abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment
 {
@@ -22,16 +22,6 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    public function getHolder(): Holder
-    {
-        return $this->holder;
-    }
-
-    public function setHolder(Holder $holder): void
-    {
-        $this->holder = $holder;
-    }
-
     /**
      * @param Control[] $schoolControls
      * @param Control[]|ReferencedId[] $personControls
@@ -39,13 +29,23 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment
      */
     final protected function getSchools(array $schoolControls, array $personControls): array
     {
-        $personIds = array_filter(array_map(function (BaseControl $control) {
-            try {
-                return $control->getValue();
-            } catch (ModelDataConflictException $exception) {
-                $control->addError(sprintf(_('Some fields of the group "%s" do not match an existing record.'), $control->getLabel()));
-            }
-        }, $personControls));
+        $personIds = array_filter(
+            array_map(
+                function (BaseControl $control) {
+                    try {
+                        return $control->getValue();
+                    } catch (ModelDataConflictException $exception) {
+                        $control->addError(
+                            sprintf(
+                                _('Some fields of the group "%s" do not match an existing record.'),
+                                $control->getLabel()
+                            )
+                        );
+                    }
+                },
+                $personControls
+            )
+        );
 
         $schools = $this->servicePersonHistory->getTable()
             ->where('person_id', $personIds)
@@ -64,5 +64,15 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment
             }
         }
         return $result;
+    }
+
+    public function getHolder(): Holder
+    {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void
+    {
+        $this->holder = $holder;
     }
 }

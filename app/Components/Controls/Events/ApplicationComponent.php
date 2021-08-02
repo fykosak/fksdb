@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -123,7 +123,14 @@ class ApplicationComponent extends BaseComponent
         $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
 
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true) as $transition) {
+        foreach (
+            $primaryMachine->getAvailableTransitions(
+                $this->holder,
+                $this->holder->getPrimaryHolder()->getModelState(),
+                true,
+                true
+            ) as $transition
+        ) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -183,7 +190,8 @@ class ApplicationComponent extends BaseComponent
 
     private function canEdit(): bool
     {
-        return $this->holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState(
+        ) != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void

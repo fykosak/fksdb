@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
 
 /**
  * Service class to high-level manipulation with ORM objects.

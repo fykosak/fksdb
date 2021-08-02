@@ -2,21 +2,21 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\Authentication\Exceptions\RecoveryException;
+use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
-use FKSDB\Models\Authentication\Exceptions\RecoveryException;
-use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
+use FKSDB\Modules\Core\BasePresenter;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
 use Nette\Application\UI\Form;
@@ -135,18 +135,22 @@ final class AuthenticationPresenter extends BasePresenter
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Login or e-mail'))
             ->addRule(Form::FILLED, _('Insert login or email address.'))
-            ->getControlPrototype()->addAttributes([
-                'class' => 'top form-control',
-                'autofocus' => true,
-                'placeholder' => _('Login or e-mail'),
-                'autocomplete' => 'username',
-            ]);
+            ->getControlPrototype()->addAttributes(
+                [
+                    'class' => 'top form-control',
+                    'autofocus' => true,
+                    'placeholder' => _('Login or e-mail'),
+                    'autocomplete' => 'username',
+                ]
+            );
         $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes([
-                'class' => 'bottom mb-3 form-control',
-                'placeholder' => _('Password'),
-                'autocomplete' => 'current-password',
-            ]);
+            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
+                [
+                    'class' => 'bottom mb-3 form-control',
+                    'placeholder' => _('Password'),
+                    'autocomplete' => 'current-password',
+                ]
+            );
         $form->addSubmit('send', _('Log in'));
         $form->addProtection(_('The form has expired. Please send it again.'));
         $form->onSuccess[] = function (Form $form) {
@@ -208,7 +212,10 @@ final class AuthenticationPresenter extends BasePresenter
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
-            $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
+            $this->flashMessage(
+                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
+                self::FLASH_SUCCESS
+            );
             $connection->commit();
             $this->redirect('login');
         } catch (AuthenticationException | RecoveryException $exception) {
@@ -230,9 +237,12 @@ final class AuthenticationPresenter extends BasePresenter
             $this->redirect('login');
         }
         try {
-            $token = $this->googleProvider->getAccessToken('authorization_code', [
-                'code' => $this->getParameter('code'),
-            ]);
+            $token = $this->googleProvider->getAccessToken(
+                'authorization_code',
+                [
+                    'code' => $this->getParameter('code'),
+                ]
+            );
             $ownerDetails = $this->googleProvider->getResourceOwner($token);
             $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
             $this->getUser()->login($login);

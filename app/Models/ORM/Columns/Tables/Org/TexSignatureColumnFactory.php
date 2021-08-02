@@ -16,7 +16,11 @@ class TexSignatureColumnFactory extends ColumnFactory
 
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED)
-            ->addRule(Form::PATTERN, sprintf(_('%s contains forbidden characters.'), $this->getTitle()), '[a-z][a-z0-9._\-]*');
+            ->addRule(
+                Form::PATTERN,
+                sprintf(_('%s contains forbidden characters.'), $this->getTitle()),
+                '[a-z][a-z0-9._\-]*'
+            );
         return $control;
     }
 }

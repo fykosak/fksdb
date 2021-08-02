@@ -28,7 +28,9 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver
         if (!$person) {
             return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
-        return $this->isSelf($person) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        return $this->isSelf(
+            $person
+        ) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
     public function isModifiable(?ModelPerson $person): bool

@@ -36,7 +36,10 @@ class ModelContestant extends AbstractModel implements Resource
 
     public function getContestYear(): ModelContestYear
     {
-        $row = $this->getTable()->createSelectionInstance(DbNames::TAB_CONTEST_YEAR)->where('contest_id', $this->contest_id)->where('year', $this->year)->fetch();
+        $row = $this->getTable()->createSelectionInstance(DbNames::TAB_CONTEST_YEAR)->where(
+            'contest_id',
+            $this->contest_id
+        )->where('year', $this->year)->fetch();
         return ModelContestYear::createFromActiveRow($row);
     }
 

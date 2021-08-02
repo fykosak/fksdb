@@ -2,11 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractService;
 
 /**
  * @method ModelEmailMessage createNewModel(array $data)

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Models\Events;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -53,17 +53,6 @@ class EventDispatchFactory
 
     /**
      * @param ModelEvent $event
-     * @return string
-     * @throws ConfigurationNotFoundException
-     */
-    public function getFormLayout(ModelEvent $event): string
-    {
-        $definition = $this->findDefinition($event);
-        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
-    }
-
-    /**
-     * @param ModelEvent $event
      * @return array
      * @throws ConfigurationNotFoundException
      */
@@ -83,6 +72,22 @@ class EventDispatchFactory
         throw new ConfigurationNotFoundException($event);
     }
 
+    private function createKey(ModelEvent $event): string
+    {
+        return $event->event_type_id . '-' . $event->event_year;
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return string
+     * @throws ConfigurationNotFoundException
+     */
+    public function getFormLayout(ModelEvent $event): string
+    {
+        $definition = $this->findDefinition($event);
+        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
+    }
+
     /**
      * @param ModelEvent $event
      * @return Holder
@@ -96,10 +101,5 @@ class EventDispatchFactory
         $holder = $this->container->{$definition['holderMethod']}();
         $holder->inferEvent($event);
         return $holder;
-    }
-
-    private function createKey(ModelEvent $event): string
-    {
-        return $event->event_type_id . '-' . $event->event_year;
     }
 }

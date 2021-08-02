@@ -11,7 +11,11 @@ class TransitionConditionFailedException extends MachineExecutionException
 
     public function __construct(Transition $blockingTransition, int $code = 0, ?\Throwable $previous = null)
     {
-        $message = sprintf(_("Cannot carry out action '%s' in the automat '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseMachine()->getName());
+        $message = sprintf(
+            _("Cannot carry out action '%s' in the automat '%s'."),
+            $blockingTransition->getLabel(),
+            $blockingTransition->getBaseMachine()->getName()
+        );
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
     }

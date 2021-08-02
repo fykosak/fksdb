@@ -2,13 +2,13 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
@@ -37,6 +37,7 @@ class Holder
     private BaseHolder $primaryHolder;
     private Connection $connection;
     private SecondaryModelStrategy $secondaryModelStrategy;
+    private array $groupedHolders;
 
     public function __construct(Connection $connection)
     {
@@ -54,17 +55,28 @@ class Holder
         return $this->connection;
     }
 
-    public function setPrimaryHolder(string $name): void
-    {
-        $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
-            return $baseHolder !== $this->primaryHolder;
-        });
-    }
-
     public function getPrimaryHolder(): BaseHolder
     {
         return $this->primaryHolder;
+    }
+
+    public function setPrimaryHolder(string $name): void
+    {
+        $this->primaryHolder = $this->getBaseHolder($name);
+        $this->secondaryBaseHolders = array_filter(
+            $this->baseHolders,
+            function (BaseHolder $baseHolder): bool {
+                return $baseHolder !== $this->primaryHolder;
+            }
+        );
+    }
+
+    public function getBaseHolder(string $name): BaseHolder
+    {
+        if (!isset($this->baseHolders[$name])) {
+            throw new InvalidArgumentException("Unknown base holder '$name'.");
+        }
+        return $this->baseHolders[$name];
     }
 
     public function addBaseHolder(BaseHolder $baseHolder): void
@@ -82,22 +94,6 @@ class Holder
     public function addProcessing(Processing $processing): void
     {
         $this->processings[] = $processing;
-    }
-
-    public function getBaseHolder(string $name): BaseHolder
-    {
-        if (!isset($this->baseHolders[$name])) {
-            throw new InvalidArgumentException("Unknown base holder '$name'.");
-        }
-        return $this->baseHolders[$name];
-    }
-
-    /**
-     * @return BaseHolder[]
-     */
-    public function getBaseHolders(): array
-    {
-        return $this->baseHolders;
     }
 
     public function hasBaseHolder(string $name): bool
@@ -123,82 +119,31 @@ class Holder
         return $this;
     }
 
+    /**
+     * @return BaseHolder[]
+     */
+    public function getBaseHolders(): array
+    {
+        return $this->baseHolders;
+    }
+
     public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void
     {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
             } else {
-                $this->secondaryModelStrategy->loadSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
+                $this->secondaryModelStrategy->loadSecondaryModels(
+                    $group['service'],
+                    $group['joinOn'],
+                    $group['joinTo'],
+                    $group['holders'],
+                    $primaryModel
+                );
             }
         }
         $this->primaryHolder->setModel($primaryModel);
     }
-
-    public function saveModels(): void
-    {
-        /*
-         * When deleting, first delete children, then parent.
-         */
-        if ($this->primaryHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
-            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
-                $baseHolder->saveModel();
-            }
-            $this->primaryHolder->saveModel();
-        } else {
-            /*
-             * When creating/updating primary model, propagate its PK to referencing secondary models.
-             */
-            $this->primaryHolder->saveModel();
-            $primaryModel = $this->primaryHolder->getModel2();
-
-            foreach ($this->getGroupedSecondaryHolders() as $group) {
-                $this->secondaryModelStrategy->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
-            }
-
-            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
-                $baseHolder->saveModel();
-            }
-        }
-    }
-
-    /**
-     * Apply processings to the values and sets them to the ORM model.
-     *
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Transition[] $transitions
-     * @param Logger $logger
-     * @param Form|null $form
-     * @return string[] machineName => new state
-     */
-    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array
-    {
-        $newStates = [];
-        foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->getTargetState();
-        }
-        foreach ($this->processings as $processing) {
-            $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
-            if ($result) {
-                $newStates = array_merge($newStates, $result);
-            }
-        }
-
-        return $newStates;
-    }
-
-    public function adjustForm(Form $form): void
-    {
-        foreach ($this->formAdjustments as $adjustment) {
-            $adjustment->adjust($form, $this);
-        }
-    }
-
-    /*
-     * Joined data manipulation
-     */
-    private array $groupedHolders;
 
     /**
      * Group secondary by service
@@ -228,6 +173,81 @@ class Holder
         }
 
         return $this->groupedHolders;
+    }
+
+    public function saveModels(): void
+    {
+        /*
+         * When deleting, first delete children, then parent.
+         */
+        if ($this->primaryHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
+            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
+                $baseHolder->saveModel();
+            }
+            $this->primaryHolder->saveModel();
+        } else {
+            /*
+             * When creating/updating primary model, propagate its PK to referencing secondary models.
+             */
+            $this->primaryHolder->saveModel();
+            $primaryModel = $this->primaryHolder->getModel2();
+
+            foreach ($this->getGroupedSecondaryHolders() as $group) {
+                $this->secondaryModelStrategy->updateSecondaryModels(
+                    $group['service'],
+                    $group['joinOn'],
+                    $group['joinTo'],
+                    $group['holders'],
+                    $primaryModel
+                );
+            }
+
+            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
+                $baseHolder->saveModel();
+            }
+        }
+    }
+
+    /*
+     * Joined data manipulation
+     */
+
+    /**
+     * Apply processings to the values and sets them to the ORM model.
+     *
+     * @param ArrayHash $values
+     * @param Machine $machine
+     * @param Transition[] $transitions
+     * @param Logger $logger
+     * @param Form|null $form
+     * @return string[] machineName => new state
+     */
+    public function processFormValues(
+        ArrayHash $values,
+        Machine $machine,
+        array $transitions,
+        Logger $logger,
+        ?Form $form
+    ): array {
+        $newStates = [];
+        foreach ($transitions as $name => $transition) {
+            $newStates[$name] = $transition->getTargetState();
+        }
+        foreach ($this->processings as $processing) {
+            $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
+            if ($result) {
+                $newStates = array_merge($newStates, $result);
+            }
+        }
+
+        return $newStates;
+    }
+
+    public function adjustForm(Form $form): void
+    {
+        foreach ($this->formAdjustments as $adjustment) {
+            $adjustment->adjust($form, $this);
+        }
     }
 
     /*

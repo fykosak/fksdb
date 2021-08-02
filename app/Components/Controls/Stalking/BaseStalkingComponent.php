@@ -6,10 +6,10 @@ use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Badges\NoRecordsBadge;
 use FKSDB\Components\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\ORMFactory;
 
 abstract class BaseStalkingComponent extends BaseComponent
 {
@@ -21,8 +21,12 @@ abstract class BaseStalkingComponent extends BaseComponent
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void
-    {
+    public function beforeRender(
+        ModelPerson $person,
+        string $headline,
+        int $userPermissions,
+        int $minimalPermissions
+    ): void {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {

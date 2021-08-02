@@ -26,7 +26,12 @@ class ContestantPresenter extends ExtendedPersonPresenter
 
     public function titleEdit(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user-edit'));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
+                'fa fa-user-edit'
+            )
+        );
     }
 
     public function titleCreate(): void

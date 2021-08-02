@@ -37,7 +37,9 @@ class AESOPPresenter extends AuthenticatedPresenter
     public function renderContestant(): void
     {
         $category = $this->getParameter('category');
-        $this->sendResponse((new ContestantModel($this->getContext(), $this->getSelectedContestYear(), $category))->createResponse());
+        $this->sendResponse(
+            (new ContestantModel($this->getContext(), $this->getSelectedContestYear(), $category))->createResponse()
+        );
     }
 
     public function renderEvent(): void

@@ -76,7 +76,17 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titleMerge(): void
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Merging persons %s (%d) and %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(
+                    _('Merging persons %s (%d) and %s (%d)'),
+                    $this->trunkPerson->getFullName(),
+                    $this->trunkPerson->person_id,
+                    $this->mergedPerson->getFullName(),
+                    $this->mergedPerson->person_id
+                )
+            )
+        );
     }
 
     public function titlePerson(): void
@@ -132,7 +142,10 @@ class DeduplicatePresenter extends BasePresenter
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
-                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
+                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists(
+                            $column,
+                            $data[Merger::IDX_RESOLUTION]
+                        )) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
                     } else {
                         $default = $value; // default is trunk

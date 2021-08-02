@@ -4,9 +4,9 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Connection;
 use Nette\Database\Row;
 
@@ -40,8 +40,12 @@ abstract class AbstractResultsModel
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
-    public function __construct(ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection, EvaluationStrategy $evaluationStrategy)
-    {
+    public function __construct(
+        ModelContestYear $contestYear,
+        ServiceTask $serviceTask,
+        Connection $connection,
+        EvaluationStrategy $evaluationStrategy
+    ) {
         $this->contestYear = $contestYear;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;
@@ -88,6 +92,25 @@ abstract class AbstractResultsModel
         ];
     }
 
+    /**
+     * @return ModelCategory[]
+     */
+    abstract public function getCategories(): array;
+
+    /**
+     * Single series number or array of them.
+     * @param int[]|int $series
+     * TODO int[] OR int
+     */
+    abstract public function setSeries($series): void;
+
+    /**
+     * @return int[]|int (see setSeries)
+     */
+    abstract public function getSeries();
+
+    abstract public function getDataColumns(ModelCategory $category): array;
+
     abstract protected function composeQuery(ModelCategory $category): string;
 
     /**
@@ -128,30 +151,13 @@ abstract class AbstractResultsModel
     {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
-            ->where([
-                'contest_id' => $this->contestYear->contest_id,
-                'year' => $this->contestYear->year,
-                'series' => $series,
-            ])
+            ->where(
+                [
+                    'contest_id' => $this->contestYear->contest_id,
+                    'year' => $this->contestYear->year,
+                    'series' => $series,
+                ]
+            )
             ->order('tasknr');
     }
-
-    /**
-     * @return ModelCategory[]
-     */
-    abstract public function getCategories(): array;
-
-    /**
-     * Single series number or array of them.
-     * @param int[]|int $series
-     * TODO int[] OR int
-     */
-    abstract public function setSeries($series): void;
-
-    /**
-     * @return int[]|int (see setSeries)
-     */
-    abstract public function getSeries();
-
-    abstract public function getDataColumns(ModelCategory $category): array;
 }

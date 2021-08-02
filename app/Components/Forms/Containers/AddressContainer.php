@@ -80,7 +80,9 @@ class AddressContainer extends ModelContainer
         $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {
-                throw new InvalidStateException('You must set FKSDB\Models\ORM\Services\ServiceRegion before getting values from the address container.');
+                throw new InvalidStateException(
+                    sprintf('You must set %s before getting values from the address container.', ServiceRegion::class)
+                );
             }
             /** @var ModelRegion|null $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();

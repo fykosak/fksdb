@@ -31,7 +31,9 @@ class DuplicateFinder
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var ModelPerson $person */
-        foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
+        foreach ($this->servicePerson->getTable()->select(
+            "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
+        ) as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -124,11 +126,6 @@ class DuplicateFinder
         return $differentPersonIds;
     }
 
-    private function stringScore(string $a, string $b): float
-    {
-        return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
-    }
-
     private function relativeDistance(string $a, string $b): float
     {
         $maxLen = max(strlen($a), strlen($b));
@@ -136,5 +133,10 @@ class DuplicateFinder
             return 0.0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
+    }
+
+    private function stringScore(string $a, string $b): float
+    {
+        return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 }

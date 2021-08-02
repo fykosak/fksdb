@@ -23,6 +23,22 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $this->servicePerson = $servicePerson;
     }
 
+    public function getOptions(Field $field): array
+    {
+        $results = [];
+        foreach ([
+                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A,
+                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B,
+                     ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C,
+                     ModelFyziklaniTeam::CATEGORY_ABROAD,
+                     ModelFyziklaniTeam::CATEGORY_OPEN,
+                 ]
+                 as $category) {
+            $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
+        }
+        return $results;
+    }
+
     protected function extractValues(Holder $holder): array
     {
         $participants = [];
@@ -67,16 +83,9 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $personControls = $this->getControl("$name.person_id");
         $value = reset($personControls)->getValue();
         $person = $this->servicePerson->findByPrimary($value);
-        return $person->getHistoryByContestYear($baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getContestYear());
-    }
-
-    public function getOptions(Field $field): array
-    {
-        $results = [];
-        foreach ([ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C, ModelFyziklaniTeam::CATEGORY_ABROAD, ModelFyziklaniTeam::CATEGORY_OPEN] as $category) {
-            $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
-        }
-        return $results;
+        return $person->getHistoryByContestYear(
+            $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getContestYear(),
+        );
     }
 
     abstract protected function getCategory(array $participants): string;
