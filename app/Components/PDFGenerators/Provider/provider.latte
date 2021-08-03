@@ -1,0 +1,50 @@
+{varType iterable $items}
+{varType array $params}
+{varType FKSDB\Components\PDFGenerators\Provider\ProviderComponent $control}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style media="print">
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #FAFAFA;
+            font: 12pt sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        .page {
+            page-break-before: always;
+            page-break-after: always;
+            width: 148mm;
+            padding: 10mm;
+            margin: 0 auto;
+            background: white;
+        }
+
+        {switch $control->getFormat()}
+        {case $control::FORMAT_A5}
+        @page {
+            size: A5;
+            margin: 0;
+        }
+
+        {/switch}
+
+    </style>
+    <title></title>
+</head>
+<body>
+{foreach $items as $item}
+    <div class="page page-a5">
+        {control page $item,$params}
+    </div>
+{/foreach}
+</body>
+</html>

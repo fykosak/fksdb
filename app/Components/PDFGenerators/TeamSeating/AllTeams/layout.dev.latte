@@ -1,5 +1,6 @@
-{layout './@layout.latte'}
+{layout '../@layout.latte'}
 {block places}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
     {foreach $places as $place}
         {var $team = $place->getTeam()}
         {if $team}
