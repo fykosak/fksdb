@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam;
 
-use FKSDB\Components\PDFGenerators\TeamSeating\AbstractPageComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 
-class PageComponent extends AbstractPageComponent implements \FKSDB\Components\PDFGenerators\PageComponent
+class SingleTeamPageComponent extends SeatingPageComponent implements \FKSDB\Components\PDFGenerators\PageComponent
 {
 
     /**

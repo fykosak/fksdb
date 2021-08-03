@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\PDFGenerators\Provider\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\Provider as ListProvider;
-use FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\Provider as PreviewProvider;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\AllTeamsProviderComponent as EachTeamProviderComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\AllTeamsProviderComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
@@ -81,32 +80,23 @@ class SeatingPresenter extends BasePresenter
         $this->template->toPay = $toPayAll;
     }
 
-    protected function createComponentSeatingList(): ProviderComponent
+    protected function createComponentSeatingList(): EachTeamProviderComponent
     {
-        return new ProviderComponent(new ListProvider($this->getEvent(), $this->getContext()), $this->getContext());
+        return new EachTeamProviderComponent($this->getEvent(), $this->getContext());
     }
 
-    protected function createComponentSeatingPreviewAll(): ProviderComponent
+    protected function createComponentSeatingPreviewAll(): AllTeamsProviderComponent
     {
-        return new ProviderComponent(
-            new PreviewProvider($this->getEvent(), 'all', $this->getContext()),
-            $this->getContext()
-        );
+        return new AllTeamsProviderComponent($this->getEvent(), 'all', $this->getContext());
     }
 
-    protected function createComponentSeatingPreviewEmpty(): ProviderComponent
+    protected function createComponentSeatingPreviewEmpty(): AllTeamsProviderComponent
     {
-        return new ProviderComponent(
-            new PreviewProvider($this->getEvent(), 'empty', $this->getContext()),
-            $this->getContext()
-        );
+        return new AllTeamsProviderComponent($this->getEvent(), 'empty', $this->getContext());
     }
 
-    protected function createComponentSeatingPreviewDev(): ProviderComponent
+    protected function createComponentSeatingPreviewDev(): AllTeamsProviderComponent
     {
-        return new ProviderComponent(
-            new PreviewProvider($this->getEvent(), 'dev', $this->getContext()),
-            $this->getContext()
-        );
+        return new AllTeamsProviderComponent($this->getEvent(), 'dev', $this->getContext());
     }
 }

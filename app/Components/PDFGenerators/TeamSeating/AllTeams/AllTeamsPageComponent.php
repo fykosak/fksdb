@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\TeamSeating\AllTeams;
 
-use FKSDB\Components\PDFGenerators\TeamSeating\AbstractPageComponent;
+use FKSDB\Components\PDFGenerators\PageComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use Nette\DI\Container;
 
-class PageComponent extends AbstractPageComponent implements \FKSDB\Components\PDFGenerators\PageComponent
+class AllTeamsPageComponent extends SeatingPageComponent implements PageComponent
 {
 
     private string $mode;

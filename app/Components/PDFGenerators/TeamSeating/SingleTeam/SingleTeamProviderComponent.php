@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam;
 
-use FKSDB\Components\PDFGenerators\Provider\ProviderComponent;
+use FKSDB\Components\PDFGenerators\Provider\AbstractProviderComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\DI\Container;
 
-class SingleProvider implements \FKSDB\Components\PDFGenerators\Provider\Provider
+class SingleTeamProviderComponent extends AbstractProviderComponent
 {
-    protected Container $container;
     protected ModelFyziklaniTeam $team;
 
     public function __construct(ModelFyziklaniTeam $team, Container $container)
     {
+        parent::__construct($container);
         $this->team = $team;
-        $this->container = $container;
     }
 
-    public function createComponentPage(): PageComponent
+    public function createComponentPage(): SingleTeamPageComponent
     {
-        return new PageComponent($this->container);
+        return new SingleTeamPageComponent($this->getContext());
     }
 
     public function getItems(): iterable
@@ -31,6 +30,6 @@ class SingleProvider implements \FKSDB\Components\PDFGenerators\Provider\Provide
 
     public function getFormat(): string
     {
-        return ProviderComponent::FORMAT_A5;
+        return AbstractProviderComponent::FORMAT_A5;
     }
 }

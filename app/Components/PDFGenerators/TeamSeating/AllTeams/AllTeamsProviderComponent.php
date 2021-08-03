@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\TeamSeating\AllTeams;
 
-use FKSDB\Components\PDFGenerators\Provider\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\AbstractProvider;
+use FKSDB\Components\PDFGenerators\TeamSeating\SeatingProviderComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
-class Provider extends AbstractProvider
+class AllTeamsProviderComponent extends SeatingProviderComponent
 {
-
     private string $mode;
 
     public function __construct(ModelEvent $event, string $mode, Container $container)
@@ -20,9 +18,9 @@ class Provider extends AbstractProvider
         $this->mode = $mode;
     }
 
-    public function createComponentPage(): PageComponent
+    public function createComponentPage(): AllTeamsPageComponent
     {
-        return new PageComponent($this->mode, $this->container);
+        return new AllTeamsPageComponent($this->mode, $this->getContext());
     }
 
     public function getItems(): iterable
@@ -32,6 +30,6 @@ class Provider extends AbstractProvider
 
     public function getFormat(): string
     {
-        return ProviderComponent::FORMAT_A5;
+        return AllTeamsProviderComponent::FORMAT_A5;
     }
 }

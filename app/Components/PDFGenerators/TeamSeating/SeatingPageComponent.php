@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\PDFGenerators\PageComponent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
-abstract class AbstractPageComponent extends BaseComponent implements PageComponent
+abstract class SeatingPageComponent extends BaseComponent implements PageComponent
 {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;

@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\PDFGenerators\Provider\ProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\SingleProvider;
+use FKSDB\Components\PDFGenerators\Provider\AbstractProviderComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\SingleTeamProviderComponent;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Entity\ModelNotFoundException;
@@ -62,14 +62,14 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return ProviderComponent
+     * @return AbstractProviderComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function createComponentSeating(): ProviderComponent
+    protected function createComponentSeating(): AbstractProviderComponent
     {
-        return new ProviderComponent(new SingleProvider($this->getEntity(), $this->getContext()), $this->getContext());
+        return new SingleTeamProviderComponent($this->getEntity(), $this->getContext());
     }
 
     /**
