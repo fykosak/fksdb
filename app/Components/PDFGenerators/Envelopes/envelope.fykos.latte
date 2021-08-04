@@ -1,0 +1,23 @@
+{layout './envelope.latte'}
+{varType FKSDB\Models\ORM\Models\ModelAddress $address}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+
+{block sender}
+    <div>FYKOS, ÚTF</div>
+    <div>Matematicko-fyzikální fakulta UK</div>
+    <div>V Holešovičkách 2</div>
+    <div>180 00 Praha 8</div>
+{/block}
+{block recipient}
+    <div>{$person->getFullName()}</div>
+    <div>{$address->target}</div>
+
+    <div>{$address->city}</div>
+
+    <div>{$address->postal_code}</div>
+    {if $address->getRegion()->country_iso != 'CZ'}
+        <b>{$address->getRegion()->name}</b>
+    {/if}
+{/block}
+
+

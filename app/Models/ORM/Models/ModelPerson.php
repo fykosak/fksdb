@@ -99,11 +99,11 @@ class ModelPerson extends AbstractModel implements Resource {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
-    public function getDeliveryAddress2(): ?ModelAddress {
+    public function getDeliveryAddress(): ?ModelAddress {
         return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
     }
 
-    public function getPermanentAddress2(): ?ModelAddress {
+    public function getPermanentAddress(): ?ModelAddress {
         return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
     }
 
