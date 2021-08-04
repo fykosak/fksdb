@@ -16,8 +16,12 @@ abstract class AbstractProviderComponent extends BaseComponent
 
     final public function render(): void
     {
-        $this->template->format = $this->getFormat();
         $this->template->items = $this->getItems();
+        switch ($this->getFormat()) {
+            case self::FORMAT_A5_PORTRAIT:
+                $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'provider-a5-portrait.latte');
+                return;
+        }
         $this->template->render(__DIR__ . '/provider.latte');
     }
 

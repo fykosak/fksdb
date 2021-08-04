@@ -1,70 +1,8 @@
 {varType iterable $items}
 {varType array $params}
-{varType string $format}
-{varType FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent $control}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <style media="print">
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #FAFAFA;
-            font: 12pt sans-serif;
-        }
 
-        * {
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
-        }
-
-        .page {
-            page-break-before: always;
-            page-break-after: always;
-            width: 148mm;
-            padding: 10mm;
-            margin: 0 auto;
-            background: white;
-        }
-
-        {* TODO CSS for each page type*}
-        {switch $format}
-        {case $control::FORMAT_A5_PORTRAIT}
-        @page {
-            size: A5 portrait;
-            margin: 0;
-        }
-
-        {case $control::FORMAT_A5_LANDSCAPE}
-        @page {
-            size: A5 landscape;
-            margin: 0;
-        }
-
-        {case $control::FORMAT_A4_PORTRAIT}
-        @page {
-            size: A4 portrait;
-            margin: 0;
-        }
-
-        {case $control::FORMAT_A4_LANDSCAPE}
-        @page {
-            size: A4 landscape;
-            margin: 0;
-        }
-
-        {/switch}
-
-    </style>
-    <title></title>
-</head>
-<body>
 {foreach $items as $item}
     <div class="page">
         {control page $item,$params}
     </div>
 {/foreach}
-</body>
-</html>
