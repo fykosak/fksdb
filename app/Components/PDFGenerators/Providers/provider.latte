@@ -1,6 +1,7 @@
 {varType iterable $items}
 {varType array $params}
-{varType FKSDB\Components\PDFGenerators\Provider\AbstractProviderComponent $control}
+{varType string $format}
+{varType FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent $control}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +29,29 @@
             background: white;
         }
 
-        {switch $control->getFormat()}
-        {case $control::FORMAT_A5}
+        {* TODO CSS for each page type*}
+        {switch $format}
+        {case $control::FORMAT_A5_PORTRAIT}
         @page {
-            size: A5;
+            size: A5 portrait;
+            margin: 0;
+        }
+
+        {case $control::FORMAT_A5_LANDSCAPE}
+        @page {
+            size: A5 landscape;
+            margin: 0;
+        }
+
+        {case $control::FORMAT_A4_PORTRAIT}
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        {case $control::FORMAT_A4_LANDSCAPE}
+        @page {
+            size: A4 landscape;
             margin: 0;
         }
 
@@ -42,7 +62,7 @@
 </head>
 <body>
 {foreach $items as $item}
-    <div class="page page-a5">
+    <div class="page">
         {control page $item,$params}
     </div>
 {/foreach}

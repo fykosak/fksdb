@@ -9,7 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
 
-class SingleTeamPageComponent extends SeatingPageComponent implements \FKSDB\Components\PDFGenerators\PageComponent
+class PageComponent extends SeatingPageComponent
 {
 
     /**

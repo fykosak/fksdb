@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\AllTeamsProviderComponent as EachTeamProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\AllTeamsProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
@@ -80,23 +81,47 @@ class SeatingPresenter extends BasePresenter
         $this->template->toPay = $toPayAll;
     }
 
-    protected function createComponentSeatingList(): EachTeamProviderComponent
+    /**
+     * @return DefaultProviderComponent
+     * @throws EventNotFoundException
+     */
+    protected function createComponentSeatingList(): DefaultProviderComponent
     {
-        return new EachTeamProviderComponent($this->getEvent(), $this->getContext());
+        return new DefaultProviderComponent(
+            new PageComponent($this->getContext()),
+            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
+            $this->getEvent()->getTeams()->limit(5),
+            $this->getContext()
+        );
     }
 
-    protected function createComponentSeatingPreviewAll(): AllTeamsProviderComponent
+    protected function createComponentSeatingPreviewAll(): DefaultProviderComponent
     {
-        return new AllTeamsProviderComponent($this->getEvent(), 'all', $this->getContext());
+        return new DefaultProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('all', $this->getContext()),
+            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
+            [null],
+            $this->getContext()
+        );
     }
 
-    protected function createComponentSeatingPreviewEmpty(): AllTeamsProviderComponent
+    protected function createComponentSeatingPreviewEmpty(): DefaultProviderComponent
     {
-        return new AllTeamsProviderComponent($this->getEvent(), 'empty', $this->getContext());
+        return new DefaultProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('empty', $this->getContext()),
+            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
+            [null],
+            $this->getContext()
+        );
     }
 
-    protected function createComponentSeatingPreviewDev(): AllTeamsProviderComponent
+    protected function createComponentSeatingPreviewDev(): DefaultProviderComponent
     {
-        return new AllTeamsProviderComponent($this->getEvent(), 'dev', $this->getContext());
+        return new DefaultProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('dev', $this->getContext()),
+            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
+            [null],
+            $this->getContext()
+        );
     }
 }

@@ -8,15 +8,16 @@ use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
+use FKSDB\Components\PDFGenerators\DefaultProviderComponent;
 use FKSDB\Components\PDFGenerators\Provider\AbstractProviderComponent;
-use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\SingleTeamProviderComponent;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -62,14 +63,19 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return AbstractProviderComponent
+     * @return DefaultProviderComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function createComponentSeating(): AbstractProviderComponent
+    protected function createComponentSeating(): DefaultProviderComponent
     {
-        return new SingleTeamProviderComponent($this->getEntity(), $this->getContext());
+        return new DefaultProviderComponent(
+            new PageComponent($this->getContext()),
+            AbstractProviderComponent::FORMAT_A5,
+            [$this->getEntity()],
+            $this->getContext()
+        );
     }
 
     /**

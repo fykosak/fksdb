@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\PDFGenerators\PageComponent;
+use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
-abstract class SeatingPageComponent extends BaseComponent implements PageComponent
+abstract class SeatingPageComponent extends AbstractPageComponent
 {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
