@@ -1,20 +1,20 @@
-{layout './envelope.latte'}
+{layout '../envelope.latte'}
 {varType FKSDB\Models\ORM\Models\ModelAddress $address}
 {varType FKSDB\Models\ORM\Models\ModelPerson $person}
-
+{varType FKSDB\Models\ORM\Models\ModelContest $contest}
 {block sender}
-    <div>FYKOS, ÚTF</div>
-    <div>Matematicko-fyzikální fakulta UK</div>
-    <div>V Holešovičkách 2</div>
-    <div>180 00 Praha 8</div>
+    {switch $contest->contest_id}
+        {case 1}
+        {include sender from './sender.fykos.latte'}
+        {case 2}
+        {include sender from './sender.vyfuk.latte'}
+    {/switch}
+
 {/block}
 {block recipient}
     <div>{$person->getFullName()}</div>
     <div>{$address->target}</div>
-
-    <div>{$address->city}</div>
-
-    <div>{$address->postal_code}</div>
+    <div>{$address->postal_code} {$address->city}</div>
     {if $address->getRegion()->country_iso != 'CZ'}
         <b>{$address->getRegion()->name}</b>
     {/if}
