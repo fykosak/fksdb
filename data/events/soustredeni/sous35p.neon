@@ -1,5 +1,5 @@
 events:
-    soustredeni:
+    soustredeni35p:
         event_type_id: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [35] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
