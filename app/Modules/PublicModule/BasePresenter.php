@@ -1,43 +1,51 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 
-abstract class BasePresenter extends AuthenticatedPresenter {
-
+abstract class BasePresenter extends AuthenticatedPresenter
+{
     use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->yearTraitStartup();
     }
 
-    public function getContestant(): ?ModelContestant {
+    public function getContestant(): ?ModelContestant
+    {
         if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
-            $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
-                'contest_id' => $this->getSelectedContestYear()->contest_id,
-                'year' => $this->getSelectedContestYear()->year,
-            ])->fetch();
+            $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(
+                [
+                    'contest_id' => $this->getSelectedContestYear()->contest_id,
+                    'year' => $this->getSelectedContestYear()->year,
+                ]
+            )->fetch();
 
             $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
         }
         return $this->contestant;
     }
 
-    protected function getNavRoots(): array {
+    protected function getNavRoots(): array
+    {
         return ['Public.Dashboard.default'];
     }
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $contest = $this->getSelectedContest();
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
@@ -46,11 +54,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    protected function getDefaultSubTitle(): ?string {
+    protected function getDefaultSubTitle(): ?string
+    {
         return sprintf(_('%d. year'), $this->year);
     }
 
-    protected function getRole(): string {
+    protected function getRole(): string
+    {
         return 'contestant';
     }
 }

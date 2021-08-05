@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -14,7 +16,8 @@ use Nette\Application\UI\Form;
  *   - fill default form values
  *   - handling submitted data must be implemented in descendants
  */
-abstract class EntityPresenter extends BasePresenter {
+abstract class EntityPresenter extends BasePresenter
+{
 
     public const COMP_EDIT_FORM = 'editComponent';
     public const COMP_CREATE_FORM = 'createComponent';
@@ -24,26 +27,39 @@ abstract class EntityPresenter extends BasePresenter {
     public ?int $id = null;
     private ?AbstractModel $model;
 
-    public function authorizedCreate(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
+    public function authorizedCreate(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest())
+        );
     }
 
-    public function authorizedEdit(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
+    public function authorizedEdit(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest())
+        );
     }
 
-    public function authorizedList(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
+    public function authorizedList(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest())
+        );
     }
 
-    public function authorizedDelete(): void {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
+    public function authorizedDelete(): void
+    {
+        $this->setAuthorized(
+            $this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest())
+        );
     }
 
     /**
      * @throws BadTypeException
      */
-    final public function renderEdit(): void {
+    final public function renderEdit(): void
+    {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();
@@ -53,7 +69,8 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadTypeException
      */
-    final public function renderCreate(): void {
+    final public function renderCreate(): void
+    {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = $component->getForm();
@@ -64,14 +81,16 @@ abstract class EntityPresenter extends BasePresenter {
      * @return AbstractModel|null
      * @deprecated
      */
-    final public function getModel(): ?AbstractModel {
+    final public function getModel(): ?AbstractModel
+    {
         if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
     }
 
-    protected function setDefaults(?AbstractModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModel $model, Form $form): void
+    {
         if (!$model) {
             return;
         }

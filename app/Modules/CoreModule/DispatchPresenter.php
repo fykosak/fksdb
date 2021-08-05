@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Models\ORM\Models\ModelContest;
@@ -8,18 +10,21 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
-class DispatchPresenter extends BasePresenter {
+class DispatchPresenter extends BasePresenter
+{
 
     private array $contestsProperty;
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Menu'), 'fa fa-home'));
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(_('Menu'), 'fa fa-home');
     }
 
     /**
      * @throws InvalidLinkException
      */
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -28,7 +33,8 @@ class DispatchPresenter extends BasePresenter {
         $this->template->contestsProperty = $this->getContestsProperty();
     }
 
-    protected function beforeRender(): void {
+    protected function beforeRender(): void
+    {
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
@@ -38,24 +44,30 @@ class DispatchPresenter extends BasePresenter {
      * @return array
      * @throws InvalidLinkException
      */
-    private function getAllOrganisers(ModelLogin $login): array {
+    private function getAllOrganisers(ModelLogin $login): array
+    {
         $results = [];
         foreach ($login->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
-                'link' => $this->link(':Org:Dashboard:default', [
-                    'contestId' => $contestId,
-                ]),
+                'link' => $this->link(
+                    ':Org:Dashboard:default',
+                    [
+                        'contestId' => $contestId,
+                    ]
+                ),
                 'title' => sprintf(_('Organiser %s'), $org->getContest()->name),
             ];
         }
         return $results;
     }
 
-    private function getContestProperty(int $contestId): array {
+    private function getContestProperty(int $contestId): array
+    {
         return $this->getContestsProperty()[$contestId];
     }
 
-    private function getContestsProperty(): array {
+    private function getContestsProperty(): array
+    {
         if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
             $query = $this->serviceContest->getTable();
@@ -76,13 +88,17 @@ class DispatchPresenter extends BasePresenter {
      * @return array
      * @throws InvalidLinkException
      */
-    private function getAllContestants(ModelPerson $person): array {
+    private function getAllContestants(ModelPerson $person): array
+    {
         $result = [];
         foreach ($person->getActiveContestants() as $contestId => $contestant) {
             $result[$contestId] = [
-                'link' => $this->link(':Public:Dashboard:default', [
-                    'contestId' => $contestId,
-                ]),
+                'link' => $this->link(
+                    ':Public:Dashboard:default',
+                    [
+                        'contestId' => $contestId,
+                    ]
+                ),
                 'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
             ];
         }

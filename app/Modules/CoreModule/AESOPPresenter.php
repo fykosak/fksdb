@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
@@ -11,32 +13,39 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use Nette\Application\BadRequestException;
 
-class AESOPPresenter extends AuthenticatedPresenter {
-
+class AESOPPresenter extends AuthenticatedPresenter
+{
     use YearPresenterTrait;
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->yearTraitStartup();
     }
 
-    public function authorizedContestant(): void {
+    public function authorizedContestant(): void
+    {
         $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
-    public function authorizedEvent(): void {
+    public function authorizedEvent(): void
+    {
         $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
     }
 
     /**
      * @throws BadRequestException
      */
-    public function renderContestant(): void {
+    public function renderContestant(): void
+    {
         $category = $this->getParameter('category');
-        $this->sendResponse((new ContestantModel($this->getContext(), $this->getSelectedContestYear(), $category))->createResponse());
+        $this->sendResponse(
+            (new ContestantModel($this->getContext(), $this->getSelectedContestYear(), $category))->createResponse()
+        );
     }
 
-    public function renderEvent(): void {
+    public function renderEvent(): void
+    {
         $eventName = $this->getParameter('eventName');
         $type = $this->getParameter('type');
         if (is_null($type)) {
@@ -49,7 +58,8 @@ class AESOPPresenter extends AuthenticatedPresenter {
         $this->sendResponse($model->createResponse());
     }
 
-    public function getAllowedAuthMethods(): array {
+    public function getAllowedAuthMethods(): array
+    {
         return [
             self::AUTH_GITHUB => false,
             self::AUTH_HTTP => true,
@@ -58,7 +68,8 @@ class AESOPPresenter extends AuthenticatedPresenter {
         ];
     }
 
-    protected function getRole(): string {
+    protected function getRole(): string
+    {
         return YearChooserComponent::ROLE_SELECTED;
     }
 }

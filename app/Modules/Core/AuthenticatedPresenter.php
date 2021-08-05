@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core;
 
 use FKSDB\Models\Authentication\GithubAuthenticator;
@@ -11,8 +13,8 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
-use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
+use Tracy\Debugger;
 
 /**
  * Presenter allows authenticated user access only.
@@ -23,7 +25,8 @@ use Nette\Security\AuthenticationException;
  *
  * @see http://www.php.net/manual/en/features.http-auth.php
  */
-abstract class AuthenticatedPresenter extends BasePresenter {
+abstract class AuthenticatedPresenter extends BasePresenter
+{
 
     public const AUTH_LOGIN = 'login';
     public const AUTH_HTTP = 'http';
@@ -51,7 +54,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /* Formats action method name.*/
-    protected static function formatAuthorizedMethod(string $action): string {
+    protected static function formatAuthorizedMethod(string $action): string
+    {
         return 'authorized' . $action;
     }
 
@@ -59,7 +63,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @param mixed $element
      * @throws BadRequestException
      */
-    public function checkRequirements($element): void {
+    public function checkRequirements($element): void
+    {
         parent::checkRequirements($element);
         if ($element instanceof \ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
@@ -75,7 +80,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws \Exception
      */
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
 
         $methods = $this->getAllowedAuthMethods();
@@ -100,14 +106,18 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    private function optionalLoginRedirect(): void {
+    private function optionalLoginRedirect(): void
+    {
         if (!$this->requiresLogin()) {
             return;
         }
-        $this->redirect(':Core:Authentication:login', [
-            'backlink' => $this->storeRequest(),
-            AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
-        ]);
+        $this->redirect(
+            ':Core:Authentication:login',
+            [
+                'backlink' => $this->storeRequest(),
+                AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+            ]
+        );
     }
 
     /**
@@ -117,11 +127,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      *
      * @return bool
      */
-    public function requiresLogin(): bool {
+    public function requiresLogin(): bool
+    {
         return true;
     }
 
-    public function getAllowedAuthMethods(): array {
+    public function getAllowedAuthMethods(): array
+    {
         return [
             self::AUTH_GITHUB => false,
             self::AUTH_HTTP => false,
@@ -130,21 +142,24 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         ];
     }
 
-    protected function getHttpRealm(): ?string {
+    protected function getHttpRealm(): ?string
+    {
         return null;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess(): void {
+    protected function unauthorizedAccess(): void
+    {
         throw new ForbiddenRequestException();
     }
 
     /**
      * @throws \Exception
      */
-    private function tryAuthToken(): void {
+    private function tryAuthToken(): void
+    {
         $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
@@ -167,7 +182,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Exception
      */
-    private function tryHttpAuth(): void {
+    private function tryHttpAuth(): void
+    {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
             return;
@@ -186,7 +202,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    private function httpAuthPrompt(): void {
+    private function httpAuthPrompt(): void
+    {
         $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
             header('WWW-Authenticate: Basic realm="' . $realm . '"');
@@ -200,7 +217,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws ForbiddenRequestException|BadRequestException
      * @throws \Exception
      */
-    private function tryGithub(): void {
+    private function tryGithub(): void
+    {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
             return;
         }

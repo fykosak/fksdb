@@ -14,19 +14,19 @@ use FKSDB\Models\UI\PageTitle;
 class SeatingPresenter extends BasePresenter
 {
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa map-marked-alt'));
+        return new PageTitle(_('Rooming'), 'fa map-marked-alt');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
+        return new PageTitle(_('List of all teams'), 'fa fa-print');
     }
 
-    public function titlePreview(): void
+    public function titlePreview(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
+        return new PageTitle(_('Preview'), 'fa fa-search');
     }
 
     /**

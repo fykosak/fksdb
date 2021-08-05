@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedAccessor;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
-trait EventEntityPresenterTrait {
-
+trait EventEntityPresenterTrait
+{
     use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
@@ -23,7 +25,8 @@ trait EventEntityPresenterTrait {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function getEntity(): AbstractModel {
+    protected function getEntity(): AbstractModel
+    {
         $model = $this->getBaseEntity();
         /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);

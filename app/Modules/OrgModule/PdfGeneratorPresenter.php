@@ -12,6 +12,5 @@ class PdfGeneratorPresenter extends BasePresenter
 {
     protected function createComponentTest(): DefaultProviderComponent
     {
-
     }
 }

@@ -1,38 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Models\Events\Model\ApplicationHandler;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Entity\ModelNotFoundException;
-use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\UI\PageTitle;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
-class ApplicationPresenter extends AbstractApplicationPresenter {
+class ApplicationPresenter extends AbstractApplicationPresenter
+{
 
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     */
-    public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Application import'), 'fas fa-download'));
+    public function titleImport(): PageTitle
+    {
+        return new PageTitle(_('Application import'), 'fas fa-download');
     }
 
     /**
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function isEnabled(): bool {
+    protected function isEnabled(): bool
+    {
         return !$this->isTeamEvent();
     }
 
@@ -41,7 +42,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * use same method of permissions as trait
      * @throws EventNotFoundException
      */
-    public function authorizedImport(): void {
+    public function authorizedImport(): void
+    {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
@@ -51,7 +53,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function createComponentGrid(): AbstractApplicationsGrid {
+    protected function createComponentGrid(): AbstractApplicationsGrid
+    {
         return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
@@ -61,7 +64,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function createComponentImport(): ImportComponent {
+    protected function createComponentImport(): ImportComponent
+    {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
@@ -77,7 +81,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         parent::renderDetail();
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();
@@ -89,11 +94,13 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         ];
     }
 
-    protected function getORMService(): ServiceEventParticipant {
+    protected function getORMService(): ServiceEventParticipant
+    {
         return $this->serviceEventParticipant;
     }
 
-    protected function getModelResource(): string {
+    protected function getModelResource(): string
+    {
         return ModelEventParticipant::RESOURCE_ID;
     }
 }

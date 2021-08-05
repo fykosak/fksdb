@@ -24,7 +24,10 @@ class PageComponent extends AbstractPageComponent
      */
     public function render($row): void
     {
-        $postContact = $row->getPermanentPostContact(true);
+        $postContact = $row->getDeliveryPostContact();
+        if (!$postContact) {
+            $postContact = $row->getPermanentPostContact();
+        }
         if ($postContact) {
             $this->template->person = $row;
             $this->template->address = $postContact->getAddress();

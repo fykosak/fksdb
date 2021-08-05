@@ -10,6 +10,7 @@ use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
 use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\UI\PageTitle;
 use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
@@ -28,9 +29,14 @@ class EnvelopePresenter extends BasePresenter
         $this->servicePerson = $servicePerson;
     }
 
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(_('Envelopes for person generator'), 'fa fa-envelope');
+    }
+
     public function actionOutput(): void
     {
-        $personIds = $this->getParameter('persons');
+        $personIds = $this->getParameter('personIds');
         $this->persons = $this->servicePerson->getTable()->where('person_id', $personIds);
     }
 
@@ -48,7 +54,7 @@ class EnvelopePresenter extends BasePresenter
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSelectForm(): FormControl
+    protected function createComponentForm(): FormControl
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
@@ -86,6 +92,6 @@ class EnvelopePresenter extends BasePresenter
 
     private function handlePrint(Form $form): void
     {
-        $this->redirect('output', ['persons' => $this->getPersonIdsFromSQL($form)]);
+        $this->redirect('output', ['personIds' => $this->getPersonIdsFromSQL($form)]);
     }
 }
