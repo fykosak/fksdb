@@ -17,12 +17,6 @@ class AESOPPresenter extends AuthenticatedPresenter
 {
     use YearPresenterTrait;
 
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->yearTraitStartup();
-    }
-
     public function authorizedContestant(): void
     {
         $this->contestAuthorizator->isAllowed('aesop', null, $this->getSelectedContest());
@@ -66,6 +60,12 @@ class AESOPPresenter extends AuthenticatedPresenter
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,
         ];
+    }
+
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->yearTraitStartup();
     }
 
     protected function getRole(): string

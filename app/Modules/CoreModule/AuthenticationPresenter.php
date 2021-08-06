@@ -76,6 +76,16 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
+     * This workaround is here because LoginUser storage
+     * returns false when only global login exists.
+     * False is return in order to AuthenticatedPresenter to correctly login the user.
+     */
+    private function isLoggedIn(): bool
+    {
+        return $this->getUser()->isLoggedIn();
+    }
+
+    /**
      * @throws BadTypeException
      * @throws \Exception
      */
@@ -107,6 +117,19 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * @throws \Exception
      */
+    private function initialRedirect(): void
+    {
+        if ($this->backlink) {
+            $this->restoreRequest($this->backlink);
+        }
+        $this->redirect(':Core:Dispatch:');
+    }
+
+    /*     * ******************* components ****************************** */
+
+    /**
+     * @throws \Exception
+     */
     public function actionRecover(): void
     {
         if ($this->isLoggedIn()) {
@@ -115,16 +138,48 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * This workaround is here because LoginUser storage
-     * returns false when only global login exists.
-     * False is return in order to AuthenticatedPresenter to correctly login the user.
+     * @throws \Exception
      */
-    private function isLoggedIn(): bool
+    public function actionGoogle(): void
     {
-        return $this->getUser()->isLoggedIn();
+        if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
+            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
+        try {
+            $token = $this->googleProvider->getAccessToken(
+                'authorization_code',
+                [
+                    'code' => $this->getParameter('code'),
+                ]
+            );
+            $ownerDetails = $this->googleProvider->getResourceOwner($token);
+            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
+            $this->getUser()->login($login);
+            $this->initialRedirect();
+        } catch (UnknownLoginException $exception) {
+            $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
+            $this->redirect('login');
+        } catch (IdentityProviderException | AuthenticationException $exception) {
+            $this->flashMessage(_('Error'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
     }
 
-    /*     * ******************* components ****************************** */
+    public function getGoogleSection(): SessionSection
+    {
+        return $this->getSession()->getSection('google-oauth2state');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function handleGoogle(): void
+    {
+        $url = $this->googleProvider->getAuthorizationUrl();
+        $this->getGoogleSection()->state = $this->googleProvider->getState();
+        $this->redirectUrl($url);
+    }
 
     /**
      * Login form component factory.
@@ -159,6 +214,22 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
+     * @param Form $form
+     * @throws \Exception
+     */
+    private function loginFormSubmitted(Form $form): void
+    {
+        $values = $form->getValues();
+        try {
+            $this->getUser()->login($values['id'], $values['password']);
+            /** @var ModelLogin $login */
+            $this->initialRedirect();
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+        }
+    }
+
+    /**
      * Password recover form.
      */
     protected function createComponentRecoverForm(): Form
@@ -175,22 +246,6 @@ final class AuthenticationPresenter extends BasePresenter
             $this->recoverFormSubmitted($form);
         };
         return $form;
-    }
-
-    /**
-     * @param Form $form
-     * @throws \Exception
-     */
-    private function loginFormSubmitted(Form $form): void
-    {
-        $values = $form->getValues();
-        try {
-            $this->getUser()->login($values['id'], $values['password']);
-            /** @var ModelLogin $login */
-            $this->initialRedirect();
-        } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-        }
     }
 
     /**
@@ -223,65 +278,10 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function actionGoogle(): void
-    {
-        if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
-            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
-            $this->redirect('login');
-        }
-        try {
-            $token = $this->googleProvider->getAccessToken(
-                'authorization_code',
-                [
-                    'code' => $this->getParameter('code'),
-                ]
-            );
-            $ownerDetails = $this->googleProvider->getResourceOwner($token);
-            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
-            $this->getUser()->login($login);
-            $this->initialRedirect();
-        } catch (UnknownLoginException $exception) {
-            $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
-            $this->redirect('login');
-        } catch (IdentityProviderException | AuthenticationException $exception) {
-            $this->flashMessage(_('Error'), self::FLASH_ERROR);
-            $this->redirect('login');
-        }
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function handleGoogle(): void
-    {
-        $url = $this->googleProvider->getAuthorizationUrl();
-        $this->getGoogleSection()->state = $this->googleProvider->getState();
-        $this->redirectUrl($url);
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function initialRedirect(): void
-    {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
-        }
-        $this->redirect(':Core:Dispatch:');
-    }
-
     protected function beforeRender(): void
     {
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
-    }
-
-    public function getGoogleSection(): SessionSection
-    {
-        return $this->getSession()->getSection('google-oauth2state');
     }
 }

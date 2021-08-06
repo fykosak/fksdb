@@ -14,19 +14,6 @@ trait CollectorPresenterTrait
      * Loading assets
      * ****************************** */
 
-    protected function createComponentJsLoader(): JavaScriptLoaderComponent
-    {
-        return new JavaScriptLoaderComponent($this->getContext());
-    }
-
-    protected function createComponentCssLoader(): StylesheetLoaderComponent
-    {
-        return new StylesheetLoaderComponent($this->getContext());
-    }
-
-    /* *******************************
-     * IJavaScriptCollector
-     * ****************************** */
     public function registerJSFile(string $file): void
     {
         /** @var JavaScriptLoaderComponent $component */
@@ -40,6 +27,10 @@ trait CollectorPresenterTrait
         $component = $this->getComponent('jsLoader');
         $component->addInline($code, $tag);
     }
+
+    /* *******************************
+     * IJavaScriptCollector
+     * ****************************** */
 
     public function unregisterJSCode(string $tag): void
     {
@@ -55,10 +46,6 @@ trait CollectorPresenterTrait
         $component->removeFile($file);
     }
 
-    /* *******************************
-     * IStylesheetCollector
-     * ****************************** */
-
     public function registerStylesheetFile(string $file, array $media = []): void
     {
         /** @var StylesheetLoaderComponent $component */
@@ -71,5 +58,19 @@ trait CollectorPresenterTrait
         /** @var StylesheetLoaderComponent $component */
         $component = $this->getComponent('cssLoader');
         $component->removeFile($file, $media);
+    }
+
+    /* *******************************
+     * IStylesheetCollector
+     * ****************************** */
+
+    protected function createComponentJsLoader(): JavaScriptLoaderComponent
+    {
+        return new JavaScriptLoaderComponent($this->getContext());
+    }
+
+    protected function createComponentCssLoader(): StylesheetLoaderComponent
+    {
+        return new StylesheetLoaderComponent($this->getContext());
     }
 }

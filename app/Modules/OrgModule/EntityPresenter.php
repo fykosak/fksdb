@@ -34,12 +34,27 @@ abstract class EntityPresenter extends BasePresenter
         );
     }
 
+    abstract protected function getModelResource(): string;
+
     public function authorizedEdit(): void
     {
         $this->setAuthorized(
             $this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest())
         );
     }
+
+    /**
+     * @deprecated
+     */
+    final public function getModel(): ?AbstractModel
+    {
+        if (!isset($this->model)) {
+            $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
+        }
+        return $this->model;
+    }
+
+    abstract protected function loadModel(int $id): ?AbstractModel;
 
     public function authorizedList(): void
     {
@@ -66,6 +81,14 @@ abstract class EntityPresenter extends BasePresenter
         $this->setDefaults($this->getModel(), $form);
     }
 
+    protected function setDefaults(?AbstractModel $model, Form $form): void
+    {
+        if (!$model) {
+            return;
+        }
+        $form->setDefaults($model->toArray());
+    }
+
     /**
      * @throws BadTypeException
      */
@@ -77,32 +100,9 @@ abstract class EntityPresenter extends BasePresenter
         $this->setDefaults($this->getModel(), $form);
     }
 
-    /**
-     * @deprecated
-     */
-    final public function getModel(): ?AbstractModel
-    {
-        if (!isset($this->model)) {
-            $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
-        }
-        return $this->model;
-    }
-
-    protected function setDefaults(?AbstractModel $model, Form $form): void
-    {
-        if (!$model) {
-            return;
-        }
-        $form->setDefaults($model->toArray());
-    }
-
-    abstract protected function loadModel(int $id): ?AbstractModel;
-
     abstract protected function createComponentEditComponent(): FormControl;
 
     abstract protected function createComponentCreateComponent(): FormControl;
 
     abstract protected function createComponentGrid(): BaseGrid;
-
-    abstract protected function getModelResource(): string;
 }

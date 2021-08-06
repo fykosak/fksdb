@@ -33,10 +33,25 @@ class DispatchPresenter extends BasePresenter
         $this->template->contestsProperty = $this->getContestsProperty();
     }
 
-    protected function beforeRender(): void
+    /**
+     * @param ModelPerson $person
+     * @throws InvalidLinkException
+     */
+    private function getAllContestants(ModelPerson $person): array
     {
-        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
-        parent::beforeRender();
+        $result = [];
+        foreach ($person->getActiveContestants() as $contestId => $contestant) {
+            $result[$contestId] = [
+                'link' => $this->link(
+                    ':Public:Dashboard:default',
+                    [
+                        'contestId' => $contestId,
+                    ]
+                ),
+                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
+            ];
+        }
+        return $result;
     }
 
     /**
@@ -60,11 +75,6 @@ class DispatchPresenter extends BasePresenter
         return $results;
     }
 
-    private function getContestProperty(int $contestId): array
-    {
-        return $this->getContestsProperty()[$contestId];
-    }
-
     private function getContestsProperty(): array
     {
         if (!isset($this->contestsProperty)) {
@@ -82,24 +92,14 @@ class DispatchPresenter extends BasePresenter
         return $this->contestsProperty;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @throws InvalidLinkException
-     */
-    private function getAllContestants(ModelPerson $person): array
+    protected function beforeRender(): void
     {
-        $result = [];
-        foreach ($person->getActiveContestants() as $contestId => $contestant) {
-            $result[$contestId] = [
-                'link' => $this->link(
-                    ':Public:Dashboard:default',
-                    [
-                        'contestId' => $contestId,
-                    ]
-                ),
-                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
-            ];
-        }
-        return $result;
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
+        parent::beforeRender();
+    }
+
+    private function getContestProperty(int $contestId): array
+    {
+        return $this->getContestsProperty()[$contestId];
     }
 }

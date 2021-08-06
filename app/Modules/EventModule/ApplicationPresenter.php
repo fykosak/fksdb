@@ -29,14 +29,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    protected function isEnabled(): bool
-    {
-        return !$this->isTeamEvent();
-    }
-
-    /**
      *
      * use same method of permissions as trait
      * @throws EventNotFoundException
@@ -44,6 +36,39 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     public function authorizedImport(): void
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
+    }
+
+    protected function getModelResource(): string
+    {
+        return ModelEventParticipant::RESOURCE_ID;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     * @throws CannotAccessModelException
+     */
+    final public function renderDetail(): void
+    {
+        parent::renderDetail();
+        $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
+        $this->template->model = $this->getEntity();
+        $this->template->groups = [
+            _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
+            _('T-shirt') => ['tshirt_size', 'tshirt_color'],
+            _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
+            _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
+        ];
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
+    {
+        return !$this->isTeamEvent();
     }
 
     /**
@@ -70,33 +95,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter
         return new ImportComponent($machine, $source, $handler, $this->getContext());
     }
 
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws NeonSchemaException
-     * @throws CannotAccessModelException
-     */
-    final public function renderDetail(): void
-    {
-        parent::renderDetail();
-        $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
-        $this->template->model = $this->getEntity();
-        $this->template->groups = [
-            _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
-            _('T-shirt') => ['tshirt_size', 'tshirt_color'],
-            _('Arrival') => ['arrival_time', 'arrival_destination', 'arrival_ticket'],
-            _('Departure') => ['departure_time', 'departure_destination', 'departure_ticket'],
-        ];
-    }
-
     protected function getORMService(): ServiceEventParticipant
     {
         return $this->serviceEventParticipant;
-    }
-
-    protected function getModelResource(): string
-    {
-        return ModelEventParticipant::RESOURCE_ID;
     }
 }

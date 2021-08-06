@@ -58,16 +58,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
-    /**
      * @throws EventNotFoundException
      */
     public function renderDetail(): void
@@ -82,6 +72,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     final public function renderList(): void
     {
         $this->template->event = $this->getEvent();
+    }
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     protected function createComponentPersonScheduleGrid(): PersonGrid

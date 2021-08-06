@@ -43,6 +43,20 @@ class OrgPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
+    public function getEntity(): ModelOrg
+    {
+        /** @var ModelOrg $entity */
+        $entity = $this->traitGetEntity();
+        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
+            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
+        }
+        return $entity;
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
     public function titleDetail(): PageTitle
     {
         return new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user');
@@ -56,20 +70,6 @@ class OrgPresenter extends BasePresenter
     public function titleList(): PageTitle
     {
         return new PageTitle(_('Organisers'), 'fa fa-user-tie');
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     */
-    public function getEntity(): ModelOrg
-    {
-        /** @var ModelOrg $entity */
-        $entity = $this->traitGetEntity();
-        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
-        }
-        return $entity;
     }
 
     /**

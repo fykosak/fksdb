@@ -13,18 +13,6 @@ use Tracy\Debugger;
 class ErrorPresenter extends BasePresenter
 {
 
-    protected function beforeRender(): void
-    {
-        $this->getPageStyleContainer()->styleId = 'error';
-        $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
-        parent::beforeRender();
-    }
-
-    protected function putIntoBreadcrumbs(): void
-    {
-        /* empty */
-    }
-
     public function titleDefault(): PageTitle
     {
         return new PageTitle(_('Error'));
@@ -62,5 +50,17 @@ class ErrorPresenter extends BasePresenter
             $this->setView('500'); // load template 500.latte
             Debugger::log($exception, Debugger::ERROR); // and log exception
         }
+    }
+
+    protected function beforeRender(): void
+    {
+        $this->getPageStyleContainer()->styleId = 'error';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
+        parent::beforeRender();
+    }
+
+    protected function putIntoBreadcrumbs(): void
+    {
+        /* empty */
     }
 }

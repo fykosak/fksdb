@@ -125,6 +125,15 @@ class PersonPresenter extends BasePresenter
     }
 
     /* ******************* COMPONENTS *******************/
+
+    /**
+     * @throws ModelNotFoundException
+     */
+    public function createComponentStalkingContainer(): StalkingContainer
+    {
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+    }
+
     /**
      * @throws BadTypeException
      */
@@ -162,35 +171,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentEditForm(): PersonFormComponent
-    {
-        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
-    }
-
-    protected function createComponentPizzaSelect(): PizzaComponent
-    {
-        return new PizzaComponent($this->getContext());
-    }
-
-    /**
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @throws ModelNotFoundException
-     */
-    public function createComponentStalkingContainer(): StalkingContainer
-    {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
-    }
-
-    /**
      * @param bool $throw
      * @throws ModelNotFoundException
      */
@@ -217,6 +197,27 @@ class PersonPresenter extends BasePresenter
             }
         }
         return $this->userPermissions;
+    }
+
+    /**
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEditForm(): PersonFormComponent
+    {
+        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
+    }
+
+    protected function createComponentPizzaSelect(): PizzaComponent
+    {
+        return new PizzaComponent($this->getContext());
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid
+    {
+        throw new NotImplementedException();
     }
 
     protected function getORMService(): ServicePerson

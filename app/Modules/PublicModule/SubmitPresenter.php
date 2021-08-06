@@ -58,21 +58,17 @@ class SubmitPresenter extends BasePresenter
 
     /* ******************* AUTH ************************/
 
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
-    }
-
     public function authorizedAjax(): void
     {
         $this->authorizedDefault();
     }
 
-    /* ********************** TITLE **********************/
-    public function titleDefault(): PageTitle
+    public function authorizedDefault(): void
     {
-        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
+
+    /* ********************** TITLE **********************/
 
     public function titleList(): PageTitle
     {
@@ -82,6 +78,11 @@ class SubmitPresenter extends BasePresenter
     public function titleAjax(): PageTitle
     {
         return $this->titleDefault();
+    }
+
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
     final public function renderDefault(): void
@@ -101,6 +102,22 @@ class SubmitPresenter extends BasePresenter
             $this->template->hasForward = ($this->getSelectedContestYear()->year == $currentContestYear->year)
                 && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
+    }
+
+    private function getAvailableTasks(): TypedTableSelection
+    {
+        // TODO related
+        $tasks = $this->taskService->getTable();
+        $tasks->where(
+            'contest_id = ? AND year = ?',
+            $this->getSelectedContestYear()->contest_id,
+            $this->getSelectedContestYear()->year
+        );
+        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
+        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
+        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
+
+        return $tasks;
     }
 
     final public function renderAjax(): void
@@ -202,16 +219,6 @@ class SubmitPresenter extends BasePresenter
         return $control;
     }
 
-    protected function createComponentSubmitsGrid(): SubmitsGrid
-    {
-        return new SubmitsGrid($this->getContext(), $this->getContestant());
-    }
-
-    protected function createComponentSubmitContainer(): SubmitContainer
-    {
-        return new SubmitContainer($this->getContext(), $this->getContestant());
-    }
-
     /**
      * @param Form $form
      * @throws StorageException
@@ -288,19 +295,13 @@ class SubmitPresenter extends BasePresenter
         }
     }
 
-    private function getAvailableTasks(): TypedTableSelection
+    protected function createComponentSubmitsGrid(): SubmitsGrid
     {
-        // TODO related
-        $tasks = $this->taskService->getTable();
-        $tasks->where(
-            'contest_id = ? AND year = ?',
-            $this->getSelectedContestYear()->contest_id,
-            $this->getSelectedContestYear()->year
-        );
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
+    }
 
-        return $tasks;
+    protected function createComponentSubmitContainer(): SubmitContainer
+    {
+        return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 }

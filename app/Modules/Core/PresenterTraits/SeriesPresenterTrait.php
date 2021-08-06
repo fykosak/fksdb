@@ -30,18 +30,6 @@ trait SeriesPresenterTrait
         }
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    private function selectSeries(): int
-    {
-        $candidate = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
-        if (!$this->isValidSeries($candidate)) {
-            throw new ForbiddenRequestException();
-        }
-        return $candidate;
-    }
-
     private function isValidSeries(?int $series): bool
     {
         return in_array($series, $this->getAllowedSeries());
@@ -61,13 +49,25 @@ trait SeriesPresenterTrait
         return $range;
     }
 
-    public function getSelectedSeries(): ?int
+    /**
+     * @throws ForbiddenRequestException
+     */
+    private function selectSeries(): int
     {
-        return $this->series;
+        $candidate = SeriesCalculator::getLastSeries($this->getSelectedContestYear());
+        if (!$this->isValidSeries($candidate)) {
+            throw new ForbiddenRequestException();
+        }
+        return $candidate;
     }
 
     protected function createComponentSeriesChooser(): SeriesChooserComponent
     {
         return new SeriesChooserComponent($this->getContext(), $this->getSelectedSeries(), $this->getAllowedSeries());
+    }
+
+    public function getSelectedSeries(): ?int
+    {
+        return $this->series;
     }
 }

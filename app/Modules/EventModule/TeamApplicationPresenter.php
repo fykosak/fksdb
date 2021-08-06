@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
 use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -35,14 +35,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
 
     /**
      * @throws EventNotFoundException
-     */
-    protected function isEnabled(): bool
-    {
-        return $this->isTeamEvent();
-    }
-
-    /**
-     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
@@ -58,6 +50,14 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         }
         $this->template->rankVisible = $rankVisible;
         $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
+    {
+        return $this->isTeamEvent();
     }
 
     /**

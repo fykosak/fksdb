@@ -41,16 +41,12 @@ trait YearPresenterTrait
         }
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    private function selectYear(): ModelContestYear
+    public function getSelectedContestYear(): ?ModelContestYear
     {
-        $candidate = $this->getSelectedContest()->getCurrentContestYear();
-        if (!$this->isValidContestYear($candidate)) {
-            throw new ForbiddenRequestException();
+        if (!isset($this->contestYear)) {
+            $this->contestYear = $this->getSelectedContest()->getContestYear($this->year);
         }
-        return $candidate;
+        return $this->contestYear;
     }
 
     private function isValidContestYear(?ModelContestYear $contestYear): bool
@@ -59,14 +55,6 @@ trait YearPresenterTrait
             return false;
         }
         return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
-    }
-
-    public function getSelectedContestYear(): ?ModelContestYear
-    {
-        if (!isset($this->contestYear)) {
-            $this->contestYear = $this->getSelectedContest()->getContestYear($this->year);
-        }
-        return $this->contestYear;
     }
 
     protected function getAvailableYears(): GroupedSelection
@@ -88,11 +76,23 @@ trait YearPresenterTrait
                         $years[] = $contestant->year;
                     }
                 }
-                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears(
-                )->where('ac_year', YearCalculator::getCurrentAcademicYear());
+                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()
+                    ->where('ac_year', YearCalculator::getCurrentAcademicYear());
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     */
+    private function selectYear(): ModelContestYear
+    {
+        $candidate = $this->getSelectedContest()->getCurrentContestYear();
+        if (!$this->isValidContestYear($candidate)) {
+            throw new ForbiddenRequestException();
+        }
+        return $candidate;
     }
 
     protected function createComponentYearChooser(): YearChooserComponent

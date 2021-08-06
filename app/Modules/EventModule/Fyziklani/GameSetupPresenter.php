@@ -30,14 +30,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-     * @throws EventNotFoundException
-     */
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
-    }
-
-    /**
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException
@@ -52,5 +44,13 @@ class GameSetupPresenter extends BasePresenter
             $this->gameSetup = $gameSetup;
         }
         return $this->gameSetup;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): void
+    {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 }

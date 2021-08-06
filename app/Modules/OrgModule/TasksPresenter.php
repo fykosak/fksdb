@@ -87,11 +87,6 @@ class TasksPresenter extends BasePresenter
         return $control;
     }
 
-    private function isLegacyXml(\SimpleXMLElement $xml): bool
-    {
-        return $xml->getName() === 'problems';
-    }
-
     /**
      * @param Form $seriesForm
      * @throws UploadException
@@ -142,5 +137,10 @@ class TasksPresenter extends BasePresenter
             unlink($file);
         }
         $this->redirect('this');
+    }
+
+    private function isLegacyXml(\SimpleXMLElement $xml): bool
+    {
+        return $xml->getName() === 'problems';
     }
 }

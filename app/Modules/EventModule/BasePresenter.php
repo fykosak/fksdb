@@ -23,19 +23,38 @@ use Nette\Security\Resource;
 abstract class BasePresenter extends AuthenticatedPresenter
 {
 
-    private ModelEvent $event;
-    private Holder $holder;
-    protected ServiceEvent $serviceEvent;
-    protected EventDispatchFactory $eventDispatchFactory;
     /**
      * @persistent
      */
     public ?int $eventId = null;
+    protected ServiceEvent $serviceEvent;
+    protected EventDispatchFactory $eventDispatchFactory;
+    private ModelEvent $event;
+    private Holder $holder;
 
     final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void
     {
         $this->serviceEvent = $serviceEvent;
         $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    public function isAuthorized(): bool
+    {
+        if (!$this->isEnabled()) {
+            return false;
+        }
+        return parent::isAuthorized();
+    }
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * Check if has contest permission or is Event org
+     * @throws EventNotFoundException
+     */
+    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -50,12 +69,22 @@ abstract class BasePresenter extends AuthenticatedPresenter
         parent::startup();
     }
 
-    public function isAuthorized(): bool
+    protected function isEnabled(): bool
     {
-        if (!$this->isEnabled()) {
-            return false;
+        return true;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function getHolder(): Holder
+    {
+        if (!isset($this->holder)) {
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
-        return parent::isAuthorized();
+        return $this->holder;
     }
 
     /**
@@ -75,29 +104,13 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @throws EventNotFoundException
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function getHolder(): Holder
-    {
-        if (!isset($this->holder)) {
-            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $this->holder;
-    }
-
-    /**
-     * @throws EventNotFoundException
      */
     final protected function getContest(): ModelContest
     {
         return $this->getEvent()->getContest();
     }
 
-    protected function isEnabled(): bool
-    {
-        return true;
-    }
+    /* **************** ACL *********************** */
 
     /**
      * @throws EventNotFoundException
@@ -107,7 +120,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
     }
 
-    /* **************** ACL *********************** */
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
@@ -131,18 +143,8 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return $this->eventAuthorizator->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * Check if has contest permission or is Event org
-     * @throws EventNotFoundException
-     */
-    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
-    }
-
     /* ********************** GUI ************************ */
+
     /**
      * @throws EventNotFoundException
      */

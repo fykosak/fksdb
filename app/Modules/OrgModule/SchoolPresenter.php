@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**

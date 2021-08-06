@@ -42,17 +42,12 @@ trait ContestPresenterTrait
         }
     }
 
-    /**
-     * @throws BadRequestException
-     */
-    private function selectContest(): ModelContest
+    public function getSelectedContest(): ?ModelContest
     {
-        /** @var ModelContest $candidate */
-        $candidate = $this->getAvailableContests()->fetch();
-        if (!$this->isValidContest($candidate)) {
-            throw new BadRequestException(_('No contest available'));
+        if (!isset($this->contest)) {
+            $this->contest = $this->serviceContest->findByPrimary($this->contestId);
         }
-        return $candidate;
+        return $this->contest;
     }
 
     private function isValidContest(?ModelContest $contest): bool
@@ -61,14 +56,6 @@ trait ContestPresenterTrait
             return false;
         }
         return (bool)$this->getAvailableContests()->where('contest_id', $contest->contest_id)->fetch();
-    }
-
-    public function getSelectedContest(): ?ModelContest
-    {
-        if (!isset($this->contest)) {
-            $this->contest = $this->serviceContest->findByPrimary($this->contestId);
-        }
-        return $this->contest;
     }
 
     /**
@@ -107,6 +94,21 @@ trait ContestPresenterTrait
         }
     }
 
+    abstract protected function getRole(): string;
+
+    /**
+     * @throws BadRequestException
+     */
+    private function selectContest(): ModelContest
+    {
+        /** @var ModelContest $candidate */
+        $candidate = $this->getAvailableContests()->fetch();
+        if (!$this->isValidContest($candidate)) {
+            throw new BadRequestException(_('No contest available'));
+        }
+        return $candidate;
+    }
+
     protected function createComponentContestChooser(): ContestChooserComponent
     {
         return new ContestChooserComponent(
@@ -115,8 +117,6 @@ trait ContestPresenterTrait
             $this->getAvailableContests()
         );
     }
-
-    abstract protected function getRole(): string;
 
     abstract protected function getContext(): Container;
 }

@@ -26,6 +26,11 @@ class ChartPresenter extends BasePresenter
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
+    protected function getModelResource(): string
+    {
+        return 'event.chart';
+    }
+
     /**
      * @throws EventNotFoundException
      */
@@ -54,10 +59,5 @@ class ChartPresenter extends BasePresenter
             'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
             'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
         ];
-    }
-
-    protected function getModelResource(): string
-    {
-        return 'event.chart';
     }
 }

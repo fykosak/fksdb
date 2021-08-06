@@ -56,16 +56,6 @@ class EventOrgPresenter extends BasePresenter
         );
     }
 
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
     public function actionDelete(): void
     {
         try {
@@ -76,6 +66,16 @@ class EventOrgPresenter extends BasePresenter
             $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
             $this->redirect('list');
         }
+    }
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     protected function getORMService(): ServiceEventOrg

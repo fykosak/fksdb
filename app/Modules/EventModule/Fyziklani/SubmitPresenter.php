@@ -68,18 +68,6 @@ class SubmitPresenter extends BasePresenter
     /* ***** Authorized methods *****/
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
-    }
-
-    /* ******** ACTION METHODS ********/
-
-    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -89,6 +77,8 @@ class SubmitPresenter extends BasePresenter
     {
         $this->template->model = $this->getEntity();
     }
+
+    /* ******** ACTION METHODS ********/
 
     /**
      * @throws EventNotFoundException
@@ -101,7 +91,34 @@ class SubmitPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
+    /**
+     * @throws ClosedSubmittingException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     */
+    public function handleCheck(): void
+    {
+        $logger = new MemoryLogger();
+        $handler = $this->handlerFactory->create($this->getEvent());
+        $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
+        FlashMessageDump::dump($logger, $this);
+        $this->redirect('this');
+    }
+
     /* ****** COMPONENTS **********/
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+    }
+
     /**
      * @throws EventNotFoundException
      */
@@ -127,22 +144,6 @@ class SubmitPresenter extends BasePresenter
     protected function createComponentEditForm(): FyziklaniSubmitFormComponent
     {
         return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @throws ClosedSubmittingException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     */
-    public function handleCheck(): void
-    {
-        $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getEvent());
-        $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
-        FlashMessageDump::dump($logger, $this);
-        $this->redirect('this');
     }
 
     protected function getORMService(): ServiceFyziklaniSubmit

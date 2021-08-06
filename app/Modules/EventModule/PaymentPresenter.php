@@ -72,24 +72,6 @@ class PaymentPresenter extends BasePresenter
         return new PageTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
-    protected function isEnabled(): bool
-    {
-        return $this->hasApi();
-    }
-    /* ********* Authorization *****************/
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
-    /* ********* actions *****************/
-
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -106,6 +88,7 @@ class PaymentPresenter extends BasePresenter
             $this->redirect(':Core:MyPayments:');
         }
     }
+    /* ********* Authorization *****************/
 
     /**
      * @throws BadTypeException
@@ -121,7 +104,17 @@ class PaymentPresenter extends BasePresenter
         }
     }
 
-    /* ********* render *****************/
+    /* ********* actions *****************/
+
+    /**
+     * TODO!!!!
+     * @throws EventNotFoundException
+     */
+    private function isOrg(): bool
+    {
+        return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
+    }
+
     /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -132,6 +125,8 @@ class PaymentPresenter extends BasePresenter
     {
         $this->template->model = $this->getEntity();
     }
+
+    /* ********* render *****************/
 
     /**
      * @throws BadTypeException
@@ -148,13 +143,19 @@ class PaymentPresenter extends BasePresenter
         $this->template->isOrg = $this->isOrg();
     }
 
-    /**
-     * TODO!!!!
-     * @throws EventNotFoundException
-     */
-    private function isOrg(): bool
+    protected function isEnabled(): bool
     {
-        return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
+        return $this->hasApi();
+    }
+
+    private function hasApi(): bool
+    {
+        try {
+            $this->getMachine();
+        } catch (\Exception $exception) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -176,14 +177,14 @@ class PaymentPresenter extends BasePresenter
         return $this->machine;
     }
 
-    private function hasApi(): bool
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        try {
-            $this->getMachine();
-        } catch (\Exception $exception) {
-            return false;
-        }
-        return true;
+        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     protected function getORMService(): ServicePayment

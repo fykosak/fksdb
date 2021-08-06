@@ -32,14 +32,6 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function isEnabled(): bool
-    {
-        return $this->getEvent()->event_type_id === 1;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
     public function authorizedPreview(): void
     {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
@@ -77,6 +69,14 @@ class SeatingPresenter extends BasePresenter
             $toPayAll[$team->getPrimary()] = $team->getScheduleRest();
         }
         $this->template->toPay = $toPayAll;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
+    {
+        return $this->getEvent()->event_type_id === 1;
     }
 
     /**

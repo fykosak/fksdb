@@ -70,6 +70,16 @@ abstract class BasePresenter extends Presenter implements
     private PageStyleContainer $pageStyleContainer;
     private Container $diContainer;
 
+    public static function publicFormatActionMethod(string $action): string
+    {
+        return static::formatActionMethod($action);
+    }
+
+    public static function getBackLinkParamName(): string
+    {
+        return 'bc';
+    }
+
     final public function injectBase(
         Container $diContainer,
         YearCalculator $yearCalculator,
@@ -84,27 +94,10 @@ abstract class BasePresenter extends Presenter implements
         $this->diContainer = $diContainer;
     }
 
-    /**
-     * @throws UnsupportedLanguageException
-     */
-    protected function startup(): void
-    {
-        parent::startup();
-        /** @var LanguageChooserComponent $control */
-        $control = $this->getComponent('languageChooser');
-        $control->init();
-    }
-
-    protected function createTemplate(): Template
-    {
-        $template = parent::createTemplate();
-        $template->setTranslator($this->translator);
-        return $template;
-    }
-
     /* *******************************
      * IJSONProvider
      * ****************************** */
+
     public function handleAutocomplete(string $acName): void
     {
         ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
@@ -126,17 +119,6 @@ abstract class BasePresenter extends Presenter implements
      * Nette extension for navigation
      * ****************************** */
 
-    /**
-     * Formats title method name.
-     * Method should set the title of the page using setTitle method.
-     *
-     * @param string
-     */
-    protected static function formatTitleMethod(string $view): string
-    {
-        return 'title' . $view;
-    }
-
     public function setView(string $view): self
     {
         parent::setView($view);
@@ -144,120 +126,11 @@ abstract class BasePresenter extends Presenter implements
         return $this;
     }
 
-    public function getTitle(): PageTitle
-    {
-        if (!isset($this->pageTitle)) {
-            $method = $this->formatTitleMethod($this->getView());
-            if (method_exists($this, $method)) {
-                $this->pageTitle = $this->{$method}();
-            }
-        }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle();
-        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
-        return $this->pageTitle;
-    }
-
-    protected function getDefaultSubTitle(): ?string
-    {
-        return null;
-    }
-
     public function setBackLink(string $backLink): ?string
     {
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;
-    }
-
-    public static function publicFormatActionMethod(string $action): string
-    {
-        return static::formatActionMethod($action);
-    }
-
-    public static function getBackLinkParamName(): string
-    {
-        return 'bc';
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws \ReflectionException
-     * @throws UnsupportedLanguageException
-     */
-    protected function beforeRender(): void
-    {
-        parent::beforeRender();
-
-        $this->template->pageTitle = $this->getTitle();
-        $this->template->pageStyleContainer = $this->getPageStyleContainer();
-        $this->template->lang = $this->getLang();
-        $this->template->navRoots = $this->getNavRoots();
-
-        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
-        $this->putIntoBreadcrumbs();
-    }
-
-    protected function getNavRoots(): array
-    {
-        return [];
-    }
-
-    final protected function getPageStyleContainer(): PageStyleContainer
-    {
-        $this->pageStyleContainer = $this->pageStyleContainer ?? new PageStyleContainer();
-        return $this->pageStyleContainer;
-    }
-
-    /**
-     * @throws \ReflectionException
-     * @throws BadTypeException
-     */
-    protected function putIntoBreadcrumbs(): void
-    {
-        /** @var BreadcrumbsComponent $component */
-        $component = $this->getComponent('breadcrumbs');
-        $component->setBackLink($this->getRequest());
-    }
-
-    protected function createComponentBreadcrumbs(): BreadcrumbsComponent
-    {
-        return new BreadcrumbsComponent($this->getContext());
-    }
-
-    protected function createComponentNavigationChooser(): NavigationChooserComponent
-    {
-        return new NavigationChooserComponent($this->getContext());
-    }
-
-    protected function createComponentThemeChooser(): ThemeChooserComponent
-    {
-        return new ThemeChooserComponent($this->getContext());
-    }
-
-    protected function createComponentValuePrinter(): ColumnPrinterComponent
-    {
-        return new ColumnPrinterComponent($this->getContext());
-    }
-
-    protected function createComponentLinkPrinter(): LinkPrinterComponent
-    {
-        return new LinkPrinterComponent($this->getContext());
-    }
-
-    final protected function createComponentLanguageChooser(): LanguageChooserComponent
-    {
-        return new LanguageChooserComponent($this->getContext(), $this->lang);
-    }
-
-    /**
-     * @throws UnsupportedLanguageException
-     */
-    public function getLang(): string
-    {
-        /** @var LanguageChooserComponent $control */
-        $control = $this->getComponent('languageChooser');
-        return $control->getLang();
     }
 
     /**
@@ -276,29 +149,6 @@ abstract class BasePresenter extends Presenter implements
         } elseif ($need) {
             $this->redirect(':Core:Authentication:login'); // will cause dispatch
         }
-    }
-
-    /*   * *******************************
-     * Extension of Nette ACL
-     *      * ****************************** */
-
-    public function isAuthorized(): bool
-    {
-        return $this->authorized;
-    }
-
-    public function setAuthorized(bool $access): void
-    {
-        $this->authorized = $access;
-    }
-
-    /**
-     * @param mixed $element
-     */
-    public function checkRequirements($element): void
-    {
-        parent::checkRequirements($element);
-        $this->setAuthorized(true);
     }
 
     /**
@@ -357,8 +207,159 @@ abstract class BasePresenter extends Presenter implements
         return $this->authorizedCache[$key];
     }
 
+    /**
+     * @param mixed $element
+     */
+    public function checkRequirements($element): void
+    {
+        parent::checkRequirements($element);
+        $this->setAuthorized(true);
+    }
+
+    public function isAuthorized(): bool
+    {
+        return $this->authorized;
+    }
+
+    public function setAuthorized(bool $access): void
+    {
+        $this->authorized = $access;
+    }
+
+    /**
+     * @throws UnsupportedLanguageException
+     */
+    protected function startup(): void
+    {
+        parent::startup();
+        /** @var LanguageChooserComponent $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init();
+    }
+
+    protected function createTemplate(): Template
+    {
+        $template = parent::createTemplate();
+        $template->setTranslator($this->translator);
+        return $template;
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     * @throws UnsupportedLanguageException
+     */
+    protected function beforeRender(): void
+    {
+        parent::beforeRender();
+
+        $this->template->pageTitle = $this->getTitle();
+        $this->template->pageStyleContainer = $this->getPageStyleContainer();
+        $this->template->lang = $this->getLang();
+        $this->template->navRoots = $this->getNavRoots();
+
+        // this is done beforeRender, because earlier it would create too much traffic? due to redirections etc.
+        $this->putIntoBreadcrumbs();
+    }
+
+    public function getTitle(): PageTitle
+    {
+        if (!isset($this->pageTitle)) {
+            $method = $this->formatTitleMethod($this->getView());
+            if (method_exists($this, $method)) {
+                $this->pageTitle = $this->{$method}();
+            }
+        }
+        $this->pageTitle = $this->pageTitle ?? new PageTitle();
+        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
+        return $this->pageTitle;
+    }
+
+    /**
+     * Formats title method name.
+     * Method should set the title of the page using setTitle method.
+     *
+     * @param string
+     */
+    protected static function formatTitleMethod(string $view): string
+    {
+        return 'title' . $view;
+    }
+
+    protected function getDefaultSubTitle(): ?string
+    {
+        return null;
+    }
+
+    final protected function getPageStyleContainer(): PageStyleContainer
+    {
+        $this->pageStyleContainer = $this->pageStyleContainer ?? new PageStyleContainer();
+        return $this->pageStyleContainer;
+    }
+
+    /**
+     * @throws UnsupportedLanguageException
+     */
+    public function getLang(): string
+    {
+        /** @var LanguageChooserComponent $control */
+        $control = $this->getComponent('languageChooser');
+        return $control->getLang();
+    }
+
+    protected function getNavRoots(): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     */
+    protected function putIntoBreadcrumbs(): void
+    {
+        /** @var BreadcrumbsComponent $component */
+        $component = $this->getComponent('breadcrumbs');
+        $component->setBackLink($this->getRequest());
+    }
+
+    protected function createComponentBreadcrumbs(): BreadcrumbsComponent
+    {
+        return new BreadcrumbsComponent($this->getContext());
+    }
+
     public function getContext(): Container
     {
         return $this->diContainer;
+    }
+
+    /*   * *******************************
+     * Extension of Nette ACL
+     *      * ****************************** */
+
+    protected function createComponentNavigationChooser(): NavigationChooserComponent
+    {
+        return new NavigationChooserComponent($this->getContext());
+    }
+
+    protected function createComponentThemeChooser(): ThemeChooserComponent
+    {
+        return new ThemeChooserComponent($this->getContext());
+    }
+
+    protected function createComponentValuePrinter(): ColumnPrinterComponent
+    {
+        return new ColumnPrinterComponent($this->getContext());
+    }
+
+    protected function createComponentLinkPrinter(): LinkPrinterComponent
+    {
+        return new LinkPrinterComponent($this->getContext());
+    }
+
+    final protected function createComponentLanguageChooser(): LanguageChooserComponent
+    {
+        return new LanguageChooserComponent($this->getContext(), $this->lang);
     }
 }
