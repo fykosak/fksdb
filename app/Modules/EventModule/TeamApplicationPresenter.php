@@ -8,8 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
-use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -65,11 +64,10 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function createComponentSeating(): DefaultProviderComponent
+    protected function createComponentSeating(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new PageComponent($this->getContext()),
-            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             [$this->getEntity()],
             $this->getContext()
         );

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
-use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -82,41 +81,37 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    protected function createComponentSeatingList(): DefaultProviderComponent
+    protected function createComponentSeatingList(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new PageComponent($this->getContext()),
-            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             $this->getEvent()->getTeams()->limit(5),
             $this->getContext()
         );
     }
 
-    protected function createComponentSeatingPreviewAll(): DefaultProviderComponent
+    protected function createComponentSeatingPreviewAll(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('all', $this->getContext()),
-            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             [null],
             $this->getContext()
         );
     }
 
-    protected function createComponentSeatingPreviewEmpty(): DefaultProviderComponent
+    protected function createComponentSeatingPreviewEmpty(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('empty', $this->getContext()),
-            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             [null],
             $this->getContext()
         );
     }
 
-    protected function createComponentSeatingPreviewDev(): DefaultProviderComponent
+    protected function createComponentSeatingPreviewDev(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('dev', $this->getContext()),
-            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             [null],
             $this->getContext()
         );

@@ -6,8 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson\PageComponent;
-use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
-use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
@@ -40,11 +39,10 @@ class EnvelopePresenter extends BasePresenter
         $this->persons = $this->servicePerson->getTable()->where('person_id', $personIds);
     }
 
-    protected function createComponentOutput(): DefaultProviderComponent
+    protected function createComponentOutput(): ProviderComponent
     {
-        return new DefaultProviderComponent(
+        return new ProviderComponent(
             new PageComponent($this->getSelectedContest(), $this->getContext()),
-            AbstractProviderComponent::FORMAT_B5_LANDSCAPE,
             $this->persons ?? [],
             $this->getContext()
         );
