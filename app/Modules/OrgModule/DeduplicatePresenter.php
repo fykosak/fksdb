@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -21,7 +23,8 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class DeduplicatePresenter extends BasePresenter {
+class DeduplicatePresenter extends BasePresenter
+{
 
     private ServicePerson $servicePerson;
     private Merger $merger;
@@ -39,7 +42,8 @@ class DeduplicatePresenter extends BasePresenter {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function authorizedPerson(): void {
+    public function authorizedPerson(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
     }
 
@@ -48,7 +52,8 @@ class DeduplicatePresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedDontMerge(int $trunkId, int $mergedId): void {
+    public function authorizedDontMerge(int $trunkId, int $mergedId): void
+    {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
@@ -57,7 +62,8 @@ class DeduplicatePresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedMerge(int $trunkId, int $mergedId): void {
+    public function authorizedMerge(int $trunkId, int $mergedId): void
+    {
         $trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (is_null($trunkPerson) || is_null($mergedPerson)) {
@@ -70,22 +76,35 @@ class DeduplicatePresenter extends BasePresenter {
         $this->setAuthorized($authorized);
     }
 
-    public function titleMerge(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Merging persons %s (%d) and %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
+    public function titleMerge(): void
+    {
+        $this->setPageTitle(
+            new PageTitle(
+                sprintf(
+                    _('Merging persons %s (%d) and %s (%d)'),
+                    $this->trunkPerson->getFullName(),
+                    $this->trunkPerson->person_id,
+                    $this->mergedPerson->getFullName(),
+                    $this->mergedPerson->person_id
+                )
+            )
+        );
     }
 
-    public function titlePerson(): void {
+    public function titlePerson(): void
+    {
         $this->setPageTitle(new PageTitle(_('Duplicate persons'), 'fa fa-exchange'));
     }
 
     /**
      * @param int $trunkId
      * @param int $mergedId
-     * @return void
+
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function actionDontMerge(int $trunkId, int $mergedId): void {
+    public function actionDontMerge(int $trunkId, int $mergedId): void
+    {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
@@ -98,12 +117,14 @@ class DeduplicatePresenter extends BasePresenter {
         $this->backLinkRedirect(true);
     }
 
-    public function actionMerge(int $trunkId, int $mergedId): void {
+    public function actionMerge(int $trunkId, int $mergedId): void
+    {
         $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
 
-    private function updateMergeForm(Form $form): void {
+    private function updateMergeForm(Form $form): void
+    {
         $conflicts = $this->merger->getConflicts();
         foreach ($conflicts as $table => $pairs) {
             $form->addGroup($table);
@@ -123,7 +144,12 @@ class DeduplicatePresenter extends BasePresenter {
                 $tableContainer->addComponent($pairContainer, $pairId);
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
-                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
+                    if (
+                        isset($data[Merger::IDX_RESOLUTION]) && array_key_exists(
+                            $column,
+                            $data[Merger::IDX_RESOLUTION]
+                        )
+                    ) {
                         $default = $data[Merger::IDX_RESOLUTION][$column];
                     } else {
                         $default = $value; // default is trunk
@@ -162,7 +188,8 @@ class DeduplicatePresenter extends BasePresenter {
         $this->registerJSFile('js/mergeForm.js');
     }
 
-    protected function createComponentPersonsGrid(): PersonsGrid {
+    protected function createComponentPersonsGrid(): PersonsGrid
+    {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
@@ -170,15 +197,17 @@ class DeduplicatePresenter extends BasePresenter {
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 
-    protected function createPersonDuplicateFinder(): DuplicateFinder {
+    protected function createPersonDuplicateFinder(): DuplicateFinder
+    {
         return new DuplicateFinder($this->servicePerson, $this->getContext());
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
-    protected function createComponentMergeForm(): FormControl {
+    protected function createComponentMergeForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $this->updateMergeForm($form);
@@ -201,7 +230,8 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    private function handleMergeFormSuccess(Form $form): void {
+    private function handleMergeFormSuccess(Form $form): void
+    {
 
         $values = $form->getValues();
         $values = FormUtils::emptyStrToNull($values);
