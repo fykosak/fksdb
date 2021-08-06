@@ -75,8 +75,8 @@ class ApplicationPresenter extends BasePresenter
             return;
         }
         if (
-            (isset($event->registration_begin) && strtotime($event->registration_begin) > time())
-            || (isset($event->registration_end) && strtotime($event->registration_end) < time())
+            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
+            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
         ) {
             throw new GoneException();
         }
