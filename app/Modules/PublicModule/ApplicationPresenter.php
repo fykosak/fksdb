@@ -100,7 +100,10 @@ class ApplicationPresenter extends BasePresenter
             $this->setAuthorized(true);
             return;
         }
-        if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
+        if (
+            (isset($event->registration_begin) && strtotime($event->registration_begin) > time())
+            || (isset($event->registration_end) && strtotime($event->registration_end) < time())
+        ) {
             throw new GoneException();
         }
     }
@@ -187,10 +190,9 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-        !$this->getMachine()->getPrimaryMachine()->getAvailableTransitions(
-            $this->holder,
-            $this->getHolder()->getPrimaryHolder()->getModelState()
-        )
+        !$this->getMachine()
+            ->getPrimaryMachine()
+            ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
