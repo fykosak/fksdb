@@ -32,13 +32,23 @@ class ClosePresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
-     * @return PageTitle
+     * @throws CannotAccessModelException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    public function titleHard(): PageTitle
+    {
+        return $this->titleTeam();
+    }
+
+    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -52,26 +62,19 @@ class ClosePresenter extends BasePresenter
         );
     }
 
-    /**
-     * @return void
-     * @throws CannotAccessModelException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     */
-    public function titleHard(): void
-    {
-        $this->titleTeam();
-    }
-
     /* ******* authorized methods ***********/
+
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedTeam(): void
     {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
+    }
+
+    protected function getModelResource(): string
+    {
+        return 'fyziklani.close';
     }
 
     /**
@@ -81,20 +84,9 @@ class ClosePresenter extends BasePresenter
     {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
     }
+    /* *********** ACTIONS **************** */
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
-    }
-    /* *********** ACTIONS **************** */
-    /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -111,8 +103,18 @@ class ClosePresenter extends BasePresenter
     }
 
     /* ********* COMPONENTS ************* */
+
     /**
-     * @return CloseTeamComponent
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+    }
+
+    /**
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -124,7 +126,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return TeamSubmitsGrid
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -140,13 +141,7 @@ class ClosePresenter extends BasePresenter
         return $this->serviceFyziklaniTeam;
     }
 
-    protected function getModelResource(): string
-    {
-        return 'fyziklani.close';
-    }
-
     /**
-     * @return BaseGrid
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): BaseGrid
@@ -155,7 +150,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): Control
@@ -164,7 +158,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentEditForm(): Control

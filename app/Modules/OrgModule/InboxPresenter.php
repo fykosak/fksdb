@@ -75,19 +75,8 @@ class InboxPresenter extends BasePresenter
     }
 
     /* *********** LIVE CYCLE *************/
-    /**
-     * @throws ForbiddenRequestException
-     * @throws BadRequestException
-     */
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->seriesTable->setContestYear($this->getSelectedContestYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
-    }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     public function actionHandout(): void
@@ -100,6 +89,17 @@ class InboxPresenter extends BasePresenter
         // $connection = $this->servicePerson->getConnection();
         // $connection->getCache()->clean(array(Cache::ALL => true));
         // $connection->getDatabaseReflection()->setConnection($connection);
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws BadRequestException
+     */
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
     /* ******************* COMPONENTS ******************/

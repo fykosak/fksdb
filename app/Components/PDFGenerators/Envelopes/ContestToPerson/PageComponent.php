@@ -35,4 +35,9 @@ class PageComponent extends AbstractPageComponent
         $this->template->contest = $this->contest;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');
     }
+
+    public function getPagesTemplatePath(): string
+    {
+        return $this->formatPathByFormat(self::FORMAT_B5_LANDSCAPE);
+    }
 }

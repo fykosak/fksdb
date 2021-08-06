@@ -44,6 +44,26 @@ class ContestantPresenter extends ExtendedPersonPresenter
         return new PageTitle(_('Contestants'), 'fa fa-user-graduate');
     }
 
+    public function messageCreate(): string
+    {
+        return _('Contestant %s created.');
+    }
+
+    public function messageEdit(): string
+    {
+        return _('Contestant %s modified.');
+    }
+
+    public function messageError(): string
+    {
+        return _('Error while creating the contestant.');
+    }
+
+    public function messageExists(): string
+    {
+        return _('Contestant already exists.');
+    }
+
     protected function createComponentGrid(): ContestantsGrid
     {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContestYear());
@@ -66,26 +86,6 @@ class ContestantPresenter extends ExtendedPersonPresenter
             return null;
         }
         return $model->getContestYear();
-    }
-
-    public function messageCreate(): string
-    {
-        return _('Contestant %s created.');
-    }
-
-    public function messageEdit(): string
-    {
-        return _('Contestant %s modified.');
-    }
-
-    public function messageError(): string
-    {
-        return _('Error while creating the contestant.');
-    }
-
-    public function messageExists(): string
-    {
-        return _('Contestant already exists.');
     }
 
     protected function getModelResource(): string

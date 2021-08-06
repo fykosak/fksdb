@@ -1,0 +1,17 @@
+{layout './pages.latte'}
+{block head}
+    {include parent}
+    <style>
+        @media all {
+            .page {
+                width: 250mm;
+                height: 176mm;
+            }
+
+            @page {
+                size: B5 landscape;
+                margin: 0;
+            }
+        }
+    </style>
+{/block}

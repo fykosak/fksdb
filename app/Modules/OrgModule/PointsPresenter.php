@@ -42,13 +42,6 @@ class PointsPresenter extends BasePresenter
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->seriesTable->setContestYear($this->getSelectedContestYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
-    }
-
     public function titleEntry(): PageTitle
     {
         return new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
@@ -74,6 +67,31 @@ class PointsPresenter extends BasePresenter
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
+    private function getGradedTasks(): array
+    {
+        /**@var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        $person = $login->getPerson();
+        if (!$person) {
+            return [];
+        }
+
+        $taskIds = [];
+        /** @var ModelTask $task */
+        foreach ($this->seriesTable->getTasks() as $task) {
+            $taskIds[] = $task->task_id;
+        }
+        $gradedTasks = $this->serviceTaskContribution->getTable()
+            ->where(
+                [
+                    'person_id' => $person->person_id,
+                    'task_id' => $taskIds,
+                    'type' => ModelTaskContribution::TYPE_GRADE,
+                ]
+            )->fetchPairs('task_id', 'task_id');
+        return array_values($gradedTasks);
+    }
+
     final public function renderEntry(): void
     {
         $this->template->showAll = (bool)$this->all;
@@ -82,20 +100,6 @@ class PointsPresenter extends BasePresenter
         } else {
             $this->template->hasQuizTask = false;
         }
-    }
-
-    protected function createComponentPointsForm(): PointsFormComponent
-    {
-        return new PointsFormComponent(
-            fn() => $this->SQLResultsCache->recalculate($this->getSelectedContestYear()),
-            $this->getContext(),
-            $this->seriesTable,
-        );
-    }
-
-    protected function createComponentPointsTableControl(): PointsPreviewComponent
-    {
-        return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
     public function handleInvalidate(): void
@@ -112,7 +116,6 @@ class PointsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void
@@ -146,29 +149,25 @@ class PointsPresenter extends BasePresenter
         }
     }
 
-    private function getGradedTasks(): array
+    protected function startup(): void
     {
-        /**@var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-        $person = $login->getPerson();
-        if (!$person) {
-            return [];
-        }
+        parent::startup();
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
+    }
 
-        $taskIds = [];
-        /** @var ModelTask $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
-            $taskIds[] = $task->task_id;
-        }
-        $gradedTasks = $this->serviceTaskContribution->getTable()
-            ->where(
-                [
-                    'person_id' => $person->person_id,
-                    'task_id' => $taskIds,
-                    'type' => ModelTaskContribution::TYPE_GRADE,
-                ]
-            )->fetchPairs('task_id', 'task_id');
-        return array_values($gradedTasks);
+    protected function createComponentPointsForm(): PointsFormComponent
+    {
+        return new PointsFormComponent(
+            fn() => $this->SQLResultsCache->recalculate($this->getSelectedContestYear()),
+            $this->getContext(),
+            $this->seriesTable,
+        );
+    }
+
+    protected function createComponentPointsTableControl(): PointsPreviewComponent
+    {
+        return new PointsPreviewComponent($this->getContext(), $this->seriesTable);
     }
 
     protected function beforeRender(): void

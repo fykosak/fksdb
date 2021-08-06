@@ -54,10 +54,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     }
 
     /* Formats action method name.*/
-    protected static function formatAuthorizedMethod(string $action): string
-    {
-        return 'authorized' . $action;
-    }
 
     /**
      * @param mixed $element
@@ -75,8 +71,12 @@ abstract class AuthenticatedPresenter extends BasePresenter
         }
     }
 
+    protected static function formatAuthorizedMethod(string $action): string
+    {
+        return 'authorized' . $action;
+    }
+
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws \Exception
      */
@@ -106,32 +106,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
         }
     }
 
-    private function optionalLoginRedirect(): void
-    {
-        if (!$this->requiresLogin()) {
-            return;
-        }
-        $this->redirect(
-            ':Core:Authentication:login',
-            [
-                'backlink' => $this->storeRequest(),
-                AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
-            ]
-        );
-    }
-
-    /**
-     * This method may be override, however only simple conditions
-     * can be checked there -- user session is not prepared at the
-     * moment of the call.
-     *
-     * @return bool
-     */
-    public function requiresLogin(): bool
-    {
-        return true;
-    }
-
     public function getAllowedAuthMethods(): array
     {
         return [
@@ -140,19 +114,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
             self::AUTH_LOGIN => true,
             self::AUTH_TOKEN => true,
         ];
-    }
-
-    protected function getHttpRealm(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * @throws ForbiddenRequestException
-     */
-    protected function unauthorizedAccess(): void
-    {
-        throw new ForbiddenRequestException();
     }
 
     /**
@@ -213,6 +174,21 @@ abstract class AuthenticatedPresenter extends BasePresenter
         }
     }
 
+    protected function getHttpRealm(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * This method may be override, however only simple conditions
+     * can be checked there -- user session is not prepared at the
+     * moment of the call.
+     */
+    public function requiresLogin(): bool
+    {
+        return true;
+    }
+
     /**
      * @throws ForbiddenRequestException|BadRequestException
      * @throws \Exception
@@ -235,5 +211,27 @@ abstract class AuthenticatedPresenter extends BasePresenter
         } catch (AuthenticationException $exception) {
             throw new ForbiddenRequestException(_('Authentication failure.'), Response::S403_FORBIDDEN, $exception);
         }
+    }
+
+    private function optionalLoginRedirect(): void
+    {
+        if (!$this->requiresLogin()) {
+            return;
+        }
+        $this->redirect(
+            ':Core:Authentication:login',
+            [
+                'backlink' => $this->storeRequest(),
+                AuthenticationPresenter::PARAM_REASON => $this->getUser()->logoutReason,
+            ]
+        );
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     */
+    protected function unauthorizedAccess(): void
+    {
+        throw new ForbiddenRequestException();
     }
 }

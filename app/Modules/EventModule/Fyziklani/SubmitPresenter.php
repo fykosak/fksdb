@@ -52,7 +52,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -69,20 +68,6 @@ class SubmitPresenter extends BasePresenter
     /* ***** Authorized methods *****/
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
-    }
-
-    /* ******** ACTION METHODS ********/
-
-    /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -93,8 +78,9 @@ class SubmitPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
+    /* ******** ACTION METHODS ********/
+
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -105,39 +91,7 @@ class SubmitPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
-    /* ****** COMPONENTS **********/
     /**
-     * @return AllSubmitsGrid
-     * @throws EventNotFoundException
-     */
-    protected function createComponentGrid(): AllSubmitsGrid
-    {
-        return new AllSubmitsGrid($this->getEvent(), $this->getContext());
-    }
-
-    /**
-     * @return PointsEntryComponent
-     * @throws EventNotFoundException
-     */
-    protected function createComponentCreateForm(): PointsEntryComponent
-    {
-        return new PointsEntryComponent($this->getContext(), $this->getEvent());
-    }
-
-    /**
-     * @return FyziklaniSubmitFormComponent
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     */
-    protected function createComponentEditForm(): FyziklaniSubmitFormComponent
-    {
-        return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
-    }
-
-    /**
-     * @return void
      * @throws ClosedSubmittingException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -151,6 +105,45 @@ class SubmitPresenter extends BasePresenter
         $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
         FlashMessageDump::dump($logger, $this);
         $this->redirect('this');
+    }
+
+    /* ****** COMPONENTS **********/
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentGrid(): AllSubmitsGrid
+    {
+        return new AllSubmitsGrid($this->getEvent(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCreateForm(): PointsEntryComponent
+    {
+        return new PointsEntryComponent($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     */
+    protected function createComponentEditForm(): FyziklaniSubmitFormComponent
+    {
+        return new FyziklaniSubmitFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceFyziklaniSubmit

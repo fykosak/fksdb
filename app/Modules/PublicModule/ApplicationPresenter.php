@@ -45,6 +45,11 @@ class ApplicationPresenter extends BasePresenter
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
 
+    public static function encodeParameters(int $eventId, int $id): string
+    {
+        return "$eventId:$id";
+    }
+
     final public function injectTernary(
         ServiceEvent $serviceEvent,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
@@ -53,37 +58,6 @@ class ApplicationPresenter extends BasePresenter
         $this->serviceEvent = $serviceEvent;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
         $this->eventDispatchFactory = $eventDispatchFactory;
-    }
-
-    protected function startup(): void
-    {
-        switch ($this->getAction()) {
-            case 'edit':
-                $this->forward('default', $this->getParameters());
-                break;
-            case 'list':
-                $this->forward(':Core:MyApplications:default', $this->getParameters());
-                break;
-            case 'default':
-                if (!isset($this->contestId)) {
-                    if (!$this->getEvent()) {
-                        throw new EventNotFoundException();
-                    }
-                    // hack if contestId is not present, but there ale a eventId param
-                    $this->forward(
-                        'default',
-                        array_merge(
-                            $this->getParameters(),
-                            [
-                                'contestId' => $this->getEvent()->getEventType()->contest_id,
-                                'year' => $this->getEvent()->year,
-                            ]
-                        )
-                    );
-                }
-        }
-        $this->yearTraitStartup();
-        parent::startup();
     }
 
     /**
@@ -100,13 +74,15 @@ class ApplicationPresenter extends BasePresenter
             $this->setAuthorized(true);
             return;
         }
-        if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
+        if (
+            (isset($event->registration_begin) && strtotime((string)$event->registration_begin) > time())
+            || (isset($event->registration_end) && strtotime((string)$event->registration_end) < time())
+        ) {
             throw new GoneException();
         }
     }
 
     /**
-     * @return PageTitle
      * @throws NeonSchemaException
      * @throws \Throwable
      */
@@ -127,23 +103,31 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
-     * @throws ForbiddenRequestException
+     * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
-    protected function unauthorizedAccess(): void
+    private function getEventApplication(): ?ActiveRow
     {
-        if ($this->getAction() == 'default') {
-            $this->initializeMachine();
-            if (
-                $this->getHolder()->getPrimaryHolder()->getModelState(
-                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
-            ) {
-                return;
-            }
+        if (!isset($this->eventApplication)) {
+            $id = $this->getParameter('id');
+            $service = $this->getHolder()->getPrimaryHolder()->getService();
+
+            $this->eventApplication = $service->findByPrimary($id);
         }
 
-        parent::unauthorizedAccess();
+        return $this->eventApplication;
+    }
+
+    /**
+     * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     */
+    private function getHolder(): Holder
+    {
+        if (!isset($this->holder)) {
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
+        }
+        return $this->holder;
     }
 
     public function requiresLogin(): bool
@@ -170,6 +154,7 @@ class ApplicationPresenter extends BasePresenter
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
+            /** @var ModelEvent $event */
             $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
@@ -187,10 +172,9 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-        !$this->getMachine()->getPrimaryMachine()->getAvailableTransitions(
-            $this->holder,
-            $this->getHolder()->getPrimaryHolder()->getModelState()
-        )
+        !$this->getMachine()
+            ->getPrimaryMachine()
+            ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
@@ -226,8 +210,95 @@ class ApplicationPresenter extends BasePresenter
         }
     }
 
+    private function getMachine(): Machine
+    {
+        if (!isset($this->machine)) {
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        }
+        return $this->machine;
+    }
+
+    protected function startup(): void
+    {
+        switch ($this->getAction()) {
+            case 'edit':
+                $this->forward('default', $this->getParameters());
+                break;
+            case 'list':
+                $this->forward(':Core:MyApplications:default', $this->getParameters());
+                break;
+            case 'default':
+                if (!isset($this->contestId)) {
+                    if (!$this->getEvent()) {
+                        throw new EventNotFoundException();
+                    }
+                    // hack if contestId is not present, but there ale a eventId param
+                    $this->forward(
+                        'default',
+                        array_merge(
+                            $this->getParameters(),
+                            [
+                                'contestId' => $this->getEvent()->getEventType()->contest_id,
+                                'year' => $this->getEvent()->year,
+                            ]
+                        )
+                    );
+                }
+        }
+        $this->yearTraitStartup();
+        parent::startup();
+    }
+
+    private function getEvent(): ?ModelEvent
+    {
+        if (!isset($this->event)) {
+            $eventId = null;
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+                $data = $this->tokenAuthenticator->getTokenData();
+                if ($data) {
+                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
+                    $eventId = $data['eventId'];
+                }
+            }
+            $eventId = $eventId ?? $this->getParameter('eventId');
+            $this->event = $this->serviceEvent->findByPrimary($eventId);
+        }
+
+        return $this->event;
+    }
+
+    public static function decodeParameters(string $data): array
+    {
+        $parts = explode(':', $data);
+        if (count($parts) != 2) {
+            throw new InvalidArgumentException("Cannot decode '$data'.");
+        }
+        return [
+            'eventId' => $parts[0],
+            'id' => $parts[1],
+        ];
+    }
+
     /**
-     * @return void
+     * @throws ForbiddenRequestException
+     * @throws NeonSchemaException
+     */
+    protected function unauthorizedAccess(): void
+    {
+        if ($this->getAction() == 'default') {
+            $this->initializeMachine();
+            if (
+                $this->getHolder()->getPrimaryHolder()->getModelState(
+                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+            ) {
+                return;
+            }
+        }
+
+        parent::unauthorizedAccess();
+    }
+
+    /**
      * @throws NeonSchemaException
      */
     private function initializeMachine(): void
@@ -236,7 +307,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ApplicationComponent
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -262,80 +332,7 @@ class ApplicationPresenter extends BasePresenter
         return $component;
     }
 
-    private function getEvent(): ?ModelEvent
-    {
-        if (!isset($this->event)) {
-            $eventId = null;
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->tokenAuthenticator->getTokenData();
-                if ($data) {
-                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
-                    $eventId = $data['eventId'];
-                }
-            }
-            $eventId = $eventId ?? $this->getParameter('eventId');
-            $this->event = $this->serviceEvent->findByPrimary($eventId);
-        }
-
-        return $this->event;
-    }
-
     /**
-     * @return AbstractModelMulti|AbstractModel|ActiveRow|ModelFyziklaniTeam|ModelEventParticipant|null
-     * @throws NeonSchemaException
-     */
-    private function getEventApplication(): ?ActiveRow
-    {
-        if (!isset($this->eventApplication)) {
-            $id = $this->getParameter('id');
-            $service = $this->getHolder()->getPrimaryHolder()->getService();
-
-            $this->eventApplication = $service->findByPrimary($id);
-        }
-
-        return $this->eventApplication;
-    }
-
-    /**
-     * @return Holder
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
-    private function getHolder(): Holder
-    {
-        if (!isset($this->holder)) {
-            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
-        }
-        return $this->holder;
-    }
-
-    private function getMachine(): Machine
-    {
-        if (!isset($this->machine)) {
-            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        }
-        return $this->machine;
-    }
-
-    public static function encodeParameters(int $eventId, int $id): string
-    {
-        return "$eventId:$id";
-    }
-
-    public static function decodeParameters(string $data): array
-    {
-        $parts = explode(':', $data);
-        if (count($parts) != 2) {
-            throw new InvalidArgumentException("Cannot decode '$data'.");
-        }
-        return [
-            'eventId' => $parts[0],
-            'id' => $parts[1],
-        ];
-    }
-
-    /**
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

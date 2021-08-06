@@ -25,16 +25,16 @@ class ValidationPresenter extends BasePresenter
         return new PageTitle(_('Select test'), 'fas fa-check');
     }
 
+    public function authorizedList(): void
+    {
+        $this->authorizedDefault();
+    }
+
     public function authorizedDefault(): void
     {
         $this->setAuthorized(
             $this->contestAuthorizator->isAllowedForAnyContest('person', 'validation')
         );
-    }
-
-    public function authorizedList(): void
-    {
-        $this->authorizedDefault();
     }
 
     public function authorizedPreview(): void

@@ -18,6 +18,11 @@ class MyApplicationsPresenter extends BasePresenter
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getPerson());
     }
 
+    private function getPerson(): ?ModelPerson
+    {
+        return $this->getUser()->getIdentity()->getPerson();
+    }
+
     public function titleDefault(): PageTitle
     {
         return new PageTitle(_('My applications'), 'fa fa-calendar-alt');
@@ -46,10 +51,5 @@ class MyApplicationsPresenter extends BasePresenter
             FieldLevelPermission::ALLOW_FULL,
             $this->getContext()
         );
-    }
-
-    private function getPerson(): ?ModelPerson
-    {
-        return $this->getUser()->getIdentity()->getPerson();
     }
 }

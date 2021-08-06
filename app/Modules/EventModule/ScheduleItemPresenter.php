@@ -63,7 +63,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-     *
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -75,7 +74,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-     * @return ScheduleItemFormContainer
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): ScheduleItemFormContainer
@@ -84,7 +82,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-     * @return ScheduleItemFormContainer
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -96,7 +93,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonsGrid
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -115,7 +111,6 @@ class ScheduleItemPresenter extends BasePresenter
     /**
      * @param string|Resource $resource
      * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

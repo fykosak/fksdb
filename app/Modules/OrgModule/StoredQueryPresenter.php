@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
@@ -33,7 +32,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleEdit(): PageTitle
@@ -52,7 +50,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleDetail(): PageTitle
@@ -66,6 +63,14 @@ class StoredQueryPresenter extends BasePresenter
         return new PageTitle($title, 'fa fa-file-csv');
     }
 
+    /**
+     * @throws ModelNotFoundException
+     */
+    final public function renderDetail(): void
+    {
+        $this->template->model = $this->getEntity();
+    }
+
     protected function startup(): void
     {
         switch ($this->getAction()) {
@@ -75,22 +80,12 @@ class StoredQueryPresenter extends BasePresenter
         parent::startup();
     }
 
-    /**
-     * @return void
-     * @throws ModelNotFoundException
-     */
-    final public function renderDetail(): void
-    {
-        $this->template->model = $this->getEntity();
-    }
-
     protected function createComponentCreateForm(): StoredQueryFormComponent
     {
         return new StoredQueryFormComponent($this->getContext(), null);
     }
 
     /**
-     * @return StoredQueryFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): StoredQueryFormComponent
@@ -118,7 +113,6 @@ class StoredQueryPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

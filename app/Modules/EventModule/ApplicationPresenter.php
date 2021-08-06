@@ -29,15 +29,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function isEnabled(): bool
-    {
-        return !$this->isTeamEvent();
-    }
-
-    /**
      *
      * use same method of permissions as trait
      * @throws EventNotFoundException
@@ -47,34 +38,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
-    /**
-     * @return AbstractApplicationsGrid
-     * @throws EventNotFoundException
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function createComponentGrid(): AbstractApplicationsGrid
+    protected function getModelResource(): string
     {
-        return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+        return ModelEventParticipant::RESOURCE_ID;
     }
 
     /**
-     * @return ImportComponent
-     * @throws EventNotFoundException
-     * @throws NeonSchemaException
-     * @throws ConfigurationNotFoundException
-     */
-    protected function createComponentImport(): ImportComponent
-    {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
-
-        return new ImportComponent($machine, $source, $handler, $this->getContext());
-    }
-
-    /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -94,13 +63,40 @@ class ApplicationPresenter extends AbstractApplicationPresenter
         ];
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function isEnabled(): bool
+    {
+        return !$this->isTeamEvent();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function createComponentGrid(): AbstractApplicationsGrid
+    {
+        return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    }
+
+    /**
+     * @throws EventNotFoundException
+     * @throws NeonSchemaException
+     * @throws ConfigurationNotFoundException
+     */
+    protected function createComponentImport(): ImportComponent
+    {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
+        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
+        $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
+
+        return new ImportComponent($machine, $source, $handler, $this->getContext());
+    }
+
     protected function getORMService(): ServiceEventParticipant
     {
         return $this->serviceEventParticipant;
-    }
-
-    protected function getModelResource(): string
-    {
-        return ModelEventParticipant::RESOURCE_ID;
     }
 }

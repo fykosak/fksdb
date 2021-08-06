@@ -11,7 +11,6 @@ use FKSDB\Models\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -29,13 +28,33 @@ trait EntityPresenterTrait
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
 
+    /**
+     * @param bool $access
+     * @return void
+     */
+    abstract public function setAuthorized(bool $access);
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     */
+    abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
+
+    protected function getModelResource(): string
+    {
+        return $this->getORMService()->getModelClassName()::RESOURCE_ID;
+    }
+
+    abstract protected function getORMService(): AbstractService;
+
+    /* ****************** TITLES ***************************** */
+
     public function authorizedCreate(): void
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'create'));
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedEdit(): void
@@ -44,7 +63,49 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
+     * @param bool $throw
+     * @throws ModelNotFoundException
+     */
+    public function getEntity(bool $throw = true): ?AbstractModel
+    {
+        $id = $this->getParameter($this->getPrimaryParameterName());
+        // protection for tests ev. change URL during app is running
+        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
+            $this->model = $this->loadModel($throw);
+        }
+        return $this->model;
+    }
+
+    /**
+     * @param string $name
+     * @param null $default
+     * @return mixed
+     */
+    abstract public function getParameter(string $name, $default = null);
+
+    protected function getPrimaryParameterName(): string
+    {
+        return 'id';
+    }
+
+    /**
+     * @param bool $throw
+     * @throws ModelNotFoundException
+     */
+    private function loadModel(bool $throw = true): ?AbstractModel
+    {
+        $id = $this->getParameter($this->getPrimaryParameterName());
+        $candidate = $this->getORMService()->findByPrimary($id);
+        if ($candidate) {
+            return $candidate;
+        } elseif ($throw) {
+            throw new ModelNotFoundException('Model does not exists');
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * @throws ModelNotFoundException
      */
     public function authorizedDelete(): void
@@ -53,15 +114,12 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
     }
-
-    /* ****************** TITLES ***************************** */
 
     public function titleList(): PageTitle
     {
@@ -89,40 +147,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @param bool $throw
-     * @return AbstractModel|null
-     * @throws ModelNotFoundException
-     */
-    public function getEntity(bool $throw = true): ?AbstractModel
-    {
-        $id = $this->getParameter($this->getPrimaryParameterName());
-        // protection for tests ev. change URL during app is running
-        if ((isset($this->model) && $id !== $this->model->getPrimary()) || !isset($this->model)) {
-            $this->model = $this->loadModel($throw);
-        }
-        return $this->model;
-    }
-
-    /**
-     * @param bool $throw
-     * @return AbstractModel|null
-     * @throws ModelNotFoundException
-     */
-    private function loadModel(bool $throw = true): ?AbstractModel
-    {
-        $id = $this->getParameter($this->getPrimaryParameterName());
-        $candidate = $this->getORMService()->findByPrimary($id);
-        if ($candidate) {
-            return $candidate;
-        } elseif ($throw) {
-            throw new ModelNotFoundException('Model does not exists');
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * @return void
      * @throws ModelException
      * @throws ModelNotFoundException
      */
@@ -148,36 +172,4 @@ trait EntityPresenterTrait
      * @throws NotImplementedException
      */
     abstract protected function createComponentGrid(): BaseGrid;
-
-    abstract protected function getORMService(): AbstractService;
-
-    protected function getModelResource(): string
-    {
-        return $this->getORMService()->getModelClassName()::RESOURCE_ID;
-    }
-
-    protected function getPrimaryParameterName(): string
-    {
-        return 'id';
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     */
-    abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
-
-    /**
-     * @param string $name
-     * @param null $default
-     * @return mixed
-     */
-    abstract public function getParameter(string $name, $default = null);
-
-    /**
-     * @param bool $access
-     * @return void
-     */
-    abstract public function setAuthorized(bool $access);
 }

@@ -54,30 +54,17 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @return array
+     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \ReflectionException
      */
-    protected function getFieldsDefinition(): array
+    final protected function createComponentCreateComponent(): FormControl
     {
-        $contestName = $this->getSelectedContest()->getContestSymbol();
-        return Helpers::evalExpressionArray(
-            $this->getContext()->getParameters()[$contestName][$this->fieldsDefinition],
-            $this->getContext()
-        );
-    }
-
-    abstract protected function appendExtendedContainer(Form $form): void;
-
-    abstract protected function getORMService(): AbstractService;
-
-    protected function getAcYearFromModel(): ?ModelContestYear
-    {
-        return null;
+        return $this->createComponentFormControl(true);
     }
 
     /**
      * @param bool $create
-     * @return FormControl
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -123,18 +110,27 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws BadTypeException
      * @throws \ReflectionException
      */
-    final protected function createComponentCreateComponent(): FormControl
+    protected function getFieldsDefinition(): array
     {
-        return $this->createComponentFormControl(true);
+        $contestName = $this->getSelectedContest()->getContestSymbol();
+        return Helpers::evalExpressionArray(
+            $this->getContext()->getParameters()[$contestName][$this->fieldsDefinition],
+            $this->getContext()
+        );
     }
 
+    protected function getAcYearFromModel(): ?ModelContestYear
+    {
+        return null;
+    }
+
+    abstract protected function appendExtendedContainer(Form $form): void;
+
+    abstract protected function getORMService(): AbstractService;
+
     /**
-     * @return FormControl
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException

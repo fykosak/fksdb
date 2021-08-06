@@ -76,6 +76,16 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
+     * This workaround is here because LoginUser storage
+     * returns false when only global login exists.
+     * False is return in order to AuthenticatedPresenter to correctly login the user.
+     */
+    private function isLoggedIn(): bool
+    {
+        return $this->getUser()->isLoggedIn();
+    }
+
+    /**
      * @throws BadTypeException
      * @throws \Exception
      */
@@ -107,125 +117,23 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * @throws \Exception
      */
-    public function actionRecover(): void
+    private function initialRedirect(): void
     {
-        if ($this->isLoggedIn()) {
-            $this->initialRedirect();
+        if ($this->backlink) {
+            $this->restoreRequest($this->backlink);
         }
-    }
-
-    /**
-     * This workaround is here because LoginUser storage
-     * returns false when only global login exists.
-     * False is return in order to AuthenticatedPresenter to correctly login the user.
-     *
-     * @return bool
-     */
-    private function isLoggedIn(): bool
-    {
-        return $this->getUser()->isLoggedIn();
+        $this->redirect(':Core:Dispatch:');
     }
 
     /*     * ******************* components ****************************** */
 
     /**
-     * Login form component factory.
-     * @return Form
-     */
-    protected function createComponentLoginForm(): Form
-    {
-        $form = new Form($this, 'loginForm');
-        $form->addText('id', _('Login or e-mail'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'))
-            ->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'top form-control',
-                    'autofocus' => true,
-                    'placeholder' => _('Login or e-mail'),
-                    'autocomplete' => 'username',
-                ]
-            );
-        $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
-                [
-                    'class' => 'bottom mb-3 form-control',
-                    'placeholder' => _('Password'),
-                    'autocomplete' => 'current-password',
-                ]
-            );
-        $form->addSubmit('send', _('Log in'));
-        $form->addProtection(_('The form has expired. Please send it again.'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->loginFormSubmitted($form);
-        };
-        return $form;
-    }
-
-    /**
-     * Password recover form.
-     *
-     * @return Form
-     */
-    protected function createComponentRecoverForm(): Form
-    {
-        $form = new Form();
-        $form->addText('id', _('Login or e-mail address'))
-            ->addRule(Form::FILLED, _('Insert login or email address.'));
-
-        $form->addSubmit('send', _('Continue'));
-
-        $form->addProtection(_('The form has expired. Please send it again.'));
-
-        $form->onSuccess[] = function (Form $form) {
-            $this->recoverFormSubmitted($form);
-        };
-        return $form;
-    }
-
-    /**
-     * @param Form $form
      * @throws \Exception
      */
-    private function loginFormSubmitted(Form $form): void
+    public function actionRecover(): void
     {
-        $values = $form->getValues();
-        try {
-            $this->getUser()->login($values['id'], $values['password']);
-            /** @var ModelLogin $login */
+        if ($this->isLoggedIn()) {
             $this->initialRedirect();
-        } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-        }
-    }
-
-    /**
-     * @param Form $form
-     * @return void
-     * @throws BadTypeException
-     * @throws UnsupportedLanguageException
-     */
-    private function recoverFormSubmitted(Form $form): void
-    {
-        $connection = $this->serviceAuthToken->explorer->getConnection();
-        try {
-            $values = $form->getValues();
-
-            $connection->beginTransaction();
-            $login = $this->passwordAuthenticator->findLogin($values['id']);
-            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
-            $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
-            $this->flashMessage(
-                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
-                self::FLASH_SUCCESS
-            );
-            $connection->commit();
-            $this->redirect('login');
-        } catch (AuthenticationException | RecoveryException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-            $connection->rollBack();
-        } catch (SendFailedException $exception) {
-            $connection->rollBack();
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
     }
 
@@ -258,6 +166,11 @@ final class AuthenticationPresenter extends BasePresenter
         }
     }
 
+    public function getGoogleSection(): SessionSection
+    {
+        return $this->getSession()->getSection('google-oauth2state');
+    }
+
     /**
      * @throws \Exception
      */
@@ -269,14 +182,100 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
+     * Login form component factory.
+     */
+    protected function createComponentLoginForm(): Form
+    {
+        $form = new Form($this, 'loginForm');
+        $form->addText('id', _('Login or e-mail'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'))
+            ->getControlPrototype()->addAttributes(
+                [
+                    'class' => 'top form-control',
+                    'autofocus' => true,
+                    'placeholder' => _('Login or e-mail'),
+                    'autocomplete' => 'username',
+                ]
+            );
+        $form->addPassword('password', _('Password'))
+            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes(
+                [
+                    'class' => 'bottom mb-3 form-control',
+                    'placeholder' => _('Password'),
+                    'autocomplete' => 'current-password',
+                ]
+            );
+        $form->addSubmit('send', _('Log in'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
+        $form->onSuccess[] = function (Form $form) {
+            $this->loginFormSubmitted($form);
+        };
+        return $form;
+    }
+
+    /**
+     * @param Form $form
      * @throws \Exception
      */
-    private function initialRedirect(): void
+    private function loginFormSubmitted(Form $form): void
     {
-        if ($this->backlink) {
-            $this->restoreRequest($this->backlink);
+        $values = $form->getValues();
+        try {
+            $this->getUser()->login($values['id'], $values['password']);
+            /** @var ModelLogin $login */
+            $this->initialRedirect();
+        } catch (AuthenticationException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
         }
-        $this->redirect(':Core:Dispatch:');
+    }
+
+    /**
+     * Password recover form.
+     */
+    protected function createComponentRecoverForm(): Form
+    {
+        $form = new Form();
+        $form->addText('id', _('Login or e-mail address'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'));
+
+        $form->addSubmit('send', _('Continue'));
+
+        $form->addProtection(_('The form has expired. Please send it again.'));
+
+        $form->onSuccess[] = function (Form $form) {
+            $this->recoverFormSubmitted($form);
+        };
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
+     */
+    private function recoverFormSubmitted(Form $form): void
+    {
+        $connection = $this->serviceAuthToken->explorer->getConnection();
+        try {
+            $values = $form->getValues();
+
+            $connection->beginTransaction();
+            $login = $this->passwordAuthenticator->findLogin($values['id']);
+            $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
+            $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
+            $this->flashMessage(
+                sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
+                self::FLASH_SUCCESS
+            );
+            $connection->commit();
+            $this->redirect('login');
+        } catch (AuthenticationException | RecoveryException $exception) {
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $connection->rollBack();
+        } catch (SendFailedException $exception) {
+            $connection->rollBack();
+            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+        }
     }
 
     protected function beforeRender(): void
@@ -284,10 +283,5 @@ final class AuthenticationPresenter extends BasePresenter
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
-    }
-
-    public function getGoogleSection(): SessionSection
-    {
-        return $this->getSession()->getSection('google-oauth2state');
     }
 }

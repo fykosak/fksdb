@@ -95,10 +95,17 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return new PageTitle(_('Select year'), '', $this->getSelectedContest()->name);
     }
 
+    public function getSelectedContest(): ?ModelContest
+    {
+        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+    }
+
     public function titleEmail(): PageTitle
     {
         return new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
     }
+
+    /* ********************* ACTIONS ***************** */
 
     public function titleContestant(): PageTitle
     {
@@ -111,7 +118,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         );
     }
 
-    /* ********************* ACTIONS ***************** */
+    public function getSelectedYear(): ?int
+    {
+        return $this->year;
+    }
 
     public function actionDefault(): void
     {
@@ -156,6 +166,18 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
+    private function getPerson(): ?ModelPerson
+    {
+        if (!isset($this->person)) {
+            if ($this->user->isLoggedIn()) {
+                $this->person = $this->user->getIdentity()->getPerson();
+            } else {
+                $this->person = null;
+            }
+        }
+        return $this->person;
+    }
+
     final public function renderContest(): void
     {
         $this->template->contests = $this->serviceContest->getTable();
@@ -178,7 +200,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function renderContestant(): void
@@ -197,40 +218,32 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    public function getSelectedContest(): ?ModelContest
+    public function getModel(): ?AbstractModel
     {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return null; //we always create new contestant
     }
 
-    public function getSelectedYear(): ?int
+    public function messageCreate(): string
     {
-        return $this->year;
+        return _('Contestant %s registered.');
     }
 
-    public function getSelectedContestYear(): ?ModelContestYear
+    public function messageEdit(): string
     {
-        $contest = $this->getSelectedContest();
-        if (is_null($contest)) {
-            return null;
-        }
-        $row = $contest->getContestYears()->where('year', $this->year)->fetch();
-        return $row ? ModelContestYear::createFromActiveRow($row) : null;
+        return _('Contestant %s modified.');
     }
 
-    private function getPerson(): ?ModelPerson
+    public function messageError(): string
     {
-        if (!isset($this->person)) {
-            if ($this->user->isLoggedIn()) {
-                $this->person = $this->user->getIdentity()->getPerson();
-            } else {
-                $this->person = null;
-            }
-        }
-        return $this->person;
+        return _('Error while registering.');
+    }
+
+    public function messageExists(): string
+    {
+        return _('Contestant already registered.');
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl
@@ -252,20 +265,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    private function getFieldsDefinition(): array
-    {
-        $contestName = $this->getSelectedContest()->getContestSymbol();
-        return Helpers::evalExpressionArray(
-            $this->getContext()->getParameters()[$contestName]['registerContestant'],
-            $this->getContext()
-        );
-    }
-
-    /**
-     * @return FormControl
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
@@ -323,33 +322,29 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $control;
     }
 
-    public function getModel(): ?AbstractModel
+    /**
+     * @throws \ReflectionException
+     */
+    private function getFieldsDefinition(): array
     {
-        return null; //we always create new contestant
+        $contestName = $this->getSelectedContest()->getContestSymbol();
+        return Helpers::evalExpressionArray(
+            $this->getContext()->getParameters()[$contestName]['registerContestant'],
+            $this->getContext()
+        );
     }
 
-    public function messageCreate(): string
+    public function getSelectedContestYear(): ?ModelContestYear
     {
-        return _('Contestant %s registered.');
-    }
-
-    public function messageEdit(): string
-    {
-        return _('Contestant %s modified.');
-    }
-
-    public function messageError(): string
-    {
-        return _('Error while registering.');
-    }
-
-    public function messageExists(): string
-    {
-        return _('Contestant already registered.');
+        $contest = $this->getSelectedContest();
+        if (is_null($contest)) {
+            return null;
+        }
+        $row = $contest->getContestYears()->where('year', $this->year)->fetch();
+        return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

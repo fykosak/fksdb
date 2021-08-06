@@ -28,7 +28,6 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleEdit(): PageTitle
@@ -55,7 +54,6 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -74,7 +72,6 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return TeacherFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): TeacherFormComponent
@@ -85,7 +82,6 @@ class TeacherPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

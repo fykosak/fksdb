@@ -9,7 +9,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -59,39 +58,31 @@ class SubmitPresenter extends BasePresenter
 
     /* ******************* AUTH ************************/
 
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
-    }
-
     public function authorizedAjax(): void
     {
         $this->authorizedDefault();
     }
 
-    /* ********************** TITLE **********************/
-    public function titleDefault(): PageTitle
+    public function authorizedDefault(): void
     {
-        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
+
+    /* ********************** TITLE **********************/
 
     public function titleList(): PageTitle
     {
         return new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
-    public function titleAjax(): void
+    public function titleAjax(): PageTitle
     {
-        $this->titleDefault();
+        return $this->titleDefault();
     }
 
-    /**
-     * @throws GoneException
-     * @deprecated
-     */
-    public function actionDownload(): void
+    public function titleDefault(): PageTitle
     {
-        throw new GoneException('');
+        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
     final public function renderDefault(): void
@@ -113,13 +104,28 @@ class SubmitPresenter extends BasePresenter
         }
     }
 
+    private function getAvailableTasks(): TypedTableSelection
+    {
+        // TODO related
+        $tasks = $this->taskService->getTable();
+        $tasks->where(
+            'contest_id = ? AND year = ?',
+            $this->getSelectedContestYear()->contest_id,
+            $this->getSelectedContestYear()->year
+        );
+        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
+        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
+        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
+
+        return $tasks;
+    }
+
     final public function renderAjax(): void
     {
         $this->template->availableTasks = $this->getAvailableTasks();
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentUploadForm(): FormControl
@@ -213,19 +219,8 @@ class SubmitPresenter extends BasePresenter
         return $control;
     }
 
-    protected function createComponentSubmitsGrid(): SubmitsGrid
-    {
-        return new SubmitsGrid($this->getContext(), $this->getContestant());
-    }
-
-    protected function createComponentSubmitContainer(): SubmitContainer
-    {
-        return new SubmitContainer($this->getContext(), $this->getContestant());
-    }
-
     /**
      * @param Form $form
-     * @return void
      * @throws StorageException
      */
     private function handleUploadFormSuccess(Form $form): void
@@ -300,19 +295,13 @@ class SubmitPresenter extends BasePresenter
         }
     }
 
-    private function getAvailableTasks(): TypedTableSelection
+    protected function createComponentSubmitsGrid(): SubmitsGrid
     {
-        // TODO related
-        $tasks = $this->taskService->getTable();
-        $tasks->where(
-            'contest_id = ? AND year = ?',
-            $this->getSelectedContestYear()->contest_id,
-            $this->getSelectedContestYear()->year
-        );
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
+    }
 
-        return $tasks;
+    protected function createComponentSubmitContainer(): SubmitContainer
+    {
+        return new SubmitContainer($this->getContext(), $this->getContestant());
     }
 }

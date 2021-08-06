@@ -16,12 +16,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     private ?ModelContestant $contestant;
 
-    protected function startup(): void
-    {
-        parent::startup();
-        $this->yearTraitStartup();
-    }
-
     public function getContestant(): ?ModelContestant
     {
         if (!isset($this->contestant)) {
@@ -37,6 +31,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
             $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
         }
         return $this->contestant;
+    }
+
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->yearTraitStartup();
     }
 
     protected function getNavRoots(): array

@@ -16,7 +16,6 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void

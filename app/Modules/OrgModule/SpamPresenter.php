@@ -54,18 +54,17 @@ class SpamPresenter extends BasePresenter
         $this->setAuthorized($authorized);
     }
 
+    protected function getORMService(): ServiceEmailMessage
+    {
+        return $this->serviceEmailMessage;
+    }
+
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
     {
         $this->template->model = $this->getEntity();
-    }
-
-    protected function getORMService(): ServiceEmailMessage
-    {
-        return $this->serviceEmailMessage;
     }
 
     protected function createComponentEditForm(): Control
@@ -86,7 +85,6 @@ class SpamPresenter extends BasePresenter
     /**
      * @param Resource|string $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

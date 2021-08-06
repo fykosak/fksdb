@@ -49,7 +49,6 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSeriesForm(): FormControl
@@ -88,14 +87,8 @@ class TasksPresenter extends BasePresenter
         return $control;
     }
 
-    private function isLegacyXml(\SimpleXMLElement $xml): bool
-    {
-        return $xml->getName() === 'problems';
-    }
-
     /**
      * @param Form $seriesForm
-     * @return void
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void
@@ -144,5 +137,10 @@ class TasksPresenter extends BasePresenter
             unlink($file);
         }
         $this->redirect('this');
+    }
+
+    private function isLegacyXml(\SimpleXMLElement $xml): bool
+    {
+        return $xml->getName() === 'problems';
     }
 }

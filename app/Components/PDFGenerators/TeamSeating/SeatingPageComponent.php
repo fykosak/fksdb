@@ -30,4 +30,9 @@ abstract class SeatingPageComponent extends AbstractPageComponent
     {
         return [10, 11, 12, 13, 14];
     }
+
+    public function getPagesTemplatePath(): string
+    {
+        return $this->formatPathByFormat(self::FORMAT_A5_PORTRAIT);
+    }
 }

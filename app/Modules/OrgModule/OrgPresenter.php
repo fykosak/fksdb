@@ -28,7 +28,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -41,7 +40,20 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    public function getEntity(): ModelOrg
+    {
+        /** @var ModelOrg $entity */
+        $entity = $this->traitGetEntity();
+        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
+            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
+        }
+        return $entity;
+    }
+
+    /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -61,22 +73,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelOrg
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     */
-    public function getEntity(): ModelOrg
-    {
-        /** @var ModelOrg $entity */
-        $entity = $this->traitGetEntity();
-        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
-        }
-        return $entity;
-    }
-
-    /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -101,7 +97,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -118,7 +113,6 @@ class OrgPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

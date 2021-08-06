@@ -40,32 +40,38 @@ class ExportPresenter extends BasePresenter
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    protected function startup(): void
-    {
-        switch ($this->getAction()) {
-            case 'edit':
-                $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
-                break;
-            case 'compose':
-                $this->redirect(':Org:StoredQuery:create', $this->getParameters());
-                break;
-            case 'list':
-                $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
-                break;
-            case 'show':
-                $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
-        }
-        parent::startup();
-    }
-
     /**
-     * @return void
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
     public function authorizedExecute(): void
     {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     */
+    public function getStoredQuery(): StoredQuery
+    {
+        if (!isset($this->storedQuery)) {
+            $model = $this->getQueryByQId();
+            if (!$model) {
+                $model = $this->getEntity();
+            }
+            $this->storedQuery = $this->storedQueryFactory->createQuery($this, $model);
+        }
+        return $this->storedQuery;
+    }
+
+    public function getQueryByQId(): ?ModelStoredQuery
+    {
+        $qid = $this->getParameter('qid');
+        if ($qid) {
+            return $this->serviceStoredQuery->findByQid($qid);
+        }
+        return null;
     }
 
     /**
@@ -118,34 +124,27 @@ class ExportPresenter extends BasePresenter
         return $methods;
     }
 
+    protected function startup(): void
+    {
+        switch ($this->getAction()) {
+            case 'edit':
+                $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
+                break;
+            case 'compose':
+                $this->redirect(':Org:StoredQuery:create', $this->getParameters());
+                break;
+            case 'list':
+                $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
+                break;
+            case 'show':
+                $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
+        }
+        parent::startup();
+    }
+
     protected function getHttpRealm(): ?string
     {
         return 'FKSDB-export';
-    }
-
-    /**
-     * @throws BadRequestException
-     * @throws ModelNotFoundException
-     */
-    public function getStoredQuery(): StoredQuery
-    {
-        if (!isset($this->storedQuery)) {
-            $model = $this->getQueryByQId();
-            if (!$model) {
-                $model = $this->getEntity();
-            }
-            $this->storedQuery = $this->storedQueryFactory->createQuery($this, $model);
-        }
-        return $this->storedQuery;
-    }
-
-    public function getQueryByQId(): ?ModelStoredQuery
-    {
-        $qid = $this->getParameter('qid');
-        if ($qid) {
-            return $this->serviceStoredQuery->findByQid($qid);
-        }
-        return null;
     }
 
     /**
@@ -182,7 +181,6 @@ class ExportPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

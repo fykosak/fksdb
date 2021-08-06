@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Charts\Event\Applications\ApplicationRationGeoChart;
 use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
 use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
@@ -25,6 +26,11 @@ class ChartPresenter extends BasePresenter
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
+    protected function getModelResource(): string
+    {
+        return 'event.chart';
+    }
+
     /**
      * @throws EventNotFoundException
      */
@@ -40,7 +46,7 @@ class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return array
+     * @return Chart[]
      * @throws EventNotFoundException
      */
     protected function registerCharts(): array
@@ -53,10 +59,5 @@ class ChartPresenter extends BasePresenter
             'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
             'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
         ];
-    }
-
-    protected function getModelResource(): string
-    {
-        return 'event.chart';
     }
 }

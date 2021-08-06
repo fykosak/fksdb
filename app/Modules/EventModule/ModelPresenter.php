@@ -13,7 +13,6 @@ class ModelPresenter extends BasePresenter
 {
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void
@@ -27,7 +26,6 @@ class ModelPresenter extends BasePresenter
     }
 
     /**
-     * @return GraphComponent
      * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
      */

@@ -26,7 +26,6 @@ abstract class BasePresenter extends EventBasePresenter
     }
 
     /**
-     * @return FyziklaniChooserComponent
      * @throws EventNotFoundException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent
@@ -35,7 +34,6 @@ abstract class BasePresenter extends EventBasePresenter
     }
 
     /**
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool

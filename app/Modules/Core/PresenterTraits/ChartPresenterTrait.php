@@ -43,6 +43,15 @@ trait ChartPresenterTrait
         return $this->chartComponents;
     }
 
+    /**
+     * @return Chart[]
+     */
+    abstract protected function registerCharts(): array;
+
+    abstract public function authorizedList(): void;
+
+    abstract public function authorizedChart(): void;
+
     protected function selectChart(): void
     {
         $charts = $this->getCharts();
@@ -53,20 +62,6 @@ trait ChartPresenterTrait
         }
     }
 
-    protected function createComponentChart(): IComponent
-    {
-        return $this->selectedChart->getControl();
-    }
-
-    abstract public function authorizedList(): void;
-
-    abstract public function authorizedChart(): void;
-
-    /**
-     * @return Chart[]
-     */
-    abstract protected function registerCharts(): array;
-
     abstract public function getAction(bool $fullyQualified = false): string;
 
     /**
@@ -74,4 +69,9 @@ trait ChartPresenterTrait
      * @return static
      */
     abstract public function setView(string $id);
+
+    protected function createComponentChart(): IComponent
+    {
+        return $this->selectedChart->getControl();
+    }
 }

@@ -43,7 +43,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -55,17 +54,6 @@ class EventOrgPresenter extends BasePresenter
             sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
             'fa fa-user-edit'
         );
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
     public function actionDelete(): void
@@ -80,13 +68,22 @@ class EventOrgPresenter extends BasePresenter
         }
     }
 
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
     protected function getORMService(): ServiceEventOrg
     {
         return $this->serviceEventOrg;
     }
 
     /**
-     * @return EventOrgsGrid
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventOrgsGrid
@@ -95,7 +92,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return EventOrgFormComponent
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent
@@ -104,7 +100,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return EventOrgFormComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
