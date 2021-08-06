@@ -18,8 +18,8 @@ class DashboardPresenter extends BasePresenter
         $this->setAuthorized($access);
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard'));
+        return new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard');
     }
 }

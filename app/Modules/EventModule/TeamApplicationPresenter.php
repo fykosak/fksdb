@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
+use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
@@ -32,7 +33,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -52,7 +52,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -60,13 +59,21 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return $this->isTeamEvent();
     }
 
-    protected function createComponentSeating(): SeatingComponent
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentSeating(): ProviderComponent
     {
-        return new SeatingComponent($this->getContext());
+        return new ProviderComponent(
+            new PageComponent($this->getContext()),
+            [$this->getEntity()],
+            $this->getContext()
+        );
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
@@ -75,7 +82,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */

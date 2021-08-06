@@ -37,13 +37,9 @@ class PaymentPresenter extends BasePresenter
     }
 
     /* ********* titles *****************/
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleCreate(): void
+    public function titleCreate(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
+        return new PageTitle(_('New payment'), 'fa fa-credit-card');
     }
 
     /**
@@ -52,11 +48,9 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
-        );
+        return new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
@@ -65,20 +59,17 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
+        return new PageTitle(
+            \sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()),
+            'fa fa-credit-card',
         );
     }
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
+        return new PageTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
     /**
@@ -100,8 +91,6 @@ class PaymentPresenter extends BasePresenter
     /* ********* Authorization *****************/
 
     /**
-     *
-     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
@@ -118,8 +107,6 @@ class PaymentPresenter extends BasePresenter
     /* ********* actions *****************/
 
     /**
-
-     *
      * TODO!!!!
      * @throws EventNotFoundException
      */
@@ -172,7 +159,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws MissingServiceException
@@ -194,7 +180,6 @@ class PaymentPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -208,7 +193,6 @@ class PaymentPresenter extends BasePresenter
     }
     /* ********* Components *****************/
     /**
-
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -225,7 +209,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventPaymentGrid
@@ -234,7 +217,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
@@ -249,7 +231,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

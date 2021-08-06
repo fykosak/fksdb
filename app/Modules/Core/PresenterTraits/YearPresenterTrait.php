@@ -29,7 +29,6 @@ trait YearPresenterTrait
     private ?ModelContestYear $contestYear;
 
     /**
-
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
@@ -85,7 +84,6 @@ trait YearPresenterTrait
     }
 
     /**
-
      * @throws ForbiddenRequestException
      */
     private function selectYear(): ModelContestYear
@@ -102,7 +100,7 @@ trait YearPresenterTrait
         return new YearChooserComponent(
             $this->getContext(),
             $this->getSelectedContestYear(),
-            $this->getAvailableYears()
+            $this->getAvailableYears(),
         );
     }
 }

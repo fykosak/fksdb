@@ -11,38 +11,37 @@ use FKSDB\Models\UI\PageTitle;
 class ResultsPresenter extends BasePresenter
 {
 
-    public function titleCorrelationStatistics(): void
+    public function titleCorrelationStatistics(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie'));
+        return new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fas fa-chart-area'));
+        return new PageTitle(_('Results and statistics'), 'fas fa-chart-area');
     }
 
-    public function titleTable(): void
+    public function titleTable(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fas fa-info'));
+        return new PageTitle(_('Detailed results'), 'fas fa-info');
     }
 
-    public function titlePresentation(): void
+    public function titlePresentation(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fas fa-chalkboard'));
+        return new PageTitle(_('Results presentation'), 'fas fa-chalkboard');
     }
 
-    public function titleTeamStatistics(): void
+    public function titleTeamStatistics(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fas fa-chart-line'));
+        return new PageTitle(_('Teams statistics'), 'fas fa-chart-line');
     }
 
-    public function titleTaskStatistics(): void
+    public function titleTaskStatistics(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar'));
+        return new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar');
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedList(): void
@@ -51,7 +50,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedResultsTable(): void
@@ -60,7 +58,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedTaskStatistics(): void
@@ -69,7 +66,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedTeamStatistics(): void
@@ -78,7 +74,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedCorrelationStatistics(): void
@@ -87,7 +82,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedPresentation(): void
@@ -96,7 +90,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentTable(): ResultsAndStatisticsComponent
@@ -105,7 +98,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentPresentation(): ResultsAndStatisticsComponent
@@ -118,7 +110,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentTeamStatistics(): ResultsAndStatisticsComponent
@@ -127,7 +118,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentTaskStatistics(): ResultsAndStatisticsComponent
@@ -136,7 +126,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentCorrelationStatistics(): ResultsAndStatisticsComponent

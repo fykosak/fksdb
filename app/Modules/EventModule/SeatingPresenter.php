@@ -4,50 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Fyziklani\Seating\SeatingComponent;
+use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\UI\PageTitle;
-use Nette\DeprecatedException;
 
 class SeatingPresenter extends BasePresenter
 {
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa map-marked-alt'));
+        return new PageTitle(_('Rooming'), 'fa map-marked-alt');
     }
 
-    public function titleEdit(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fas fa-pen'));
+        return new PageTitle(_('List of all teams'), 'fa fa-print');
     }
 
-    public function titleDownload(): void
+    public function titlePreview(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
-    }
-
-    public function titleList(): void
-    {
-        $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
-    }
-
-    public function titlePreview(): void
-    {
-        $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
-    }
-
-    public function authorizedEdit(): void
-    {
-        $this->setAuthorized(false);
-        // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
-    }
-
-    public function authorizedDownload(): void
-    {
-        $this->setAuthorized(false);
-        // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
+        return new PageTitle(_('Preview'), 'fa fa-search');
     }
 
     /**
@@ -76,22 +54,7 @@ class SeatingPresenter extends BasePresenter
         $this->setAuthorized($download || $edit);
     }
 
-    final public function renderEdit(): void
-    {
-        throw new DeprecatedException();
-        /* if ($this->isAjax()) {
-             $data = $this->getHttpRequest()->getPost('requestData');
-             $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
-             $response = new ReactResponse();
-             $response->setAct('update-teams');
-             $response->setData(['updatedTeams' => $updatedTeams]);
-             $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
-             $this->sendResponse($response);
-         }*/
-    }
-
     /**
-
      * @throws EventNotFoundException
      */
     final public function renderList(): void
@@ -108,16 +71,6 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-
-     * @throws EventNotFoundException
-     */
-    final public function renderPreview(): void
-    {
-        $this->template->event = $this->getEvent();
-    }
-
-    /**
-
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -125,8 +78,42 @@ class SeatingPresenter extends BasePresenter
         return $this->getEvent()->event_type_id === 1;
     }
 
-    protected function createComponentSeating(): SeatingComponent
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentSeatingList(): ProviderComponent
     {
-        return new SeatingComponent($this->getContext());
+        return new ProviderComponent(
+            new PageComponent($this->getContext()),
+            $this->getEvent()->getTeams()->limit(5),
+            $this->getContext()
+        );
+    }
+
+    protected function createComponentSeatingPreviewAll(): ProviderComponent
+    {
+        return new ProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('all', $this->getContext()),
+            [null],
+            $this->getContext()
+        );
+    }
+
+    protected function createComponentSeatingPreviewEmpty(): ProviderComponent
+    {
+        return new ProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('empty', $this->getContext()),
+            [null],
+            $this->getContext()
+        );
+    }
+
+    protected function createComponentSeatingPreviewDev(): ProviderComponent
+    {
+        return new ProviderComponent(
+            new \FKSDB\Components\PDFGenerators\TeamSeating\AllTeams\PageComponent('dev', $this->getContext()),
+            [null],
+            $this->getContext()
+        );
     }
 }

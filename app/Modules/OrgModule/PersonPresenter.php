@@ -19,7 +19,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\Resource;
 use Tracy\Debugger;
@@ -48,53 +47,35 @@ class PersonPresenter extends BasePresenter
     }
 
     /* *********** TITLE ***************/
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleSearch(): void
+    public function titleSearch(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Find person'), 'fa fa-search'));
+        return new PageTitle(_('Find person'), 'fa fa-search');
     }
 
     /**
-
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye')
-        );
+        return new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
     }
 
     /**
-
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit')
-        );
+        return new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit');
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(_('Create person'), 'fa fa-user-plus');
     }
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titlePizza(): void
+    public function titlePizza(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-pizza-slice'));
+        return new PageTitle(_('Pizza'), 'fa fa-pizza-slice');
     }
 
     /* *********** AUTH ***************/
@@ -109,7 +90,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -124,7 +104,6 @@ class PersonPresenter extends BasePresenter
     /* ********************* ACTIONS **************/
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -148,7 +127,6 @@ class PersonPresenter extends BasePresenter
     /* ******************* COMPONENTS *******************/
 
     /**
-
      * @throws ModelNotFoundException
      */
     public function createComponentStalkingContainer(): StalkingContainer
@@ -157,7 +135,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl
@@ -169,20 +146,23 @@ class PersonPresenter extends BasePresenter
             'person_id'
         );
 
-        $form->addSubmit('stalk', _('Let\'s stalk'))->onClick[] = function (SubmitButton $button) {
-            $values = $button->getForm()->getValues();
-            $this->redirect('detail', ['id' => $values['person_id']]);
-        };
-        $form->addSubmit('edit', _('Edit'))->onClick[] = function (SubmitButton $button) {
-            $values = $button->getForm()->getValues();
-            $this->redirect('edit', ['id' => $values['person_id']]);
-        };
+        $form->addSubmit('stalk', _('Let\'s stalk'))
+            ->onClick[] =
+            function (SubmitButton $button) {
+                $values = $button->getForm()->getValues();
+                $this->redirect('detail', ['id' => $values['person_id']]);
+            };
+        $form->addSubmit('edit', _('Edit'))
+            ->onClick[] =
+            function (SubmitButton $button) {
+                $values = $button->getForm()->getValues();
+                $this->redirect('edit', ['id' => $values['person_id']]);
+            };
 
         return $control;
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentCreateForm(): PersonFormComponent
@@ -192,7 +172,6 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @param bool $throw
-
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(bool $throw = true): int
@@ -221,7 +200,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): PersonFormComponent
@@ -235,7 +213,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid
@@ -252,7 +229,6 @@ class PersonPresenter extends BasePresenter
      * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

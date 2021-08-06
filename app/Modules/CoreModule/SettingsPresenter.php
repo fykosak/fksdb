@@ -39,13 +39,12 @@ class SettingsPresenter extends BasePresenter
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
+        return new PageTitle(_('Settings'), 'fa fa-cogs');
     }
 
     /**
-
      * @throws BadTypeException
      */
     public function actionDefault(): void
@@ -78,7 +77,6 @@ class SettingsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl

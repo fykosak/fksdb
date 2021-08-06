@@ -42,14 +42,14 @@ class PointsPresenter extends BasePresenter
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    public function titleEntry(): void
+    public function titleEntry(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen'));
+        return new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
     }
 
-    public function titlePreview(): void
+    public function titlePreview(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Points list'), 'fas fa-clipboard-list'));
+        return new PageTitle(_('Points list'), 'fas fa-clipboard-list');
     }
 
     public function authorizedEntry(): void
@@ -116,7 +116,6 @@ class PointsPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void
@@ -162,7 +161,7 @@ class PointsPresenter extends BasePresenter
         return new PointsFormComponent(
             fn() => $this->SQLResultsCache->recalculate($this->getSelectedContestYear()),
             $this->getContext(),
-            $this->seriesTable
+            $this->seriesTable,
         );
     }
 

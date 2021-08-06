@@ -14,14 +14,14 @@ trait ChartPresenterTrait
     protected Chart $selectedChart;
     private array $chartComponents;
 
-    public function titleChart(): void
+    public function titleChart(): PageTitle
     {
-        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie'));
+        return new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Charts'), 'fas fa-chart-pie'));
+        return new PageTitle(_('Charts'), 'fas fa-chart-pie');
     }
 
     final public function renderChart(): void
@@ -66,7 +66,7 @@ trait ChartPresenterTrait
 
     /**
      * @param string $id
-     * @return void
+     * @return static
      */
     abstract public function setView(string $id);
 

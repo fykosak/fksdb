@@ -43,13 +43,12 @@ class TasksPresenter extends BasePresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport(): void
+    public function titleImport(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Task import'), 'fas fa-download'));
+        return new PageTitle(_('Task import'), 'fas fa-download');
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentSeriesForm(): FormControl
@@ -90,7 +89,6 @@ class TasksPresenter extends BasePresenter
 
     /**
      * @param Form $seriesForm
-
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void

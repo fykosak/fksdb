@@ -32,30 +32,27 @@ class EventOrgPresenter extends BasePresenter
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
-                'fa fa-user-edit'
-            )
+        return new PageTitle(
+            sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
+            'fa fa-user-edit'
         );
     }
 
@@ -74,7 +71,6 @@ class EventOrgPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -88,7 +84,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventOrgsGrid
@@ -97,7 +92,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent
@@ -106,7 +100,6 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

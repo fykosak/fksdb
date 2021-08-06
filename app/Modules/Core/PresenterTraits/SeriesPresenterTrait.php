@@ -19,7 +19,6 @@ trait SeriesPresenterTrait
     public ?int $series = null;
 
     /**
-
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
@@ -51,7 +50,6 @@ trait SeriesPresenterTrait
     }
 
     /**
-
      * @throws ForbiddenRequestException
      */
     private function selectSeries(): int

@@ -41,7 +41,6 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -51,7 +50,6 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -77,17 +75,15 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function titleExecute(): void
+    public function titleExecute(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle'));
+        return new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle');
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -111,7 +107,6 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -140,6 +135,7 @@ class ExportPresenter extends BasePresenter
                 break;
             case 'list':
                 $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
+                break;
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
@@ -152,7 +148,6 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -186,7 +181,6 @@ class ExportPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

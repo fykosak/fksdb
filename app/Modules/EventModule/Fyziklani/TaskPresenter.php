@@ -23,14 +23,14 @@ class TaskPresenter extends BasePresenter
     public const IMPORT_STATE_REMOVE_N_INSERT = 2;
     public const IMPORT_STATE_INSERT = 3;
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Tasks'), 'fas fa-tasks'));
+        return new PageTitle(_('Tasks'), 'fas fa-tasks');
     }
 
-    public function titleImport(): void
+    public function titleImport(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fas fa-download'));
+        return new PageTitle(_('Tasks Import'), 'fas fa-download');
     }
 
     /**
@@ -50,7 +50,6 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentTaskImportForm(): FormControl
@@ -77,7 +76,6 @@ class TaskPresenter extends BasePresenter
 
     /**
      * @param Form $form
-
      * @throws EventNotFoundException
      * @throws MissingServiceException
      */
@@ -95,7 +93,6 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): TaskGrid

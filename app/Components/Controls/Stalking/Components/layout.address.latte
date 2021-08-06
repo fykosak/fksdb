@@ -1,6 +1,7 @@
 {layout '../@layout.latte'}
 {block content}
     {varType Nette\Database\Table\GroupedSelection $postContacts}
+    {varType int $personId}
     {if count($postContacts)}
         {varType Nette\Database\Table\ActiveRow $row}
         {foreach $postContacts as $row}
@@ -38,6 +39,11 @@
             </div>
 
         {/foreach}
+        <hr/>
+        <div class="card-body">
+            <a class="card-link"
+            href="{plink :Org:Envelope:output personIds=>[$personId]}">{_'Create envelope'}</a>
+        </div>
     {else}
         {control noRecords}
     {/if}

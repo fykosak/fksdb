@@ -54,7 +54,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException
@@ -66,7 +65,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param bool $create
-
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -112,7 +110,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-
      * @throws \ReflectionException
      */
     protected function getFieldsDefinition(): array
@@ -134,7 +131,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     abstract protected function getORMService(): AbstractService;
 
     /**
-
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException

@@ -49,7 +49,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
@@ -59,7 +58,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -77,7 +75,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -91,7 +88,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function getEvent(): ModelEvent
@@ -107,7 +103,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     final protected function getContest(): ModelContest
@@ -118,7 +113,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /* **************** ACL *********************** */
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function isTeamEvent(): bool
@@ -129,7 +123,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
@@ -141,7 +134,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * Check if is contest and event org
      * TODO vyfakuje to aj cartesianov
      * @throws EventNotFoundException
@@ -154,7 +146,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /* ********************** GUI ************************ */
 
     /**
-     * @return string|null
      * @throws EventNotFoundException
      */
     protected function getDefaultSubTitle(): ?string
@@ -163,7 +154,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException

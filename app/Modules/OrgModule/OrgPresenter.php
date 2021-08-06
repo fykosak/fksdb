@@ -28,22 +28,18 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()),
-                'fa fa-user-edit'
-            )
+        return new PageTitle(
+            sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()),
+            'fa fa-user-edit'
         );
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -58,29 +54,25 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user')
-        );
+        return new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user');
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(_('Create an organiser'), 'fa fa-user-plus');
     }
 
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('Organisers'), 'fa fa-user-tie');
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -105,7 +97,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -122,7 +113,6 @@ class OrgPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

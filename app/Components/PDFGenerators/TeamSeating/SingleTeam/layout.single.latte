@@ -1,6 +1,6 @@
-{layout './@layout.latte'}
+{layout '../@layout.latte'}
 {block places}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $place}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
     {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
     {foreach $places as $place}
         {if $place->getTeam() && $place->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
@@ -15,3 +15,6 @@
         {/if}
     {/foreach}
 {/block}
+{* TODO!! if count($toPay[$team->getPrimary()])}
+    <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
+{/if*}

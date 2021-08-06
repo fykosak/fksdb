@@ -33,35 +33,22 @@ class ScheduleGroupPresenter extends BasePresenter
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-list'));
+        return new PageTitle(_('Schedule'), 'fas fa-list');
+    }
+
+    public function titlePersons(): PageTitle
+    {
+        return new PageTitle(_('Whole program'), 'fas fa-list');
+    }
+
+    public function titleDetail(): PageTitle
+    {
+        return new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list');
     }
 
     /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titlePersons(): void
-    {
-        $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-list'));
-    }
-
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleDetail(): void
-    {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list'));
-    }
-
-    /**
-     *
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -73,7 +60,6 @@ class ScheduleGroupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): ScheduleGroupFormComponent
@@ -82,7 +68,6 @@ class ScheduleGroupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -94,7 +79,6 @@ class ScheduleGroupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): BaseGrid
@@ -103,7 +87,6 @@ class ScheduleGroupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentAllPersonsGrid(): AllPersonsGrid
@@ -112,7 +95,6 @@ class ScheduleGroupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -131,7 +113,6 @@ class ScheduleGroupPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

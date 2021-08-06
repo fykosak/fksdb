@@ -54,30 +54,29 @@ class InboxPresenter extends BasePresenter
 
     /* ***************** TITLES ***********************/
 
-    public function titleInbox(): void
+    public function titleInbox(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope'));
+        return new PageTitle(_('Inbox'), 'fa fa-envelope');
     }
 
-    public function titleHandout(): void
+    public function titleHandout(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-folder-open'));
+        return new PageTitle(_('Handout'), 'fa fa-folder-open');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-list-ul'));
+        return new PageTitle(_('List of submits'), 'fa fa-list-ul');
     }
 
-    public function titleCorrected(): void
+    public function titleCorrected(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-file-signature'));
+        return new PageTitle(_('Corrected'), 'fa fa-file-signature');
     }
 
     /* *********** LIVE CYCLE *************/
 
     /**
-
      * @throws BadTypeException
      */
     public function actionHandout(): void

@@ -53,14 +53,14 @@ final class AuthenticationPresenter extends BasePresenter
         $this->googleProvider = $googleProvider;
     }
 
-    public function titleLogin(): void
+    public function titleLogin(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Login')));
+        return new PageTitle(_('Login'));
     }
 
-    public function titleRecover(): void
+    public function titleRecover(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Password recovery')));
+        return new PageTitle(_('Password recovery'));
     }
 
     /**
@@ -79,8 +79,6 @@ final class AuthenticationPresenter extends BasePresenter
      * This workaround is here because LoginUser storage
      * returns false when only global login exists.
      * False is return in order to AuthenticatedPresenter to correctly login the user.
-     *
-
      */
     private function isLoggedIn(): bool
     {
@@ -185,7 +183,6 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * Login form component factory.
-
      */
     protected function createComponentLoginForm(): Form
     {
@@ -234,8 +231,6 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * Password recover form.
-     *
-
      */
     protected function createComponentRecoverForm(): Form
     {
@@ -255,7 +250,6 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * @param Form $form
-
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

@@ -26,24 +26,22 @@ class ContestantPresenter extends ExtendedPersonPresenter
         $this->serviceContestant = $serviceContestant;
     }
 
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
-                'fa fa-user-edit'
-            )
+        return new PageTitle(
+            sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
+            'fa fa-user-edit'
         );
     }
 
-    public function titleCreate(): void
+    public function titleCreate(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Create contestant'), 'fa fa-user-plus'));
+        return new PageTitle(_('Create contestant'), 'fa fa-user-plus');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-user-graduate'));
+        return new PageTitle(_('Contestants'), 'fa fa-user-graduate');
     }
 
     public function messageCreate(): string

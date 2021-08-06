@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -26,18 +25,17 @@ class SpamPresenter extends BasePresenter
     }
 
     /**
-
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fas fa-envelope-open')
+        return new PageTitle(
+            sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()),
+            'fas fa-envelope-open'
         );
     }
 
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('List of emails'), 'fas fa-mail-bulk');
     }
@@ -62,7 +60,6 @@ class SpamPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -88,7 +85,6 @@ class SpamPresenter extends BasePresenter
     /**
      * @param Resource|string $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

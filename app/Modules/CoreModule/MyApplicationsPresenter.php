@@ -23,9 +23,9 @@ class MyApplicationsPresenter extends BasePresenter
         return $this->getUser()->getIdentity()->getPerson();
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('My applications'), 'fa fa-calendar-alt'));
+        return new PageTitle(_('My applications'), 'fa fa-calendar-alt');
     }
 
     protected function createComponentNewApplicationsGrid(): NewApplicationsGrid

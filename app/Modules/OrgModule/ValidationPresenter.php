@@ -10,19 +10,19 @@ use FKSDB\Models\UI\PageTitle;
 
 class ValidationPresenter extends BasePresenter
 {
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Data validation'), 'fas fa-clipboard-check'));
+        return new PageTitle(_('Data validation'), 'fas fa-clipboard-check');
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('All tests'), 'fas fa-tasks'));
+        return new PageTitle(_('All tests'), 'fas fa-tasks');
     }
 
-    public function titlePreview(): void
+    public function titlePreview(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Select test'), 'fas fa-check'));
+        return new PageTitle(_('Select test'), 'fas fa-check');
     }
 
     public function authorizedList(): void

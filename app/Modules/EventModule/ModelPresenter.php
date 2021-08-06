@@ -13,7 +13,6 @@ class ModelPresenter extends BasePresenter
 {
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void
@@ -21,13 +20,12 @@ class ModelPresenter extends BasePresenter
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-project-diagram'));
+        return new PageTitle(_('Model of event'), 'fa fa-project-diagram');
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ConfigurationNotFoundException
      */

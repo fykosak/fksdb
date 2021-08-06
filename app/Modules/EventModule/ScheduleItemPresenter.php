@@ -41,11 +41,9 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard')
-        );
+        return new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard');
     }
 
     /**
@@ -54,24 +52,17 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen')
-        );
+        return new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen');
+    }
+
+    public function titleCreate(): PageTitle
+    {
+        return new PageTitle(_('Create schedule item'), 'fa fa-plus');
     }
 
     /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleCreate(): void
-    {
-        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-plus'));
-    }
-
-    /**
-     *
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -83,7 +74,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): ScheduleItemFormContainer
@@ -92,7 +82,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -104,7 +93,6 @@ class ScheduleItemPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -123,7 +111,6 @@ class ScheduleItemPresenter extends BasePresenter
     /**
      * @param string|Resource $resource
      * @param string|null $privilege
-
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

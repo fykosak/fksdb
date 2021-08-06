@@ -15,9 +15,9 @@ class DispatchPresenter extends BasePresenter
 
     private array $contestsProperty;
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Menu'), 'fa fa-home'));
+        return new PageTitle(_('Menu'), 'fa fa-home');
     }
 
     /**
@@ -35,7 +35,6 @@ class DispatchPresenter extends BasePresenter
 
     /**
      * @param ModelPerson $person
-
      * @throws InvalidLinkException
      */
     private function getAllContestants(ModelPerson $person): array
@@ -57,7 +56,6 @@ class DispatchPresenter extends BasePresenter
 
     /**
      * @param ModelLogin $login
-
      * @throws InvalidLinkException
      */
     private function getAllOrganisers(ModelLogin $login): array
@@ -98,5 +96,10 @@ class DispatchPresenter extends BasePresenter
     {
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
+    }
+
+    private function getContestProperty(int $contestId): array
+    {
+        return $this->getContestsProperty()[$contestId];
     }
 }

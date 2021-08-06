@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
@@ -29,41 +28,32 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
-                'fas fa-user-edit'
-            )
+        return new PageTitle(
+            sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
+            'fas fa-user-edit'
         );
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(_('Create new teacher'), 'fas fa-user-plus');
     }
 
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('Teacher'), 'fas fa-chalkboard-teacher');
     }
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fas fa-chalkboard-teacher'));
+        return new PageTitle(_('Teacher detail'), 'fas fa-chalkboard-teacher');
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -82,7 +72,6 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): TeacherFormComponent
@@ -93,7 +82,6 @@ class TeacherPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

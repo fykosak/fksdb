@@ -23,19 +23,19 @@ class ItemPresenter extends BasePresenter
         $this->serviceItem = $serviceItem;
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-barcode'));
+        return new PageTitle(_('Items'), 'fa fa-barcode');
     }
 
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Edit item'), 'fas fa-pen'));
+        return new PageTitle(_('Edit item'), 'fas fa-pen');
     }
 
-    public function titleCreate(): void
+    public function titleCreate(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-plus'));
+        return new PageTitle(_('Create item'), 'fa fa-plus');
     }
 
     protected function createComponentCreateForm(): Control
@@ -61,7 +61,6 @@ class ItemPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

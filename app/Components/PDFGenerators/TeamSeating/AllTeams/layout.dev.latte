@@ -1,24 +1,25 @@
-{layout './@layout.latte'}
+{layout '../@layout.latte'}
 {block places}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
     {foreach $places as $place}
         {var $team = $place->getTeam()}
         {if $team}
-            {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+15).')' }
+            {var $cor = 'translate(' . $place->x_coordinate . ',' . -($place->y_coordinate+15) . ')'}
             <g transform="{$cor}">
                 <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
             </g>
-            {include place 'place'=>$place ,'className'=>('category-'.$team->category.' occupied game-lang-'.$team->game_lang)}
+            {include place 'place'=>$place ,'className'=>('category-' . $team->category . ' occupied game-lang-' . $team->game_lang)}
         {else}
             {include place 'place'=>$place ,'className'=>'free'}
         {/if}
 
-        {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate-25).')' }
-        <g transform="{$cor}">
+        {var $cor2 = 'translate(' . $place->x_coordinate . ',' . -($place->y_coordinate-25) . ')'}
+        <g transform="{$cor2}">
             <text text-anchor="middle">{$place->getPrimary()}</text>
         </g>
     {/foreach}
 {/block}
-{block styles}
+{block SVGstyles}
     {include parent}
     <style>
         circle.team-position.category-A {
@@ -45,5 +46,4 @@
             stroke-width: 3px !important;
         }
     </style>
-
 {/block}

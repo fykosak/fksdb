@@ -11,7 +11,6 @@ use FKSDB\Models\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -28,8 +27,12 @@ trait EntityPresenterTrait
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
-    
-    abstract public function setAuthorized(bool $access): void;
+
+    /**
+     * @param bool $access
+     * @return void
+     */
+    abstract public function setAuthorized(bool $access);
 
     /**
      * @param Resource|string|null $resource
@@ -76,6 +79,7 @@ trait EntityPresenterTrait
     /**
      * @param string $name
      * @param null $default
+     * @return mixed
      */
     abstract public function getParameter(string $name, $default = null);
 
@@ -117,61 +121,29 @@ trait EntityPresenterTrait
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void
-    {
-        $this->setPageTitle($this->getTitleList());
-    }
-
-    /**
-     * @param PageTitle $pageTitle
-     *
-     * @throws ForbiddenRequestException
-     */
-    abstract public function setPageTitle(PageTitle $pageTitle);
-
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('List of entities'), 'fa fa-table');
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    final public function titleCreate(): void
-    {
-        $this->setPageTitle($this->getTitleCreate());
-    }
-
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(_('Create an entity'), 'fa fa-plus');
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Edit an entity'), 'fa fa-pencil'));
+        return new PageTitle(_('Edit an entity'), 'fa fa-pencil');
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Detail of the entity'), 'fa fa-eye'));
+        return new PageTitle(_('Detail of the entity'), 'fa fa-eye');
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    public function titleDelete(): void
+    public function titleDelete(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Delete an entity'), 'fa fa-minus'));
+        return new PageTitle(_('Delete an entity'), 'fa fa-minus');
     }
 
     /**

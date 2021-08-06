@@ -83,25 +83,22 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NeonSchemaException
      * @throws \Throwable
      */
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
         if ($this->getEventApplication()) {
-            $this->setPageTitle(
-                new PageTitle(
-                    \sprintf(
-                        _('Application for %s: %s'),
-                        $this->getEvent()->name,
-                        $this->getEventApplication()->__toString()
-                    ),
-                    'fas fa-calendar-day'
-                )
+            return new PageTitle(
+                \sprintf(
+                    _('Application for %s: %s'),
+                    $this->getEvent()->name,
+                    $this->getEventApplication()->__toString()
+                ),
+                'fas fa-calendar-day',
             );
         } else {
-            $this->setPageTitle(new PageTitle((string)$this->getEvent(), 'fas fa-calendar-plus'));
+            return new PageTitle((string)$this->getEvent(), 'fas fa-calendar-plus');
         }
     }
 
@@ -122,7 +119,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -158,6 +154,7 @@ class ApplicationPresenter extends BasePresenter
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
+            /** @var ModelEvent $event */
             $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
@@ -175,10 +172,9 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-            !$this->getMachine()->getPrimaryMachine()->getAvailableTransitions(
-                $this->holder,
-                $this->getHolder()->getPrimaryHolder()->getModelState()
-            )
+        !$this->getMachine()
+            ->getPrimaryMachine()
+            ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
@@ -284,7 +280,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
@@ -304,7 +299,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NeonSchemaException
      */
     private function initializeMachine(): void
@@ -313,7 +307,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -340,7 +333,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

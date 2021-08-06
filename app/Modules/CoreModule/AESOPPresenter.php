@@ -62,6 +62,11 @@ class AESOPPresenter extends AuthenticatedPresenter
         ];
     }
 
+    protected function getHttpRealm(): ?string
+    {
+        return 'AESOP';
+    }
+
     protected function startup(): void
     {
         parent::startup();

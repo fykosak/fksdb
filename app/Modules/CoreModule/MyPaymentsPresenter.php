@@ -16,9 +16,9 @@ class MyPaymentsPresenter extends BasePresenter
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('My payments'), 'fa fa-credit-card'));
+        return new PageTitle(_('My payments'), 'fa fa-credit-card');
     }
 
     protected function createComponentMyPaymentGrid(): PersonRelatedGrid

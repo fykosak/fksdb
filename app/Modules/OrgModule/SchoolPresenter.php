@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
@@ -29,42 +28,33 @@ class SchoolPresenter extends BasePresenter
         $this->serviceSchool = $serviceSchool;
     }
 
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('Schools'), 'fa fa-school');
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(_('Create school'), 'fa fa-plus');
     }
 
     /**
-
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen'));
+        return new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fas fa-pen');
     }
 
     /**
-
-     *
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university')
-        );
+        return new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university');
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -78,7 +68,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): SchoolFormComponent
@@ -92,7 +81,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid
@@ -103,7 +91,6 @@ class SchoolPresenter extends BasePresenter
     /**
      * @param Resource|string $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

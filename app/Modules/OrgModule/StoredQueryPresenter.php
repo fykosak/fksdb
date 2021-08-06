@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
@@ -33,35 +32,27 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen'));
+        return new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen');
     }
 
-    public function getTitleCreate(): PageTitle
+    public function titleCreate(): PageTitle
     {
         return new PageTitle(sprintf(_('Create query')), 'fa fa-plus');
     }
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-file-csv'));
+        return new PageTitle(_('Exports'), 'fa fa-file-csv');
     }
 
     /**
-
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
@@ -69,11 +60,10 @@ class StoredQueryPresenter extends BasePresenter
             $title .= " ($qid)";
         }
 
-        $this->setPageTitle(new PageTitle($title, 'fa fa-file-csv'));
+        return new PageTitle($title, 'fa fa-file-csv');
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -96,7 +86,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): StoredQueryFormComponent
@@ -124,7 +113,6 @@ class StoredQueryPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

@@ -23,13 +23,9 @@ use Nette\Application\ForbiddenRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter
 {
 
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleImport(): void
+    public function titleImport(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Application import'), 'fas fa-download'));
+        return new PageTitle(_('Application import'), 'fas fa-download');
     }
 
     /**
@@ -48,7 +44,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -69,7 +64,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -78,7 +72,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -89,7 +82,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException

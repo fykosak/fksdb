@@ -36,12 +36,9 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    final public function titleList(): void
+    final public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('List of applications'), 'fas fa-address-book'));
+        return new PageTitle(_('List of applications'), 'fas fa-address-book');
     }
 
     /**
@@ -50,19 +47,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws Throwable
      */
-    final public function titleDetail(): void
+    final public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user')
-        );
+        return new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user');
     }
 
-    /**
-     * @throws ForbiddenRequestException
-     */
-    final public function titleTransitions(): void
+    final public function titleTransitions(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-exchange-alt'));
+        return new PageTitle(_('Group transitions'), 'fa fa-exchange-alt');
     }
 
     /**

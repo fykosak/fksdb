@@ -14,14 +14,14 @@ use Nette\Utils\Html;
 class DiplomasPresenter extends BasePresenter
 {
 
-    public function titleResults(): void
+    public function titleResults(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
+        return new PageTitle(_('Final results'), 'fa fa-trophy');
     }
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-calculator'));
+        return new PageTitle(_('Calculate ranking'), 'fa fa-calculator');
     }
 
     /**
@@ -41,7 +41,6 @@ class DiplomasPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     final public function renderDefault(): void
@@ -82,16 +81,14 @@ class DiplomasPresenter extends BasePresenter
 
     /**
      * @param string|null $category
-
      * @throws EventNotFoundException
      */
-    public function isReadyAllToCalculate(string $category = null): bool
+    public function isReadyAllToCalculate(?string $category = null): bool
     {
         return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentResults(): FinalResultsComponent

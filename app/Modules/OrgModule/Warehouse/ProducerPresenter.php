@@ -30,23 +30,22 @@ class ProducerPresenter extends BasePresenter
         $this->serviceProducer = $serviceProducer;
     }
 
-    public function titleList(): void
+    public function titleList(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-store-alt'));
+        return new PageTitle(_('Producers'), 'fas fa-store-alt');
     }
 
-    public function titleEdit(): void
+    public function titleEdit(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-pen'));
+        return new PageTitle(_('Edit producer'), 'fas fa-pen');
     }
 
-    public function titleCreate(): void
+    public function titleCreate(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Create producer'), 'fa fa-plus'));
+        return new PageTitle(_('Create producer'), 'fa fa-plus');
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -75,7 +74,6 @@ class ProducerPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ModelNotFoundException
      */
     protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid
@@ -86,7 +84,6 @@ class ProducerPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

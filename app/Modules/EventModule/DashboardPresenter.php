@@ -11,16 +11,14 @@ class DashboardPresenter extends BasePresenter
 {
 
     /**
-
      * @throws EventNotFoundException
      */
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt'));
+        return new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void
@@ -29,7 +27,6 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     final public function renderDefault(): void
@@ -39,7 +36,6 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     private function getWebUrl(): string

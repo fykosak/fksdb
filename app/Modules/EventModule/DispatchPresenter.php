@@ -12,9 +12,9 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 class DispatchPresenter extends AuthenticatedPresenter
 {
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar-alt'));
+        return new PageTitle(_('List of events'), 'fa fa-calendar-alt');
     }
 
     protected function createComponentContestBadge(): ContestBadge

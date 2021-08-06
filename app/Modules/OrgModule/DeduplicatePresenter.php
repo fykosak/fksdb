@@ -76,30 +76,27 @@ class DeduplicatePresenter extends BasePresenter
         $this->setAuthorized($authorized);
     }
 
-    public function titleMerge(): void
+    public function titleMerge(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(
-                    _('Merging persons %s (%d) and %s (%d)'),
-                    $this->trunkPerson->getFullName(),
-                    $this->trunkPerson->person_id,
-                    $this->mergedPerson->getFullName(),
-                    $this->mergedPerson->person_id
-                )
+        return new PageTitle(
+            sprintf(
+                _('Merging persons %s (%d) and %s (%d)'),
+                $this->trunkPerson->getFullName(),
+                $this->trunkPerson->person_id,
+                $this->mergedPerson->getFullName(),
+                $this->mergedPerson->person_id
             )
         );
     }
 
-    public function titlePerson(): void
+    public function titlePerson(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Duplicate persons'), 'fa fa-exchange'));
+        return new PageTitle(_('Duplicate persons'), 'fa fa-exchange');
     }
 
     /**
      * @param int $trunkId
      * @param int $mergedId
-
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -145,7 +142,8 @@ class DeduplicatePresenter extends BasePresenter
                 $pairContainer->setOption('label', \str_replace('_', ' ', $table));
                 foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
                     if (
-                        isset($data[Merger::IDX_RESOLUTION]) && array_key_exists(
+                        isset($data[Merger::IDX_RESOLUTION])
+                        && array_key_exists(
                             $column,
                             $data[Merger::IDX_RESOLUTION]
                         )
@@ -203,7 +201,6 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentMergeForm(): FormControl

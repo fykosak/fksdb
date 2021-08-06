@@ -36,54 +36,38 @@ class SubmitPresenter extends BasePresenter
     }
 
     /* ***** Title methods *****/
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleCreate(): void
+    public function titleCreate(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Scoring'), 'fas fa-pen'));
+        return new PageTitle(_('Scoring'), 'fas fa-pen');
+    }
+
+    public function titleList(): PageTitle
+    {
+        return new PageTitle(_('Submits'), 'fa fa-table');
+    }
+
+    public function titleEdit(): PageTitle
+    {
+        return new PageTitle(_('Change of scoring'), 'fas fa-pen');
     }
 
     /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void
-    {
-        $this->setPageTitle(new PageTitle(_('Submits'), 'fa fa-table'));
-    }
-
-    /**
-
-     * @throws ForbiddenRequestException
-     */
-    public function titleEdit(): void
-    {
-        $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fas fa-pen'));
-    }
-
-    /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleDetail(): void
+    public function titleDetail(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id),
-                'fas fa-search'
-            )
+        return new PageTitle(
+            sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id),
+            'fas fa-search'
         );
     }
 
     /* ***** Authorized methods *****/
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -97,7 +81,6 @@ class SubmitPresenter extends BasePresenter
     /* ******** ACTION METHODS ********/
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -109,7 +92,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-
      * @throws ClosedSubmittingException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -130,7 +112,6 @@ class SubmitPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -139,7 +120,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): AllSubmitsGrid
@@ -148,7 +128,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PointsEntryComponent
@@ -157,7 +136,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

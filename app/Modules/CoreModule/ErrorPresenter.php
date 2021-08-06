@@ -13,14 +13,13 @@ use Tracy\Debugger;
 class ErrorPresenter extends BasePresenter
 {
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Error')));
+        return new PageTitle(_('Error'));
     }
 
     /**
      * @param \Exception
-
      */
     final public function renderDefault($exception): void
     {

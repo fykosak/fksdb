@@ -85,14 +85,14 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /* ********************* TITLE ***************** */
-    public function titleContest(): void
+    public function titleContest(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Select contest')));
+        return new PageTitle(_('Select contest'));
     }
 
-    public function titleYear(): void
+    public function titleYear(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Select year'), '', $this->getSelectedContest()->name));
+        return new PageTitle(_('Select year'), '', $this->getSelectedContest()->name);
     }
 
     public function getSelectedContest(): ?ModelContest
@@ -100,22 +100,20 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
 
-    public function titleEmail(): void
+    public function titleEmail(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name));
+        return new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
     }
 
     /* ********************* ACTIONS ***************** */
 
-    public function titleContestant(): void
+    public function titleContestant(): PageTitle
     {
-        $this->setPageTitle(
-            new PageTitle(
-                sprintf(
-                    _('%s – contestant application (year %s)'),
-                    $this->getSelectedContest()->name,
-                    $this->getSelectedYear()
-                )
+        return new PageTitle(
+            sprintf(
+                _('%s – contestant application (year %s)'),
+                $this->getSelectedContest()->name,
+                $this->getSelectedYear()
             )
         );
     }
@@ -202,7 +200,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-
      * @throws BadTypeException
      */
     final public function renderContestant(): void
@@ -247,7 +244,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-
      * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl
@@ -269,7 +265,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
@@ -328,7 +323,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-
      * @throws \ReflectionException
      */
     private function getFieldsDefinition(): array
@@ -351,7 +345,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

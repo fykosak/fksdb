@@ -14,13 +14,12 @@ class GameSetupPresenter extends BasePresenter
 {
     private ModelFyziklaniGameSetup $gameSetup;
 
-    public function titleDefault(): void
+    public function titleDefault(): PageTitle
     {
-        $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
+        return new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs');
     }
 
     /**
-
      * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws NotSetGameParametersException
@@ -31,7 +30,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException
@@ -49,7 +47,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void

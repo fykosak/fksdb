@@ -154,7 +154,6 @@ abstract class BasePresenter extends Presenter implements
     /**
      * @param string $destination
      * @param array|null $args
-
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
@@ -228,7 +227,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void
@@ -246,11 +244,6 @@ abstract class BasePresenter extends Presenter implements
         return $template;
     }
 
-    protected function setPageTitle(PageTitle $pageTitle): void
-    {
-        $this->pageTitle = $pageTitle;
-    }
-
     /**
      * @throws BadRequestException
      * @throws BadTypeException
@@ -261,7 +254,6 @@ abstract class BasePresenter extends Presenter implements
     {
         parent::beforeRender();
 
-        $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
         $this->template->pageTitle = $this->getTitle();
         $this->template->pageStyleContainer = $this->getPageStyleContainer();
         $this->template->lang = $this->getLang();
@@ -271,30 +263,28 @@ abstract class BasePresenter extends Presenter implements
         $this->putIntoBreadcrumbs();
     }
 
+    public function getTitle(): PageTitle
+    {
+        if (!isset($this->pageTitle)) {
+            $method = $this->formatTitleMethod($this->getView());
+            if (method_exists($this, $method)) {
+                $this->pageTitle = $this->{$method}();
+            }
+        }
+        $this->pageTitle = $this->pageTitle ?? new PageTitle();
+        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
+        return $this->pageTitle;
+    }
+
     /**
      * Formats title method name.
      * Method should set the title of the page using setTitle method.
      *
      * @param string
-
      */
     protected static function formatTitleMethod(string $view): string
     {
         return 'title' . $view;
-    }
-
-    /**
-
-     * @throws BadRequestException
-     */
-    public function getTitle(): PageTitle
-    {
-        if (!isset($this->pageTitle)) {
-            $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
-        }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle();
-        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
-        return $this->pageTitle;
     }
 
     protected function getDefaultSubTitle(): ?string
@@ -309,7 +299,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-
      * @throws UnsupportedLanguageException
      */
     public function getLang(): string
@@ -345,7 +334,7 @@ abstract class BasePresenter extends Presenter implements
         return $this->diContainer;
     }
 
-    /* ********************************
+    /*   * *******************************
      * Extension of Nette ACL
      *      * ****************************** */
 
