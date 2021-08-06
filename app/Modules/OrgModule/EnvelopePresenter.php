@@ -6,21 +6,23 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson\PageComponent;
+use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\UI\PageTitle;
-use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 
 class EnvelopePresenter extends BasePresenter
 {
 
-    private TypedTableSelection $persons;
-
     private Explorer $readOnlyExplorer;
     private ServicePerson $servicePerson;
+    /** @persistent */
+    public array $personIds = [];
+    /** @persistent */
+    public string $format = AbstractPageComponent::FORMAT_B5_LANDSCAPE;
 
     public function injectDatabase(ServicePerson $servicePerson): void
     {
@@ -33,18 +35,12 @@ class EnvelopePresenter extends BasePresenter
         return new PageTitle(_('Envelopes for person generator'), 'fa fa-envelope');
     }
 
-    public function actionOutput(): void
-    {
-        $personIds = $this->getParameter('personIds');
-        $this->persons = $this->servicePerson->getTable()->where('person_id', $personIds);
-    }
-
     protected function createComponentOutput(): ProviderComponent
     {
         return new ProviderComponent(
-            new PageComponent($this->getSelectedContest(), $this->getContext()),
-            $this->persons ?? [],
-            $this->getContext()
+            new PageComponent($this->getSelectedContest(), $this->getContext(), $this->format),
+            $this->servicePerson->getTable()->where('person_id', $this->personIds),
+            $this->getContext(),
         );
     }
 
@@ -55,16 +51,15 @@ class EnvelopePresenter extends BasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        $form->addTextArea('sql', _('SQL'))->setOption(
-            'description',
-            _(
-                'SQL dotaz, 
-            ktorý obahuje slpec rovnaký ako klúčový attribut v ktorom sa nachádza person_id osoby, 
-            pre vybratie jednej osoby použite "select 324 as person_id from dual"'
-            )
-        );
+        $form->addTextArea('sql', _('SQL query'));
         $form->addText('attribute', _('Person_id attribute'))->setDefaultValue('person_id');
-        $testButton = $form->addSubmit('test', _('Test'));
+        $form->addSelect(
+            'format',
+            _('Format'),
+            PageComponent::getAvailableFormats(),
+        );
+
+        $testButton = $form->addSubmit('preview', _('Preview'));
         $testButton->onClick[] = fn(Form $form) => $this->handleTest($form);
 
         $printButton = $form->addSubmit('print', _('Print'));
@@ -74,7 +69,8 @@ class EnvelopePresenter extends BasePresenter
 
     private function handleTest(Form $form): void
     {
-        $this->persons = $this->servicePerson->getTable()->where('person_id', $this->getPersonIdsFromSQL($form));
+        $this->personIds = $this->getPersonIdsFromSQL($form);
+        $this->format = $form->getValues()['format'];
     }
 
     private function getPersonIdsFromSQL(Form $form): array
@@ -89,6 +85,12 @@ class EnvelopePresenter extends BasePresenter
 
     private function handlePrint(Form $form): void
     {
-        $this->redirect('output', ['personIds' => $this->getPersonIdsFromSQL($form)]);
+        $this->redirect(
+            'output',
+            [
+                'personIds' => $this->getPersonIdsFromSQL($form),
+                'format' => $form->getValues()['format'],
+            ],
+        );
     }
 }

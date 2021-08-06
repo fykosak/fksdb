@@ -30,8 +30,6 @@ final class ProviderComponent extends BaseComponent
     public function render(): void
     {
         $this->template->items = $this->items;
-        /** @var AbstractPageComponent $component */
-        $component = $this->getComponent('page');
-        $this->template->render($component->getPagesTemplatePath());
+        $this->template->render($this->pageComponent->getPagesTemplatePath());
     }
 }

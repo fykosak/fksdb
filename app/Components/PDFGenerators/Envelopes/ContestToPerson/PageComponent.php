@@ -12,11 +12,13 @@ use Nette\DI\Container;
 class PageComponent extends AbstractPageComponent
 {
     private ModelContest $contest;
+    private string $format;
 
-    public function __construct(ModelContest $contest, Container $container)
+    public function __construct(ModelContest $contest, Container $container, string $format = self::FORMAT_B5_LANDSCAPE)
     {
         parent::__construct($container);
         $this->contest = $contest;
+        $this->format = $format;
     }
 
     /**
@@ -38,6 +40,6 @@ class PageComponent extends AbstractPageComponent
 
     public function getPagesTemplatePath(): string
     {
-        return $this->formatPathByFormat(self::FORMAT_B5_LANDSCAPE);
+        return $this->formatPathByFormat($this->format);
     }
 }
