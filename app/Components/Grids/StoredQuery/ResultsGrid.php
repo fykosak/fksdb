@@ -13,10 +13,6 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ResultsGrid extends BaseGrid {
 
     private StoredQuery $storedQuery;

@@ -14,11 +14,6 @@ use Nette\DI\Definitions\Statement;
 use Nette\DI\ServiceCreationException;
 use Nette\NotImplementedException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Helpers {
 
     /** @var string[] */

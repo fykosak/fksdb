@@ -7,11 +7,6 @@ use FKSDB\Models\Github\Events\PingEvent;
 use FKSDB\Models\Github\Events\PushEvent;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class EventFactory {
     use SmartObject;
 

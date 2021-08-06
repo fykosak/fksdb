@@ -12,6 +12,7 @@ use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
 use Nette\Utils\Finder;
+use SplFileInfo;
 use Tester\Assert;
 use Tester\Environment;
 
@@ -94,7 +95,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->truncateTables(['submit', 'task', 'contestant_base']);
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
-        /** @var \SplFileInfo $f */
+        /** @var SplFileInfo $f */
         foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
             if ($f->isDir()) {
                 @rmdir($f->getPathname());

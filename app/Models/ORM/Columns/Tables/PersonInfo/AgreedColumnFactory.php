@@ -10,10 +10,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-/**
- * Class AgreedField
- * *
- */
 class AgreedColumnFactory extends ColumnFactory {
 
     /**

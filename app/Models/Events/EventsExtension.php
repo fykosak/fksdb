@@ -32,10 +32,7 @@ use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
  * It's a f**** magic!
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
 

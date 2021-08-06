@@ -4,11 +4,6 @@ namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\DI\CompilerExtension;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class NavigationExtension extends CompilerExtension {
 
     public function loadConfiguration(): void {

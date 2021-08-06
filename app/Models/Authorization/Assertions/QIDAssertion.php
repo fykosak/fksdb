@@ -9,11 +9,6 @@ use Nette\Security\Role;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class QIDAssertion {
 
     use SmartObject;

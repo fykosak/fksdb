@@ -10,7 +10,7 @@
 {varType FKSDB\Models\ORM\Models\ModelEventParticipant $participant}
 {varType FKSDB\Models\ORM\Models\ModelPersonHistory $history}
 
-{define #personSchedule}
+{define personSchedule}
 
     {if $hasSchedule}
         <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
@@ -55,7 +55,7 @@
     {var $teacher = $model->getTeacher()}
     {if $teacher}
         {control valuePrinter:row 'person.person_link', $teacher}
-        {include #personSchedule, person => $teacher,event=> $model->getEvent()}
+        {include personSchedule, person => $teacher,event=> $model->getEvent()}
     {/if}
     <hr/>
 
@@ -77,11 +77,11 @@
 
         {control valuePrinter:row 'school.school', $history}
 
-        {include #personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
+        {include personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
     <hr/>
     <h2>{_'Seating'}</h2>
-    {control seating:team $model}
+    {control seating}
 {/block}

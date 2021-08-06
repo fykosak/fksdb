@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\SeriesCalculator;
@@ -13,18 +14,15 @@ use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
 use FKSDB\Models\UI\PageTitle;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\Http\FileUpload;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class TasksPresenter extends BasePresenter {
+class TasksPresenter extends BasePresenter
+{
 
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
@@ -40,26 +38,32 @@ class TasksPresenter extends BasePresenter {
         $this->downloader = $downloader;
     }
 
-    public function authorizedImport(): void {
+    public function authorizedImport(): void
+    {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Task import'), 'fas fa-download'));
+    public function titleImport(): PageTitle
+    {
+        return new PageTitle(_('Task import'), 'fas fa-download');
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSeriesForm(): FormControl {
+    protected function createComponentSeriesForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
-        $source = $form->addRadioList('source', _('Problem source'), [
-            self::SOURCE_ASTRID => _('Astrid'),
-            self::SOURCE_FILE => _('XML file (new XML)'),
-        ]);
+        $source = $form->addRadioList(
+            'source',
+            _('Problem source'),
+            [
+                self::SOURCE_ASTRID => _('Astrid'),
+                self::SOURCE_FILE => _('XML file (new XML)'),
+            ]
+        );
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
@@ -83,16 +87,12 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
-    private function isLegacyXml(\SimpleXMLElement $xml): bool {
-        return $xml->getName() === 'problems';
-    }
-
     /**
      * @param Form $seriesForm
-     * @return void
      * @throws UploadException
      */
-    private function validSubmitSeriesForm(Form $seriesForm): void {
+    private function validSubmitSeriesForm(Form $seriesForm): void
+    {
         /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
@@ -137,5 +137,10 @@ class TasksPresenter extends BasePresenter {
             unlink($file);
         }
         $this->redirect('this');
+    }
+
+    private function isLegacyXml(\SimpleXMLElement $xml): bool
+    {
+        return $xml->getName() === 'problems';
     }
 }

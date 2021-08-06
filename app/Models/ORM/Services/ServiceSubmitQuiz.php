@@ -9,9 +9,6 @@ use FKSDB\Models\ORM\Models\ModelSubmitQuiz;
 use Nette\Utils\DateTime;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Miroslav Jarý <mira.jary@gmail.com>
- */
 class ServiceSubmitQuiz extends AbstractService {
 
     public function findByContestant(ModelQuiz $question, ModelContestant $contestant): ?ModelSubmitQuiz {

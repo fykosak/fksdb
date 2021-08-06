@@ -3,8 +3,6 @@
 namespace FKSDB\Models\Results;
 /**
  * POD, not represented in database
- *
- * @author michal
  */
 class ModelCategory {
 

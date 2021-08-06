@@ -8,12 +8,8 @@ use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note IAuthenticator interface is not explicitly implemented due to 'array'
  * type hint at authenticate method.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {

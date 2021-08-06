@@ -7,8 +7,6 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow contest
  * @property-read ActiveRow person
  * @property-read int since

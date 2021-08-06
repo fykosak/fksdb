@@ -8,13 +8,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- * @note Assumes the first part of the field name is the holder name or
- * the dynamic (wildCart) part represents the holder name.
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class UniqueCheck extends AbstractAdjustment {
 
     private string $field;

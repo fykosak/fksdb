@@ -10,8 +10,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\IIdentity;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read bool active
  * @property-read int login_id
  * @property-read \DateTimeInterface last_login
@@ -97,7 +95,7 @@ class ModelLogin extends AbstractModel implements IIdentity {
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
                 $grant = ModelGrant::createFromActiveRow($row);
-                $this->roles[] = new Grant($grant->contest_id, $grant->ref(DbNames::TAB_ROLE, 'role_id')->name);
+                $this->roles[] = new Grant($grant->contest_id, $grant->role->name);
             }
             // roles from other tables
             $person = $this->getPerson();

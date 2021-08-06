@@ -4,10 +4,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use Fykosak\NetteORM\AbstractModel;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ModelRole extends AbstractModel {
 
     public const CONTESTANT = 'contestant';

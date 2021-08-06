@@ -125,8 +125,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?? [],
-                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?? [],
+                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress() ?? [],
+                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress() ?? [],
             ]);
         }
     }
@@ -135,7 +135,7 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);
-            $oldAddress = $person->getAddress2($shortType);
+            $oldAddress = $person->getAddress($shortType);
             if (count($datum)) {
                 if ($oldAddress) {
                     $this->serviceAddress->updateModel($oldAddress, $datum);

@@ -8,9 +8,6 @@ services:
         factory: FKSDB\Models\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
-    readOnlyConnection:
-        factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
-        autowired: false
     ## need setUp
     submitUploatedStorage:
         factory: FKSDB\Models\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%)
@@ -73,7 +70,7 @@ services:
     - FKSDB\Models\Results\SQLResultsCache
     - FKSDB\Models\Results\ResultsModelFactory
     #strored query
-    - FKSDB\Models\StoredQuery\StoredQueryFactory(@readOnlyConnection,...)
+    - FKSDB\Models\StoredQuery\StoredQueryFactory(@database.ro.connection,...)
     #stats
     - FKSDB\Models\Stats\StatsModelFactory
     #tasks

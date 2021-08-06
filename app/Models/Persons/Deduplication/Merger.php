@@ -9,10 +9,7 @@ use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @todo refactor to ConflictResolver, TableMergerFactory
- * @author Michal Koutný <michal@fykos.cz>
  */
 class Merger {
 

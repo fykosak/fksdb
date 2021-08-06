@@ -2,9 +2,9 @@
 {block content}
     {control form}
     <hr/>
-    {include #parent}
+    {include parent}
 {/block}
-{define #submit-row}
+{define submit-row}
     {if $submit}
         {if $correctedSubmitStorage->fileExists($submit) && $submit->corrected}
             <td class="bg-success text-white">#{$submit->submit_id}</td>

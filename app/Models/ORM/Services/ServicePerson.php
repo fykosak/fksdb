@@ -7,7 +7,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */

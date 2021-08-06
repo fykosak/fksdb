@@ -19,9 +19,6 @@ use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent {

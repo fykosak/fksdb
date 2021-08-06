@@ -10,9 +10,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- *
  * @property-read string state
  * @property-read int e_fyziklani_team_id
  * @property-read int|null points

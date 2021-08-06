@@ -4,10 +4,6 @@ namespace FKSDB\Components\Forms\Containers;
 
 use Nette\Database\Table\ActiveRow;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class PersonInfoContainer extends ModelContainer {
 
     /**

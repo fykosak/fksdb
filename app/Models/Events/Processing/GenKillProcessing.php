@@ -17,8 +17,6 @@ use Nette\Utils\ArrayHash;
  *
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class GenKillProcessing implements Processing {
 

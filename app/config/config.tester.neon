@@ -8,8 +8,6 @@
 parameters:
     tester:
         dbInstances: 8
-    ro-database:
-        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
     upload:
         # Path to storage directory
         root: %appDir%/../tmp/upload
@@ -20,4 +18,8 @@ parameters:
 application:
     silentLinks: false
 database:
-    dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"
+    default:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
+    ro:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb_test1'
+

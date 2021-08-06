@@ -12,6 +12,8 @@
     {control valuePrinter:row 'schedule_group.start', $group}
 
     {control valuePrinter:row 'schedule_group.end', $group}
-    <a class="btn btn-primary btn-sm" href="{plink ScheduleGroup:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
-    <a class="btn btn-primary btn-sm" href="{plink ScheduleGroup:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
+    <a class="btn btn-primary btn-sm"
+       href="{plink ScheduleGroup:detail id=>$group->schedule_group_id}">{_('Detail of group')}</a>
+    <a class="btn btn-primary btn-sm"
+       href="{plink ScheduleGroup:edit id=>$group->schedule_group_id}">{_('Edit group')}</a>
 </div>

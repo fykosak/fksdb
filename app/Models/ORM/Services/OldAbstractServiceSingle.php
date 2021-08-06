@@ -12,7 +12,6 @@ use Fykosak\NetteORM\AbstractModel;
  * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
  *       duplicated in all descendant classes.
  *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @deprecated
  * @use AbstractServiceSingle
  * @method AbstractModel storeModel(array $data, ?AbstractModel $model = null)

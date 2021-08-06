@@ -8,8 +8,6 @@ use Nette\Forms\Controls\HiddenField;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class OptimisticForm extends Form {
 

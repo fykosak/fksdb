@@ -5,9 +5,6 @@ namespace FKSDB\Models\ORM\Services;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\AbstractModel;
 
-/**
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class ServicePersonHasFlag extends AbstractService {
 
     public function createNewModel(array $data): AbstractModel {

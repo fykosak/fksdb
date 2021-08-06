@@ -5,9 +5,6 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceSchool extends AbstractService {
 
     public function isCzSkSchool(?int $schoolId): bool {

@@ -8,11 +8,6 @@ use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ContestChooserComponent extends ChooserComponent {
 
     private TypedTableSelection $availableContests;

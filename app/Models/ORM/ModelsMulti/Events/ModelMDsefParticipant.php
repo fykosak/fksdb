@@ -8,8 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read  ModelEventParticipant $mainModel
  */
 class ModelMDsefParticipant extends AbstractModelMulti {

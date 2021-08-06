@@ -11,12 +11,6 @@ use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- * @author Michal Cervenak <miso@fykos.cz>
- */
 class MailTemplateFactory {
 
     /** without trailing slash */

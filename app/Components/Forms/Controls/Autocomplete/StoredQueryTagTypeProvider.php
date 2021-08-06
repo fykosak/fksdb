@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
     private const DESCRIPTION = 'description';

@@ -7,9 +7,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\UI\Template;
 use Nette\DI\Container;
 
-/**
- * @author Michal Koutny
- */
 abstract class SeriesTableComponent extends BaseComponent {
 
     private SeriesTable $seriesTable;

@@ -9,8 +9,6 @@ use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2011 extends EvaluationStrategy {
 

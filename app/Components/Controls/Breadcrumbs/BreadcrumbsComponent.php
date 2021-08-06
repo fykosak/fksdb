@@ -28,8 +28,6 @@ use Tracy\Debugger;
  * (this is ensured via call in the beforeRender method).
  *
  * @note Page titles of visited pages are cached in the session.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class BreadcrumbsComponent extends BaseComponent {
 

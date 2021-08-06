@@ -8,9 +8,6 @@ use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class MultiTableSelection extends Selection {
 
     private AbstractServiceMulti $service;

@@ -14,9 +14,6 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-/**
- * @author Lukáš Timko
- */
 class CloseTeamsGrid extends BaseGrid {
 
     private ModelEvent $event;

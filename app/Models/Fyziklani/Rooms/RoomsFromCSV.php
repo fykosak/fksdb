@@ -10,15 +10,9 @@ use FKSDB\Models\Utils\CSVParser;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class RoomsFromCSV extends Stage {
 
-    /** @var string */
-    private $data;
+    private string $data;
 
     private ModelEvent $event;
 
@@ -54,7 +48,6 @@ class RoomsFromCSV extends Stage {
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-
                 $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), Logger::WARNING));
 
                 continue;
@@ -76,11 +69,10 @@ class RoomsFromCSV extends Stage {
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
      */
     public function getOutput() {
         return null;
     }
-
 }
 

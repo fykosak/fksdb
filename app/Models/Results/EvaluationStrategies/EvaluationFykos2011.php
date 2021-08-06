@@ -10,8 +10,6 @@ use Nette\InvalidArgumentException;
 /**
  * First two categories have doubled points for the first two problems.
  * Introduced in FYKOS 2011 (25 th year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationFykos2011 extends EvaluationStrategy {
 

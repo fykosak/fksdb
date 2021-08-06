@@ -13,11 +13,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-/**
- * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class FlagCheck extends AbstractAdjustment implements FormAdjustment {
 
     private ServiceSchool $serviceSchool;
@@ -106,7 +101,7 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelSchool|false $school */
+        /** @var ModelSchool|null $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)->fetch();

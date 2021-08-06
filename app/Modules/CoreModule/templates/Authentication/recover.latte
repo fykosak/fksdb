@@ -1,6 +1,6 @@
 {layout ./@layout.latte}
 
-{block #form}
+{block form}
     {form recoverForm class => 'form-signin'}
         <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
         {input id class => 'last form-control', autofocus => true, placeholder => _('E-mail')}

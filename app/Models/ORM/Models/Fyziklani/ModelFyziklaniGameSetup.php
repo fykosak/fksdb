@@ -5,7 +5,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- * Class ModelFyziklaniGameSetup
  * @property-read int event_id
  * @property-read \DateTimeInterface game_start
  * @property-read \DateTimeInterface game_end

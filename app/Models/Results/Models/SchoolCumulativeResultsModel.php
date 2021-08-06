@@ -13,8 +13,6 @@ use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
- *
- * @author Lukáš Timko <lukast@fykos.cz>
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 

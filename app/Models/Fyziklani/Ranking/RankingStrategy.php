@@ -9,9 +9,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
-/**
- * @author Lukáš Timko
- */
 class RankingStrategy {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

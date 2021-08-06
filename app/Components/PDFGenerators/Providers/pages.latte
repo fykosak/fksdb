@@ -1,0 +1,56 @@
+{varType iterable $items}
+{varType array $params}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {block head}
+        <style>
+            @media all {
+                body {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                    /*background-color: #FAFAFA;*/
+                    font: 12pt sans-serif;
+                }
+
+                * {
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                }
+
+                .page {
+                    position: relative;
+                    page-break-before: always;
+                    page-break-after: always;
+                    margin: 0 auto;
+                    /* background: red;*/
+                    padding: 0;
+                }
+
+                @page {
+                    margin: 0;
+                }
+            }
+
+            @media screen {
+                .page {
+                    border: 1px dotted #ccc;
+                }
+            }
+
+        </style>
+    {/block}
+    <title></title>
+</head>
+<body>
+{foreach $items as $item}
+    <div class="page" style="position: relative">
+        {control page $item,$params}
+    </div>
+{/foreach}
+</body>
+</html>
+
+

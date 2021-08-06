@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractService {
