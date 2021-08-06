@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
@@ -13,7 +12,7 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function isAllowed($resource, ?string $privilege): bool
     {

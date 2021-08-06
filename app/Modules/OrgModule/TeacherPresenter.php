@@ -29,7 +29,7 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -54,7 +54,7 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void
@@ -63,7 +63,7 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -82,7 +82,7 @@ class TeacherPresenter extends BasePresenter
     }
 
     /**
-     * @return TeacherFormComponent
+
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): TeacherFormComponent
@@ -93,7 +93,7 @@ class TeacherPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

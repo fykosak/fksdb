@@ -11,7 +11,7 @@ class DashboardPresenter extends BasePresenter
 {
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     public function titleDefault(): void
@@ -20,7 +20,7 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void
@@ -29,7 +29,7 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     final public function renderDefault(): void
@@ -39,7 +39,7 @@ class DashboardPresenter extends BasePresenter
     }
 
     /**
-     * @return string
+
      * @throws EventNotFoundException
      */
     private function getWebUrl(): string

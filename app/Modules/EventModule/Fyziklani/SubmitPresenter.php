@@ -37,7 +37,7 @@ class SubmitPresenter extends BasePresenter
 
     /* ***** Title methods *****/
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void
@@ -46,7 +46,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titleList(): void
@@ -55,7 +55,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void
@@ -64,7 +64,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -83,7 +83,7 @@ class SubmitPresenter extends BasePresenter
     /* ***** Authorized methods *****/
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -97,7 +97,7 @@ class SubmitPresenter extends BasePresenter
     /* ******** ACTION METHODS ********/
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -109,7 +109,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ClosedSubmittingException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -130,7 +130,7 @@ class SubmitPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -139,7 +139,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return AllSubmitsGrid
+
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): AllSubmitsGrid
@@ -148,7 +148,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return PointsEntryComponent
+
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): PointsEntryComponent
@@ -157,7 +157,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return FyziklaniSubmitFormComponent
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

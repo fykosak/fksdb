@@ -41,7 +41,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -51,7 +51,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return StoredQuery
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -77,7 +77,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -87,7 +87,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -111,7 +111,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -152,7 +152,7 @@ class ExportPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsComponent
+
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -186,7 +186,7 @@ class ExportPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

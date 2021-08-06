@@ -45,7 +45,7 @@ class SettingsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadTypeException
      */
     public function actionDefault(): void
@@ -78,7 +78,7 @@ class SettingsPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl

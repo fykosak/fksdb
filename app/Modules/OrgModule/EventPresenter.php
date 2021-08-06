@@ -40,7 +40,7 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -68,7 +68,7 @@ class EventPresenter extends BasePresenter
     }
 
     /**
-     * @return EventFormComponent
+
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): EventFormComponent
@@ -84,7 +84,7 @@ class EventPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

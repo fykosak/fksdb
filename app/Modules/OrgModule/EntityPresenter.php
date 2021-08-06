@@ -44,7 +44,6 @@ abstract class EntityPresenter extends BasePresenter
     }
 
     /**
-     * @return AbstractModel|null
      * @deprecated
      */
     final public function getModel(): ?AbstractModel

@@ -43,7 +43,7 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -74,7 +74,7 @@ class EventOrgPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -88,7 +88,7 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return EventOrgsGrid
+
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventOrgsGrid
@@ -97,7 +97,7 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return EventOrgFormComponent
+
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent
@@ -106,7 +106,7 @@ class EventOrgPresenter extends BasePresenter
     }
 
     /**
-     * @return EventOrgFormComponent
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

@@ -29,7 +29,7 @@ trait YearPresenterTrait
     private ?ModelContestYear $contestYear;
 
     /**
-     * @return void
+
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
@@ -85,7 +85,7 @@ trait YearPresenterTrait
     }
 
     /**
-     * @return ModelContestYear
+
      * @throws ForbiddenRequestException
      */
     private function selectYear(): ModelContestYear

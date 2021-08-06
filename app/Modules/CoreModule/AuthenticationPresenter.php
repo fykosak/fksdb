@@ -80,7 +80,7 @@ final class AuthenticationPresenter extends BasePresenter
      * returns false when only global login exists.
      * False is return in order to AuthenticatedPresenter to correctly login the user.
      *
-     * @return bool
+
      */
     private function isLoggedIn(): bool
     {
@@ -185,7 +185,7 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * Login form component factory.
-     * @return Form
+
      */
     protected function createComponentLoginForm(): Form
     {
@@ -235,7 +235,7 @@ final class AuthenticationPresenter extends BasePresenter
     /**
      * Password recover form.
      *
-     * @return Form
+
      */
     protected function createComponentRecoverForm(): Form
     {
@@ -255,7 +255,7 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * @param Form $form
-     * @return void
+
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

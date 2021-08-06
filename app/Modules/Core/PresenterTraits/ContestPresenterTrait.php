@@ -29,7 +29,7 @@ trait ContestPresenterTrait
     private ?ModelContest $contest;
 
     /**
-     * @return void
+
      * @throws BadRequestException
      */
     protected function contestTraitStartup(): void
@@ -98,7 +98,7 @@ trait ContestPresenterTrait
     abstract protected function getRole(): string;
 
     /**
-     * @return ModelContest
+
      * @throws BadRequestException
      */
     private function selectContest(): ModelContest

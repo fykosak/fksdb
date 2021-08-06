@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
@@ -39,7 +38,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -51,7 +50,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -70,7 +69,7 @@ class ClosePresenter extends BasePresenter
     /* ******* authorized methods ***********/
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     public function authorizedTeam(): void
@@ -93,7 +92,7 @@ class ClosePresenter extends BasePresenter
     /* *********** ACTIONS **************** */
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -114,7 +113,7 @@ class ClosePresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -123,7 +122,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return CloseTeamComponent
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -135,7 +134,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return TeamSubmitsGrid
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -152,7 +151,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return BaseGrid
+
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): BaseGrid
@@ -161,7 +160,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
+
      * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): Control
@@ -170,7 +169,7 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
+
      * @throws NotImplementedException
      */
     protected function createComponentEditForm(): Control

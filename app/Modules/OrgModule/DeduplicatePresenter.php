@@ -99,7 +99,7 @@ class DeduplicatePresenter extends BasePresenter
     /**
      * @param int $trunkId
      * @param int $mergedId
-     * @return void
+
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -203,7 +203,7 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentMergeForm(): FormControl

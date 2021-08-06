@@ -50,7 +50,7 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentTaskImportForm(): FormControl
@@ -77,7 +77,7 @@ class TaskPresenter extends BasePresenter
 
     /**
      * @param Form $form
-     * @return void
+
      * @throws EventNotFoundException
      * @throws MissingServiceException
      */
@@ -95,7 +95,7 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @return TaskGrid
+
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): TaskGrid

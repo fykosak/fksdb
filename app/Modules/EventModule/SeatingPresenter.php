@@ -91,7 +91,7 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     final public function renderList(): void
@@ -108,7 +108,7 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      */
     final public function renderPreview(): void
@@ -117,7 +117,7 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return bool
+
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool

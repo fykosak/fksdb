@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
@@ -42,7 +41,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function isAnyContestAuthorized($resource, ?string $privilege): bool
     {

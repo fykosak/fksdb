@@ -32,7 +32,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return void
+
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -52,7 +52,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return bool
+
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -66,7 +66,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return SchoolCheckComponent
+
      * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
@@ -75,7 +75,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return AbstractApplicationsGrid
+
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */

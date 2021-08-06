@@ -136,7 +136,7 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentUploadForm(): FormControl
@@ -232,7 +232,7 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @param Form $form
-     * @return void
+
      * @throws StorageException
      */
     private function handleUploadFormSuccess(Form $form): void

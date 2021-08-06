@@ -19,7 +19,6 @@ trait EventEntityPresenterTrait
     }
 
     /**
-     * @return AbstractModel|null
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

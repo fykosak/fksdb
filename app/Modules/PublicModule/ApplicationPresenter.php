@@ -83,7 +83,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws NeonSchemaException
      * @throws \Throwable
      */
@@ -122,7 +122,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return Holder
+
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -284,7 +284,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
@@ -304,7 +304,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws NeonSchemaException
      */
     private function initializeMachine(): void
@@ -313,7 +313,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ApplicationComponent
+
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -340,7 +340,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

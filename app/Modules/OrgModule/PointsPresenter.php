@@ -116,7 +116,7 @@ class PointsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws BadRequestException
      */
     public function handleRecalculateAll(): void

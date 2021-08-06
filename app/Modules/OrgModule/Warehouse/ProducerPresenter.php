@@ -46,7 +46,7 @@ class ProducerPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -75,7 +75,7 @@ class ProducerPresenter extends BasePresenter
     }
 
     /**
-     * @return ProductsFromProducerGrid
+
      * @throws ModelNotFoundException
      */
     protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid
@@ -86,7 +86,7 @@ class ProducerPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
+
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

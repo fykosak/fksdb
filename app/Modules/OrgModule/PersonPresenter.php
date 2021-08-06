@@ -49,7 +49,7 @@ class PersonPresenter extends BasePresenter
 
     /* *********** TITLE ***************/
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titleSearch(): void
@@ -58,7 +58,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -71,7 +71,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -89,7 +89,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void
@@ -109,7 +109,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return void
+
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -124,7 +124,7 @@ class PersonPresenter extends BasePresenter
     /* ********************* ACTIONS **************/
 
     /**
-     * @return void
+
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -148,7 +148,7 @@ class PersonPresenter extends BasePresenter
     /* ******************* COMPONENTS *******************/
 
     /**
-     * @return StalkingContainer
+
      * @throws ModelNotFoundException
      */
     public function createComponentStalkingContainer(): StalkingContainer
@@ -157,7 +157,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl
@@ -182,7 +182,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonFormComponent
+
      * @throws ModelNotFoundException
      */
     protected function createComponentCreateForm(): PersonFormComponent
@@ -192,7 +192,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @param bool $throw
-     * @return int
+
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(bool $throw = true): int
@@ -221,7 +221,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonFormComponent
+
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): PersonFormComponent
@@ -235,7 +235,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return BaseGrid
+
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid
@@ -252,7 +252,7 @@ class PersonPresenter extends BasePresenter
      * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
-     * @return bool
+
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

@@ -49,7 +49,7 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
+
      * @throws BadTypeException
      */
     protected function createComponentSeriesForm(): FormControl
@@ -90,7 +90,7 @@ class TasksPresenter extends BasePresenter
 
     /**
      * @param Form $seriesForm
-     * @return void
+
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void

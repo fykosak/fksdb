@@ -66,7 +66,7 @@ trait ChartPresenterTrait
 
     /**
      * @param string $id
-     * @return static
+     * @return void
      */
     abstract public function setView(string $id);
 

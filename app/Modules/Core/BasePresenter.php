@@ -154,7 +154,7 @@ abstract class BasePresenter extends Presenter implements
     /**
      * @param string $destination
      * @param array|null $args
-     * @return bool
+
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
@@ -228,7 +228,7 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @return void
+
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void
@@ -276,7 +276,7 @@ abstract class BasePresenter extends Presenter implements
      * Method should set the title of the page using setTitle method.
      *
      * @param string
-     * @return string
+
      */
     protected static function formatTitleMethod(string $view): string
     {
@@ -284,7 +284,7 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @return PageTitle
+
      * @throws BadRequestException
      */
     public function getTitle(): PageTitle
@@ -309,7 +309,7 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @return string
+
      * @throws UnsupportedLanguageException
      */
     public function getLang(): string

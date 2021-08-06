@@ -77,7 +77,7 @@ class InboxPresenter extends BasePresenter
     /* *********** LIVE CYCLE *************/
 
     /**
-     * @return void
+
      * @throws BadTypeException
      */
     public function actionHandout(): void

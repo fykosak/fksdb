@@ -28,17 +28,12 @@ trait EntityPresenterTrait
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
-
-    /**
-     * @param bool $access
-     * @return void
-     */
-    abstract public function setAuthorized(bool $access);
+    
+    abstract public function setAuthorized(bool $access): void;
 
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
@@ -48,6 +43,7 @@ trait EntityPresenterTrait
     }
 
     abstract protected function getORMService(): AbstractService;
+
     /* ****************** TITLES ***************************** */
 
     public function authorizedCreate(): void
@@ -56,7 +52,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedEdit(): void
@@ -66,7 +61,6 @@ trait EntityPresenterTrait
 
     /**
      * @param bool $throw
-     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
     public function getEntity(bool $throw = true): ?AbstractModel
@@ -82,7 +76,6 @@ trait EntityPresenterTrait
     /**
      * @param string $name
      * @param null $default
-     * @return mixed
      */
     abstract public function getParameter(string $name, $default = null);
 
@@ -93,7 +86,6 @@ trait EntityPresenterTrait
 
     /**
      * @param bool $throw
-     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
     private function loadModel(bool $throw = true): ?AbstractModel
@@ -110,7 +102,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDelete(): void
@@ -119,7 +110,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -128,7 +118,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      */
     public function titleList(): void
@@ -138,7 +127,6 @@ trait EntityPresenterTrait
 
     /**
      * @param PageTitle $pageTitle
-     * @return void
      *
      * @throws ForbiddenRequestException
      */
@@ -150,7 +138,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      */
     final public function titleCreate(): void
@@ -164,7 +151,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void
@@ -173,7 +159,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void
@@ -182,7 +167,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      */
     public function titleDelete(): void
@@ -191,7 +175,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelException
      * @throws ModelNotFoundException
      */

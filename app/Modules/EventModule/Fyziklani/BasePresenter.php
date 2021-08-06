@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types=1);
-declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
@@ -27,7 +26,6 @@ abstract class BasePresenter extends EventBasePresenter
     }
 
     /**
-     * @return FyziklaniChooserComponent
      * @throws EventNotFoundException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent
@@ -36,7 +34,6 @@ abstract class BasePresenter extends EventBasePresenter
     }
 
     /**
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
