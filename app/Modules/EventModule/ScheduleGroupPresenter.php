@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\EntityForms\ScheduleGroupFormComponent;
@@ -7,25 +9,27 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
  * @method ModelScheduleGroup getEntity()
  */
-class ScheduleGroupPresenter extends BasePresenter {
+class ScheduleGroupPresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     private ServiceScheduleGroup $serviceScheduleGroup;
 
-    final public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
+    final public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void
+    {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
@@ -33,7 +37,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Schedule'), 'fas fa-list'));
     }
 
@@ -41,7 +46,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titlePersons(): void {
+    public function titlePersons(): void
+    {
         $this->setPageTitle(new PageTitle(_('Whole program'), 'fas fa-list'));
     }
 
@@ -49,7 +55,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(): void {
+    public function titleDetail(): void
+    {
         $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list'));
     }
 
@@ -60,7 +67,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
@@ -68,7 +76,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return ScheduleGroupFormComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): ScheduleGroupFormComponent {
+    protected function createComponentCreateForm(): ScheduleGroupFormComponent
+    {
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), null);
     }
 
@@ -79,7 +88,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentEditForm(): ScheduleGroupFormComponent {
+    protected function createComponentEditForm(): ScheduleGroupFormComponent
+    {
         return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
@@ -87,7 +97,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return BaseGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         return new GroupsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -95,7 +106,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return AllPersonsGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentAllPersonsGrid(): AllPersonsGrid {
+    protected function createComponentAllPersonsGrid(): AllPersonsGrid
+    {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
     }
 
@@ -106,11 +118,13 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentItemsGrid(): ItemsGrid {
+    protected function createComponentItemsGrid(): ItemsGrid
+    {
         return new ItemsGrid($this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceScheduleGroup {
+    protected function getORMService(): ServiceScheduleGroup
+    {
         return $this->serviceScheduleGroup;
     }
 
@@ -120,7 +134,8 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 }

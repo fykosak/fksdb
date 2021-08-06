@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -7,34 +9,39 @@ use FKSDB\Components\Grids\Warehouse\ProducersGrid;
 use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProducer;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
  * @method ModelProducer getEntity(bool $throw = true)
  */
-class ProducerPresenter extends BasePresenter {
+class ProducerPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private ServiceProducer $serviceProducer;
 
-    public function injectService(ServiceProducer $serviceProducer): void {
+    public function injectService(ServiceProducer $serviceProducer): void
+    {
         $this->serviceProducer = $serviceProducer;
     }
 
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Producers'), 'fas fa-store-alt'));
     }
 
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(_('Edit producer'), 'fas fa-pen'));
     }
 
-    public function titleCreate(): void {
+    public function titleCreate(): void
+    {
         $this->setPageTitle(new PageTitle(_('Create producer'), 'fa fa-plus'));
     }
 
@@ -42,23 +49,28 @@ class ProducerPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    final public function renderDetail(): void {
+    final public function renderDetail(): void
+    {
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): ServiceProducer {
+    protected function getORMService(): ServiceProducer
+    {
         return $this->serviceProducer;
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid
+    {
         return new ProducersGrid($this->getContext());
     }
 
@@ -66,7 +78,8 @@ class ProducerPresenter extends BasePresenter {
      * @return ProductsFromProducerGrid
      * @throws ModelNotFoundException
      */
-    protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid {
+    protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid
+    {
         return new ProductsFromProducerGrid($this->getContext(), $this->getEntity());
     }
 
@@ -75,7 +88,8 @@ class ProducerPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAllowed($resource, $privilege);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -8,10 +10,12 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\Models\UI\PageTitle;
 
-class GameSetupPresenter extends BasePresenter {
+class GameSetupPresenter extends BasePresenter
+{
     private ModelFyziklaniGameSetup $gameSetup;
 
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }
 
@@ -21,16 +25,9 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         $this->template->gameSetup = $this->getGameSetup();
-    }
-
-    /**
-     * @return void
-     * @throws EventNotFoundException
-     */
-    public function authorizedDefault(): void {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 
     /**
@@ -39,7 +36,8 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException
      */
-    protected function getGameSetup(): ModelFyziklaniGameSetup {
+    protected function getGameSetup(): ModelFyziklaniGameSetup
+    {
         if (!isset($this->gameSetup)) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
@@ -48,5 +46,14 @@ class GameSetupPresenter extends BasePresenter {
             $this->gameSetup = $gameSetup;
         }
         return $this->gameSetup;
+    }
+
+    /**
+     * @return void
+     * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): void
+    {
+        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 }

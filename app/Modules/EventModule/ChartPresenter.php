@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Charts\Event\Applications\ApplicationRationGeoChart;
@@ -7,29 +10,37 @@ use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
 use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
+use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
-use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 
-class ChartPresenter extends BasePresenter {
-
+class ChartPresenter extends BasePresenter
+{
     use ChartPresenterTrait;
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList(): void {
+    public function authorizedList(): void
+    {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
+    }
+
+    protected function getModelResource(): string
+    {
+        return 'event.chart';
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedChart(): void {
+    public function authorizedChart(): void
+    {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
-    protected function startup(): void {
+    protected function startup(): void
+    {
         parent::startup();
         $this->selectChart();
     }
@@ -38,7 +49,8 @@ class ChartPresenter extends BasePresenter {
      * @return array
      * @throws EventNotFoundException
      */
-    protected function registerCharts(): array {
+    protected function registerCharts(): array
+    {
         return [
             'participantAcquaintance' => new ParticipantAcquaintanceChart($this->getContext(), $this->getEvent()),
             'singleApplicationProgress' => new SingleComponent($this->getContext(), $this->getEvent()),
@@ -47,9 +59,5 @@ class ChartPresenter extends BasePresenter {
             'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
             'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
         ];
-    }
-
-    protected function getModelResource(): string {
-        return 'event.chart';
     }
 }

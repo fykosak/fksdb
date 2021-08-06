@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 
-class DashboardPresenter extends BasePresenter {
+class DashboardPresenter extends BasePresenter
+{
 
     /**
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault(): void {
+    public function titleDefault(): void
+    {
         $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt'));
     }
 
@@ -19,7 +23,8 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void {
+    public function authorizedDefault(): void
+    {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
@@ -27,7 +32,8 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
     }
@@ -36,7 +42,8 @@ class DashboardPresenter extends BasePresenter {
      * @return string
      * @throws EventNotFoundException
      */
-    private function getWebUrl(): string {
+    private function getWebUrl(): string
+    {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 // FOF
@@ -74,7 +81,10 @@ class DashboardPresenter extends BasePresenter {
                 return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/jaro%d', $this->getEvent()->begin->format('Y'));
             case 12:
                 // setkani podzim
-                return \sprintf('http://vyfuk.mff.cuni.cz/akce/setkani/podzim%d', $this->getEvent()->begin->format('Y'));
+                return \sprintf(
+                    'http://vyfuk.mff.cuni.cz/akce/setkani/podzim%d',
+                    $this->getEvent()->begin->format('Y')
+                );
             case 13:
                 // Náboj Junior
                 return \sprintf('#'); // FIXME

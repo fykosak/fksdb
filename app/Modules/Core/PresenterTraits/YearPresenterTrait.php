@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
@@ -16,8 +18,8 @@ use Nette\InvalidStateException;
  * Trait YearPresenterTrait
  * @property YearCalculator $yearCalculator
  */
-trait YearPresenterTrait {
-
+trait YearPresenterTrait
+{
     use ContestPresenterTrait;
 
     /**
@@ -31,7 +33,8 @@ trait YearPresenterTrait {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function yearTraitStartup(): void {
+    protected function yearTraitStartup(): void
+    {
         $this->contestTraitStartup();
         $contestYear = $this->getSelectedContestYear();
         if (!isset($contestYear) || !$this->isValidContestYear($contestYear)) {
@@ -39,33 +42,24 @@ trait YearPresenterTrait {
         }
     }
 
-    /**
-     * @return ModelContestYear
-     * @throws ForbiddenRequestException
-     */
-    private function selectYear(): ModelContestYear {
-        $candidate = $this->getSelectedContest()->getCurrentContestYear();
-        if (!$this->isValidContestYear($candidate)) {
-            throw new ForbiddenRequestException();
-        }
-        return $candidate;
-    }
-
-    private function isValidContestYear(?ModelContestYear $contestYear): bool {
-        if (!$contestYear) {
-            return false;
-        }
-        return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
-    }
-
-    public function getSelectedContestYear(): ?ModelContestYear {
+    public function getSelectedContestYear(): ?ModelContestYear
+    {
         if (!isset($this->contestYear)) {
             $this->contestYear = $this->getSelectedContest()->getContestYear($this->year);
         }
         return $this->contestYear;
     }
 
-    protected function getAvailableYears(): GroupedSelection {
+    private function isValidContestYear(?ModelContestYear $contestYear): bool
+    {
+        if (!$contestYear) {
+            return false;
+        }
+        return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
+    }
+
+    protected function getAvailableYears(): GroupedSelection
+    {
         $contest = $this->getSelectedContest();
         switch ($this->getRole()) {
             case YearChooserComponent::ROLE_ORG:
@@ -83,13 +77,32 @@ trait YearPresenterTrait {
                         $years[] = $contestant->year;
                     }
                 }
-                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear());
+                return count($years) ? $contest->getContestYears()->where('year', $years) : $contest->getContestYears()
+                    ->where('ac_year', YearCalculator::getCurrentAcademicYear());
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $this->getRole()));
         }
     }
 
-    protected function createComponentYearChooser(): YearChooserComponent {
-        return new YearChooserComponent($this->getContext(), $this->getSelectedContestYear(), $this->getAvailableYears());
+    /**
+     * @return ModelContestYear
+     * @throws ForbiddenRequestException
+     */
+    private function selectYear(): ModelContestYear
+    {
+        $candidate = $this->getSelectedContest()->getCurrentContestYear();
+        if (!$this->isValidContestYear($candidate)) {
+            throw new ForbiddenRequestException();
+        }
+        return $candidate;
+    }
+
+    protected function createComponentYearChooser(): YearChooserComponent
+    {
+        return new YearChooserComponent(
+            $this->getContext(),
+            $this->getSelectedContestYear(),
+            $this->getAvailableYears()
+        );
     }
 }

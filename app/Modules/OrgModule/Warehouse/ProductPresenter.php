@@ -1,49 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
-class ProductPresenter extends BasePresenter {
+class ProductPresenter extends BasePresenter
+{
     use EntityPresenterTrait;
 
     private ServiceProduct $serviceProduct;
 
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('Products'), 'fas fa-dolly'));
     }
 
-    public function titleEdit(): void {
+    public function titleEdit(): void
+    {
         $this->setPageTitle(new PageTitle(_('Edit product'), 'fas fa-pen'));
     }
 
-    public function titleCreate(): void {
+    public function titleCreate(): void
+    {
         $this->setPageTitle(new PageTitle(_('Create product'), 'fa fa-plus'));
     }
 
-    public function injectService(ServiceProduct $serviceProduct): void {
+    public function injectService(ServiceProduct $serviceProduct): void
+    {
         $this->serviceProduct = $serviceProduct;
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control
+    {
         throw new NotImplementedException();
     }
 
-    protected function createComponentGrid(): ProductsGrid {
+    protected function createComponentGrid(): ProductsGrid
+    {
         return new ProductsGrid($this->getContext());
     }
 
-    protected function getORMService(): ServiceProduct {
+    protected function getORMService(): ServiceProduct
+    {
         return $this->serviceProduct;
     }
 
@@ -52,7 +63,8 @@ class ProductPresenter extends BasePresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
         return $this->isAllowed($resource, $privilege);
     }
 }

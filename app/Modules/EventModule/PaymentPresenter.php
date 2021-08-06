@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
+use FKSDB\Components\EntityForms\PaymentFormComponent;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Machine;
 use FKSDB\Models\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
@@ -22,14 +24,15 @@ use Nette\Security\Resource;
 /**
  * @method ModelPayment getEntity
  */
-class PaymentPresenter extends BasePresenter {
-
+class PaymentPresenter extends BasePresenter
+{
     use EventEntityPresenterTrait;
 
     private Machine\Machine $machine;
     private ServicePayment $servicePayment;
 
-    final public function injectServicePayment(ServicePayment $servicePayment): void {
+    final public function injectServicePayment(ServicePayment $servicePayment): void
+    {
         $this->servicePayment = $servicePayment;
     }
 
@@ -38,7 +41,8 @@ class PaymentPresenter extends BasePresenter {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleCreate(): void {
+    public function titleCreate(): void
+    {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
     }
 
@@ -48,8 +52,11 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
+    public function titleEdit(): void
+    {
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
+        );
     }
 
     /**
@@ -58,34 +65,21 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function titleDetail(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
+    public function titleDetail(): void
+    {
+        $this->setPageTitle(
+            new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card')
+        );
     }
 
     /**
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function titleList(): void {
+    public function titleList(): void
+    {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
     }
-
-    protected function isEnabled(): bool {
-        return $this->hasApi();
-    }
-    /* ********* Authorization *****************/
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     * @throws EventNotFoundException
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
-    /* ********* actions *****************/
 
     /**
      * @throws EventNotFoundException
@@ -93,12 +87,17 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    public function actionEdit(): void {
+    public function actionEdit(): void
+    {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
+            $this->flashMessage(
+                \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
+                \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR
+            );
             $this->redirect(':Core:MyPayments:');
         }
     }
+    /* ********* Authorization *****************/
 
     /**
      *
@@ -106,7 +105,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    public function actionCreate(): void {
+    public function actionCreate(): void
+    {
         if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
@@ -115,30 +115,7 @@ class PaymentPresenter extends BasePresenter {
         }
     }
 
-    /* ********* render *****************/
-    /**
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     */
-    final public function renderEdit(): void {
-        $this->template->model = $this->getEntity();
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws EventNotFoundException
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
-     * @throws CannotAccessModelException
-     */
-    final public function renderDetail(): void {
-        $payment = $this->getEntity();
-        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
-        $this->template->model = $payment;
-        $this->template->isOrg = $this->isOrg();
-    }
+    /* ********* actions *****************/
 
     /**
      * @return bool
@@ -146,28 +123,46 @@ class PaymentPresenter extends BasePresenter {
      * TODO!!!!
      * @throws EventNotFoundException
      */
-    private function isOrg(): bool {
+    private function isOrg(): bool
+    {
         return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
     }
 
     /**
-     * @return PaymentMachine
-     * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws MissingServiceException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
      */
-    private function getMachine(): PaymentMachine {
-        if (!isset($this->machine)) {
-            $machine = $this->getContext()->getService(sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year));
-            if (!$machine instanceof PaymentMachine) {
-                throw new BadTypeException(PaymentMachine::class, $this->machine);
-            }
-            $this->machine = $machine;
-        }
-        return $this->machine;
+    final public function renderEdit(): void
+    {
+        $this->template->model = $this->getEntity();
     }
 
-    private function hasApi(): bool {
+    /* ********* render *****************/
+
+    /**
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws CannotAccessModelException
+     */
+    final public function renderDetail(): void
+    {
+        $payment = $this->getEntity();
+        $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
+        $this->template->model = $payment;
+        $this->template->isOrg = $this->isOrg();
+    }
+
+    protected function isEnabled(): bool
+    {
+        return $this->hasApi();
+    }
+
+    private function hasApi(): bool
+    {
         try {
             $this->getMachine();
         } catch (\Exception $exception) {
@@ -176,7 +171,39 @@ class PaymentPresenter extends BasePresenter {
         return true;
     }
 
-    protected function getORMService(): ServicePayment {
+    /**
+     * @return PaymentMachine
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws MissingServiceException
+     */
+    private function getMachine(): PaymentMachine
+    {
+        if (!isset($this->machine)) {
+            $machine = $this->getContext()->getService(
+                sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year)
+            );
+            if (!$machine instanceof PaymentMachine) {
+                throw new BadTypeException(PaymentMachine::class, $this->machine);
+            }
+            $this->machine = $machine;
+        }
+        return $this->machine;
+    }
+
+    /**
+     * @param Resource|string|null $resource
+     * @param string|null $privilege
+     * @return bool
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
+    protected function getORMService(): ServicePayment
+    {
         return $this->servicePayment;
     }
     /* ********* Components *****************/
@@ -188,15 +215,21 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentTransitionButtons(): TransitionButtonsComponent {
-        return new TransitionButtonsComponent($this->getMachine(), $this->getContext(), $this->getMachine()->createHolder($this->getEntity()));
+    protected function createComponentTransitionButtons(): TransitionButtonsComponent
+    {
+        return new TransitionButtonsComponent(
+            $this->getMachine(),
+            $this->getContext(),
+            $this->getMachine()->createHolder($this->getEntity())
+        );
     }
 
     /**
      * @return EventPaymentGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): EventPaymentGrid {
+    protected function createComponentGrid(): EventPaymentGrid
+    {
         return new EventPaymentGrid($this->getEvent(), $this->getContext());
     }
 
@@ -205,7 +238,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): PaymentFormComponent {
+    protected function createComponentCreateForm(): PaymentFormComponent
+    {
         return new PaymentFormComponent(
             $this->getContext(),
             $this->isOrg(),
@@ -222,7 +256,8 @@ class PaymentPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      */
-    protected function createComponentEditForm(): PaymentFormComponent {
+    protected function createComponentEditForm(): PaymentFormComponent
+    {
         return new PaymentFormComponent(
             $this->getContext(),
             $this->isOrg(),
