@@ -29,7 +29,6 @@ trait ContestPresenterTrait
     private ?ModelContest $contest;
 
     /**
-     * @return void
      * @throws BadRequestException
      */
     protected function contestTraitStartup(): void
@@ -44,7 +43,6 @@ trait ContestPresenterTrait
     }
 
     /**
-     * @return ModelContest
      * @throws BadRequestException
      */
     private function selectContest(): ModelContest

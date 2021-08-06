@@ -30,7 +30,6 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -65,7 +64,6 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     final public function renderList(): void
@@ -82,7 +80,6 @@ class SeatingPresenter extends BasePresenter
     }
 
     /**
-     * @return DefaultProviderComponent
      * @throws EventNotFoundException
      */
     protected function createComponentSeatingList(): DefaultProviderComponent

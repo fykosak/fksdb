@@ -32,7 +32,6 @@ class ErrorPresenter extends BasePresenter
 
     /**
      * @param \Exception
-     * @return void
      */
     final public function renderDefault($exception): void
     {

@@ -178,7 +178,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function renderContestant(): void
@@ -230,7 +229,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl
@@ -252,7 +250,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return array
      * @throws \ReflectionException
      */
     private function getFieldsDefinition(): array
@@ -265,7 +262,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
@@ -349,7 +345,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws BadRequestException

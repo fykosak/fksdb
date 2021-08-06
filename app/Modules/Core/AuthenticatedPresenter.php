@@ -76,7 +76,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws \Exception
      */
@@ -124,8 +123,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
      * This method may be override, however only simple conditions
      * can be checked there -- user session is not prepared at the
      * moment of the call.
-     *
-     * @return bool
      */
     public function requiresLogin(): bool
     {

@@ -51,7 +51,6 @@ class EnvelopePresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl

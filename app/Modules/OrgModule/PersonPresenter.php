@@ -53,7 +53,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleDetail(): PageTitle
@@ -62,7 +61,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleEdit(): PageTitle
@@ -92,7 +90,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -107,7 +104,6 @@ class PersonPresenter extends BasePresenter
     /* ********************* ACTIONS **************/
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -130,7 +126,6 @@ class PersonPresenter extends BasePresenter
 
     /* ******************* COMPONENTS *******************/
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl
@@ -159,7 +154,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentCreateForm(): PersonFormComponent
@@ -168,7 +162,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): PersonFormComponent
@@ -182,7 +175,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return BaseGrid
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid
@@ -191,7 +183,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @return StalkingContainer
      * @throws ModelNotFoundException
      */
     public function createComponentStalkingContainer(): StalkingContainer
@@ -201,7 +192,6 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @param bool $throw
-     * @return int
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(bool $throw = true): int
@@ -238,7 +228,6 @@ class PersonPresenter extends BasePresenter
      * @param Resource|string $resource
      * @param string|null $privilege
      * all auth method is overwritten
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

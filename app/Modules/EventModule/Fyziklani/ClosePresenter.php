@@ -32,13 +32,12 @@ class ClosePresenter extends BasePresenter
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
-    public function getTitleList(): PageTitle
+    public function titleList(): PageTitle
     {
         return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
-     * @return PageTitle
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -53,20 +52,18 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws CannotAccessModelException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleHard(): void
+    public function titleHard(): PageTitle
     {
-        $this->titleTeam();
+        return $this->titleTeam();
     }
 
     /* ******* authorized methods ***********/
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedTeam(): void
@@ -85,7 +82,6 @@ class ClosePresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -94,7 +90,6 @@ class ClosePresenter extends BasePresenter
     }
     /* *********** ACTIONS **************** */
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -112,7 +107,6 @@ class ClosePresenter extends BasePresenter
 
     /* ********* COMPONENTS ************* */
     /**
-     * @return CloseTeamComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -124,7 +118,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return TeamSubmitsGrid
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -146,7 +139,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return BaseGrid
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): BaseGrid
@@ -155,7 +147,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): Control
@@ -164,7 +155,6 @@ class ClosePresenter extends BasePresenter
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentEditForm(): Control

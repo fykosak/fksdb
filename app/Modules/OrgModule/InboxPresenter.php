@@ -87,7 +87,6 @@ class InboxPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     public function actionHandout(): void

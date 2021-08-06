@@ -28,7 +28,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -41,7 +40,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -61,7 +59,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelOrg
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -76,7 +73,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -101,7 +97,6 @@ class OrgPresenter extends BasePresenter
     }
 
     /**
-     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -118,7 +113,6 @@ class OrgPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

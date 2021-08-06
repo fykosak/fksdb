@@ -11,7 +11,6 @@ use FKSDB\Models\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -35,7 +34,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedEdit(): void
@@ -44,7 +42,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDelete(): void
@@ -53,7 +50,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -90,7 +86,6 @@ trait EntityPresenterTrait
 
     /**
      * @param bool $throw
-     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
     public function getEntity(bool $throw = true): ?AbstractModel
@@ -105,7 +100,6 @@ trait EntityPresenterTrait
 
     /**
      * @param bool $throw
-     * @return AbstractModel|null
      * @throws ModelNotFoundException
      */
     private function loadModel(bool $throw = true): ?AbstractModel
@@ -122,7 +116,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @return void
      * @throws ModelException
      * @throws ModelNotFoundException
      */
@@ -164,7 +157,6 @@ trait EntityPresenterTrait
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 

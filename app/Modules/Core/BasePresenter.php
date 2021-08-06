@@ -85,7 +85,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @return void
      * @throws UnsupportedLanguageException
      */
     protected function startup(): void
@@ -132,7 +131,6 @@ abstract class BasePresenter extends Presenter implements
      * Method should set the title of the page using setTitle method.
      *
      * @param string
-     * @return string
      */
     protected static function formatTitleMethod(string $view): string
     {
@@ -145,7 +143,7 @@ abstract class BasePresenter extends Presenter implements
         $this->pageTitle = null;
         return $this;
     }
-    
+
     public function getTitle(): PageTitle
     {
         if (!isset($this->pageTitle)) {
@@ -253,7 +251,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @return string
      * @throws UnsupportedLanguageException
      */
     public function getLang(): string
@@ -307,7 +304,6 @@ abstract class BasePresenter extends Presenter implements
     /**
      * @param string $destination
      * @param array|null $args
-     * @return bool
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

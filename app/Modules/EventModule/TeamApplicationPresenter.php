@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
-use FKSDB\Components\PDFGenerators\DefaultProviderComponent;
-use FKSDB\Components\PDFGenerators\Provider\AbstractProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\DefaultProviderComponent;
+use FKSDB\Components\PDFGenerators\Providers\AbstractProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -34,7 +34,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -43,7 +42,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -63,7 +61,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return DefaultProviderComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -72,14 +69,13 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     {
         return new DefaultProviderComponent(
             new PageComponent($this->getContext()),
-            AbstractProviderComponent::FORMAT_A5,
+            AbstractProviderComponent::FORMAT_A5_PORTRAIT,
             [$this->getEntity()],
             $this->getContext()
         );
     }
 
     /**
-     * @return SchoolCheckComponent
      * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent
@@ -88,7 +84,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */

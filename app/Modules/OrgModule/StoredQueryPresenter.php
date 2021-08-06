@@ -33,7 +33,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleEdit(): PageTitle
@@ -52,7 +51,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleDetail(): PageTitle
@@ -76,7 +74,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -90,7 +87,6 @@ class StoredQueryPresenter extends BasePresenter
     }
 
     /**
-     * @return StoredQueryFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): StoredQueryFormComponent
@@ -118,7 +114,6 @@ class StoredQueryPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

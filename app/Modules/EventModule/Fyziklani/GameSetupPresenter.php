@@ -20,7 +20,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws NotSetGameParametersException
@@ -31,7 +30,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedDefault(): void
@@ -40,7 +38,6 @@ class GameSetupPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelFyziklaniGameSetup
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException

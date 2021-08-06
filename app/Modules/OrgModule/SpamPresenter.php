@@ -55,7 +55,6 @@ class SpamPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -86,7 +85,6 @@ class SpamPresenter extends BasePresenter
     /**
      * @param Resource|string $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

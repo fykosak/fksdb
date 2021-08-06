@@ -81,7 +81,6 @@ class PaymentPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -109,8 +108,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     *
-     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
@@ -152,8 +149,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @return bool
-     *
      * TODO!!!!
      * @throws EventNotFoundException
      */
@@ -163,7 +158,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @return PaymentMachine
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws MissingServiceException
@@ -198,7 +192,6 @@ class PaymentPresenter extends BasePresenter
     }
     /* ********* Components *****************/
     /**
-     * @return TransitionButtonsComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -215,7 +208,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @return EventPaymentGrid
      * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventPaymentGrid
@@ -224,7 +216,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
@@ -239,7 +230,6 @@ class PaymentPresenter extends BasePresenter
     }
 
     /**
-     * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

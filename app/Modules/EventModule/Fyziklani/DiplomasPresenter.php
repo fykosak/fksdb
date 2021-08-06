@@ -41,7 +41,6 @@ class DiplomasPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     final public function renderDefault(): void
@@ -82,16 +81,14 @@ class DiplomasPresenter extends BasePresenter
 
     /**
      * @param string|null $category
-     * @return bool
      * @throws EventNotFoundException
      */
-    public function isReadyAllToCalculate(string $category = null): bool
+    public function isReadyAllToCalculate(?string $category = null): bool
     {
         return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**
-     * @return FinalResultsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentResults(): FinalResultsComponent

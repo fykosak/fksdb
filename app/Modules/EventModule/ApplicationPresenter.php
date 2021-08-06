@@ -29,7 +29,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function isEnabled(): bool
@@ -48,7 +47,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -59,7 +57,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return ImportComponent
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -74,7 +71,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

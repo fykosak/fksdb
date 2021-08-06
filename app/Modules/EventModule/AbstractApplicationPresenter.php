@@ -60,7 +60,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     /**
      * @param Resource|string|null $resource
      * @param string|null $privilege
-     * @return bool
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -69,7 +68,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function renderDetail(): void
@@ -79,7 +77,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     final public function renderList(): void
@@ -93,7 +90,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ApplicationComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -111,7 +107,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return TransitionButtonsComponent
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -129,7 +124,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return MassTransitionsComponent
      * @throws EventNotFoundException
      */
     final protected function createComponentMassTransitions(): MassTransitionsComponent
@@ -140,7 +134,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentCreateForm(): Control
@@ -149,7 +142,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return Control
      * @throws NotImplementedException
      */
     protected function createComponentEditForm(): Control

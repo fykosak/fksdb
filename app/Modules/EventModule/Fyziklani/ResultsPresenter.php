@@ -42,7 +42,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedList(): void
@@ -51,7 +50,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedResultsTable(): void
@@ -60,7 +58,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedTaskStatistics(): void
@@ -69,7 +66,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedTeamStatistics(): void
@@ -78,7 +74,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedCorrelationStatistics(): void
@@ -87,7 +82,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      */
     public function authorizedPresentation(): void
@@ -96,7 +90,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentTable(): ResultsAndStatisticsComponent
@@ -105,7 +98,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentPresentation(): ResultsAndStatisticsComponent
@@ -118,7 +110,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentTeamStatistics(): ResultsAndStatisticsComponent
@@ -127,7 +118,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentTaskStatistics(): ResultsAndStatisticsComponent
@@ -136,7 +126,6 @@ class ResultsPresenter extends BasePresenter
     }
 
     /**
-     * @return ResultsAndStatisticsComponent
      * @throws EventNotFoundException
      */
     protected function createComponentCorrelationStatistics(): ResultsAndStatisticsComponent

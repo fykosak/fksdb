@@ -9,7 +9,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -80,18 +79,9 @@ class SubmitPresenter extends BasePresenter
         return new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
-    public function titleAjax(): void
+    public function titleAjax(): PageTitle
     {
-        $this->titleDefault();
-    }
-
-    /**
-     * @throws GoneException
-     * @deprecated
-     */
-    public function actionDownload(): void
-    {
-        throw new GoneException('');
+        return $this->titleDefault();
     }
 
     final public function renderDefault(): void
@@ -119,7 +109,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentUploadForm(): FormControl
@@ -225,7 +214,6 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @param Form $form
-     * @return void
      * @throws StorageException
      */
     private function handleUploadFormSuccess(Form $form): void

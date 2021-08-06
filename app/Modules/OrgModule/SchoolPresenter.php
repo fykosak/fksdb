@@ -40,7 +40,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleEdit(): PageTitle
@@ -49,7 +48,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @return PageTitle
      * @throws ModelNotFoundException
      */
     public function titleDetail(): PageTitle
@@ -58,7 +56,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @return void
      * @throws ModelNotFoundException
      */
     final public function renderDetail(): void
@@ -72,7 +69,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @return SchoolFormComponent
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): SchoolFormComponent
@@ -86,7 +82,6 @@ class SchoolPresenter extends BasePresenter
     }
 
     /**
-     * @return ContestantsFromSchoolGrid
      * @throws ModelNotFoundException
      */
     protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid
@@ -97,7 +92,6 @@ class SchoolPresenter extends BasePresenter
     /**
      * @param Resource|string $resource
      * @param string|null $privilege
-     * @return bool
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

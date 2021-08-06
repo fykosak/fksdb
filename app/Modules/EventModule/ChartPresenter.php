@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Charts\Event\Applications\ApplicationRationGeoChart;
 use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
 use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
@@ -40,7 +41,7 @@ class ChartPresenter extends BasePresenter
     }
 
     /**
-     * @return array
+     * @return Chart[]
      * @throws EventNotFoundException
      */
     protected function registerCharts(): array
