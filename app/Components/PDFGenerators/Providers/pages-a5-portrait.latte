@@ -1,19 +1,11 @@
-{layout './provider.latte'}
+{layout './pages.latte'}
 {block head}
     {include parent}
     <style>
-        @media screen {
-
-        }
-
         @media all {
             .page {
-                page-break-before: always;
-                page-break-after: always;
                 width: 148mm;
-                padding: 10mm;
-                margin: 0 auto;
-                background: white;
+
             }
 
             @page {
@@ -21,7 +13,6 @@
                 margin: 0;
             }
         }
-
     </style>
 {/block}
 
