@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\RelatedGrid;
@@ -13,9 +15,11 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class EventPaymentGrid extends RelatedGrid {
+class EventPaymentGrid extends RelatedGrid
+{
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container, $event, 'payment');
     }
 
@@ -28,7 +32,8 @@ class EventPaymentGrid extends RelatedGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addColumns([
             'payment.payment_uid',
@@ -43,7 +48,8 @@ class EventPaymentGrid extends RelatedGrid {
         $this->addCSVDownloadButton();
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelPayment::class;
     }
 }

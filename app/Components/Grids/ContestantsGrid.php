@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -16,17 +18,25 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class ContestantsGrid extends BaseGrid {
+class ContestantsGrid extends BaseGrid
+{
 
     private ModelContestYear $contestYear;
 
-    public function __construct(Container $container, ModelContestYear $contestYear) {
+    public function __construct(Container $container, ModelContestYear $contestYear)
+    {
         parent::__construct($container);
         $this->contestYear = $contestYear;
     }
 
-    protected function getData(): IDataSource {
-        return new NDataSource($this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where('year', $this->contestYear->year));
+    protected function getData(): IDataSource
+    {
+        return new NDataSource(
+            $this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where(
+                'year',
+                $this->contestYear->year
+            )
+        );
     }
 
     /**
@@ -38,7 +48,8 @@ class ContestantsGrid extends BaseGrid {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->setDefaultOrder('person.other_name ASC');
@@ -61,7 +72,8 @@ class ContestantsGrid extends BaseGrid {
         $this->paginate = false;
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelContestant::class;
     }
 }
