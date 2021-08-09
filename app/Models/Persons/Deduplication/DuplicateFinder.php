@@ -53,7 +53,7 @@ class DuplicateFinder {
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
                         ];
-                        continue; // we search only pairs, so each equivalence class is decomposed into pairs
+                        // we search only pairs, so each equivalence class is decomposed into pairs
                     }
                 }
             }

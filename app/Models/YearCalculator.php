@@ -70,7 +70,7 @@ class YearCalculator
             $row = $contest->getContestYears()->where('year', $forwardYear)->fetch();
 
             /* Apply the forward shift only when the appropriate year is defined in the database */
-            if ($this->container->getParameters()[$contest->getContestSymbol()]['forwardRegistration'] && (bool)$row) {
+            if ($this->container->getParameters()[$contest->getContestSymbol()]['forwardRegistration'] && $row) {
                 return self::FORWARD_SHIFT;
             } else {
                 return 0;

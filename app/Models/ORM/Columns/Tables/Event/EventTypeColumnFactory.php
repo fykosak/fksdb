@@ -28,7 +28,7 @@ class EventTypeColumnFactory extends ColumnFactory {
      */
     protected function createFormControl(...$args): BaseControl {
         [$contest] = $args;
-        if (\is_null($contest) || !$contest instanceof ModelContest) {
+        if (!$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
         }
 

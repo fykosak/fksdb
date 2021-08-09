@@ -70,7 +70,7 @@ class StoredQueryParameter
             case \PDO::PARAM_STR:
                 return (string)$value;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+                throw new InvalidStateException("Unsupported parameter type '$type'.");
         }
     }
 }

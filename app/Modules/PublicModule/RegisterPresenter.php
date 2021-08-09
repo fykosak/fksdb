@@ -154,7 +154,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if ($this->getSelectedContest() && $person) {
             $contestants = $person->getActiveContestants();
             $contest = $this->getSelectedContest();
-            $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
+            $contestant = $contestants[$contest->contest_id] ?? null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
                 $this->flashMessage(

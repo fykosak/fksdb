@@ -12,6 +12,7 @@ use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Http\IResponse;
 use Nette\Http\Response;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
@@ -209,7 +210,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Authentication failure.'), Response::S403_FORBIDDEN, $exception);
+            throw new ForbiddenRequestException(_('Authentication failure.'), IResponse::S403_FORBIDDEN, $exception);
         }
     }
 

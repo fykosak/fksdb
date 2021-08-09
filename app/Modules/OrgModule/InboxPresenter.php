@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Submits\SeriesTable;
 use FKSDB\Models\UI\PageTitle;
+use Nette\Security\Authorizator;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -33,7 +34,7 @@ class InboxPresenter extends BasePresenter
     public function authorizedInbox(): void
     {
         $this->setAuthorized(
-            $this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest())
+            $this->contestAuthorizator->isAllowed('submit', Authorizator::ALL, $this->getSelectedContest())
         );
     }
 

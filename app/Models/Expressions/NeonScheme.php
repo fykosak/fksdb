@@ -9,7 +9,8 @@ use Nette\Utils\Arrays;
  * So far only helper methods to "checked" laoding of Neon configuration.
  * The scheme (metamodel) for the configuration is Neon-encoded as well.
  */
-class NeonScheme {
+class NeonScheme
+{
 
     public const TYPE_NEON = 'neon';
     public const TYPE_EXPRESSION = 'expression';
@@ -21,9 +22,10 @@ class NeonScheme {
      * @return array
      * @throws NeonSchemaException
      */
-    public static function readSection(array $section, array $sectionScheme): array {
+    public static function readSection(array $section, array $sectionScheme): array
+    {
         if (!is_array($section)) {
-            throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
+            throw new NeonSchemaException('Expected array got \'' . $section . '\'.');
         }
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
@@ -38,7 +40,7 @@ class NeonScheme {
                     continue;
                 }
             } else {
-                $result[$key] = isset($section[$key]) ? $section[$key] : $metadata['default'];
+                $result[$key] = $section[$key] ?? $metadata['default'];
             }
 
             $typeDef = $metadata['type'] ?? self::TYPE_NEON;

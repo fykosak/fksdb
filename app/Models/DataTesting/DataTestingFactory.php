@@ -5,22 +5,18 @@ namespace FKSDB\Models\DataTesting;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServiceContest;
 
 class DataTestingFactory {
     /** @var PersonTest[][] */
     private array $tests = [];
-    private ServiceContest $serviceContest;
     private ORMFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
-     * @param ServiceContest $serviceContest
      * @param ORMFactory $tableReflectionFactory
      * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, ORMFactory $tableReflectionFactory) {
-        $this->serviceContest = $serviceContest;
+    public function __construct(ORMFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }

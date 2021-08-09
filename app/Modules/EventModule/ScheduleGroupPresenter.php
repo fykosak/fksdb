@@ -45,7 +45,7 @@ class ScheduleGroupPresenter extends BasePresenter
 
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list');
+        return new PageTitle(_('Schedule items'), 'fas fa-clipboard-list');
     }
 
     /**

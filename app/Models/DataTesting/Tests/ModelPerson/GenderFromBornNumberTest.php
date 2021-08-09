@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
+use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\Models\ModelPerson;
 
-class GenderFromBornNumberTest extends PersonTest {
+class GenderFromBornNumberTest extends PersonTest
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void
+    {
         $info = $person->getInfo();
 
         if (!$info) {
@@ -22,7 +28,7 @@ class GenderFromBornNumberTest extends PersonTest {
         }
 
         if (!$person->gender) {
-            $logger->log(new TestLog($this->title, _('Gender is not set'), TestLog::LVL_WARNING));
+            $logger->log(new TestLog($this->title, _('Gender is not set'), Message::LVL_WARNING));
             return;
         }
         if (!$info->born_id) {
@@ -31,9 +37,9 @@ class GenderFromBornNumberTest extends PersonTest {
         }
 
         if (BornNumber::getGender($info->born_id) != $person->gender) {
-            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->title, 'Gender not match born number', Message::LVL_DANGER));
         } else {
-            $logger->log(new TestLog($this->title, 'Gender match born number', TestLog::LVL_SUCCESS));
+            $logger->log(new TestLog($this->title, 'Gender match born number', Message::LVL_SUCCESS));
         }
     }
 }

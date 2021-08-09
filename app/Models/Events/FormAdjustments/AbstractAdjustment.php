@@ -5,6 +5,7 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Form;
 use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
@@ -60,7 +61,7 @@ abstract class AbstractAdjustment implements FormAdjustment {
         foreach ($form->getComponents(true, FormControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
-            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
+            $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->pathCache[$path] = $control;
         }
     }

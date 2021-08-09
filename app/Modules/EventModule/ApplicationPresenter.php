@@ -88,11 +88,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      */
     protected function createComponentImport(): ImportComponent
     {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
-        $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
-
-        return new ImportComponent($machine, $source, $handler, $this->getContext());
+        return new ImportComponent(
+            new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $this->getContext()
+        );
     }
 
     protected function getORMService(): ServiceEventParticipant

@@ -34,7 +34,7 @@ class Updater
     {
         $user = $this->container->getParameters()['updater']['installUser'];
         $script = $this->container->getParameters()['updater']['installScript'];
-        $cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";
+        $cmd = "sudo -u $user $script $path $branch >/dev/null 2>/dev/null &";
         Debugger::log("Running: $cmd");
         shell_exec($cmd);
     }

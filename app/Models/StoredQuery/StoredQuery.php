@@ -195,11 +195,7 @@ class StoredQuery implements IDataSource, Resource
         // bind explicit parameters
         foreach ($this->getQueryParameters() as $parameter) {
             $key = $parameter->getName();
-            if (isset($this->parameterValues[$key])) {
-                $value = $this->parameterValues[$key];
-            } else {
-                $value = $parameter->getDefaultValue();
-            }
+            $value = $this->parameterValues[$key] ?? $parameter->getDefaultValue();
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
@@ -267,7 +263,7 @@ class StoredQuery implements IDataSource, Resource
             }
 
             if ($this->limit !== null && $this->offset !== null) {
-                $sql .= " LIMIT {$this->offset}, {$this->limit}";
+                $sql .= " LIMIT $this->offset, $this->limit";
             }
 
             $statement = $this->bindParams($sql);

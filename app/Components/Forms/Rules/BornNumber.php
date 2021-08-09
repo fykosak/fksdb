@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 
@@ -15,7 +15,7 @@ class BornNumber {
     public function __invoke(BaseControl $control): bool {
         $rc = $control->getValue();
         // suppose once validated is always valid
-        if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
+        if ($rc == WriteOnly::VALUE_ORIGINAL) {
             return true;
         }
         // "be liberal in what you receive"

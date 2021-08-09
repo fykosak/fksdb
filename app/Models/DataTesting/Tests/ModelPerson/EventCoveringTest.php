@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
@@ -11,13 +14,16 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
-class EventCoveringTest extends PersonTest {
+class EventCoveringTest extends PersonTest
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void
+    {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
@@ -48,7 +54,8 @@ class EventCoveringTest extends PersonTest {
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
-    private function check(Logger $logger, array $data, array $organisers, string $type, ModelPerson $person): void {
+    private function check(Logger $logger, array $data, array $organisers, string $type, ModelPerson $person): void
+    {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $organisers[$contestId])) {
@@ -69,11 +76,23 @@ class EventCoveringTest extends PersonTest {
         }
     }
 
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
-        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s.'), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog
+    {
+        return new TestLog(
+            $this->title,
+            \sprintf(
+                _('Organization and participation at same year %d and contestId %d %s<->%s.'),
+                $year,
+                $contestId,
+                $typeP,
+                $typeO
+            ),
+            Message::LVL_DANGER
+        );
     }
 
-    private function getEventOrgYears(ModelPerson $person): array {
+    private function getEventOrgYears(ModelPerson $person): array
+    {
         $eventOrgYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],

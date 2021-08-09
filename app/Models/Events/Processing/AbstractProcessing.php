@@ -7,6 +7,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control as FormControl;
@@ -127,7 +128,7 @@ abstract class AbstractProcessing implements Processing {
             }
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
-            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
+            $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->formPathCache[$path] = $control;
         }
     }

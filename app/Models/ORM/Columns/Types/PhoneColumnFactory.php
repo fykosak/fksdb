@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -70,12 +71,12 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
                 new TestLog(
                     $this->getTitle(),
                     \sprintf('%s number (%s) is not valid', $this->getTitle(), $value),
-                    TestLog::LVL_DANGER
+                    Message::LVL_DANGER
                 )
             );
         } else {
             $logger->log(
-                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS)
+                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS)
             );
         }
     }

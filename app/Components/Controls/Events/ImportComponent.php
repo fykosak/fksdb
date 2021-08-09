@@ -23,21 +23,15 @@ use Tracy\Debugger;
 
 class ImportComponent extends BaseComponent
 {
-
-    private Machine $machine;
-
     private SingleEventSource $source;
-
     private ApplicationHandler $handler;
 
     public function __construct(
-        Machine $machine,
         SingleEventSource $source,
         ApplicationHandler $handler,
         Container $container
     ) {
         parent::__construct($container);
-        $this->machine = $machine;
         $this->source = $source;
         $this->handler = $handler;
     }

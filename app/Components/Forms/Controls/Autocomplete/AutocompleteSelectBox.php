@@ -89,7 +89,7 @@ class AutocompleteSelectBox extends TextBase {
     public function getControl(): Html {
         $control = parent::getControl();
         $control->addAttributes([
-            'data-ac' => (int)true,
+            'data-ac' => 1,
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,

@@ -34,12 +34,12 @@ class EventOrgPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
+        return new PageTitle(_('Organisers of event'), 'fa fa-user-tie');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
+        return new PageTitle(_('Create organiser of event'), 'fa fa-user-plus');
     }
 
     /**

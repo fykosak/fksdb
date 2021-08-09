@@ -46,7 +46,7 @@ class Downloader
 
     private function download(string $path): string
     {
-        $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
+        $src = "https://$this->httpUser:$this->httpPassword@$this->host$path";
         $dst = tempnam($this->tmpDir, 'task');
 
         if (!copy($src, $dst)) {

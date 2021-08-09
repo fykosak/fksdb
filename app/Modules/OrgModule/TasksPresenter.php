@@ -127,7 +127,7 @@ class TasksPresenter extends BasePresenter
             $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), self::FLASH_ERROR);
             Debugger::log($exception);
         } catch (ModelException $exception) {
-            $this->flashMessage(sprintf(_('Error during import.')), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during import.'), self::FLASH_ERROR);
             Debugger::log($exception);
         } catch (DeprecatedException $exception) {
             $this->flashMessage(_('Legacy XML format is deprecated'), self::FLASH_ERROR);

@@ -2,19 +2,20 @@
 
 namespace FKSDB\Models\Events\Model;
 
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-class ImportHandler {
+class ImportHandler
+{
 
     use SmartObject;
 
@@ -29,7 +30,8 @@ class ImportHandler {
 
     private CSVParser $parser;
 
-    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source)
+    {
         $this->container = $container;
         $this->parser = $parser;
         $this->source = $source;
@@ -45,7 +47,8 @@ class ImportHandler {
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool
+    {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
@@ -66,7 +69,7 @@ class ImportHandler {
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -80,7 +83,8 @@ class ImportHandler {
         return !$hasError;
     }
 
-    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
+    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array
+    {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
             return [$baseHolder->getName(), $parts[0]];
@@ -94,7 +98,8 @@ class ImportHandler {
      * @return array
      * @throws ImportHandlerException
      */
-    private function rowToValues(iterable $row): array {
+    private function rowToValues(iterable $row): array
+    {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $values = [];
         $fieldExists = false;
@@ -123,7 +128,8 @@ class ImportHandler {
      * @return Holder[]
      * @throws NeonSchemaException
      */
-    private function createHoldersMap(): array {
+    private function createHoldersMap(): array
+    {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 

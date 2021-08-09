@@ -107,7 +107,7 @@ abstract class BasePresenter extends Presenter implements
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider && $provider instanceof FilteredDataProvider) {
+            if ($provider instanceof FilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
             $response = new JsonResponse($data);

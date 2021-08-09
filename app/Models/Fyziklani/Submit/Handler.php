@@ -79,7 +79,7 @@ class Handler
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(\sprintf(_('Task given and validated.')));
+            throw new TaskCodeException(_('Task given and validated.'));
         }
     }
 

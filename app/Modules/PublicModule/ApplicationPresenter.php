@@ -181,9 +181,9 @@ class ApplicationPresenter extends BasePresenter
                 ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
             ) {
                 $this->setView('closed');
-                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), self::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), self::FLASH_INFO);
             }
         }
 

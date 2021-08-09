@@ -1,30 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ModelContestYear;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Models\Mail\SendFailedException;
+use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
-class ExtendedPersonHandler {
-
+class ExtendedPersonHandler
+{
     use SmartObject;
 
     public const CONT_AGGR = 'aggr';
@@ -57,11 +58,13 @@ class ExtendedPersonHandler {
         $this->invitationLang = $invitationLang;
     }
 
-    public function getInvitationLang(): string {
+    public function getInvitationLang(): string
+    {
         return $this->invitationLang;
     }
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return $this->person;
     }
 
@@ -69,7 +72,8 @@ class ExtendedPersonHandler {
      * @param Form $form
      * @return ModelPerson|null|AbstractModel|ActiveRow
      */
-    final protected function getReferencedPerson(Form $form): ?ActiveRow {
+    final protected function getReferencedPerson(Form $form): ?ActiveRow
+    {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
         return $input->getModel();
@@ -83,7 +87,8 @@ class ExtendedPersonHandler {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int {
+    final public function handleForm(Form $form, ExtendedPersonPresenter $presenter, bool $sendEmail): int
+    {
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -111,7 +116,13 @@ class ExtendedPersonHandler {
              */
             $this->connection->commit();
 
-            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(
+                sprintf(
+                    $create ? $presenter->messageCreate() : $presenter->messageEdit(),
+                    $this->person->getFullName()
+                ),
+                BasePresenter::FLASH_SUCCESS
+            );
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -121,10 +132,10 @@ class ExtendedPersonHandler {
         } catch (ModelException $exception) {
             $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), BasePresenter::FLASH_ERROR);
             } else {
                 Debugger::log($exception, Debugger::ERROR);
-                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageError(), BasePresenter::FLASH_ERROR);
             }
 
             return self::RESULT_ERROR;
@@ -137,7 +148,11 @@ class ExtendedPersonHandler {
         }
     }
 
-    protected function storeExtendedModel(ModelPerson $person, iterable $values, ExtendedPersonPresenter $presenter): void {
+    protected function storeExtendedModel(
+        ModelPerson $person,
+        iterable $values,
+        ExtendedPersonPresenter $presenter
+    ): void {
         if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
@@ -145,12 +160,11 @@ class ExtendedPersonHandler {
         $model = $presenter->getModel();
 
         if (!$model) {
-            $data = [
+            $model = $this->service->createNewModel([
                 'contest_id' => $this->contestYear->getContest(),
                 'person_id' => $person->getPrimary(),
                 'year' => $this->contestYear->year,
-            ];
-            $model = $this->service->createNewModel((array)$data);
+            ]);
         }
 
         // update data

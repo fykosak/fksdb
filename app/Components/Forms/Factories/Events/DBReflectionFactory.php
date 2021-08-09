@@ -5,9 +5,9 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
-use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\Transitions\Machine\Machine;
+use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -16,19 +16,22 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-class DBReflectionFactory extends AbstractFactory {
+class DBReflectionFactory extends AbstractFactory
+{
 
     private Connection $connection;
     /** @var array tableName => columnName[] */
     private array $columns = [];
     private ORMFactory $tableReflectionFactory;
 
-    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, ORMFactory $tableReflectionFactory)
+    {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function createComponent(Field $field): BaseControl {
+    public function createComponent(Field $field): BaseControl
+    {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -44,7 +47,7 @@ class DBReflectionFactory extends AbstractFactory {
             if ($tableName) {
                 $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
         }
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
@@ -82,7 +85,8 @@ class DBReflectionFactory extends AbstractFactory {
         return $element;
     }
 
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void
+    {
         if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
@@ -92,7 +96,8 @@ class DBReflectionFactory extends AbstractFactory {
         $control->setDefaultValue($default);
     }
 
-    private function resolveColumn(Field $field): ?array {
+    private function resolveColumn(Field $field): ?array
+    {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 
@@ -114,7 +119,8 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    private function getColumnMetadata(string $table, string $column): ?array {
+    private function getColumnMetadata(string $table, string $column): ?array
+    {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getDriver()->getColumns($table) as $columnMeta) {
@@ -122,10 +128,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
             $this->columns[$table] = $columns;
         }
-        if (isset($this->columns[$table][$column])) {
-            return $this->columns[$table][$column];
-        } else {
-            return null;
-        }
+        return $this->columns[$table][$column] ?? null;
     }
 }

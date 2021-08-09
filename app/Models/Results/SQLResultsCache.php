@@ -29,7 +29,7 @@ class SQLResultsCache
             'calc_points' => null,
         ];
         $conditions[] = 'contest_id = ' . $contestYear->contest_id;
-        $conditions[] = 'year = ' . (int)$contestYear->year;
+        $conditions[] = 'year = ' . $contestYear->year;
 
         $sql = '
             UPDATE submit s
@@ -65,7 +65,7 @@ class SQLResultsCache
         foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contestYear->getContest()->contest_id;
-            $conditions[] = 't.year = ' . (int)$contestYear->year;
+            $conditions[] = 't.year = ' . $contestYear->year;
             $conditions[] = 's.task_id = ' . $task->task_id;
             $sql = '
             UPDATE submit s

@@ -75,7 +75,7 @@ abstract class SecondaryModelStrategy {
                     $this->resolveMultipleSecondaries($baseHolder, $conflicts, $joinData);
                 }
             }
-            $baseHolder->data += (array)$joinData;
+            $baseHolder->data += $joinData;
         }
     }
 

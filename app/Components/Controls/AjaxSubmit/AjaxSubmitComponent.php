@@ -20,6 +20,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
+use Nette\Http\IResponse;
 use Nette\Http\Response;
 use Tracy\Debugger;
 
@@ -108,7 +109,7 @@ class AjaxSubmitComponent extends AjaxComponent
 
             if (!$fileContainer->isOk()) {
                 $this->getLogger()->log(new Message(_('File is not Ok'), Logger::ERROR));
-                $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
+                $this->sendAjaxResponse(IResponse::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);

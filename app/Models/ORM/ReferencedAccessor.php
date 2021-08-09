@@ -25,14 +25,13 @@ final class ReferencedAccessor
         $modelReflection = new \ReflectionClass($model);
         $candidates = 0;
         foreach ($modelReflection->getMethods() as $method) {
-            $name = (string)$method->getName();
             $return = (string)$method->getReturnType();
             if (substr($return, 0, 1) == '?') {
                 $return = substr($return, 1);
             }
             if ($return === $modelClassName) {
                 $candidates++;
-                $newModel = $model->{$name}();
+                $newModel = $model->{$method->getName()}();
             }
         }
         if ($candidates !== 1) {

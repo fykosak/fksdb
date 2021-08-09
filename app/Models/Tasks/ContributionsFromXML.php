@@ -25,11 +25,8 @@ class ContributionsFromXML extends Stage {
 
     private ServiceTaskContribution $taskContributionService;
 
-    private ServiceOrg $serviceOrg;
-
-    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
+    public function __construct(ServiceTaskContribution $taskContributionService) {
         $this->taskContributionService = $taskContributionService;
-        $this->serviceOrg = $serviceOrg;
     }
 
     /**

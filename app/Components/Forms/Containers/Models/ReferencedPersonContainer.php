@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -17,6 +19,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
 use Nette\Application\BadRequestException;
@@ -117,7 +120,9 @@ class ReferencedPersonContainer extends ReferencedContainer
                 $fullFieldName = "$sub.$fieldName";
                 if ($this->getReferencedId()->getHandler()->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
-                        throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
+                        throw new InvalidStateException(
+                            "Should define uniqueness validator for field $sub.$fieldName."
+                        );
                     }
 
                     $control->addCondition(function (): bool {
@@ -125,16 +130,24 @@ class ReferencedPersonContainer extends ReferencedContainer
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName): bool {
-                            $personId = $this->getReferencedId()->getValue(false);
+                        ->addRule(
+                            function (BaseControl $control) use ($fullFieldName): bool {
+                                $personId = $this->getReferencedId()->getValue(false);
 
-                            $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
-                            if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $this->getReferencedId()->setValue($foundPerson, ReferencedId::MODE_FORCE);
-                                return false;
-                            }
-                            return true;
-                        }, _('There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'));
+                                $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
+                                    $fullFieldName,
+                                    $control->getValue()
+                                );
+                                if ($foundPerson && $foundPerson->getPrimary() != $personId) {
+                                    $this->getReferencedId()->setValue($foundPerson, ReferencedId::MODE_FORCE);
+                                    return false;
+                                }
+                                return true;
+                            },
+                            _(
+                                'There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'
+                            )
+                        );
                 }
 
                 $subContainer->addComponent($control, $fieldName);
@@ -212,7 +225,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     } else {
                         $component->setDefaultValue($value);
                     }
-                    if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                    if ($realValue && $resolution == ReferencedHandler::RESOLUTION_EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
