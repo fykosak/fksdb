@@ -85,7 +85,7 @@ class StoredQueryFactory implements XMLNodeSerializer {
         $node->appendChild($parametersNode);
         foreach ($dataSource->getImplicitParameters() as $name => $value) {
             $parameterNode = $doc->createElement('parameter', $value);
-            $parameterNode->setAttribute('name', $name);
+            $parameterNode->setAttribute('name', (string)$name);
             $parametersNode->appendChild($parameterNode);
         }
 
@@ -94,7 +94,7 @@ class StoredQueryFactory implements XMLNodeSerializer {
         $node->appendChild($columnDefinitionsNode);
         foreach ($dataSource->getColumnNames() as $column) {
             $columnDefinitionNode = $doc->createElement('column-definition');
-            $columnDefinitionNode->setAttribute('name', $column);
+            $columnDefinitionNode->setAttribute('name', (string)$column);
             $columnDefinitionsNode->appendChild($columnDefinitionNode);
         }
 

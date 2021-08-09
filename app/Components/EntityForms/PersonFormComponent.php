@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\Messages\Message;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
@@ -24,7 +26,8 @@ use Nette\InvalidArgumentException;
 /**
  * @property ModelPerson|null $model
  */
-class PersonFormComponent extends AbstractEntityFormComponent {
+class PersonFormComponent extends AbstractEntityFormComponent
+{
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
@@ -41,7 +44,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
-    public function __construct(Container $container, int $userPermission, ?ModelPerson $person) {
+    public function __construct(Container $container, int $userPermission, ?ModelPerson $person)
+    {
         parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
         $this->logger = new MemoryLogger();
@@ -63,7 +67,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $this->serviceAddress = $serviceAddress;
     }
 
-    public static function mapAddressContainerNameToType(string $containerName): string {
+    public static function mapAddressContainerNameToType(string $containerName): string
+    {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
                 return ModelPostContact::TYPE_PERMANENT;
@@ -80,13 +85,18 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
                 case self::PERSON_CONTAINER:
-                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata($table, $rows, $this->userPermission);
+                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata(
+                        $table,
+                        $rows,
+                        $this->userPermission
+                    );
                     break;
                 case self::POST_CONTACT_DELIVERY:
                 case self::POST_CONTACT_PERMANENT:
@@ -99,7 +109,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
@@ -107,11 +118,19 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         $this->logger->clear();
         /** @var ModelPerson $person */
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
-        $this->servicePersonInfo->storeModel(array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]), $person->getInfo());
+        $this->servicePersonInfo->storeModel(
+            array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),
+            $person->getInfo()
+        );
         $this->storeAddresses($person, $data);
 
         $connection->commit();
-        $this->logger->log(new Message(isset($this->model) ? _('Data has been updated') : _('Person has been created'), Message::LVL_SUCCESS));
+        $this->logger->log(
+            new Message(
+                isset($this->model) ? _('Data has been updated') : _('Person has been created'),
+                Message::LVL_SUCCESS
+            )
+        );
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
         $this->getPresenter()->redirect('this');
     }
@@ -120,7 +139,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
@@ -131,7 +151,8 @@ class PersonFormComponent extends AbstractEntityFormComponent {
         }
     }
 
-    private function storeAddresses(ModelPerson $person, array $data): void {
+    private function storeAddresses(ModelPerson $person, array $data): void
+    {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);

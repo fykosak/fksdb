@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -12,24 +14,26 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-class ResultsCategoryGrid extends BaseGrid {
+class ResultsCategoryGrid extends BaseGrid
+{
 
     private ModelEvent $event;
 
     private string $category;
 
-    public function __construct(ModelEvent $event, string $category, Container $container) {
+    public function __construct(ModelEvent $event, string $category, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $teams = $this->event->getParticipatingTeams()
             ->where('category', $this->category)
             ->order('name');
         return new NDataSource($teams);
-
     }
 
     /**
@@ -38,7 +42,8 @@ class ResultsCategoryGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -50,7 +55,8 @@ class ResultsCategoryGrid extends BaseGrid {
         ]);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelFyziklaniTeam::class;
     }
 }

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
@@ -17,7 +19,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelScheduleItem|null $model
  */
-class ScheduleItemFormContainer extends AbstractEntityFormComponent {
+class ScheduleItemFormContainer extends AbstractEntityFormComponent
+{
 
     public const CONTAINER = 'container';
 
@@ -25,17 +28,22 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
     private ModelEvent $event;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleItem $model) {
+    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleItem $model)
+    {
         parent::__construct($container, $model);
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceScheduleItem $serviceScheduleItem, SingleReflectionFormFactory $singleReflectionFormFactory): void {
+    final public function injectPrimary(
+        ServiceScheduleItem $serviceScheduleItem,
+        SingleReflectionFormFactory $singleReflectionFormFactory
+    ): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
@@ -49,7 +57,8 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONTAINER => $this->model->toArray(),
@@ -63,7 +72,8 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $container = $this->singleReflectionFormFactory->createContainer('schedule_item', [
             'name_cs',
             'name_en',
