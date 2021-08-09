@@ -18,7 +18,7 @@ class XMLHelper
     {
         foreach ($data as $key => $datum) {
             $childNode = $doc->createElement($key);
-            $childNode->nodeValue = htmlspecialchars($datum);
+            $childNode->nodeValue = htmlspecialchars((string)$datum);
             $parentNode->appendChild($childNode);
         }
     }
@@ -33,7 +33,7 @@ class XMLHelper
             foreach ($datum as $attrValue => $value) {
                 $childNode = $doc->createElement($key);
                 $childNode->setAttribute($attrName, (string)$attrValue);
-                $childNode->nodeValue = htmlspecialchars($value);
+                $childNode->nodeValue = htmlspecialchars((string)$value);
                 $parentNode->appendChild($childNode);
             }
         }
