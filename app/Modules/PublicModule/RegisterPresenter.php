@@ -252,9 +252,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->emailFormSucceeded($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->emailFormSucceeded($form);
         return $control;
     }
 

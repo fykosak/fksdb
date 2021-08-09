@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Localization;
 
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
 
-class GettextTranslator implements Translator {
+class GettextTranslator implements Translator
+{
 
     /** @var array[lang] => locale */
     private array $locales;
@@ -14,12 +17,14 @@ class GettextTranslator implements Translator {
 
     private ?string $lang = null;
 
-    public function __construct(array $locales, string $localeDir) {
+    public function __construct(array $locales, string $localeDir)
+    {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
 
-    public function getLang(): ?string {
+    public function getLang(): ?string
+    {
         return $this->lang;
     }
 
@@ -27,7 +32,8 @@ class GettextTranslator implements Translator {
      *
      * @param string $lang ISO 639-1
      */
-    public function setLang(string $lang): void {
+    public function setLang(string $lang): void
+    {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
         }
@@ -44,7 +50,8 @@ class GettextTranslator implements Translator {
     /**
      * @return string[]
      */
-    public function getSupportedLanguages(): array {
+    public function getSupportedLanguages(): array
+    {
         return array_keys($this->locales);
     }
 
@@ -53,7 +60,8 @@ class GettextTranslator implements Translator {
      * @param ...$parameters
      * @return string
      */
-    public function translate($message, ...$parameters): string {
+    public function translate($message, ...$parameters): string
+    {
         [$count] = $parameters;
         if ($message === '' || $message === null) {
             return '';
@@ -71,7 +79,8 @@ class GettextTranslator implements Translator {
      * @param string $lang
      * @return mixed
      */
-    public static function i18nHelper(object $object, string $field, string $lang) {
+    public static function i18nHelper(object $object, string $field, string $lang)
+    {
         return $object->{$field . '_' . $lang};
     }
 

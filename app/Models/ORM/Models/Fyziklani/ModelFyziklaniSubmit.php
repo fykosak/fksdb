@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
@@ -22,30 +24,36 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  */
-class ModelFyziklaniSubmit extends AbstractModel implements Resource {
+class ModelFyziklaniSubmit extends AbstractModel implements Resource
+{
 
     public const STATE_NOT_CHECKED = 'not_checked';
     public const STATE_CHECKED = 'checked';
 
     public const RESOURCE_ID = 'fyziklani.submit';
 
-    public function getFyziklaniTask(): ModelFyziklaniTask {
+    public function getFyziklaniTask(): ModelFyziklaniTask
+    {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->getFyziklaniTeam()->getEvent();
     }
 
-    public function getFyziklaniTeam(): ModelFyziklaniTeam {
+    public function getFyziklaniTeam(): ModelFyziklaniTeam
+    {
         return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 
-    public function isChecked(): bool {
+    public function isChecked(): bool
+    {
         return $this->state === self::STATE_CHECKED;
     }
 
-    public function __toArray(): array {
+    public function __toArray(): array
+    {
         return [
             'points' => $this->points,
             'teamId' => $this->e_fyziklani_team_id,
@@ -60,7 +68,8 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource {
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */
-    public function canRevoke(bool $throws = true): bool {
+    public function canRevoke(bool $throws = true): bool
+    {
         if (is_null($this->points)) {
             if (!$throws) {
                 throw new AlreadyRevokedSubmitException();
@@ -75,7 +84,8 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource {
         return true;
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

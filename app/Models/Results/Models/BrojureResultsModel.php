@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -9,7 +11,8 @@ use Nette\InvalidStateException;
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
  */
-class BrojureResultsModel extends AbstractResultsModel {
+class BrojureResultsModel extends AbstractResultsModel
+{
 
     public const COL_SERIES_PREFIX = 's';
     /** @var int[] */
@@ -31,7 +34,8 @@ class BrojureResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category): array {
+    public function getDataColumns(ModelCategory $category): array
+    {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -80,24 +84,28 @@ class BrojureResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    public function getSeries(): array {
+    public function getSeries(): array
+    {
         return $this->series;
     }
 
     /**
      * @param int[] $series
      */
-    public function setSeries($series): void {
+    public function setSeries($series): void
+    {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
     }
 
-    public function getListedSeries(): int {
+    public function getListedSeries(): int
+    {
         return $this->listedSeries;
     }
 
-    public function setListedSeries(int $listedSeries): void {
+    public function setListedSeries(int $listedSeries): void
+    {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -106,11 +114,13 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return $this->evaluationStrategy->getCategories();
     }
 
-    protected function composeQuery(ModelCategory $category): string {
+    protected function composeQuery(ModelCategory $category): string
+    {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
@@ -140,7 +150,9 @@ class BrojureResultsModel extends AbstractResultsModel {
         $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
         $studentPilnySumLimitInversed = $studentPilnySumLimit != 0 ? 1.0 / $studentPilnySumLimit : 0;
 
-        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn(
+                $category
+            ) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
         $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
 
@@ -176,7 +188,8 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
      *
      * @return int sum of Student Pilny points
      */
-    private function getSumLimitForStudentPilny(): int {
+    private function getSumLimitForStudentPilny(): int
+    {
         return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
     }
 
@@ -186,7 +199,8 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
      * @param ModelCategory $category
      * @return int sum of points
      */
-    private function getSumLimit(ModelCategory $category): int {
+    private function getSumLimit(ModelCategory $category): int
+    {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks

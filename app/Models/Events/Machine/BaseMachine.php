@@ -84,16 +84,16 @@ class BaseMachine {
      * @return Transition[]
      */
     public function getAvailableTransitions(Holder $holder, string $sourceState, bool $visible = false, bool $executable = true): array {
-        return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($holder, $executable, $visible): bool {
-            return
-                (!$executable || $transition->canExecute($holder)) && (!$visible || $transition->isVisible($holder));
-        });
+        return array_filter(
+            $this->getMatchingTransitions($sourceState),
+            fn(Transition $transition): bool => (!$executable || $transition->canExecute($holder))
+                && (!$visible || $transition->isVisible($holder))
+        );
     }
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
-        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState): bool {
-            return $transition->getTargetState() == $targetState;
-        });
+        $candidates = array_filter($this->getMatchingTransitions($sourceState), fn(Transition $transition): bool => $transition->getTargetState() == $targetState
+        );
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
@@ -108,8 +108,7 @@ class BaseMachine {
      * @return Transition[]
      */
     private function getMatchingTransitions(string $sourceStateMask): array {
-        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask): bool {
-            return $transition->matches($sourceStateMask);
-        });
+        return array_filter($this->transitions, fn(Transition $transition): bool => $transition->matches($sourceStateMask)
+        );
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IIdentity;
 
@@ -17,9 +19,11 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModel implements IIdentity {
+class ModelLogin extends AbstractModel implements IIdentity
+{
 
-    public function getPerson(): ?ModelPerson {
+    public function getPerson(): ?ModelPerson
+    {
         if ($this->person) {
             return ModelPerson::createFromActiveRow($this->person);
         }
@@ -29,7 +33,8 @@ class ModelLogin extends AbstractModel implements IIdentity {
     /**
      * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
-    public function getActiveOrgs(): array {
+    public function getActiveOrgs(): array
+    {
         if ($this->getPerson()) {
             return $this->getPerson()->getActiveOrgs();
         } else {
@@ -43,16 +48,19 @@ class ModelLogin extends AbstractModel implements IIdentity {
         }
     }
 
-    public function isOrg(): bool {
+    public function isOrg(): bool
+    {
         return count($this->getActiveOrgs()) > 0;
     }
 
-    public function isContestant(): bool {
+    public function isContestant(): bool
+    {
         $person = $this->getPerson();
         return $person && count($person->getActiveContestants()) > 0;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         $person = $this->getPerson();
         if ($person) {
             return $person->__toString();
@@ -71,13 +79,15 @@ class ModelLogin extends AbstractModel implements IIdentity {
      * @param string $password
      * @return string
      */
-    public function createHash(string $password): string {
+    public function createHash(string $password): string
+    {
         return PasswordAuthenticator::calculateHash($password, $this);
     }
 
     // ----- IIdentity implementation ----------
 
-    public function getId(): int {
+    public function getId(): int
+    {
         return $this->login_id;
     }
 
@@ -87,7 +97,8 @@ class ModelLogin extends AbstractModel implements IIdentity {
     /**
      * @return Grant[]
      */
-    public function getRoles(): array {
+    public function getRoles(): array
+    {
         if (!isset($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);

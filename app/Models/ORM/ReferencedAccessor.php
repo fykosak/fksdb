@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
-use Tracy\Debugger;
 
 final class ReferencedAccessor
 {

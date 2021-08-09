@@ -48,9 +48,7 @@ class NeonScheme {
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {
-                    $result[$key] = array_map(function ($it) {
-                        return Helpers::statementFromExpression($it);
-                    }, $result[$key]);
+                    $result[$key] = array_map(fn($it) => Helpers::statementFromExpression($it), $result[$key]);
                 } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {

@@ -225,9 +225,7 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
+                        $names = array_merge($names, array_map(fn(BaseHolder $it): string => $it->getName(), $group['holders']));
                     }
                     break;
                 case self::ADDR_ALL:

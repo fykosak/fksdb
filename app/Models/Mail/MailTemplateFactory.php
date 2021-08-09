@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -11,7 +13,8 @@ use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\Translator;
 
-class MailTemplateFactory {
+class MailTemplateFactory
+{
 
     /** without trailing slash */
     private string $templateDir;
@@ -21,7 +24,12 @@ class MailTemplateFactory {
     private Translator $translator;
     private IRequest $request;
 
-    public function __construct(string $templateDir, Application $application, Translator $translator, IRequest $request) {
+    public function __construct(
+        string $templateDir,
+        Application $application,
+        Translator $translator,
+        IRequest $request
+    ) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
@@ -34,7 +42,8 @@ class MailTemplateFactory {
      * @deprecated
      * TODO remove this!
      */
-    final public function injectApplication($application): void {
+    final public function injectApplication($application): void
+    {
         $this->application = $application;
     }
 
@@ -45,7 +54,8 @@ class MailTemplateFactory {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function createLoginInvitation(?string $lang, array $data): Template {
+    public function createLoginInvitation(?string $lang, array $data): Template
+    {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
@@ -56,7 +66,8 @@ class MailTemplateFactory {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function createPasswordRecovery(string $lang, array $data): Template {
+    public function createPasswordRecovery(string $lang, array $data): Template
+    {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
@@ -68,7 +79,8 @@ class MailTemplateFactory {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): Template {
+    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): Template
+    {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
         foreach ($data as $key => $value) {
@@ -84,7 +96,8 @@ class MailTemplateFactory {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    final public function createFromFile(string $filename, ?string $lang): Template {
+    final public function createFromFile(string $filename, ?string $lang): Template
+    {
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);

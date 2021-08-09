@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
 use Fykosak\NetteORM\AbstractService;
 
-class ServiceStoredQueryTagType extends AbstractService {
+class ServiceStoredQueryTagType extends AbstractService
+{
 
 }

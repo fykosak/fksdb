@@ -1,28 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-class SeriesChooserComponent extends ChooserComponent {
+class SeriesChooserComponent extends ChooserComponent
+{
 
     private int $series;
     private array $allowedSeries;
 
-    public function __construct(Container $container, int $series, array $allowedSeries) {
+    public function __construct(Container $container, int $series, array $allowedSeries)
+    {
         parent::__construct($container);
         $this->series = $series;
         $this->allowedSeries = $allowedSeries;
     }
 
     /* ************ CHOOSER METHODS *************** */
-    protected function getTitle(): Title {
+    protected function getTitle(): Title
+    {
         return new Title(sprintf(_('Series %d'), $this->series));
     }
 
-    protected function getItems(): array {
+    protected function getItems(): array
+    {
         return $this->allowedSeries;
     }
 
@@ -30,7 +36,8 @@ class SeriesChooserComponent extends ChooserComponent {
      * @param int $item
      * @return bool
      */
-    public function isItemActive($item): bool {
+    public function isItemActive($item): bool
+    {
         return $item === $this->series;
     }
 
@@ -38,7 +45,8 @@ class SeriesChooserComponent extends ChooserComponent {
      * @param int $item
      * @return Title
      */
-    public function getItemTitle($item): Title {
+    public function getItemTitle($item): Title
+    {
         return new Title(sprintf(_('Series %d'), $item));
     }
 
@@ -47,7 +55,8 @@ class SeriesChooserComponent extends ChooserComponent {
      * @return string
      * @throws InvalidLinkException
      */
-    public function getItemLink($item): string {
+    public function getItemLink($item): string
+    {
         return $this->getPresenter()->link('this', ['series' => $item]);
     }
 }

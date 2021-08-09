@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -8,7 +10,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Security\User;
 
-class HandlerFactory {
+class HandlerFactory
+{
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
@@ -27,7 +30,14 @@ class HandlerFactory {
         $this->user = $user;
     }
 
-    public function create(ModelEvent $event): Handler {
-        return new Handler($event, $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit, $this->user);
+    public function create(ModelEvent $event): Handler
+    {
+        return new Handler(
+            $event,
+            $this->serviceFyziklaniTeam,
+            $this->serviceFyziklaniTask,
+            $this->serviceFyziklaniSubmit,
+            $this->user
+        );
     }
 }

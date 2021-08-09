@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\DbNames;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
@@ -15,27 +17,36 @@ use Nette\Security\Resource;
  * @property-read int contest_id
  * @property-read int year
  */
-class ModelContestant extends AbstractModel implements Resource {
+class ModelContestant extends AbstractModel implements Resource
+{
     public const RESOURCE_ID = 'contestant';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return ModelContest::createFromActiveRow($this->contest);
     }
 
-    public function getContestYear(): ModelContestYear {
-        $row = $this->getTable()->createSelectionInstance(DbNames::TAB_CONTEST_YEAR)->where('contest_id', $this->contest_id)->where('year', $this->year)->fetch();
+    public function getContestYear(): ModelContestYear
+    {
+        $row = $this->getTable()->createSelectionInstance(DbNames::TAB_CONTEST_YEAR)->where(
+            'contest_id',
+            $this->contest_id
+        )->where('year', $this->year)->fetch();
         return ModelContestYear::createFromActiveRow($row);
     }
 
-    public function getPersonHistory(): ModelPersonHistory {
+    public function getPersonHistory(): ModelPersonHistory
+    {
         return $this->getPerson()->getHistoryByContestYear($this->getContestYear());
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

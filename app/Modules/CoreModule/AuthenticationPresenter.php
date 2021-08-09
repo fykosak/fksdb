@@ -207,9 +207,8 @@ final class AuthenticationPresenter extends BasePresenter
             );
         $form->addSubmit('send', _('Log in'));
         $form->addProtection(_('The form has expired. Please send it again.'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->loginFormSubmitted($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->loginFormSubmitted($form);
+
         return $form;
     }
 
@@ -242,9 +241,8 @@ final class AuthenticationPresenter extends BasePresenter
 
         $form->addProtection(_('The form has expired. Please send it again.'));
 
-        $form->onSuccess[] = function (Form $form) {
-            $this->recoverFormSubmitted($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->recoverFormSubmitted($form);
+
         return $form;
     }
 

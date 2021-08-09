@@ -269,9 +269,7 @@ class BaseHolder {
      * @return Field[]
      */
     public function getDeterminingFields(): array {
-        return array_filter($this->fields, function (Field $field): bool {
-            return $field->isDetermining();
-        });
+        return array_filter($this->fields, fn(Field $field): bool => $field->isDetermining());
     }
 
     public function createFormContainer(): ContainerWithOptions {

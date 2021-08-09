@@ -50,9 +50,8 @@ abstract class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(ModelHolder $holder): array {
-        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder): bool {
-            return $this->isAvailable($transition, $holder);
-        });
+        return \array_filter($this->getTransitions(), fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
+        );
     }
 
     /**
@@ -61,9 +60,8 @@ abstract class Machine {
      * @throws UnavailableTransitionsException
      */
     public function getTransitionById(string $id): Transition {
-        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) use ($id): bool {
-            return $transition->getId() === $id;
-        });
+        $transitions = \array_filter($this->getTransitions(), fn(Transition $transition): bool => $transition->getId() === $id
+        );
         return $this->selectTransition($transitions);
     }
 

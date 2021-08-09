@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
@@ -14,12 +16,14 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int phone_nsn
  * @property-read string phone_prefix
  */
-class ModelRegion extends AbstractModel {
+class ModelRegion extends AbstractModel
+{
 
     public const CZECH_REPUBLIC = 3;
     public const SLOVAKIA = 2;
 
-    public function matchPhone(string $number): bool {
+    public function matchPhone(string $number): bool
+    {
         if (\is_null($this->phone_nsn) || \is_null($this->phone_prefix)) {
             return false;
         }
@@ -31,7 +35,8 @@ class ModelRegion extends AbstractModel {
      * @return string
      * @throws InvalidPhoneNumberException
      */
-    public function formatPhoneNumber(string $number): string {
+    public function formatPhoneNumber(string $number): string
+    {
         $regExp = null;
         switch ($this->phone_nsn) {
             case 9:

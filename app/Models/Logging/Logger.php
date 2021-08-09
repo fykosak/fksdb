@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Logging;
 
 use FKSDB\Models\Messages\Message;
@@ -7,7 +9,8 @@ use FKSDB\Models\Messages\Message;
 /**
  * Implementations may define their own message levels.
  */
-interface Logger {
+interface Logger
+{
 
     public const ERROR = 'danger';
     public const WARNING = 'warning';

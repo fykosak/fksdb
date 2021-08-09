@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\WebService\XMLHelper;
-use Nette\SmartObject;
 
-class SignaturesWebModel extends WebModel {
-
-    use SmartObject;
-
+class SignaturesWebModel extends WebModel
+{
     private ServiceContest $serviceContest;
 
-    public function inject(ServiceContest $serviceContest): void {
+    public function inject(ServiceContest $serviceContest): void
+    {
         $this->serviceContest = $serviceContest;
     }
 
@@ -23,7 +23,8 @@ class SignaturesWebModel extends WebModel {
      * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
@@ -32,8 +33,7 @@ class SignaturesWebModel extends WebModel {
         $doc = new \DOMDocument();
 
         $rootNode = $doc->createElement('signatures');
-        $orgs = $contest->related(DbNames::TAB_ORG);
-        foreach ($orgs as $row) {
+        foreach ($contest->related(DbNames::TAB_ORG) as $row) {
             $org = ModelOrg::createFromActiveRow($row);
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([

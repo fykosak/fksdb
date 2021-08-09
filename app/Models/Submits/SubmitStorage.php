@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -8,7 +10,8 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
  * Storage for signle file for each submit. Storage must keep original file
  * which can be modified by processings for later use.
  */
-interface SubmitStorage {
+interface SubmitStorage
+{
 
     public const TYPE_ORIGINAL = 0;
     public const TYPE_PROCESSED = 1;

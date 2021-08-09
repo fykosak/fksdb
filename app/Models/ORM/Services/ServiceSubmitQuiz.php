@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelQuiz;
 use FKSDB\Models\ORM\Models\ModelSubmitQuiz;
-use Nette\Utils\DateTime;
 use Fykosak\NetteORM\AbstractService;
+use Nette\Utils\DateTime;
 
-class ServiceSubmitQuiz extends AbstractService {
+class ServiceSubmitQuiz extends AbstractService
+{
 
-    public function findByContestant(ModelQuiz $question, ModelContestant $contestant): ?ModelSubmitQuiz {
+    public function findByContestant(ModelQuiz $question, ModelContestant $contestant): ?ModelSubmitQuiz
+    {
         /** @var ModelSubmitQuiz $result */
         $result = $contestant->related(DbNames::TAB_SUBMIT_QUIZ)
             ->where('question_id', $question->question_id)
@@ -19,7 +23,8 @@ class ServiceSubmitQuiz extends AbstractService {
         return $result ? ModelSubmitQuiz::createFromActiveRow($result) : null;
     }
 
-    public function saveSubmittedQuestion(ModelQuiz $question, ModelContestant $contestant, ?string $answer): void {
+    public function saveSubmittedQuestion(ModelQuiz $question, ModelContestant $contestant, ?string $answer): void
+    {
         $submit = $this->findByContestant($question, $contestant);
         if ($submit) {
             $this->updateModel($submit, [

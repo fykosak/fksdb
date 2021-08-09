@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
@@ -9,7 +11,8 @@ use Nette\DI\Container;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
-class WebServiceModel {
+class WebServiceModel
+{
 
     private ModelLogin $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
@@ -25,7 +28,8 @@ class WebServiceModel {
         'GetStats' => Models\StatsWebModel::class,
     ];
 
-    public function __construct(Container $container, PasswordAuthenticator $authenticator) {
+    public function __construct(Container $container, PasswordAuthenticator $authenticator)
+    {
         $this->authenticator = $authenticator;
         $this->container = $container;
     }
@@ -37,7 +41,8 @@ class WebServiceModel {
      * @throws \SoapFault
      * @throws \Exception
      */
-    public function authenticationCredentials(\stdClass $args): void {
+    public function authenticationCredentials(\stdClass $args): void
+    {
         if (!isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new \SoapFault('Sender', 'Missing credentials.');
@@ -58,8 +63,9 @@ class WebServiceModel {
      * @throws \SoapFault
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments): \SoapVar {
-        $this->checkAuthentication(__FUNCTION__);
+    public function __call(string $name, array $arguments): \SoapVar
+    {
+        $this->checkAuthentication();
         if (isset(self::WEB_MODELS[$name])) {
             $reflection = new \ReflectionClass(self::WEB_MODELS[$name]);
             if (!$reflection->isSubclassOf(WebModel::class)) {
@@ -74,20 +80,21 @@ class WebServiceModel {
     }
 
     /**
-     * @param string $serviceName
      * @throws \SoapFault
      */
-    private function checkAuthentication(string $serviceName): void {
+    private function checkAuthentication(): void
+    {
         if (!isset($this->authenticatedLogin)) {
-            $msg = sprintf('Unauthenticated access to %s.', $serviceName);
+            $msg = sprintf('Unauthenticated access to %s.', __FUNCTION__);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
-            $this->log(sprintf('Called %s ', $serviceName));
+            $this->log(sprintf('Called %s ', __FUNCTION__));
         }
     }
 
-    private function log(string $msg): void {
+    private function log(string $msg): void
+    {
         if (!isset($this->authenticatedLogin)) {
             $message = 'unauthenticated@';
         } else {

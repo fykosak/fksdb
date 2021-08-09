@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
 
-class DbNames {
+class DbNames
+{
 
     public const TAB_ADDRESS = 'address';
     public const TAB_AUTH_TOKEN = 'auth_token';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -11,15 +13,18 @@ use Nette\InvalidArgumentException;
 /**
  * Fill calculated points into database.
  */
-class SQLResultsCache {
+class SQLResultsCache
+{
 
     private ServiceTask $serviceTask;
 
-    public function __construct(ServiceTask $serviceTask) {
+    public function __construct(ServiceTask $serviceTask)
+    {
         $this->serviceTask = $serviceTask;
     }
 
-    public function invalidate(ModelContestYear $contestYear): void {
+    public function invalidate(ModelContestYear $contestYear): void
+    {
         $data = [
             'calc_points' => null,
         ];
@@ -40,10 +45,13 @@ class SQLResultsCache {
      * @throws BadRequestException
      * @throws \PDOException
      */
-    public function recalculate(ModelContestYear $contestYear): void {
+    public function recalculate(ModelContestYear $contestYear): void
+    {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
-            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year);
+            throw new InvalidArgumentException(
+                'Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+            );
         }
 // TODO related
         $tasks = $this->serviceTask->getTable()
@@ -80,7 +88,8 @@ class SQLResultsCache {
      * @param ModelContestYear $contestYear
      * @param int $series
      */
-    public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void {
+    public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void
+    {
         $params = [];
         $params[] = 'contest_id=' . $contestYear->contest_id;
         $params[] = 'year=' . $contestYear->year;

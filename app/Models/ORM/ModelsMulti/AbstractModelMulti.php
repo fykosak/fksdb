@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\ModelsMulti;
 
 use Fykosak\NetteORM\AbstractModel;
@@ -10,7 +12,8 @@ use Nette\SmartObject;
 /**
  * @deprecated
  */
-abstract class AbstractModelMulti extends ActiveRow {
+abstract class AbstractModelMulti extends ActiveRow
+{
 
     use SmartObject;
 
@@ -23,13 +26,15 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param AbstractModel $mainModel
      * @param AbstractModel $joinedModel
      */
-    public function __construct(AbstractModel $mainModel, AbstractModel $joinedModel) {
+    public function __construct(AbstractModel $mainModel, AbstractModel $joinedModel)
+    {
         parent::__construct($joinedModel->toArray(), $joinedModel->getTable());
         $this->joinedModel = $joinedModel;
         $this->mainModel = $mainModel;
     }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return $this->mainModel->toArray() + $this->joinedModel->toArray();
     }
 
@@ -37,7 +42,8 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param string|int $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get(string $key) {
+    public function &__get(string $key)
+    {
         if ($this->mainModel->__isset($key)) {
             return $this->mainModel->__get($key);
         }
@@ -53,7 +59,8 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param string|int $name
      * @return bool
      */
-    public function __isset($name): bool {
+    public function __isset($name): bool
+    {
         return $this->mainModel->__isset($name) || $this->joinedModel->__isset($name);
     }
 
@@ -61,14 +68,16 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param string $column
      * @param mixed $value
      */
-    public function __set($column, $value): void {
+    public function __set($column, $value): void
+    {
         throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param string|int $key
      */
-    public function __unset($key): void {
+    public function __unset($key): void
+    {
         throw new \LogicException('Cannot update multiModel directly.');
     }
 
@@ -76,7 +85,8 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param bool $throw
      * @return mixed
      */
-    public function getPrimary($throw = true) {
+    public function getPrimary($throw = true)
+    {
         return $this->joinedModel->getPrimary($throw);
     }
 
@@ -84,7 +94,8 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param mixed $column
      * @return bool
      */
-    public function offsetExists($column): bool {
+    public function offsetExists($column): bool
+    {
         return $this->__isset($column);
     }
 
@@ -92,7 +103,8 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param mixed $column
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &offsetGet($column) {
+    public function &offsetGet($column)
+    {
         return $this->__get($column);
     }
 
@@ -100,14 +112,16 @@ abstract class AbstractModelMulti extends ActiveRow {
      * @param mixed $column
      * @param mixed $value
      */
-    public function offsetSet($column, $value): void {
+    public function offsetSet($column, $value): void
+    {
         throw new \LogicException('Cannot update multiModel directly.');
     }
 
     /**
      * @param mixed $column
      */
-    public function offsetUnset($column): void {
+    public function offsetUnset($column): void
+    {
         throw new \LogicException('Cannot update multiModel directly.');
     }
 }

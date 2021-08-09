@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
 
 /**
  * @property-read \DateTimeInterface until
@@ -18,19 +20,23 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string note
  * @property-read int teacher_id
  */
-class ModelTeacher extends AbstractModel implements Resource {
+class ModelTeacher extends AbstractModel implements Resource
+{
 
     public const RESOURCE_ID = 'teacher';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getSchool(): ModelSchool {
+    public function getSchool(): ModelSchool
+    {
         return ModelSchool::createFromActiveRow($this->school);
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

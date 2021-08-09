@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ValuePrinters;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -9,43 +11,46 @@ use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
-class EventRolePrinter {
-
+class EventRolePrinter
+{
     use SmartObject;
 
-    public function __invoke(ModelPerson $person, ModelEvent $event): Html {
-        if (!$person) {
-            Html::el('span')
-                ->addAttributes(['class' => 'badge badge-danger'])
-                ->addText(_('No user found'));
-        }
+    public function __invoke(ModelPerson $person, ModelEvent $event): Html
+    {
         $container = Html::el('span');
         $roles = $person->getRolesForEvent($event);
         if (!\count($roles)) {
-            $container->addHtml(Html::el('span')
-                ->addAttributes(['class' => 'badge badge-danger'])
-                ->addText(_('No role')));
+            $container->addHtml(
+                Html::el('span')
+                    ->addAttributes(['class' => 'badge badge-danger'])
+                    ->addText(_('No role'))
+            );
             return $container;
         }
         return $this->getHtml($roles);
     }
 
-    private function getHtml(array $roles): Html {
+    private function getHtml(array $roles): Html
+    {
         $container = Html::el('span');
 
         foreach ($roles as $role) {
             switch ($role['type']) {
                 case 'teacher':
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-9'])
-                        ->addText(_('Teacher') . ' - ' . $role['team']->name));
+                    $container->addHtml(
+                        Html::el('span')
+                            ->addAttributes(['class' => 'badge badge-9'])
+                            ->addText(_('Teacher') . ' - ' . $role['team']->name)
+                    );
                     break;
-                case'org':
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-7'])
-                        ->addText(_('Event org') . ($role['org']->note ? (' - ' . $role['org']->note) : '')));
+                case 'org':
+                    $container->addHtml(
+                        Html::el('span')
+                            ->addAttributes(['class' => 'badge badge-7'])
+                            ->addText(_('Event org') . ($role['org']->note ? (' - ' . $role['org']->note) : ''))
+                    );
                     break;
-                case'participant':
+                case 'participant':
                     $team = null;
                     /** @var ModelEventParticipant $participant */
                     $participant = $role['participant'];
@@ -53,16 +58,21 @@ class EventRolePrinter {
                         $team = $participant->getFyziklaniTeam();
                     } catch (BadRequestException $exception) {
                     }
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-10'])
-                        ->addText(_('Participant') . ' - ' . _($participant->status) .
-                            ($team ? (' - team: ' . $team->name) : '')
-                        ));
+                    $container->addHtml(
+                        Html::el('span')
+                            ->addAttributes(['class' => 'badge badge-10'])
+                            ->addText(
+                                _('Participant') . ' - ' . _($participant->status) .
+                                ($team ? (' - team: ' . $team->name) : '')
+                            )
+                    );
                     break;
                 case 'contest_org':
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-6'])
-                        ->addText(_('Contest org')));
+                    $container->addHtml(
+                        Html::el('span')
+                            ->addAttributes(['class' => 'badge badge-6'])
+                            ->addText(_('Contest org'))
+                    );
             }
         }
         return $container;

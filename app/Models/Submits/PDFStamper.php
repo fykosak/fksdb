@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
-class PDFStamper implements StorageProcessing {
+class PDFStamper implements StorageProcessing
+{
 
     private string $inputFile;
 
@@ -20,31 +23,38 @@ class PDFStamper implements StorageProcessing {
      */
     private const STAMP_MASK = 'S%dU%s, %s, %s';
 
-    public function __construct(int $fontSize) {
+    public function __construct(int $fontSize)
+    {
         $this->fontSize = $fontSize;
     }
 
-    public function getInputFile(): string {
+    public function getInputFile(): string
+    {
         return $this->inputFile;
     }
 
-    public function setInputFile(string $filename): void {
+    public function setInputFile(string $filename): void
+    {
         $this->inputFile = $filename;
     }
 
-    public function getOutputFile(): string {
+    public function getOutputFile(): string
+    {
         return $this->outputFile;
     }
 
-    public function setOutputFile(string $filename): void {
+    public function setOutputFile(string $filename): void
+    {
         $this->outputFile = $filename;
     }
 
-    public function getFontSize(): int {
+    public function getFontSize(): int
+    {
         return $this->fontSize;
     }
 
-    public function getStampMask(): string {
+    public function getStampMask(): string
+    {
         return self::STAMP_MASK;
     }
 
@@ -52,7 +62,8 @@ class PDFStamper implements StorageProcessing {
      * @param ModelSubmit $submit
      * @throws ProcessingException
      */
-    public function process(ModelSubmit $submit): void {
+    public function process(ModelSubmit $submit): void
+    {
         if (!$this->getInputFile()) {
             throw new InvalidStateException('Input file not set.');
         }
@@ -73,7 +84,8 @@ class PDFStamper implements StorageProcessing {
         }
     }
 
-    private function stampText(string $text): void {
+    private function stampText(string $text): void
+    {
         $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 

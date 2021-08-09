@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
 
-abstract class EvaluationStrategy {
+abstract class EvaluationStrategy
+{
 
     /**
      * Should return SQL expression with points for given task.

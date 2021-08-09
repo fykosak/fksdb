@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\DbNames;
@@ -14,14 +16,16 @@ use Nette\Security\Resource;
  * @property-read string sql
  * @property-read string name
  */
-class ModelStoredQuery extends AbstractModel implements Resource {
+class ModelStoredQuery extends AbstractModel implements Resource
+{
 
     public const RESOURCE_ID = 'storedQuery';
 
     /**
      * @return ModelStoredQueryParameter[]
      */
-    public function getParameters(): array {
+    public function getParameters(): array
+    {
         $result = [];
         foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
             $result[] = ModelStoredQueryParameter::createFromActiveRow($row);
@@ -29,14 +33,16 @@ class ModelStoredQuery extends AbstractModel implements Resource {
         return $result;
     }
 
-    public function getTags(): GroupedSelection {
+    public function getTags(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
 
     /**
      * @return ModelStoredQueryTagType[]
      */
-    public function getStoredQueryTagTypes(): array {
+    public function getStoredQueryTagTypes(): array
+    {
         $tags = $this->getTags();
         $result = [];
         foreach ($tags as $tag) {
@@ -45,7 +51,8 @@ class ModelStoredQuery extends AbstractModel implements Resource {
         return $result;
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 }

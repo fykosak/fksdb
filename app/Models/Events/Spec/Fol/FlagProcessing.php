@@ -10,15 +10,18 @@ use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class FlagProcessing extends WithSchoolProcessing {
+class FlagProcessing extends WithSchoolProcessing
+{
 
     private ServiceSchool $serviceSchool;
 
-    public function __construct(ServiceSchool $serviceSchool) {
+    public function __construct(ServiceSchool $serviceSchool)
+    {
         $this->serviceSchool = $serviceSchool;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -45,7 +48,10 @@ class FlagProcessing extends WithSchoolProcessing {
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+            if (
+                !($this->serviceSchool->isCzSkSchool($participantData['school_id'])
+                    && $this->isStudent($participantData['study_year']))
+            ) {
                 /** @var ModelPersonHasFlag $personHasFlag */
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
@@ -57,7 +63,8 @@ class FlagProcessing extends WithSchoolProcessing {
         }
     }
 
-    private function isStudent(?int $studyYear): bool {
+    private function isStudent(?int $studyYear): bool
+    {
         return !is_null($studyYear);
     }
 }

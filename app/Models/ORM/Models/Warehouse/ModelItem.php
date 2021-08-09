@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
@@ -26,22 +28,27 @@ use Nette\Security\Resource;
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka
  */
-class ModelItem extends AbstractModel implements Resource {
+class ModelItem extends AbstractModel implements Resource
+{
     public const RESOURCE_ID = 'warehouse.item';
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return ModelContest::createFromActiveRow($this->contest);
     }
 
-    public function getProducer(): ?ModelProducer {
+    public function getProducer(): ?ModelProducer
+    {
         return $this->getProduct()->getProducer();
     }
 
-    public function getProduct(): ModelProduct {
+    public function getProduct(): ModelProduct
+    {
         return ModelProduct::createFromActiveRow($this->product);
     }
 }

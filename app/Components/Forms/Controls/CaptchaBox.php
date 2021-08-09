@@ -16,9 +16,7 @@ class CaptchaBox extends SelectBox {
             self::VALUE_YES => _('Yes'),
         ]);
 
-        $this->addRule(function (BaseControl $control): bool {
-            return $control->getValue() == self::VALUE_NO;
-        }, _('This form is for people only.'));
+        $this->addRule(fn(BaseControl $control): bool => $control->getValue() == self::VALUE_NO, _('This form is for people only.'));
 
         $this->setDefaultValue(self::VALUE_YES);
     }

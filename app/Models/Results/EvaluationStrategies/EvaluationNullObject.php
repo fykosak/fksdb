@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\Models\Exceptions\NotImplementedException;
 
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
  */
-class EvaluationNullObject extends EvaluationStrategy {
+class EvaluationNullObject extends EvaluationStrategy
+{
 
     /**
      * @return array|void
      * @throws NotImplementedException
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         throw new NotImplementedException();
     }
 
@@ -24,7 +28,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return array|void
      * @throws NotImplementedException
      */
-    public function categoryToStudyYears(ModelCategory $category): array {
+    public function categoryToStudyYears(ModelCategory $category): array
+    {
         throw new NotImplementedException();
     }
 
@@ -33,7 +38,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return string
      * @throws NotImplementedException
      */
-    public function getPointsColumn(ActiveRow $task): string {
+    public function getPointsColumn(ActiveRow $task): string
+    {
         throw new NotImplementedException();
     }
 
@@ -41,7 +47,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return string
      * @throws NotImplementedException
      */
-    public function getSumColumn(): string {
+    public function getSumColumn(): string
+    {
         throw new NotImplementedException();
     }
 
@@ -51,7 +58,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return int|null
      * @throws NotImplementedException
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int
+    {
         throw new NotImplementedException();
     }
 
@@ -60,8 +68,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return string
      * @throws NotImplementedException
      */
-    public function getTaskPointsColumn(ModelCategory $category): string {
+    public function getTaskPointsColumn(ModelCategory $category): string
+    {
         throw new NotImplementedException();
     }
-
 }

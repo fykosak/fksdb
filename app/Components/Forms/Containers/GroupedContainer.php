@@ -14,7 +14,8 @@ class GroupedContainer extends Container {
     private array $groups = [];
     private string $prefix;
 
-    public function __construct(string $prefix) {
+    public function __construct(string $prefix)
+    {
         $this->monitor(Form::class, function (Form $form) {
             foreach ($this->groups as $caption => $myGroup) {
                 $formGroup = $form->addGroup($this->prefix . '-' . $caption, false);
@@ -32,7 +33,8 @@ class GroupedContainer extends Container {
      * @param bool $setAsCurrent
      * @return ControlGroup
      */
-    public function addGroup(string $caption, bool $setAsCurrent = true): ControlGroup {
+    public function addGroup(string $caption, bool $setAsCurrent = true): ControlGroup
+    {
         $group = new ControlGroup();
         $group->setOption('label', $caption);
         $group->setOption('visual', true);

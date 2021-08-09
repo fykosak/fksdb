@@ -48,15 +48,19 @@ class GroupsGrid extends RelatedGrid
         });
 
         $this->addButton('detail')->setText(_('Detail'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
-            });
+            /** @var ModelScheduleGroup $row */
+            ->setLink(
+                fn(ActiveRow $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:detail',
+                    ['id' => $row->schedule_group_id]
+                ));
         $this->addButton('edit')->setText(_('Edit'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
-            });
+            /** @var ModelScheduleGroup $row */
+            ->setLink(
+                fn(ActiveRow $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:edit',
+                    ['id' => $row->schedule_group_id]
+                ));
     }
 
     protected function getModelClassName(): string

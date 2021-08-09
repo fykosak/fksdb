@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -9,7 +11,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\DI\Container;
 
-class YearChooserComponent extends ChooserComponent {
+class YearChooserComponent extends ChooserComponent
+{
 
     public const ROLE_ORG = 'org';
     public const ROLE_CONTESTANT = 'contestant';
@@ -19,17 +22,20 @@ class YearChooserComponent extends ChooserComponent {
     private ?ModelContestYear $contestYear;
     private GroupedSelection $availableYears;
 
-    public function __construct(Container $container, ?ModelContestYear $urlYear, GroupedSelection $availableYears) {
+    public function __construct(Container $container, ?ModelContestYear $urlYear, GroupedSelection $availableYears)
+    {
         parent::__construct($container);
         $this->contestYear = $urlYear;
         $this->availableYears = $availableYears;
     }
 
-    protected function getTitle(): Title {
+    protected function getTitle(): Title
+    {
         return new Title(sprintf(_('Year %d'), $this->contestYear->year));
     }
 
-    protected function getItems(): iterable {
+    protected function getItems(): iterable
+    {
         return $this->availableYears;
     }
 
@@ -37,7 +43,8 @@ class YearChooserComponent extends ChooserComponent {
      * @param ActiveRow|ModelContestYear $item
      * @return bool
      */
-    public function isItemActive($item): bool {
+    public function isItemActive($item): bool
+    {
         return $item->year === $this->contestYear->year;
     }
 
@@ -45,7 +52,8 @@ class YearChooserComponent extends ChooserComponent {
      * @param ActiveRow|ModelContestYear $item
      * @return Title
      */
-    public function getItemTitle($item): Title {
+    public function getItemTitle($item): Title
+    {
         return new Title(sprintf(_('Year %d'), $item->year));
     }
 
@@ -54,7 +62,8 @@ class YearChooserComponent extends ChooserComponent {
      * @return string
      * @throws InvalidLinkException
      */
-    public function getItemLink($item): string {
+    public function getItemLink($item): string
+    {
         return $this->getPresenter()->link('this', ['year' => $item->year]);
     }
 }

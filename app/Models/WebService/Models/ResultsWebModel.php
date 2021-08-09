@@ -82,7 +82,9 @@ class ResultsWebModel extends WebModel
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+                $args->{'school-cumulatives'}->{'school-cumulative'} = [
+                    $args->{'school-cumulatives'}->{'school-cumulative'},
+                ];
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {

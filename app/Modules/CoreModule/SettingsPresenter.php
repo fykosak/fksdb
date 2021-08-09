@@ -125,9 +125,7 @@ class SettingsPresenter extends BasePresenter
 
         $form->addSubmit('send', _('Save'));
 
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleSettingsFormSuccess($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->handleSettingsFormSuccess($form);
         return $control;
     }
 

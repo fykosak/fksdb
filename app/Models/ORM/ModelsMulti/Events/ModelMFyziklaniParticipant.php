@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\ModelsMulti\Events;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -9,9 +11,11 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 /**
  * @property-read ModelEventParticipant $mainModel
  */
-class ModelMFyziklaniParticipant extends AbstractModelMulti {
+class ModelMFyziklaniParticipant extends AbstractModelMulti
+{
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return $this->mainModel->getEvent();
     }
 }

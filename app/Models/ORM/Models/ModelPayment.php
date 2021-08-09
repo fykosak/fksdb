@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
@@ -7,9 +9,9 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\Machine;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
 
 /**
  * @property-read int person_id
@@ -31,7 +33,8 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModel implements Resource {
+class ModelPayment extends AbstractModel implements Resource
+{
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
     public const STATE_RECEIVED = 'received'; // payment received
@@ -39,18 +42,21 @@ class ModelPayment extends AbstractModel implements Resource {
     public const STATE_NEW = 'new'; // new payment
     public const RESOURCE_ID = 'event.payment';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**
      * @return ModelPersonSchedule[]
      */
-    public function getRelatedPersonSchedule(): array {
+    public function getRelatedPersonSchedule(): array
+    {
         $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
         /** @var ModelSchedulePayment $row */
@@ -60,23 +66,28 @@ class ModelPayment extends AbstractModel implements Resource {
         return $items;
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function getPaymentId(): string {
+    public function getPaymentId(): string
+    {
         return \sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
-    public function canEdit(): bool {
+    public function canEdit(): bool
+    {
         return \in_array($this->state, [Machine\Machine::STATE_INIT, self::STATE_NEW]);
     }
 
-    public function getPrice(): Price {
+    public function getPrice(): Price
+    {
         return new Price($this->price, $this->currency);
     }
 
-    public function hasGeneratedSymbols(): bool {
+    public function hasGeneratedSymbols(): bool
+    {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 }

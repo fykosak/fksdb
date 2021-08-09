@@ -107,9 +107,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
         $submit = $form->addSubmit('execute', _('Execute'))
             ->setValidationScope(null);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-success']);
-        $submit->onClick[] = function (SubmitButton $button) {
-            $this->handleComposeExecute($button->getForm());
-        };
+        $submit->onClick[] = fn(SubmitButton $button) => $this->handleComposeExecute($button->getForm());
     }
 
     /**

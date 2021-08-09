@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -9,7 +11,8 @@ use Nette\InvalidStateException;
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
  */
-class DetailResultsModel extends AbstractResultsModel {
+class DetailResultsModel extends AbstractResultsModel
+{
 
     protected int $series;
     /** Cache */
@@ -21,7 +24,8 @@ class DetailResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category): array {
+    public function getDataColumns(ModelCategory $category): array
+    {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
@@ -45,14 +49,16 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
     /**
      * @param int $series
      */
-    public function setSeries($series): void {
+    public function setSeries($series): void
+    {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -61,11 +67,13 @@ class DetailResultsModel extends AbstractResultsModel {
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return $this->evaluationStrategy->getCategories();
     }
 
-    protected function composeQuery(ModelCategory $category): string {
+    protected function composeQuery(ModelCategory $category): string
+    {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }

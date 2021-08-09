@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\DataTesting;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
+use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
-class PersonTestComponent extends BaseComponent {
+class PersonTestComponent extends BaseComponent
+{
 
     /**
      * @persistent
@@ -37,7 +40,8 @@ class PersonTestComponent extends BaseComponent {
     private ServicePerson $servicePerson;
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void
+    {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -46,7 +50,8 @@ class PersonTestComponent extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
@@ -69,7 +74,7 @@ class PersonTestComponent extends BaseComponent {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->title);
+            $field = $testsContainer->addCheckbox((string)$key, $test->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -101,7 +106,8 @@ class PersonTestComponent extends BaseComponent {
     /**
      * @return array[]
      */
-    private function calculateProblems(): array {
+    private function calculateProblems(): array
+    {
         $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
         /** @var ModelPerson $model */
@@ -110,9 +116,10 @@ class PersonTestComponent extends BaseComponent {
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog): bool {
-                return \in_array($simpleLog->level, $this->levels);
-            });
+            $personLog = \array_filter(
+                $logger->getMessages(),
+                fn(TestLog $simpleLog): bool => \in_array($simpleLog->level, $this->levels)
+            );
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
@@ -121,7 +128,8 @@ class PersonTestComponent extends BaseComponent {
         return $logs;
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->logs = $this->calculateProblems();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
     }

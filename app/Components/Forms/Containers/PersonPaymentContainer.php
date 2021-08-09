@@ -10,7 +10,8 @@ use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 
-class PersonPaymentContainer extends ContainerWithOptions {
+class PersonPaymentContainer extends ContainerWithOptions
+{
 
     private bool $isAttached = false;
 
@@ -22,7 +23,8 @@ class PersonPaymentContainer extends ContainerWithOptions {
 
     private bool $showAll;
 
-    public function __construct(Container $container, ModelEvent $event, array $groupTypes, bool $showAll = true) {
+    public function __construct(Container $container, ModelEvent $event, array $groupTypes, bool $showAll = true)
+    {
         parent::__construct($container);
         $this->event = $event;
         $this->groupTypes = $groupTypes;
@@ -36,7 +38,8 @@ class PersonPaymentContainer extends ContainerWithOptions {
         });
     }
 
-    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void
+    {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
@@ -44,7 +47,8 @@ class PersonPaymentContainer extends ContainerWithOptions {
      * @return void
      * @throws NotImplementedException
      */
-    protected function configure(): void {
+    protected function configure(): void
+    {
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->groupTypes)) {

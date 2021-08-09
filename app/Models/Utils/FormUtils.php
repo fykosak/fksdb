@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Utils;
 
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class FormUtils {
+class FormUtils
+{
 
     /**
      * Convert empty strings to nulls.
@@ -16,7 +19,8 @@ class FormUtils {
      * @return iterable|null
      * @todo Move to general utils.
      */
-    public static function emptyStrToNull($values, bool $asArray = false) {
+    public static function emptyStrToNull($values, bool $asArray = false)
+    {
         if (is_iterable($values)) {
             $result = $asArray ? [] : new ArrayHash();
             foreach ($values as $key => $value) {
@@ -36,7 +40,8 @@ class FormUtils {
      * @return ArrayHash
      * @todo Move to general utils.
      */
-    public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash {
+    public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash
+    {
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
@@ -51,7 +56,8 @@ class FormUtils {
         return $result;
     }
 
-    public static function removeEmptyValues(array $values): array {
+    public static function removeEmptyValues(array $values): array
+    {
         $result = [];
         foreach ($values as $key => $value) {
             if (is_array($value)) {
@@ -66,7 +72,8 @@ class FormUtils {
         return $result;
     }
 
-    public static function findFirstSubmit(Form $form): ?SubmitButton {
+    public static function findFirstSubmit(Form $form): ?SubmitButton
+    {
         foreach ($form->getComponents() as $component) {
             if ($component instanceof SubmitButton) {
                 return $component;
@@ -74,5 +81,4 @@ class FormUtils {
         }
         return null;
     }
-
 }

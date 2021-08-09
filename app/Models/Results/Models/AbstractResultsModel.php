@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Database\Connection;
 use Nette\Database\Row;
 
 /**
  * General results sheet with contestants and their ranks.
  */
-abstract class AbstractResultsModel {
+abstract class AbstractResultsModel
+{
 
     public const COL_DEF_LABEL = 'label';
     public const COL_DEF_LIMIT = 'limit';
@@ -39,7 +42,12 @@ abstract class AbstractResultsModel {
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
-    public function __construct(ModelContestYear $contestYear, ServiceTask $serviceTask, Connection $connection, EvaluationStrategy $evaluationStrategy) {
+    public function __construct(
+        ModelContestYear $contestYear,
+        ServiceTask $serviceTask,
+        Connection $connection,
+        EvaluationStrategy $evaluationStrategy
+    ) {
         $this->contestYear = $contestYear;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;
@@ -51,7 +59,8 @@ abstract class AbstractResultsModel {
      * @return Row[]
      * @throws \PDOException
      */
-    public function getData(ModelCategory $category): array {
+    public function getData(ModelCategory $category): array
+    {
         $sql = $this->composeQuery($category);
 
         $stmt = $this->connection->query($sql);
@@ -75,7 +84,8 @@ abstract class AbstractResultsModel {
      * Unused?
      * @return array
      */
-    public function getMetaColumns(): array {
+    public function getMetaColumns(): array
+    {
         return [
             self::DATA_NAME,
             self::DATA_SCHOOL,
@@ -91,7 +101,8 @@ abstract class AbstractResultsModel {
      * @param iterable $conditions
      * @return string
      */
-    protected function conditionsToWhere(iterable $conditions): string {
+    protected function conditionsToWhere(iterable $conditions): string
+    {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
@@ -119,7 +130,8 @@ abstract class AbstractResultsModel {
         return '(' . implode(') and (', $where) . ')';
     }
 
-    protected function getTasks(int $series): TypedTableSelection {
+    protected function getTasks(int $series): TypedTableSelection
+    {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
             ->where([

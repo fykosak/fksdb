@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Stats;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\Database\Connection;
 use Nette\Database\Row;
 
-class TaskStatsModel {
+class TaskStatsModel
+{
 
     protected ModelContestYear $contestYear;
 
@@ -14,16 +17,19 @@ class TaskStatsModel {
 
     protected int $series;
 
-    public function __construct(ModelContestYear $contestYear, Connection $connection) {
+    public function __construct(ModelContestYear $contestYear, Connection $connection)
+    {
         $this->contestYear = $contestYear;
         $this->connection = $connection;
     }
 
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
-    public function setSeries(int $series): void {
+    public function setSeries(int $series): void
+    {
         $this->series = $series;
     }
 
@@ -32,7 +38,8 @@ class TaskStatsModel {
      * @return Row[]
      * @throws \PDOException
      */
-    public function getData(array $labels): array {
+    public function getData(array $labels): array
+    {
         $sql = 'SELECT * FROM `v_task_stats` WHERE ' .
             'contest_id = ? AND year = ? ' .
             "AND series = ? AND label IN ('" . implode("','", $labels) . "')";

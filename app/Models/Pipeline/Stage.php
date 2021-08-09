@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Pipeline;
 
 use FKSDB\Models\Messages\Message;
 
-abstract class Stage {
+abstract class Stage
+{
 
     private Pipeline $pipeline;
 
@@ -20,15 +23,18 @@ abstract class Stage {
      */
     abstract public function getOutput();
 
-    final protected function getPipeline(): Pipeline {
+    final protected function getPipeline(): Pipeline
+    {
         return $this->pipeline;
     }
 
-    final public function setPipeline(Pipeline $pipeline): void {
+    final public function setPipeline(Pipeline $pipeline): void
+    {
         $this->pipeline = $pipeline;
     }
 
-    final protected function log(Message $message): void {
+    final protected function log(Message $message): void
+    {
         $this->getPipeline()->log($message);
     }
 }

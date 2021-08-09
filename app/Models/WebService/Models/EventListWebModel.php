@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 
-class EventListWebModel extends WebModel {
+class EventListWebModel extends WebModel
+{
 
     private ServiceEvent $serviceEvent;
 
-    public function inject(ServiceEvent $serviceEvent): void {
+    public function inject(ServiceEvent $serviceEvent): void
+    {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -18,7 +22,8 @@ class EventListWebModel extends WebModel {
      * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->eventTypeIds)) {
             throw new \SoapFault('Sender', 'Unknown eventType.');
         }

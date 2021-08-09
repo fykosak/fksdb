@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Links\LinkFactory;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 
-final class ORMFactory {
-
+final class ORMFactory
+{
     use SmartObject;
 
     private Container $container;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
@@ -26,7 +29,8 @@ final class ORMFactory {
      * @throws BadTypeException
      * @throws MissingServiceException
      */
-    public function loadColumnFactory(string $tableName, string $colName): ColumnFactory {
+    public function loadColumnFactory(string $tableName, string $colName): ColumnFactory
+    {
         $service = $this->container->getService('orm.' . $tableName . '.column.' . $colName);
         if (!$service instanceof ColumnFactory) {
             throw new BadTypeException(ColumnFactory::class, $service);
@@ -41,7 +45,8 @@ final class ORMFactory {
      * @throws BadTypeException
      * @throws MissingServiceException
      */
-    public function loadLinkFactory(string $tableName, string $linkId): LinkFactory {
+    public function loadLinkFactory(string $tableName, string $linkId): LinkFactory
+    {
         $service = $this->container->getService('orm.' . $tableName . '.link.' . $linkId);
         if (!$service instanceof LinkFactory) {
             throw new BadTypeException(LinkFactory::class, $service);

@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use Fykosak\NetteORM\AbstractService;
 
-class ServiceFyziklaniRoom extends AbstractService {
+class ServiceFyziklaniRoom extends AbstractService
+{
 
     /**
      * @param array $ids
      * @return array[]
      */
-    public function getRoomsByIds(array $ids): array {
+    public function getRoomsByIds(array $ids): array
+    {
         $rooms = [];
         foreach ($ids as $roomId) {
             /** @var ModelFyziklaniRoom $room */

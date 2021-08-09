@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
+use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
-class ServiceAddress extends AbstractService {
+class ServiceAddress extends AbstractService
+{
 
     private const PATTERN = '/[0-9]{5}/';
 
@@ -21,14 +24,16 @@ class ServiceAddress extends AbstractService {
      * @return ModelAddress
      * @throws ModelException
      */
-    public function createNewModel(array $data): ModelAddress {
+    public function createNewModel(array $data): ModelAddress
+    {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
     }
 
-    public function updateModel(AbstractModel $model, array $data): bool {
+    public function updateModel(AbstractModel $model, array $data): bool
+    {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
@@ -41,7 +46,8 @@ class ServiceAddress extends AbstractService {
      * @return int
      * @throws InvalidPostalCode
      */
-    public function inferRegion(?string $postalCode): int {
+    public function inferRegion(?string $postalCode): int
+    {
         if (!$postalCode) {
             throw new InvalidPostalCode($postalCode);
         }
@@ -70,7 +76,8 @@ class ServiceAddress extends AbstractService {
         }
     }
 
-    public function tryInferRegion(?string $postalCode): bool {
+    public function tryInferRegion(?string $postalCode): bool
+    {
         try {
             $this->inferRegion($postalCode);
             return true;

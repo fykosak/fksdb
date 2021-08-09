@@ -111,9 +111,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 $model = $baseHolder->getModel2();
                 return $model ? $model->getPrimary(false) : null;
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
