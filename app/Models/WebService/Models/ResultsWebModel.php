@@ -98,7 +98,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->brojure);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setListedSeries($seriesSingle);
+                $resultsModel->setListedSeries((int)$seriesSingle);
                 $resultsModel->setSeries(range(1, $seriesSingle));
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
             }
@@ -114,7 +114,7 @@ class ResultsWebModel extends WebModel
             foreach ($args->brojures->brojure as $brojure) {
                 $series = explode(' ', $brojure);
                 $listedSeries = $series[count($series) - 1];
-                $resultsModel->setListedSeries($listedSeries);
+                $resultsModel->setListedSeries((int)$listedSeries);
                 $resultsModel->setSeries($series);
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
             }
