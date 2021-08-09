@@ -1,3 +1,10 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $baseHolder}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType array $linkArgs}
+{var $link = $control->link(...$linkArgs)}
+
 <p>
     {if $person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
     gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} dobrý výkon v uplynulých sériích FYKOSu,
