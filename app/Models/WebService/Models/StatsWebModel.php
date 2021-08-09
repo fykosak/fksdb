@@ -53,9 +53,9 @@ class StatsWebModel extends WebModel {
                     $taskNode = $doc->createElement('task');
                     $statsNode->appendChild($taskNode);
 
-                    $taskNode->setAttribute('series', $seriesNo);
-                    $taskNode->setAttribute('label', $task['label']);
-                    $taskNode->setAttribute('tasknr', $task['tasknr']);
+                    $taskNode->setAttribute('series', (string)$seriesNo);
+                    $taskNode->setAttribute('label', (string)$task['label']);
+                    $taskNode->setAttribute('tasknr', (string)$task['tasknr']);
 
                     $node = $doc->createElement('points', $task['points']);
                     $taskNode->appendChild($node);

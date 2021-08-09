@@ -150,7 +150,7 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('event');
-        $node->setAttribute('eventId', $this->event_id);
+        $node->setAttribute('eventId', (string)$this->event_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }
