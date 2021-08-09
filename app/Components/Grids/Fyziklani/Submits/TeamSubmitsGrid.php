@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -11,16 +13,19 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class TeamSubmitsGrid extends SubmitsGrid {
+class TeamSubmitsGrid extends SubmitsGrid
+{
 
     private ModelFyziklaniTeam $team;
 
-    public function __construct(ModelFyziklaniTeam $team, Container $container) {
+    public function __construct(ModelFyziklaniTeam $team, Container $container)
+    {
         $this->team = $team;
         parent::__construct($container);
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
         return new NDataSource($submits);
@@ -33,7 +38,8 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumnTask();

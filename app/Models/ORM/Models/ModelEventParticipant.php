@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
@@ -39,33 +41,40 @@ use Nette\Security\Resource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator {
+class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator
+{
 
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getPersonHistory(): ?ModelPersonHistory {
+    public function getPersonHistory(): ?ModelPersonHistory
+    {
         return $this->getPerson()->getHistoryByContestYear($this->getEvent()->getContestYear());
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return $this->getEvent()->getContest();
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->getPerson()->__toString();
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    public function getPrice(): Price {
+    public function getPrice(): Price
+    {
         return new Price($this->price, Price::CURRENCY_CZK);
     }
 
@@ -73,19 +82,24 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
      * @return ModelFyziklaniTeam
      * @throws BadRequestException
      */
-    public function getFyziklaniTeam(): ModelFyziklaniTeam {
-        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
+    public function getFyziklaniTeam(): ModelFyziklaniTeam
+    {
+        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
+            ->select('e_fyziklani_team.*')
+            ->fetch();
         if (!$row) {
             throw new BadRequestException('Event is not fyziklani!');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function __toArray(): array {
+    public function __toArray(): array
+    {
         return [
             'participantId' => $this->event_participant_id,
             'eventId' => $this->event_id,
@@ -111,9 +125,10 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         ];
     }
 
-    public function createXMLNode(\DOMDocument $document): \DOMElement {
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
         $node = $document->createElement('participant');
-        $node->setAttribute('eventParticipantId', $this->event_participant_id);
+        $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }
