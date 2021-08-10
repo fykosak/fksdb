@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
@@ -93,5 +94,15 @@ class ExportWebModel extends WebModel
             'execute',
             $implicitParameters[StoredQueryFactory::PARAM_CONTEST]
         );
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     * @throws GoneException
+     */
+    public function getJsonResponse(array $params): array
+    {
+        throw new GoneException();
     }
 }

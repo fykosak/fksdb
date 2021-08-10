@@ -13,6 +13,8 @@ use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\WebService\XMLHelper;
+use Nette\Application\BadRequestException;
+use Nette\Http\IResponse;
 
 class EventWebModel extends WebModel
 {
@@ -133,6 +135,41 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    private function createTeamListArray(ModelEvent $event): array
+    {
+        $teamsData = [];
+        foreach ($event->getTeams() as $row) {
+            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $teacher = $team->getTeacher();
+            $teamData = [
+                'teamId' => $team->e_fyziklani_team_id,
+                'name' => $team->name,
+                'status' => $team->status,
+                'category' => $team->category,
+                'created' => $team->created->format('c'),
+                'phone' => $team->phone,
+                'password' => $team->password,
+                'points' => $team->points,
+                'rankCategory' => $team->rank_category,
+                'rankTotal' => $team->rank_total,
+                'forceA' => $team->force_a,
+                'gameLang' => $team->game_lang,
+                'teacher' => $teacher ? [
+                    'name' => $teacher->getFullName(),
+                    'email' => $teacher->getInfo()->email,
+                ] : null,
+                'participants' => [],
+            ];
+
+            foreach ($team->getParticipants() as $participantRow) {
+                $participant = ModelEventParticipant::createFromActiveRow($participantRow->event_participant);
+                $teamData['participants'][] = $this->createParticipantArray($participant);
+            }
+            $teamsData[$team->e_fyziklani_team_id] = $teamData;
+        }
+        return $teamsData;
+    }
+
     private function createParticipantListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
     {
         $rootNode = $doc->createElement('participants');
@@ -144,17 +181,58 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    private function createParticipantListArray(ModelEvent $event): array
+    {
+        $participants = [];
+        foreach ($event->getParticipants() as $row) {
+            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participants[$participant->event_participant_id] = $this->createParticipantArray($participant);
+        }
+        return $participants;
+    }
+
     private function createParticipantNode(ModelEventParticipant $participant, \DOMDocument $doc): \DOMElement
     {
         $pNode = $participant->createXMLNode($doc);
+        XMLHelper::fillArrayToNode($this->createParticipantArray($participant), $doc, $pNode);
+        return $pNode;
+    }
+
+    private function createParticipantArray(ModelEventParticipant $participant): array
+    {
         $history = $participant->getPersonHistory();
-        XMLHelper::fillArrayToNode([
+        return [
             'name' => $participant->getPerson()->getFullName(),
             'email' => $participant->getPerson()->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
             'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
-        ], $doc, $pNode);
-        return $pNode;
+        ];
+    }
+
+    /**
+     * @param array $params
+     * @return array|\SoapVar
+     * @throws BadRequestException
+     * @throws \SoapFault
+     */
+    public function getJsonResponse(array $params): array
+    {
+        if (!isset($params['event_id'])) {
+            throw new \SoapFault('Sender', 'Unknown eventId.');
+        }
+        $event = $this->serviceEvent->findByPrimary(+$params['event_id']);
+        if (is_null($event)) {
+            throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
+        }
+        $data = $event->__toArray();
+        $data['teams'] = $this->createTeamListArray($event);
+        $data['participants'] = $this->createParticipantListArray($event);
+        // $root->appendChild($this->createScheduleListNode($doc, $event));
+        // $root->appendChild($this->createPersonScheduleNode($doc, $event));
+        // $root->appendChild($this->createParticipantListNode($doc, $event));
+        // $doc->formatOutput = true;
+        //return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
+        return $data;
     }
 }

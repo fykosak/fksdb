@@ -33,6 +33,11 @@ fksrouter:
 
         # Backward compatibility
         -
+            mask: 'api/<action>[/id]'
+            module: Core
+            presenter: RestApi
+            action: default
+        -
             mask: 'web-service/<action>'
             module: Org
             presenter: WebService

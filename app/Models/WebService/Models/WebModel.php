@@ -34,4 +34,9 @@ abstract class WebModel {
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);
     }
+
+    public function getJsonResponse(array $params): array
+    {
+        return [];
+    }
 }
