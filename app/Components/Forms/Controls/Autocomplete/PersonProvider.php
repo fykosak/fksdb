@@ -66,7 +66,7 @@ class PersonProvider implements FilteredDataProvider {
 
     private function getItem(ModelPerson $person): array {
         $place = null;
-        $address = $person->getDeliveryAddress2();
+        $address = $person->getDeliveryAddress();
         if ($address) {
             $place = $address->city;
         }

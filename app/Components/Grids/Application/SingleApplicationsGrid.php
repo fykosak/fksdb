@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Models\Exceptions\BadTypeException;
@@ -12,7 +14,8 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class SingleApplicationsGrid extends AbstractApplicationsGrid {
+class SingleApplicationsGrid extends AbstractApplicationsGrid
+{
 
     /**
      * @param Presenter $presenter
@@ -23,7 +26,8 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         $this->setDefaultOrder('person.family_name');
         $this->paginate = false;
 
@@ -36,14 +40,16 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
         parent::configure($presenter);
     }
 
-    protected function getSource(): GroupedSelection {
+    protected function getSource(): GroupedSelection
+    {
         return $this->event->getParticipants();
     }
 
     /**
      * @return string[]
      */
-    protected function getHoldersColumns(): array {
+    protected function getHoldersColumns(): array
+    {
         return [
             'price',
             'lunch_count',
@@ -64,11 +70,13 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
         ];
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelEventParticipant::class;
     }
 
-    protected function getTableName(): string {
+    protected function getTableName(): string
+    {
         return DbNames::TAB_EVENT_PARTICIPANT;
     }
 }

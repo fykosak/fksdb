@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\React;
 
 use FKSDB\Components\Controls\BaseComponent;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 
-abstract class ReactComponent extends BaseComponent {
-
+abstract class ReactComponent extends BaseComponent
+{
     use ReactComponentTrait;
 
-    public function __construct(Container $container, string $reactId) {
+    public function __construct(Container $container, string $reactId)
+    {
         parent::__construct($container);
         $this->registerReact($reactId);
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $html = Html::el('div');
         $this->appendPropertyTo($html);
         $this->template->html = $html;

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
+use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -21,7 +23,8 @@ use Nette\Security\Resource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator {
+class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
+{
 
     public const RESOURCE_ID = 'event.scheduleGroup';
     public const TYPE_ACCOMMODATION = 'accommodation';
@@ -32,11 +35,13 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator 
     public const TYPE_WEEKEND = 'weekend';
     public const TYPE_WEEKEND_INFO = 'weekend_info';
 
-    public function getItems(): GroupedSelection {
+    public function getItems(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
@@ -44,11 +49,13 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator 
      * @return string
      * Label include datetime from schedule group
      */
-    public function getLabel(): string {
+    public function getLabel(): string
+    {
         return $this->name_cs . '/' . $this->name_en;
     }
 
-    public function __toArray(): array {
+    public function __toArray(): array
+    {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
             'scheduleGroupType' => $this->schedule_group_type,
@@ -62,26 +69,28 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator 
         ];
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function createXMLNode(\DOMDocument $document): \DOMElement {
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
         $node = $document->createElement('scheduleGroup');
-        $node->setAttribute('scheduleGroupId', $this->schedule_group_id);
+        $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
         XMLHelper::fillArrayToNode([
-            'scheduleGroupId' => $this->schedule_group_id,
-            'scheduleGroupType' => $this->schedule_group_type,
-            'eventId' => $this->event_id,
-            'start' => $this->start->format('c'),
-            'end' => $this->end->format('c'),
-        ], $document, $node);
+                                       'scheduleGroupId' => $this->schedule_group_id,
+                                       'scheduleGroupType' => $this->schedule_group_type,
+                                       'eventId' => $this->event_id,
+                                       'start' => $this->start->format('c'),
+                                       'end' => $this->end->format('c'),
+                                   ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'name' => [
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
             ],
-        ], $document, $node);
+        ],                                  $document, $node);
         return $node;
     }
 }

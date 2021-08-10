@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
@@ -19,7 +21,8 @@ use Nette\Security\Resource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends AbstractModel implements Resource {
+class ModelPerson extends AbstractModel implements Resource
+{
 
     public const RESOURCE_ID = 'person';
 
@@ -28,25 +31,32 @@ class ModelPerson extends AbstractModel implements Resource {
      * (so far, there's not support for multiple login in DB schema)
      * @return ModelLogin|null
      */
-    public function getLogin(): ?ModelLogin {
+    public function getLogin(): ?ModelLogin
+    {
         $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
         return $login ? ModelLogin::createFromActiveRow($login) : null;
     }
 
-    public function getPreferredLang(): ?string {
+    public function getPreferredLang(): ?string
+    {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
     }
 
-    public function getInfo(): ?ModelPersonInfo {
+    public function getInfo(): ?ModelPersonInfo
+    {
         $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
         return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
     }
 
-    public function getHistoryByContestYear(ModelContestYear $contestYear, bool $extrapolated = false): ?ModelPersonHistory {
+    public function getHistoryByContestYear(
+        ModelContestYear $contestYear,
+        bool $extrapolated = false
+    ): ?ModelPersonHistory {
         return $this->getHistory($contestYear->ac_year, $extrapolated);
     }
 
-    public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
+    public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory
+    {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY)
             ->where('ac_year', $acYear)
             ->fetch();
@@ -64,7 +74,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @param int|ModelContest|null $contest
      * @return GroupedSelection
      */
-    public function getContestants($contest = null): GroupedSelection {
+    public function getContestants($contest = null): GroupedSelection
+    {
         $contestId = null;
         if ($contest instanceof ModelContest) {
             $contestId = $contest->contest_id;
@@ -78,7 +89,8 @@ class ModelPerson extends AbstractModel implements Resource {
         return $related;
     }
 
-    public function getOrgs(?int $contestId = null): GroupedSelection {
+    public function getOrgs(?int $contestId = null): GroupedSelection
+    {
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -86,42 +98,51 @@ class ModelPerson extends AbstractModel implements Resource {
         return $related;
     }
 
-    public function getFlags(): GroupedSelection {
+    public function getFlags(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
-    public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag {
+    public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag
+    {
         $row = $this->getFlags()->where('flag.fid', $flagType)->fetch();
         return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
     }
 
-    public function getPostContacts(): GroupedSelection {
+    public function getPostContacts(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
-    public function getDeliveryAddress2(): ?ModelAddress {
+    public function getDeliveryAddress(): ?ModelAddress
+    {
         return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
     }
 
-    public function getPermanentAddress2(): ?ModelAddress {
+    public function getPermanentAddress(): ?ModelAddress
+    {
         return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
     }
 
-    public function getAddress(string $type): ?ModelAddress {
+    public function getAddress(string $type): ?ModelAddress
+    {
         $postContact = $this->getPostContact($type);
         return $postContact ? $postContact->getAddress() : null;
     }
 
-    public function getPostContact(string $type): ?ModelPostContact {
+    public function getPostContact(string $type): ?ModelPostContact
+    {
         $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
         return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
     }
 
-    public function getDeliveryPostContact(): ?ModelPostContact {
+    public function getDeliveryPostContact(): ?ModelPostContact
+    {
         return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
     }
 
-    public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact {
+    public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact
+    {
         $postContact = $this->getPostContact(ModelPostContact::TYPE_PERMANENT);
         if ($postContact) {
             return $postContact;
@@ -132,15 +153,18 @@ class ModelPerson extends AbstractModel implements Resource {
         }
     }
 
-    public function getEventParticipants(): GroupedSelection {
+    public function getEventParticipants(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    public function getEventTeachers(): GroupedSelection {
+    public function getEventTeachers(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
-    public function isEventParticipant(?int $eventId = null): bool {
+    public function isEventParticipant(?int $eventId = null): bool
+    {
         $tmp = $this->getEventParticipants();
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);
@@ -148,23 +172,27 @@ class ModelPerson extends AbstractModel implements Resource {
         return (bool)$tmp->fetch();
     }
 
-    public function getEventOrgs(): GroupedSelection {
+    public function getEventOrgs(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
     /**
      * @return null|ModelPersonHistory the most recent person's history record (if any)
      */
-    private function getLastHistory(): ?ModelPersonHistory {
+    private function getLastHistory(): ?ModelPersonHistory
+    {
         $row = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
         return $row ? ModelPersonHistory::createFromActiveRow($row) : null;
     }
 
-    public function getFullName(): string {
+    public function getFullName(): string
+    {
         return $this->display_name ?? $this->other_name . ' ' . $this->family_name;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->getFullName();
     }
 
@@ -172,7 +200,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @return ModelOrg[] indexed by contest_id
      * @internal To get active orgs call FKSDB\Models\ORM\Models\ModelLogin::getActiveOrgs
      */
-    public function getActiveOrgs(): array {
+    public function getActiveOrgs(): array
+    {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
             $org = ModelOrg::createFromActiveRow($org);
@@ -184,7 +213,8 @@ class ModelPerson extends AbstractModel implements Resource {
         return $result;
     }
 
-    public function getActiveOrgsAsQuery(ModelContest $contest): GroupedSelection {
+    public function getActiveOrgsAsQuery(ModelContest $contest): GroupedSelection
+    {
         $year = $contest->getCurrentContestYear()->year;
         return $this->related(DbNames::TAB_ORG, 'person_id')
             ->where('contest_id', $contest->contest_id)
@@ -197,7 +227,8 @@ class ModelPerson extends AbstractModel implements Resource {
      *
      * @return ModelContestant[] indexed by contest_id
      */
-    public function getActiveContestants(): array {
+    public function getActiveContestants(): array
+    {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
             $contestant = ModelContestant::createFromActiveRow($contestant);
@@ -215,7 +246,8 @@ class ModelPerson extends AbstractModel implements Resource {
         return $result;
     }
 
-    public static function parseFullName(string $fullName): array {
+    public static function parseFullName(string $fullName): array
+    {
         $names = explode(' ', $fullName);
         $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
         $familyName = $names[count($names) - 1];
@@ -231,7 +263,8 @@ class ModelPerson extends AbstractModel implements Resource {
         ];
     }
 
-    public static function inferGender(array $data): string {
+    public static function inferGender(array $data): string
+    {
         if (mb_substr($data['family_name'], -1) == 'á') {
             return 'F';
         } else {
@@ -239,7 +272,8 @@ class ModelPerson extends AbstractModel implements Resource {
         }
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
@@ -248,7 +282,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @param string $type
      * @return string|null
      */
-    public function getSerializedSchedule(int $eventId, string $type): ?string {
+    public function getSerializedSchedule(int $eventId, string $type): ?string
+    {
         if (!$eventId) {
             return null;
         }
@@ -273,18 +308,24 @@ class ModelPerson extends AbstractModel implements Resource {
      * Definitely ugly but, there is only this way... Mišo
      * TODO refactoring
      */
-    public function removeScheduleForEvent(int $eventId): void {
-        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
+    public function removeScheduleForEvent(int $eventId): void
+    {
+        $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
+            'schedule_item.schedule_group.event_id=?',
+            $eventId
+        );
         foreach ($query as $row) {
             $row->delete();
         }
     }
 
-    public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
+    public function getScheduleForEvent(ModelEvent $event): GroupedSelection
+    {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
 
-    public function getSchedule(): GroupedSelection {
+    public function getSchedule(): GroupedSelection
+    {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id');
     }
 
@@ -293,7 +334,13 @@ class ModelPerson extends AbstractModel implements Resource {
      * @param string[] $types
      * @return ModelSchedulePayment[]
      */
-    public function getScheduleRests(ModelEvent $event, array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]): array {
+    public function getScheduleRests(
+        ModelEvent $event,
+        array $types = [
+            ModelScheduleGroup::TYPE_ACCOMMODATION,
+            ModelScheduleGroup::TYPE_WEEKEND,
+        ]
+    ): array {
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
@@ -312,7 +359,8 @@ class ModelPerson extends AbstractModel implements Resource {
      * @param ModelEvent $event
      * @return array[]
      */
-    public function getRolesForEvent(ModelEvent $event): array {
+    public function getRolesForEvent(ModelEvent $event): array
+    {
         $roles = [];
         $eventId = $event->event_id;
         $teachers = $this->getEventTeachers()->where('event_id', $eventId);

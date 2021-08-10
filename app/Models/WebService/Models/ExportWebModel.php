@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
@@ -8,13 +10,14 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 use Nette\Application\BadRequestException;
 
-class ExportWebModel extends WebModel {
+class ExportWebModel extends WebModel
+{
 
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
 
     public function inject(
-        StoredQueryFactory $storedQueryFactory,
+        StoredQueryFactory  $storedQueryFactory,
         ContestAuthorizator $contestAuthorizator
     ): void {
         $this->storedQueryFactory = $storedQueryFactory;
@@ -27,7 +30,8 @@ class ExportWebModel extends WebModel {
      * @throws BadRequestException
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         // parse arguments
         if (!isset($args->qid)) {
             throw new \SoapFault('Sender', 'QId is not present');
@@ -47,7 +51,8 @@ class ExportWebModel extends WebModel {
                     $this->log($msg);
                     throw new \SoapFault('Sender', $msg);
                 }
-                $parameters[$parameter->name] = $this->container->getParameters()['inverseContestMapping'][$parameters[$parameter->name]];
+                $parameters[$parameter->name] = $this->container->getParameters(
+                )['inverseContestMapping'][$parameters[$parameter->name]];
             }
         }
 
@@ -66,7 +71,7 @@ class ExportWebModel extends WebModel {
 
         $doc = new \DOMDocument();
         $exportNode = $doc->createElement('export');
-        $exportNode->setAttribute('qid', $args->qid);
+        $exportNode->setAttribute('qid', (string)$args->qid);
         $doc->appendChild($exportNode);
 
         $this->storedQueryFactory->fillNode($storedQuery, $exportNode, $doc, $format);
@@ -76,11 +81,17 @@ class ExportWebModel extends WebModel {
         return new \SoapVar($doc->saveXML($exportNode), XSD_ANYXML);
     }
 
-    private function isAuthorizedExport(StoredQuery $query): bool {
+    private function isAuthorizedExport(StoredQuery $query): bool
+    {
         $implicitParameters = $query->getImplicitParameters();
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
+        return $this->contestAuthorizator->isAllowedForLogin(
+            $this->authenticatedLogin,
+            $query,
+            'execute',
+            $implicitParameters[StoredQueryFactory::PARAM_CONTEST]
+        );
     }
 }

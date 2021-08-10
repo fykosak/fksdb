@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -8,11 +10,12 @@ use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\SQL\SearchableDataSource;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -23,24 +26,29 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\Models\SQL\SearchableDataSource;
 
-class AllSubmitsGrid extends SubmitsGrid {
+class AllSubmitsGrid extends SubmitsGrid
+{
 
     private ModelEvent $event;
     private HandlerFactory $handlerFactory;
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(HandlerFactory $handlerFactory): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory): void
+    {
         $this->handlerFactory = $handlerFactory;
     }
 
-    protected function getData(): IDataSource {
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
+    protected function getData(): IDataSource
+    {
+        $submits = $this->serviceFyziklaniSubmit->findAll(
+            $this->event
+        )/*->where('fyziklani_submit.points IS NOT NULL')*/
         ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback($this->getFilterCallBack());
@@ -54,7 +62,8 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -70,17 +79,14 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('delete')
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function (ModelFyziklaniSubmit $row): string {
-                return $this->link('delete!', $row->fyziklani_submit_id);
-            })->setConfirmationDialog(function (): string {
-                return _('Really take back the task submit?');
-            })->setText(_('Delete'))
-            ->setShow(function (ModelFyziklaniSubmit $row): bool {
-                return $row->canRevoke();
-            });
+            ->setLink(fn(ModelFyziklaniSubmit $row): string => $this->link('delete!', $row->fyziklani_submit_id))
+            ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
+            ->setText(_('Delete'))
+            ->setShow(fn(ModelFyziklaniSubmit $row): bool => $row->canRevoke());
     }
 
-    private function getFilterCallBack(): callable {
+    private function getFilterCallBack(): callable
+    {
         return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
@@ -95,7 +101,11 @@ class AllSubmitsGrid extends SubmitsGrid {
                         if (TaskCodePreprocessor::checkControlNumber($fullCode)) {
                             $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
-                            $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
+                            $table->where(
+                                'e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ',
+                                $teamId,
+                                $taskLabel
+                            );
                         } else {
                             $this->flashMessage(_('Wrong task code'), BasePresenter::FLASH_WARNING);
                         }
@@ -111,7 +121,8 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
     }
 
-    public function handleDelete(int $id): void {
+    public function handleDelete(int $id): void
+    {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
@@ -134,7 +145,8 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSearchForm(): FormControl {
+    protected function createComponentSearchForm(): FormControl
+    {
         if (!$this->isSearchable()) {
             throw new InvalidStateException('Cannot create search form without searchable data source.');
         }
@@ -162,7 +174,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues();
+            $values = $form->getValues('array');
             $this->searchTerm = $values;
             if ($this->dataSource instanceof SearchableDataSource) {
                 $this->dataSource->applyFilter($values);
