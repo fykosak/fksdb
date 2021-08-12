@@ -47,21 +47,12 @@ events:
                 default: soustredeni@fykos.cz
             notifyFrom:
                 default: soustredeni@fykos.cz
-            deadline1:
-                default: 1970-01-01 00:00:00
-            deadline2:
-                default: 1970-01-01 00:00:00
-            deadline3:
-                default: 1970-01-01 00:00:00
-            deadline4:
+            deadline:
                 default: 1970-01-01 00:00:00
             letterWhere:
                 default: nikde
             letterSignature:
                 default: Student Pilný
-            letterResolutionTime:
-                default: až naprší a uschne
-
 
         baseMachines:
             PARTICIPANT:
@@ -91,48 +82,48 @@ events:
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare, .self)
                     invited|invited1|invited2|invited3->applied:
-                        condition: or(before(param('deadline1')),role('admin'))
+                        condition: or(before(param('deadline')),role('admin'))
                         label: _('Confirm participation')
                     spare|spare1|spare2|spare3->interested:
-                        condition: before(param('deadline1'))
+                        condition: before(param('deadline'))
                         label: _('I want to go')
                     invited|invited1|invited2|invited3->rejected:
-                        condition: or(before(param('deadline1')),role('admin'))
+                        condition: or(before(param('deadline')),role('admin'))
                         label: _('Decline participation')
                         behaviorType: danger
 
                     spare->spare1:
-                        condition: and(after(param('deadline2')),role('admin'))
+                        condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare1, self)
                     invited->invited1:
-                        condition: and(after(param('deadline2')),role('admin'))
+                        condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited1, self)
                     spare1->spare2:
-                        condition: and(after(param('deadline3')),role('admin'))
+                        condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare2, self)
                     invited1->invited2:
-                        condition: and(after(param('deadline3')),role('admin'))
+                        condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited2, self)
                     spare2->spare3:
-                        condition: and(after(param('deadline4')),role('admin'))
+                        condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/spare3, self)
                     invited2->invited3:
-                        condition: and(after(param('deadline4')),role('admin'))
+                        condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/invited3, self)
                     spare|spare1|spare2|spare3->rejected:
-                        condition: or(before(param('deadline1')),role('admin'))
+                        condition: or(before(param('deadline')),role('admin'))
                         label: _('Decline participation')
                         behaviorType: danger
                     interested->applied:
