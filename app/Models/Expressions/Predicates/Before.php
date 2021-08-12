@@ -4,7 +4,6 @@ namespace FKSDB\Models\Expressions\Predicates;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 class Before extends EvaluatedExpression {
 
@@ -26,7 +25,6 @@ class Before extends EvaluatedExpression {
     public function __invoke(...$args): bool {
         $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {
-            Debugger::barDump($datetime);
             throw new InvalidStateException();
         }
         return $datetime->getTimestamp() >= time();
