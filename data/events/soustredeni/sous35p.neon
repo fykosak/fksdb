@@ -1,0 +1,230 @@
+events:
+    soustredeni35p:
+        event_type_id: [5] # jarní i podzimní sous. nejsou různá
+        eventYears: [35] # specify for which years this machine is valid, by default all years
+        formLayout: soustredeni.form
+#        notifyBcc: vercah@fykos.cz
+#        notifyFrom: soustredeni@fykos.cz
+#        letterDecisionDeadline: 2021-09-10T00:00:00+01:00
+#        letterWhere: Dolní Dvůr
+#        letterSignature: Veronika Hendrychová
+#        letterResolutionTime: 2021-09-13T00:00:00+01:00
+        paramScheme:
+            notifyBcc:
+                default: soustredeni@fykos.cz
+            notifyFrom:
+                default: soustredeni@fykos.cz
+            letterWhere:
+                default: nikde
+            letterSignature:
+                default: Student Pilný
+            letterDecisionDeadline:
+                default: 1970-01-01 00:00:00
+            letterResolutionTime:
+                default: 1970-01-01 00:00:00
+
+
+        baseMachines:
+            PARTICIPANT:
+                service: @orm.event_participant.service
+
+                states: %events.defaultSous.states%
+
+                transitions:
+                    __init->invited:
+                        condition: role('admin')
+                        label: _('Invite participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited, .self)
+                    auto.invited->invited: # this must be duplicate of __init->invited
+                        condition: role('admin')
+                        label: _('Invite participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited, .self)
+                    __init->spare:
+                        condition: role('admin')
+                        label: _('Invite Spare')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare, .self)
+                    auto.spare->spare: # this must be duplicate of __init->spare
+                        condition: role('admin')
+                        label: _('Invite Spare')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare, .self)
+                    invited|invited1|invited2|invited3->applied:
+                        condition: or(regOpen(),role('admin'))
+                        label: _('Confirm participation')
+                    spare|spare1|spare2|spare3->interested:
+                        condition: regOpen()
+                        label: _('I want to go')
+                    invited|invited1|invited2|invited3->rejected:
+                        condition: or(regOpen(),role('admin'))
+                        label: _('Decline participation')
+                        behaviorType: danger
+
+                    spare->spare1:
+                        condition: role('admin')
+                        label: _('Send first call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                    invited->invited1:
+                        condition: role('admin')
+                        label: _('Send first call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                    spare1->spare2:
+                        condition: role('admin')
+                        label: _('Send second call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                    invited1->invited2:
+                        condition: role('admin')
+                        label: _('Send second call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                    spare2->spare3:
+                        condition: role('admin')
+                        label: _('Send last call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/spare-reminder, self)
+                    invited2->invited3:
+                        condition: role('admin')
+                        label: _('Send last call')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
+                    spare|spare1|spare2|spare3->rejected:
+                        condition: role('admin')
+                        label: _('Decline participation')
+                        behaviorType: danger
+                    interested->applied:
+                        condition: role('admin')
+                        label: _('Confirm participation')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/interested-applied, self)
+                    spare->invited:
+                        condition: role('admin')
+                        label: _('Invite as participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                    spare1->invited1:
+                        condition: role('admin')
+                        label: _('Invite as participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                    spare2->invited2:
+                        condition: role('admin')
+                        label: _('Invite as participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                    spare3->invited3:
+                        condition: role('admin')
+                        label: _('Invite as participant')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/spare-invited, self)
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Participated')
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Missed')
+
+                    invited|invited1|invited2|invited3|auto.invited|spare|spare1|spare2|spare3|auto.spare|applied|interested->cancelled:
+                        condition: role('admin')
+                        label: _('Cancel application')
+                    invited|invited1|invited2|invited3|spare|spare1|spare2|spare3|applied|interested->out_of_db:
+                        condition: role('admin')
+                        label: _('Deal with outside FKSDB')
+                    out_of_db->invited:
+                        condition: role('admin')
+                        label: _('Return to DB as Invited')
+                    out_of_db->invited1:
+                        condition: role('admin')
+                        label: _('Return to DB as Invited, first call')
+                    out_of_db->invited2:
+                        condition: role('admin')
+                        label: _('Return to DB as Invited, second call')
+                    out_of_db->invited3:
+                        condition: role('admin')
+                        label: _('Return to DB as Invited, last call')
+                    out_of_db->auto.invited:
+                        condition: role('admin')
+                        label: _('Return to DB as Invited (auto)')
+                    out_of_db->spare:
+                        condition: role('admin')
+                        label: _('Return to DB as Spare')
+                    out_of_db->spare1:
+                        condition: role('admin')
+                        label: _('Return to DB as Spare, first call')
+                    out_of_db->spare2:
+                        condition: role('admin')
+                        label: _('Return to DB as Spare, second call')
+                    out_of_db->spare3:
+                        condition: role('admin')
+                        label: _('Return to DB as Spare, last call')
+                    out_of_db->auto.spare:
+                        condition: role('admin')
+                        label: _('Return to DB as Spare (auto)')
+                    out_of_db->applied:
+                        condition: role('admin')
+                        label: _('Return to DB as Applied')
+                    out_of_db->interested:
+                        condition: role('admin')
+                        label: _('Return to DB as Interested')
+                    out_of_db->participated:
+                        condition: role('admin')
+                        label: _('Return to DB as Participated')
+                    out_of_db->rejected:
+                        condition: role('admin')
+                        label: _('Return to DB as Rejected')
+                    out_of_db->missed:
+                        condition: role('admin')
+                        label: _('Return to DB as missed')
+                    out_of_db->cancelled:
+                        condition: role('admin')
+                        label: _('Return to DB as cancelled')
+
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Delete application')
+
+                fields:
+                    person_id:
+                        label: _('Person')
+                        required: true
+                        modifiable: %events.soustredeni.appCond%
+                        default: null
+                        factory: RefPerson(%events.soustredeni.person%, email, role('admin'), role('admin'), false)
+                    diet:
+                        label: _('Food')
+                        description: _("Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If so, do you want us to get you the special diet or will you bring your own food?")
+                    health_restrictions:
+                        label: _('Health restrictions')
+                        description: _("Do you have any health restriction, that could pose a problem for your participation or because of which you could not participate in certain physicaly demanding (or night) activities? E.g. alergies, diabetes, epilepsy, other chronic diseases... Do you taky any medications, be it periodically or in case of problems? Which? Is there anything else about your health we should know about?")
+                    tshirt_size:
+                        label: _('What size of T-shirt do you wear?')
+                        required: %events.soustredeni.requiredCond%
+                        factory: Chooser(_("Choose a size"), Options(%events.soustredeni.tshirt%))
+                    price:
+                        label: _('Price of camp (CZK)')
+                        modifiable: false
+                        description: _("Price calculated according to the rules on our website.")
+
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: _('Participant')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+                    modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
+            formAdjustments:
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "The person selected is already applied.")
+                - @events.privacyPolicy
+
+            processings:
+                - @events.privacyPolicy
