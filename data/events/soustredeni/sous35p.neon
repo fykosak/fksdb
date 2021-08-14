@@ -93,7 +93,7 @@ events:
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(sous/35p/invited-reminder, self)
                     spare|spare1|spare2|spare3->rejected:
-                        condition: role('admin')
+                        condition: or(regOpen(),role('admin'))
                         label: _('Decline participation')
                         behaviorType: danger
                     interested->applied:
