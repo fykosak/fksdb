@@ -17,7 +17,7 @@ class ExportWebModel extends WebModel
     private ContestAuthorizator $contestAuthorizator;
 
     public function inject(
-        StoredQueryFactory  $storedQueryFactory,
+        StoredQueryFactory $storedQueryFactory,
         ContestAuthorizator $contestAuthorizator
     ): void {
         $this->storedQueryFactory = $storedQueryFactory;
@@ -36,7 +36,9 @@ class ExportWebModel extends WebModel
         if (!isset($args->qid)) {
             throw new \SoapFault('Sender', 'QId is not present');
         }
-        $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : XMLNodeSerializer::EXPORT_FORMAT_1;
+        $format = isset($args->{'format-version'})
+            ? ((int)$args->{'format-version'})
+            : XMLNodeSerializer::EXPORT_FORMAT_1;
         $parameters = [];
 
         // stupid PHP deserialization
