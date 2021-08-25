@@ -127,7 +127,7 @@ class StoredQueryFactory implements XMLNodeSerializer
                 } else {
                     throw new BadRequestException(_('Unsupported format'));
                 }
-                $textNode = $doc->createTextNode($value);
+                $textNode = $doc->createTextNode((string)$value);
                 $colNode->appendChild($textNode);
                 $rowNode->appendChild($colNode);
             }
