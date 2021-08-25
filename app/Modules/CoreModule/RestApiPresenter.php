@@ -27,6 +27,11 @@ class RestApiPresenter extends AuthenticatedPresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('webService', 'default'));
     }
 
+    public function authorizedGetEvent(): void
+    {
+        $this->authorizedDefault();
+    }
+
     final protected function beforeRender(): void
     {
         try {
@@ -35,8 +40,23 @@ class RestApiPresenter extends AuthenticatedPresenter
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
-            Debugger::barDump($exception);
+            Debugger::log($exception);
             throw $exception;
         }
+    }
+
+    public function getAllowedAuthMethods(): array
+    {
+        return [
+            self::AUTH_GITHUB => false,
+            self::AUTH_HTTP => true,
+            self::AUTH_LOGIN => true,
+            self::AUTH_TOKEN => true,
+        ];
+    }
+
+    protected function getHttpRealm(): ?string
+    {
+        return 'JSON';
     }
 }
