@@ -255,11 +255,13 @@ class SubmitPresenter extends BasePresenter
                 $taskValues = $values['task' . $task->task_id];
 
                 if (count($questions)) {
-                    /** @var ModelQuiz $question */
+                    // Verification if user has event submitted any answer
+                    $anySubmit = false;
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];
                         if ($answer != null) {
+                            $anySubmit = true;
                             $this->submitQuizQuestionService->saveSubmittedQuestion(
                                 $question,
                                 $this->getContestant(),
@@ -267,6 +269,12 @@ class SubmitPresenter extends BasePresenter
                             );
                         }
                     }
+
+                    // If there are no submitted quiz answers, continue
+                    if (!$anySubmit) {
+                        continue;
+                    }
+
                     $this->submitHandlerFactory->handleQuizSubmit($task, $this->getContestant());
                 } else {
                     if (!isset($taskValues['file'])) { // upload field was disabled
