@@ -355,6 +355,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $contest = $this->getSelectedContest();
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
+            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
         }
         parent::beforeRender();

@@ -56,6 +56,7 @@ class ErrorPresenter extends BasePresenter
     {
         $this->getPageStyleContainer()->styleId = 'error';
         $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
+        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
     }
 
