@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-02 11:00+0200\n"
+"POT-Creation-Date: 2021-09-02 10:39+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -3585,7 +3585,7 @@ msgid "Born family name"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:429
-msgid "Only if different from surname."
+msgid "Only if different from surname"
 msgstr ""
 
 #: i18n/../app/config/orm.neon.neon2php:433

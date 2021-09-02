@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-02 11:00+0200\n"
+"POT-Creation-Date: 2021-09-02 10:39+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -3591,7 +3591,7 @@ msgstr "Rodné příjmení"
 
 #: i18n/../app/config/orm.neon.neon2php:429
 #, fuzzy
-msgid "Only if different from surname."
+msgid "Only if different from surname"
 msgstr "Pouze pokud je odlišné od přijmení"
 
 #: i18n/../app/config/orm.neon.neon2php:433
