@@ -245,11 +245,11 @@ msgstr "Chyba během importu. %s"
 #: i18n/../app/Modules/OrgModule/TasksPresenter.php:132
 #, php-format
 msgid "Error during import."
-msgstr "Chyba při importu"
+msgstr "Chyba během importu."
 
 #: i18n/../app/Modules/OrgModule/TasksPresenter.php:135
 msgid "Legacy XML format is deprecated"
-msgstr "Legacy XML formát je zastaralý"
+msgstr "Legacy XML formát je zastaralý."
 
 #: i18n/../app/Modules/OrgModule/StoredQueryPresenter.php:39
 #, php-format
@@ -294,7 +294,7 @@ msgstr "Upravit učitele %s"
 
 #: i18n/../app/Modules/OrgModule/TeacherPresenter.php:43
 msgid "Create new teacher"
-msgstr "Vytvoř nového učitele"
+msgstr "Vytvořit nového učitele"
 
 #: i18n/../app/Modules/OrgModule/TeacherPresenter.php:48
 #: i18n/../app/Models/ValuePrinters/EventRolePrinter.php:41
@@ -308,7 +308,7 @@ msgstr "Detail učitele"
 
 #: i18n/../app/Modules/OrgModule/ExtendedPersonPresenter.php:87
 msgid "Person is required."
-msgstr "Pole osoba je vyžadováno"
+msgstr "Pole osoba je vyžadováno."
 
 #: i18n/../app/Modules/OrgModule/ExtendedPersonPresenter.php:100
 #: i18n/../app/Components/EntityForms/AbstractEntityFormComponent.php:62
@@ -361,7 +361,7 @@ msgstr "Chyba při vytváření soutěžícího."
 
 #: i18n/../app/Modules/OrgModule/ContestantPresenter.php:64
 msgid "Contestant already exists."
-msgstr "Soutěžící již existuje"
+msgstr "Soutěžící již existuje."
 
 #: i18n/../app/Modules/OrgModule/ExportPresenter.php:83
 #, php-format
@@ -463,7 +463,7 @@ msgstr "Duplicitní osoby"
 
 #: i18n/../app/Modules/OrgModule/DeduplicatePresenter.php:113
 msgid "Persons not merged."
-msgstr "Osoby nebyly sloučeny"
+msgstr "Osoby nebyly sloučeny."
 
 #: i18n/../app/Modules/OrgModule/DeduplicatePresenter.php:166
 msgid "Trunk"
@@ -486,11 +486,11 @@ msgstr "Zrušit"
 
 #: i18n/../app/Modules/OrgModule/DeduplicatePresenter.php:241
 msgid "Persons successfully merged."
-msgstr "Osoby úspěšně sloučeny"
+msgstr "Osoby úspěšně sloučeny."
 
 #: i18n/../app/Modules/OrgModule/DeduplicatePresenter.php:245
 msgid "Manual conflict resolution is necessary."
-msgstr "Je potřeba manuální vyřešení konfliktů"
+msgstr "Je potřeba manuální vyřešení konfliktů."
 
 #: i18n/../app/Modules/OrgModule/EventPresenter.php:33
 #: i18n/../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:51
@@ -527,11 +527,11 @@ msgstr "Neznámá přihláška"
 
 #: i18n/../app/Modules/PublicModule/ApplicationPresenter.php:184
 msgid "Registration is not open."
-msgstr "Registrace není otevřena"
+msgstr "Registrace není otevřena."
 
 #: i18n/../app/Modules/PublicModule/ApplicationPresenter.php:186
 msgid "Application machine has no available transitions."
-msgstr "Žádné přechody nejsou dostupné"
+msgstr "Žádné přechody nejsou dostupné."
 
 #: i18n/../app/Modules/PublicModule/SubmitPresenter.php:75
 #: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:3
@@ -567,7 +567,7 @@ msgstr "Přepsat nahraná řešení."
 
 #: i18n/../app/Modules/PublicModule/SubmitPresenter.php:177
 msgid "Either tick overwrite the solution, or don't submit it."
-msgstr "Buď zaškrtněte přepsat nahraná řešení, nebo je nenahrávejte"
+msgstr "Buď zaškrtněte přepsat nahraná řešení, nebo je nenahrávejte."
 
 #: i18n/../app/Modules/PublicModule/SubmitPresenter.php:212
 msgid "Submit"
@@ -593,7 +593,7 @@ msgstr "Vyberte soutěž"
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:95
 msgid "Select year"
-msgstr "Vyber rok"
+msgstr "Vyberte rok"
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:105
 msgid "Type e-mail"
@@ -606,7 +606,7 @@ msgstr "%s – přihlášení do soutěže (%s. ročník)"
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:137
 msgid "User must be a person in order to register as a contestant."
-msgstr ""
+msgstr "Uživatel musí být osoba v databázi, aby se mohl registrovat jako soutěžící."
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:145
 msgid "An existing account found. To continue, please sign in."
@@ -620,7 +620,7 @@ msgstr "Upravit učitele %s"
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:228
 #, php-format
 msgid "Contestant %s registered."
-msgstr "Soutěžící %s registrovaný"
+msgstr "Soutěžící %s je registrovaný."
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:238
 msgid "Error while registering."
@@ -628,7 +628,7 @@ msgstr "Chyba při registraci"
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:243
 msgid "Contestant already registered."
-msgstr "Soutěžící již existuje"
+msgstr "Soutěžící již existuje."
 
 #: i18n/../app/Modules/PublicModule/RegisterPresenter.php:253
 #: i18n/../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:42
@@ -753,7 +753,7 @@ msgstr "Změna bodování"
 #: i18n/../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:63
 #, php-format
 msgid "Detail of the submit #%d"
-msgstr "Podrobnosti odevydání #%d"
+msgstr "Podrobnosti odevzdání #%d"
 
 #: i18n/../app/Modules/EventModule/Fyziklani/GameSetupPresenter.php:19
 msgid "Fyziklani game setup"
@@ -967,7 +967,7 @@ msgstr "Moje přihlášky"
 #: i18n/../app/Modules/CoreModule/AuthenticationPresenter.php:58
 #: i18n/../app/config/orm.neon.neon2php:294
 msgid "Login"
-msgstr "Přihlšovací jméno"
+msgstr "Přihlašovací jméno"
 
 #: i18n/../app/Modules/CoreModule/AuthenticationPresenter.php:63
 #: i18n/../app/Models/Authentication/AccountManager.php:109
@@ -1608,7 +1608,7 @@ msgstr "ukončený"
 
 #: i18n/../app/Models/Events/Spec/Fol/BornCheck.php:42
 msgid "Birthday is required field."
-msgstr "Pole narození je povinné"
+msgstr "Pole narození je povinné."
 
 #: i18n/../app/Models/Events/Spec/Fol/PasswordProcessing.php:28
 msgid "Set new game password."
@@ -2926,7 +2926,7 @@ msgstr "Import přihlášek"
 #: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:7
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/list.latte.latte2php:7
 msgid "Mass transitions"
-msgstr "Hromadné řechody"
+msgstr "Hromadné přechody"
 
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:24
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:4
@@ -3670,7 +3670,7 @@ msgstr "Datum narození"
 
 #: i18n/../app/config/orm.neon.neon2php:534
 msgid "Birth Id"
-msgstr ""
+msgstr "Rodné číslo"
 
 #: i18n/../app/config/orm.neon.neon2php:535
 msgid "For foreigners empty."
