@@ -101,7 +101,7 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import succesfull (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import successful (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
             } else {
                 $this->getPresenter()->flashMessage(sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
             }
