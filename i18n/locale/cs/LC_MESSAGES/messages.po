@@ -2662,7 +2662,7 @@ msgstr "Přeskočit přihlášku a pokračovat."
 
 #: i18n/../app/Components/Controls/Events/ImportComponent.php:58
 msgid "Stateless applications."
-msgstr "Přihláška bez stavu."
+msgstr "Přihlláška bez stavu."
 
 #: i18n/../app/Components/Controls/Events/ImportComponent.php:60
 msgid "Ignore."
