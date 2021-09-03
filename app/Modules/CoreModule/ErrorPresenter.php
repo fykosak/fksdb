@@ -39,7 +39,7 @@ class ErrorPresenter extends BasePresenter
                         IResponse::S405_METHOD_NOT_ALLOWED,
                         IResponse::S410_GONE,
                     ]
-                ) ? $code : '500'
+                ) ? (string)$code : '500'
             );
             // log to access.log
             Debugger::log(
