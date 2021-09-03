@@ -1,7 +1,7 @@
 <p>
     {if $person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
     za úspěšnou účast v našem semináři bychom tě rádi pozvali jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$event->event_type->name}, které se letos koná od
-    {$event->begin|date:'j.n. Y'} do {$event->end|date:'j.n. Y'} v {$holder->getParameter('letterWhere')}.
+    {$event->begin|date:'j. n. Y'} do {$event->end|date:'j. n. Y'} v {$holder->getParameter('letterWhere')}.
 </p>
 <p>
     Jedná se o týdenní akci v přírodě pořádanou našimi organizátory. Proto se můžeš těšit na přednášky nejen o
@@ -24,7 +24,7 @@
     aplikace FKSDB po přihlášení nebo pomocí odkazu<br/>
     {var $link = $control->link(...$linkArgs)}
     <a href="{$link}">{$link}</a><br/>
-    Nejlépe ihned, nejpozději však do {$holder->getParameter('deadline')|date:'j.n. Y'}. (Prosím, pokud víš, že se nebudeš moci zúčastnit, oznam nám i to.)
+    nejlépe ihned, nejpozději však do {$holder->getParameter('deadline')|date:'j. n. Y'}. (Prosím, pokud víš, že se nebudeš moci zúčastnit, oznam nám i to.)
 </p>
 <p>
     V případě, že se na soustředění dostaneš, pošleme ti mail. Rozhodnutí můžeš očekávat {$holder->getParameter('letterResolutionTime')}).

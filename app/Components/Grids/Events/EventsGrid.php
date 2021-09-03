@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
@@ -11,9 +13,11 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class EventsGrid extends EntityGrid {
+class EventsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container, ModelContestYear $contestYear) {
+    public function __construct(Container $container, ModelContestYear $contestYear)
+    {
         parent::__construct($container, ServiceEvent::class, [
             'event.event_id',
             'event.event_type',
@@ -32,7 +36,8 @@ class EventsGrid extends EntityGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 

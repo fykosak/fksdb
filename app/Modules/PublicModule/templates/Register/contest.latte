@@ -3,6 +3,6 @@
 {block content}
     {foreach $contests as $contest}
         <a href="{plink 'year' ,'contestId'=>$contest->contest_id}"
-                n:class="'col-12 btn btn-lg btn-block ','btn-'.$contest->getContestSymbol()">{$contest->name}</a>
+                n:class="'col-12 btn btn-lg btn-block ','btn-' . $contest->getContestSymbol()">{$contest->name}</a>
     {/foreach}
 {/block}

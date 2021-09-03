@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
@@ -7,10 +9,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Submits\StorageException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
@@ -18,7 +17,10 @@ use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -27,7 +29,8 @@ use Nette\Forms\Form;
 /**
  * @property ModelPayment|null $model
  */
-class PaymentFormComponent extends AbstractEntityFormComponent {
+class PaymentFormComponent extends AbstractEntityFormComponent
+{
 
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
@@ -59,20 +62,33 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
-    protected function appendSubmitButton(Form $form): SubmitButton {
+    protected function appendSubmitButton(Form $form): SubmitButton
+    {
         return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
     }
 
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         if ($this->isOrg) {
-            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
+            $form->addComponent(
+                $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider),
+                'person_id'
+            );
         } else {
             $form->addHidden('person_id');
         }
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->isCreating()), 'payment_accommodation');
+        $form->addComponent(
+            new PersonPaymentContainer(
+                $this->getContext(),
+                $this->machine->getEvent(),
+                $this->machine->getScheduleGroupTypes(),
+                !$this->isCreating()
+            ),
+            'payment_accommodation'
+        );
     }
 
     /**
@@ -84,7 +100,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
      * @throws ModelException
      * @throws StorageException
      */
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = [
             'currency' => $values['currency'],
@@ -96,9 +113,12 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
             $model = $this->model;
         } else {
             $holder = $this->machine->createHolder(null);
-            $this->machine->saveAndExecuteImplicitTransition($holder, array_merge($data, [
-                'event_id' => $this->machine->getEvent()->event_id,
-            ]));
+            $this->machine->saveAndExecuteImplicitTransition(
+                $holder,
+                array_merge($data, [
+                    'event_id' => $this->machine->getEvent()->event_id,
+                ])
+            );
             $model = $holder->getModel();
         }
 
@@ -115,7 +135,9 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.'));
+        $this->getPresenter()->flashMessage(
+            !isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.')
+        );
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
@@ -123,7 +145,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $values = $this->model->toArray();
             $query = $this->model->getRelatedPersonSchedule();

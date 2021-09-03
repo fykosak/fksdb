@@ -77,8 +77,6 @@ navigation:
             Fyziklani.GameSetup.default: []
 
         Event.Seating.default:
-            Event.Seating.edit: []
-            Event.Seating.download: []
             Event.Seating.preview: []
             Event.Seating.list: []
         Fyziklani.Results.default:
