@@ -43,7 +43,7 @@ trait SeriesPresenterTrait
         // If the year has holiday series, remove posibility to upload 7th series
         // (due to Astrid's structure)
         if (SeriesCalculator::hasHolidaySeries($this->getSelectedContestYear())) {
-            if ($key = array_search('7', $range)) {
+            if (($key = array_search('7', $range)) !== false) {
                 unset($range[$key]);
             }
         }
