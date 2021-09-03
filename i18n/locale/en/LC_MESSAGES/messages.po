@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-26 19:01+0200\n"
+"POT-Creation-Date: 2021-09-03 21:44+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -269,7 +269,7 @@ msgstr ""
 msgid "Detail of the query \"%s\""
 msgstr ""
 
-#: ../app/Modules/OrgModule/BasePresenter.php:38
+#: ../app/Modules/OrgModule/BasePresenter.php:39
 #, php-format
 msgid "%d. year, %s. series"
 msgstr ""
@@ -510,7 +510,7 @@ msgstr ""
 msgid "Dashboard"
 msgstr ""
 
-#: ../app/Modules/PublicModule/BasePresenter.php:59
+#: ../app/Modules/PublicModule/BasePresenter.php:60
 #, php-format
 msgid "%d. year"
 msgstr ""
@@ -557,6 +557,7 @@ msgid "Only PDF files are accepted."
 msgstr ""
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:169
+#: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:36
 msgid "Task is not for your category."
 msgstr ""
 
@@ -1312,10 +1313,12 @@ msgid "primary school"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/Person/GenderColumnFactory.php:25
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:73
 msgid "Male"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/Person/GenderColumnFactory.php:25
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:80
 msgid "Female"
 msgstr ""
 
@@ -1413,6 +1416,7 @@ msgstr ""
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:171
 #: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:31
 msgid "Team"
 msgstr ""
 
@@ -1740,6 +1744,7 @@ msgid "This functionality has not been implemented yet."
 msgstr ""
 
 #: ../app/Models/StoredQuery/StoredQueryFactory.php:128
+#: ../app/Components/Controls/AjaxSubmit/middleware.ts.ts2php:22
 msgid "Unsupported format"
 msgstr ""
 
@@ -1904,6 +1909,8 @@ msgstr ""
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:172
 #: ../app/Components/Grids/SubmitsGrid.php:65
 #: ../app/Modules/EventModule/Fyziklani/templates/Submit/detail.latte.latte2php:7
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:67
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:34
 msgid "Task"
 msgstr ""
 
@@ -1928,6 +1935,7 @@ msgid "--Select task--"
 msgstr ""
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:173
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Container.tsx.tsx2php:47
 msgid "Code"
 msgstr ""
 
@@ -2346,47 +2354,47 @@ msgstr ""
 msgid "This form is for people only."
 msgstr ""
 
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:35
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:41
 msgid "Team applications time progress"
 msgstr ""
 
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:45
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:51
 msgid "Applications time progress"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:15
+#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:20
 msgid "Teams per country"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:27
+#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:33
 msgid "Participants per country"
 msgstr ""
 
-#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:15
+#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:20
 msgid "Participants per team"
 msgstr ""
 
-#: ../app/Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart.php:43
+#: ../app/Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart.php:49
 msgid "Participant acquaintance"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/PerSeriesChart.php:31
+#: ../app/Components/Charts/Contestants/PerSeriesChart.php:37
 msgid "Contestants per series"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/PerYearsChart.php:56
+#: ../app/Components/Charts/Contestants/PerYearsChart.php:59
 msgid "Contestants per years"
 msgstr ""
 
-#: ../app/Components/Charts/Contestants/AggregatedSeriesChart.php:40
+#: ../app/Components/Charts/Contestants/AggregatedSeriesChart.php:49
 msgid "Total contestants per series"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.php:38
+#: ../app/Components/Charts/TotalPersonsChart.php:45
 msgid "Total persons in FKSDB"
 msgstr ""
 
-#: ../app/Components/Charts/TotalPersonsChart.php:46
+#: ../app/Components/Charts/TotalPersonsChart.php:50
 msgid ""
 "Graph shows the progress in the number of people in FKSDB and the number of "
 "assigned person_ids."
@@ -2952,6 +2960,9 @@ msgstr ""
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:13
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:17
 #: ../data/events/fol/fol1.neon.neon2php:88
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:20
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:26
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:39
 msgid "Category"
 msgstr ""
 
@@ -3021,6 +3032,7 @@ msgstr ""
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:52
 #: ../app/config/orm.neon.neon2php:217 ../app/config/orm.neon.neon2php:385
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
 msgid "Price"
 msgstr ""
 
@@ -3234,6 +3246,8 @@ msgid "Contests"
 msgstr ""
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:76
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:36
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:74
 msgid "Timeline"
 msgstr ""
 
@@ -3346,6 +3360,7 @@ msgid "Contestant Id"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:55
+#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
 msgid "Year"
 msgstr ""
 
@@ -3569,6 +3584,7 @@ msgid "Payment UId"
 msgstr "Event ID"
 
 #: ../app/config/orm.neon.neon2php:416
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:86
 msgid "Person Id"
 msgstr ""
 
@@ -5063,8 +5079,229 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr "Chosen person is already registered to the event."
 
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
-msgid "Used capacity"
+#: ../app/Models/FrontEnd/apps/events/attendance/Index.tsx.tsx2php:24
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:26
+msgid "...reading code..."
+msgstr ""
+
+#: ../app/Models/FrontEnd/apps/events/attendance/Index.tsx.tsx2php:25
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:13
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:27
+msgid "Scan QR-code"
+msgstr ""
+
+#: ../app/Models/ValuePrinters/PricePrinter.tsx.tsx2php:14
+msgid "for free"
+msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/ScheduleField.tsx.tsx2php:44
+msgid "No items found."
+msgstr ""
+
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:22
+msgid "Free capacity"
+msgstr ""
+
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/CommonChart.tsx.tsx2php:110
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:67
+msgid "Time progress"
+msgstr ""
+
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:66
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:43
+msgid "All"
+msgstr ""
+
+#: ../app/Components/Charts/Contestants/ContestatnsData.tsx.tsx2php:15
+msgid "Full year"
+msgstr ""
+
+#: ../app/Components/Charts/Contestants/ContestatnsData.tsx.tsx2php:18
+msgid "series"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:21
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:27
+msgid "Global results"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/Form.tsx.tsx2php:22
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:66
+msgid "Options"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/RowsField.tsx.tsx2php:24
+msgid "Rows"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/ColsField.tsx.tsx2php:24
+msgid "Cols"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader.tsx.tsx2php:59
+msgid "Fetch"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:25
+msgid "Not public results"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:32
+msgid "Turn off"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:35
+msgid "This function don't turn on if results are public!"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:75
+msgid "select task"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:84
+msgid "Aggregation time"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:99
+msgid "From"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:114
+msgid "To"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:22
+msgid "Global statistics"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:26
+msgid "Total solved problem"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:29
+msgid "Statistics from single problem"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:42
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:48
+msgid "Time histogram"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:66
+#, fuzzy
+msgid "First team"
+msgstr "Register"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:67
+msgid "Second team"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:68
+msgid "Average"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:69
+msgid "Under 2 minutes"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:70
+msgid "Both teams"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:46
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:55
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:36
+msgid "select team"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:70
+msgid "Correlation "
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:68
+#, fuzzy
+msgid "Time first team"
+msgstr "Register"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:69
+msgid "Time second team"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:70
+msgid "Difference"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:77
+#, fuzzy
+msgid "first team"
+msgstr "Register"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:78
+msgid "second team"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:79
+msgid "both teams"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:80
+msgid "per task"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:24
+msgid "bod"
+msgstr "point"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:28
+msgid "body"
+msgstr "points"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:31
+msgid "bodů"
+msgstr "points"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:49
+msgid "Statistic for team "
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
+msgid "Success of submitting"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/filters/select/MultiSelect.tsx.tsx2php:35
+msgid "Active filters"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/filters/select/MultiSelect.tsx.tsx2php:46
+msgid "Available filters"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/Index.tsx.tsx2php:38
+msgid "Results of Fyziklani"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:33
+msgid "Invalid team"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:36
+msgid "Invalid task"
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:29
+msgid "Revoke"
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:31
+msgid "Remove submit?"
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/LoadingState.tsx.tsx2php:7
+msgid "Loading"
+msgstr ""
+
+#: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:42
+msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
 
 #~ msgid "Přihlásit tým"
@@ -5084,15 +5321,6 @@ msgstr ""
 
 #~ msgid "U cizinců prázdné."
 #~ msgstr "Empty for non-Czech, non-Slovak."
-
-#~ msgid "bod"
-#~ msgstr "point"
-
-#~ msgid "body"
-#~ msgstr "points"
-
-#~ msgid "bodů"
-#~ msgstr "points"
 
 #~ msgid "Město a okres (kvůli diplomům)."
 #~ msgstr "Town/city (due to certificates)."

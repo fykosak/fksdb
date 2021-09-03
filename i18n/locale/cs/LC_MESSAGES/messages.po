@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-26 19:01+0200\n"
+"POT-Creation-Date: 2021-09-03 21:44+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -269,7 +269,7 @@ msgstr "Exporty"
 msgid "Detail of the query \"%s\""
 msgstr "Podrobnosti dotazu  \"%s\""
 
-#: ../app/Modules/OrgModule/BasePresenter.php:38
+#: ../app/Modules/OrgModule/BasePresenter.php:39
 #, php-format
 msgid "%d. year, %s. series"
 msgstr "%d. ročník, %s. série"
@@ -510,7 +510,7 @@ msgstr "Upravit akci %s"
 msgid "Dashboard"
 msgstr "Pultík"
 
-#: ../app/Modules/PublicModule/BasePresenter.php:59
+#: ../app/Modules/PublicModule/BasePresenter.php:60
 #, php-format
 msgid "%d. year"
 msgstr "%d. ročník"
@@ -557,6 +557,7 @@ msgid "Only PDF files are accepted."
 msgstr "Přijímáme pouze PDF soubory."
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:169
+#: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:36
 msgid "Task is not for your category."
 msgstr "Úloha není pro vaši kategorii."
 
@@ -1316,10 +1317,12 @@ msgid "primary school"
 msgstr "základní škola"
 
 #: ../app/Models/ORM/Columns/Tables/Person/GenderColumnFactory.php:25
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:73
 msgid "Male"
 msgstr "Muž"
 
 #: ../app/Models/ORM/Columns/Tables/Person/GenderColumnFactory.php:25
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:80
 msgid "Female"
 msgstr "Žena"
 
@@ -1421,6 +1424,7 @@ msgstr "Herní parametry nejsou nastaveny."
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:171
 #: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:31
 msgid "Team"
 msgstr "Tým"
 
@@ -1747,6 +1751,7 @@ msgid "This functionality has not been implemented yet."
 msgstr "Tato funkcionalita ještě není implementována."
 
 #: ../app/Models/StoredQuery/StoredQueryFactory.php:128
+#: ../app/Components/Controls/AjaxSubmit/middleware.ts.ts2php:22
 msgid "Unsupported format"
 msgstr "Nepodporovaný formát"
 
@@ -1911,6 +1916,8 @@ msgstr "Název úlohy"
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:172
 #: ../app/Components/Grids/SubmitsGrid.php:65
 #: ../app/Modules/EventModule/Fyziklani/templates/Submit/detail.latte.latte2php:7
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:67
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:34
 msgid "Task"
 msgstr "Úloha"
 
@@ -1935,6 +1942,7 @@ msgid "--Select task--"
 msgstr "--vyber úlohu--"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:173
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Container.tsx.tsx2php:47
 msgid "Code"
 msgstr "Kód"
 
@@ -2354,47 +2362,47 @@ msgstr "Jsi robot?"
 msgid "This form is for people only."
 msgstr "Tento formulář je pouze pro lidi."
 
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:35
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/TeamComponent.php:41
 msgid "Team applications time progress"
 msgstr "Počet přihlášených týmů v čase"
 
-#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:45
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/SingleComponent.php:51
 msgid "Applications time progress"
 msgstr "Počet přihlášených soutěžících v čase"
 
-#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:15
+#: ../app/Components/Charts/Event/Applications/TeamsGeoChart.php:20
 msgid "Teams per country"
 msgstr "Týmy dle zemí."
 
-#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:27
+#: ../app/Components/Charts/Event/Applications/ParticipantsTimeGeoChart.php:33
 msgid "Participants per country"
 msgstr "Účastníci dle zemí."
 
-#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:15
+#: ../app/Components/Charts/Event/Applications/ApplicationRationGeoChart.php:20
 msgid "Participants per team"
 msgstr "Účastníci dle týmů."
 
-#: ../app/Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart.php:43
+#: ../app/Components/Charts/Event/ParticipantAcquaintance/ParticipantAcquaintanceChart.php:49
 msgid "Participant acquaintance"
 msgstr "Známosti účastníků"
 
-#: ../app/Components/Charts/Contestants/PerSeriesChart.php:31
+#: ../app/Components/Charts/Contestants/PerSeriesChart.php:37
 msgid "Contestants per series"
 msgstr "Účastníci po sériích"
 
-#: ../app/Components/Charts/Contestants/PerYearsChart.php:56
+#: ../app/Components/Charts/Contestants/PerYearsChart.php:59
 msgid "Contestants per years"
 msgstr "Účastníci podle ročníků"
 
-#: ../app/Components/Charts/Contestants/AggregatedSeriesChart.php:40
+#: ../app/Components/Charts/Contestants/AggregatedSeriesChart.php:49
 msgid "Total contestants per series"
 msgstr "Celkový počet účastníků po sériích"
 
-#: ../app/Components/Charts/TotalPersonsChart.php:38
+#: ../app/Components/Charts/TotalPersonsChart.php:45
 msgid "Total persons in FKSDB"
 msgstr "Celkový počet osob ve FKSDB"
 
-#: ../app/Components/Charts/TotalPersonsChart.php:46
+#: ../app/Components/Charts/TotalPersonsChart.php:50
 #, fuzzy
 msgid ""
 "Graph shows the progress in the number of people in FKSDB and the number of "
@@ -2966,6 +2974,9 @@ msgstr "Všechny týmy, obsahuje kategorii id pozice"
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:13
 #: ../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:17
 #: ../data/events/fol/fol1.neon.neon2php:88
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:20
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:26
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:39
 msgid "Category"
 msgstr "Kategorie"
 
@@ -3033,6 +3044,7 @@ msgstr "Položka"
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:52
 #: ../app/config/orm.neon.neon2php:217 ../app/config/orm.neon.neon2php:385
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/PriceLabel.tsx.tsx2php:15
 msgid "Price"
 msgstr "Cena"
 
@@ -3246,6 +3258,8 @@ msgid "Contests"
 msgstr "Soutěže"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:76
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:36
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:74
 msgid "Timeline"
 msgstr "Časový průběh"
 
@@ -3359,6 +3373,7 @@ msgid "Contestant Id"
 msgstr "Id soutěžícího"
 
 #: ../app/config/orm.neon.neon2php:55
+#: ../app/Components/Charts/Contestants/PerYearsChart.tsx.tsx2php:34
 msgid "Year"
 msgstr "Rok"
 
@@ -3572,6 +3587,7 @@ msgid "Payment UId"
 msgstr "UId platby"
 
 #: ../app/config/orm.neon.neon2php:416
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:86
 msgid "Person Id"
 msgstr "Osobní ID"
 
@@ -5046,9 +5062,230 @@ msgstr ""
 msgid "Zvolená osoba je již přihlášená."
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:17
-msgid "Used capacity"
-msgstr "Již zabraná kapacita"
+#: ../app/Models/FrontEnd/apps/events/attendance/Index.tsx.tsx2php:24
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:26
+msgid "...reading code..."
+msgstr "...čtu kód..."
+
+#: ../app/Models/FrontEnd/apps/events/attendance/Index.tsx.tsx2php:25
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:13
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput.tsx.tsx2php:27
+msgid "Scan QR-code"
+msgstr "Oskenovat QR-kód"
+
+#: ../app/Models/ValuePrinters/PricePrinter.tsx.tsx2php:14
+msgid "for free"
+msgstr "zdarma"
+
+#: ../app/Components/Forms/Controls/Schedule/ScheduleField.tsx.tsx2php:44
+msgid "No items found."
+msgstr "Žádná položka nebyla nalezena"
+
+#: ../app/Components/Forms/Controls/Schedule/Components/Parts/CapacityLabel.tsx.tsx2php:22
+msgid "Free capacity"
+msgstr "Volná kapacita"
+
+#: ../app/Components/Charts/Event/ApplicationsTimeProgress/CommonChart.tsx.tsx2php:110
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:67
+msgid "Time progress"
+msgstr "Počet přihlášek v čase"
+
+#: ../app/Components/Charts/TotalPersonsChart.tsx.tsx2php:66
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:43
+msgid "All"
+msgstr "Vše"
+
+#: ../app/Components/Charts/Contestants/ContestatnsData.tsx.tsx2php:15
+msgid "Full year"
+msgstr "Celý rok"
+
+#: ../app/Components/Charts/Contestants/ContestatnsData.tsx.tsx2php:18
+msgid "series"
+msgstr "série"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:21
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:27
+msgid "Global results"
+msgstr "Celkové výsledky"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/Form.tsx.tsx2php:22
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:66
+msgid "Options"
+msgstr "Možnosti"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/RowsField.tsx.tsx2php:24
+msgid "Rows"
+msgstr "Řádky"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Settings/ColsField.tsx.tsx2php:24
+msgid "Cols"
+msgstr "Sloupce"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader.tsx.tsx2php:59
+msgid "Fetch"
+msgstr "Fetchnout"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:25
+msgid "Not public results"
+msgstr "Neveřejné výsledkovky"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:32
+msgid "Turn off"
+msgstr "Vypnout"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/HardVisible/Component.tsx.tsx2php:35
+msgid "This function don't turn on if results are public!"
+msgstr "Tato funkci nezapínej pokud jsou výsledky veřejné!"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:75
+msgid "select task"
+msgstr "vyber úlohu"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:84
+msgid "Aggregation time"
+msgstr "Čas pro agregaci do histogramu"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:99
+msgid "From"
+msgstr "Od"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:114
+msgid "To"
+msgstr "Do"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:22
+msgid "Global statistics"
+msgstr "Globální statistiky"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:26
+msgid "Total solved problem"
+msgstr "Celkem vyřešených úloh"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:29
+msgid "Statistics from single problem"
+msgstr "Statistiky jedné úlohy"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:42
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index.tsx.tsx2php:48
+msgid "Time histogram"
+msgstr "Časový histogram"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:66
+msgid "First team"
+msgstr "První tým"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:67
+msgid "Second team"
+msgstr "Druhý tým"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:68
+msgid "Average"
+msgstr "Průměr"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:69
+msgid "Under 2 minutes"
+msgstr "Pod 2 minuty"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:70
+msgid "Both teams"
+msgstr "Oba týmy"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:46
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:55
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:36
+msgid "select team"
+msgstr "vyber tým"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index.tsx.tsx2php:70
+msgid "Correlation "
+msgstr "Korelace "
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:68
+msgid "Time first team"
+msgstr "Čas prvního týmu"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:69
+msgid "Time second team"
+msgstr "Čas druhého týmu"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:70
+msgid "Difference"
+msgstr "Rozdíl"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:77
+msgid "first team"
+msgstr "první tým"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:78
+msgid "second team"
+msgstr "druhý tým"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:79
+msgid "both teams"
+msgstr "oba týmy"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:80
+msgid "per task"
+msgstr "na úlohu"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:24
+msgid "bod"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:28
+msgid "body"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Legend.tsx.tsx2php:31
+msgid "bodů"
+msgstr ""
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:49
+msgid "Statistic for team "
+msgstr "Statistiky týmu "
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index.tsx.tsx2php:60
+msgid "Success of submitting"
+msgstr "Úspěšné odevzdání"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/filters/select/MultiSelect.tsx.tsx2php:35
+msgid "Active filters"
+msgstr "Aktivní filtry"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/filters/select/MultiSelect.tsx.tsx2php:46
+msgid "Available filters"
+msgstr "Dostupné filtry"
+
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/components/Index.tsx.tsx2php:38
+msgid "Results of Fyziklani"
+msgstr "Výsledky Fyziklání"
+
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:33
+msgid "Invalid team"
+msgstr "Neplatný tým"
+
+#: ../app/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay.tsx.tsx2php:36
+msgid "Invalid task"
+msgstr "Neplatná úloha"
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:29
+msgid "Revoke"
+msgstr "Ovolat"
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/FileState.tsx.tsx2php:31
+msgid "Remove submit?"
+msgstr "Smazat odevzdání?"
+
+#: ../app/Components/Controls/AjaxSubmit/Components/States/LoadingState.tsx.tsx2php:7
+msgid "Loading"
+msgstr "Načítání"
+
+#: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:42
+msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
+msgstr ""
+
+#~ msgid "Used capacity"
+#~ msgstr "Již zabraná kapacita"
 
 #~ msgid "Cannot get academic year without selected contest."
 #~ msgstr "Nelze určit akademický rok bez vybrání soutěže."
@@ -5150,153 +5387,6 @@ msgstr "Již zabraná kapacita"
 
 #~ msgid "Undefined"
 #~ msgstr "Nedefinováno"
-
-#~ msgid "Revoke"
-#~ msgstr "Ovolat"
-
-#~ msgid "Remove submit?"
-#~ msgstr "Smazat odevzdání?"
-
-#~ msgid "Loading"
-#~ msgstr "Načítání"
-
-#~ msgid "Full year"
-#~ msgstr "Celý rok"
-
-#~ msgid "series"
-#~ msgstr "série"
-
-#~ msgid "All"
-#~ msgstr "Vše"
-
-#~ msgid "Time progress"
-#~ msgstr "Počet přihlášek v čase"
-
-#~ msgid "Options"
-#~ msgstr "Možnosti"
-
-#~ msgid "select task"
-#~ msgstr "vyber úlohu"
-
-#~ msgid "Aggregation time"
-#~ msgstr "Čas pro agregaci do histogramu"
-
-#~ msgid "From"
-#~ msgstr "Od"
-
-#~ msgid "To"
-#~ msgstr "Do"
-
-#~ msgid "Global statistics"
-#~ msgstr "Globální statistiky"
-
-#~ msgid "Total solved problem"
-#~ msgstr "Celkem vyřešených úloh"
-
-#~ msgid "Statistics from single problem"
-#~ msgstr "Statistiky jedné úlohy"
-
-#~ msgid "Time histogram"
-#~ msgstr "Časový histogram"
-
-#~ msgid "First team"
-#~ msgstr "První tým"
-
-#~ msgid "Second team"
-#~ msgstr "Druhý tým"
-
-#~ msgid "Average"
-#~ msgstr "Průměr"
-
-#~ msgid "Under 2 minutes"
-#~ msgstr "Pod 2 minuty"
-
-#~ msgid "Both teams"
-#~ msgstr "Oba týmy"
-
-#~ msgid "Time first team"
-#~ msgstr "Čas prvního týmu"
-
-#~ msgid "Time second team"
-#~ msgstr "Čas druhého týmu"
-
-#~ msgid "Difference"
-#~ msgstr "Rozdíl"
-
-#~ msgid "first team"
-#~ msgstr "první tým"
-
-#~ msgid "second team"
-#~ msgstr "druhý tým"
-
-#~ msgid "both teams"
-#~ msgstr "oba týmy"
-
-#~ msgid "per task"
-#~ msgstr "na úlohu"
-
-#~ msgid "select team"
-#~ msgstr "vyber tým"
-
-#~ msgid "Correlation "
-#~ msgstr "Korelace "
-
-#~ msgid "Statistic for team "
-#~ msgstr "Statistiky týmu "
-
-#~ msgid "Success of submitting"
-#~ msgstr "Úspěšné odevzdání"
-
-#~ msgid "Global results"
-#~ msgstr "Celkové výsledky"
-
-#~ msgid "Cols"
-#~ msgstr "Sloupce"
-
-#~ msgid "Rows"
-#~ msgstr "Řádky"
-
-#~ msgid "Results of Fyziklani"
-#~ msgstr "Výsledky Fyziklání"
-
-#~ msgid "Active filters"
-#~ msgstr "Aktivní filtry"
-
-#~ msgid "Available filters"
-#~ msgstr "Dostupné filtry"
-
-#~ msgid "Fetch"
-#~ msgstr "Fetchnout"
-
-#~ msgid "Not public results"
-#~ msgstr "Neveřejné výsledkovky"
-
-#~ msgid "Turn off"
-#~ msgstr "Vypnout"
-
-#~ msgid "This function don't turn on if results are public!"
-#~ msgstr "Tato funkci nezapínej pokud jsou výsledky veřejné!"
-
-#~ msgid "Invalid team"
-#~ msgstr "Neplatný tým"
-
-#~ msgid "Invalid task"
-#~ msgstr "Neplatná úloha"
-
-#~ msgid "Scan QR-code"
-#~ msgstr "Oskenovat QR-kód"
-
-#~ msgid "...reading code..."
-#~ msgstr "...čtu kód..."
-
-#~ msgid "Free capacity"
-#~ msgstr "Volná kapacita"
-
-#~ msgid "No items found."
-#~ msgstr "Žádná položka nebyla nalezena"
-
-#~ msgid "for free"
-#~ msgstr "zdarma"
 
 #~ msgid "I agree with the privacy policy"
 #~ msgstr "Souhlasím s podmínkami zpracování osobních údajů"
