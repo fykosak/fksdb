@@ -198,7 +198,10 @@ class ResultsModelFactory implements XMLNodeSerializer
 
                     // data columns
                     foreach ($dataSource->getDataColumns($category) as $column) {
-                        $columnNode = $doc->createElement('column', $row[$column[AbstractResultsModel::COL_ALIAS]]);
+                        $columnNode = $doc->createElement(
+                            'column',
+                            (string)$row[$column[AbstractResultsModel::COL_ALIAS]]
+                        );
                         $contestantNode->appendChild($columnNode);
                     }
                 }
