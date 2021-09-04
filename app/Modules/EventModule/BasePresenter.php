@@ -166,6 +166,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-fyziklani navbar-dark');
+                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             case 9:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-light');
