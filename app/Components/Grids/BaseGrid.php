@@ -107,8 +107,8 @@ abstract class BaseGrid extends Grid
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
-        if (isset($this->searchTerm['term'])) {
-            $this->dataSource->applyFilter($this->searchTerm['term']);
+        if (isset($this->searchTerm)) {
+            $this->dataSource->applyFilter($this->searchTerm);
         }
         $count = $this->getCount();
         $this->getPaginator()->itemCount = $count;
@@ -161,9 +161,9 @@ abstract class BaseGrid extends Grid
             ->setHtmlAttribute('placeholder', _('Find'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            $this->searchTerm['term'] = $values['term'];
-            $this->dataSource->applyFilter($values['term']);
+            $values = $form->getValues('array');
+            $this->searchTerm = $values;
+            $this->dataSource->applyFilter($values);
             // TODO is this vv needed? vv
             $count = $this->dataSource->getCount();
             $this->getPaginator()->itemCount = $count;

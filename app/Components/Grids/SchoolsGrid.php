@@ -29,8 +29,8 @@ class SchoolsGrid extends EntityGrid
     {
         $schools = $this->service->getTable();
         $dataSource = new SearchableDataSource($schools);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
+        $dataSource->setFilterCallback(function (Selection $table, array $value) {
+            $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
                 $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
