@@ -32,8 +32,8 @@ class OrgsGrid extends BaseGrid
         $orgs = $this->contest->related(DbNames::TAB_ORG);
 
         $dataSource = new SearchableDataSource($orgs);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
+        $dataSource->setFilterCallback(function (Selection $table, array $value) {
+            $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
                 $table->where(
                     'CONCAT(person.family_name, person.other_name, IFNULL(org.role,\'\'), IFNULL(org.contribution,\'\'))

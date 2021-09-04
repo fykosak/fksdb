@@ -29,8 +29,8 @@ class TaskGrid extends BaseGrid
     {
         $submits = $this->event->getFyziklaniTasks();
         $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
+        $dataSource->setFilterCallback(function (Selection $table, array $value) {
+            $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
                 $table->where(
                     'name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')',

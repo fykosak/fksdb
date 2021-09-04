@@ -35,8 +35,8 @@ class TeachersGrid extends EntityGrid
         $teachers = $this->service->getTable()->select('teacher.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($teachers);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
+        $dataSource->setFilterCallback(function (Selection $table, array $value) {
+            $tokens = preg_split('/\s+/', $value['term']);
             foreach ($tokens as $token) {
                 $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
