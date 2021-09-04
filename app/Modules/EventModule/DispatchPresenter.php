@@ -31,6 +31,7 @@ class DispatchPresenter extends AuthenticatedPresenter
     {
         $this->getPageStyleContainer()->styleId = 'event';
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
+        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
     }
 }
