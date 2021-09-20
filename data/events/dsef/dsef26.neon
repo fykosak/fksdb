@@ -1,6 +1,6 @@
 parameters:
     events:
-        dsef25:
+        dsef26:
             person:
                 person:
                     other_name:
@@ -26,7 +26,7 @@ parameters:
                         required: true
 
 events:
-    dsef25:
+    dsef26:
         event_type_id: 2
         eventYears: [26]
         formLayout: dsef.form
@@ -43,10 +43,10 @@ events:
                         required: true
                         modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.dsef25.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                        factory: RefPerson(%events.dsef26.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
-                        description:  _('à 30 Kč')
+                        description: _('à 30 Kč')
         machine:
             baseMachines:
                 participant:
