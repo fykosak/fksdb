@@ -87,7 +87,7 @@ class AllSubmitsGrid extends SubmitsGrid
 
     private function getFilterCallBack(): callable
     {
-        return function (Selection $table, $value): void {
+        return function (Selection $table, array $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;

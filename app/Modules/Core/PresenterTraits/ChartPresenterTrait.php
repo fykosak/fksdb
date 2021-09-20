@@ -10,7 +10,7 @@ use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait
 {
-
+    /** @var Chart|IComponent */
     protected Chart $selectedChart;
     private array $chartComponents;
 
@@ -72,6 +72,6 @@ trait ChartPresenterTrait
 
     protected function createComponentChart(): IComponent
     {
-        return $this->selectedChart->getControl();
+        return $this->selectedChart;
     }
 }

@@ -8,6 +8,8 @@ class PageStyleContainer {
 
     private string $navBarClassName;
 
+    private string $navBrandPath;
+
     public array $mainContainerClassNames = ['container', 'bg-white-container'];
 
     public function __construct() {
@@ -33,5 +35,13 @@ class PageStyleContainer {
 
     public function getNavBarClassName(): string {
         return $this->navBarClassName ?? 'bg-light navbar-light';
+    }
+
+    public function setNavBrandPath(string $path): void {
+        $this->navBrandPath = $path;
+    }
+
+    public function getNavBrandPath(): string {
+        return $this->navBrandPath ?? '/images/logo/gray.svg';
     }
 }

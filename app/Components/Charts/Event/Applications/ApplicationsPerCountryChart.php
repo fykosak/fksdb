@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\GeoCharts\GeoChart;
@@ -8,22 +10,27 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-abstract class ApplicationsPerCountryChart extends GeoChart {
+abstract class ApplicationsPerCountryChart extends GeoChart
+{
 
     protected ModelEvent $event;
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    public function __construct(Container $context, ModelEvent $event, string $scale) {
+    public function __construct(Container $context, ModelEvent $event, string $scale)
+    {
         parent::__construct($context, $scale);
         $this->event = $event;
     }
 
-    public function injectSecondary(ServiceEventParticipant $serviceEventParticipant): void {
+    public function injectSecondary(ServiceEventParticipant $serviceEventParticipant): void
+    {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    final protected function getTeams(): ResultSet {
-        return $this->serviceEventParticipant->explorer->query('SELECT 
+    final protected function getTeams(): ResultSet
+    {
+        return $this->serviceEventParticipant->explorer->query(
+            'SELECT 
 region.country_iso3 as `country` ,
 COUNT(distinct e_fyziklani_team_id) as `t`, 
 COUNT(*) as `p`
@@ -34,11 +41,15 @@ LEFT JOIN address USING (address_id)
 LEFT JOIN region USING (region_id)
 LEFT JOIN e_fyziklani_participant USING (event_participant_id)
 LEFT JOIN e_fyziklani_team USING (e_fyziklani_team_id, event_id)
-WHERE ep.event_id in (?)
-GROUP BY  region.country_iso3', $this->event->getContestYear()->ac_year, $this->event->event_id);
+WHERE ep.event_id = ?
+GROUP BY  region.country_iso3',
+            $this->event->getContestYear()->ac_year,
+            $this->event->event_id
+        );
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return null;
     }
 }

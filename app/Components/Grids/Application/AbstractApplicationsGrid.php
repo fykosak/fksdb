@@ -67,7 +67,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid
             $label = Html::el('span')
                 ->addHtml(Html::el('b')->addText($state['state']))
                 ->addText(': ')
-                ->addHtml(Html::el('i')->addText(_($state['description'])))
+                ->addHtml(Html::el('i')->addText(_((string)$state['description'])))
                 ->addText(' (' . $state['count'] . ')');
             $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
         }
@@ -97,9 +97,9 @@ abstract class AbstractApplicationsGrid extends BaseGrid
 
     public function getFilterCallBack(): callable
     {
-        return function (Selection $table, $value): void {
+        return function (Selection $table, array $value): void {
             $states = [];
-            foreach ($value->status as $state => $value) {
+            foreach ($value['status'] as $state => $value) {
                 if ($value) {
                     $states[] = str_replace('__', '.', $state);
                 }
