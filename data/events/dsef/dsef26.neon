@@ -1,0 +1,63 @@
+parameters:
+    events:
+        dsef25:
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    id_number:
+                        required: true
+                    born:
+                        required: true
+                person_schedule:
+                    accommodation:
+                        required: false
+                    dsef_morning:
+                        required: true
+                    dsef_afternoon:
+                        required: true
+                post_contact_p:
+                    address:
+                        required: true
+
+events:
+    dsef25:
+        event_type_id: 2
+        eventYears: [26]
+        formLayout: dsef.form
+        paramScheme: %events.defaultDsef.paramScheme%
+
+        baseMachines:
+            PARTICIPANT_DSEF:
+                service: @orm.event_participant.service
+                states: %events.defaultDsef.states%
+                transitions: %events.defaultDsef.transitions%
+                fields:
+                    person_id:
+                        label: _('Person')
+                        required: true
+                        modifiable: %events.defaultDsef.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.dsef25.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    lunch_count:
+                        modifiable: %events.defaultDsef.appCond%
+                        description:  _('à 30 Kč')
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT_DSEF
+                    label: _('Účastník')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                - @events.captcha
+
+            processings:
+                - @events.privacyPolicy
