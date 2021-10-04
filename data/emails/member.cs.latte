@@ -1,5 +1,6 @@
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
 <p>
-    Jsi členem týmu <em>{$holder->getPrimaryHolder()->getModel()->__toString()}</em> pro {$event->name}.
+    Jsi členem týmu <em>{$holder->getPrimaryHolder()->getModel2()->__toString()}</em> pro {$event->name}.
 </p>
 {include 'inc/eventEdit.cs.latte' event => $event, token => $token}
 {include 'inc/closing.cs.latte'}
