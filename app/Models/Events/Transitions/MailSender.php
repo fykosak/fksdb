@@ -100,14 +100,9 @@ class MailSender {
      * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder): void {
-        $personIds = $this->resolveAdressees($transition, $holder);
-        $persons = $this->servicePerson->getTable()
-            ->where('person.person_id', $personIds)
-            ->where(':person_info.email IS NOT NULL')
-            ->fetchPairs('person_id');
+        $persons = $this->resolveAdressees($transition, $holder);
 
         $logins = [];
-        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
@@ -206,6 +201,9 @@ class MailSender {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
+    /**
+     * @return ModelPerson[]
+     */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
@@ -225,9 +223,7 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
+                        $names = array_merge($names, array_map(fn (BaseHolder $it): string => $it->getName(), $group['holders']));
                     }
                     break;
                 case self::ADDR_ALL:
@@ -242,7 +238,7 @@ class MailSender {
         foreach ($names as $name) {
             $person = $holder->getBaseHolder($name)->getPerson();
             if ($person) {
-                $persons[] = $person->person_id;
+                $persons[] = $person;
             }
         }
         return $persons;

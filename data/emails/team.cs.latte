@@ -1,3 +1,6 @@
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType FKSDB\Models\Events\Machine\Machine $machine}
+{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $application}
 {var $state = $holder->getPrimaryHolder()->getModelState()}
 <p>
     Změna přihlášky týmu <em>{$application}</em>. Aktuální stav &ndash; <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.
