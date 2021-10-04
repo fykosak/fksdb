@@ -24,6 +24,7 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -107,7 +108,6 @@ class MailSender {
             ->fetchPairs('person_id');
 
         $logins = [];
-        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
@@ -206,6 +206,9 @@ class MailSender {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
+    /**
+     * @return int[]
+     */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
@@ -225,9 +228,7 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
+                        $names = array_merge($names, array_map(fn (BaseHolder $it): string => $it->getName(), $group['holders']));
                     }
                     break;
                 case self::ADDR_ALL:
