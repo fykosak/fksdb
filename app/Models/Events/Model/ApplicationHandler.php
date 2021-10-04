@@ -38,14 +38,12 @@ class ApplicationHandler {
 
     private string $errorMode = self::ERROR_ROLLBACK;
     private Connection $connection;
-    private Container $container;
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->container = $container;
         $container->callInjects($this);
     }
 
