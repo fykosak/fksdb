@@ -24,6 +24,7 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -100,7 +101,11 @@ class MailSender {
      * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder): void {
-        $persons = $this->resolveAdressees($transition, $holder);
+        $personIds = $this->resolveAdressees($transition, $holder);
+        $persons = $this->servicePerson->getTable()
+            ->where('person.person_id', $personIds)
+            ->where(':person_info.email IS NOT NULL')
+            ->fetchPairs('person_id');
 
         $logins = [];
         foreach ($persons as $person) {
@@ -202,7 +207,7 @@ class MailSender {
     }
 
     /**
-     * @return ModelPerson[]
+     * @return int[]
      */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
@@ -238,7 +243,7 @@ class MailSender {
         foreach ($names as $name) {
             $person = $holder->getBaseHolder($name)->getPerson();
             if ($person) {
-                $persons[] = $person;
+                $persons[] = $person->person_id;
             }
         }
         return $persons;
