@@ -49,7 +49,6 @@ class PDFStamper implements StorageProcessing {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @throws ProcessingException
      */
     public function process(ModelSubmit $submit): void {

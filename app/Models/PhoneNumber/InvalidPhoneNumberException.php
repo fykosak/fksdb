@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\PhoneNumber;
 
-class InvalidPhoneNumberException extends \Exception {
+use Nette\InvalidStateException;
 
+class InvalidPhoneNumberException extends InvalidStateException
+{
 }

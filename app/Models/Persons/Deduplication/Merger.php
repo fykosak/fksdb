@@ -51,8 +51,6 @@ class Merger {
 
     /**
      * Form values with proper resoluted values.
-     *
-     * @param iterable $rawValues
      */
     public function setConflictResolution(iterable $rawValues): void {
         foreach ($rawValues as $table => $pairs) {
@@ -99,9 +97,6 @@ class Merger {
     }
 
     /**
-     *
-     * @param string $table
-     * @return TableMerger
      * @internal Friend of Merger class.
      */
     public function getMerger(string $table): TableMerger {
@@ -146,9 +141,6 @@ class Merger {
     }
 
     /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @param string $column
      * @internal Friend of Merger class.
      */
     public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void {
@@ -158,10 +150,6 @@ class Merger {
     }
 
     /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @param string $column
-     * @return bool
      * @internal Friend of Merger class.
      */
     public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): bool {
@@ -170,9 +158,6 @@ class Merger {
     }
 
     /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @param string $column
      * @return mixed
      * @internal Friend of Merger class.
      */

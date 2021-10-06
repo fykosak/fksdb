@@ -26,8 +26,6 @@ class GithubAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param IRequest $request
-     * @return ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException

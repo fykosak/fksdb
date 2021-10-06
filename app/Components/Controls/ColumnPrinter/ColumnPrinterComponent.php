@@ -18,10 +18,6 @@ class ColumnPrinterComponent extends BaseComponent {
     }
 
     /**
-     * @param string $field
-     * @param AbstractModel $model
-     * @param int $userPermission
-     * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
@@ -34,10 +30,6 @@ class ColumnPrinterComponent extends BaseComponent {
     }
 
     /**
-     * @param string $field
-     * @param AbstractModel $model
-     * @param int $userPermission
-     * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
@@ -47,10 +39,6 @@ class ColumnPrinterComponent extends BaseComponent {
     }
 
     /**
-     * @param string $field
-     * @param AbstractModel $model
-     * @param int $userPermission
-     * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
@@ -60,10 +48,6 @@ class ColumnPrinterComponent extends BaseComponent {
     }
 
     /**
-     * @param string $field
-     * @param AbstractModel $model
-     * @param int $userPermission
-     * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */

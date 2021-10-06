@@ -31,7 +31,6 @@ class FyziklaniChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelEvent $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $item->event_id === $this->event->event_id;
@@ -43,7 +42,6 @@ class FyziklaniChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelEvent $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title($item->name);
@@ -51,7 +49,6 @@ class FyziklaniChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelEvent $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

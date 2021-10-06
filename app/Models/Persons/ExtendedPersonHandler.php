@@ -66,7 +66,6 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @param Form $form
      * @return ModelPerson|null|AbstractModel|ActiveRow
      */
     final protected function getReferencedPerson(Form $form): ?ActiveRow {
@@ -76,10 +75,6 @@ class ExtendedPersonHandler {
     }
 
     /**
-     * @param Form $form
-     * @param ExtendedPersonPresenter $presenter
-     * @param bool $sendEmail
-     * @return int
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

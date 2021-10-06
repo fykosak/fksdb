@@ -18,7 +18,6 @@ class ServiceEmailMessage extends AbstractService {
     }
 
     /**
-     * @param array $data
      * @return ModelEmailMessage|ActiveRow
      * @throws ModelException
      */

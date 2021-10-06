@@ -37,7 +37,6 @@ class CorrectedStorage implements SubmitStorage {
     }
 
     /**
-     * @param StorageProcessing $processing
      * @throws NotImplementedException
      */
     public function addProcessing(StorageProcessing $processing): void {
@@ -66,8 +65,6 @@ class CorrectedStorage implements SubmitStorage {
     }
 
     /**
-     * @param string $filename
-     * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
     public function storeFile(string $filename, ModelSubmit $submit): void {
@@ -97,16 +94,12 @@ class CorrectedStorage implements SubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     *
-     * @param ModelSubmit $submit
-     * @return bool
      */
     public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
     }
 
     /**
-     * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
     public function deleteFile(ModelSubmit $submit): void {
@@ -114,7 +107,6 @@ class CorrectedStorage implements SubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit): string {

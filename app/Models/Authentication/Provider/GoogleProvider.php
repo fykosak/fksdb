@@ -11,10 +11,6 @@ class GoogleProvider extends Google {
     use SmartObject;
 
     /**
-     * GoogleProvider constructor.
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param LinkGenerator $linkGenerator
      * @throws InvalidLinkException
      */
     public function __construct(string $clientId, string $clientSecret, LinkGenerator $linkGenerator) {

@@ -106,7 +106,6 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param string|int|ActiveRow|AbstractModel|ModelPerson $value
-     * @param bool $force
      * @return static
      */
     public function setValue($value, bool $force = false): self {
@@ -135,7 +134,6 @@ class ReferencedId extends HiddenField {
      * If you are calling this method out of transaction, set $fullfilPromise to
      * false. This is the case for event form adjustments.
      *
-     * @param bool $fullfilPromise
      * @return mixed
      */
     public function getValue(bool $fullfilPromise = true) {

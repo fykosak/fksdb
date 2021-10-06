@@ -33,7 +33,6 @@ abstract class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @return void
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */

@@ -75,7 +75,6 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws EventNotFoundException
      * @throws MissingServiceException
      */

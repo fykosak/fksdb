@@ -32,8 +32,6 @@ class GroupOptions implements OptionsProvider {
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
-     * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
@@ -61,7 +59,6 @@ class GroupOptions implements OptionsProvider {
     }
 
     /**
-     * @param ModelEvent $event
      * @return ModelDsefGroup[]
      */
     private function getGroups(ModelEvent $event): array {

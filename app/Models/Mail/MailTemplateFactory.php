@@ -39,9 +39,6 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string|null $lang ISO 639-1
-     * @param array $data
-     * @return Template
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -50,9 +47,6 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $lang ISO 639-1
-     * @param array $data
-     * @return Template
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -61,10 +55,6 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $templateFile
-     * @param string|null $lang ISO 639-1
-     * @param array $data
-     * @return Template
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -78,9 +68,6 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $filename
-     * @param string|null $lang ISO 639-1
-     * @return Template
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

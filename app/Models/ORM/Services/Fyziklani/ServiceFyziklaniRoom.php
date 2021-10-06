@@ -8,7 +8,7 @@ use Fykosak\NetteORM\AbstractService;
 class ServiceFyziklaniRoom extends AbstractService {
 
     /**
-     * @param array $ids
+     * @param int[] $ids
      * @return array[]
      */
     public function getRoomsByIds(array $ids): array {

@@ -36,7 +36,6 @@ class NavigationChooserComponent extends ChooserComponent
     }
 
     /**
-     * @return Title
      * @throws BadRequestException
      * @throws BadTypeException
      */
@@ -63,7 +62,6 @@ class NavigationChooserComponent extends ChooserComponent
 
     /**
      * @param array $item
-     * @return bool
      */
     public function isItemActive($item): bool
     {
@@ -83,7 +81,6 @@ class NavigationChooserComponent extends ChooserComponent
 
     /**
      * @param array $item
-     * @return Title
      * @throws BadRequestException
      * @throws BadTypeException
      */
@@ -105,7 +102,6 @@ class NavigationChooserComponent extends ChooserComponent
 
     /**
      * @param array $item
-     * @return string
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
@@ -121,7 +117,6 @@ class NavigationChooserComponent extends ChooserComponent
 
     /**
      * @param array $item
-     * @return bool
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException

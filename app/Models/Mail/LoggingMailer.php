@@ -44,8 +44,6 @@ class LoggingMailer implements Mailer {
     }
 
     /**
-     * @param Message $mail
-     * @return void
      * @throws \Exception
      */
     public function send(Message $mail): void {

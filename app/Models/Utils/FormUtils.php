@@ -12,7 +12,6 @@ class FormUtils {
      * Convert empty strings to nulls.
      *
      * @param string|iterable $values
-     * @param bool $asArray
      * @return iterable|null
      * @todo Move to general utils.
      */
@@ -31,9 +30,6 @@ class FormUtils {
     }
 
     /**
-     * @param ArrayHash $values
-     * @param bool $ignoreNulls
-     * @return ArrayHash
      * @todo Move to general utils.
      */
     public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash {

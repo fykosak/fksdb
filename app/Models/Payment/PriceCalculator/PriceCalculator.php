@@ -33,7 +33,6 @@ class PriceCalculator implements TransitionCallback {
     }
 
     /**
-     * @param ModelPayment $modelPayment
      * @return array[]
      */
     public function getGridItems(ModelPayment $modelPayment): array {

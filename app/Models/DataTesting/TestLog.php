@@ -28,7 +28,6 @@ class TestLog extends Message {
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
     public function mapLevelToIcon(): string {
@@ -49,7 +48,6 @@ class TestLog extends Message {
     }
 
     /**
-     * @return Html
      * @throws NotImplementedException
      */
     public function createHtmlIcon(): Html {

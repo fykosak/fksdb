@@ -33,7 +33,6 @@ class OptimisticForm extends Form {
 
     /**
      * @param null $data Must be always null! Defaults callback is used to produce the values.
-     * @param bool $erase
      * @return static
      * @throws \LogicException
      */
@@ -52,9 +51,6 @@ class OptimisticForm extends Form {
         return $this;
     }
 
-    /**
-     * @return HiddenField|IComponent
-     */
     private function getFingerprintInput(): HiddenField {
         return $this[self::FINGERPRINT];
     }

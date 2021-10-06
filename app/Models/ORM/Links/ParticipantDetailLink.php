@@ -14,7 +14,6 @@ class ParticipantDetailLink extends LinkFactory {
 
     /**
      * @param ModelEventParticipant|AbstractModel $model
-     * @return string
      */
     protected function getDestination(AbstractModel $model): string {
         if ($model->getEvent()->isTeamEvent()) {
@@ -26,7 +25,6 @@ class ParticipantDetailLink extends LinkFactory {
 
     /**
      * @param AbstractModel|ModelEventParticipant $model
-     * @return array
      * @throws BadRequestException
      */
     protected function prepareParams(AbstractModel $model): array {

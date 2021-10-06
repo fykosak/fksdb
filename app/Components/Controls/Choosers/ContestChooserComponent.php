@@ -29,7 +29,6 @@ class ContestChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelContest $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $this->contest->contest_id === $item->contest_id;
@@ -37,7 +36,6 @@ class ContestChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelContest $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title($item->name);
@@ -45,7 +43,6 @@ class ContestChooserComponent extends ChooserComponent {
 
     /**
      * @param ModelContest $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

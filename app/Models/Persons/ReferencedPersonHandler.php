@@ -89,8 +89,6 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ArrayHash $values
-     * @return ModelPerson
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws ModelDataConflictException
@@ -107,9 +105,6 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ActiveRow $model
-     * @param ArrayHash $values
-     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws ModelDataConflictException
@@ -127,9 +122,6 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ModelPerson $person
-     * @param ArrayHash $data
-     * @return void
      * @throws ModelException
      * @throws ModelDataConflictException
      * @throws ExistingPaymentException
@@ -337,9 +329,6 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param ModelPerson $person
-     * @param ArrayHash $data
-     * @param array $models
      * @throws ModelException
      */
     private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models): void {
@@ -385,7 +374,6 @@ class ReferencedPersonHandler implements ReferencedHandler {
     }
 
     /**
-     * @param string $field
      * @param mixed $key
      * @return ModelPerson|null|ActiveRow
      */

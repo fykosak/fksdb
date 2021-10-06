@@ -15,7 +15,6 @@ class UntilColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelOrg $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if (\is_null($model->until)) {

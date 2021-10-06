@@ -21,7 +21,6 @@ class EventLink extends ColumnFactory {
 
     /**
      * @param ModelEvent|AbstractModel $model
-     * @return Html
      * @throws InvalidLinkException
      */
     protected function createHtmlValue(AbstractModel $model): Html {

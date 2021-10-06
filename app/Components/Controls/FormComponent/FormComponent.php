@@ -23,7 +23,6 @@ abstract class FormComponent extends BaseComponent {
     }
 
     /**
-     * @return Form
      * @throws BadTypeException
      */
     final protected function getForm(): Form {
@@ -35,7 +34,6 @@ abstract class FormComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     final protected function createComponentFormControl(): FormControl {

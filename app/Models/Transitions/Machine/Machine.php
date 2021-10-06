@@ -46,7 +46,6 @@ abstract class Machine {
     }
 
     /**
-     * @param ModelHolder $holder
      * @return Transition[]
      */
     public function getAvailableTransitions(ModelHolder $holder): array {
@@ -56,8 +55,6 @@ abstract class Machine {
     }
 
     /**
-     * @param string $id
-     * @return Transition
      * @throws UnavailableTransitionsException
      */
     public function getTransitionById(string $id): Transition {
@@ -73,7 +70,6 @@ abstract class Machine {
 
     /**
      * @param Transition[] $transitions
-     * @return Transition
      * @throws \LogicException
      * @throws UnavailableTransitionsException
      * Protect more that one transition between nodes
@@ -92,9 +88,6 @@ abstract class Machine {
     /* ********** execution ******** */
 
     /**
-     * @param string $id
-     * @param ModelHolder $holder
-     * @return void
      * @throws UnavailableTransitionsException
      * @throws \Exception
      */
@@ -107,22 +100,16 @@ abstract class Machine {
     }
 
     /**
-     * @param ModelHolder $holder
-     * @param array $data
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
      * @throws \Exception
      */
-
     final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void {
         $transition = $this->selectTransition($this->getAvailableTransitions($holder));
         $this->saveAndExecuteTransition($transition, $holder, $data);
     }
 
     /**
-     * @param Transition $transition
-     * @param ModelHolder $holder
-     * @param array $data
      * @throws ForbiddenRequestException
      */
     final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void {
@@ -138,9 +125,6 @@ abstract class Machine {
     }
 
     /**
-     * @param Transition $transition
-     * @param ModelHolder|null $holder
-     * @return void
      * @throws ForbiddenRequestException
      * @throws \Exception
      */

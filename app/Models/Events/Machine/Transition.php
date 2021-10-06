@@ -83,7 +83,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @param callable|bool $visible
-     * @return void
      */
     public function setVisible($visible): void {
         $this->visible = $visible;
@@ -101,7 +100,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     }
 
     /**
-     * @param Holder $holder
      * @return Transition[]
      */
     private function getInducedTransitions(Holder $holder): array {
@@ -130,9 +128,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     }
 
     /**
-     * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return null|array
      */
     private function validateTarget(Holder $holder, array $inducedTransitions): ?array {
         foreach ($inducedTransitions as $inducedTransition) {
@@ -161,9 +157,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * Launch induced transitions and sets new state.
-     *
-     * @param Holder $holder
-     * @return array
      * @throws TransitionConditionFailedException
      * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
@@ -193,7 +186,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     /**
      * Triggers onExecuted event.
      *
-     * @param Holder $holder
      * @param Transition[] $inducedTransitions
      * @throws TransitionOnExecutedException
      */
@@ -210,7 +202,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @note Assumes the condition is fulfilled.
-     * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {
         $holder->setModelState($this->getTargetState());
@@ -218,7 +209,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
-     * @return bool
      */
     public function matches(string $mask): bool {
         $parts = self::parseMask($mask);
@@ -241,9 +231,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @note Assumes mask is valid.
-     *
-     * @param string $mask
-     * @return array
      */
     private static function parseMask(string $mask): array {
         return explode('->', $mask);

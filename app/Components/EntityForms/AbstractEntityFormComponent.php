@@ -67,8 +67,6 @@ abstract class AbstractEntityFormComponent extends FormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws ModelException
      */
     abstract protected function handleFormSuccess(Form $form): void;

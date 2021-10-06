@@ -47,8 +47,6 @@ final class TaskCodePreprocessor {
     }
 
     /**
-     * @param string $code
-     * @return string
      * @throws TaskCodeException
      */
     public static function createFullCode(string $code): string {
@@ -61,8 +59,6 @@ final class TaskCodePreprocessor {
     }
 
     /**
-     * @param string $code
-     * @return ModelFyziklaniTeam|ActiveRow
      * @throws TaskCodeException
      */
     public function getTeam(string $code): ModelFyziklaniTeam {
@@ -77,8 +73,6 @@ final class TaskCodePreprocessor {
     }
 
     /**
-     * @param string $code
-     * @return ModelFyziklaniTask
      * @throws TaskCodeException
      */
     public function getTask(string $code): ModelFyziklaniTask {

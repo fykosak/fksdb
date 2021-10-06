@@ -18,7 +18,6 @@ interface DataProvider {
      * Provider may or may not use knowledge of this update.
      *
      * @param int id
-     * @return void
      */
     public function setDefaultValue($id): void;
 }

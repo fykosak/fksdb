@@ -70,7 +70,6 @@ class DuplicateFinder {
     /**
      * @param ModelPerson|ModelPersonInfo $a
      * @param ModelPerson|ModelPersonInfo $b
-     * @return float
      * @todo Implement more than binary score.
      */
     private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
@@ -103,7 +102,6 @@ class DuplicateFinder {
 
     /**
      * @param ActiveRow|ModelPersonInfo $person
-     * @return array
      */
     private function getDifferentPersons(ActiveRow $person): array {
         if (!isset($person->duplicates)) {

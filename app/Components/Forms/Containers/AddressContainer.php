@@ -43,7 +43,6 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param ModelPostContact|mixed $data
-     * @param bool $erase
      * @return static
      */
     public function setValues($data, bool $erase = false): self {
@@ -66,7 +65,6 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param null $returnType
-     * @param array|null $controls
      * @return array|ArrayHash
      */
     public function getUnsafeValues($returnType = null, array $controls = null) {

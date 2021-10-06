@@ -80,7 +80,6 @@ class BaseHolder {
 
     /**
      * @param bool|callable $modifiable
-     * @return void
      */
     public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
@@ -88,7 +87,6 @@ class BaseHolder {
 
     /**
      * @param bool|callable $visible
-     * @return void
      */
     public function setVisible($visible): void {
         $this->visible = $visible;
@@ -103,7 +101,6 @@ class BaseHolder {
     }
 
     /**
-     * @param ModelEvent $event
      * @throws NeonSchemaException
      */
     private function setEvent(ModelEvent $event): void {
@@ -113,7 +110,6 @@ class BaseHolder {
     }
 
     /**
-     * @param ModelEvent $event
      * @throws NeonSchemaException
      */
     public function inferEvent(ModelEvent $event): void {

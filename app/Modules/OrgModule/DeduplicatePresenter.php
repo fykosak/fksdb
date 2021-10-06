@@ -48,8 +48,6 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-     * @param int $trunkId
-     * @param int $mergedId
      * @throws NotFoundException
      */
     public function authorizedDontMerge(int $trunkId, int $mergedId): void
@@ -58,8 +56,6 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-     * @param int $trunkId
-     * @param int $mergedId
      * @throws NotFoundException
      */
     public function authorizedMerge(int $trunkId, int $mergedId): void
@@ -95,8 +91,6 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-     * @param int $trunkId
-     * @param int $mergedId
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -223,7 +217,6 @@ class DeduplicatePresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws \ReflectionException
      * @throws BadTypeException
      */

@@ -29,7 +29,6 @@ class YearCalculator {
 
     /**
      * The academic year starts at 1st day of self::FIRST_AC_MONTH.
-     * @return int
      */
     public static function getCurrentAcademicYear(): int {
         $calYear = date('Y');
@@ -53,8 +52,6 @@ class YearCalculator {
     }
 
     /**
-     * @param ModelContest $contest
-     * @return int
      * @see getCurrentAcademicYear
      */
     public function getForwardShift(ModelContest $contest): int {

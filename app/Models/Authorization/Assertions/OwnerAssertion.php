@@ -3,6 +3,7 @@
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
+use FKSDB\Models\Events\Semantics\Role;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestant;
@@ -15,23 +16,22 @@ use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\UserStorage;
 
-class OwnerAssertion {
+class OwnerAssertion
+{
 
     private UserStorage $userStorage;
 
-    public function __construct(UserStorage $userStorage) {
+    public function __construct(UserStorage $userStorage)
+    {
         $this->userStorage = $userStorage;
     }
 
     /**
-     *
-     * @param Permission $acl
-     * @param string $role
-     * @param string $resourceId
-     * @param string $privilege
-     * @return bool
+     * @param string|Role $role
+     * @param string|Resource $resourceId
      */
-    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isSubmitUploader(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    {
         [, $login] = $this->userStorage->getState();
         if (!$login) {
             throw new InvalidStateException('Expecting logged user.');
@@ -47,14 +47,11 @@ class OwnerAssertion {
 
     /**
      * Checks whether contestant belongs to the same contest as the role was assigned.
-     *
-     * @param Permission $acl
-     * @param string $role
-     * @param string $resourceId
-     * @param string $privilege
-     * @return bool
+     * @param string|Role $role
+     * @param string|Resource $resourceId
      */
-    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isOwnContestant(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    {
         [$state] = $this->userStorage->getState();
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
@@ -69,14 +66,11 @@ class OwnerAssertion {
 
     /**
      * Checks whether person is contestant in any of the role-assigned contests.
-     *
-     * @param Permission $acl
-     * @param string $role
-     * @param string $resourceId
-     * @param string $privilege
-     * @return bool
+     * @param string|Role $role
+     * @param string|Resource $resourceId
      */
-    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    {
         [$state] = $this->userStorage->getState();
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
@@ -95,14 +89,11 @@ class OwnerAssertion {
      * Check that the person is the person of logged user.
      *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
-     *
-     * @param Permission $acl
-     * @param string $role
-     * @param string $resourceId
-     * @param string $privilege
-     * @return bool
+     * @param string|Role $role
+     * @param string|Resource $resourceId
      */
-    public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function isSelf(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    {
         /** @var IIdentity $login */
         [$state, $login] = $this->userStorage->getState();
         if (!$state) {

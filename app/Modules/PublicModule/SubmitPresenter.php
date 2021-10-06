@@ -220,7 +220,6 @@ class SubmitPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws StorageException
      */
     private function handleUploadFormSuccess(Form $form): void

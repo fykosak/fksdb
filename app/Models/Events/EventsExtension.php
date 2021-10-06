@@ -75,7 +75,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @return void
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -232,9 +231,6 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param string $name
-     * @param array $definition
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -278,10 +274,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param string $eventName
-     * @param string $baseName
-     * @param string $instanceName
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -325,8 +317,6 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param string $name
-     * @param array $definition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -367,11 +357,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param string $eventName
-     * @param string $baseName
-     * @param string $instanceName
-     * @param array $instanceDefinition
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */

@@ -37,9 +37,7 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver {
     }
 
     /**
-     * @param ModelPerson $person
-     * @param string|Resource $privilege
-     * @return bool
+     * @param string|Resource|null $privilege
      */
     private function isAllowed(ModelPerson $person, $privilege): bool {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);

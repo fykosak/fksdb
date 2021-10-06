@@ -33,7 +33,6 @@ class WebServiceModel {
     /**
      * This method should be called when handling AuthenticationCredentials SOAP header.
      *
-     * @param \stdClass $args
      * @throws \SoapFault
      * @throws \Exception
      */
@@ -52,9 +51,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param string $name
      * @param \stdClass[] $arguments
-     * @return \SoapVar
      * @throws \SoapFault
      * @throws \ReflectionException
      */
@@ -74,7 +71,6 @@ class WebServiceModel {
     }
 
     /**
-     * @param string $serviceName
      * @throws \SoapFault
      */
     private function checkAuthentication(string $serviceName): void {

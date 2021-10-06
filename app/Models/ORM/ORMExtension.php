@@ -46,11 +46,7 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
     }
 
     /**
-     * @param string $tableName
-     * @param string $modelClassName
-     * @param string $linkId
      * @param string|array $def
-     * @return ServiceDefinition
      */
     private function createLinkFactory(string $tableName, string $modelClassName, string $linkId, $def): ServiceDefinition {
         $builder = $this->getContainerBuilder();
@@ -64,11 +60,7 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
     }
 
     /**
-     * @param string $tableName
-     * @param string $modelClassName
-     * @param string $fieldName
      * @param array|string $field
-     * @return ServiceDefinition
      * @throws NotImplementedException
      */
     private function createColumnFactory(string $tableName, string $modelClassName, string $fieldName, $field): ServiceDefinition {
@@ -191,7 +183,6 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
 
     /**
      * @param string|Statement $value
-     * @return string
      */
     private function translate($value): string {
         if ($value instanceof Statement) {

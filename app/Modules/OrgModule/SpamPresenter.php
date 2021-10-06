@@ -83,8 +83,7 @@ class SpamPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string $resource
-     * @param string|null $privilege
+     * @param Resource|string|null $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

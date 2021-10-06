@@ -47,7 +47,6 @@ abstract class AbstractResultsModel {
     }
 
     /**
-     * @param ModelCategory $category
      * @return Row[]
      * @throws \PDOException
      */
@@ -73,7 +72,6 @@ abstract class AbstractResultsModel {
 
     /**
      * Unused?
-     * @return array
      */
     public function getMetaColumns(): array {
         return [
@@ -88,8 +86,6 @@ abstract class AbstractResultsModel {
 
     /**
      * @note Work only with numeric types.
-     * @param iterable $conditions
-     * @return string
      */
     protected function conditionsToWhere(iterable $conditions): string {
         $where = [];

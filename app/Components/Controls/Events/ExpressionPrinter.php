@@ -10,7 +10,6 @@ class ExpressionPrinter {
 
     /**
      * @param mixed $expression
-     * @return string
      */
     public function printExpression($expression): string {
         if (is_scalar($expression)) {

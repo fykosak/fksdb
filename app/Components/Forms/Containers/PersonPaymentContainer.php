@@ -41,7 +41,6 @@ class PersonPaymentContainer extends ContainerWithOptions {
     }
 
     /**
-     * @return void
      * @throws NotImplementedException
      */
     protected function configure(): void {

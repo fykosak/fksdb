@@ -14,13 +14,6 @@ class ServiceAuthToken extends AbstractService {
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**
-     * @param ModelLogin $login
-     * @param string $type
-     * @param \DateTimeInterface|null $until
-     * @param null|string $data
-     * @param bool $refresh
-     * @param \DateTimeInterface|null $since
-     * @return ModelAuthToken
      * @throws ModelException
      */
     public function createToken(ModelLogin $login, string $type, ?\DateTimeInterface $until, ?string $data = null, bool $refresh = false, ?\DateTimeInterface $since = null): ModelAuthToken {
@@ -86,7 +79,6 @@ class ServiceAuthToken extends AbstractService {
 
     /**
      * @param string|ModelAuthToken $token
-     * @return void
      */
     public function disposeToken($token): void {
         if (!$token instanceof ModelAuthToken) {

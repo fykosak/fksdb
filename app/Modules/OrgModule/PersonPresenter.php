@@ -171,7 +171,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param bool $throw
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(bool $throw = true): int
@@ -227,7 +226,6 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @param Resource|string $resource
-     * @param string|null $privilege
      * all auth method is overwritten
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
