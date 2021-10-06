@@ -106,7 +106,7 @@ class SubmitsGrid extends BaseGrid
             })->setShow(function (ActiveRow $row): bool {
                 $submit = ModelSubmit::createFromActiveRow($row);
                 if (!$submit->isQuiz()) {
-                    return $submit->corrected;
+                    return (bool)$submit->corrected;
                 } else {
                     return false;
                 }
