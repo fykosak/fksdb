@@ -75,14 +75,6 @@ class ReferencedPersonFactory {
     }
 
     /**
-     * @param ModelPerson|null $person
-     * @param string $sub
-     * @param string $field
-     * @param ModelContestYear $contestYear
-     * @param bool $extrapolate
-     * @param bool $hasDelivery
-     * @param bool $targetValidation
-     * @param ModelEvent|null $event
      * @return mixed
      */
     public static function getPersonValue(?ModelPerson $person, string $sub, string $field, ModelContestYear $contestYear, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false, ?ModelEvent $event = null) {

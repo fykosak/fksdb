@@ -35,8 +35,6 @@ class MassTransitionsComponent extends BaseComponent {
     }
 
     /**
-     * @param string $name
-     * @return void
      * @throws NeonSchemaException
      */
     public function handleTransition(string $name): void {

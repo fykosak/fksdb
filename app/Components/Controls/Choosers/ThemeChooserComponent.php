@@ -42,7 +42,6 @@ class ThemeChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $item === $this->getSelectedTheme();
@@ -50,7 +49,6 @@ class ThemeChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title($item);
@@ -58,7 +56,6 @@ class ThemeChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

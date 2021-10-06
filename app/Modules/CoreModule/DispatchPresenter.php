@@ -34,7 +34,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelPerson $person
      * @throws InvalidLinkException
      */
     private function getAllContestants(ModelPerson $person): array
@@ -55,7 +54,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelLogin $login
      * @throws InvalidLinkException
      */
     private function getAllOrganisers(ModelLogin $login): array

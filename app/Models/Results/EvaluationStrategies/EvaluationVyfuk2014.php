@@ -38,7 +38,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @return string
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1') {
@@ -54,8 +53,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
-     * @return int|null
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
         if ($task->label == '1' && $task->series < 7) {

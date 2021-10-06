@@ -20,7 +20,6 @@ class TShirtSizeColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelEventParticipant $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new StringPrinter())($model->tshirt_size);

@@ -24,7 +24,6 @@ trait ClientDataTrait {
 
     /**
      * @param string|int|null $key
-     * @return array|null
      */
     public function getClientData($key = null): ?array {
         if ($key === null) {

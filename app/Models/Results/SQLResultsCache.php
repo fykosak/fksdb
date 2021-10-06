@@ -39,7 +39,6 @@ class SQLResultsCache
     }
 
     /**
-     * @param ModelContestYear $contestYear
      * @throws BadRequestException
      * @throws \PDOException
      */
@@ -82,9 +81,6 @@ class SQLResultsCache
 
     /**
      * Calculate points from form-based tasks, such as quizzes.
-     *
-     * @param ModelContestYear $contestYear
-     * @param int $series
      */
     public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void
     {

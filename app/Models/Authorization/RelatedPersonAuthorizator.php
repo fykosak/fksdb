@@ -20,9 +20,6 @@ class RelatedPersonAuthorizator {
     /**
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
-     *
-     * @param Holder $holder
-     * @return bool
      */
     public function isRelatedPerson(Holder $holder): bool {
         // everyone is related

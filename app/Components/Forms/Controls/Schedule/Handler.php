@@ -26,10 +26,6 @@ class Handler {
     }
 
     /**
-     * @param ArrayHash $data
-     * @param ModelPerson $person
-     * @param ModelEvent $event
-     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
@@ -41,11 +37,6 @@ class Handler {
     }
 
     /**
-     * @param array $newScheduleData
-     * @param string $type
-     * @param ModelPerson $person
-     * @param ModelEvent $event
-     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException

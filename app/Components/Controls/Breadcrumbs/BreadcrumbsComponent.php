@@ -52,7 +52,6 @@ class BreadcrumbsComponent extends BaseComponent {
 
     /**
      * Breadcrumbs constructor.
-     * @param Container $container
      */
     public function __construct(Container $container) {
         parent::__construct($container);
@@ -75,7 +74,6 @@ class BreadcrumbsComponent extends BaseComponent {
      * ********************** */
 
     /**
-     * @param AppRequest $request
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -147,8 +145,6 @@ class BreadcrumbsComponent extends BaseComponent {
     }
 
     /**
-     * @param AppRequest $request
-     * @param int|null $maxLen
      * @return NaviRequest[]
      */
     private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
@@ -189,7 +185,6 @@ class BreadcrumbsComponent extends BaseComponent {
     /**
      *
      * @param AppRequest|string|NaviRequest $request
-     * @return string
      * @throws \ReflectionException
      */
     private function getPathKey($request): string {
@@ -244,7 +239,6 @@ class BreadcrumbsComponent extends BaseComponent {
      * ********************** */
 
     /**
-     * @param string|null $backLink
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -271,9 +265,6 @@ class BreadcrumbsComponent extends BaseComponent {
 
     /**
      * @param NavigablePresenter|Presenter $presenter
-     * @param AppRequest $request
-     * @param string|null $backLink
-     * @return Request
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -312,9 +303,6 @@ class BreadcrumbsComponent extends BaseComponent {
 
     /**
      * Filter only parameters relevant to identify the request.
-     *
-     * @param array $parameters
-     * @return array
      */
     protected function filterParameters(iterable $parameters): array {
         $result = [];

@@ -41,7 +41,6 @@ class PointsEntryComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws NotSetGameParametersException
      */
     protected function getData(): array {
@@ -53,7 +52,6 @@ class PointsEntryComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws InvalidLinkException
      */
     protected function getActions(): array {

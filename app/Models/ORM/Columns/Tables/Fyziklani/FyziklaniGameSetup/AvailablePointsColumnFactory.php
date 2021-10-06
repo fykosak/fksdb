@@ -10,7 +10,6 @@ use Nette\Utils\Html;
 class AvailablePointsColumnFactory extends ColumnFactory{
     /**
      * @param AbstractModel|ModelFyziklaniGameSetup $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $container = Html::el('span');

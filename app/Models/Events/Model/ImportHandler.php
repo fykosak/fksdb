@@ -36,10 +36,6 @@ class ImportHandler {
     }
 
     /**
-     * @param ApplicationHandler $handler
-     * @param string $errorMode
-     * @param string $stateless
-     * @return bool
      * @throws ImportHandlerException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -90,8 +86,6 @@ class ImportHandler {
     }
 
     /**
-     * @param iterable $row
-     * @return array
      * @throws ImportHandlerException
      */
     private function rowToValues(iterable $row): array {

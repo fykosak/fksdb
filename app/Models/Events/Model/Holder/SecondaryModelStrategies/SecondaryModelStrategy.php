@@ -13,7 +13,6 @@ abstract class SecondaryModelStrategy {
     /**
      * @param BaseHolder[] $holders
      * @param ActiveRow[] $models
-     * @return void
      */
     public function setSecondaryModels(array $holders, iterable $models): void {
         $filledHolders = 0;
@@ -30,11 +29,7 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param AbstractService|AbstractServiceMulti $service
-     * @param string|null $joinOn
-     * @param string|null $joinTo
      * @param BaseHolder[] $holders
-     * @param ActiveRow|null $primaryModel
-     * @return void
      */
     public function loadSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ?ActiveRow $primaryModel = null): void {
         if ($primaryModel) {
@@ -52,11 +47,7 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param AbstractService|AbstractServiceMulti $service
-     * @param string|null $joinOn
-     * @param string|null $joinTo
      * @param BaseHolder[] $holders
-     * @param ActiveRow $primaryModel
-     * @return void
      */
     public function updateSecondaryModels($service, ?string $joinOn, ?string $joinTo, array $holders, ActiveRow $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();

@@ -43,7 +43,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     abstract protected function getSource(): Selection;
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl
@@ -84,8 +83,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -113,7 +110,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     abstract protected function getHoldersColumns(): array;
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */

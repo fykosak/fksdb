@@ -56,8 +56,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -142,7 +140,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl

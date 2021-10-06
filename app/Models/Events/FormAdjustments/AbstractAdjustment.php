@@ -30,7 +30,6 @@ abstract class AbstractAdjustment implements FormAdjustment {
     }
 
     /**
-     * @param string $mask
      * @return FormControl[]
      */
     final protected function getControl(string $mask): array {

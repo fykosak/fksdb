@@ -25,8 +25,6 @@ class PersonGrid extends BaseGrid
     }
 
     /**
-     * @param ModelPerson|null $person
-     * @param ModelEvent|null $event
      * @throws \InvalidArgumentException
      * @throws GridException
      */
@@ -40,8 +38,6 @@ class PersonGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */

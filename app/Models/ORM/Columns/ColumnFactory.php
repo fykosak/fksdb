@@ -48,8 +48,6 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws OmittedControlException
      */
     final public function createField(...$args): BaseControl {
@@ -109,8 +107,6 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws OmittedControlException
      */
     protected function createFormControl(...$args): BaseControl {
@@ -122,9 +118,6 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param AbstractModel $model
-     * @param int $userPermissionsLevel
-     * @return Html
      * @throws CannotAccessModelException
      */
     final public function render(AbstractModel $model, int $userPermissionsLevel): Html {
@@ -139,8 +132,6 @@ abstract class ColumnFactory {
     }
 
     /**
-     * @param AbstractModel $modelSingle
-     * @return AbstractModel|null
      * @throws CannotAccessModelException
      */
     protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {

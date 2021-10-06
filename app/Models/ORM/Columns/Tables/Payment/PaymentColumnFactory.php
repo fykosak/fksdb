@@ -23,8 +23,6 @@ class PaymentColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws AbstractColumnException
      */
     protected function createFormControl(...$args): BaseControl {
@@ -32,8 +30,6 @@ class PaymentColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModel $model
-     * @return Html
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */

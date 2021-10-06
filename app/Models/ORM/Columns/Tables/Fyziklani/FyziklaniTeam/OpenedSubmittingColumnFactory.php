@@ -11,7 +11,6 @@ class OpenedSubmittingColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelFyziklaniTeam $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $html = Html::el('span');

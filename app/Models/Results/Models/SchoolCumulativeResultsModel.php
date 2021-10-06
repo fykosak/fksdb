@@ -30,9 +30,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     *
-     * @param ModelCategory $category
-     * @return array
      */
     public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
@@ -101,7 +98,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param ModelCategory $category
      * @return Row[]
      */
     public function getData(ModelCategory $category): array {

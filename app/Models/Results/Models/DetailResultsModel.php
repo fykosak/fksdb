@@ -17,9 +17,6 @@ class DetailResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     *
-     * @param ModelCategory $category
-     * @return array
      */
     public function getDataColumns(ModelCategory $category): array {
         if (!isset($this->dataColumns[$category->id])) {

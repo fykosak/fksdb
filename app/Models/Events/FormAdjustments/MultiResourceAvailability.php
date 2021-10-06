@@ -36,7 +36,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array $fields Fields that contain amount of the resource
      * @param array|string $paramCapacity Name of the parameter with overall capacity.
      * @param string $message String '%avail' will be substitued for the actual amount of available resource.
-     * @param Explorer $explorer
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */

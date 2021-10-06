@@ -20,11 +20,6 @@ class ScheduleField extends TextInput {
     private ServiceScheduleItem $serviceScheduleItem;
 
     /**
-     * ScheduleField constructor.
-     * @param ModelEvent $event
-     * @param string $type
-     * @param ServiceScheduleItem $serviceScheduleItem
-     * @param string|null $label
      * @throws BadRequestException
      * @throws NotImplementedException
      */
@@ -38,8 +33,6 @@ class ScheduleField extends TextInput {
     }
 
     /**
-     * @param string $type
-     * @return string
      * @throws NotImplementedException
      */
     private function getDefaultLabel(string $type): string {

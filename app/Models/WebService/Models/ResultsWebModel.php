@@ -30,8 +30,6 @@ class ResultsWebModel extends WebModel
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \SoapFault
@@ -126,9 +124,6 @@ class ResultsWebModel extends WebModel
     }
 
     /**
-     * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
@@ -143,8 +138,6 @@ class ResultsWebModel extends WebModel
 
     /**
      * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
@@ -158,9 +151,6 @@ class ResultsWebModel extends WebModel
     }
 
     /**
-     * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
@@ -175,8 +165,6 @@ class ResultsWebModel extends WebModel
 
     /**
      * @param AbstractResultsModel|BrojureResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */

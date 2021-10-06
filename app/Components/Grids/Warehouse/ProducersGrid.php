@@ -22,8 +22,6 @@ class ProducersGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */

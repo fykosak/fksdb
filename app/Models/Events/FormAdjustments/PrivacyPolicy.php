@@ -33,9 +33,6 @@ class PrivacyPolicy implements Processing, FormAdjustment {
     }
 
     /**
-     * @param Form $form
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */

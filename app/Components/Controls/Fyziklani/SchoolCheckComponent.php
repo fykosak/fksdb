@@ -37,7 +37,6 @@ class SchoolCheckComponent extends BaseComponent {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
      * @return ModelSchool[]
      */
     private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array {

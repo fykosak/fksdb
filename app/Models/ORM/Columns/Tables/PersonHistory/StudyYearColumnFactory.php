@@ -14,8 +14,6 @@ use Nette\Utils\Html;
 class StudyYearColumnFactory extends ColumnFactory {
 
     /**
-     * @param array $args
-     * @return BaseControl
      * @throws \InvalidArgumentException
      */
     protected function createFormControl(...$args): BaseControl {

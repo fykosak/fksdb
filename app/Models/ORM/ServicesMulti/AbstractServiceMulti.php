@@ -33,9 +33,6 @@ abstract class AbstractServiceMulti {
 
     /**
      * Use this method to create new models!
-     *
-     * @param array $data
-     * @return AbstractModelMulti
      * @throws ModelException
      */
     public function createNewModel(array $data): AbstractModelMulti {
@@ -52,8 +49,6 @@ abstract class AbstractServiceMulti {
 
     /**
      * @param ActiveRow|AbstractModelMulti $model
-     * @param array $data
-     * @return bool
      * @throws ModelException
      */
     public function updateModel(ActiveRow $model, array $data): bool {
@@ -63,7 +58,6 @@ abstract class AbstractServiceMulti {
     }
 
     /**
-     * @param AbstractModelMulti|ActiveRow $model
      * @throws \InvalidArgumentException
      */
     private function checkType(AbstractModelMulti $model): void {
@@ -75,10 +69,6 @@ abstract class AbstractServiceMulti {
 
     /**
      * Use this method to store a model!
-     *
-     * @param AbstractModelMulti|null $model
-     * @param array $data
-     * @return AbstractModelMulti
      * @deprecated
      */
     public function storeModel(array $data, ?AbstractModelMulti $model = null): AbstractModelMulti {
@@ -92,8 +82,6 @@ abstract class AbstractServiceMulti {
 
     /**
      * Use this method to delete a model!
-     *
-     * @param AbstractModelMulti $model
      * @throws \InvalidArgumentException
      */
     public function dispose(AbstractModelMulti $model): void {
@@ -103,9 +91,7 @@ abstract class AbstractServiceMulti {
     }
 
     /**
-     *
      * @param mixed $key ID of the joined models
-     * @return AbstractModelMulti|null
      */
     public function findByPrimary($key): ?AbstractModelMulti {
         $joinedModel = $this->joinedService->findByPrimary($key);
@@ -132,7 +118,7 @@ abstract class AbstractServiceMulti {
     }
 
     /**
-     * @return string|AbstractModelMulti
+     * @return class-string<AbstractModelMulti>|string|AbstractModelMulti
      */
     final public function getModelClassName(): string {
         return $this->modelClassName;

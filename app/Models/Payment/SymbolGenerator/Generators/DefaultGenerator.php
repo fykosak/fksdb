@@ -32,9 +32,6 @@ class DefaultGenerator extends AbstractSymbolGenerator {
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @param int $variableNumber
-     * @return array
      * @throws UnsupportedCurrencyException
      */
     protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array {
@@ -47,9 +44,6 @@ class DefaultGenerator extends AbstractSymbolGenerator {
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @param mixed ...$args
-     * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */

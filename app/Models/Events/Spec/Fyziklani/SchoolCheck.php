@@ -31,7 +31,6 @@ abstract class SchoolCheck extends AbstractAdjustment implements FormAdjustment 
     /**
      * @param Control[] $schoolControls
      * @param Control[]|ReferencedId[] $personControls
-     * @return array
      */
     final protected function getSchools(array $schoolControls, array $personControls): array {
         $personIds = array_filter(array_map(function (BaseControl $control) {

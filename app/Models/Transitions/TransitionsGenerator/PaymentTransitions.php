@@ -21,11 +21,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
     protected EventAuthorizator $eventAuthorizator;
     protected ServicePersonSchedule $servicePersonSchedule;
 
-    /**
-     * Fyziklani13Payment constructor.
-     * @param EventAuthorizator $eventAuthorizator
-     * @param ServicePersonSchedule $servicePersonSchedule
-     */
     public function __construct(
         EventAuthorizator $eventAuthorizator,
         ServicePersonSchedule $servicePersonSchedule
@@ -35,8 +30,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
     }
 
     /**
-     * @param Machine $machine
-     * @return void
      * @throws BadTypeException
      * @throws \Exception
      */
@@ -54,7 +47,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
 
     /**
      * implicit transition when creating model (it's not executed only try condition!)
-     * @param PaymentMachine $machine
      * @throws \Exception
      */
     private function decorateTransitionInitToNew(PaymentMachine $machine): void {
@@ -63,8 +55,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
     }
 
     /**
-     * @param PaymentMachine $machine
-     * @return void
      * @throws \Exception
      */
     private function decorateTransitionNewToWaiting(PaymentMachine $machine): void {
@@ -75,8 +65,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
     abstract protected function getDatesCondition(): callable;
 
     /**
-     * @param PaymentMachine $machine
-     * @return void
      * @throws UnavailableTransitionsException
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void {
@@ -91,8 +79,6 @@ abstract class PaymentTransitions implements TransitionsDecorator {
     }
 
     /**
-     * @param PaymentMachine $machine
-     * @return void
      * @throws UnavailableTransitionsException
      */
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void {

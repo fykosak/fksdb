@@ -64,7 +64,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param bool $create
      * @throws BadTypeException
      * @throws \ReflectionException
      */

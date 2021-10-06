@@ -26,10 +26,6 @@ class NavigationFactory {
     }
 
     /**
-     * @param Presenter $ownPresenter
-     * @param string $presenterName
-     * @param string $action
-     * @param array|null $providedParams
      * @return Presenter|NavigablePresenter
      * @throws BadRequestException
      * @throws BadTypeException
@@ -43,10 +39,6 @@ class NavigationFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param string $actionParams
-     * @param array|null $params
-     * @return array
      * @throws \ReflectionException
      */
     public function actionParams(Presenter $presenter, string $actionParams, ?array $params): array {
@@ -65,9 +57,6 @@ class NavigationFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param array $node
-     * @return string
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
@@ -80,9 +69,6 @@ class NavigationFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param array $node
-     * @return bool
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException

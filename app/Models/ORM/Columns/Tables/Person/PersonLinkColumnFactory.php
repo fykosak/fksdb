@@ -21,7 +21,6 @@ class PersonLinkColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPerson $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new PersonLink($this->presenterComponent))($model);

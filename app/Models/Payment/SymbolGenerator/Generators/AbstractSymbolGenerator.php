@@ -18,17 +18,12 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @param $args
-     * @return array
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
     abstract protected function create(ModelPayment $modelPayment, ...$args): array;
 
     /**
-     * @param ModelHolder $holder
-     * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
@@ -40,8 +35,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback {
     }
 
     /**
-     * @param ModelHolder $holder
-     * @param $args
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */

@@ -9,10 +9,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 class BornIdColumnFactory extends ColumnFactory {
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
+
     protected function createFormControl(...$args): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());

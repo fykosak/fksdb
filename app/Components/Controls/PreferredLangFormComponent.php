@@ -54,7 +54,6 @@ class PreferredLangFormComponent extends FormComponent {
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function render(): void {

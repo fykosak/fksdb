@@ -15,9 +15,6 @@ use FKSDB\Models\Submits\StorageException;
 class ServiceSchedulePayment extends AbstractService {
 
     /**
-     * @param array $data
-     * @param ModelPayment $payment
-     * @return void
      * @throws DuplicatePaymentException
      * @throws EmptyDataException
      * @throws NotImplementedException

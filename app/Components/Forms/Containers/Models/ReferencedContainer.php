@@ -117,7 +117,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @return void
      * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException

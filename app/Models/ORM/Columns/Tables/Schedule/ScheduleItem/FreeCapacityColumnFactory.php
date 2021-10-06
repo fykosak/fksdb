@@ -12,7 +12,6 @@ class FreeCapacityColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelScheduleItem $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $capacity = null;
