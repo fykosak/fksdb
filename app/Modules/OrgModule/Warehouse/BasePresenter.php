@@ -11,7 +11,6 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     protected function isAllowed($resource, ?string $privilege): bool
     {

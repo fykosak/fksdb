@@ -36,7 +36,6 @@ class CloseTeamComponent extends BaseComponent {
     }
 
     /**
-     * @return void
      * @throws NotSetGameParametersException
      */
     final public function render(): void {
@@ -45,7 +44,6 @@ class CloseTeamComponent extends BaseComponent {
     }
 
     /**
-     * @return string
      * @throws NotSetGameParametersException
      */
     private function getNextTask(): string {

@@ -83,7 +83,6 @@ class ProducerPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

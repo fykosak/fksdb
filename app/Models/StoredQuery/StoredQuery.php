@@ -205,7 +205,6 @@ class StoredQuery implements IDataSource, Resource {
      * ****************************** */
 
     /**
-     * @param array $filters
      * @throws NotImplementedException
      */
     public function filterData(array $filters): void {
@@ -213,8 +212,6 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     /**
-     * @param string $column
-     * @return int
      * @throws \PDOException
      */
     public function getCount(string $column = '*'): int {
@@ -229,7 +226,6 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     /**
-     * @return \PDOStatement
      * @throws \PDOException
      */
     public function getData(): \PDOStatement {

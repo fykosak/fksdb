@@ -56,13 +56,7 @@ class MailSender {
 
     /**
      * MailSender constructor.
-     * @param string $filename
      * @param array|string $addresees
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param AccountManager $accountManager
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServicePerson $servicePerson
-     * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
         string $filename,
@@ -83,9 +77,6 @@ class MailSender {
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -94,9 +85,6 @@ class MailSender {
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -122,10 +110,6 @@ class MailSender {
     }
 
     /**
-     * @param ModelLogin $login
-     * @param BaseMachine $baseMachine
-     * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws ModelException
@@ -182,14 +166,6 @@ class MailSender {
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param ActiveRow $application
-     * @param Holder $holder
-     * @param Machine $machine
-     * @return string
-     * TODO extension point
-     */
     private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');

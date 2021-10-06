@@ -134,7 +134,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @param bool $need
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -152,8 +151,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @param string $destination
-     * @param array|null $args
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
@@ -279,8 +276,6 @@ abstract class BasePresenter extends Presenter implements
     /**
      * Formats title method name.
      * Method should set the title of the page using setTitle method.
-     *
-     * @param string
      */
     protected static function formatTitleMethod(string $view): string
     {

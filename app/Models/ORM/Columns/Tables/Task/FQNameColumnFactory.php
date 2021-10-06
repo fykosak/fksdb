@@ -13,15 +13,12 @@ class FQNameColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelTask $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('span')->addText($model->getFQName());
     }
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws AbstractColumnException
      */
     protected function createFormControl(...$args): BaseControl {

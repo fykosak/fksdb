@@ -23,10 +23,6 @@ class GettextTranslator implements Translator {
         return $this->lang;
     }
 
-    /**
-     *
-     * @param string $lang ISO 639-1
-     */
     public function setLang(string $lang): void {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
@@ -50,8 +46,6 @@ class GettextTranslator implements Translator {
 
     /**
      * @param string $message
-     * @param ...$parameters
-     * @return string
      */
     public function translate($message, ...$parameters): string {
         [$count] = $parameters;
@@ -66,9 +60,6 @@ class GettextTranslator implements Translator {
     }
 
     /**
-     * @param object $object
-     * @param string $field
-     * @param string $lang
      * @return mixed
      */
     public static function i18nHelper(object $object, string $field, string $lang) {

@@ -48,7 +48,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
@@ -122,7 +121,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
@@ -133,7 +131,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Check if is contest and event org
      * TODO vyfakuje to aj cartesianov
      * @throws EventNotFoundException

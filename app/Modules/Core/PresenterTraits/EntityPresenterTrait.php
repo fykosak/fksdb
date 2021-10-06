@@ -6,11 +6,13 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
@@ -23,20 +25,18 @@ trait EntityPresenterTrait
     public ?int $id = null;
     protected ?AbstractModel $model;
 
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedList(): void
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
 
-    /**
-     * @param bool $access
-     * @return void
-     */
-    abstract public function setAuthorized(bool $access);
+    abstract public function setAuthorized(bool $access): void;
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
@@ -48,14 +48,18 @@ trait EntityPresenterTrait
     abstract protected function getORMService(): AbstractService;
 
     /* ****************** TITLES ***************************** */
-
+    /**
+     * @throws EventNotFoundException
+     */
     public function authorizedCreate(): void
     {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'create'));
     }
 
     /**
+     * @throws EventNotFoundException
      * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function authorizedEdit(): void
     {
@@ -63,7 +67,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @param bool $throw
      * @throws ModelNotFoundException
      */
     public function getEntity(bool $throw = true): ?AbstractModel
@@ -77,7 +80,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @param string $name
      * @param null $default
      * @return mixed
      */
@@ -89,7 +91,6 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @param bool $throw
      * @throws ModelNotFoundException
      */
     private function loadModel(bool $throw = true): ?AbstractModel
@@ -106,6 +107,8 @@ trait EntityPresenterTrait
     }
 
     /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function authorizedDelete(): void
@@ -114,6 +117,8 @@ trait EntityPresenterTrait
     }
 
     /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function authorizedDetail(): void
@@ -147,7 +152,8 @@ trait EntityPresenterTrait
     }
 
     /**
-     * @throws ModelException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void

@@ -31,8 +31,6 @@ class DispatchGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException

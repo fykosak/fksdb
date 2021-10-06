@@ -2,17 +2,17 @@
 
 namespace FKSDB\Models\ORM;
 
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
-use Tracy\Debugger;
 
 final class ReferencedAccessor
 {
 
     /**
-     * @param ActiveRow $model
-     * @param string $modelClassName
-     * @return ActiveRow|null
+     * @template T
+     * @param class-string<T>|string $modelClassName
+     * @return T|ActiveRow|null
      * @throws CannotAccessModelException
      */
     public static function accessModel(ActiveRow $model, string $modelClassName): ?ActiveRow

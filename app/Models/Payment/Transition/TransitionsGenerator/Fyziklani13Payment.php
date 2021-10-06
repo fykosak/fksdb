@@ -8,7 +8,6 @@ use FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions;
 class Fyziklani13Payment extends PaymentTransitions {
 
     /**
-     * @return callable
      * @throws \Exception
      */
     protected function getDatesCondition(): callable {

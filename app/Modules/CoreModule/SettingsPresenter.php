@@ -179,7 +179,6 @@ class SettingsPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws ModelException
      */
     private function handleSettingsFormSuccess(Form $form): void

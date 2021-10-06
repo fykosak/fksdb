@@ -37,8 +37,6 @@ class PersonsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -59,7 +57,6 @@ class PersonsGrid extends BaseGrid
 
     /**
      * @param TestLog[] $logs
-     * @return Html
      * @throws BadTypeException
      * @throws NotImplementedException
      */

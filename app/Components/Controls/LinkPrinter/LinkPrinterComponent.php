@@ -18,9 +18,6 @@ class LinkPrinterComponent extends BaseComponent {
     }
 
     /**
-     * @param string $linkId
-     * @param AbstractModel $model
-     * @return void
      * @throws BadTypeException
      * @throws CannotAccessModelException
      * @throws InvalidLinkException

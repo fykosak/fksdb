@@ -27,8 +27,6 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param array $user
-     * @return ModelLogin
      * @throws UnknownLoginException
      * @throws AuthenticationException
      * @throws InactiveLoginException
@@ -53,8 +51,6 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param array $user
-     * @return ModelPerson|null
      * @throws AuthenticationException
      */
     private function findPerson(array $user): ?ModelPerson {

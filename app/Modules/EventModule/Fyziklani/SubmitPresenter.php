@@ -111,7 +111,6 @@ class SubmitPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

@@ -38,9 +38,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param ModelSubmit $submit
-     * @return void
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws StorageException
@@ -59,9 +56,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param ModelSubmit $submit
-     * @return void
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws StorageException
@@ -80,8 +74,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param ModelSubmit $submit
-     * @return void
      * @throws ForbiddenRequestException
      * @throws StorageException
      * @throws ModelException
@@ -124,9 +116,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param int $id
-     * @param bool $throw
-     * @return ModelSubmit|null
      * @throws NotFoundException
      */
     public function getSubmit(int $id, bool $throw = true): ?ModelSubmit {
@@ -138,9 +127,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param ModelSubmit $submit
-     * @param string $privilege
-     * @return void
      * @throws ForbiddenRequestException
      */
     private function checkPrivilege(ModelSubmit $submit, string $privilege): void {

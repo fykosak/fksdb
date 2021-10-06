@@ -23,9 +23,6 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
     /**
      * TeamsPerSchool constructor.
      * @param callable|int $teamsPerSchool
-     * @param ExpressionEvaluator $evaluator
-     * @param Explorer $explorer
-     * @param ServicePersonHistory $servicePersonHistory
      */
     public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Explorer $explorer, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
@@ -43,7 +40,6 @@ class TeamsPerSchool extends SchoolCheck implements FormAdjustment {
 
     /**
      * @param callable|int $teamsPerSchool
-     * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool): void {
         $this->teamsPerSchool = $teamsPerSchool;

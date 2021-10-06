@@ -25,10 +25,7 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
 
     /**
      * PersonContainerResolver constructor.
-     * @param Field $field
      * @param callable|bool $condition
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
      */
     public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;

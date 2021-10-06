@@ -9,7 +9,6 @@ abstract class EvaluatedExpression {
 
     /**
      * @param mixed $evaluated
-     * @param ...$args
      * @return mixed
      */
     final protected function evaluateArgument($evaluated, ...$args) {
@@ -21,7 +20,6 @@ abstract class EvaluatedExpression {
     }
 
     /**
-     * @param array ...$args
      * @return mixed
      */
     abstract public function __invoke(...$args);

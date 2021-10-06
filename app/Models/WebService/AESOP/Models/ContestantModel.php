@@ -20,9 +20,6 @@ class ContestantModel extends AESOPModel {
 
     /**
      * ContestantModel constructor.
-     * @param Container $container
-     * @param ModelContestYear $contestYear
-     * @param string|null $category
      * @throws BadRequestException
      */
     public function __construct(Container $container, ModelContestYear $contestYear, ?string $category) {
@@ -36,7 +33,6 @@ class ContestantModel extends AESOPModel {
     }
 
     /**
-     * @return PlainTextResponse
      * @throws BadRequestException
      */
     public function createResponse(): PlainTextResponse {
@@ -90,9 +86,6 @@ WHERE
     }
 
     /**
-     *
-     * @param string|null $stringCategory
-     * @return ModelCategory|null
      * @throws BadRequestException
      */
     private function getCategory(?string $stringCategory): ?ModelCategory {
@@ -106,8 +99,6 @@ WHERE
     }
 
     /**
-     * @param ResultSet $data
-     * @return array
      * @throws BadRequestException
      */
     private function filterCategory(ResultSet $data): array {

@@ -23,7 +23,6 @@ class ContainerWithOptions extends Container {
      * Options recognized by DefaultFormRenderer
      * - 'description' - textual or Html object description
      *
-     * @param string key
      * @param mixed value
      * @return static
      */
@@ -38,7 +37,6 @@ class ContainerWithOptions extends Container {
 
     /**
      * Returns user-specific option.
-     * @param string key
      * @param mixed  default value
      * @return mixed
      */
@@ -48,7 +46,6 @@ class ContainerWithOptions extends Container {
 
     /**
      * Returns user-specific options.
-     * @return array
      */
     final public function getOptions(): array {
         return $this->options;

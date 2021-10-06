@@ -43,7 +43,6 @@ class TaskGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void

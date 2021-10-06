@@ -13,7 +13,6 @@ class ParticipantListLink extends LinkFactory {
 
     /**
      * @param AbstractModel|ModelEvent $model
-     * @return string
      */
     protected function getDestination(AbstractModel $model): string {
         if ($model->isTeamEvent()) {
@@ -25,7 +24,6 @@ class ParticipantListLink extends LinkFactory {
 
     /**
      * @param AbstractModel|ModelEvent $model
-     * @return array
      */
     protected function prepareParams(AbstractModel $model): array {
         return [

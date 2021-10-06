@@ -68,8 +68,6 @@ class ModelLogin extends AbstractModel implements IIdentity {
      * Sets hash of the instance with correct hashing function.
      *
      * @note Must be called after setting login_id.
-     * @param string $password
-     * @return string
      */
     public function createHash(string $password): string {
         return PasswordAuthenticator::calculateHash($password, $this);

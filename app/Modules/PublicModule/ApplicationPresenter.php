@@ -136,8 +136,6 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $eventId
-     * @param int|null $id
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException

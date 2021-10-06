@@ -23,12 +23,6 @@ class StudyYearsFromXML extends Stage {
     private ServiceTaskStudyYear $serviceTaskStudyYear;
     private ServiceStudyYear $serviceStudyYear;
 
-    /**
-     * StudyYearsFromXML2 constructor.
-     * @param array $defaultStudyYears
-     * @param ServiceTaskStudyYear $serviceTaskStudyYear
-     * @param ServiceStudyYear $serviceStudyYear
-     */
     public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;

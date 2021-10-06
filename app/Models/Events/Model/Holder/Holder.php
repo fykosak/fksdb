@@ -99,7 +99,6 @@ class Holder {
     }
 
     /**
-     * @param ModelEvent $event
      * @return static
      * @throws NeonSchemaException
      */
@@ -150,11 +149,7 @@ class Holder {
     /**
      * Apply processings to the values and sets them to the ORM model.
      *
-     * @param ArrayHash $values
-     * @param Machine $machine
      * @param Transition[] $transitions
-     * @param Logger $logger
-     * @param Form|null $form
      * @return string[] machineName => new state
      */
     public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array {
@@ -217,7 +212,6 @@ class Holder {
      */
 
     /**
-     * @param string $name
      * @return mixed
      */
     public function getParameter(string $name) {

@@ -19,7 +19,6 @@ class FormControl extends BaseComponent {
     }
 
     /**
-     * @return Form
      * @throws BadTypeException
      */
     final public function getForm(): Form {

@@ -18,10 +18,6 @@ class Before extends EvaluatedExpression {
         $this->datetime = $datetime;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     public function __invoke(...$args): bool {
         $datetime = $this->evaluateArgument($this->datetime, ...$args);
         if (!$datetime instanceof \DateTimeInterface) {

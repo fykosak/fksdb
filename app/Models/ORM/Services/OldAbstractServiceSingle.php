@@ -19,8 +19,6 @@ use Fykosak\NetteORM\AbstractModel;
 abstract class OldAbstractServiceSingle extends AbstractService {
 
     /**
-     * @param array $data
-     * @return AbstractModel
      * @deprecated
      * @internal Used also in MultiTableSelection.
      */

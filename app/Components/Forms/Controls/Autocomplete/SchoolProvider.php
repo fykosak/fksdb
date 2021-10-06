@@ -27,9 +27,6 @@ class SchoolProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $search = trim($search);
@@ -69,7 +66,6 @@ class SchoolProvider implements FilteredDataProvider {
     }
 
     /**
-     * @return array
      * @throws NotImplementedException
      */
     public function getItems(): array {
@@ -85,7 +81,6 @@ class SchoolProvider implements FilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return void
      */
     public function setDefaultValue($id): void {
         $this->defaultValue = $id;

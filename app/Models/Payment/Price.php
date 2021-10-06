@@ -19,7 +19,6 @@ class Price {
     }
 
     /**
-     * @param Price $price
      * @throws \LogicException
      */
     public function add(Price $price): void {
@@ -49,8 +48,6 @@ class Price {
     }
 
     /**
-     * @param string $currency
-     * @return string
      * @throws UnsupportedCurrencyException
      */
     public static function getLabel(string $currency): string {
@@ -65,7 +62,6 @@ class Price {
     }
 
     /**
-     * @return string
      * @throws UnsupportedCurrencyException
      */
     public function __toString(): string {

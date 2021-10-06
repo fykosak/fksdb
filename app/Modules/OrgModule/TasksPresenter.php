@@ -88,7 +88,6 @@ class TasksPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $seriesForm
      * @throws UploadException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void

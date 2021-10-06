@@ -54,10 +54,6 @@ class BaseMachine {
         }
     }
 
-    /**
-     * @param string state identification
-     * @return string
-     */
     public function getStateName(string $state): string {
         switch ($state) {
             case \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT:
@@ -77,10 +73,6 @@ class BaseMachine {
     }
 
     /**
-     * @param Holder $holder
-     * @param string $sourceState
-     * @param bool $visible
-     * @param bool $executable
      * @return Transition[]
      */
     public function getAvailableTransitions(Holder $holder, string $sourceState, bool $visible = false, bool $executable = true): array {
@@ -104,7 +96,6 @@ class BaseMachine {
     }
 
     /**
-     * @param string $sourceStateMask
      * @return Transition[]
      */
     private function getMatchingTransitions(string $sourceStateMask): array {

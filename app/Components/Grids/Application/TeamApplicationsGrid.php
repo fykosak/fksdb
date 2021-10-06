@@ -20,8 +20,6 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
 {
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
