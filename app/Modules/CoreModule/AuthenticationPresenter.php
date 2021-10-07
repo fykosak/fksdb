@@ -214,7 +214,6 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws \Exception
      */
     private function loginFormSubmitted(Form $form): void
@@ -249,7 +248,6 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

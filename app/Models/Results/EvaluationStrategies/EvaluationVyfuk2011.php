@@ -22,8 +22,7 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
     }
 
     /**
-     * @param ModelCategory $category
-     * @return array|int
+     * @return int[]
      */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
@@ -50,8 +49,6 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
-     * @return int
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         return $task->points;

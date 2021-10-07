@@ -13,7 +13,6 @@ class ContestColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelContest $model
-     * @return Html
      * @throws ContestNotFoundException
      */
     protected function createHtmlValue(AbstractModel $model): Html {

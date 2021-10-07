@@ -37,9 +37,7 @@ class ContestAuthorizator {
      * of the queried contest.
      *
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * @param int|ModelContest $contest queried contest
-     * @return bool
      */
     public function isAllowed($resource, ?string $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
@@ -53,8 +51,6 @@ class ContestAuthorizator {
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
      */
     final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
         if (!$this->getUser()->isLoggedIn()) {
@@ -76,11 +72,8 @@ class ContestAuthorizator {
     }
 
     /**
-     * @param ModelLogin $login
      * @param Resource|string $resource
-     * @param string|null $privilege
      * @param ModelContest|int $contest
-     * @return bool
      */
     final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;

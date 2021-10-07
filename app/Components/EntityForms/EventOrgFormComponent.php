@@ -62,7 +62,6 @@ class EventOrgFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void

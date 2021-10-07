@@ -42,8 +42,6 @@ class AllPersonsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */

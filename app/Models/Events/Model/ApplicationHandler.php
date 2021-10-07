@@ -261,11 +261,10 @@ class ApplicationHandler {
     }
 
     /**
-     * @param \Exception $e
-     * @return void
+     * @return never|void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(\Exception $e): void {
+    private function reRaise(\Throwable $e): void {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

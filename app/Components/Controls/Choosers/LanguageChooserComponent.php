@@ -53,8 +53,6 @@ class LanguageChooserComponent extends ChooserComponent {
 
     /**
      * Preferred language of the page
-     *
-     * @return string ISO 639-1
      * @throws UnsupportedLanguageException
      */
     final public function getLang(): string {
@@ -63,7 +61,6 @@ class LanguageChooserComponent extends ChooserComponent {
     }
 
     /**
-     * @return string
      * @throws UnsupportedLanguageException
      */
     private function selectLang(): string {
@@ -116,7 +113,6 @@ class LanguageChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $this->language === $item;
@@ -124,7 +120,6 @@ class LanguageChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title(self::$languageNames[$item]);
@@ -132,7 +127,6 @@ class LanguageChooserComponent extends ChooserComponent {
 
     /**
      * @param string $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

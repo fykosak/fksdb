@@ -23,7 +23,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
-use Throwable;
 
 abstract class AbstractApplicationPresenter extends BasePresenter
 {
@@ -45,7 +44,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     final public function titleDetail(): PageTitle
     {
@@ -76,7 +75,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

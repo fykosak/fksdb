@@ -89,7 +89,6 @@ class Utils {
      * Uses __toString conversion.
      *
      * @param mixed $object
-     * @return string
      */
     public static function getFingerprint($object): string {
         if (is_iterable($object)) {
@@ -113,7 +112,6 @@ class Utils {
      * Returns string representation of iterable objects.
      *
      * @param mixed $object
-     * @return string
      */
     public static function getRepresentation($object): string {
         if (is_iterable($object)) {
@@ -135,9 +133,6 @@ class Utils {
 
     /**
      * Tranform an address in order only the owner could recongize it.
-     *
-     * @param string $email
-     * @return string
      */
     public static function cryptEmail(string $email): string {
         [$user, $host] = preg_split('/@/', $email);
@@ -154,10 +149,6 @@ class Utils {
      * Converts string to (hopefully) valid XML element name.
      *
      * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
-     *
-     * @param string $string
-     * @param string $prefix
-     * @return string
      */
     public static function xmlName(string $string, string $prefix = '_'): string {
         if (preg_match('/^[0-9\.-]/', $string)) {

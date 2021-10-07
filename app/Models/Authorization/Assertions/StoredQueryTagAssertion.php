@@ -9,8 +9,8 @@ use Nette\Security\Role;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-class StoredQueryTagAssertion {
-
+class StoredQueryTagAssertion
+{
     use SmartObject;
 
     private array $tagNames;
@@ -19,7 +19,8 @@ class StoredQueryTagAssertion {
      * StoredQueryTagAssertion constructor.
      * @param array|string $tagNames
      */
-    public function __construct($tagNames) {
+    public function __construct($tagNames)
+    {
         if (!is_array($tagNames)) {
             $tagNames = [$tagNames];
         }
@@ -27,13 +28,11 @@ class StoredQueryTagAssertion {
     }
 
     /**
-     * @param Permission $acl
-     * @param Role $role
+     * @param Role|string $role
      * @param Resource|string|null $resourceId
-     * @param string|null $privilege
-     * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {
+    public function __invoke(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');

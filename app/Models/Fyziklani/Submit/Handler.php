@@ -40,10 +40,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param string $code
-     * @param int $points
-     * @return void
      * @throws PointsMismatchException
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
@@ -54,10 +50,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param string $code
-     * @param int $points
-     * @return void
      * @throws PointsMismatchException
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
@@ -79,8 +71,6 @@ class Handler {
     }
 
     /**
-     * @param string $code
-     * @return void
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
@@ -99,10 +89,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @param int $points
-     * @return void
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
@@ -129,9 +115,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @return void
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      * @throws ModelException
@@ -153,10 +136,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @param int $points
-     * @return void
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws ModelException

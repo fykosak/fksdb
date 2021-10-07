@@ -43,12 +43,6 @@ class PersonFactory extends AbstractFactory {
      * @param callable|bool $allowClear
      * @param callable|bool $modifiable
      * @param callable|bool $visible
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
-     * @param User $user
-     * @param ServicePerson $servicePerson
-     * @param DIContainer $container
      */
     public function __construct(
         $fieldsDefinition,
@@ -77,8 +71,6 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param Field $field
-     * @return ReferencedId
      * @throws \ReflectionException
      */
     public function createComponent(Field $field): ReferencedId {
@@ -109,9 +101,6 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param Field $field
-     * @param DataValidator $validator
-     * @return void
      * @throws \ReflectionException
      */
     public function validate(Field $field, DataValidator $validator): void {
@@ -141,8 +130,6 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param Field $field
-     * @return array
      * @throws \ReflectionException
      */
     private function evaluateFieldsDefinition(Field $field): array {

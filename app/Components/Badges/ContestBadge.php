@@ -8,8 +8,6 @@ use Nette\Utils\Html;
 
 class ContestBadge extends Badge {
     /**
-     * @param ...$args
-     * @return Html
      * @throws ContestNotFoundException
      */
     public static function getHtml(...$args): Html {

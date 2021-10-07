@@ -39,7 +39,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @return string
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1' || $task->label == '2') {
@@ -55,7 +54,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
      * @return float|int
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {

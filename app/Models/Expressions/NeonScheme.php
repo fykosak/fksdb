@@ -16,9 +16,6 @@ class NeonScheme {
     public const QUALIFIER_ARRAY = 'array';
 
     /**
-     * @param array $section
-     * @param array $sectionScheme
-     * @return array
      * @throws NeonSchemaException
      */
     public static function readSection(array $section, array $sectionScheme): array {

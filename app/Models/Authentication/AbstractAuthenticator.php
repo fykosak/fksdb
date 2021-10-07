@@ -21,7 +21,6 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
     }
 
     /**
-     * @param ModelLogin $login
      * @throws \Exception
      */
     protected function logAuthentication(ModelLogin $login): void {

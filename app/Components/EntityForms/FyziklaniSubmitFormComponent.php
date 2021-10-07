@@ -29,8 +29,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws NotSetGameParametersException
      */
     protected function configureForm(Form $form): void
@@ -39,7 +37,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -68,7 +65,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return RadioList
      * TODO to table-reflection factory
      * @throws NotSetGameParametersException
      */

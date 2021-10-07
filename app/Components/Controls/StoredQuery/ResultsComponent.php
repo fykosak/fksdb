@@ -78,7 +78,6 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentParametrizeForm(): FormControl
@@ -114,7 +113,6 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     final public function render(): void
@@ -139,8 +137,6 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @param string $format
-     * @return void
      * @throws ForbiddenRequestException
      * @throws NotFoundException|GoneException
      */
@@ -184,8 +180,6 @@ class ResultsComponent extends BaseComponent
 
     /**
      * @param ModelStoredQueryParameter[] $queryParameters
-     * @param ControlGroup|null $group
-     * @return ModelContainer
      * TODO
      */
     private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer

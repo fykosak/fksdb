@@ -68,7 +68,6 @@ class Field {
 
     /**
      * @param mixed $default
-     * @return void
      */
     public function setDefault($default): void {
         $this->default = $default;
@@ -123,7 +122,6 @@ class Field {
 
     /**
      * @param callable|bool $visible
-     * @return void
      */
     public function setVisible($visible): void {
         $this->visible = $visible;

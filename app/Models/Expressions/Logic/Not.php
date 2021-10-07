@@ -17,10 +17,6 @@ class Not extends EvaluatedExpression {
         $this->expression = $expression;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     final public function __invoke(...$args): bool {
         return !$this->evaluateArgument($this->expression, ...$args);
     }

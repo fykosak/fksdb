@@ -16,8 +16,6 @@ class ServiceFyziklaniTask extends AbstractService {
     }
 
     /**
-     * @param ModelEvent $event
-     * @param bool $hideName
      * @return ModelFyziklaniTask[]
      */
     public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {

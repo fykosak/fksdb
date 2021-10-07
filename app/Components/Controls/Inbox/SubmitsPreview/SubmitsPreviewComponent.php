@@ -23,8 +23,6 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
     }
 
     /**
-     * @param int $id
-     * @return void
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
@@ -37,7 +35,6 @@ class SubmitsPreviewComponent extends SeriesTableComponent {
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {

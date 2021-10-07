@@ -28,7 +28,6 @@ class SeriesChooserComponent extends ChooserComponent {
 
     /**
      * @param int $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $item === $this->series;
@@ -36,7 +35,6 @@ class SeriesChooserComponent extends ChooserComponent {
 
     /**
      * @param int $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title(sprintf(_('Series %d'), $item));
@@ -44,7 +42,6 @@ class SeriesChooserComponent extends ChooserComponent {
 
     /**
      * @param int $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

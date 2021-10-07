@@ -41,9 +41,6 @@ class SingleEventSource implements HolderSource {
 
     /**
      * SingleEventSource constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -104,7 +101,6 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @return void
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -133,8 +129,6 @@ class SingleEventSource implements HolderSource {
      * Method propagates selected calls to internal primary models selection.
      *
      * @staticvar array $delegated
-     * @param string $name
-     * @param array $args
      * @return SingleEventSource|int
      */
     public function __call(string $name, array $args) {
@@ -168,8 +162,6 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @param int $primaryKey
-     * @return Holder
      * @throws NeonSchemaException
      */
     public function getHolder(int $primaryKey): Holder {

@@ -51,8 +51,6 @@ class SchoolFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void
@@ -85,7 +83,6 @@ class SchoolFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void

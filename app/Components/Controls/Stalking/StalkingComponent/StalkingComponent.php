@@ -11,10 +11,6 @@ use Nette\InvalidStateException;
 class StalkingComponent extends BaseStalkingComponent {
 
     /**
-     * @param string $section
-     * @param ModelPerson $person
-     * @param int $userPermission
-     * @return void
      * @throws NotImplementedException
      */
     final public function render(string $section, ModelPerson $person, int $userPermission): void {
@@ -34,9 +30,6 @@ class StalkingComponent extends BaseStalkingComponent {
     }
 
     /**
-     * @param array $definition
-     * @param ModelPerson $person
-     * @return void
      * @throws NotImplementedException
      */
     private function renderSingle(array $definition, ModelPerson $person): void {
@@ -62,8 +55,6 @@ class StalkingComponent extends BaseStalkingComponent {
 
     /**
      * @param array|AbstractModel[] $definition
-     * @param ModelPerson $person
-     * @return void
      */
     private function renderMulti(array $definition, ModelPerson $person): void {
         $models = [];

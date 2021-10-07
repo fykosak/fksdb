@@ -21,9 +21,6 @@ class CumulativeResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     *
-     * @param ModelCategory $category
-     * @return array
      */
     public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
@@ -149,8 +146,6 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
 
     /**
      * Returns total points for given category and series
-     *
-     * @param ModelCategory $category
      * @return int sum of points
      */
     private function getSumLimit(ModelCategory $category): int {

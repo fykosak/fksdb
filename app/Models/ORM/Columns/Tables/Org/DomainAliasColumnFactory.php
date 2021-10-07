@@ -17,7 +17,6 @@ class DomainAliasColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelOrg $model
-     * @return Html
      * @throws ContestNotFoundException
      */
     protected function createHtmlValue(AbstractModel $model): Html {
@@ -31,10 +30,6 @@ class DomainAliasColumnFactory extends ColumnFactory {
         }
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);

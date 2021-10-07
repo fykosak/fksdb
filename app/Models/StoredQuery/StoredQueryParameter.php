@@ -16,10 +16,7 @@ class StoredQueryParameter {
 
     /**
      * StoredQueryParameter constructor.
-     * @param string $name
      * @param mixed $defaultValue
-     * @param int $PDOType
-     * @param string|null $description
      */
     public function __construct(string $name, $defaultValue, int $PDOType, string $description = null) {
         $this->name = $name;
@@ -49,7 +46,6 @@ class StoredQueryParameter {
 
     /**
      * @param mixed $value
-     * @param int $type
      * @return bool|int|string
      */
     public function getTypedValue($value, int $type) {

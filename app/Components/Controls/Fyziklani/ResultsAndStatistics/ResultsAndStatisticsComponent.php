@@ -51,7 +51,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws NotSetGameParametersException
      * @throws BadTypeException
      */
@@ -94,7 +93,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws InvalidLinkException
      */
     protected function getActions(): array {
@@ -104,7 +102,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     }
 
     /**
-     * @return bool
      * @throws NotSetGameParametersException
      */
     private function isResultsVisible(): bool {

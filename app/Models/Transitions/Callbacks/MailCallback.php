@@ -18,13 +18,6 @@ class MailCallback implements TransitionCallback {
     protected string $templateFile;
     protected array $emailData;
 
-    /**
-     * MailCallback constructor.
-     * @param string $templateFile
-     * @param array $emailData
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @param MailTemplateFactory $mailTemplateFactory
-     */
     public function __construct(
         string $templateFile,
         array $emailData,
@@ -38,9 +31,6 @@ class MailCallback implements TransitionCallback {
     }
 
     /**
-     * @param ModelHolder $holder
-     * @param mixed ...$args
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException|CannotAccessModelException
      */
@@ -49,9 +39,6 @@ class MailCallback implements TransitionCallback {
     }
 
     /**
-     * @param ModelHolder $holder
-     * @param mixed ...$args
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws CannotAccessModelException

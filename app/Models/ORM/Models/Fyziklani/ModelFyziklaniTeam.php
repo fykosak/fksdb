@@ -106,8 +106,6 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @param bool $throws
-     * @return bool
      * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
@@ -129,7 +127,6 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @param array $types
      * @return ModelPersonSchedule[]
      */
     public function getScheduleRest(array $types = ['accommodation', 'weekend']): array

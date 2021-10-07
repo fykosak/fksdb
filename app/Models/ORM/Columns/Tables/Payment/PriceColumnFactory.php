@@ -13,7 +13,6 @@ class PriceColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPayment $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if ($model->price) {

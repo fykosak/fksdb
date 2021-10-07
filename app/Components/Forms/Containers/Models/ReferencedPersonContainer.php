@@ -90,7 +90,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws NotImplementedException
@@ -142,8 +141,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     /**
      * @param ActiveRow|ModelPerson|null $model
-     * @param string $mode
-     * @return void
      */
     public function setModel(?ActiveRow $model, string $mode): void {
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
@@ -203,9 +200,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param string $sub
-     * @param string $fieldName
-     * @param array $metadata
      * @return IComponent|BaseControl
      * @throws BadTypeException
      * @throws NotImplementedException
@@ -213,7 +207,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws BadRequestException
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent {
-        $control = null;
         switch ($sub) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
             case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
@@ -293,12 +286,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
     }
 
     /**
-     * @param ModelPerson|null $person
-     * @param string $sub
-     * @param string $field
-     * @param bool $extrapolate
-     * @param bool $hasDelivery
-     * @param bool $targetValidation
      * @return mixed
      */
     protected function getPersonValue(?ModelPerson $person, string $sub, string $field, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false) {

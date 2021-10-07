@@ -21,8 +21,6 @@ class ServicePersonInfo extends AbstractService {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @param array $data
-     * @return bool
      * @throws ModelException
      */
     public function updateModel(AbstractModel $model, array $data): bool {

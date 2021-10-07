@@ -50,7 +50,6 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @return string
      * Label include datetime from schedule group
      */
     public function getLabel(): string

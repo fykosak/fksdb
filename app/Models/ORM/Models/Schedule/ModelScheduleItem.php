@@ -44,8 +44,6 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @param string $currency
-     * @return Price
      * @throws UnsupportedCurrencyException
      */
     public function getPrice(string $currency): Price
@@ -96,7 +94,6 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @return int
      * @throws \LogicException
      */
     public function getAvailableCapacity(): int

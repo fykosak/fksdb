@@ -20,7 +20,6 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param AbstractModelMulti $model
      * @throws ModelException
      */
     public function dispose(AbstractModelMulti $model): void {

@@ -62,7 +62,6 @@ class DiplomasPresenter extends BasePresenter
     }
 
     /**
-     * @param string|null $category
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
@@ -80,7 +79,6 @@ class DiplomasPresenter extends BasePresenter
     }
 
     /**
-     * @param string|null $category
      * @throws EventNotFoundException
      */
     public function isReadyAllToCalculate(?string $category = null): bool

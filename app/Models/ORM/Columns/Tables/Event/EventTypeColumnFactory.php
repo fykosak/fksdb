@@ -22,13 +22,11 @@ class EventTypeColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param array $args
-     * @return BaseControl
      * @throws \InvalidArgumentException
      */
     protected function createFormControl(...$args): BaseControl {
         [$contest] = $args;
-        if (\is_null($contest) || !$contest instanceof ModelContest) {
+        if (!$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
         }
 
@@ -43,7 +41,6 @@ class EventTypeColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelEvent $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('span')->addText($model->getEventType()->name);

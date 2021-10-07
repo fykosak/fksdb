@@ -27,7 +27,6 @@ class NumberPrinter extends AbstractValuePrinter {
 
     /**
      * @param int|float $value
-     * @return Html
      */
     protected function getHtml($value): Html {
         return Html::el('span')->addHtml($this->format($value));

@@ -15,10 +15,9 @@ class WriteOnlyInput extends TextInput implements WriteOnly {
 
     /**
      * WriteOnlyInput constructor.
-     * @param null $label
-     * @param null $maxLength
+     * @param object|string $label
      */
-    public function __construct($label = null, $maxLength = null) {
+    public function __construct($label = null, int $maxLength = null) {
         parent::__construct($label, $maxLength);
         $this->writeOnlyAppendMonitors();
     }

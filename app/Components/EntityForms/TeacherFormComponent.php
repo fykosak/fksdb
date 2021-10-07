@@ -38,8 +38,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -68,7 +66,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -79,7 +76,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */

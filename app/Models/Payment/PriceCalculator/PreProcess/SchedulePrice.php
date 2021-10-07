@@ -9,8 +9,6 @@ use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 
 class SchedulePrice implements Preprocess {
     /**
-     * @param ModelPayment $modelPayment
-     * @return Price
      * @throws UnsupportedCurrencyException
      */
     public static function calculate(ModelPayment $modelPayment): Price {
@@ -23,8 +21,6 @@ class SchedulePrice implements Preprocess {
     }
 
     /**
-     * @param ModelPayment $modelPayment
-     * @return array
      * @throws UnsupportedCurrencyException
      * @throws NotImplementedException
      */

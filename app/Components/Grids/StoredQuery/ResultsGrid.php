@@ -32,7 +32,6 @@ class ResultsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException

@@ -49,7 +49,6 @@ class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
@@ -107,7 +106,7 @@ class SubmitsGrid extends BaseGrid
             })->setShow(function (ActiveRow $row): bool {
                 $submit = ModelSubmit::createFromActiveRow($row);
                 if (!$submit->isQuiz()) {
-                    return $submit->corrected;
+                    return (bool)$submit->corrected;
                 } else {
                     return false;
                 }
@@ -135,7 +134,6 @@ class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void
@@ -149,7 +147,6 @@ class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void

@@ -8,7 +8,6 @@ class PersonInfoContainer extends ModelContainer {
 
     /**
      * @param mixed|iterable $data
-     * @param bool $erase
      * @return static
      */
     public function setValues($data, bool $erase = false): self {

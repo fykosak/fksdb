@@ -16,24 +16,17 @@ interface NavigablePresenter extends IPresenter {
 
     /**
      * Should set persistent parameter identifying the backlink.
-     *
-     * @param string $backLink
      * @return string|null  original value of the backlink parameter
      */
     public function setBackLink(string $backLink): ?string;
 
     /**
      * Returns title object of the current view.
-     *
-     * @return PageTitle
      */
     public function getTitle(): PageTitle;
 
     /**
      * Publish access of the protecetd static method.
-     *
-     * @param string $action
-     * @return string
      */
     public static function publicFormatActionMethod(string $action): string;
 

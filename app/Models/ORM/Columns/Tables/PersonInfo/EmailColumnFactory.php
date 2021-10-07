@@ -22,7 +22,6 @@ class EmailColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new EmailPrinter())($model->email);

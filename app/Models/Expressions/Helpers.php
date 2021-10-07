@@ -65,7 +65,6 @@ class Helpers {
      * Transforms and evalutes the expression during runtime.
      *
      * @param mixed $expression
-     * @param Container $container
      * @return mixed
      * @throws ServiceCreationException
      * @throws \ReflectionException
@@ -97,7 +96,6 @@ class Helpers {
 
     /**
      * @param mixed $expressionArray
-     * @param Container $container
      * @return mixed
      * @throws \ReflectionException
      */
