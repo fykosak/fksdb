@@ -35,6 +35,7 @@ use Nette\Security\Resource;
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
+ * @property-read int teacher_id
  * @property-read ActiveRow person
  */
 class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
@@ -59,7 +60,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
 
     public function getTeacher(): ?ModelPerson
     {
-        return isset($this->person) ? ModelPerson::createFromActiveRow($this->person) : null;
+        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
     public function getEvent(): ModelEvent
