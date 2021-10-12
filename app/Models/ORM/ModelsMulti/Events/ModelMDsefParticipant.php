@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 
 /**
  * @property-read  ModelEventParticipant $mainModel
+ * @deprecated
  */
 class ModelMDsefParticipant extends AbstractModelMulti {
 

@@ -27,6 +27,7 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
+
     public const TYPE_ACCOMMODATION = 'accommodation';
     public const TYPE_VISA = 'visa';
     public const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
@@ -34,6 +35,9 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
     public const TYPE_TEACHER_PRESENT = 'teacher_present';
     public const TYPE_WEEKEND = 'weekend';
     public const TYPE_WEEKEND_INFO = 'weekend_info';
+
+    public const TYPE_DSEF_MORNING = 'dsef_morning';
+    public const TYPE_DSEF_AFTERNOON = 'dsef_afternoon';
 
     public function getItems(): GroupedSelection
     {
@@ -78,18 +82,18 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
         $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
         XMLHelper::fillArrayToNode([
-                                       'scheduleGroupId' => $this->schedule_group_id,
-                                       'scheduleGroupType' => $this->schedule_group_type,
-                                       'eventId' => $this->event_id,
-                                       'start' => $this->start->format('c'),
-                                       'end' => $this->end->format('c'),
-                                   ], $document, $node);
+            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupType' => $this->schedule_group_type,
+            'eventId' => $this->event_id,
+            'start' => $this->start->format('c'),
+            'end' => $this->end->format('c'),
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'name' => [
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
             ],
-        ],                                  $document, $node);
+        ], $document, $node);
         return $node;
     }
 }
