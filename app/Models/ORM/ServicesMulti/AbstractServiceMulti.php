@@ -15,7 +15,8 @@ use Nette\SmartObject;
  * Joined side is in a sense primary (search, select, delete).
  * @deprecated
  */
-abstract class AbstractServiceMulti {
+abstract class AbstractServiceMulti
+{
 
     use SmartObject;
 
@@ -24,7 +25,12 @@ abstract class AbstractServiceMulti {
     public string $joiningColumn;
     private string $modelClassName;
 
-    public function __construct(OldAbstractServiceSingle $mainService, OldAbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
+    public function __construct(
+        OldAbstractServiceSingle $mainService,
+        OldAbstractServiceSingle $joinedService,
+        string $joiningColumn,
+        string $modelClassName
+    ) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
         $this->modelClassName = $modelClassName;
@@ -35,14 +41,16 @@ abstract class AbstractServiceMulti {
      * Use this method to create new models!
      * @throws ModelException
      */
-    public function createNewModel(array $data): AbstractModelMulti {
+    public function createNewModel(array $data): AbstractModelMulti
+    {
         $mainModel = $this->mainService->createNewModel($data);
         $data[$this->joiningColumn] = $mainModel->{$this->joiningColumn};
         $joinedModel = $this->joinedService->createNewModel($data);
         return $this->composeModel($mainModel, $joinedModel);
     }
 
-    public function composeModel(AbstractModel $mainModel, AbstractModel $joinedModel): AbstractModelMulti {
+    public function composeModel(AbstractModel $mainModel, AbstractModel $joinedModel): AbstractModelMulti
+    {
         $className = $this->getModelClassName();
         return new $className($mainModel, $joinedModel);
     }
@@ -51,7 +59,8 @@ abstract class AbstractServiceMulti {
      * @param ActiveRow|AbstractModelMulti $model
      * @throws ModelException
      */
-    public function updateModel(ActiveRow $model, array $data): bool {
+    public function updateModel(ActiveRow $model, array $data): bool
+    {
         $this->checkType($model);
         $this->mainService->updateModel($model->mainModel, $data);
         return $this->joinedService->updateModel($model->joinedModel, $data);
@@ -60,10 +69,13 @@ abstract class AbstractServiceMulti {
     /**
      * @throws \InvalidArgumentException
      */
-    private function checkType(AbstractModelMulti $model): void {
+    private function checkType(AbstractModelMulti $model): void
+    {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
-            throw new \InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+            throw new \InvalidArgumentException(
+                'Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model)
+            );
         }
     }
 
@@ -71,12 +83,16 @@ abstract class AbstractServiceMulti {
      * Use this method to store a model!
      * @deprecated
      */
-    public function storeModel(array $data, ?AbstractModelMulti $model = null): AbstractModelMulti {
+    public function storeModel(array $data, ?AbstractModelMulti $model = null): AbstractModelMulti
+    {
         $mainModel = $this->mainService->storeModel($data, $model ? $model->mainModel : null);
 
-        $joinedModel = $this->joinedService->storeModel(array_merge($data, [
-            $this->joiningColumn => $mainModel->getPrimary(),
-        ]), $model ? $model->joinedModel : null);
+        $joinedModel = $this->joinedService->storeModel(
+            array_merge($data, [
+                $this->joiningColumn => $mainModel->getPrimary(),
+            ]),
+            $model ? $model->joinedModel : null
+        );
         return $this->composeModel($mainModel, $joinedModel);
     }
 
@@ -84,7 +100,8 @@ abstract class AbstractServiceMulti {
      * Use this method to delete a model!
      * @throws \InvalidArgumentException
      */
-    public function dispose(AbstractModelMulti $model): void {
+    public function dispose(AbstractModelMulti $model): void
+    {
         $this->checkType($model);
         $this->joinedService->dispose($model->joinedModel);
         //TODO here should be deletion of mainModel as well, consider parametrizing this
@@ -93,7 +110,8 @@ abstract class AbstractServiceMulti {
     /**
      * @param mixed $key ID of the joined models
      */
-    public function findByPrimary($key): ?AbstractModelMulti {
+    public function findByPrimary($key): ?AbstractModelMulti
+    {
         $joinedModel = $this->joinedService->findByPrimary($key);
         if (!$joinedModel) {
             return null;
@@ -106,13 +124,20 @@ abstract class AbstractServiceMulti {
         return $this->composeModel($mainModel, $joinedModel);
     }
 
-    public function getTable(): MultiTableSelection {
+    public function getTable(): MultiTableSelection
+    {
         $joinedTable = $this->joinedService->getTable()->getName();
         $mainTable = $this->mainService->getTable()->getName();
 
-        $selection = new MultiTableSelection($this, $joinedTable, $this->joinedService->explorer, $this->joinedService->explorer->getConventions());
-        $selection->select("$joinedTable.*");
-        $selection->select("$mainTable.*");
+        $selection = new MultiTableSelection(
+            $this,
+            $joinedTable,
+            $this->joinedService->explorer,
+            $this->joinedService->explorer->getConventions()
+        );
+        // $selection->joinWhere($mainTable, "$joinedTable.{$mainTable}_id = $mainTable.{$mainTable}_id");
+        // $selection->select("$joinedTable.*");
+         $selection->select("$mainTable.*");
 
         return $selection;
     }
@@ -120,7 +145,8 @@ abstract class AbstractServiceMulti {
     /**
      * @return class-string<AbstractModelMulti>|string|AbstractModelMulti
      */
-    final public function getModelClassName(): string {
+    final public function getModelClassName(): string
+    {
         return $this->modelClassName;
     }
 }
