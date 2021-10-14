@@ -158,7 +158,6 @@ class ApplicationHandler {
             }
 
             $this->commit();
-
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
@@ -166,7 +165,7 @@ class ApplicationHandler {
             } elseif (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
-            if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
+            if (($data||$form) && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
                 $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
