@@ -275,13 +275,10 @@ class ModelPerson extends AbstractModel implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getSerializedSchedule(int $eventId, string $type): ?string
+    public function getSerializedSchedule(ModelEvent $event, string $type): ?string
     {
-        if (!$eventId) {
-            return null;
-        }
         $query = $this->getSchedule()
-            ->where('schedule_item.schedule_group.event_id', $eventId)
+            ->where('schedule_item.schedule_group.event_id', $event->event_id)
             ->where('schedule_item.schedule_group.schedule_group_type', $type);
         $items = [];
         foreach ($query as $row) {

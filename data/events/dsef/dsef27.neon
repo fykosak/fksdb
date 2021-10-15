@@ -21,9 +21,6 @@ parameters:
                         required: true
                     dsef_afternoon:
                         required: true
-                post_contact_p:
-                    address:
-                        required: true
 
 events:
     dsef27:
@@ -46,7 +43,7 @@ events:
                         factory: RefPerson(%events.dsef27.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
-                        description: _('à 30 Kč')
+                        description: _('Počet "obědů" (bageta za 30 Kč)')
         machine:
             baseMachines:
                 participant:
