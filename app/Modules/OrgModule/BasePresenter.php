@@ -29,6 +29,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
             $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
+            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         }
         parent::beforeRender();
     }
@@ -40,7 +41,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     protected function isAnyContestAuthorized($resource, ?string $privilege): bool
     {

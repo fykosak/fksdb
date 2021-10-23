@@ -11,7 +11,6 @@ class NameNIdColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelFyziklaniTeam $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('span')->addText($model->name . ' (' . $model->e_fyziklani_team_id . ')');

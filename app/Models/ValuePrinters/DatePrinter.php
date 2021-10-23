@@ -15,7 +15,6 @@ class DatePrinter extends AbstractValuePrinter {
 
     /**
      * @param DateTime $value
-     * @return Html
      */
     protected function getHtml($value): Html {
         return Html::el('span')->addText($value->format($this->format));

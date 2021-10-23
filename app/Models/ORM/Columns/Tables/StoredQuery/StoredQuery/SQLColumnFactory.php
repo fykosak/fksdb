@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 class SQLColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelStoredQuery $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('pre')->addAttributes(['class' => 'syntax-sql'])->addText($model->sql);

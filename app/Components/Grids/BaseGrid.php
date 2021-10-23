@@ -67,7 +67,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @return IDataSource
      * @throws NotImplementedException
      */
     protected function getData(): IDataSource
@@ -76,7 +75,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @return Template
      * @throws BadTypeException
      */
     protected function createTemplate(): Template
@@ -107,8 +105,8 @@ abstract class BaseGrid extends Grid
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
-        if (isset($this->searchTerm['term'])) {
-            $this->dataSource->applyFilter($this->searchTerm['term']);
+        if (isset($this->searchTerm)) {
+            $this->dataSource->applyFilter($this->searchTerm);
         }
         $count = $this->getCount();
         $this->getPaginator()->itemCount = $count;
@@ -144,7 +142,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl
@@ -161,9 +158,9 @@ abstract class BaseGrid extends Grid
             ->setHtmlAttribute('placeholder', _('Find'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            $this->searchTerm['term'] = $values['term'];
-            $this->dataSource->applyFilter($values['term']);
+            $values = $form->getValues('array');
+            $this->searchTerm = $values;
+            $this->dataSource->applyFilter($values);
             // TODO is this vv needed? vv
             $count = $this->dataSource->getCount();
             $this->getPaginator()->itemCount = $count;
@@ -177,9 +174,6 @@ abstract class BaseGrid extends Grid
 
     /**
      * Adds button with Bootstrap CSS classes (default is 'default').
-     * @param string $name
-     * @param string|null $label
-     * @return Button
      * @throws DuplicateButtonException
      */
     protected function addButton(string $name, ?string $label = null): Button
@@ -190,9 +184,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param string $name
-     * @param string|null $label
-     * @return GlobalButton
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
@@ -204,9 +195,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param string $field
-     * @param int $userPermission
-     * @return Column
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -224,9 +212,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param string $factoryName
-     * @param callable $accessCallback
-     * @return Column
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -251,9 +236,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param array $fields
-     * @param int $userPermissions
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -265,12 +247,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param string $destination
-     * @param string $id
-     * @param string $label
-     * @param bool $checkACL
-     * @param array $params
-     * @return Button
      * @throws DuplicateButtonException
      */
     protected function addLinkButton(
@@ -307,9 +283,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @param string $linkId
-     * @param bool $checkACL
-     * @return Button
      * @throws BadTypeException
      * @throws DuplicateButtonException
      */
@@ -336,7 +309,6 @@ abstract class BaseGrid extends Grid
     }
 
     /**
-     * @return GlobalButton|Button
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */

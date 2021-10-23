@@ -25,9 +25,6 @@ class EventAuthorizator {
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
      * @deprecated
      */
     public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool {
@@ -36,9 +33,6 @@ class EventAuthorizator {
 
     /**
      * @param Resource|string $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
      */
     public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
@@ -46,9 +40,6 @@ class EventAuthorizator {
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
      */
     public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         $login = $this->user->getIdentity();
@@ -63,9 +54,6 @@ class EventAuthorizator {
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
      */
     public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         $login = $this->user->getIdentity();
@@ -80,9 +68,6 @@ class EventAuthorizator {
 
     /**
      * @param Resource|string $resource
-     * @param string|null $privilege
-     * @param ModelEvent $event
-     * @return bool
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
         $login = $this->user->getIdentity();

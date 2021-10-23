@@ -40,8 +40,6 @@ class AjaxSubmitComponent extends AjaxComponent {
     }
 
     /**
-     * @param bool $throw
-     * @return ModelSubmit|null
      * @throws NotFoundException
      */
     private function getSubmit(bool $throw = false): ?ModelSubmit {
@@ -53,7 +51,6 @@ class AjaxSubmitComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws InvalidLinkException
      */
     protected function getActions(): array {
@@ -75,7 +72,6 @@ class AjaxSubmitComponent extends AjaxComponent {
     }
 
     /**
-     * @return array
      * @throws NotFoundException
      */
     protected function getData(): array {
@@ -84,7 +80,6 @@ class AjaxSubmitComponent extends AjaxComponent {
     }
 
     /**
-     * @return void
      * @throws StorageException
      */
     public function handleUpload(): void {
@@ -126,7 +121,6 @@ class AjaxSubmitComponent extends AjaxComponent {
     }
 
     /**
-     * @return void
      * @throws BadRequestException
      */
     public function handleDownload(): void {

@@ -21,9 +21,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param string|null $category
-     * @return Html
-     *
      * @throws NotClosedTeamException
      * @internal
      */
@@ -39,8 +36,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param string|null $category
-     * @return Html
      * @throws NotClosedTeamException
      */
     public function __invoke(?string $category = null): Html {
@@ -64,7 +59,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param GroupedSelection $teams
      * @return array[]
      * @throws NotClosedTeamException
      */
@@ -112,7 +106,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
      * @return array[]|int[]
      */
     protected function getAllSubmits(ModelFyziklaniTeam $team): array {

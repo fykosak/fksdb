@@ -54,7 +54,6 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -67,8 +66,6 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */

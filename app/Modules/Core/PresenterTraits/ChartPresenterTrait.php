@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Charts\Core\Chart;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait
 {
-
+    /** @var Chart|IComponent */
     protected Chart $selectedChart;
     private array $chartComponents;
 
@@ -36,6 +37,7 @@ trait ChartPresenterTrait
 
     /**
      * @return Chart[]
+     * @throws EventNotFoundException
      */
     protected function getCharts(): array
     {
@@ -52,6 +54,9 @@ trait ChartPresenterTrait
 
     abstract public function authorizedChart(): void;
 
+    /**
+     * @throws EventNotFoundException
+     */
     protected function selectChart(): void
     {
         $charts = $this->getCharts();
@@ -65,13 +70,12 @@ trait ChartPresenterTrait
     abstract public function getAction(bool $fullyQualified = false): string;
 
     /**
-     * @param string $id
      * @return static
      */
     abstract public function setView(string $id);
 
     protected function createComponentChart(): IComponent
     {
-        return $this->selectedChart->getControl();
+        return $this->selectedChart;
     }
 }

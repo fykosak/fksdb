@@ -48,7 +48,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
@@ -122,7 +121,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
@@ -133,7 +131,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Check if is contest and event org
      * TODO vyfakuje to aj cartesianov
      * @throws EventNotFoundException
@@ -166,6 +163,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-fyziklani navbar-dark');
+                $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             case 9:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-light');

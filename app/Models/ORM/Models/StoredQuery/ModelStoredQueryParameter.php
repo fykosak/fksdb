@@ -52,9 +52,7 @@ class ModelStoredQueryParameter extends AbstractModel {
     }
 
     /**
-     * @param string $type
      * @param mixed $value
-     * @return array
      */
     public static function setInferDefaultValue(string $type, $value): array {
         $data = [];

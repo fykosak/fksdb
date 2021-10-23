@@ -14,9 +14,6 @@ abstract class PersonFileLevelTest extends PersonTest {
     private ORMFactory $tableReflectionFactory;
 
     /**
-     * PersonFileLevelTest constructor.
-     * @param ORMFactory $tableReflectionFactory
-     * @param string $fieldName
      * @throws BadTypeException
      */
     public function __construct(ORMFactory $tableReflectionFactory, string $fieldName) {
@@ -26,7 +23,6 @@ abstract class PersonFileLevelTest extends PersonTest {
     }
 
     /**
-     * @return TestedColumnFactory|ColumnFactory
      * @throws BadTypeException
      */
     final protected function getRowFactory(): TestedColumnFactory {

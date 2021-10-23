@@ -26,8 +26,6 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenData
-     * @return ModelLogin
      * @throws AuthenticationException
      * @throws \Exception
      */
@@ -51,8 +49,6 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * Get rid off token and user is no more authenticated by the token(?).
-     *
-     * @return void
      */
     public function disposeAuthToken(): void {
         $section = $this->session->getSection(self::SESSION_NS);
@@ -66,7 +62,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @param string|null $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
-    public function isAuthenticatedByToken($tokenType = null): bool {
+    public function isAuthenticatedByToken(?string $tokenType = null): bool {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
             return ($tokenType === null) ? true : ($section->type == $tokenType);

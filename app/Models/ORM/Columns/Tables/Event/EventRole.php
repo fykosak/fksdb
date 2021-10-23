@@ -23,8 +23,6 @@ class EventRole extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModel $model
-     * @return Html
      * @throws CannotAccessModelException
      */
     protected function createHtmlValue(AbstractModel $model): Html {

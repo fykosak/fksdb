@@ -39,7 +39,6 @@ class SQLResultsCache
     }
 
     /**
-     * @param ModelContestYear $contestYear
      * @throws BadRequestException
      * @throws \PDOException
      */
@@ -82,9 +81,6 @@ class SQLResultsCache
 
     /**
      * Calculate points from form-based tasks, such as quizzes.
-     *
-     * @param ModelContestYear $contestYear
-     * @param int $series
      */
     public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void
     {
@@ -96,7 +92,7 @@ class SQLResultsCache
         $sql = 'UPDATE submit s INNER JOIN (SELECT sq.ct_id, q.task_id, SUM(IF(sq.answer=q.answer, q.points, 0))
                 AS "raw_points" FROM submit_quiz sq JOIN quiz q USING (question_id) JOIN task t USING (task_id)
                 WHERE t.' . implode(' AND t.', $params) . ' GROUP BY ct_id, task_id ) r ON s.ct_id = r.ct_id AND
-                s.task_id = r.task_id SET s.raw_points = r.raw_points';
+                s.task_id = r.task_id SET s.raw_points = r.raw_points, s.calc_points = r.raw_points';
 
         $this->serviceTask->explorer->query($sql);
     }

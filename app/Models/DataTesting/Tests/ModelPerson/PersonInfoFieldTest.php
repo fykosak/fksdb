@@ -10,9 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 class PersonInfoFieldTest extends PersonFileLevelTest {
 
     /**
-     * @param Logger $logger
-     * @param ModelPerson $person
-     * @return void
      * @throws BadTypeException
      */
     final public function run(Logger $logger, ModelPerson $person): void {

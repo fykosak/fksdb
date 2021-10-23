@@ -19,9 +19,6 @@ abstract class AbstractModelMulti extends ActiveRow {
 
     /**
      * @note DO NOT use directly, use AbstractServiceMulti::composeModel
-     *
-     * @param AbstractModel $mainModel
-     * @param AbstractModel $joinedModel
      */
     public function __construct(AbstractModel $mainModel, AbstractModel $joinedModel) {
         parent::__construct($joinedModel->toArray(), $joinedModel->getTable());
@@ -34,7 +31,6 @@ abstract class AbstractModelMulti extends ActiveRow {
     }
 
     /**
-     * @param string|int $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get(string $key) {
@@ -51,7 +47,6 @@ abstract class AbstractModelMulti extends ActiveRow {
 
     /**
      * @param string|int $name
-     * @return bool
      */
     public function __isset($name): bool {
         return $this->mainModel->__isset($name) || $this->joinedModel->__isset($name);
@@ -82,7 +77,6 @@ abstract class AbstractModelMulti extends ActiveRow {
 
     /**
      * @param mixed $column
-     * @return bool
      */
     public function offsetExists($column): bool {
         return $this->__isset($column);

@@ -34,7 +34,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelPerson $person
      * @throws InvalidLinkException
      */
     private function getAllContestants(ModelPerson $person): array
@@ -55,7 +54,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelLogin $login
      * @throws InvalidLinkException
      */
     private function getAllOrganisers(ModelLogin $login): array
@@ -95,6 +93,7 @@ class DispatchPresenter extends BasePresenter
     protected function beforeRender(): void
     {
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
+        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
     }
 

@@ -22,7 +22,6 @@ class PersonProvider implements FilteredDataProvider {
 
     /**
      * Syntactic sugar, should be solved more generally.
-     * @param ModelContest $contest
      */
     public function filterOrgs(ModelContest $contest): void {
         $this->searchTable = $this->servicePerson->getTable()
@@ -35,9 +34,6 @@ class PersonProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $search = trim($search);

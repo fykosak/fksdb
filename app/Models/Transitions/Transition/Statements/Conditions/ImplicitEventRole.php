@@ -13,7 +13,6 @@ class ImplicitEventRole extends EventRole {
 
     /**
      * @param AbstractModel[] $args
-     * @return bool
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */

@@ -21,9 +21,6 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $search = trim((string)$search);
@@ -60,7 +57,6 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return void
      */
     public function setDefaultValue($id): void {
         /* intentionally blank */

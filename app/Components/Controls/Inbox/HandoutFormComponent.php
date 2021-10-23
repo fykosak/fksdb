@@ -42,7 +42,6 @@ class HandoutFormComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
@@ -66,7 +65,6 @@ class HandoutFormComponent extends BaseComponent {
     }
 
     /**
-     * @param Form $form
      * @throws ModelException
      */
     public function handleFormSuccess(Form $form): void {
@@ -102,7 +100,6 @@ class HandoutFormComponent extends BaseComponent {
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     public function setDefaults(): void {

@@ -11,7 +11,6 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     protected function isAllowed($resource, ?string $privilege): bool
     {
@@ -29,6 +28,7 @@ abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
             $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
+            $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         }
         parent::beforeRender();
     }

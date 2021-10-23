@@ -12,7 +12,6 @@ use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 class ServiceFyziklaniTeam extends OldAbstractServiceSingle {
 
     /**
-     * @param ModelEvent $event
      * @return ModelFyziklaniTeam[]
      */
     public static function getTeamsAsArray(ModelEvent $event): array {

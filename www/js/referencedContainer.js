@@ -110,7 +110,7 @@ $(function () {
                 const $buttonEdit = $('<button type="button" class="btn btn-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
                 $buttonEdit.click(decompactifyContainer);
 
-                const $buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-remove"></span></button>');
+                const $buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-times"></span></button>');
                 $buttonDel.click(function () {
                     $clearButton.click();
                 });
@@ -140,7 +140,7 @@ $(function () {
 
             function decorateClearButton() {
                 var well = elContainer.children('.bd-callout');
-                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="fa fa-remove"></span></button>');
+                var buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
                 buttonDel.click(function () {
                     $clearButton.click();
                 });

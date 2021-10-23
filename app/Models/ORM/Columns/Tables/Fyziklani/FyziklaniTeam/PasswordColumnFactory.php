@@ -12,7 +12,6 @@ class PasswordColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelFyziklaniTeam $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new HashPrinter())($model->password);

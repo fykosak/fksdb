@@ -52,7 +52,6 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -65,8 +64,6 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */

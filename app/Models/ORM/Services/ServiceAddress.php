@@ -17,8 +17,6 @@ class ServiceAddress extends AbstractService {
     private const PATTERN = '/[0-9]{5}/';
 
     /**
-     * @param array $data
-     * @return ModelAddress
      * @throws ModelException
      */
     public function createNewModel(array $data): ModelAddress {
@@ -36,9 +34,6 @@ class ServiceAddress extends AbstractService {
     }
 
     /**
-     *
-     * @param string|null $postalCode
-     * @return int
      * @throws InvalidPostalCode
      */
     public function inferRegion(?string $postalCode): int {

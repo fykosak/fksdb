@@ -152,9 +152,6 @@ class UploadedStorage implements SubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     *
-     * @param ModelSubmit $submit
-     * @return bool
      */
     public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
@@ -175,7 +172,6 @@ class UploadedStorage implements SubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return \SplFileInfo[]
      */
     private function retrieveFiles(ModelSubmit $submit): array {
@@ -190,7 +186,6 @@ class UploadedStorage implements SubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit): string {

@@ -108,7 +108,6 @@ class TimelineComponent extends ReactComponent {
 
     /**
      * @param ModelEvent[] $events
-     * @param array $dates
      * @return \DateTimeInterface[]
      */
     private function calculateFirstAndLast(array $events, array $dates): array {
@@ -144,7 +143,6 @@ class TimelineComponent extends ReactComponent {
     }
 
     /**
-     * @return array
      * @throws \Exception
      */
     public function getData(): array {

@@ -35,7 +35,6 @@ class YearChooserComponent extends ChooserComponent {
 
     /**
      * @param ActiveRow|ModelContestYear $item
-     * @return bool
      */
     public function isItemActive($item): bool {
         return $item->year === $this->contestYear->year;
@@ -43,7 +42,6 @@ class YearChooserComponent extends ChooserComponent {
 
     /**
      * @param ActiveRow|ModelContestYear $item
-     * @return Title
      */
     public function getItemTitle($item): Title {
         return new Title(sprintf(_('Year %d'), $item->year));
@@ -51,7 +49,6 @@ class YearChooserComponent extends ChooserComponent {
 
     /**
      * @param ActiveRow|ModelContestYear $item
-     * @return string
      * @throws InvalidLinkException
      */
     public function getItemLink($item): string {

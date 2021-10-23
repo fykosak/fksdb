@@ -20,9 +20,6 @@ class SingleReflectionFormFactory {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @return ColumnFactory
      * @throws BadTypeException
      */
     protected function loadFactory(string $tableName, string $fieldName): ColumnFactory {
@@ -30,10 +27,6 @@ class SingleReflectionFormFactory {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param ...$args
-     * @return BaseControl
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -42,10 +35,6 @@ class SingleReflectionFormFactory {
     }
 
     /**
-     * @param string $table
-     * @param array $fields
-     * @param array $args
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -60,10 +49,6 @@ class SingleReflectionFormFactory {
     }
 
     /**
-     * @param string $table
-     * @param array $fields
-     * @param FieldLevelPermission $userPermissions
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */

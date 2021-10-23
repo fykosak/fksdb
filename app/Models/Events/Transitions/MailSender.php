@@ -24,6 +24,7 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use Tracy\Debugger;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -55,13 +56,7 @@ class MailSender {
 
     /**
      * MailSender constructor.
-     * @param string $filename
      * @param array|string $addresees
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param AccountManager $accountManager
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServicePerson $servicePerson
-     * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
         string $filename,
@@ -82,9 +77,6 @@ class MailSender {
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -93,9 +85,6 @@ class MailSender {
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -107,7 +96,6 @@ class MailSender {
             ->fetchPairs('person_id');
 
         $logins = [];
-        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
@@ -122,10 +110,6 @@ class MailSender {
     }
 
     /**
-     * @param ModelLogin $login
-     * @param BaseMachine $baseMachine
-     * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws ModelException
@@ -182,14 +166,6 @@ class MailSender {
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param ActiveRow $application
-     * @param Holder $holder
-     * @param Machine $machine
-     * @return string
-     * TODO extension point
-     */
     private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
@@ -206,6 +182,9 @@ class MailSender {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
+    /**
+     * @return int[]
+     */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
@@ -225,9 +204,7 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
+                        $names = array_merge($names, array_map(fn (BaseHolder $it): string => $it->getName(), $group['holders']));
                     }
                     break;
                 case self::ADDR_ALL:

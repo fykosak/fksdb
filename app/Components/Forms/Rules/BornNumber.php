@@ -66,7 +66,6 @@ class BornNumber {
     }
 
     /**
-     * @param string $bornNumber
      * @return array [year,month,day,extension,control]
      * @throws OutOfRangeException
      */
@@ -80,8 +79,6 @@ class BornNumber {
     }
 
     /**
-     * @param string $bornNumber
-     * @return string
      * @throws OutOfRangeException
      */
     public static function getGender(string $bornNumber): string {

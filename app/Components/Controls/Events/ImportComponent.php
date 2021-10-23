@@ -37,7 +37,6 @@ class ImportComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentFormImport(): FormControl {
@@ -76,7 +75,6 @@ class ImportComponent extends BaseComponent {
     }
 
     /**
-     * @param Form $form
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException

@@ -38,14 +38,12 @@ class ApplicationHandler {
 
     private string $errorMode = self::ERROR_ROLLBACK;
     private Connection $connection;
-    private Container $container;
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->container = $container;
         $container->callInjects($this);
     }
 
@@ -160,7 +158,6 @@ class ApplicationHandler {
             }
 
             $this->commit();
-
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
@@ -168,7 +165,7 @@ class ApplicationHandler {
             } elseif (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
             }
-            if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
+            if (($data||$form) && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
                 $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
@@ -263,11 +260,10 @@ class ApplicationHandler {
     }
 
     /**
-     * @param \Exception $e
-     * @return void
+     * @return never|void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(\Exception $e): void {
+    private function reRaise(\Throwable $e): void {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

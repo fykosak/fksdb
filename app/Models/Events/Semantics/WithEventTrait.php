@@ -10,8 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 trait WithEventTrait {
 
     /**
-     * @param object $obj
-     * @return ModelEvent
      * @throws \InvalidArgumentException
      */
     protected function getEvent(object $obj): ModelEvent {
@@ -19,8 +17,6 @@ trait WithEventTrait {
     }
 
     /**
-     * @param object $obj
-     * @return Holder
      * @throws \InvalidArgumentException
      */
     protected function getHolder(object $obj): Holder {

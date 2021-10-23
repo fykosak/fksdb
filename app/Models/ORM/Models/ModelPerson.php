@@ -29,7 +29,6 @@ class ModelPerson extends AbstractModel implements Resource
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
-     * @return ModelLogin|null
      */
     public function getLogin(): ?ModelLogin
     {
@@ -72,7 +71,6 @@ class ModelPerson extends AbstractModel implements Resource
 
     /**
      * @param int|ModelContest|null $contest
-     * @return GroupedSelection
      */
     public function getContestants($contest = null): GroupedSelection
     {
@@ -277,18 +275,10 @@ class ModelPerson extends AbstractModel implements Resource
         return self::RESOURCE_ID;
     }
 
-    /**
-     * @param int eventId
-     * @param string $type
-     * @return string|null
-     */
-    public function getSerializedSchedule(int $eventId, string $type): ?string
+    public function getSerializedSchedule(ModelEvent $event, string $type): ?string
     {
-        if (!$eventId) {
-            return null;
-        }
         $query = $this->getSchedule()
-            ->where('schedule_item.schedule_group.event_id', $eventId)
+            ->where('schedule_item.schedule_group.event_id', $event->event_id)
             ->where('schedule_item.schedule_group.schedule_group_type', $type);
         $items = [];
         foreach ($query as $row) {
@@ -304,7 +294,6 @@ class ModelPerson extends AbstractModel implements Resource
     }
 
     /**
-     * @param int $eventId
      * Definitely ugly but, there is only this way... Mišo
      * TODO refactoring
      */
@@ -330,7 +319,6 @@ class ModelPerson extends AbstractModel implements Resource
     }
 
     /**
-     * @param ModelEvent $event
      * @param string[] $types
      * @return ModelSchedulePayment[]
      */
@@ -356,7 +344,6 @@ class ModelPerson extends AbstractModel implements Resource
     }
 
     /**
-     * @param ModelEvent $event
      * @return array[]
      */
     public function getRolesForEvent(ModelEvent $event): array

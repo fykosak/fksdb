@@ -56,8 +56,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -87,7 +85,7 @@ class AllSubmitsGrid extends SubmitsGrid
 
     private function getFilterCallBack(): callable
     {
-        return function (Selection $table, $value): void {
+        return function (Selection $table, array $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;
@@ -142,7 +140,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl

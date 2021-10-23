@@ -23,8 +23,6 @@ class ServicePerson extends AbstractService {
 
     /**
      * @param ModelPerson|AbstractModel|null $model
-     * @param array $data
-     * @return AbstractModel
      */
     public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel {
         if (is_null($model) && is_null($data['gender'])) {

@@ -60,8 +60,6 @@ class EventFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -84,7 +82,6 @@ class EventFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -119,7 +116,6 @@ class EventFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */

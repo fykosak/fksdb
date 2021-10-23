@@ -32,10 +32,7 @@ class StoredQueryFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @return StoredQuery
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
     {
@@ -78,10 +75,6 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     /**
      * @param StoredQuery $dataSource
-     * @param \DOMNode $node
-     * @param \DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
      * @throws BadRequestException
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void

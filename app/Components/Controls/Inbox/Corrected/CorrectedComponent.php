@@ -23,7 +23,6 @@ class CorrectedComponent extends SeriesTableComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {

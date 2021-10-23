@@ -36,7 +36,6 @@ class PersonsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */

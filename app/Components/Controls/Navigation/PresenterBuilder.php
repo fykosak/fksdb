@@ -18,13 +18,7 @@ class PresenterBuilder {
 
     /**
      * Provides an instance of a presenter prepared for calling action*, render*, etc. methods.
-     *
-     * @param string $presenterName
-     * @param string $action
-     * @param array|null $params
-     * @param array|null $baseParams
      * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
-     * @return Presenter
      * @throws BadRequestException
      */
     public function preparePresenter(string $presenterName, string $action, ?array $params = [], ?array $baseParams = [], bool $newInstance = false): Presenter {

@@ -26,7 +26,6 @@ class InboxFormComponent extends SeriesTableFormComponent {
     }
 
     /**
-     * @param Form $form
      * @throws ForbiddenRequestException
      * @throws ModelException
      */

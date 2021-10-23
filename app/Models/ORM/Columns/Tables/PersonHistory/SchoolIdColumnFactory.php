@@ -20,8 +20,6 @@ class SchoolIdColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModel $model
-     * @return Html
      * @throws NotImplementedException
      */
     protected function createHtmlValue(AbstractModel $model): Html {

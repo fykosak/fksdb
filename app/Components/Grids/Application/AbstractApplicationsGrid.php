@@ -43,7 +43,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     abstract protected function getSource(): Selection;
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl
@@ -67,7 +66,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid
             $label = Html::el('span')
                 ->addHtml(Html::el('b')->addText($state['state']))
                 ->addText(': ')
-                ->addHtml(Html::el('i')->addText(_($state['description'])))
+                ->addHtml(Html::el('i')->addText(_((string)$state['description'])))
                 ->addText(' (' . $state['count'] . ')');
             $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
         }
@@ -84,8 +83,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -97,9 +94,9 @@ abstract class AbstractApplicationsGrid extends BaseGrid
 
     public function getFilterCallBack(): callable
     {
-        return function (Selection $table, $value): void {
+        return function (Selection $table, array $value): void {
             $states = [];
-            foreach ($value->status as $state => $value) {
+            foreach ($value['status'] as $state => $value) {
                 if ($value) {
                     $states[] = str_replace('__', '.', $state);
                 }
@@ -113,7 +110,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid
     abstract protected function getHoldersColumns(): array;
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */

@@ -46,11 +46,6 @@ class AccountManager {
 
     /**
      * Creates login and invites user to set up the account.
-     *
-     * @param ModelPerson $person
-     * @param string $email
-     * @param string $lang
-     * @return ModelLogin
      * @throws UnsupportedLanguageException
      * @throws BadTypeException
      * @throws \Exception
@@ -77,9 +72,6 @@ class AccountManager {
     }
 
     /**
-     * @param ModelLogin $login
-     * @param string|null $lang
-     * @return void
      * @throws UnsupportedLanguageException
      * @throws BadTypeException
      * @throws \Exception

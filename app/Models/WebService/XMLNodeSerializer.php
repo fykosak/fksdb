@@ -9,10 +9,6 @@ interface XMLNodeSerializer {
 
     /**
      * @param mixed $dataSource
-     * @param \DOMNode $node
-     * @param \DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void;
 }

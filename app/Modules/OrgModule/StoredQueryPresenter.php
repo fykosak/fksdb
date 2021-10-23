@@ -41,7 +41,7 @@ class StoredQueryPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(sprintf(_('Create query')), 'fa fa-plus');
+        return new PageTitle(_('Create query'), 'fa fa-plus');
     }
 
     public function titleList(): PageTitle
@@ -112,7 +112,6 @@ class StoredQueryPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

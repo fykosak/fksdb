@@ -12,10 +12,6 @@ use Nette\Utils\Html;
 
 class AgreedColumnFactory extends ColumnFactory {
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     protected function createFormControl(...$args): BaseControl {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
@@ -30,7 +26,6 @@ class AgreedColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new DatePrinter())($model->agreed);

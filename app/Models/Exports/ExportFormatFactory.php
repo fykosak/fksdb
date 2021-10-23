@@ -45,9 +45,6 @@ class ExportFormatFactory {
     }
 
     /**
-     * @param string $name
-     * @param StoredQuery $storedQuery
-     * @return ExportFormat
      * @throws GoneException
      */
     public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat {

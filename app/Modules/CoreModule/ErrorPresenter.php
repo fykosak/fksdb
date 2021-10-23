@@ -18,10 +18,7 @@ class ErrorPresenter extends BasePresenter
         return new PageTitle(_('Error'));
     }
 
-    /**
-     * @param \Exception
-     */
-    final public function renderDefault($exception): void
+    final public function renderDefault(?\Throwable $exception): void
     {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = true;
@@ -39,7 +36,7 @@ class ErrorPresenter extends BasePresenter
                         IResponse::S405_METHOD_NOT_ALLOWED,
                         IResponse::S410_GONE,
                     ]
-                ) ? $code : '500'
+                ) ? (string)$code : '500'
             );
             // log to access.log
             Debugger::log(
@@ -56,6 +53,7 @@ class ErrorPresenter extends BasePresenter
     {
         $this->getPageStyleContainer()->styleId = 'error';
         $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
+        $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
     }
 

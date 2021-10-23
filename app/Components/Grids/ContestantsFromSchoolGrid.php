@@ -19,7 +19,8 @@ class ContestantsFromSchoolGrid extends EntityGrid
     {
         parent::__construct($container, ServiceContestant::class, [
             'person.full_name',
-            'contestant_base.year', /*'person_history.study_year',*/
+            'contestant_base.year',
+            'person_history.study_year',
             'contest.contest',
         ], [
             'person:person_history.school_id' => $school->school_id,
@@ -27,8 +28,6 @@ class ContestantsFromSchoolGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException

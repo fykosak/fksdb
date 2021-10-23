@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 class TShirtColorColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelEventParticipant $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $value = $model->tshirt_color;
