@@ -17,7 +17,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)

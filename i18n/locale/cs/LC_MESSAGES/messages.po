@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 13:41+0200\n"
+"POT-Creation-Date: 2021-10-23 17:04+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -123,7 +123,7 @@ msgstr ""
 #: ../data/events/fol/fol11.neon.neon2php:132
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:47
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:47
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:94
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:84
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:77
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:61
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:90
@@ -136,7 +136,7 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:190
 #: ../data/events/fov/fov.neon.neon2php:85
 #: ../data/events/fov/fov34.neon.neon2php:62
-#: ../data/events/dsef/dsef27.neon.neon2php:42
+#: ../data/events/dsef/dsef27.neon.neon2php:39
 #: ../data/events/dsef/dsef19.neon.neon2php:45
 #: ../data/events/dsef/dsef2-1.neon.neon2php:51
 #: ../data/events/dsef/dsef23.neon.neon2php:90
@@ -322,7 +322,7 @@ msgstr "Vytvořit"
 #: ../app/Modules/CoreModule/SettingsPresenter.php:126
 #: ../app/Components/EntityForms/AbstractEntityFormComponent.php:62
 #: ../app/Components/Controls/PreferredLangFormComponent.php:32
-#: ../app/Components/Controls/Events/ApplicationComponent.php:104
+#: ../app/Components/Controls/Events/ApplicationComponent.php:114
 #: ../app/Components/Controls/Inbox/HandoutFormComponent.php:59
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:32
 #: ../app/Components/Controls/Inbox/SeriesTableFormComponent.php:21
@@ -481,7 +481,7 @@ msgstr "Sloučit osoby"
 #: ../app/Modules/OrgModule/DeduplicatePresenter.php:210
 #: ../app/Components/Grids/SubmitsGrid.php:75
 #: ../app/Components/Grids/SubmitsGrid.php:77
-#: ../app/Components/Controls/Events/ApplicationComponent.php:138
+#: ../app/Components/Controls/Events/ApplicationComponent.php:155
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -1331,7 +1331,7 @@ msgid ""
 "The queries with QID cannot be deleted and QID can be used for permissions "
 "and permanent reference."
 msgstr ""
-"Dotazy s QID nelze smazat a QID lze pozžít pro autorizaci a permanentní "
+"Dotazy s QID nelze smazat a QID lze použít pro autorizaci a permanentní "
 "referenci"
 
 #: ../app/Models/ORM/Columns/Tables/StoredQuery/StoredQuery/QIDColumnFactory.php:16
@@ -1549,47 +1549,47 @@ msgid "Failed to send an e-mail."
 msgstr "Nepodařilo se odeslat e-mail."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:101
-#: ../app/Models/Events/Model/ApplicationHandler.php:163
+#: ../app/Models/Events/Model/ApplicationHandler.php:162
 #, php-format
 msgid "Application \"%s\" created."
 msgstr "Přihláška \"%s\" vytvořena."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:103
-#: ../app/Models/Events/Model/ApplicationHandler.php:165
+#: ../app/Models/Events/Model/ApplicationHandler.php:164
 msgid "Application deleted."
 msgstr "Přihláška smazána"
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:105
-#: ../app/Models/Events/Model/ApplicationHandler.php:167
+#: ../app/Models/Events/Model/ApplicationHandler.php:166
 #, php-format
 msgid "State of application \"%s\" changed."
 msgstr "Stav přihlášky \"%s\" změněn"
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:111
-#: ../app/Models/Events/Model/ApplicationHandler.php:175
+#: ../app/Models/Events/Model/ApplicationHandler.php:174
 #, php-format
 msgid "Some fields of group \"%s\" don't match an existing record."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:115
-#: ../app/Models/Events/Model/ApplicationHandler.php:180
+#: ../app/Models/Events/Model/ApplicationHandler.php:179
 #, php-format
 msgid "Data in group \"%s\" collide with an existing application."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:170
+#: ../app/Models/Events/Model/ApplicationHandler.php:169
 #, php-format
 msgid "Application \"%s\" saved."
 msgstr "Přihláška \"%s\" uložena"
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:214
+#: ../app/Models/Events/Model/ApplicationHandler.php:213
 #, php-format
 msgid ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
 msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
 
-#: ../app/Models/Events/Model/ApplicationHandler.php:268
+#: ../app/Models/Events/Model/ApplicationHandler.php:267
 msgid "Error while saving the application."
 msgstr "Error při ukládání přihlášky"
 
@@ -2098,7 +2098,7 @@ msgstr "Schválení je nutné pro pokračování"
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:45
 msgid ""
 "First of all try to find the person in our database using e-mail address"
-msgstr "Nejprve zkuste najít danou osobu v naší databázi dle emailové adresy"
+msgstr "Nejprve zkuste najít danou osobu v naší databázi dle e-mailové adresy"
 
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:54
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:69
@@ -2209,7 +2209,7 @@ msgstr "Pole \"%s\" je vyžadováno"
 msgid "%s is required"
 msgstr "Pole \"%s\" je vyžadováno"
 
-#: ../app/Components/Forms/Factories/Events/PersonFactory.php:126
+#: ../app/Components/Forms/Factories/Events/PersonFactory.php:153
 #, php-format
 msgid "%s: %s is a required field."
 msgstr "%s: %s je požadované pole"
@@ -2547,7 +2547,7 @@ msgstr "Jméno parametru je příliš dlouhé."
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:181
 #, fuzzy
 msgid ""
-"The name of the parameter can only contain lowercase \n"
+"The name of the parameter can only contain lowercase \r\n"
 "                letters of the english alphabet, numbers, and an underscore."
 msgstr ""
 "Jméno parametru může obsahovat pouze malá písmena anglické abecedy, čísla a "
@@ -2939,7 +2939,7 @@ msgstr "Import přihlášek"
 #: ../app/Modules/EventModule/templates/Application/list.latte.latte2php:7
 #: ../app/Modules/EventModule/templates/AbstractApplication/list.latte.latte2php:7
 msgid "Mass transitions"
-msgstr "Hromadné řechody"
+msgstr "Hromadné přechody"
 
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:24
 #: ../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:4
@@ -3235,7 +3235,7 @@ msgstr "Historie osoby"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:25
 msgid "Emails"
-msgstr ""
+msgstr "E-maily"
 
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:32
 msgid "Task contribution"
@@ -3682,7 +3682,7 @@ msgstr "U cizinců číslo pasu"
 #: ../app/config/orm.neon.neon2php:524
 #, fuzzy
 msgid "Passport Id"
-msgstr "Heslo"
+msgstr "Číslo pasu"
 
 #: ../app/config/orm.neon.neon2php:530
 msgid "Date of birth"
@@ -3690,7 +3690,7 @@ msgstr "Datum narození"
 
 #: ../app/config/orm.neon.neon2php:534
 msgid "Birth Id"
-msgstr ""
+msgstr "Rodné číslo"
 
 #: ../app/config/orm.neon.neon2php:535
 msgid "For foreigners empty."
@@ -3722,7 +3722,7 @@ msgstr ""
 #: ../data/events/tsaf/tsaf7.neon.neon2php:92
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:27
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:27
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:73
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:63
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:57
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:41
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:70
@@ -3740,7 +3740,7 @@ msgstr ""
 #: ../data/events/tsaf/tsaf7.neon.neon2php:108
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:32
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:32
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:78
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:68
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:62
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:46
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:75
@@ -3770,7 +3770,7 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:105
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:35
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:35
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:81
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:71
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:65
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:49
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:78
@@ -3803,7 +3803,7 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:109
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:39
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:39
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:85
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:75
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:69
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:53
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:82
@@ -3828,7 +3828,7 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:112
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:43
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:43
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:89
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:79
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:73
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:57
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:86
@@ -3846,7 +3846,7 @@ msgstr ""
 #: ../data/events/council/council1.neon.neon2php:15
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:81
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:81
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:128
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:118
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:83
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:97
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:126
@@ -3863,13 +3863,13 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:162
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:91
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:91
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:137
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:127
 #: ../data/events/setkani/podzim/setkani10.neon.neon2php:93
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:107
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:136
 #: ../data/events/setkani/jaro/setkani10.neon.neon2php:83
 #: ../data/events/setkani/setkani.neon.neon2php:151
-#: ../data/events/dsef/dsef27.neon.neon2php:54
+#: ../data/events/dsef/dsef27.neon.neon2php:51
 #: ../data/events/dsef/dsef19.neon.neon2php:72
 #: ../data/events/dsef/dsef2-1.neon.neon2php:81
 #: ../data/events/dsef/dsef23.neon.neon2php:113
@@ -3974,7 +3974,7 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:125
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:78
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:78
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:125
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:115
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:70
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:99
 #: ../data/events/setkani/setkani.neon.neon2php:138
@@ -4069,7 +4069,7 @@ msgstr ""
 #: ../data/events/tabor/tabor8.neon.neon2php:122
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:75
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:75
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:122
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:112
 #: ../data/events/setkani/jaro/setkani8.neon.neon2php:67
 #: ../data/events/setkani/jaro/setkani9.neon.neon2php:96
 #: ../data/events/setkani/setkani.neon.neon2php:135
@@ -4203,7 +4203,7 @@ msgstr "Pozvat účastníka"
 #: ../data/events/soustredeni/sous35p.neon.neon2php:46
 #: ../data/events/soustredeni/sous35p.neon.neon2php:51
 msgid "Invite Spare"
-msgstr "Poznat Náhradníka"
+msgstr "Pozvat náhradníka"
 
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:95
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:140
@@ -4753,7 +4753,7 @@ msgstr ""
 
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:53
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:53
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:100
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:90
 #: ../data/events/setkani/setkani.neon.neon2php:113
 msgid "Předpokládaný příjezd"
 msgstr ""
@@ -4765,14 +4765,14 @@ msgstr ""
 
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:56
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:56
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:103
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:93
 #: ../data/events/setkani/setkani.neon.neon2php:116
 msgid "Na jaké místo přijedeš?"
 msgstr ""
 
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:60
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:60
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:107
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:97
 #: ../data/events/setkani/setkani.neon.neon2php:120
 msgid "Předpokládaný odjezd"
 msgstr ""
@@ -4784,7 +4784,7 @@ msgstr ""
 
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:63
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:63
-#: ../data/events/setkani/podzim/setkani11.neon.neon2php:110
+#: ../data/events/setkani/podzim/setkani11.neon.neon2php:100
 #: ../data/events/setkani/setkani.neon.neon2php:123
 msgid "Z jakého místa chceš odjíždět?"
 msgstr ""
@@ -5050,10 +5050,8 @@ msgstr ""
 msgid "Jazyk ve kterém chcete soutěžit."
 msgstr ""
 
-#: ../data/events/dsef/dsef27.neon.neon2php:49
-#: ../data/events/dsef/dsef24.neon.neon2php:53
-#: ../data/events/dsef/dsef25.neon.neon2php:53
-msgid "à 30 Kč"
+#: ../data/events/dsef/dsef27.neon.neon2php:46
+msgid "Počet \"obědů\" (bageta za 30 Kč)"
 msgstr ""
 
 #: ../data/events/dsef/dsef19.neon.neon2php:51
@@ -5072,6 +5070,11 @@ msgstr ""
 #: ../data/events/dsef/dsef24.neon.neon2php:50
 #: ../data/events/dsef/dsef25.neon.neon2php:50
 msgid "Zvolit skupinu"
+msgstr ""
+
+#: ../data/events/dsef/dsef24.neon.neon2php:53
+#: ../data/events/dsef/dsef25.neon.neon2php:53
+msgid "à 30 Kč"
 msgstr ""
 
 #: ../data/events/vaf/vaf.neon.neon2php:64
@@ -5338,7 +5341,6 @@ msgstr ""
 #~ msgid "Download routing"
 #~ msgstr "Stáhnout umístění týmů do místností"
 
-#, php-format
 #~ msgid "Backlink %s not allowed"
 #~ msgstr "Zpětný odkaz %s není povolen"
 
@@ -5348,7 +5350,6 @@ msgstr ""
 #~ msgid "Multiple persons correspond to the Facebook profile."
 #~ msgstr "Facebook účtu odpovídá více osob."
 
-#, php-format
 #~ msgid "Missing person in application Id %s."
 #~ msgstr "Chybějící osoby v přihlášce s ID %s."
 
