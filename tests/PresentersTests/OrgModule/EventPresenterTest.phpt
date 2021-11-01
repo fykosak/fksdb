@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
@@ -14,14 +15,19 @@ use Tester\Assert;
  * Class EventPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventPresenterTest extends AbstractOrgPresenterTestCase {
+class EventPresenterTest extends AbstractOrgPresenterTestCase
+{
 
     private int $eventId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->loginUser();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
 
         $this->eventId = $this->insert(DbNames::TAB_EVENT, [
             'event_type_id' => 1,
@@ -33,7 +39,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         ]);
     }
 
-    public function testList(): void {
+    public function testList(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -42,7 +49,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::contains('#' . $this->eventId, $html);
     }
 
-    public function testCreate(): void {
+    public function testCreate(): void
+    {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -59,7 +67,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testCreateDuplicate(): void {
+    public function testCreateDuplicate(): void
+    {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -78,7 +87,8 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testEdit(): void {
+    public function testEdit(): void
+    {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
                 'event_type_id' => (string)1,
@@ -96,16 +106,19 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal('Dummy Event edited', $org->name);
     }
 
-    protected function getPresenterName(): string {
+    protected function getPresenterName(): string
+    {
         return 'Org:Event';
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
-    private function countEvents(): int {
+    private function countEvents(): int
+    {
         return $this->explorer->query('SELECT * FROM event')->getRowCount();
     }
 }

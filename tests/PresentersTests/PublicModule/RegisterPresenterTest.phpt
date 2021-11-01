@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule;
 
@@ -12,11 +13,13 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Bridges\ApplicationLatte\Template;
 use Tester\Assert;
 
-class RegisterPresenterTest extends DatabaseTestCase {
+class RegisterPresenterTest extends DatabaseTestCase
+{
 
     private IPresenter $fixture;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
@@ -24,7 +27,8 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $this->fixture->autoCanonicalize = false;
     }
 
-    public function testDispatch(): void {
+    public function testDispatch(): void
+    {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contest',
             'lang' => 'en',
@@ -40,7 +44,8 @@ class RegisterPresenterTest extends DatabaseTestCase {
         Assert::contains('Select contest', $html);
     }
 
-    public function testForm() {
+    public function testForm()
+    {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contestant',
             'contestId' => 1,

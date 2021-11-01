@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
@@ -10,11 +11,13 @@ use Tester\DomQuery;
 
 $container = require '../../Bootstrap.php';
 
-class SecondaryLimitOk extends ResourceAvailabilityTestCase {
+class SecondaryLimitOk extends ResourceAvailabilityTestCase
+{
 
     private int $tsafEventId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->tsafEventId = $this->createEvent([
             'event_type_id' => 7,
@@ -34,7 +37,8 @@ EOT
         }
     }
 
-    public function getTestData(): array {
+    public function getTestData(): array
+    {
         return [
             [3, false],
             [2, true],
@@ -44,12 +48,23 @@ EOT
     /**
      * @dataProvider getTestData
      */
-    public function testDisplay(int $capacity, bool $disabled): void {
-        Assert::equal(2, (int)$this->explorer->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
-        $this->explorer->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
+    public function testDisplay(int $capacity, bool $disabled): void
+    {
+        Assert::equal(
+            2,
+            (int)$this->explorer->query(
+                'SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?',
+                $this->eventId
+            )->fetchField()
+        );
+        $this->explorer->query(
+            'UPDATE event SET parameters = ? WHERE event_id = ?',
+            <<<EOT
 accomodationCapacity: $capacity                
 EOT
-            , $this->eventId);
+            ,
+            $this->eventId
+        );
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -67,10 +82,14 @@ EOT
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
         Assert::true((bool)$dom->xpath('//input[@name="participantDsef[accomodation]"]'));
-        Assert::equal($disabled, (bool)$dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]'));
+        Assert::equal(
+            $disabled,
+            (bool)$dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]')
+        );
     }
 
-    protected function getCapacity(): int {
+    protected function getCapacity(): int
+    {
         return 3;
     }
 }

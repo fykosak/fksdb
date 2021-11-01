@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
 
@@ -9,7 +10,8 @@ use Nette\DI\Container;
 use SoapVar;
 use Tester\Assert;
 
-class WebServiceModelTest extends DatabaseTestCase {
+class WebServiceModelTest extends DatabaseTestCase
+{
 
     private Container $container;
 
@@ -19,12 +21,14 @@ class WebServiceModelTest extends DatabaseTestCase {
      * WebServiceModelTest constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->container = $container;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->fixture = $this->container->getService('webServiceModel');
@@ -32,11 +36,13 @@ class WebServiceModelTest extends DatabaseTestCase {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         parent::tearDown();
     }
 
-    public function testResults(): void {
+    public function testResults(): void
+    {
         $header = [
             'username' => 'homer',
             'password' => '123456',

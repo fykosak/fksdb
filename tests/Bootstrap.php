@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests;
 
@@ -26,19 +27,25 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 
-class Bootstrap {
-    public static function boot(): Configurator {
+class Bootstrap
+{
+    public static function boot(): Configurator
+    {
         $configurator = new Configurator();
 
         // Enable Nette Debugger for error visualisation & logging
         $configurator->setDebugMode(false);
         Debugger::$logDirectory = LOG_DIR;
         Environment::setup();
-        error_reporting(/*~E_USER_DEPRECATED &*/ ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
+        error_reporting(/*~E_USER_DEPRECATED &*/
+            ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED
+        );
 
 // Enable RobotLoader - this will load all classes automatically
         $configurator->setTempDirectory(TEMP_DIR);
-        error_reporting(/*~E_USER_DEPRECATED &*/ ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
+        error_reporting(/*~E_USER_DEPRECATED &*/
+            ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED
+        );
         $configurator->createRobotLoader()
             ->addDirectory(APP_DIR)
             ->addDirectory(LIBS_DIR)

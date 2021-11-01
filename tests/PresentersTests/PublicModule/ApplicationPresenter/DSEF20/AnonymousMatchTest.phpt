@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
 $container = require '../../../../Bootstrap.php';
@@ -11,46 +13,49 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class AnonymousMatchTest extends DsefTestCase {
+class AnonymousMatchTest extends DsefTestCase
+{
 
-    protected function tearDown(): void {
-         $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
+    protected function tearDown(): void
+    {
+        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
         parent::tearDown();
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => ReferencedId::VALUE_PROMISE,
                 'person_id_1' => [
-                    '_c_compact' => " ",
+                    '_c_compact' => ' ',
                     'person' => [
-                        'other_name' => "Paní",
-                        'family_name' => "Bílá",
+                        'other_name' => 'Paní',
+                        'family_name' => 'Bílá',
                     ],
                     'person_info' => [
-                        'email' => "bila@hrad.cz",
-                        'id_number' => "1231354",
-                        'born' => "2000-01-01",
+                        'email' => 'bila@hrad.cz',
+                        'id_number' => '1231354',
+                        'born' => '2000-01-01',
                     ],
                     'post_contact_p' => [
                         'address' => [
-                            'target' => "jkljhkjh",
-                            'city' => "jkhlkjh",
-                            'postal_code' => "64546",
-                            'country_iso' => "",
+                            'target' => 'jkljhkjh',
+                            'city' => 'jkhlkjh',
+                            'postal_code' => '64546',
+                            'country_iso' => '',
                         ],
                     ],
                 ],
-                'e_dsef_group_id' => "1",
-                'lunch_count' => "3",
-                'message' => "",
+                'e_dsef_group_id' => '1',
+                'lunch_count' => '3',
+                'message' => '',
             ],
-            'privacy' => "on",
-            'c_a_p_t_cha' => "pqrt",
-            '__init__applied' => "Přihlásit účastníka",
+            'privacy' => 'on',
+            'c_a_p_t_cha' => 'pqrt',
+            '__init__applied' => 'Přihlásit účastníka',
         ]);
 
         $response = $this->fixture->run($request);
@@ -69,7 +74,6 @@ class AnonymousMatchTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AnonymousMatchTest($container);

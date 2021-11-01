@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
@@ -10,9 +11,11 @@ use Tester\DomQuery;
 
 $container = require '../../Bootstrap.php';
 
-class PrimaryLimitOk extends ResourceAvailabilityTestCase {
+class PrimaryLimitOk extends ResourceAvailabilityTestCase
+{
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -33,7 +36,8 @@ class PrimaryLimitOk extends ResourceAvailabilityTestCase {
         Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    protected function getCapacity(): int {
+    protected function getCapacity(): int
+    {
         return 3;
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
 $container = require '../../../../Bootstrap.php';
@@ -11,9 +13,11 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 
-class AnonymousTest extends DsefTestCase {
+class AnonymousTest extends DsefTestCase
+{
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -32,7 +36,8 @@ class AnonymousTest extends DsefTestCase {
         Assert::contains('Účastník', $html);
     }
 
-    public function testAnonymousRegistration(): void {
+    public function testAnonymousRegistration(): void
+    {
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",

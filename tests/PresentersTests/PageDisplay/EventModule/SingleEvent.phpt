@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
@@ -10,8 +11,10 @@ $container = require '../../../Bootstrap.php';
  * Class EventModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SingleEvent extends EventModuleTestCase {
-    protected function getEventData(): array {
+class SingleEvent extends EventModuleTestCase
+{
+    protected function getEventData(): array
+    {
         return [
             'event_type_id' => 7,
             'year' => 1,
@@ -22,7 +25,8 @@ class SingleEvent extends EventModuleTestCase {
         ];
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
             ['Event:Application', 'list'],
             ['Event:Application', 'import'],

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
@@ -8,11 +9,13 @@ use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class CancelTest extends TsafTestCase {
+class CancelTest extends TsafTestCase
+{
 
     private int $tsafAppId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
@@ -42,7 +45,8 @@ class CancelTest extends TsafTestCase {
         ]);
     }
 
-    public function testCancel(): void {
+    public function testCancel(): void
+    {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->personId,

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
@@ -11,14 +12,21 @@ use Tester\DomQuery;
 
 $container = require '../../Bootstrap.php';
 
-class PrimaryLast extends ResourceAvailabilityTestCase {
+class PrimaryLast extends ResourceAvailabilityTestCase
+{
 
     private int $appId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $personId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
+        $personId = $this->createPerson(
+            'Paní',
+            'Černá',
+            ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
         $this->appId = $this->insert('event_participant', [
             'person_id' => $personId,
             'event_id' => $this->eventId,
@@ -32,7 +40,8 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
         $this->authenticate($personId, $this->fixture);
     }
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -54,7 +63,8 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
         Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    protected function getCapacity(): int {
+    protected function getCapacity(): int
+    {
         return 3;
     }
 }
