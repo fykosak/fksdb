@@ -10,7 +10,7 @@ use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
 

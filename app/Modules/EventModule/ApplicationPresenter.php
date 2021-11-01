@@ -16,7 +16,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 

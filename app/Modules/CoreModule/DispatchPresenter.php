@@ -7,7 +7,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
 class DispatchPresenter extends BasePresenter

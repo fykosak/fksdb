@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;

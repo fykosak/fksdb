@@ -12,7 +12,7 @@ use FKSDB\Models\Fyziklani\FyziklaniTaskImportProcessor;
 use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Form;
 use Nette\DI\MissingServiceException;
 

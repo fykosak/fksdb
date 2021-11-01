@@ -9,7 +9,7 @@ class Loader {
 
     private items: App[] = [];
 
-    constructor() {
+    public constructor() {
         this.hashMapLoader = new MapRegister();
     }
 

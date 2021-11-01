@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\UI\Form;

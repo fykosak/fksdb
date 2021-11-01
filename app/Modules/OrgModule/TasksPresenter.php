@@ -13,7 +13,7 @@ use FKSDB\Models\SeriesCalculator;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;

@@ -1,5 +1,5 @@
 {varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
-{varType FKSDB\Models\UI\PageTitle $pageTitle}
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -37,7 +37,7 @@
         <div class="navbar-nav mr-auto">
             {block nav-left}
                 {foreach $navRoots as $root}
-                    {control navigationChooser $root}
+                    {control navigationChooser:nav $root}
                 {/foreach}
             {/block}
         </div>

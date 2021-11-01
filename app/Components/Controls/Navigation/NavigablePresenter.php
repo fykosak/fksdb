@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\IPresenter;
 
 /**
@@ -12,7 +14,8 @@ use Nette\Application\IPresenter;
  *
  * @note navigable == splavný :-)
  */
-interface NavigablePresenter extends IPresenter {
+interface NavigablePresenter extends IPresenter
+{
 
     /**
      * Should set persistent parameter identifying the backlink.
@@ -23,7 +26,7 @@ interface NavigablePresenter extends IPresenter {
     /**
      * Returns title object of the current view.
      */
-    public function getTitle(): PageTitle;
+    public function getTitle(): Title;
 
     /**
      * Publish access of the protecetd static method.

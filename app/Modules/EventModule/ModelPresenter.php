@@ -7,7 +7,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Events\GraphComponent;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class ModelPresenter extends BasePresenter
 {

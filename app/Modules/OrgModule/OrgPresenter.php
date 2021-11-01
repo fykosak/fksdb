@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
