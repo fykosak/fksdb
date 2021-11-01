@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests;
@@ -34,11 +35,6 @@ class WebServiceModelTest extends DatabaseTestCase
         $this->fixture = $this->container->getService('webServiceModel');
         $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 
     public function testResults(): void

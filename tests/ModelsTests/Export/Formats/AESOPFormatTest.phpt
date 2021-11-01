@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
@@ -41,11 +42,6 @@ class AESOPFormatTest extends DatabaseTestCase
         $storedQuery->setQId('aesop.ct');
 
         $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);*/
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 
     public function testResponse(): void

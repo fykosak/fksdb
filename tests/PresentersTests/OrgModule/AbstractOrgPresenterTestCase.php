@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
@@ -8,7 +9,6 @@ use Nette\Application\Request;
 
 abstract class AbstractOrgPresenterTestCase extends EntityPresenterTestCase
 {
-
     protected function createPostRequest(string $action, array $params, array $postData = []): Request
     {
         $params['year'] = 1;

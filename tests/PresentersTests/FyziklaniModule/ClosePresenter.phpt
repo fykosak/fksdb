@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
@@ -86,11 +87,6 @@ class ClosePresenter extends FyziklaniTestCase
         $this->mockApplication();
 
         $this->authenticate($this->userPersonId, $this->fixture);
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
     }
 
     private function createCloseTeamRequest(array $formData, array $params = []): Request
