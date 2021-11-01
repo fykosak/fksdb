@@ -186,8 +186,8 @@ class ApplicationComponent extends BaseComponent
 
     private function canEdit(): bool
     {
-        return $this->holder->getPrimaryHolder()->getModelState(
-            ) != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState()
+            != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void

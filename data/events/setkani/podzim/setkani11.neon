@@ -1,6 +1,6 @@
 parameters:
     events:
-        setkani11:
+        setkani11podzim:
             person:
                 person:
                     other_name:
@@ -29,23 +29,13 @@ parameters:
                     weekend:
                         required: false
             tshirt:
-                size:
-                    M_S: S pánské
-                    M_M: M pánské
-                    M_L: L pánské
-                    M_XL: XL pánské
-                    M_XXL: XXL pánské
-                    F_S: S dámské
-                    F_M: M dámské
-                    F_L: L dámské
-                    F_XL: XL dámské
                 color:
                     blue: Modrá
                     orange: Oranžová
                     wine: Vínová
                     black: Černá
 events:
-    setkani10podzim:
+    setkani11podzim:
         event_type_id: [12]
         eventYears: [11] # specify for which years this machine is valid, by default all years
         formLayout: setkani.form
@@ -117,7 +107,7 @@ events:
                     tshirt_color:
                         label: 'Jakou barvu mikiny bys chtěl?'
                         required: false
-                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
+                        factory: Chooser("Zvol barvu", Options(%events.setkani11podzim.tshirt.color%))
                     diet:
                         label: _('Jídlo')
                         description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"
