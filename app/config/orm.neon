@@ -860,7 +860,7 @@ orm:
                          accommodation: [badge: 'badge badge-1', label: 'Accommodation']
                          accommodation_gender: [badge: 'badge badge-2', label: 'Accommodation gender']
                          accommodation_teacher: [badge: 'badge badge-3', label: 'Accommodation teacher']
-                         teacher_present: [badge: 'badge badge-4', label: 'Schedule during compotition']
+                         teacher_present: [badge: 'badge badge-4', label: 'Schedule during competition']
                          weekend: [badge: 'badge badge-5', label: 'Weekend']
                          weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
                          visa: [badge: 'badge badge-7', label: 'Visa']
