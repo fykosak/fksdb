@@ -15,7 +15,7 @@ use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;

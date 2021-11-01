@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -123,13 +122,13 @@ class SubmitsGrid extends BaseGrid
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
                 sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()),
-                Logger::WARNING
+                Message::LVL_WARNING
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_DANGER);
+            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_ERROR);
         }
     }
 
@@ -142,7 +141,7 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -155,7 +154,7 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 

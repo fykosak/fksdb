@@ -104,7 +104,7 @@ class SettingsPresenter extends BasePresenter
             $rule,
             true,
             $login->hash && (!$tokenAuthentication),
-            (bool)$tokenAuthentication
+            $tokenAuthentication
         );
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */

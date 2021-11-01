@@ -22,18 +22,9 @@ class CorrectedStorage implements SubmitStorage {
      */
     private string $directoryMask;
 
-    /**
-     * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
-     * File extension + metadata will be added to the name.
-     *
-     * @var string
-     */
-    private string $filenameMask;
-
-    public function __construct(string $root, string $directoryMask, string $filenameMask) {
+    public function __construct(string $root, string $directoryMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
-        $this->filenameMask = $filenameMask;
     }
 
     /**

@@ -353,7 +353,7 @@ class BaseHolder {
      */
     private function cacheParameters(): void
     {
-        $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
+        $parameters = $this->getEvent()->parameters ?? '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         if (is_string($parameters)) {
             throw new NeonSchemaException('Parameters must be an array string given');

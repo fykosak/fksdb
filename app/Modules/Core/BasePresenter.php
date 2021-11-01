@@ -17,12 +17,12 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
@@ -45,10 +45,10 @@ abstract class BasePresenter extends Presenter implements
 {
     use CollectorPresenterTrait;
 
-    public const FLASH_SUCCESS = Logger::SUCCESS;
-    public const FLASH_INFO = Logger::INFO;
-    public const FLASH_WARNING = Logger::WARNING;
-    public const FLASH_ERROR = Logger::ERROR;
+    public const FLASH_SUCCESS = Message::LVL_SUCCESS;
+    public const FLASH_INFO = Message::LVL_INFO;
+    public const FLASH_WARNING = Message::LVL_WARNING;
+    public const FLASH_ERROR = Message::LVL_ERROR;
 
     /**
      * BackLink for tree construction for breadcrumbs.

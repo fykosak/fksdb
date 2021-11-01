@@ -9,7 +9,6 @@ use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
@@ -17,7 +16,7 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
+use Fykosak\Utils\Logging\FlashMessageDump;
 
 /**
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)

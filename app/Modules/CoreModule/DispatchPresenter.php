@@ -96,9 +96,4 @@ class DispatchPresenter extends BasePresenter
         $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
     }
-
-    private function getContestProperty(int $contestId): array
-    {
-        return $this->getContestsProperty()[$contestId];
-    }
 }

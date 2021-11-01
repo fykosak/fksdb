@@ -154,12 +154,11 @@ class ExtendedPersonHandler
         $model = $presenter->getModel();
 
         if (!$model) {
-            $data = [
+            $model = $this->service->createNewModel([
                 'contest_id' => $this->contestYear->getContest(),
                 'person_id' => $person->getPrimary(),
                 'year' => $this->contestYear->year,
-            ];
-            $model = $this->service->createNewModel((array)$data);
+            ]);
         }
 
         // update data

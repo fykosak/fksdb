@@ -4,8 +4,8 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -37,7 +37,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $model = $holder->getPrimaryHolder()->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Message::LVL_INFO));
         }
     }
 

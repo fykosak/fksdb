@@ -9,7 +9,7 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;

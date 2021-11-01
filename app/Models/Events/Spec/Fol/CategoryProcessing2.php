@@ -4,15 +4,17 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-class CategoryProcessing2 extends AbstractCategoryProcessing {
+class CategoryProcessing2 extends AbstractCategoryProcessing
+{
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -23,7 +25,7 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
         $model = $holder->getPrimaryHolder()->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Logger::INFO));
+            $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Message::LVL_INFO));
         }
     }
 
@@ -34,7 +36,8 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      */
-    protected function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string
+    {
         // init stats
         $olds = 0;
         $years = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ

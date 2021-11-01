@@ -40,7 +40,7 @@ final class YearChooserComponent extends ChooserComponent
                 [],
                 $this->contestYear->year === $year->year
             );
-        };
+        }
         return new NavItem(new Title(sprintf(_('Year %d'), $this->contestYear->year)), '#', [], $items);
     }
 }

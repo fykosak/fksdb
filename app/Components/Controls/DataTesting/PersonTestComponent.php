@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;

@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServicePerson;

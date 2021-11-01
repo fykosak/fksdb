@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\InvalidStateException;
 
 /**

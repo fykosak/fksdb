@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
 abstract class PersonTest {

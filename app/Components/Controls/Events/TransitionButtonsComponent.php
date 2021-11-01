@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\DI\Container;

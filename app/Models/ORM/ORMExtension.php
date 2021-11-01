@@ -196,7 +196,7 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension {
         $factory->addSetup('setUp', [
             $tableName,
             $modelClassName,
-            isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
+            $field['accessKey'] ?? $fieldName,
             $this->translate($field['title']),
             isset($field['description']) ? $this->translate($field['description']) : null,
         ]);

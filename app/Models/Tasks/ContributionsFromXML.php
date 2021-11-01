@@ -2,18 +2,17 @@
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
  */
-class ContributionsFromXML extends Stage {
+class ContributionsFromXML extends Stage
+{
 
     private SeriesData $data;
 
@@ -25,32 +24,34 @@ class ContributionsFromXML extends Stage {
 
     private ServiceTaskContribution $taskContributionService;
 
-    private ServiceOrg $serviceOrg;
-
-    public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
+    public function __construct(ServiceTaskContribution $taskContributionService)
+    {
         $this->taskContributionService = $taskContributionService;
-        $this->serviceOrg = $serviceOrg;
     }
 
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void
+    {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -78,7 +79,7 @@ class ContributionsFromXML extends Stage {
                     ->fetch();
 
                 if (!$row) {
-                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Logger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
                     continue;
                 }
                 $contributors[] = ModelOrg::createFromActiveRow($row);
