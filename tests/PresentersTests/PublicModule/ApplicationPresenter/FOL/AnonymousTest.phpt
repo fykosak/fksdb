@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
 $container = require '../../../../Bootstrap.php';
@@ -12,9 +14,11 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 
-class AnonymousTest extends FolTestCase {
+class AnonymousTest extends FolTestCase
+{
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'en',
@@ -33,7 +37,8 @@ class AnonymousTest extends FolTestCase {
         Assert::contains('Register team', $html);
     }
 
-    public function testAnonymousRegistration(): void {
+    public function testAnonymousRegistration(): void
+    {
         $request = $this->createPostRequest([
             'team' => [
                 'name' => 'Okurkový tým',

@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\Choosers\ChooserComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\UI\PageTitle;
-use FKSDB\Models\UI\Title;
+use Fykosak\Utils\UI\Navigation\NavigationItemComponent;
+use Fykosak\Utils\UI\Navigation\NavItem;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Tracy\Debugger;
 
-class NavigationChooserComponent extends ChooserComponent
+class NavigationChooserComponent extends NavigationItemComponent
 {
 
     private NavigationFactory $navigationFactory;
@@ -22,12 +23,30 @@ class NavigationChooserComponent extends ChooserComponent
         $this->navigationFactory = $navigationFactory;
     }
 
-    final public function render(string $root = ''): void
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException|\ReflectionException
+     */
+    final public function renderNav(string $root = ''): void
     {
-        $this->structure = $this->navigationFactory->getStructure($root);
-        parent::render();
+        $structure = $this->navigationFactory->getStructure($root);
+        parent::render($this->getItem($structure));
     }
 
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     */
+    protected function beforeRender(): void
+    {
+        $this->template->items = $this->getItems();
+        $this->template->title = $this->getTitle();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     */
     final public function renderBoard(string $root): void
     {
         $this->structure = $this->navigationFactory->getStructure($root);
@@ -49,10 +68,9 @@ class NavigationChooserComponent extends ChooserComponent
                 $this->structure['linkParams']
             );
             $presenter->setView($presenter->getView()); // to force update the title
-            Debugger::barDump($presenter->getTitle());
             return $presenter->getTitle();
         }
-        return new PageTitle('');
+        return new Title('');
     }
 
     protected function getItems(): iterable
@@ -61,10 +79,33 @@ class NavigationChooserComponent extends ChooserComponent
     }
 
     /**
-     * @param array $item
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    public function isItemActive($item): bool
+    private function getItem(array $structure): NavItem
     {
+        $items = [];
+        foreach ($structure['parents'] as $item) {
+            [$destination, $params] = $this->navigationFactory->createLinkParams($this->getPresenter(), $item);
+            if ($this->isItemVisible($item)) {
+                $items[] = new NavItem(
+                    $this->getItemTitle($item),
+                    $destination,
+                    $params,
+                    [],
+                    $this->isItemActive($item)
+                );
+            }
+        }
+        return new NavItem($this->getItemTitle($structure), '#', [], $items);
+    }
+
+    public function isItemActive(array $item): bool
+    {
+        if ($item instanceof NavItem) {
+            return false;
+        }
         if (isset($item['linkPresenter'])) {
             try {
                 $this->navigationFactory->createLink($this->getPresenter(), $item);
@@ -80,11 +121,10 @@ class NavigationChooserComponent extends ChooserComponent
     }
 
     /**
-     * @param array $item
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function getItemTitle($item): Title
+    public function getItemTitle(array $item): Title
     {
         if (isset($item['linkPresenter'])) {
             $presenter = $this->navigationFactory->preparePresenter(
@@ -101,13 +141,12 @@ class NavigationChooserComponent extends ChooserComponent
     }
 
     /**
-     * @param array $item
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    public function getItemLink($item): string
+    public function getItemLink(array $item): string
     {
         if (isset($item['linkPresenter'])) {
             return $this->navigationFactory->createLink($this->getPresenter(), $item);
@@ -116,13 +155,15 @@ class NavigationChooserComponent extends ChooserComponent
     }
 
     /**
-     * @param array $item
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function isItemVisible($item): bool
+    public function isItemVisible(array $item): bool
     {
+        if ($item instanceof NavItem) {
+            return true;
+        }
         if (isset($item['visible'])) {
             return $item['visible'];
         }

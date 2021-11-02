@@ -11,7 +11,7 @@ use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Nette\Security\Resource;

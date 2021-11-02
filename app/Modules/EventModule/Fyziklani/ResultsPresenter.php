@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatisticsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class ResultsPresenter extends BasePresenter
 {

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -14,9 +15,12 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\Mail\MailTemplateFactory;
+use Nette\SmartObject;
 use Nette\Utils\DateTime;
 
-class AccountManager {
+class AccountManager
+{
+    use SmartObject;
 
     private ServiceLogin $serviceLogin;
     private ServiceAuthToken $serviceAuthToken;
@@ -46,11 +50,11 @@ class AccountManager {
 
     /**
      * Creates login and invites user to set up the account.
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin
+    {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
@@ -63,7 +67,10 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?? $lang, $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation(
+            $person->getPreferredLang() ?? $lang,
+            $templateParams
+        );
         $data['subject'] = _('Create an account');
         $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;
@@ -72,11 +79,11 @@ class AccountManager {
     }
 
     /**
-     * @throws UnsupportedLanguageException
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, string $lang): void {
+    public function sendRecovery(ModelLogin $login, string $lang): void
+    {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -105,13 +112,15 @@ class AccountManager {
         $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    public function cancelRecovery(ModelLogin $login): void {
+    public function cancelRecovery(ModelLogin $login): void
+    {
         $login->related(DbNames::TAB_AUTH_TOKEN)->where([
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])->delete();
     }
 
-    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin {
+    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin
+    {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

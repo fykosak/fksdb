@@ -392,7 +392,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);
 
         $config = $this->getConfig();
-        $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$eventName]['paramScheme'];
+        $paramScheme = $definition['paramScheme'] ?? $config[$eventName]['paramScheme'];
         foreach (array_keys($paramScheme) as $paramKey) {
             $this->validateConfigName($paramKey);
         }

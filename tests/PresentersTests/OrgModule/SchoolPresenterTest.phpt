@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../Bootstrap.php';
@@ -14,14 +16,19 @@ use Tester\Assert;
  * Class EventPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
+class SchoolPresenterTest extends AbstractOrgPresenterTestCase
+{
 
     private int $schoolId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->loginUser();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
         $addressId = $this->insert(DbNames::TAB_ADDRESS, [
             'first_row' => 'PU',
             'second_row' => 'PU',
@@ -37,7 +44,8 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
         ]);
     }
 
-    public function testList(): void {
+    public function testList(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -45,31 +53,33 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::contains('PU', $html);
     }
 
-    public function testCreate(): void {
+    public function testCreate(): void
+    {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
-                SchoolFormComponent::CONT_ADDRESS => [
-                    'first_row' => 'PU',
-                    'second_row' => 'PU',
-                    'target' => 'PU',
-                    'city' => 'PU',
-                    'postal_code' => '02001',
-                    'region_id' => '1',
-                ],
-                SchoolFormComponent::CONT_SCHOOL => [
-                    'name' => 'Test school',
-                    'name_abbrev' => 'T school',
-                ],
-            ]
-        );
+            SchoolFormComponent::CONT_ADDRESS => [
+                'first_row' => 'PU',
+                'second_row' => 'PU',
+                'target' => 'PU',
+                'city' => 'PU',
+                'postal_code' => '02001',
+                'region_id' => '1',
+            ],
+            SchoolFormComponent::CONT_SCHOOL => [
+                'name' => 'Test school',
+                'name_abbrev' => 'T school',
+            ],
+        ]);
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init + 1, $after);
     }
 
-    public function testEdit(): void {
+    public function testEdit(): void
+    {
         $init = $this->countSchools();
-        $response = $this->createFormRequest('edit',
+        $response = $this->createFormRequest(
+            'edit',
             [
                 SchoolFormComponent::CONT_ADDRESS => [
                     'first_row' => 'PU',
@@ -86,7 +96,8 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
             ],
             [
                 'id' => $this->schoolId,
-            ]);
+            ]
+        );
         if ($response instanceof TextResponse) {
             file_put_contents('t.html', (string)$response->getSource());
         }
@@ -100,16 +111,19 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal('PU edited', $school->city);
     }
 
-    protected function getPresenterName(): string {
+    protected function getPresenterName(): string
+    {
         return 'Org:School';
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_SCHOOL, DbNames::TAB_ADDRESS]);
         parent::tearDown();
     }
 
-    private function countSchools(): int {
+    private function countSchools(): int
+    {
         return $this->explorer->query('SELECT * FROM school')->getRowCount();
     }
 }

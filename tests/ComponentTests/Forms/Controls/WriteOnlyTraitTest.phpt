@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
 $container = require '../../../Bootstrap.php';
@@ -13,12 +15,14 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class WriteOnlyTraitTest extends DsefTestCase {
+class WriteOnlyTraitTest extends DsefTestCase
+{
 
     /** @var int */
     private $dsefAppId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         // create address for person
@@ -57,7 +61,8 @@ class WriteOnlyTraitTest extends DsefTestCase {
         $this->authenticate($adminId, $this->fixture);
     }
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
@@ -84,7 +89,8 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::notContains('SinCity', $html);
     }
 
-    public function testSave(): void {
+    public function testSave(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
@@ -142,7 +148,11 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $application->lunch_count);
 
-        $addressId = $this->explorer->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
+        $addressId = $this->explorer->fetchField(
+            'SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?',
+            $this->personId,
+            ModelPostContact::TYPE_PERMANENT
+        );
         Assert::notEqual(null, $addressId);
 
         $address = $this->explorer->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);

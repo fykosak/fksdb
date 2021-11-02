@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
 use DateTime;
@@ -11,11 +13,13 @@ $container = require '../../../Bootstrap.php';
  * Class EventModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Schedule extends EventModuleTestCase {
+class Schedule extends EventModuleTestCase
+{
 
     private int $scheduleGroupId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->scheduleGroupId = $this->insert(DbNames::TAB_SCHEDULE_GROUP, [
             'schedule_group_type' => 'accommodation',
@@ -27,7 +31,8 @@ class Schedule extends EventModuleTestCase {
         ]);
     }
 
-    protected function getEventData(): array {
+    protected function getEventData(): array
+    {
         return [
             'event_type_id' => 1,
             'year' => 1,
@@ -38,13 +43,15 @@ class Schedule extends EventModuleTestCase {
         ];
     }
 
-    protected function transformParams(string $presenterName, string $action, array $params): array {
+    protected function transformParams(string $presenterName, string $action, array $params): array
+    {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['id'] = $this->scheduleGroupId;
         return [$presenterName, $action, $params];
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
             ['Event:ScheduleGroup', 'list'],
             ['Event:ScheduleGroup', 'persons'],
@@ -54,8 +61,9 @@ class Schedule extends EventModuleTestCase {
         ];
     }
 
-    protected function tearDown(): void {
-         $this->truncateTables(['schedule_group',DbNames::TAB_EVENT]);
+    protected function tearDown(): void
+    {
+        $this->truncateTables(['schedule_group', DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 }

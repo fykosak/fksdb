@@ -12,7 +12,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -22,7 +21,8 @@ use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
@@ -154,7 +154,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if ($this->getSelectedContest() && $person) {
             $contestants = $person->getActiveContestants();
             $contest = $this->getSelectedContest();
-            $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
+            $contestant = $contestants[$contest->contest_id] ?? null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
                 $this->flashMessage(
@@ -266,8 +266,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
-     * @throws \ReflectionException
+     * @throws \ReflectionException|UnsupportedLanguageException
      */
     protected function createComponentContestantForm(): FormControl
     {
@@ -346,7 +345,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      * @throws BadRequestException
      * @throws \ReflectionException
      */

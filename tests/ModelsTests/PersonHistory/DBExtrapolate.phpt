@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ModelsTests\PersonHistory;
+
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
@@ -10,7 +13,8 @@ use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 
-class DBExtrapolate extends DatabaseTestCase {
+class DBExtrapolate extends DatabaseTestCase
+{
 
     private ServicePerson $service;
 
@@ -19,12 +23,14 @@ class DBExtrapolate extends DatabaseTestCase {
      * @param ServicePerson $service
      * @param Container $container
      */
-    public function __construct(ServicePerson $service, Container $container) {
+    public function __construct(ServicePerson $service, Container $container)
+    {
         parent::__construct($container);
         $this->service = $service;
     }
 
-    public function testNull(): void {
+    public function testNull(): void
+    {
         $personId = $this->createPerson('Student', 'Pilný');
         $this->createPersonHistory($personId, YearCalculator::getCurrentAcademicYear(), 1, 1);
 

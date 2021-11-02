@@ -7,7 +7,7 @@ use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Models\ModelEvent;

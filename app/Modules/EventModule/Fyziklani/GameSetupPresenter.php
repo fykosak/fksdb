@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class GameSetupPresenter extends BasePresenter
 {

@@ -1,22 +1,6 @@
 {layout ../@layout.latte}
-{varType FKSDB\Components\Controls\Choosers\ChooserComponent $control}
-{varType FKSDB\Models\UI\PageTitle $title}
-{varType iterable $items}
+{varType Fykosak\Utils\UI\Navigation\NavItem $navItem}
+{dump $navItem}
 {block content}
-    <div class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-            {$title->toHtml()}
-        </a>
-        <div class="dropdown-menu">
-            {foreach $items as $item}
-                {continueIf !$control->isItemVisible($item)}
-                {if $control->isItemActive($item)}
-                    <span class="dropdown-item active">{$control->getItemTitle($item)->toHtml()}</span>
-                {else}
-                    <a class="dropdown-item"
-                       href="{$control->getItemLink($item)}">{$control->getItemTitle($item)->toHtml()}</a>
-                {/if}
-            {/foreach}
-        </div>
-    </div>
+    {control nav $navItem}
 {/block}

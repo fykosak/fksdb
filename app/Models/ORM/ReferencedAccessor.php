@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\ORM;
 
-use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
 
@@ -24,7 +23,7 @@ final class ReferencedAccessor
         $modelReflection = new \ReflectionClass($model);
         $candidates = 0;
         foreach ($modelReflection->getMethods() as $method) {
-            $name = (string)$method->getName();
+            $name = $method->getName();
             $return = (string)$method->getReturnType();
             if (substr($return, 0, 1) == '?') {
                 $return = substr($return, 1);

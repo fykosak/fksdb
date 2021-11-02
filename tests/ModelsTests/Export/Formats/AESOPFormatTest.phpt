@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
 $container = require '../../../Bootstrap.php';
@@ -10,18 +12,21 @@ use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Environment;
 
-class AESOPFormatTest extends DatabaseTestCase {
+class AESOPFormatTest extends DatabaseTestCase
+{
 
     private ExportFormatFactory $exportFactory;
     private StoredQueryFactory $queryFactory;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->exportFactory = $this->getContainer()->getByType(ExportFormatFactory::class);
         $this->queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         Environment::skip();
         /*global $container;
         parent::setUp();
@@ -39,11 +44,8 @@ class AESOPFormatTest extends DatabaseTestCase {
         $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);*/
     }
 
-    protected function tearDown(): void {
-        parent::tearDown();
-    }
-
-    public function testResponse(): void {
+    public function testResponse(): void
+    {
         /*  $response = $this->fixture->getResponse();
           Assert::type(PlainTextResponse::class, $response);*/
     }

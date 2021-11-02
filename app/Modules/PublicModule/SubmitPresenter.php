@@ -23,7 +23,7 @@ use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Application\UI\Form;

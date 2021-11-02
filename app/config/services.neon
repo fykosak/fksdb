@@ -49,7 +49,7 @@ services:
     #github
     - FKSDB\Models\Github\EventFactory
      #localization
-    - FKSDB\Models\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #maitenance
     - FKSDB\Models\Maintenance\Updater
     #main

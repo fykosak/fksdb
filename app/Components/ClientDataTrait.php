@@ -29,7 +29,7 @@ trait ClientDataTrait {
         if ($key === null) {
             return $this->clientData;
         } else {
-            return isset($this->clientData[$key]) ? $this->clientData[$key] : null;
+            return $this->clientData[$key] ?? null;
         }
     }
 }

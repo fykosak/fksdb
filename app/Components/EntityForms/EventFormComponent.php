@@ -12,7 +12,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -20,6 +19,7 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -77,7 +77,7 @@ class EventFormComponent extends AbstractEntityFormComponent
         /** @var ModelEvent $model */
         $model = $this->serviceEvent->storeModel($data, $this->model);
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

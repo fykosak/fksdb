@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\ORM\Columns;
 
-use FKSDB\Models\Logging\Logger;
 use Fykosak\NetteORM\AbstractModel;
+use Fykosak\Utils\Logging\Logger;
 
 interface TestedColumnFactory {
 

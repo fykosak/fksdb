@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
 use DateTime;
@@ -10,8 +12,10 @@ $container = require '../../../Bootstrap.php';
  * Class EventModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamEvent extends EventModuleTestCase {
-    protected function getEventData(): array {
+class TeamEvent extends EventModuleTestCase
+{
+    protected function getEventData(): array
+    {
         return [
             'event_type_id' => 1,
             'year' => 1,
@@ -22,7 +26,8 @@ class TeamEvent extends EventModuleTestCase {
         ];
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
             ['Event:Chart', 'list'],
             ['Event:Chart', 'participantAcquaintance'],

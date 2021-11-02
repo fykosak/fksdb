@@ -1,11 +1,8 @@
 {varType FKSDB\Components\Controls\Navigation\NavigationChooserComponent $control}
-
 {block content}
-    {var $hasNode = false}
     <nav class="d-md-flex justify-content-md-around flex-wrap">
         {foreach $items as $item}
             {continueIf !$control->isItemVisible($item)}
-            {var $hasNode = true}
             <a href="{$control->getItemLink($item)}"
                class="mb-3 d-block navigation-item p-2">
                 <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getItemTitle($item)->icon}"></i></span>

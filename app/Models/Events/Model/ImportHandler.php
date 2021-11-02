@@ -62,7 +62,7 @@ class ImportHandler {
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {

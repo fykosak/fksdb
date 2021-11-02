@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 use FKSDB\Models\ORM\DbNames;
@@ -9,8 +11,8 @@ use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-abstract class FyziklaniTestCase extends DatabaseTestCase {
-
+abstract class FyziklaniTestCase extends DatabaseTestCase
+{
     use MockApplicationTrait;
 
     protected int $eventId;
@@ -20,24 +22,38 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
      * FyziklaniTestCase constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->setContainer($container);
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
+        $this->userPersonId = $this->createPerson(
+            'Paní',
+            'Černá',
+            ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]
+        );
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables(['fyziklani_submit', 'fyziklani_task', DbNames::TAB_E_FYZIKLANI_TEAM, 'fyziklani_game_setup', 'event']);
+    protected function tearDown(): void
+    {
+        $this->truncateTables(
+            ['fyziklani_submit', 'fyziklani_task', DbNames::TAB_E_FYZIKLANI_TEAM, 'fyziklani_game_setup', 'event']
+        );
         parent::tearDown();
     }
 
-    protected function createEvent(array $data): int {
+    protected function createEvent(array $data): int
+    {
         if (!isset($data['event_type_id'])) {
             $data['event_type_id'] = 1;
         }
@@ -71,7 +87,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         return $eventId;
     }
 
-    protected function createTeam(array $data): int {
+    protected function createTeam(array $data): int
+    {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->eventId;
         }
@@ -90,7 +107,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         return $this->insert(DbNames::TAB_E_FYZIKLANI_TEAM, $data);
     }
 
-    protected function createTask(array $data): int {
+    protected function createTask(array $data): int
+    {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->eventId;
         }
@@ -100,17 +118,25 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         return $this->insert(DbNames::TAB_FYZIKLANI_TASK, $data);
     }
 
-    protected function createSubmit(array $data): int {
+    protected function createSubmit(array $data): int
+    {
         return $this->insert(DbNames::TAB_FYZIKLANI_SUBMIT, $data);
     }
 
-    protected function findSubmit(int $taskId, int $teamId): ?Row {
+    protected function findSubmit(int $taskId, int $teamId): ?Row
+    {
         return $this->explorer->fetch(
-            'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
+            'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?',
+            $taskId,
+            $teamId
+        );
     }
 
-    protected function findTeam(int $teamId): ?Row {
+    protected function findTeam(int $teamId): ?Row
+    {
         return $this->explorer->fetch(
-            'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
+            'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?',
+            $teamId
+        );
     }
 }

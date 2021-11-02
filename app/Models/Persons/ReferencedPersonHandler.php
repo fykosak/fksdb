@@ -249,7 +249,7 @@ class ReferencedPersonHandler implements ReferencedHandler
             $this->serviceAddress->updateModel($model->getAddress(), $data);
             $this->servicePostContact->updateModel($model, $data);
         } else {
-            $data = array_merge((array)$data, [
+            $data = array_merge($data, [
                 'person_id' => $person->person_id,
                 'type' => PersonFormComponent::mapAddressContainerNameToType($type),
             ]);

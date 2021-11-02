@@ -13,10 +13,10 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -89,10 +89,9 @@ class ApplicationPresenter extends AbstractApplicationPresenter
     protected function createComponentImport(): ImportComponent
     {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
-        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         $handler = new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext());
 
-        return new ImportComponent($machine, $source, $handler, $this->getContext());
+        return new ImportComponent($source, $handler, $this->getContext());
     }
 
     protected function getORMService(): ServiceEventParticipant

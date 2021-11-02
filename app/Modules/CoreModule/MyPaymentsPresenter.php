@@ -6,7 +6,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class MyPaymentsPresenter extends BasePresenter
 {

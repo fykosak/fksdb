@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;

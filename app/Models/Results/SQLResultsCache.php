@@ -27,7 +27,7 @@ class SQLResultsCache
             'calc_points' => null,
         ];
         $conditions[] = 'contest_id = ' . $contestYear->contest_id;
-        $conditions[] = 'year = ' . (int)$contestYear->year;
+        $conditions[] = 'year = ' . $contestYear->year;
 
         $sql = '
             UPDATE submit s

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
@@ -58,7 +58,7 @@ class PipelineFactory {
         // common stages
         $pipeline->addStage(new TasksFromXML($this->serviceTask));
         $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
-        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution, $this->serviceOrg));
+        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution));
         $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
 
         return $pipeline;

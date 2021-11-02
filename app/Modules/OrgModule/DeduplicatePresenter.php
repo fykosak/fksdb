@@ -9,15 +9,15 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -104,7 +104,7 @@ class DeduplicatePresenter extends BasePresenter
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), Logger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         $this->backLinkRedirect(true);
     }
 

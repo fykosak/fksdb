@@ -40,7 +40,7 @@ class NavigationExtension extends CompilerExtension {
         $action = substr($fullQualityAction, $a + 1);
         $data['linkPresenter'] = $presenterName;
         $data['linkAction'] = $action;
-        $data['linkParams'] = isset($arguments['params']) ? $arguments['params'] : null;
+        $data['linkParams'] = $arguments['params'] ?? null;
         unset($data['params']);
         return $data;
     }

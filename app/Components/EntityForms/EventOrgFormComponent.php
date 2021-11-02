@@ -6,7 +6,7 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;

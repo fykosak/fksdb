@@ -1,20 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use Nette\Utils\DateTime;
 
-abstract class TsafTestCase extends DsefTestCase {
+abstract class TsafTestCase extends DsefTestCase
+{
 
     protected int $dsefEventId;
 
     protected int $tsafEventId;
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         return $this->eventId;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->dsefEventId = $this->eventId;
 

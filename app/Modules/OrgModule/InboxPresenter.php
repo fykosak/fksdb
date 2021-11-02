@@ -11,7 +11,7 @@ use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Submits\SeriesTable;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

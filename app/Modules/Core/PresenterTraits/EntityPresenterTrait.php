@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\Exceptions\ModelException;

@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
 class DiplomasPresenter extends BasePresenter

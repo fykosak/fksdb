@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
