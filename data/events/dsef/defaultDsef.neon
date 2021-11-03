@@ -1,7 +1,7 @@
 parameters:
     events:
         defaultDsef:
-            appCond: or(regOpen(), role('admin'))
+            appCond: role('admin')
             states:
                 - applied
                 - participated
