@@ -7,8 +7,8 @@ use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 

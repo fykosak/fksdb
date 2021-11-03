@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\React;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;

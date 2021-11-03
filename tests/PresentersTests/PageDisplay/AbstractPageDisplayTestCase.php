@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\Models\ORM\DbNames;
@@ -15,8 +17,8 @@ use Tester\Assert;
  * Class PageDisplayTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
-
+abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
+{
     use MockApplicationTrait;
 
     protected int $personId;
@@ -26,12 +28,14 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * PageDisplayTest constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->setContainer($container);
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
@@ -46,7 +50,8 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $this->authenticate($this->loginId);
     }
 
-    final protected function createRequest(string $presenterName, string $action, array $params): Request {
+    final protected function createRequest(string $presenterName, string $action, array $params): Request
+    {
         $params['lang'] = $params['lang'] ?? 'en';
         $params['action'] = $action;
         return new Request($presenterName, 'GET', $params);
@@ -55,7 +60,8 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     /**
      * @dataProvider getPages
      */
-    final public function testDisplay(string $presenterName, string $action, array $params = []): void {
+    final public function testDisplay(string $presenterName, string $action, array $params = []): void
+    {
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $this->authenticate($this->loginId, $fixture);
@@ -71,15 +77,16 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         });
     }
 
-    protected function transformParams(string $presenterName, string $action, array $params): array {
+    protected function transformParams(string $presenterName, string $action, array $params): array
+    {
         return [$presenterName, $action, $params];
     }
 
     abstract public function getPages(): array;
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
         parent::tearDown();
     }
 }
-

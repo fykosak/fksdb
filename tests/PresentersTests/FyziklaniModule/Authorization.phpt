@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
@@ -15,8 +17,8 @@ use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class Authorization extends FyziklaniTestCase {
-
+class Authorization extends FyziklaniTestCase
+{
     use MockApplicationTrait;
 
     private int $perPerson;
@@ -29,12 +31,14 @@ class Authorization extends FyziklaniTestCase {
      * AuthorizationTest constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->setContainer($container);
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
@@ -49,12 +53,18 @@ class Authorization extends FyziklaniTestCase {
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]);
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
+        );
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]);
+        $this->insert(
+            DbNames::TAB_CONTESTANT_BASE,
+            ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
+        );
 
         $this->eventId = $this->createEvent([]);
         $taskId = $this->insert('fyziklani_task', [
@@ -78,12 +88,14 @@ class Authorization extends FyziklaniTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
         parent::tearDown();
     }
 
-    public function getTestData(): array {
+    public function getTestData(): array
+    {
         return [
             [null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
             ['perPerson', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
@@ -93,7 +105,8 @@ class Authorization extends FyziklaniTestCase {
         ];
     }
 
-    private function createGetRequest(string $presenterName, string $action): Request {
+    private function createGetRequest(string $presenterName, string $action): Request
+    {
         $params = [
             'lang' => 'cs',
             'contestId' => (string)1,
@@ -109,7 +122,8 @@ class Authorization extends FyziklaniTestCase {
     /**
      * @dataProvider getTestData
      */
-    public function testAccess(?string $personCol, string $presenterName, array $actions, bool $results): void {
+    public function testAccess(?string $personCol, string $presenterName, array $actions, bool $results): void
+    {
         if (!is_array($actions)) {
             $actions = [$actions];
         }

@@ -120,7 +120,7 @@ class SingleEventSource implements HolderSource {
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
+            $holder->setModel($primaryModel, $cache[$primaryPK] ?? []);
             $this->holders[$primaryPK] = $holder;
         }
     }

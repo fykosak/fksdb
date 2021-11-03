@@ -212,7 +212,7 @@ class BreadcrumbsComponent extends BaseComponent {
                 if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
                 }
-                $filteredParameters[$param] = isset($parameters[$param]) ? $parameters[$param] : null;
+                $filteredParameters[$param] = $parameters[$param] ?? null;
             }
 
             $paramKey = Utils::getFingerprint($filteredParameters);

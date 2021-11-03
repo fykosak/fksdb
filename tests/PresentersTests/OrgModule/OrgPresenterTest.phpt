@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../Bootstrap.php';
@@ -13,7 +15,8 @@ use Tester\Assert;
  * Class OrgPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgPresenterTest extends AbstractOrgPresenterTestCase {
+class OrgPresenterTest extends AbstractOrgPresenterTestCase
+{
 
     /** @var int */
     private $personId;
@@ -22,17 +25,25 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
     /** @var int */
     private $orgPersonId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->loginUser();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
 
         $this->orgPersonId = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->orgId = $this->insert(DbNames::TAB_ORG, ['person_id' => $this->orgPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0, 'domain_alias' => 'a']);
+        $this->orgId = $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->orgPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0, 'domain_alias' => 'a']
+        );
         $this->personId = $this->createPerson('Tester_C', 'Testrovič_C');
     }
 
-    public function testList(): void {
+    public function testList(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -41,7 +52,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::contains('Still organises', $html);
     }
 
-    public function testCreate(): void {
+    public function testCreate(): void
+    {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -57,7 +69,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testOutRangeCreate(): void {
+    public function testOutRangeCreate(): void
+    {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -74,7 +87,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testModelErrorCreate(): void {
+    public function testModelErrorCreate(): void
+    {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -91,7 +105,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testEdit(): void {
+    public function testEdit(): void
+    {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => (string)$this->orgPersonId,
@@ -108,7 +123,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::equal(2, $org->order);
     }
 
-    public function testDetail(): void {
+    public function testDetail(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -117,16 +133,19 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         Assert::contains('Still organises', $html);
     }
 
-    protected function getPresenterName(): string {
+    protected function getPresenterName(): string
+    {
         return 'Org:Org';
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_ORG]);
         parent::tearDown();
     }
 
-    private function countOrgs(): int {
+    private function countOrgs(): int
+    {
         return $this->explorer->query('SELECT * FROM org where person_id=?', $this->personId)->getRowCount();
     }
 }

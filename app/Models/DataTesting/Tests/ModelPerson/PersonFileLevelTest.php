@@ -2,7 +2,6 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;

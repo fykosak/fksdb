@@ -46,7 +46,7 @@ class SchoolsInTeam extends SchoolCheck implements FormAdjustment {
 
         $msgMixture = sprintf(_('Only %d different schools can be represented in the team.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (Control $control) use ($schoolControls, $personControls, $form, $msgMixture): bool {
+            $control->addRule(function () use ($schoolControls, $personControls, $form, $msgMixture): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 if (!$this->checkMixture($schools)) {
                     $form->addError($msgMixture);

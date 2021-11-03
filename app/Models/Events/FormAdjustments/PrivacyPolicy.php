@@ -7,7 +7,7 @@ use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Utils\FormUtils;

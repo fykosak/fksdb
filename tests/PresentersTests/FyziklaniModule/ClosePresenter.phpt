@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
@@ -10,11 +12,13 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Schema\Helpers;
 use Tester\Assert;
 
-class ClosePresenter extends FyziklaniTestCase {
+class ClosePresenter extends FyziklaniTestCase
+{
 
     private IPresenter $fixture;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->eventId = $this->createEvent([]);
@@ -85,11 +89,8 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->authenticate($this->userPersonId, $this->fixture);
     }
 
-    protected function tearDown(): void {
-        parent::tearDown();
-    }
-
-    private function createCloseTeamRequest(array $formData, array $params = []): Request {
+    private function createCloseTeamRequest(array $formData, array $params = []): Request
+    {
         return new Request(
             'Fyziklani:Close:team',
             'POST',
@@ -97,10 +98,12 @@ class ClosePresenter extends FyziklaniTestCase {
                 'lang' => 'cs',
                 'eventId' => $this->eventId,
             ]),
-            $formData);
+            $formData
+        );
     }
 
-    private function createPostDiplomasRequest(array $formData, array $params = []): Request {
+    private function createPostDiplomasRequest(array $formData, array $params = []): Request
+    {
         return new Request(
             'Fyziklani:Diplomas:default',
             'POST',
@@ -108,10 +111,12 @@ class ClosePresenter extends FyziklaniTestCase {
                 'lang' => 'cs',
                 'eventId' => $this->eventId,
             ]),
-            $formData);
+            $formData
+        );
     }
 
-    public function getTestTeams(string $category): array {
+    public function getTestTeams(string $category): array
+    {
         /* team ID, sum of points, rank_category, rank */
         $a = [
             'A' => [
@@ -126,7 +131,8 @@ class ClosePresenter extends FyziklaniTestCase {
         return $a[$category];
     }
 
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return [
             ['A'],
             ['B'],
@@ -136,7 +142,8 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * Not a real test method.
      */
-    private function innerTestCloseTeam(int $teamId, int $pointsSum): void {
+    private function innerTestCloseTeam(int $teamId, int $pointsSum): void
+    {
         $request = $this->createCloseTeamRequest([
             '_do' => 'closeTeamControl-close',
         ], [
@@ -153,30 +160,32 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * @dataProvider getCategories
      */
-    public function testCloseCategory(string $category): void {
+    public function testCloseCategory(string $category): void
+    {
         Assert::true(true);
 
-      /*  foreach ($this->getTestTeams($category) as $teamData) {
-            [$teamId, $pointsSum,] = $teamData;
-            $this->innerTestCloseTeam($teamId, $pointsSum);
-        }
-        /*    $request = $this->createPostDiplomasRequest([], [
-                'category' => $category,
-                'do' => 'close',
-            ]);
+        /*  foreach ($this->getTestTeams($category) as $teamData) {
+              [$teamId, $pointsSum,] = $teamData;
+              $this->innerTestCloseTeam($teamId, $pointsSum);
+          }
+          /*    $request = $this->createPostDiplomasRequest([], [
+                  'category' => $category,
+                  'do' => 'close',
+              ]);
 
-            $response = $this->fixture->run($request);
-            Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
+              $response = $this->fixture->run($request);
+              Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
 
-            foreach ($this->getTestTeams($category) as $teamData) {
-                list($teamId, , $cRank,) = $teamData;
-                $team = $this->findTeam($teamId);
-                Assert::notEqual(false, $team);
-                Assert::equal($cRank, $team->rank_category);
-            }*/
+              foreach ($this->getTestTeams($category) as $teamData) {
+                  list($teamId, , $cRank,) = $teamData;
+                  $team = $this->findTeam($teamId);
+                  Assert::notEqual(false, $team);
+                  Assert::equal($cRank, $team->rank_category);
+              }*/
     }
 
-    public function testCloseAll(): void {
+    public function testCloseAll(): void
+    {
         Assert::true(true);
         /*foreach ($this->getCategories() as $catData) {
             [$category] = $catData;

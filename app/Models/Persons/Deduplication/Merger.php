@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use FKSDB\Models\Logging\DevNullLogger;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\DevNullLogger;
+use Fykosak\Utils\Logging\Logger;
 use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
@@ -11,7 +11,8 @@ use Nette\MemberAccessException;
 /**
  * @todo refactor to ConflictResolver, TableMergerFactory
  */
-class Merger {
+class Merger
+{
 
     public const IDX_TRUNK = 'trunk';
     public const IDX_MERGED = 'merged';
@@ -26,33 +27,39 @@ class Merger {
     /** @var TableMerger[] */
     private array $tableMergers = [];
 
-    public function __construct(array $configuration, Explorer $explorer) {
+    public function __construct(array $configuration, Explorer $explorer)
+    {
         $this->configuration = $configuration;
         $this->explorer = $explorer;
         $this->logger = new DevNullLogger();
     }
 
-    public function getLogger(): Logger {
+    public function getLogger(): Logger
+    {
         return $this->logger;
     }
 
-    public function setLogger(Logger $logger): void {
+    public function setLogger(Logger $logger): void
+    {
         $this->logger = $logger;
     }
 
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void {
+    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
+    {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
-    public function getConflicts(): array {
+    public function getConflicts(): array
+    {
         return $this->conflicts;
     }
 
     /**
      * Form values with proper resoluted values.
      */
-    public function setConflictResolution(iterable $rawValues): void {
+    public function setConflictResolution(iterable $rawValues): void
+    {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
                 $data = &$this->getPairDataById($table, $pairId);
@@ -66,7 +73,8 @@ class Merger {
         }
     }
 
-    public function merge(?bool $commit = null): bool {
+    public function merge(?bool $commit = null): bool
+    {
         // This workaround fixes inproper caching of referenced tables.
 
         $table = $this->trunkRow->getTable()->getName();
@@ -99,14 +107,16 @@ class Merger {
     /**
      * @internal Friend of Merger class.
      */
-    public function getMerger(string $table): TableMerger {
+    public function getMerger(string $table): TableMerger
+    {
         if (!isset($this->tableMergers[$table])) {
             $this->tableMergers[$table] = $this->createTableMerger($table);
         }
         return $this->tableMergers[$table];
     }
 
-    private function createTableMerger(string $table): TableMerger {
+    private function createTableMerger(string $table): TableMerger
+    {
         $tableMerger = new TableMerger($table, $this, $this->explorer, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
@@ -119,7 +129,8 @@ class Merger {
         return $tableMerger;
     }
 
-    private function resetConflicts(): void {
+    private function resetConflicts(): void
+    {
         foreach ($this->conflicts as $table => &$conflictPairs) {
             foreach ($conflictPairs as $pairId => &$data) {
                 unset($data[self::IDX_TRUNK]);
@@ -129,7 +140,8 @@ class Merger {
         }
     }
 
-    private function hasConflicts(): bool {
+    private function hasConflicts(): bool
+    {
         foreach ($this->conflicts as $table => $conflictPairs) {
             foreach ($conflictPairs as $pairId => $data) {
                 if (array_key_exists(self::IDX_TRUNK, $data)) {
@@ -143,7 +155,8 @@ class Merger {
     /**
      * @internal Friend of Merger class.
      */
-    public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void {
+    public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void
+    {
         $data = &$this->getPairData($trunkRow, $mergedRow);
         $data[self::IDX_TRUNK][$column] = $trunkRow[$column];
         $data[self::IDX_MERGED][$column] = $mergedRow[$column];
@@ -152,7 +165,8 @@ class Merger {
     /**
      * @internal Friend of Merger class.
      */
-    public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): bool {
+    public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): bool
+    {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return array_key_exists(self::IDX_RESOLUTION, $data) && array_key_exists($column, $data[self::IDX_RESOLUTION]);
     }
@@ -161,23 +175,27 @@ class Merger {
      * @return mixed
      * @internal Friend of Merger class.
      */
-    public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column) {
+    public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column)
+    {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return $data[self::IDX_RESOLUTION][$column];
     }
 
-    private function getPairId(ActiveRow $trunkRow, ActiveRow $mergedRow): string {
+    private function getPairId(ActiveRow $trunkRow, ActiveRow $mergedRow): string
+    {
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
-    private function &getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow): array {
+    private function &getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow): array
+    {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);
 
         return $this->getPairDataById($table, $pairId);
     }
 
-    private function &getPairDataById(string $table, string $pairId): array {
+    private function &getPairDataById(string $table, string $pairId): array
+    {
         if (!isset($this->conflicts[$table])) {
             $this->conflicts[$table] = [];
         }

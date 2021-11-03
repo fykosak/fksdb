@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
-use FKSDB\Components\Controls\Choosers\FyziklaniChooserComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -23,14 +22,6 @@ abstract class BasePresenter extends EventBasePresenter
     ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function createComponentFyziklaniChooser(): FyziklaniChooserComponent
-    {
-        return new FyziklaniChooserComponent($this->getContext(), $this->getEvent());
     }
 
     /**

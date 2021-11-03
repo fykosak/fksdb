@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\DataTesting\PersonTestComponent;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class ValidationPresenter extends BasePresenter
 {

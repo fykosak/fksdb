@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Models\ORM\DbNames;
@@ -7,7 +9,8 @@ use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
 
-abstract class ResourceAvailabilityTestCase extends EventTestCase {
+abstract class ResourceAvailabilityTestCase extends EventTestCase
+{
 
     protected IPresenter $fixture;
     protected array $persons = [];
@@ -15,11 +18,13 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
     abstract protected function getCapacity(): int;
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         return $this->eventId;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $capacity = $this->getCapacity();
@@ -44,7 +49,11 @@ EOT
         $this->mockApplication();
 
         $this->persons = [];
-        $this->persons[] = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')]);
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá',
+            ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')]
+        );
         $eid = $this->insert('event_participant', [
             'person_id' => end($this->persons),
             'event_id' => $this->eventId,
@@ -56,7 +65,11 @@ EOT
             'e_dsef_group_id' => 1,
         ]);
 
-        $this->persons[] = $this->createPerson('Paní', 'Bílá II.', ['email' => 'bila2@hrad.cz', 'born' => DateTime::from('2000-01-01')]);
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá II.',
+            ['email' => 'bila2@hrad.cz', 'born' => DateTime::from('2000-01-01')]
+        );
         $eid = $this->insert('event_participant', [
             'person_id' => end($this->persons),
             'event_id' => $this->eventId,
@@ -69,9 +82,14 @@ EOT
         ]);
     }
 
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'event_participant', DbNames::TAB_EVENT]);
+    protected function tearDown(): void
+    {
+        $this->truncateTables([
+            DbNames::TAB_E_DSEF_PARTICIPANT,
+            DbNames::TAB_E_DSEF_GROUP,
+            DbNames::TAB_EVENT_PARTICIPANT,
+            DbNames::TAB_EVENT,
+        ]);
         parent::tearDown();
     }
 }
-

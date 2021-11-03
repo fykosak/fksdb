@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 
 abstract class Stage {
 

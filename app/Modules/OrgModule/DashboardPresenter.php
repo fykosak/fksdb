@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class DashboardPresenter extends BasePresenter
 {

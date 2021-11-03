@@ -16,8 +16,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -25,7 +24,7 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Application\BadRequestException;
@@ -332,7 +331,6 @@ class ApplicationPresenter extends BasePresenter
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      * @throws BadRequestException
      * @throws \ReflectionException
      */

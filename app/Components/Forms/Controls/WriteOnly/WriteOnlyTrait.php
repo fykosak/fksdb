@@ -32,7 +32,7 @@ trait WriteOnlyTrait {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {
                 $form->onValidate = $form->onValidate ?: [];
-                array_unshift($form->onValidate, function (Form $form): void {
+                array_unshift($form->onValidate, function (): void {
                     if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
                         $this->writeOnlyDisable();
                     }

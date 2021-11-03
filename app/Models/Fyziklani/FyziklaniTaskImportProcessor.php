@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Fyziklani;
 
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -50,7 +50,7 @@ class FyziklaniTaskImportProcessor {
                     $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {
                     $logger->log(new Message(
-                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Logger::WARNING));
+                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Message::LVL_WARNING));
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));

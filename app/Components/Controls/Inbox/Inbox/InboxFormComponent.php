@@ -5,10 +5,10 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -39,9 +39,9 @@ class InboxFormComponent extends SeriesTableFormComponent {
                 $submit = $this->serviceSubmit->findByContestantId($ctId, $taskNo);
                 if ($submittedOn && $submit) {
                     //   $serviceSubmit->updateModel($submit, ['submitted_on' => $submittedOn]);
-                    //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), ILogger::INFO);
+                    //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), I\Fykosak\Utils\Logging\Message::LVL_INFO);
                 } elseif (!$submittedOn && $submit) {
-                    $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Logger::WARNING);
+                    $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
                     $submit->delete();
                 } elseif ($submittedOn && !$submit) {
                     $this->serviceSubmit->createNewModel([
@@ -50,7 +50,7 @@ class InboxFormComponent extends SeriesTableFormComponent {
                         'submitted_on' => $submittedOn,
                         'source' => ModelSubmit::SOURCE_POST,
                     ]);
-                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), Logger::SUCCESS);
+                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), Message::LVL_SUCCESS);
                 } else {
                     // do nothing
                 }

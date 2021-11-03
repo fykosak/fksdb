@@ -90,7 +90,7 @@ class GroupOptions implements OptionsProvider {
         $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
-            $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
+            $occupied = $groupOccupied[$key] ?? 0;
             if ($group->capacity > $occupied) {
                 $remains = $group->capacity - $occupied;
                 if ($selfGroup === $key) {

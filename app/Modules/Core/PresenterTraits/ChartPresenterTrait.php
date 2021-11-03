@@ -6,7 +6,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
 trait ChartPresenterTrait

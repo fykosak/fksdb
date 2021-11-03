@@ -6,7 +6,6 @@ use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelSchool;
-use Nette\Application\BadRequestException;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;

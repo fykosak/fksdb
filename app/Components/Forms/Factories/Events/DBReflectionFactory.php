@@ -122,10 +122,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
             $this->columns[$table] = $columns;
         }
-        if (isset($this->columns[$table][$column])) {
-            return $this->columns[$table][$column];
-        } else {
-            return null;
-        }
+        return $this->columns[$table][$column] ?? null;
     }
 }

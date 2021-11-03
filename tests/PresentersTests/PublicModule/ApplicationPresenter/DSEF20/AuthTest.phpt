@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
 $container = require '../../../../Bootstrap.php';
@@ -12,14 +14,17 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class AuthTest extends DsefTestCase {
+class AuthTest extends DsefTestCase
+{
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->authenticate($this->personId, $this->fixture);
     }
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
@@ -42,7 +47,8 @@ class AuthTest extends DsefTestCase {
         Assert::contains('Paní Bílá', $html);
     }
 
-    public function testAuthRegistration(): void {
+    public function testAuthRegistration(): void
+    {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([

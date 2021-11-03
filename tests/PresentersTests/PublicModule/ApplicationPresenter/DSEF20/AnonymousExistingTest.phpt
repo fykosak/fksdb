@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
 $container = require '../../../../Bootstrap.php';
@@ -9,41 +11,43 @@ use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class AnonymousExistingTest extends DsefTestCase {
+class AnonymousExistingTest extends DsefTestCase
+{
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => (string)$this->personId,
                 'person_id_1' => [
-                    '_c_compact' => " ",
+                    '_c_compact' => ' ',
                     'person' => [
-                        'other_name' => "Paní",
-                        'family_name' => "Bílá",
+                        'other_name' => 'Paní',
+                        'family_name' => 'Bílá',
                     ],
                     'person_info' => [
-                        'email' => "bila@hrad.cz",
-                        'id_number' => "1231354",
-                        'born' => "2014-09-15",
+                        'email' => 'bila@hrad.cz',
+                        'id_number' => '1231354',
+                        'born' => '2014-09-15',
                     ],
                     'post_contact_p' => [
                         'address' => [
-                            'target' => "jkljhkjh",
-                            'city' => "jkhlkjh",
-                            'postal_code' => "64546",
-                            'country_iso' => "",
+                            'target' => 'jkljhkjh',
+                            'city' => 'jkhlkjh',
+                            'postal_code' => '64546',
+                            'country_iso' => '',
                         ],
                     ],
                 ],
-                'e_dsef_group_id' => "1",
-                'lunch_count' => "3",
-                'message' => "",
+                'e_dsef_group_id' => '1',
+                'lunch_count' => '3',
+                'message' => '',
             ],
-            'privacy' => "on",
-            'c_a_p_t_cha' => "pqrt",
-            '__init__applied' => "Přihlásit účastníka",
+            'privacy' => 'on',
+            'c_a_p_t_cha' => 'pqrt',
+            '__init__applied' => 'Přihlásit účastníka',
         ]);
 
         $response = $this->fixture->run($request);
@@ -53,7 +57,10 @@ class AnonymousExistingTest extends DsefTestCase {
         Assert::equal((int)$this->personId, $application->person_id);
 
         $info = $this->assertPersonInfo($this->personId);
-        Assert::equal('1231354', $info->id_number); // TODO here would be better null (at least we don't rewrite existing data)
+        Assert::equal(
+            '1231354',
+            $info->id_number
+        ); // TODO here would be better null (at least we don't rewrite existing data)
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');

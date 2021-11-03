@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Model;
 
 $container = require '../../Bootstrap.php';
@@ -11,19 +13,19 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\DevNullLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use Fykosak\Utils\Logging\DevNullLogger;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
 
-class ApplicationHandlerTest extends EventTestCase {
-
+class ApplicationHandlerTest extends EventTestCase
+{
     use MockApplicationTrait;
 
     private ApplicationHandler $fixture;
@@ -36,21 +38,26 @@ class ApplicationHandlerTest extends EventTestCase {
      * ApplicationHandlerTest constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->setContainer($container);
         $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
     }
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         throw new BadRequestException();
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
-        $this->explorer->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
-            . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
+        $this->explorer->query(
+            "INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
+            . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')"
+        );
 
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
@@ -65,7 +72,8 @@ class ApplicationHandlerTest extends EventTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
         parent::tearDown();
     }
@@ -73,7 +81,8 @@ class ApplicationHandlerTest extends EventTestCase {
     /**
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
      */
-    public function testNewApplication(): void {
+    public function testNewApplication(): void
+    {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
@@ -209,7 +218,10 @@ class ApplicationHandlerTest extends EventTestCase {
 
             Assert::equal($teamName, $team->name);
 
-            $count = $this->explorer->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel2()->getPrimary());
+            $count = $this->explorer->fetchField(
+                'SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?',
+                $this->holder->getPrimaryHolder()->getModel2()->getPrimary()
+            );
             Assert::equal(2, $count);
         }, ApplicationHandlerException::class);
     }

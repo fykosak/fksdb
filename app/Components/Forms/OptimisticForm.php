@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms;
 
 use Nette\Application\UI\Form;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\HiddenField;
 
 /**

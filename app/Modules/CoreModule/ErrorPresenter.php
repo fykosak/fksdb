@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
