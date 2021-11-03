@@ -19,11 +19,9 @@ parameters:
                         required: true
                     dsef_afternoon:
                         required: true
-            appCond: role('admin')
-            states: %events.defaultDsef.states%
             transitions:
                 __init->applied:
-                    condition: %events.dsef27.appCond%
+                    condition: role('admin')
                     label: _('Přihlásit účastníka')
                     onExecuted:
                         - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
