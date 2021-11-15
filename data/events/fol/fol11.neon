@@ -27,6 +27,11 @@ parameters:
                     spam_mff:
                         required: false
                         description: _('Pouze pro české a slovenské studenty.')
+            dep:
+                valueVisible:
+                    p*.person_id.person_history.study_year:
+                        from: p*.person_id.person_history.school_id
+                        value: 5570
 
 events:
     fol11:
@@ -144,6 +149,7 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
+                - FKSDB\Models\Events\FormAdjustments\ValueDependentVisibility(%events.fol11.dep.valueVisible%)
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
                 - FKSDB\Models\Events\Spec\Fol\FlagCheck()
