@@ -19,7 +19,7 @@ parameters:
                 person_history:
                     school_id:
                         required: true
-                        description: _('Pokud nelze školu nalézt, napište na schola.novum () fykos.cz, reaguje rychle. Pokud nejste student, vyplňte "not a student".')
+                        description: _('Napište prvních několik znaků vaší školy, školu pak vyberete ze seznamu. Pokud nelze školu nalézt, pošlete na email schola.novum@fykos.cz údaje o vaší škole jako název, adresu a pokud možno i odkaz na webovou stránku. Školu založíme a pošleme vám odpověď. Pak budete schopni dokončit registraci. Pokud nejste student, vyplňte "not a student".')
                     study_year:
                         required: false
                         description: _('Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ.')
@@ -37,7 +37,7 @@ events:
             notifyBcc:
                 default: online@fyziklani.cz
             notifyFrom:
-                default: Fyziklání online <online@fyziklani.cz>
+                default: Online Physics Brawl <online@fyziklani.cz>
             migrated:
                 default: false
 
@@ -89,12 +89,6 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                    note:
-                        label: _('Kontaktní adresa')
-                        required: false
-                        visible: true
-                        modifiable: %events.fol11.modCond%
-                        description: _('Pro zaslání případné odměny.')
 
             #
             #   PARTICIPANT
