@@ -37,7 +37,7 @@ events:
             notifyBcc:
                 default: online@fyziklani.cz
             notifyFrom:
-                default: Online Physics Brawl <online@fyziklani.cz>
+                default: Physics Brawl Online <online@fyziklani.cz>
             migrated:
                 default: false
 
