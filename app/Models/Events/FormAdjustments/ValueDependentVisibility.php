@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -7,15 +9,12 @@ use Nette\Forms\Control;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 class ValueDependentVisibility extends PairwiseAdjustment
 {
     protected function innerAdjust(Form $form, Holder $holder): void
     {
         foreach ($this->rules as $target => $prerequisite) {
-            Debugger::barDump($target);
-            Debugger::barDump($prerequisite);
             $cTarget = $this->getControl($target);
             $cPrerequisite = $this->getControl($prerequisite['from']);
 
@@ -51,6 +50,8 @@ class ValueDependentVisibility extends PairwiseAdjustment
      */
     protected function processPair(BaseControl $target, Control $prerequisite, $value = null): void
     {
-        $target->getRules()->addConditionOn($prerequisite, Form::NOT_EQUAL, $value)->toggle($target->getHtmlId() . '-pair');
+        $target->getRules()->addConditionOn($prerequisite, Form::NOT_EQUAL, $value)->toggle(
+            $target->getHtmlId() . '-pair'
+        );
     }
 }

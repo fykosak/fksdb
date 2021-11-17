@@ -8,25 +8,34 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-class UniqueCheck extends AbstractAdjustment {
+class UniqueCheck extends AbstractAdjustment
+{
 
     private string $field;
 
     private string $message;
 
-    public function __construct(string $field, string $message) {
+    public function __construct(string $field, string $message)
+    {
         $this->field = $field;
         $this->message = $message;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
 
         foreach ($controls as $name => $control) {
-            $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
+            $name = $holder->hasBaseHolder($name)
+                ? $name
+                : substr(
+                    $this->field,
+                    0,
+                    strpos($this->field, self::DELIMITER)
+                );
             $baseHolder = $holder->getBaseHolder($name);
             $control->addRule(function (Control $control) use ($baseHolder): bool {
                 $table = $baseHolder->getService()->getTable();
@@ -43,7 +52,10 @@ class UniqueCheck extends AbstractAdjustment {
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
-                $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
+                $table->where(
+                    $baseHolder->getEventIdColumn(),
+                    $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary()
+                );
                 if ($model) {
                     $table->where("NOT $pk = ?", $model->getPrimary());
                 }

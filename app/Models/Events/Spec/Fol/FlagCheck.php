@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
@@ -13,7 +12,7 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-class FlagCheck extends AbstractAdjustment implements FormAdjustment
+class FlagCheck extends AbstractAdjustment
 {
 
     private ServiceSchool $serviceSchool;

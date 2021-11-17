@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 use Nette\Forms\Control;
 use Nette\InvalidArgumentException;
 
-abstract class PairwiseAdjustment extends AbstractAdjustment implements FormAdjustment
+abstract class PairwiseAdjustment extends AbstractAdjustment
 {
 
     protected iterable $rules;

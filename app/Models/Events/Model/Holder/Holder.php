@@ -22,7 +22,8 @@ use Nette\Utils\ArrayHash;
  *
  * It takes care of data loading/storing and also provides event's metadata.
  */
-class Holder {
+class Holder
+{
 
     /** @var FormAdjustment[] */
     private array $formAdjustments = [];
@@ -37,7 +38,8 @@ class Holder {
     private Connection $connection;
     private SecondaryModelStrategy $secondaryModelStrategy;
 
-    public function __construct(Connection $connection) {
+    public function __construct(Connection $connection)
+    {
         $this->connection = $connection;
 
         /*
@@ -47,36 +49,43 @@ class Holder {
         $this->processings[] = new GenKillProcessing();
     }
 
-    public function getConnection(): Connection {
+    public function getConnection(): Connection
+    {
         return $this->connection;
     }
 
-    public function setPrimaryHolder(string $name): void {
+    public function setPrimaryHolder(string $name): void
+    {
         $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
             return $baseHolder !== $this->primaryHolder;
         });
     }
 
-    public function getPrimaryHolder(): BaseHolder {
+    public function getPrimaryHolder(): BaseHolder
+    {
         return $this->primaryHolder;
     }
 
-    public function addBaseHolder(BaseHolder $baseHolder): void {
+    public function addBaseHolder(BaseHolder $baseHolder): void
+    {
         $baseHolder->setHolder($this);
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    public function addFormAdjustment(FormAdjustment $formAdjustment): void {
+    public function addFormAdjustment(FormAdjustment $formAdjustment): void
+    {
         $this->formAdjustments[] = $formAdjustment;
     }
 
-    public function addProcessing(Processing $processing): void {
+    public function addProcessing(Processing $processing): void
+    {
         $this->processings[] = $processing;
     }
 
-    public function getBaseHolder(string $name): BaseHolder {
+    public function getBaseHolder(string $name): BaseHolder
+    {
         if (!isset($this->baseHolders[$name])) {
             throw new InvalidArgumentException("Unknown base holder '$name'.");
         }
@@ -86,15 +95,18 @@ class Holder {
     /**
      * @return BaseHolder[]
      */
-    public function getBaseHolders(): array {
+    public function getBaseHolders(): array
+    {
         return $this->baseHolders;
     }
 
-    public function hasBaseHolder(string $name): bool {
+    public function hasBaseHolder(string $name): bool
+    {
         return isset($this->baseHolders[$name]);
     }
 
-    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void {
+    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void
+    {
         $this->secondaryModelStrategy = $secondaryModelStrategy;
     }
 
@@ -102,25 +114,34 @@ class Holder {
      * @return static
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): self {
+    public function inferEvent(ModelEvent $event): self
+    {
         foreach ($this->getBaseHolders() as $baseHolder) {
             $baseHolder->inferEvent($event);
         }
         return $this;
     }
 
-    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void {
+    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void
+    {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
             } else {
-                $this->secondaryModelStrategy->loadSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
+                $this->secondaryModelStrategy->loadSecondaryModels(
+                    $group['service'],
+                    $group['joinOn'],
+                    $group['joinTo'],
+                    $group['holders'],
+                    $primaryModel
+                );
             }
         }
         $this->primaryHolder->setModel($primaryModel);
     }
 
-    public function saveModels(): void {
+    public function saveModels(): void
+    {
         /*
          * When deleting, first delete children, then parent.
          */
@@ -137,7 +158,13 @@ class Holder {
             $primaryModel = $this->primaryHolder->getModel2();
 
             foreach ($this->getGroupedSecondaryHolders() as $group) {
-                $this->secondaryModelStrategy->updateSecondaryModels($group['service'], $group['joinOn'], $group['joinTo'], $group['holders'], $primaryModel);
+                $this->secondaryModelStrategy->updateSecondaryModels(
+                    $group['service'],
+                    $group['joinOn'],
+                    $group['joinTo'],
+                    $group['holders'],
+                    $primaryModel
+                );
             }
 
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
@@ -152,7 +179,13 @@ class Holder {
      * @param Transition[] $transitions
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, Logger $logger, ?Form $form): array {
+    public function processFormValues(
+        ArrayHash $values,
+        Machine $machine,
+        array $transitions,
+        Logger $logger,
+        ?Form $form
+    ): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTargetState();
@@ -167,7 +200,8 @@ class Holder {
         return $newStates;
     }
 
-    public function adjustForm(Form $form): void {
+    public function adjustForm(Form $form): void
+    {
         foreach ($this->formAdjustments as $adjustment) {
             $adjustment->adjust($form, $this);
         }
@@ -182,7 +216,8 @@ class Holder {
      * Group secondary by service
      * @return BaseHolder[][]|array[] items: joinOn, service, holders
      */
-    public function getGroupedSecondaryHolders(): array {
+    public function getGroupedSecondaryHolders(): array
+    {
         if (!isset($this->groupedHolders)) {
             $this->groupedHolders = [];
 
@@ -214,7 +249,8 @@ class Holder {
     /**
      * @return mixed
      */
-    public function getParameter(string $name) {
+    public function getParameter(string $name)
+    {
         $parts = explode('.', $name, 2);
         if (count($parts) == 1) {
             return $this->primaryHolder->getParameter($name);
