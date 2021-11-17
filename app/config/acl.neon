@@ -30,6 +30,11 @@ acl:
     - addRole(aesop)                    # AESOPový stahovač dat
     - addRole(web)                      # webový stahovač dat (např. fksdbexport)
     - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
+    # Roles automaticly added for event
+    - addRole(event.fyziklaniTeacher)
+    - addRole(event.org)
+    - addRole(event.contestOrg)
+    - addRole(event.participant)
 
     ## Resources
     - addResource(submit)        # revoke, upload, download, edit, ALL

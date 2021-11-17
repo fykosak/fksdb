@@ -81,12 +81,12 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($this->getEvent(), $this->lastUpdated);
         }
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
+        $result['teams'] = $this->serviceFyziklaniTeam->serialiseTeams($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->serialiseTasks($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
         //  }
         return $result;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelContest;
@@ -11,24 +13,27 @@ use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-class ContestAuthorizator {
-
+class ContestAuthorizator
+{
     use SmartObject;
 
     private User $user;
 
     private Permission $permission;
 
-    public function __construct(User $identity, Permission $permission) {
+    public function __construct(User $identity, Permission $permission)
+    {
         $this->user = $identity;
         $this->permission = $permission;
     }
 
-    public function getUser(): User {
+    public function getUser(): User
+    {
         return $this->user;
     }
 
-    protected function getPermission(): Permission {
+    protected function getPermission(): Permission
+    {
         return $this->permission;
     }
 
@@ -37,9 +42,9 @@ class ContestAuthorizator {
      * of the queried contest.
      *
      * @param Resource|string|null $resource
-     * @param int|ModelContest $contest queried contest
      */
-    public function isAllowed($resource, ?string $privilege, $contest): bool {
+    public function isAllowed($resource, ?string $privilege, ModelContest $contest): bool
+    {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
@@ -52,7 +57,8 @@ class ContestAuthorizator {
     /**
      * @param Resource|string|null $resource
      */
-    final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
+    final public function isAllowedForAnyContest($resource, ?string $privilege): bool
+    {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
@@ -75,7 +81,8 @@ class ContestAuthorizator {
      * @param Resource|string $resource
      * @param ModelContest|int $contest
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool {
+    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool
+    {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 

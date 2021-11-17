@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
@@ -81,7 +83,7 @@ class OwnerAssertion
         $grant = $acl->getQueriedRole();
 
         //TODO restrict also to the current year? Probably another assertion.
-        $contestants = $person->getContestants($grant->getContestId());
+        $contestants = $person->getContestants($grant->getContest());
         return count($contestants) > 0;
     }
 
