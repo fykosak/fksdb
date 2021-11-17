@@ -8,7 +8,7 @@ interface StateProps {
     messages: Message[];
 }
 
-class MessageBox extends React.Component<StateProps, {}> {
+class MessageBox extends React.Component<StateProps, Record<string, never>> {
     public render() {
         const {messages} = this.props;
         return <>

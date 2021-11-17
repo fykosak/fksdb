@@ -7,7 +7,7 @@ interface OwnProps {
     price: Price;
 }
 
-export default class PriceLabel extends React.Component<OwnProps, {}> {
+export default class PriceLabel extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {price} = this.props;

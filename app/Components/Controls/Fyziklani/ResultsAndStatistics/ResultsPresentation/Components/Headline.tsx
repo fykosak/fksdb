@@ -8,7 +8,7 @@ interface OwnProps {
     category: string;
 }
 
-export default class Headline extends React.Component<OwnProps, {}> {
+export default class Headline extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {category, startPosition, endPosition} = this.props;

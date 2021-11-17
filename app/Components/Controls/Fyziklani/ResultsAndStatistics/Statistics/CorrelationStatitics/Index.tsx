@@ -26,7 +26,7 @@ interface DispatchProps {
     onChangeSecondTeam(id: number): void;
 }
 
-class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
+class CorrelationStats extends React.Component<StateProps & DispatchProps, Record<string, never>> {
 
     public render() {
         const {teams, onChangeFirstTeam, onChangeSecondTeam, firstTeamId, secondTeamId} = this.props;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export class Powered extends React.Component<{}, {}> {
+export class Powered extends React.Component<Record<string, never>, Record<string, never>> {
 
     public render() {
         return (

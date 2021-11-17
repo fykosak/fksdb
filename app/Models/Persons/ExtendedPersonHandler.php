@@ -9,19 +9,18 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Fykosak\NetteORM\AbstractService;
-use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
 class ExtendedPersonHandler
@@ -97,9 +96,9 @@ class ExtendedPersonHandler
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -115,7 +114,7 @@ class ExtendedPersonHandler
                     $create ? $presenter->messageCreate() : $presenter->messageEdit(),
                     $this->person->getFullName()
                 ),
-                ContestantPresenter::FLASH_SUCCESS
+                Message::LVL_SUCCESS
             );
 
             if (!$hasLogin) {
@@ -126,10 +125,10 @@ class ExtendedPersonHandler
         } catch (ModelException $exception) {
             $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), Message::LVL_ERROR);
             } else {
                 Debugger::log($exception, Debugger::ERROR);
-                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageError(), Message::LVL_ERROR);
             }
 
             return self::RESULT_ERROR;

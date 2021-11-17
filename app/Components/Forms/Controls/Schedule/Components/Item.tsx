@@ -25,7 +25,7 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps, Record<string, never>> {
 
     public render() {
         const {item, value, onChange, params} = this.props;

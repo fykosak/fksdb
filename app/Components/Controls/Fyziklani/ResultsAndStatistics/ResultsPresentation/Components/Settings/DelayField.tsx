@@ -15,14 +15,15 @@ interface DispatchProps {
     onSetDelay(position: number): void;
 }
 
-class DelayField extends React.Component<StateProps & DispatchProps, {}> {
+class DelayField extends React.Component<StateProps & DispatchProps, Record<string, never>> {
 
     public render() {
         const {delay, onSetDelay} = this.props;
         return <div className="form-group">
             <div className={'form-group'}>
                 <label>Delay</label>
-                <input name={'delay'} className={'form-control'} value={delay} type={'number'} max={60 * 1000} min={1000}
+                <input name={'delay'} className={'form-control'} value={delay} type={'number'} max={60 * 1000}
+                       min={1000}
                        step={1000}
                        onChange={(e) => {
                            onSetDelay(+e.target.value);

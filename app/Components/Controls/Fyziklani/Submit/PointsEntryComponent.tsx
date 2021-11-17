@@ -16,7 +16,7 @@ interface OwnProps {
 
 }
 
-export default class PointsEntryComponent extends React.Component<OwnProps, {}> {
+export default class PointsEntryComponent extends React.Component<OwnProps, Record<string, never>> {
     public render() {
         const {data, actions} = this.props;
         const {tasks, teams, availablePoints} = data;

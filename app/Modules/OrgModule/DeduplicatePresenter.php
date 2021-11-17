@@ -177,7 +177,6 @@ class DeduplicatePresenter extends BasePresenter
                 }
             }
         }
-        $this->registerJSFile('js/mergeForm.js');
     }
 
     protected function createComponentPersonsGrid(): PersonsGrid
@@ -231,11 +230,11 @@ class DeduplicatePresenter extends BasePresenter
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
         if ($merger->merge()) {
-            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Persons successfully merged.'), Message::LVL_SUCCESS);
             FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
-            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), Message::LVL_INFO);
             $this->redirect('this'); //this is correct
         }
     }

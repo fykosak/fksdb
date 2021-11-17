@@ -23,7 +23,7 @@ interface OwnProps {
     rooms: Room[];
 }
 
-class RoutingApp extends React.Component<DispatchProps & OwnProps, {}> {
+class RoutingApp extends React.Component<DispatchProps & OwnProps, Record<string, never>> {
 
     public componentDidMount() {
         const {onAddTeams, teams} = this.props;

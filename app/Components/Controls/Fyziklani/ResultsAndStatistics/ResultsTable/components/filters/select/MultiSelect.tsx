@@ -25,7 +25,7 @@ interface DispatchProps {
     onRemoveFilter(filter: Filter): void;
 }
 
-class MultiSelect extends React.Component<StateProps & DispatchProps, {}> {
+class MultiSelect extends React.Component<StateProps & DispatchProps, Record<string, never>> {
 
     public render() {
         const {categories, filters, index, onRemoveFilter, onAddFilter} = this.props;

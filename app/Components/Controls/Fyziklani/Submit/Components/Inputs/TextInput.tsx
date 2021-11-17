@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 
-export default class TextInput extends React.Component<WrappedFieldProps & {}, {}> {
+export default class TextInput extends React.Component<WrappedFieldProps & Record<string, never>, Record<string, never>> {
 
     public render() {
         const {meta: {valid}, input} = this.props;

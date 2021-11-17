@@ -27,7 +27,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}> {
+class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, Record<string, never>> {
 
     public render() {
         const {

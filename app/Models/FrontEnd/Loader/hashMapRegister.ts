@@ -43,7 +43,7 @@ export default class HashMapLoader {
         this.apps[reactId] = callback;
     }
 
-    public registerActionsComponent<T = any, P = {}>(
+    public registerActionsComponent<T = any, P = Record<string, never>>(
         reactId: string,
         component: React.ComponentClass<{ actions: NetteActions; data: T } & P>,
         params: P = null,
@@ -52,7 +52,7 @@ export default class HashMapLoader {
         this.actionsComponents[reactId] = {component, params};
     }
 
-    public registerDataComponent<T = any, P = {}>(
+    public registerDataComponent<T = any, P = Record<string, never>>(
         reactId: string,
         component: React.ComponentClass<{ data: T } & P>,
         params: P = null,
@@ -61,7 +61,7 @@ export default class HashMapLoader {
         this.dataComponents[reactId] = {component, params};
     }
 
-    public registerComponent<P = {}>(
+    public registerComponent<P = Record<string, never>>(
         reactId: string,
         component: React.ComponentClass<P>,
         params: P = null,

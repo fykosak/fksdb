@@ -25,7 +25,6 @@ trait ReactComponentTrait
     {
         $this->reactId = $reactId;
         $this->logger = new MemoryLogger();
-        $this->registerMonitor();
     }
 
     /**
@@ -47,16 +46,6 @@ trait ReactComponentTrait
         foreach ($this->getResponseData() as $key => $value) {
             $html->setAttribute('data-' . $key, $value);
         }
-    }
-
-    private function registerMonitor(): void
-    {
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!self::$attachedJS) {
-                self::$attachedJS = true;
-                $collector->registerJSFile('js/bundle.min.js');
-            }
-        });
     }
 
     protected function getLogger(): Logger

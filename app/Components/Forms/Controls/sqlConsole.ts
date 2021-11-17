@@ -1,3 +1,6 @@
+import '../../../../www/js/codemirror.min.js';
+import './sqlConsole.scss';
+
 $(() => {
     document.querySelectorAll('.sqlConsole').forEach((el) => {
         CodeMirror.fromTextArea(el,
@@ -7,7 +10,7 @@ $(() => {
                 smartIndent: true,
                 lineNumbers: true,
                 matchBrackets: true,
-                autofocus: true
+                autofocus: true,
             });
     });
     document.querySelectorAll('.syntax-sql').forEach((el) => {
@@ -22,7 +25,7 @@ $(() => {
             indentWithTabs: true,
             smartIndent: true,
             matchBrackets: true,
-            autofocus: true
+            autofocus: true,
         });
     });
 });

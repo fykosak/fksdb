@@ -9,7 +9,7 @@ interface OwnProps {
     app: Reducer<any, any>;
 }
 
-export default class ActionsStoreCreator extends React.Component<OwnProps, {}> {
+export default class ActionsStoreCreator extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {storeMap, app} = this.props;

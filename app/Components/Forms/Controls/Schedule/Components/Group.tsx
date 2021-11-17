@@ -10,7 +10,7 @@ interface OwnProps {
     params: Params;
 }
 
-export default class Group extends React.Component<OwnProps, {}> {
+export default class Group extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {group, params} = this.props;

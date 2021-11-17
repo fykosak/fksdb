@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface OwnProps<T extends {}, L extends {} = {}> {
+interface OwnProps<T extends Record<string, never>, L extends Record<string, never> = Record<string, never>> {
     chart: React.ComponentClass<T> | any; // TODO fix ConnectedComponent
     chartProps: T;
     legendComponent?: React.ComponentClass<T> | any;
@@ -9,7 +9,7 @@ interface OwnProps<T extends {}, L extends {} = {}> {
     containerClassName?: string;
 }
 
-export default class ChartContainer<T, L> extends React.Component<OwnProps<T, L>, {}> {
+export default class ChartContainer<T, L> extends React.Component<OwnProps<T, L>, Record<string, never>> {
 
     public render() {
         const {legendComponent, legendProps, headline, chartProps, chart, containerClassName} = this.props;

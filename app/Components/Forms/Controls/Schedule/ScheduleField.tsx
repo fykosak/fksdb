@@ -28,7 +28,7 @@ export interface Params {
     };
 }
 
-class ScheduleField extends React.Component<OwnProps, {}> {
+class ScheduleField extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         return <StoreCreator app={app}>

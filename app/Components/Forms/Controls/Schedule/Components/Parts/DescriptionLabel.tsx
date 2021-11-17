@@ -8,7 +8,7 @@ interface OwnProps {
     description: LocalizedString;
 }
 
-export default class DescriptionLabel extends React.Component<OwnProps, {}> {
+export default class DescriptionLabel extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {description} = this.props;

@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
@@ -66,7 +65,7 @@ class PointsEntryComponent extends AjaxComponent {
             $handler = $this->handlerFactory->create($this->event);
             $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
         } catch (TaskCodeException | ClosedSubmittingException $exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
     }

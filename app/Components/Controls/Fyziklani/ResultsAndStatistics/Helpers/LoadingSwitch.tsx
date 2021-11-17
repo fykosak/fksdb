@@ -10,7 +10,7 @@ interface StateProps {
     isReady: boolean;
 }
 
-class LoadingSwitch extends React.Component<StateProps & OwnProps, {}> {
+class LoadingSwitch extends React.Component<StateProps & OwnProps, Record<string, never>> {
     public render() {
 
         const {isReady} = this.props;

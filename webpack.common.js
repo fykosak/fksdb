@@ -1,50 +1,44 @@
 var path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
     entry: './app/Bootstrap.tsx',
     output: {
-        path: __dirname + '/www/js/',
+        path: path.resolve(__dirname, './www/assets'),
+        assetModuleFilename: 'media/[path][name][ext]',
         filename: 'bundle.min.js',
-        publicPath: 'js',
     },
+    plugins: [
+        new MiniCssExtractPlugin(),
+        new ESLintPlugin({
+            context: '../',
+            failOnError: false,
+            extensions: ['js', 'ts', 'tsx'],
+            exclude: ['./lib', './vendor','./www'],
+        }),
+    ],
     module: {
         rules: [
             {
-                enforce: 'pre',
                 test: /\.tsx?$/,
-                loader: 'tslint-loader',
-                exclude: /node_modules/,
-                options: {
-                    failOnHint: false,
-                    configuration: require('./tslint.json'),
-                },
-            },
-            {
-                test: /\.tsx?$/,
-                use: 'awesome-typescript-loader',
+                use: 'ts-loader',
                 //use: 'ts-loader',
                 exclude: /node_modules/,
             },
             {
+                test: /\.(css)$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader']
+            },
+            {
                 test: /\.s[ac]ss$/i,
-                use: [
-                    // Creates `style` nodes from JS strings
-                    "style-loader",
-                    // Translates CSS into CommonJS
-                    "css-loader",
-                    // Compiles Sass to CSS
-                    {
-                        loader: 'sass-loader',
-                        options: {
-                            webpackImporter: false,
-                            sassOptions: {
-                                includePaths: ['node_modules'],
-                            },
-                            implementation: require('sass'),
-                        },
-                    },
-                ],
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'resolve-url-loader', {
+                    loader: 'sass-loader',
+                    options: {
+                        sourceMap: true
+                    }
+                }],
             },
         ],
     },
@@ -56,7 +50,5 @@ module.exports = {
     },
     externals: {
         jquery: 'jQuery',
-        React: 'react',
-        ReactDOM: 'react-dom'
     },
 };

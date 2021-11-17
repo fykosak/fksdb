@@ -13,7 +13,7 @@ interface StateProps {
     inserted: Date;
 }
 
-class Timer extends React.Component<StateProps & OwnProps, {}> {
+class Timer extends React.Component<StateProps & OwnProps, Record<string, never>> {
     private timerId;
 
     public componentDidMount() {

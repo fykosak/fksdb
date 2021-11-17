@@ -27,7 +27,7 @@ interface OwnProps {
     taskId: number;
 }
 
-class Timeline extends React.Component<StateProps & OwnProps, {}> {
+class Timeline extends React.Component<StateProps & OwnProps, Record<string, never>> {
 
     private xAxis: SVGGElement;
 

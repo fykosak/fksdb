@@ -14,7 +14,7 @@ interface StateProps {
     submit: ModelSubmit;
 }
 
-class UploadContainer extends React.Component<StateProps, {}> {
+class UploadContainer extends React.Component<StateProps, Record<string, never>> {
 
     public render() {
 

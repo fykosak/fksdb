@@ -7,7 +7,7 @@ interface OwnProps {
     data: GeoData;
 }
 
-export default class TeamsGeoChart extends React.Component<OwnProps, {}> {
+export default class TeamsGeoChart extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         return <ChartContainer

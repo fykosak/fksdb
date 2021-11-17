@@ -1,29 +1,23 @@
 body[data-style-id="login"] {
 
-  background: url(/images/bg/1.jpg) 50%;
+  background: url(./background/1.jpg) 50%;
   background-size: cover;
 
 
   &[data-bg="1"] {
-    background: url(/images/bg/1.jpg) 50%;
+    background: url(./background/1.jpg) 50%;
     background-size: cover;
   }
 
   &[data-bg="2"] {
-    background: url(/images/bg/2.jpg) 0 10%;
+    background: url(./background/2.jpg) 0 10%;
     background-size: cover;
   }
 
   &[data-bg="3"] {
-    background: url(/images/bg/3.jpg) 0 10%;
+    background: url(./background/3.jpg) 0 10%;
     background-size: cover;
   }
-
-  /*  &[data-bg="4"] main.login {
-      background: url(/images/bg/4.jpg) 0 10%;
-      background-size: cover;
-    }*/
-
 
   .login-form-container {
     max-width: 330px;

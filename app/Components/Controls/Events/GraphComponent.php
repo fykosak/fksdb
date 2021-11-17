@@ -16,15 +16,6 @@ class GraphComponent extends BaseComponent {
 
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/graph/raphael.js');
-                $collector->registerJSFile('js/graph/dracula_graffle.js');
-                $collector->registerJSFile('js/graph/dracula_graph.js');
-                $collector->registerJSFile('js/eventModelGraph.js');
-            }
-        });
         $this->baseMachine = $baseMachine;
     }
 

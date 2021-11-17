@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 
@@ -31,7 +31,7 @@ class CloseTeamComponent extends BaseComponent {
             'points' => $sum,
         ]);
         $this->connection->commit();
-        $this->getPresenter()->flashMessage(\sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(\sprintf(_('Team "%s" has successfully closed submitting, with total %d points.'), $this->team->name, $sum), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list', ['id' => null]);
     }
 

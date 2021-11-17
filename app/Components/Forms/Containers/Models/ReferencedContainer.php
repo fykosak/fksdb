@@ -33,15 +33,13 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     public function __construct(DIContainer $container, bool $allowClear) {
         parent::__construct($container);
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
+        $this->monitor(JavaScriptCollector::class, function () {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
-                $collector->registerJSFile('js/referencedContainer.js');
                 $this->updateHtmlData();
             }
-        }, function (JavaScriptCollector $collector) {
+        }, function () {
             $this->attachedJS = false;
-            $collector->unregisterJSFile('js/referencedContainer.js');
         });
         $this->createClearButton();
         $this->createCompactValue();

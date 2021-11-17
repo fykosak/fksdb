@@ -33,7 +33,7 @@ export class Filter {
     }
 }
 
-export const createFilters = (categories: string[] = [], includeAll: boolean = true): Filter[] => {
+export const createFilters = (categories: string[] = [], includeAll = true): Filter[] => {
 
     const categoriesFilters = categories.map((category: string) => {
         return new Filter({roomId: null, category, name: translator.getText('Category') + ' ' + category});

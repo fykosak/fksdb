@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 
-export default class Attendance extends React.Component<{}, { processing: boolean; messages: string[] }> {
+export default class Attendance extends React.Component<Record<string, never>, { processing: boolean; messages: string[] }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, messages: []};
@@ -57,7 +57,6 @@ export default class Attendance extends React.Component<{}, { processing: boolea
             const reader = new FileReader();
             reader.onload = () => {
                 event.target.value = '';
-                // @ts-ignore
                 window.qrcode.callback = (e) => {
                     if (e instanceof Error) {
                         reject('Failed to read QR-code: ' + e.message);
@@ -65,7 +64,6 @@ export default class Attendance extends React.Component<{}, { processing: boolea
                         resolve(e);
                     }
                 };
-                // @ts-ignore
                 window.qrcode.decode(reader.result);
             };
             reader.readAsDataURL(event.target.files[0]);

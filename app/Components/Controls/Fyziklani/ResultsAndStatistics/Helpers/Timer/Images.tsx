@@ -10,11 +10,11 @@ interface StateProps {
     visible: boolean;
 }
 
-class Images extends React.Component<StateProps, {}> {
+class Images extends React.Component<StateProps, Record<string, never>> {
     private timerId: number;
 
     public componentDidMount() {
-        this.timerId = setInterval(() => this.forceUpdate(), 1000);
+        this.timerId = window.setInterval(() => this.forceUpdate(), 1000);
     }
 
     public componentWillUnmount() {

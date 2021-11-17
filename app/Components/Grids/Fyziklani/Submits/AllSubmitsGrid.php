@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\SQL\SearchableDataSource;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -105,7 +105,7 @@ class AllSubmitsGrid extends SubmitsGrid
                                 $taskLabel
                             );
                         } else {
-                            $this->flashMessage(_('Wrong task code'), BasePresenter::FLASH_WARNING);
+                            $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
                         }
                         break;
                     case 'not_null':
@@ -124,7 +124,7 @@ class AllSubmitsGrid extends SubmitsGrid
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);
             $this->redirect('this');
         }
         try {
@@ -134,7 +134,7 @@ class AllSubmitsGrid extends SubmitsGrid
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('this');
         }
     }

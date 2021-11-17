@@ -31,7 +31,7 @@ interface OwnProps {
     data: ResponseData;
 }
 
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, {}> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, Record<string, never>> {
 
     public componentDidUpdate(nextProps: DispatchProps & StateProps & OwnProps) {
         const {lastUpdated: oldLastUpdated} = this.props;
@@ -76,7 +76,7 @@ const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onFetch: (url) => dispatchFetch<ResponseData>(url, dispatch, null),
-        onWaitForFetch: (delay: number, url: string): number => setTimeout(() => {
+        onWaitForFetch: (delay: number, url: string): number => window.setTimeout(() => {
             return dispatchFetch<ResponseData>(url, dispatch, null);
         }, delay),
     };

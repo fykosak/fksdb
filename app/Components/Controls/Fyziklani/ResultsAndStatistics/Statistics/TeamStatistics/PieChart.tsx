@@ -23,7 +23,7 @@ interface PointGroupItem {
     count: number;
 }
 
-class Chart extends React.Component<StateProps & OwnProps, {}> {
+class Chart extends React.Component<StateProps & OwnProps, Record<string, never>> {
 
     public render() {
         const {submits, teamId, activePoints} = this.props;

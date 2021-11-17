@@ -15,7 +15,7 @@ interface StateProps {
     tasks: ModelFyziklaniTask[];
 }
 
-class Index extends React.Component<StateProps, {}> {
+class Index extends React.Component<StateProps, Record<string, never>> {
 
     public render() {
         const {submits, teams, tasks, filter} = this.props;

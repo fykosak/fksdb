@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
@@ -14,6 +13,7 @@ use FKSDB\Models\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Utils\CSVParser;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -106,19 +106,19 @@ class ImportComponent extends BaseComponent
             if ($result) {
                 $this->getPresenter()->flashMessage(
                     sprintf(_('Import succesfull (%.2f s).'), $elapsedTime),
-                    BasePresenter::FLASH_SUCCESS
+                    Message::LVL_SUCCESS
                 );
             } else {
                 $this->getPresenter()->flashMessage(
                     sprintf(_('Import ran with errors (%.2f s).'), $elapsedTime),
-                    BasePresenter::FLASH_WARNING
+                    Message::LVL_WARNING
                 );
             }
 
             $this->redirect('this');
         } catch (ImportHandlerException $exception) {
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 }

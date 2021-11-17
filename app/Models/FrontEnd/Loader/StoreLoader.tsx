@@ -13,7 +13,7 @@ interface DispatchProps<D> {
     onInit(data: Response2<D>): void;
 }
 
-class StoreLoader<D> extends React.Component<OwnProps<D> & DispatchProps<D>, {}> {
+class StoreLoader<D> extends React.Component<OwnProps<D> & DispatchProps<D>, Record<string, never>> {
     public componentDidMount() {
         const {storeMap, onInit} = this.props;
         onInit(storeMap);

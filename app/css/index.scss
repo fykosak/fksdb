@@ -1,7 +1,6 @@
-// compilation by 'sass scss/index.scss bundle.css'
 @import "fyziklani-theme";
 @import "inbox";
-@import "login";
+@import "../Modules/CoreModule/templates/Authentication/login";
 @import "colors";
 @import "fyziklani";
 @import "points";
@@ -16,16 +15,6 @@
 
 h1 .small {
   font-weight: 300;
-}
-
-#spinner {
-  background-image: url('../../images/spinner.gif');
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 32px;
-  height: 32px;
-  display: none;
 }
 
 html, body {

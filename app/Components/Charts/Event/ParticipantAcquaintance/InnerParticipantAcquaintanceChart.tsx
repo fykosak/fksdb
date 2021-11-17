@@ -118,7 +118,6 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 if (datum.source.index === this.state.activeId || datum.target.index === this.state.activeId) {
                     className = 'active';
                 }
-                // @ts-ignore: Type 'void' is not assignable to type 'string'.
                 const dAttr: string = ribbonCreator(datum);
                 return <path
                     className={'ribbon ' + className}

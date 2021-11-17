@@ -51,12 +51,6 @@ class AutocompleteSelectBox extends TextBase {
                 ]);
             }
         });
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/autocompleteSelect.js');
-            }
-        });
 
         $this->ajax = $ajax;
         $this->renderMethod = $renderMethod;

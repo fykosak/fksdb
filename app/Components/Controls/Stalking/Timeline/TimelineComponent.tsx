@@ -60,7 +60,7 @@ interface Props {
     };
 }
 
-export default class TimelineComponent extends ChartComponent<Props, {}> {
+export default class TimelineComponent extends ChartComponent<Props, Record<string, never>> {
     private colorScale;
     private readonly lineHeight = 30;
     private rowNumber;

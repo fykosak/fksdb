@@ -35,7 +35,7 @@ interface DispatchProps {
     onSetToDate(date: Date): void;
 }
 
-class Options extends React.Component<StateProps & DispatchProps, {}> {
+class Options extends React.Component<StateProps & DispatchProps, Record<string, never>> {
 
     public componentDidMount() {
         const {onSetFromDate, onSetToDate, gameEnd, gameStart} = this.props;

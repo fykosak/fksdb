@@ -11,7 +11,7 @@ interface OwnProps {
     app: any;
 }
 
-export default class MainComponent extends React.Component<OwnProps, {}> {
+export default class MainComponent extends React.Component<OwnProps, Record<string, never>> {
     public render() {
         const storeMap = {
             actions: this.props.actions,

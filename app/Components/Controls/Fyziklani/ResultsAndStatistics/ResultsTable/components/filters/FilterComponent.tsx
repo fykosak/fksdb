@@ -12,7 +12,7 @@ interface OwnProps {
 
 }
 
-export default class FilterComponent extends React.Component<OwnProps, {}> {
+export default class FilterComponent extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {active, onClick, onCloseClick, filter, type} = this.props;

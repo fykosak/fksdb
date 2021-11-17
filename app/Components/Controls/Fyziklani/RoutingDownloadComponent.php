@@ -22,7 +22,6 @@ class RoutingDownloadComponent extends BaseComponent {
         $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;
-                $collector->registerJSFile('js/routingPdf.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js');
             }
@@ -35,7 +34,6 @@ class RoutingDownloadComponent extends BaseComponent {
 
     final public function render(): void {
         $rooms = [];// $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
-
         $this->template->rooms = $rooms;
         // $this->template->buildings = $this->event->getParameter('gameSetup')['buildings'];
         $this->template->teams = $this->serviceFyziklaniTeam->serialiseTeams($this->event);

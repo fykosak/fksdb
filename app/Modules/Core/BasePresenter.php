@@ -22,7 +22,6 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
@@ -44,11 +43,6 @@ abstract class BasePresenter extends Presenter implements
     NavigablePresenter
 {
     use CollectorPresenterTrait;
-
-    public const FLASH_SUCCESS = Message::LVL_SUCCESS;
-    public const FLASH_INFO = Message::LVL_INFO;
-    public const FLASH_WARNING = Message::LVL_WARNING;
-    public const FLASH_ERROR = Message::LVL_ERROR;
 
     /**
      * BackLink for tree construction for breadcrumbs.
@@ -108,7 +102,7 @@ abstract class BasePresenter extends Presenter implements
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider && $provider instanceof FilteredDataProvider) {
+            if ($provider instanceof FilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
             $response = new JsonResponse($data);

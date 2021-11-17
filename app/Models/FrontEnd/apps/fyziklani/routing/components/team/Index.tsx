@@ -26,7 +26,7 @@ interface OwnProps {
     team: ModelFyziklaniTeam;
 }
 
-class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
+class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps, Record<string, never>> {
     public render() {
 
         const {onDragStart, onDragEnd, team, onRemovePlace, isUpdated, isDragged} = this.props;

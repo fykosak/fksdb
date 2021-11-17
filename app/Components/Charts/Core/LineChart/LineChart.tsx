@@ -21,7 +21,7 @@ interface OwnProps<> {
     };
 }
 
-export default class LineChart extends ChartComponent<OwnProps, {}> {
+export default class LineChart extends ChartComponent<OwnProps, Record<string, never>> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

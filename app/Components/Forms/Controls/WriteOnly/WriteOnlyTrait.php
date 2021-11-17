@@ -40,12 +40,6 @@ trait WriteOnlyTrait {
                 $this->writeOnlyAttachedOnValidate = true;
             }
         });
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->writeOnlyAttachedJS) {
-                $this->writeOnlyAttachedJS = true;
-                $collector->registerJSFile('js/writeOnlyInput.js');
-            }
-        });
     }
 
     public function getWriteOnly(): bool {

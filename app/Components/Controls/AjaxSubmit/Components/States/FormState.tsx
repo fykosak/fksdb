@@ -31,7 +31,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FormState extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
+class FormState extends React.Component<OwnProps & StateProps & DispatchProps, Record<string, never>> {
 
     public render() {
         const {dragged} = this.props;

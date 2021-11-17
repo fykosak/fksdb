@@ -8,7 +8,7 @@ interface OwnProps {
     params: Params;
 }
 
-export default class Container extends React.Component<OwnProps, {}> {
+export default class Container extends React.Component<OwnProps, Record<string, never>> {
 
     public render() {
         const {groups, params} = this.props;

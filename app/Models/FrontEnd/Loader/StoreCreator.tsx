@@ -11,7 +11,7 @@ interface OwnProps {
     app: Reducer<any, any>;
 }
 
-export default class StoreCreator extends React.Component<OwnProps, {}> {
+export default class StoreCreator extends React.Component<OwnProps, Record<string, never>> {
     public render() {
         const {app} = this.props;
         const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);

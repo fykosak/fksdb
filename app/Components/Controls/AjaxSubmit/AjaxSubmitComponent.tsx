@@ -11,7 +11,7 @@ interface IProps {
     actions: NetteActions;
 }
 
-export default class AjaxSubmitComponent extends React.Component<IProps, {}> {
+export default class AjaxSubmitComponent extends React.Component<IProps, Record<string, never>> {
 
     public render() {
         return <ActionsStoreCreator

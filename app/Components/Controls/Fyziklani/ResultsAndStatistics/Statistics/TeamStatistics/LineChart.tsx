@@ -24,7 +24,7 @@ interface OwnProps {
     teamId: number;
 }
 
-class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
+class PointsInTime extends React.Component<StateProps & OwnProps, Record<string, never>> {
 
     public render() {
         const {

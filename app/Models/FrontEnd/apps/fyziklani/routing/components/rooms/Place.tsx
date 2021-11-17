@@ -23,7 +23,7 @@ interface OwnProps {
     roomId: number;
 }
 
-class PlaceComponent extends React.Component<StateProps & OwnProps & DispatchProps, {}> {
+class PlaceComponent extends React.Component<StateProps & OwnProps & DispatchProps, Record<string, never>> {
     public render() {
         const {x, y, onDrop, teams, draggedTeamId, roomId} = this.props;
         const team = teams && teams.filter((currentTeam) => {

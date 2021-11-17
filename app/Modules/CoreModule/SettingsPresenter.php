@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -63,11 +64,11 @@ class SettingsPresenter extends BasePresenter
     final public function renderDefault(): void
     {
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
-            $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
+            $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
-            $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
+            $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
 
@@ -197,9 +198,9 @@ class SettingsPresenter extends BasePresenter
 
         $this->loginService->updateModel($login, $loginData);
 
-        $this->flashMessage(_('User information has been saved.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Password changed.'), Message::LVL_SUCCESS);
             $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
