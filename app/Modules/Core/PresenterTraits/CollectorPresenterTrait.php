@@ -21,6 +21,31 @@ trait CollectorPresenterTrait
         $component->addFile($file);
     }
 
+    public function registerJSCode(string $code, ?string $tag = null): void
+    {
+        /** @var JavaScriptLoaderComponent $component */
+        $component = $this->getComponent('jsLoader');
+        $component->addInline($code, $tag);
+    }
+
+    /* *******************************
+     * IJavaScriptCollector
+     * ****************************** */
+
+    public function unregisterJSCode(string $tag): void
+    {
+        /** @var JavaScriptLoaderComponent $component */
+        $component = $this->getComponent('jsLoader');
+        $component->removeInline($tag);
+    }
+
+    public function unregisterJSFile(string $file): void
+    {
+        /** @var JavaScriptLoaderComponent $component */
+        $component = $this->getComponent('jsLoader');
+        $component->removeFile($file);
+    }
+
     public function registerStylesheetFile(string $file, array $media = []): void
     {
         /** @var StylesheetLoaderComponent $component */

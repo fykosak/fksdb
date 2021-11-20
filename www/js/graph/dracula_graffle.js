@@ -1,1 +1,0 @@
-../../../libs/graph-dracula/lib/dracula_graffle.js

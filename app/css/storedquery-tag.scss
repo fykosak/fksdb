@@ -1,6 +1,18 @@
 /* general setting */
 @import "colors";
-@import "mixins/stored-query-tag";
+
+@mixin stored-query-tag($color,$background) {
+  color: $color;
+  background-color: $background;
+  &.active, &:hover, &:focus {
+    opacity: .5;
+  }
+  &.active {
+    &:hover, &:focus {
+      opacity: 1;
+    }
+  }
+}
 
 .stored-query-tags a:hover, .stored-query-tags a:focus {
   text-decoration: none;

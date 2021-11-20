@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;

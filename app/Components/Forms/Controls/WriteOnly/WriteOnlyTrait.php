@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 

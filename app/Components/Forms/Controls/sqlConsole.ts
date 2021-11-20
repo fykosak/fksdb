@@ -1,9 +1,9 @@
-import '../../../../www/js/codemirror.min.js';
+// @ts-ignore
+import CodeMirror from 'codemirror';
 import './sqlConsole.scss';
 
 $(() => {
     document.querySelectorAll('.sqlConsole').forEach((el) => {
-        // @ts-ignore
         CodeMirror.fromTextArea(el,
             {
                 mode: 'text/x-mysql',
@@ -17,7 +17,6 @@ $(() => {
     document.querySelectorAll('.syntax-sql').forEach((el) => {
         const code = el.innerHTML;
         el.innerHTML = '';
-// @ts-ignore
         CodeMirror(el, {
             value: code,
             mode: 'text/x-mysql',
