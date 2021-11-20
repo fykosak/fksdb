@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface OwnProps<T extends Record<string, never>, L extends Record<string, never> = Record<string, never>> {
+interface OwnProps<T extends {}, L extends {} = Record<string, never>> {
     chart: React.ComponentClass<T> | any; // TODO fix ConnectedComponent
     chartProps: T;
     legendComponent?: React.ComponentClass<T> | any;

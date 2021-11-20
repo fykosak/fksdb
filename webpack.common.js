@@ -1,6 +1,6 @@
 var path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
@@ -12,12 +12,6 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin(),
-        new ESLintPlugin({
-            context: '../',
-            failOnError: false,
-            extensions: ['js', 'ts', 'tsx'],
-            exclude: ['./lib', './vendor','./www'],
-        }),
     ],
     module: {
         rules: [

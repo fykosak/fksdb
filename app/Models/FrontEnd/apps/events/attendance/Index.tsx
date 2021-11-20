@@ -57,6 +57,7 @@ export default class Attendance extends React.Component<Record<string, never>, {
             const reader = new FileReader();
             reader.onload = () => {
                 event.target.value = '';
+                // @ts-ignore
                 window.qrcode.callback = (e) => {
                     if (e instanceof Error) {
                         reject('Failed to read QR-code: ' + e.message);
@@ -64,6 +65,7 @@ export default class Attendance extends React.Component<Record<string, never>, {
                         resolve(e);
                     }
                 };
+                // @ts-ignore
                 window.qrcode.decode(reader.result);
             };
             reader.readAsDataURL(event.target.files[0]);

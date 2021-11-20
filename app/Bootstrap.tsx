@@ -57,7 +57,7 @@ appsLoader.hashMapLoader.registerComponent('attendance.qr-code', Attendance);
 appsLoader.run();
 
 $(function () {
-
+// @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options
         options: {},
@@ -85,11 +85,13 @@ $(function () {
             }
 
             const overlayInput = actualInput.clone();
+            // @ts-ignore
             overlayInput.removeAttr('id', null).val('').attr('placeholder', originalLabel);
             overlayInput.removeClass('date').removeAttr('name');
             overlayInput.removeAttr('data-writeonly');
             overlayInput.removeAttr('data-nette-rules');
             overlayInput.removeAttr('required');
+            // @ts-ignore
             overlayInput.attr('data-writeonly-overlay', true);
             overlayInput.insertAfter(actualGroup);
 
@@ -124,12 +126,13 @@ $(function () {
             actualInput.data('writeonly-enabled', true);
         },
     });
+    // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
 
 });
 
 $(function () {
-
+// @ts-ignore
     $.widget('fks.referencedContainer', {
 // default options
         options: {
@@ -293,6 +296,7 @@ $(function () {
             }
         },
     });
+    // @ts-ignore
     $('[data-referenced]').referencedContainer();
 
 });
@@ -300,11 +304,13 @@ jQuery(function () {
     document.querySelectorAll('div.mergeSource').forEach((el) => {
         const field = document.getElementById(el.getAttribute('data-field'));
         field.addEventListener('click', () => {
+            // @ts-ignore
             field.value = el.querySelector('.value').innerText;
         });
     });
 });
 $(document).ready(function () {
+    // @ts-ignore
     $.widget('fks.enterSubmitForm', {
         _create: function () {
             this.update();
@@ -322,11 +328,12 @@ $(document).ready(function () {
                 });
         },
     });
-
+// @ts-ignore
     $('form[data-submit-on=\'enter\']').enterSubmitForm();
     document.querySelectorAll('.btn-danger').forEach((el) => {
         el.addEventListener('click', () => {
             if (window.confirm('O RLY?')) {
+                // @ts-ignore
                 el.trigger('click');
             }
         })
@@ -335,6 +342,7 @@ $(document).ready(function () {
 
 });
 $(function () {
+    // @ts-ignore
     $('[data-toggle="popover"]').popover({
         trigger: 'hover',
     })
@@ -417,6 +425,7 @@ $(() => {
     }
 });
 $(function () {
+    // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
 // default options
         options: {
@@ -519,6 +528,7 @@ $(function () {
                 const items = this.element.data('ac-items');
                 options.source = (request, response) => {
                     const s = termFunction(request.term);
+                    // @ts-ignore
                     response($.ui.autocomplete.filter(
                         items, s));
                 };
@@ -555,6 +565,7 @@ $(function () {
                 };
             }
 
+            // @ts-ignore
             const acEl = el.autocomplete(options);
 
             const renderMethod = this.element.data('ac-render-method');
