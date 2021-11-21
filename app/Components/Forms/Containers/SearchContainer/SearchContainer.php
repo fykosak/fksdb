@@ -44,7 +44,7 @@ abstract class SearchContainer extends ContainerWithOptions
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
 
-        $submit->onClick[] = function () {
+        $submit->onClick[] = function (): void {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->getSearchCallback())($term);
 

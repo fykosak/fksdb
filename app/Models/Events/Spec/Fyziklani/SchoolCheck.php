@@ -40,7 +40,7 @@ abstract class SchoolCheck extends AbstractAdjustment
         $personIds = array_filter(
             array_map(function (BaseControl $control) {
                 try {
-                    return $control->getValue();
+                    return $control->getValue(false);
                 } catch (ModelDataConflictException $exception) {
                     $control->addError(
                         sprintf(

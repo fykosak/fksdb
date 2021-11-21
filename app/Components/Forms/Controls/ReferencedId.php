@@ -155,14 +155,11 @@ class ReferencedId extends HiddenField
      */
     public function getValue(bool $fullfilPromise = true)
     {
-        $parent = parent::getValue();
-        if ($parent) {
-            return $parent;
-        }
         if ($fullfilPromise && $this->promise) {
             return $this->promise->getValue();
         }
-        return null;
+        $value = parent::getValue();
+        return $value ?: null;
     }
 
     public function rollback(): void
