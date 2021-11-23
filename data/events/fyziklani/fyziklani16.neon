@@ -197,7 +197,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Person')
+                        label: _('Participant')
                         visible: true
                         modifiable: %events.fyziklani16.appCond%
                         determining: true
