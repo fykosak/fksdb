@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Components\React\AjaxComponent;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;

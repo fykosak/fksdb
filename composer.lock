@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ee3568fd484dd8e8a353d2739342adb",
+    "content-hash": "ce7f285763db2c6f654ef23de69b4d2a",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -54,6 +54,43 @@
                 "source": "https://github.com/fykosak/nette-fks-utils/tree/master"
             },
             "time": "2021-10-30T10:49:33+00:00"
+        },
+        {
+            "name": "fykosak/nette-frontend-component",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fykosak/nette-frontend-component.git",
+                "reference": "2d99a98"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fykosak/nette-frontend-component/zipball/2d99a98",
+                "reference": "2d99a98",
+                "shasum": ""
+            },
+            "require": {
+                "fykosak/nette-fks-utils": "dev-master#4054d9ff",
+                "nette/application": "^v3.1.0",
+                "nette/forms": "^3.1.0",
+                "php": ">=7.4 <8.1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fykosak\\NetteFrontendComponent\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "support": {
+                "issues": "https://github.com/fykosak/nette-frontend-component/issues",
+                "source": "https://github.com/fykosak/nette-frontend-component/tree/master"
+            },
+            "time": "2021-11-23T23:01:25+00:00"
         },
         {
             "name": "fykosak/nette-orm",
@@ -1170,16 +1207,16 @@
         },
         {
             "name": "nette/forms",
-            "version": "v3.1.5",
+            "version": "v3.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/forms.git",
-                "reference": "2786ebc772cde724dad945e8bc2d7c578d831f4e"
+                "reference": "4ed52434b61d7e532cb3bc77b048717703b91b0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/forms/zipball/2786ebc772cde724dad945e8bc2d7c578d831f4e",
-                "reference": "2786ebc772cde724dad945e8bc2d7c578d831f4e",
+                "url": "https://api.github.com/repos/nette/forms/zipball/4ed52434b61d7e532cb3bc77b048717703b91b0b",
+                "reference": "4ed52434b61d7e532cb3bc77b048717703b91b0b",
                 "shasum": ""
             },
             "require": {
@@ -1239,9 +1276,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/forms/issues",
-                "source": "https://github.com/nette/forms/tree/v3.1.5"
+                "source": "https://github.com/nette/forms/tree/v3.1.6"
             },
-            "time": "2021-10-07T01:42:05+00:00"
+            "time": "2021-11-09T11:56:09+00:00"
         },
         {
             "name": "nette/http",
@@ -1397,16 +1434,16 @@
         },
         {
             "name": "nette/neon",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/neon.git",
-                "reference": "33d262a0c4fb6c6371385f6dc8532f4e32c20ebc"
+                "reference": "1f4e5f6a30bf45b6c2c932be7396ea70692ee607"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/neon/zipball/33d262a0c4fb6c6371385f6dc8532f4e32c20ebc",
-                "reference": "33d262a0c4fb6c6371385f6dc8532f4e32c20ebc",
+                "url": "https://api.github.com/repos/nette/neon/zipball/1f4e5f6a30bf45b6c2c932be7396ea70692ee607",
+                "reference": "1f4e5f6a30bf45b6c2c932be7396ea70692ee607",
                 "shasum": ""
             },
             "require": {
@@ -1416,8 +1453,11 @@
             "require-dev": {
                 "nette/tester": "^2.0",
                 "phpstan/phpstan": "^0.12",
-                "tracy/tracy": "^2.3"
+                "tracy/tracy": "^2.8.8"
             },
+            "bin": [
+                "bin/neon-lint"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1456,9 +1496,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/neon/issues",
-                "source": "https://github.com/nette/neon/tree/v3.3.0"
+                "source": "https://github.com/nette/neon/tree/v3.3.1"
             },
-            "time": "2021-10-19T22:11:22+00:00"
+            "time": "2021-11-09T01:00:15+00:00"
         },
         {
             "name": "nette/nette",
@@ -2492,16 +2532,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627"
+                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5f38c8804a9e97d23e0c8d63341088cd8a22d627",
-                "reference": "5f38c8804a9e97d23e0c8d63341088cd8a22d627",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/6f981ee24cf69ee7ce9736146d1c57c2780598a8",
+                "reference": "6f981ee24cf69ee7ce9736146d1c57c2780598a8",
                 "shasum": ""
             },
             "require": {
@@ -2510,7 +2550,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.4-dev"
+                    "dev-main": "2.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2539,7 +2579,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.4.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.0"
             },
             "funding": [
                 {
@@ -2555,20 +2595,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-23T23:28:01+00:00"
+            "time": "2021-07-12T14:48:14+00:00"
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.8.7",
+            "version": "v2.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "8e708de7c611f626c8792d43f1c78812ea24e6f6"
+                "reference": "1a18df64f6b745962e9a0bdf87eccfc62309e593"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/8e708de7c611f626c8792d43f1c78812ea24e6f6",
-                "reference": "8e708de7c611f626c8792d43f1c78812ea24e6f6",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/1a18df64f6b745962e9a0bdf87eccfc62309e593",
+                "reference": "1a18df64f6b745962e9a0bdf87eccfc62309e593",
                 "shasum": ""
             },
             "require": {
@@ -2586,7 +2626,7 @@
                 "nette/tester": "^2.2",
                 "nette/utils": "^3.0",
                 "phpstan/phpstan": "^0.12",
-                "psr/log": "^1.0"
+                "psr/log": "^1.0 || ^2.0 || ^3.0"
             },
             "type": "library",
             "extra": {
@@ -2627,9 +2667,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.8.7"
+                "source": "https://github.com/nette/tracy/tree/v2.8.8"
             },
-            "time": "2021-08-24T16:26:27+00:00"
+            "time": "2021-11-08T23:40:20+00:00"
         }
     ],
     "packages-dev": [
@@ -2694,7 +2734,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "fykosak/nette-orm": 20,
-        "fykosak/nette-fks-utils": 20
+        "fykosak/nette-fks-utils": 20,
+        "fykosak/nette-frontend-component": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

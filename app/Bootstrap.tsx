@@ -18,42 +18,56 @@ import PointsEntryComponent from './Components/Controls/Fyziklani/Submit/PointsE
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
 import Attendance from './Models/FrontEnd/apps/events/attendance/Index';
-import { appsLoader } from './Models/FrontEnd/Loader/Loader';
+import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
 
-import '../vendor/nette/forms/src/assets/netteForms';
+import 'vendor/nette/forms/src/assets/netteForms';
 import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
+import '@fortawesome/fontawesome-free/css/all.css'
+import 'bootstrap/scss/bootstrap.scss'
+import 'bootstrap/dist/js/bootstrap.bundle'
 
-appsLoader.register(eventSchedule);
+const renderer = new Renderer();
+[
+    'accommodation',
+    'visa',
+    'accommodation_gender',
+    'accommodation_teacher',
+    'teacher_present',
+    'weekend',
+    'weekend_info',
+    'dsef_morning',
+    'dsef_afternoon',
+].forEach((value) => renderer.hashMapLoader.register('event.schedule.' + value, eventSchedule));
 
-appsLoader.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
-appsLoader.hashMapLoader.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
+renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
+renderer.hashMapLoader.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
+renderer.hashMapLoader.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
-appsLoader.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);
+renderer.hashMapLoader.registerDataComponent('chart.total-person', TotalPersonsChart);
+renderer.hashMapLoader.registerDataComponent('chart.person.detail.timeline', TimelineComponent);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart);
-appsLoader.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart);
+renderer.hashMapLoader.registerDataComponent('chart.contestants.per-series', PerSeriesChart);
+renderer.hashMapLoader.registerDataComponent('chart.contestants.per-years', PerYearsChart);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {accessKey: 'participants'});
-appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart);
-appsLoader.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-progress', CommonChart, {accessKey: 'participants'});
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.acquaintance', ParticipantAcquaintanceChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.participants.time-geo', ParticipantsTimeGeoChart);
 
-appsLoader.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart);
-appsLoader.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {accessKey: 'teams'});
-appsLoader.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoChart);
+renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {accessKey: 'teams'});
+renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart);
 
-appsLoader.hashMapLoader.registerComponent('attendance.qr-code', Attendance);
-appsLoader.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent);
+renderer.hashMapLoader.registerComponent('attendance.qr-code', Attendance);
+renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent);
 
-appsLoader.run();
+renderer.run();
 
 $(function () {
 // @ts-ignore
@@ -186,7 +200,7 @@ $(function () {
                 searchInputGroup.append(searchButton);
 
                 // append handler
-                $searchInput.change(function () {
+                $searchInput.change(() => {
                     originalSearchButton.click();
                 });
                 // promote search group in place of the container

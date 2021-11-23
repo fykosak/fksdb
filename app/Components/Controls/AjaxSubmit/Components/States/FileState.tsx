@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -44,7 +44,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps, R
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchNetteFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store): StateProps => {

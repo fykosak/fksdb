@@ -1,4 +1,4 @@
-import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { Room } from '../../helpers/interfaces';

@@ -2,12 +2,12 @@ import { translator } from '@translator/translator';
 import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
 import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
 import NetteInputConnector from 'FKSDB/Models/FrontEnd/InputConnector/NetteInputConnector';
-import { App } from 'FKSDB/Models/FrontEnd/Loader/Loader';
-import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './style.scss';
+import { mapRegisterCallback } from 'vendor/fykosak/nette-frontend-component/src/Loader/HashMapLoader';
 
 interface OwnProps {
     scheduleDef: {
@@ -29,6 +29,9 @@ export interface Params {
 }
 
 class ScheduleField extends React.Component<OwnProps, Record<string, never>> {
+    public componentDidMount() {
+        this.props.input.style.display = 'none';
+    }
 
     public render() {
         return <StoreCreator app={app}>
@@ -47,7 +50,7 @@ class ScheduleField extends React.Component<OwnProps, Record<string, never>> {
     }
 }
 
-export const eventSchedule: App = (element, reactId, rawData) => {
+export const eventSchedule: mapRegisterCallback = (element, reactId, rawData) => {
     const [module, component, mode] = reactId.split('.');
     if (module !== 'event') {
         return false;

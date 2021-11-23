@@ -2,8 +2,8 @@ import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStat
 import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
-} from 'FKSDB/Models/FrontEnd/Fetch/actions';
-import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+} from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
+import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 export interface State {
     gameEnd?: Date;
@@ -14,7 +14,7 @@ export interface State {
     visible?: boolean;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
     const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.data;
     return {
         ...state,

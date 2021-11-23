@@ -1,5 +1,5 @@
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { dragEnd, dragStart, dropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import * as React from 'react';
@@ -108,7 +108,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),
-        onFileUpload: (values, url: string) => dispatchFetch(url, dispatch, values),
+        onFileUpload: (values, url: string) => dispatchNetteFetch(url, dispatch, values),
     };
 };
 

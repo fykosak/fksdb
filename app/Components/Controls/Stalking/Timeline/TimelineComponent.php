@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -11,18 +10,22 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\YearCalculator;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-class TimelineComponent extends ReactComponent {
+class TimelineComponent extends FrontEndComponent
+{
 
     private ModelPerson $person;
 
-    public function __construct(Container $container, ModelPerson $person) {
+    public function __construct(Container $container, ModelPerson $person)
+    {
         parent::__construct($container, 'person.detail.timeline');
         $this->person = $person;
     }
 
-    private function eventToArray(ModelEvent $event): array {
+    private function eventToArray(ModelEvent $event): array
+    {
         return [
             'eventId' => $event->event_id,
             'name' => $event->name,
@@ -36,7 +39,8 @@ class TimelineComponent extends ReactComponent {
      * @return \array[][]
      * @throws \Exception
      */
-    private function calculateData(): array {
+    private function calculateData(): array
+    {
         $dates = [
             'since' => [],
             'until' => [],
@@ -44,10 +48,16 @@ class TimelineComponent extends ReactComponent {
         $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
-            $since = new \DateTime($org->getContest()->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+            $since = new \DateTime(
+                $org->getContest()->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+            );
             $until = new \DateTime();
             if ($org->until) {
-                $until = new \DateTime($org->getContest()->getContestYear($org->until)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
+                $until = new \DateTime(
+                    $org->getContest()->getContestYear(
+                        $org->until
+                    )->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
+                );
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
@@ -79,7 +89,8 @@ class TimelineComponent extends ReactComponent {
         ]];
     }
 
-    private function calculateEvents(): array {
+    private function calculateEvents(): array
+    {
         $events = [];
         $eventParticipants = [];
         foreach ($this->person->getEventParticipants() as $row) {
@@ -110,7 +121,8 @@ class TimelineComponent extends ReactComponent {
      * @param ModelEvent[] $events
      * @return \DateTimeInterface[]
      */
-    private function calculateFirstAndLast(array $events, array $dates): array {
+    private function calculateFirstAndLast(array $events, array $dates): array
+    {
         $first = $this->person->created;
         $last = new \DateTime();
         foreach ($events as $event) {
@@ -145,7 +157,8 @@ class TimelineComponent extends ReactComponent {
     /**
      * @throws \Exception
      */
-    public function getData(): array {
+    public function getData(): array
+    {
         [$events, $calculatedEvents] = $this->calculateEvents();
         [$dates, $longTimeEvents] = $this->calculateData();
         [$first, $last] = $this->calculateFirstAndLast($events, $dates);

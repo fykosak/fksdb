@@ -1,4 +1,4 @@
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
 import {
     Action,
     Dispatch,
@@ -17,7 +17,7 @@ export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFo
         ...values,
         code: getFullCode(values.code),
     };
-    return dispatchFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data), () => {
+    return dispatchNetteFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data), () => {
         dispatch(reset(FORM_NAME));
     });
 };

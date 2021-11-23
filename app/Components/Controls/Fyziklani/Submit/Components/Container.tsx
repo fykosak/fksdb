@@ -6,8 +6,8 @@ import TextInput from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Inp
 import ErrorBlock from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ErrorBlock';
 import ValueDisplay from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay';
 import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit/reducer';
-import { Message } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';

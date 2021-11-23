@@ -1,5 +1,5 @@
 import { SubmitFormRequest } from 'FKSDB/Components/Controls/Fyziklani/Submit/actions';
-import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
 
@@ -9,7 +9,7 @@ interface OwnProps {
     availablePoints: number[];
     handleSubmit: SubmitHandler<{ code: string }, any>;
 
-    onSubmit?(values: SubmitFormRequest): Promise<Response2<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
 }
 
 export default class SubmitButtons extends React.Component<OwnProps, Record<string, never>> {

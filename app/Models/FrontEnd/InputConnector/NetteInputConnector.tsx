@@ -31,7 +31,7 @@ class NetteInputConnector extends React.Component<OwnProps & StateProps & Dispat
         }
     }
 
-    public componentWillReceiveProps(newProps: OwnProps & StateProps & DispatchProps) {
+    public UNSAFE_componentWillReceiveProps(newProps: OwnProps & StateProps & DispatchProps) {
         const data: InputConnectorItems = {};
         let hasValue = false;
 

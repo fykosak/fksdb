@@ -1,8 +1,8 @@
 import { translator } from '@translator/translator';
 import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
@@ -75,9 +75,9 @@ const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onFetch: (url) => dispatchFetch<ResponseData>(url, dispatch, null),
+        onFetch: (url) => dispatchNetteFetch<ResponseData>(url, dispatch, null),
         onWaitForFetch: (delay: number, url: string): number => window.setTimeout(() => {
-            return dispatchFetch<ResponseData>(url, dispatch, null);
+            return dispatchNetteFetch<ResponseData>(url, dispatch, null);
         }, delay),
     };
 };

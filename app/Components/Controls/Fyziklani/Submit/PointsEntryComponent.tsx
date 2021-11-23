@@ -1,5 +1,5 @@
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
-import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
@@ -15,7 +14,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-class ResultsAndStatisticsComponent extends AjaxComponent {
+class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Components\AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;

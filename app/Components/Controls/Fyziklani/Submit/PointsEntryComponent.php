@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
-use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use Fykosak\Utils\Logging\Message;
@@ -15,7 +14,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
-class PointsEntryComponent extends AjaxComponent {
+class PointsEntryComponent extends \Fykosak\NetteFrontendComponent\Components\AjaxComponent
+{
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 

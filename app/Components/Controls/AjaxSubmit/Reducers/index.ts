@@ -8,7 +8,7 @@ import {
     uploadData,
 } from './uploadData';
 
-import { fetchApi, FetchApiState } from 'FKSDB/Models/FrontEnd/Fetch/reducer';
+import { fetchApi, FetchApiState } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import {
     errorLogger,
     State as ErrorLoggerState,

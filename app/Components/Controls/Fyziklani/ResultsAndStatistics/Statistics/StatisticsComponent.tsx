@@ -3,7 +3,7 @@ import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatist
 import * as React from 'react';
 import { app } from './Reducers';
 import App from './StatisticsComponentsRouter';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';

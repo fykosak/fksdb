@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
 
-class RoutingEditComponent extends AjaxComponent {
+class RoutingEditComponent extends \Fykosak\NetteFrontendComponent\Components\AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
