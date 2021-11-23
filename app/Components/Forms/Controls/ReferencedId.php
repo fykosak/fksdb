@@ -26,7 +26,6 @@ use Tracy\Debugger;
  */
 class ReferencedId extends HiddenField
 {
-
     public const MODE_NORMAL = 'MODE_NORMAL';
     public const MODE_FORCE = 'MODE_FORCE';
     public const MODE_ROLLBACK = 'MODE_ROLLBACK';
