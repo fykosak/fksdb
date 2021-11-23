@@ -26,8 +26,8 @@ import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
 import '@fortawesome/fontawesome-free/css/all.css'
-import 'bootstrap/scss/bootstrap.scss'
-import 'bootstrap/dist/js/bootstrap.bundle'
+// import 'bootstrap/scss/bootstrap.scss'
+// import 'bootstrap/dist/js/bootstrap.bundle'
 
 const renderer = new Renderer();
 [

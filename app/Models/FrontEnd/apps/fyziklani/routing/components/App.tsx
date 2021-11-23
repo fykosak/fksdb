@@ -1,5 +1,4 @@
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
-import Powered from 'FKSDB/Models/UI/Powered';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -45,7 +44,6 @@ class RoutingApp extends React.Component<DispatchProps & OwnProps, Record<string
             <div>
                 <Form/>
             </div>
-            <Powered/>
         </>);
     }
 }
