@@ -1,6 +1,3 @@
-{*
-    General help macros.
-*}
 {define errors}
     {var $fieldErrors = []}
     {foreach $form->getControls() as $cont}
@@ -23,28 +20,23 @@
     {if $description}
         <span class="text-muted">{$description}</span>
     {/if}
-
 {/define}
 
 {define plain}
     {varType Nette\Forms\Controls\TextInput $field}
-    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required"
-            id="{$field->getHtmlId()}-pair">
-        {label $field/}
-            {do $field->getControlPrototype()->addAttributes(['class'=>$field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'])}
-            {input $field}
+    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
+        {label $field}
+            {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
             {include metadata field => $field}
     </div>
 {/define}
 
 {define checkbox}
     {varType Nette\Forms\Controls\Checkbox $field}
-    <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
+    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         <div class="form-check">
-            {do $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
-            {$field->getControlPart()}
-            {do $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
-            {$field->getLabelPart()}
+            {input $field class: 'form-check-input'}
+            {label $field class: 'form-check-label'}
         </div>
         {include metadata field => $field}
     </div>
@@ -52,12 +44,12 @@
 
 {define radiolist}
     {varType Nette\Forms\Controls\RadioList $field}
-    <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
-        {label $field /}
+    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
+        {label $field}
         {foreach $field->getItems() as $key => $item}
             <div class="form-check">
-                {$field->getControlPart($key)->addAttributes(['class'=>'form-check-input'])}
-                {$field->getLabelPart($key)->addAttributes(['class'=>'form-check-label'])}
+                {input $field:$key class: 'form-check-input'}
+                {label $field:$key class: 'form-check-label'}
             </div>
         {/foreach}
         {include metadata field => $field}
@@ -66,41 +58,35 @@
 
 {define button}
     {varType Nette\Forms\Controls\Button $field}
-    {do $field->getControlPrototype()->addAttributes(['class'=>'btn'])}
-    {if !Nette\Utils\Arrays::grep(array_keys(explode(' ',$field->getControlPrototype()->getAttribute('class'))), '/btn-/')}
-        {do $field->getControlPrototype()->addAttributes(['class'=>'btn-primary'])}
-    {/if}
-    {input $field}
+    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-primary':''))}
 {/define}
 
 {define buttonArray}
     {varType Nette\Forms\Controls\Button[] $buttons}
     {var $buttonRows = []}
     {foreach $buttons as $button}
-        {do if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
+        {php if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
         {php $buttonRows[$button->getOption('row')][] = $button}
     {/foreach}
-    {do ksort($buttonRows)}
+    {php ksort($buttonRows)}
     {foreach $buttonRows as $row}
-        <div n:if="$row">
+        {if $row}
             <div class="btn-group col-12">
                 {foreach $row as $button}
                     {include button field => $button}
                 {/foreach}
             </div>
-        </div>
+        {/if}
     {/foreach}
 {/define}
 
 {define hidden}
     {varType Nette\Forms\Controls\HiddenField $field}
-    <div n:tag-if="$field->hasErrors()" n:class="form-group, $field->hasErrors() ? has-error"
-            id="{$field->getHtmlId()}-pair">
+    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         <div n:tag-if="$field->hasErrors()">
             {input $field}
             {include metadata field => $field}
         </div>
-
     </div>
 {/define}
 

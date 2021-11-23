@@ -5,7 +5,7 @@
     {var $id = ($level > 1 && $withOptions) ? $container->getOption('id') : $container->getName()}
     {var $attrs = $withOptions? array_filter($container->getOptions(),fn($value)=>preg_match('/^data-.*/',$value),ARRAY_FILTER_USE_KEY):[]}
     {if !$withOptions || $container->getOption('visible', true)}
-        <div n:snippet="group-$id"                    n:attr="(expand) $attrs" >
+        <div n:snippet="group-$id" n:attr="(expand) $attrs" >
             {var $className = ($level > 1 || ($level == 1 && count($container->getComponents()) > 1 && !($container->name == 'aggr')))
             ?('col-12 bd-callout ' . ($level == 1?'bd-callout-info':($level == 2?'bd-callout-warning':'bd-callout-danger')))
             :''}
@@ -14,6 +14,7 @@
                 {if $level > 0 && $withOptions && $container->getOption('label')}
                     <h4>{$container->getOption('label')}</h4>
                 {/if}
+
                 <p n:if="$level > 0 && $withOptions && $container->getOption('description')">{$container->getOption('description')}</p>
                 {include subComponents conainer=>$container, level=>$level}
             </fieldset>
@@ -32,7 +33,9 @@
                 {php $controls = []}
             {/if}
             {if $level < 2 || ($component instanceof FKSDB\Components\Forms\Containers\Models\ContainerWithOptions && $component->getOption('showGroup'))}
-                {include container container => $component, level => $level + 1}
+                {formContainer $component}
+                    {include container container => $component, level => $level + 1}
+                {/formContainer}
             {else}
                 {include controls controls => $component->getControls()}
             {/if}
