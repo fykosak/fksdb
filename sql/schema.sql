@@ -1505,6 +1505,20 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
             ON UPDATE RESTRICT
 ) ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `unsubscribed_email`;
+CREATE TABLE `unsubscribed_email`
+(
+    `unsubscribed_email_id` INT(11)  NOT NULL AUTO_INCREMENT,
+    `created`               DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `email_hash`            CHAR(40) NOT NULL COMMENT 'SHA1 hash of the email address in lowercase',
+    `note`                  VARCHAR(255)      DEFAULT NULL,
+    PRIMARY KEY (`unsubscribed_email_id`),
+    UNIQUE KEY `email_hash` (`email_hash`)
+) ENGINE = InnoDB
+  COLLATE = utf8_czech_ci;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;
+
+

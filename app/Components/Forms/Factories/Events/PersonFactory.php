@@ -98,6 +98,8 @@ class PersonFactory extends AbstractFactory
             $visibleResolver,
             $event
         );
+        $referencedId->getSearchContainer()->setOption('label', $field->getLabel());
+        $referencedId->getSearchContainer()->setOption('description', $field->getDescription());
         $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
         $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
         return $referencedId;

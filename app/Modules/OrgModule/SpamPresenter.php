@@ -30,7 +30,7 @@ class SpamPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
-            sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()),
+            sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
             'fas fa-envelope-open'
         );
     }

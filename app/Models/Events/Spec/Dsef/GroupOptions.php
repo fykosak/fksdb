@@ -16,8 +16,8 @@ use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 /**
  * @deprecated
  */
-class GroupOptions implements OptionsProvider {
-
+class GroupOptions implements OptionsProvider
+{
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
@@ -47,7 +47,8 @@ class GroupOptions implements OptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
-    private function transformGroups(iterable $groups): array {
+    private function transformGroups(iterable $groups): array
+    {
         $result = [];
         foreach ($groups as $name => $capacity) {
             $result[] = [
@@ -61,11 +62,13 @@ class GroupOptions implements OptionsProvider {
     /**
      * @return ModelDsefGroup[]
      */
-    private function getGroups(ModelEvent $event): array {
+    private function getGroups(ModelEvent $event): array
+    {
         return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }
 
-    public function getOptions(Field $field): array {
+    public function getOptions(Field $field): array
+    {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         /** @var ModelDsefParticipant $model */
