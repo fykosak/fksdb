@@ -269,7 +269,7 @@ msgstr "Exporty"
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:57
 #, php-format
 msgid "Detail of the query \"%s\""
-msgstr "Detail dotazu \"%s\"
+msgstr "Detail dotazu \"%s\""
 
 #: ../app/Modules/OrgModule/BasePresenter.php:39
 #, php-format
