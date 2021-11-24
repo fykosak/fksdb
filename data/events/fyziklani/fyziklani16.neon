@@ -1,6 +1,6 @@
 parameters:
     events:
-        fyziklani14:
+        fyziklani16:
             appCond: or(regOpen(), role('admin'))
 
             gameLangs:
@@ -75,9 +75,9 @@ parameters:
 
 
 events:
-    fyziklani14:
+    fyziklani16:
         event_type_id: 1
-        eventYears: [14] # specify for which years this machine is valid, by default all years
+        eventYears: [16] # specify for which years this machine is valid, by default all years
         formLayout: fyziklani/fyziklani13.form
         paramScheme:
             notifyBcc:
@@ -103,11 +103,11 @@ events:
 
                 transitions:
                     __init->pending:
-                        condition: %events.fyziklani14.appCond%
+                        condition: %events.fyziklani16.appCond%
                         label: _('Register team')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2020/teacher,.primary)
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2020/participant,.secondary)
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
@@ -136,13 +136,13 @@ events:
                         label: _('Název týmu')
                         required: true
                         visible: true
-                        modifiable: %events.fyziklani14.appCond%
+                        modifiable: %events.fyziklani16.appCond%
                     game_lang:
-                        label: _('Jazyk, ve kterém chcete soutěžit.')
+                        label: _('Jazyk, ve kterém chcete soutěžit')
                         required: true
                         visible: true
-                        modifiable: %events.fyziklani14.appCond%
-                        factory: Chooser('Select language/Vyberte jazyk',Options(%events.fyziklani14.gameLangs%))
+                        modifiable: %events.fyziklani16.appCond%
+                        factory: Chooser('Select language/Vyberte jazyk',Options(%events.fyziklani16.gameLangs%))
                     category:
                         label: _('Kategorie')
                         required: true
@@ -157,16 +157,16 @@ events:
                         label: _('Kontaktní telefon')
                         required: true
                         visible: true
-                        modifiable: %events.fyziklani14.appCond%
+                        modifiable: %events.fyziklani16.appCond%
                     teacher_id:
                         label: _('Učitel/doprovod')
                         required: false
                         visible: true
-                        modifiable: %events.fyziklani14.appCond%
-                        factory: RefPerson(%events.fyziklani14.teacher%, email, true, role('admin'), false)
+                        modifiable: %events.fyziklani16.appCond%
+                        factory: RefPerson(%events.fyziklani16.teacher%, email, true, role('admin'), false)
                     note:
                         label: _('Note')
-                        modifiable: %events.fyziklani14.appCond%
+                        modifiable: %events.fyziklani16.appCond%
                         required: false
                         visible: true
             #   PARTICIPANT
@@ -180,10 +180,10 @@ events:
 
                 transitions:
                     __init->applied:
-                        condition: %events.fyziklani14.appCond%
+                        condition: %events.fyziklani16.appCond%
                         label: _('Přihlásit člena')
                     applied->__terminated:
-                        condition: %events.fyziklani14.appCond%
+                        condition: %events.fyziklani16.appCond%
                         label: _('Odebrat člena')
                     applied->participated:
                         condition: role('admin')
@@ -197,11 +197,11 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Person')
+                        label: _('Participant')
                         visible: true
-                        modifiable: %events.fyziklani14.appCond%
+                        modifiable: %events.fyziklani16.appCond%
                         determining: true
-                        factory: RefPerson(%events.fyziklani14.participant%, email, true, role('admin'), false)
+                        factory: RefPerson(%events.fyziklani16.participant%, email, true, role('admin'), false)
 
 
         #
@@ -234,8 +234,8 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - FKSDB\Models\Events\FormAdjustments\DependentRequirements(%events.fyziklani14.dep.require%)
-                - FKSDB\Models\Events\FormAdjustments\DependentVisibility(%events.fyziklani14.dep.visible%)
+                - FKSDB\Models\Events\FormAdjustments\DependentRequirements(%events.fyziklani16.dep.require%)
+                - FKSDB\Models\Events\FormAdjustments\DependentVisibility(%events.fyziklani16.dep.visible%)
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('team.name', "Tým s názvem '%value' již existuje.")
                 - FKSDB\Models\Events\FormAdjustments\UniqueCheck('*.person_id', "Osoba je již na Fyziklání přihlášena.")
                 - FKSDB\Models\Events\Spec\Fyziklani\SchoolsInTeam(param('schoolsInTeam'))
