@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
@@ -10,11 +12,13 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Components\AjaxComponent {
+class ResultsAndStatisticsComponent extends AjaxComponent
+{
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
@@ -23,12 +27,14 @@ class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Comp
     private ModelEvent $event;
     private ?string $lastUpdated = null;
 
-    public function __construct(Container $container, ModelEvent $event, string $reactId) {
+    public function __construct(Container $container, ModelEvent $event, string $reactId)
+    {
         parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    final protected function getEvent(): ModelEvent {
+    final protected function getEvent(): ModelEvent
+    {
         return $this->event;
     }
 
@@ -44,7 +50,8 @@ class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Comp
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    public function handleRefresh(string $lastUpdated): void {
+    public function handleRefresh(string $lastUpdated): void
+    {
         $this->lastUpdated = $lastUpdated;
         $this->sendAjaxResponse();
     }
@@ -53,7 +60,8 @@ class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Comp
      * @throws NotSetGameParametersException
      * @throws BadTypeException
      */
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
 
         $presenter = $this->getPresenter();
@@ -68,8 +76,8 @@ class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Comp
             'gameStart' => $gameSetup->game_start->format('c'),
             'gameEnd' => $gameSetup->game_end->format('c'),
             'times' => [
-                'toStart' => strtotime($gameSetup->game_start) - time(),
-                'toEnd' => strtotime($gameSetup->game_end) - time(),
+                'toStart' => $gameSetup->game_start->getTimestamp() - time(),
+                'toEnd' => $gameSetup->game_end->getTimestamp() - time(),
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
@@ -94,16 +102,17 @@ class ResultsAndStatisticsComponent extends \Fykosak\NetteFrontendComponent\Comp
     /**
      * @throws InvalidLinkException
      */
-    protected function getActions(): array {
-        return [
-            'refresh' => $this->link('refresh!', ['lastUpdated' => (new DateTime())->format('c')]),
-        ];
+    protected function configure(): void
+    {
+        $this->addAction('refresh', 'refresh!', ['lastUpdated' => (new DateTime())->format('c')]);
+        parent::configure();
     }
 
     /**
      * @throws NotSetGameParametersException
      */
-    private function isResultsVisible(): bool {
+    private function isResultsVisible(): bool
+    {
         return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();
     }
 }

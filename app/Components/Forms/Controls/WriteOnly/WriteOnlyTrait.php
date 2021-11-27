@@ -25,8 +25,6 @@ trait WriteOnlyTrait {
 
     private bool $writeOnlyAttachedOnValidate = false;
 
-    private bool $writeOnlyAttachedJS = false;
-
     private function writeOnlyAppendMonitors(): void {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {

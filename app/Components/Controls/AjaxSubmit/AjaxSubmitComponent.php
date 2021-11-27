@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
@@ -56,23 +58,11 @@ class AjaxSubmitComponent extends AjaxComponent
     /**
      * @throws InvalidLinkException
      */
-    protected function getActions(): array
+    protected function configure(): void
     {
-        /* if ($this->getSubmit()) {
-             return [
-                 'revoke' => $this->link('revoke!'),
-                 'download' => $this->link('download!'),
-             ];
-         } else {
-             return [
-                 'upload' => $this->link('upload!'),
-             ];
-         }*/
-        return [
-            'revoke' => $this->link('revoke!'),
-            'download' => $this->link('download!'),
-            'upload' => $this->link('upload!'),
-        ];
+        $this->addAction('revoke', 'revoke!');
+        $this->addAction('download', 'download!');
+        $this->addAction('upload', 'upload!');
     }
 
     /**
@@ -116,7 +106,12 @@ class AjaxSubmitComponent extends AjaxComponent
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), Message::LVL_ERROR));
+            $this->getLogger()->log(
+                new Message(
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()),
+                    Message::LVL_ERROR
+                )
+            );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         } catch (StorageException | ModelException$exception) {
