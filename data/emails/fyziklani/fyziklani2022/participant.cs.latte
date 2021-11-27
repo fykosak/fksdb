@@ -1,4 +1,6 @@
 {layout './layout.latte'}
+{varType array $linkArgs}
+{var $link = $control->link(...$linkArgs)}
 {block body}
     <p>
         Ahoj,<br/>
