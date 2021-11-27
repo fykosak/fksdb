@@ -1,10 +1,11 @@
 {layout './layout.latte'}
 {block body}
+    {var $link= $control->link(...$linkArgs)}
     <p>
         To whom it may concern,<br/>
         thank you for your registration into our competition Fyziklani which takes place on 11. 2. 2022 in Prague in
         the Czech Republic. All data you provided us with can be checked and edited
-        <a n:href="//:Public:Application:, at => $token">here</a>. Data concerning the team composition can be edited
+        <a href="{$link}">here</a>. Data concerning the team composition can be edited
         anytime before the end of the registration.
     </p>
 
