@@ -21,7 +21,6 @@ use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
 class ReferencedPersonFactory
 {
-
     use SmartObject;
 
     private ServicePerson $servicePerson;

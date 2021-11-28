@@ -28,9 +28,10 @@ class RegexpCheck extends AbstractAdjustment
             return;
         }
         foreach ($controls as $control) {
-            $control->addRule(function (Control $control): bool {
-                return (bool)Strings::match($control->getValue(), $this->pattern);
-            }, $this->message);
+            $control->addRule(
+                fn(Control $control): bool => (bool)Strings::match($control->getValue(), $this->pattern),
+                $this->message
+            );
         }
     }
 }

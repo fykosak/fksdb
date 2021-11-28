@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-15 22:00+0100\n"
+"POT-Creation-Date: 2021-11-23 21:17+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -99,7 +99,7 @@ msgstr ""
 #: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:11
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:11
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:50
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:60
 #: ../app/Components/EntityForms/PaymentFormComponent.php:74
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:20
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:64
@@ -121,7 +121,7 @@ msgstr ""
 #: ../data/events/soustredeni/sous35p.neon.neon2php:192
 #: ../data/events/fol/fol1.neon.neon2php:139
 #: ../data/events/fol/fol8.neon.neon2php:139
-#: ../data/events/fol/fol11.neon.neon2php:126
+#: ../data/events/fol/fol11.neon.neon2php:131
 #: ../data/events/setkani/podzim/setkani8.neon.neon2php:47
 #: ../data/events/setkani/podzim/setkani9.neon.neon2php:47
 #: ../data/events/setkani/podzim/setkani11.neon.neon2php:84
@@ -132,7 +132,7 @@ msgstr ""
 #: ../data/events/setkani/setkani.neon.neon2php:107
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:144
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:183
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:202
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:200
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:195
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:190
 #: ../data/events/fov/fov.neon.neon2php:85
@@ -642,14 +642,14 @@ msgid "Contestant already registered."
 msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:253
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:42
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:49
 #: ../app/config/orm.neon.neon2php:476
 msgid "E-mail"
 msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:254
 #: ../app/Components/Grids/BaseGrid.php:158
-#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:35
+#: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:42
 msgid "Find"
 msgstr ""
 
@@ -1288,7 +1288,7 @@ msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/EmailColumnFactory.php:19
 #: ../app/Models/ORM/Columns/Types/EmailColumnFactory.php:18
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:44
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:51
 msgid "Invalid e-mail."
 msgstr ""
 
@@ -1627,7 +1627,7 @@ msgstr ""
 msgid "terminated"
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/BornCheck.php:42
+#: ../app/Models/Events/Spec/Fol/BornCheck.php:46
 msgid "Birthday is required field."
 msgstr ""
 
@@ -1635,11 +1635,11 @@ msgstr ""
 msgid "Set new game password."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:25
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:27
 msgid "Not valid $rulesVersion."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:40
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
 #: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
 #, php-format
 msgid "Team inserted to category %s."
@@ -1650,30 +1650,30 @@ msgstr ""
 msgid "Team registered for the category %s."
 msgstr "Registrácia"
 
-#: ../app/Models/Events/Spec/Fol/FlagCheck.php:47
+#: ../app/Models/Events/Spec/Fol/FlagCheck.php:46
 msgid "This option is only available to Czech and Slovak students."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/FlagCheck.php:48
+#: ../app/Models/Events/Spec/Fol/FlagCheck.php:47
 msgid "This option is only available to secondary school students."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Dsef/GroupOptions.php:99
+#: ../app/Models/Events/Spec/Dsef/GroupOptions.php:102
 #, php-format
 msgid "(%d vacancies)"
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:54
+#: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:62
 #, php-format
 msgid "A school cannot have more than %d teams in the contest."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:106
+#: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:121
 #, php-format
 msgid "Registered teams from the same school %s."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/SchoolCheck.php:40
+#: ../app/Models/Events/Spec/Fyziklani/SchoolCheck.php:54
 #, php-format
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr ""
@@ -1682,17 +1682,17 @@ msgstr ""
 msgid "Cannot determine category."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/SchoolsInTeam.php:47
+#: ../app/Models/Events/Spec/Fyziklani/SchoolsInTeam.php:54
 #, php-format
 msgid "Only %d different schools can be represented in the team."
 msgstr ""
 
 #: ../app/Models/Events/FormAdjustments/DependentRequirements.php:12
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:248
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:288
 msgid "Field %label is required."
 msgstr ""
 
-#: ../app/Models/Events/FormAdjustments/PrivacyPolicy.php:45
+#: ../app/Models/Events/FormAdjustments/PrivacyPolicy.php:49
 msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
@@ -1731,6 +1731,7 @@ msgstr ""
 #: ../data/events/soustredeni/sous34p.neon.neon2php:207
 #: ../data/events/soustredeni/sous34j.neon.neon2php:207
 #: ../data/events/soustredeni/sous35p.neon.neon2php:221
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:200
 #: ../data/events/fov/fov.neon.neon2php:100
 #: ../data/events/fov/fov34.neon.neon2php:77
 #: ../data/events/dsef/defaultDsef.neon.neon2php:58
@@ -2085,39 +2086,39 @@ msgstr ""
 msgid "There has been a change in the data of this form since it was shown."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:103
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:106
 msgid "Deliver address"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:106
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:109
 #: ../app/Components/Forms/Factories/AddressFactory.php:43
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:12
 msgid "Permanent address"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:108
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:111
 #: ../app/Components/Forms/Factories/AddressFactory.php:43
 msgid "(when different from delivery address)"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:133
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:147
 msgid ""
 "There is (formally) different person with email %value. Probably it is a "
 "duplicate so it substituted original data in the form."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:246
+#: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:286
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:45
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:54
 msgid ""
 "First of all try to find the person in our database using e-mail address"
 msgstr ""
 
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:54
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:69
-#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:84
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:64
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:80
+#: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:96
 msgid "Unknown search type"
 msgstr ""
 
@@ -2224,7 +2225,7 @@ msgstr ""
 msgid "%s is required"
 msgstr ""
 
-#: ../app/Components/Forms/Factories/Events/PersonFactory.php:153
+#: ../app/Components/Forms/Factories/Events/PersonFactory.php:155
 #, php-format
 msgid "%s: %s is a required field."
 msgstr ""
@@ -2297,7 +2298,8 @@ msgstr ""
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:46
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:51
 #: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:229
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:170
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:168
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:168
 msgid "Note"
 msgstr ""
 
@@ -3067,6 +3069,7 @@ msgid "Item"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:51
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:52
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:40
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:52
 #: ../app/config/orm.neon.neon2php:217 ../app/config/orm.neon.neon2php:385
@@ -3344,48 +3347,56 @@ msgstr ""
 msgid "was uploaded via a quiz form"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:4
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:4
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:4
 msgid "Constant symbol"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:10
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:10
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:10
 msgid "Variable symbol"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:16
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:16
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:16
 #: ../app/config/orm.neon.neon2php:372
 msgid "Specific symbol"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:22
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:22
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:22
 #: ../app/config/orm.neon.neon2php:360 ../app/config/orm.neon.neon2php:489
 msgid "Bank account"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:28
+#: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:28
+#: ../app/config/orm.neon.neon2php:363
+msgid "Bank name"
+msgstr ""
+
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:34
+#: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:34
+#: ../app/config/orm.neon.neon2php:76 ../app/config/orm.neon.neon2php:381
+msgid "Recipient"
+msgstr ""
+
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:40
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:28
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:40
 #: ../app/config/orm.neon.neon2php:369
 msgid "IBAN"
 msgstr ""
 
+#: ../data/emails/fyziklani/fyziklani2022/payment/parameters.latte.latte2php:46
 #: ../data/emails/fyziklani/fyziklani2019/payment/parameters.latte.latte2php:34
 #: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:46
 #: ../app/config/orm.neon.neon2php:375
 msgid "SWIFT"
-msgstr ""
-
-#: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:28
-#: ../app/config/orm.neon.neon2php:363
-msgid "Bank name"
-msgstr ""
-
-#: ../data/emails/fyziklani/fyziklani2020/payment/parameters.latte.latte2php:34
-#: ../app/config/orm.neon.neon2php:76 ../app/config/orm.neon.neon2php:381
-msgid "Recipient"
 msgstr ""
 
 #: ../app/config/payment.neon.neon2php:76
@@ -3785,8 +3796,9 @@ msgstr "Prihlásiť"
 #: ../data/events/setkani/setkani.neon.neon2php:92
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:64
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:100
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:123
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:121
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:106
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:121
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:111
 #: ../data/events/dsef/dsef27.neon.neon2php:30
 #: ../data/events/dsef/defaultDsef.neon.neon2php:18
@@ -3816,8 +3828,9 @@ msgstr ""
 #: ../data/events/setkani/setkani.neon.neon2php:95
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:67
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:103
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:126
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:124
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:109
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:124
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:114
 #: ../data/events/dsef/dsef27.neon.neon2php:33
 #: ../data/events/dsef/defaultDsef.neon.neon2php:21
@@ -4105,7 +4118,7 @@ msgstr "Prihlásiť"
 #: ../data/events/tabor/tabor1-6.neon.neon2php:146
 #: ../data/events/tabor/tabor8.neon.neon2php:102
 #: ../data/events/fol/fol8.neon.neon2php:68
-#: ../data/events/fol/fol11.neon.neon2php:68
+#: ../data/events/fol/fol11.neon.neon2php:73
 msgid "Zúčastnil se"
 msgstr ""
 
@@ -4686,55 +4699,60 @@ msgid "Pro výpočet kategorie. Ponechte nevyplněné, pokud nejste ze SŠ/ZŠ."
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:63
-#: ../data/events/fol/fol11.neon.neon2php:63
+#: ../data/events/fol/fol11.neon.neon2php:68
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:53
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:109
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:107
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:107
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
 #, fuzzy
 msgid "Register team"
 msgstr "Registrácia"
 
 #: ../data/events/fol/fol8.neon.neon2php:71
-#: ../data/events/fol/fol11.neon.neon2php:71
+#: ../data/events/fol/fol11.neon.neon2php:76
 msgid "Nezúčastnil se"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:75
-#: ../data/events/fol/fol11.neon.neon2php:75
+#: ../data/events/fol/fol11.neon.neon2php:80
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:71
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:107
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:130
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:128
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:113
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:128
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:118
 msgid "Zrušit tým"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:79
-#: ../data/events/fol/fol11.neon.neon2php:79
+#: ../data/events/fol/fol11.neon.neon2php:84
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:75
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:134
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:132
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:117
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:132
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:122
 msgid "Smazat tým"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:83
-#: ../data/events/fol/fol11.neon.neon2php:83
+#: ../data/events/fol/fol11.neon.neon2php:88
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:79
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:115
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:138
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:136
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:136
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:126
 msgid "Název týmu"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:88
-#: ../data/events/fol/fol11.neon.neon2php:88
+#: ../data/events/fol/fol11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:90
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:120
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:149
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:147
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:147
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:137
 msgid "Kategorie"
 msgstr ""
@@ -4761,29 +4779,29 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:123
-#: ../data/events/fol/fol11.neon.neon2php:110
+#: ../data/events/fol/fol11.neon.neon2php:115
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:130
 msgid "Přidat člena"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:134
-#: ../data/events/fol/fol11.neon.neon2php:121
+#: ../data/events/fol/fol11.neon.neon2php:126
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:139
 msgid "Smazat člena"
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:154
-#: ../data/events/fol/fol11.neon.neon2php:141
+#: ../data/events/fol/fol11.neon.neon2php:147
 msgid "Tým s názvem '%value' již existuje."
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:155
-#: ../data/events/fol/fol11.neon.neon2php:142
+#: ../data/events/fol/fol11.neon.neon2php:148
 msgid "Osoba je již na Fyziklání online přihlášena."
 msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:158
-#: ../data/events/fol/fol11.neon.neon2php:145
+#: ../data/events/fol/fol11.neon.neon2php:151
 msgid ""
 "Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky."
 msgstr ""
@@ -4904,32 +4922,36 @@ msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:58
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:115
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:98
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:103
 msgid "Schválit účast"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:61
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:97
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:120
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:118
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:103
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:118
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:108
 msgid "Potvrdit jako náhradníka"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:84
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:143
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:141
 msgid "Jazyk, ve kterém chcete soutěžit."
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:95
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:154
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:152
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:152
 msgid "Chceme soutěžit v kategorii A"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:97
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:156
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:154
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:154
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:144
 msgid ""
 "Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
@@ -4939,48 +4961,54 @@ msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:158
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:205
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:217
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:215
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:216
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:215
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:206
 msgid "Tým"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:163
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:210
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:222
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:220
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:221
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:220
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:211
 msgid "1. člen"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:167
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:214
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:226
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:224
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:225
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:224
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:215
 msgid "2. člen"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:170
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:217
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:229
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:227
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:228
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:227
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:218
 msgid "3. člen"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:173
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:220
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:232
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:230
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:231
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:230
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:221
 msgid "4. člen"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:176
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:223
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:235
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:233
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:234
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:233
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:224
 msgid "5. člen"
 msgstr ""
@@ -5009,15 +5037,17 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:130
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:159
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:157
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:136
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:157
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:147
 msgid "Kontaktní telefon"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:164
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:141
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:152
 msgid "Učitel/doprovod"
 msgstr ""
@@ -5043,16 +5073,18 @@ msgid "Ubytování noc před soutěží."
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:165
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:186
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:184
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:177
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:184
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:174
 #, fuzzy
 msgid "Přihlásit člena"
 msgstr "Prihlásiť"
 
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:170
-#: ../data/events/fyziklani/fyziklani14.neon.neon2php:189
+#: ../data/events/fyziklani/fyziklani14.neon.neon2php:187
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:182
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:187
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:177
 msgid "Odebrat člena"
 msgstr ""
@@ -5085,6 +5117,10 @@ msgstr ""
 #, fuzzy
 msgid "Místnost"
 msgstr "Miesto"
+
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:141
+msgid "Jazyk, ve kterém chcete soutěžit"
+msgstr ""
 
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:7
 msgid ""
