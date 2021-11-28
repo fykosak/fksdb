@@ -111,11 +111,11 @@ events:
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant-spare,.secondary)
                     approved|spare->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
