@@ -8,6 +8,7 @@ import ValueDisplay from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/
 import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit/reducer';
 import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
@@ -24,7 +25,7 @@ export interface OwnProps {
 }
 
 interface DispatchProps {
-    onSubmit(values: SubmitFormRequest): Promise<any>;
+    onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest> | void>;
 }
 
 interface StateProps {
@@ -90,7 +91,7 @@ const mapStateToProps = (state: SubmitStore): StateProps => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm<{ code: string }, any, string>({
+    reduxForm<{ code: string }, OwnProps, string>({
         form: FORM_NAME,
         validate,
     })(Container),

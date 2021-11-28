@@ -23,7 +23,7 @@ interface DispatchProps {
     onChangeFirstTeam(id: number): void;
 }
 
-class TeamStats extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class TeamStats extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {teams, onChangeFirstTeam, teamId} = this.props;

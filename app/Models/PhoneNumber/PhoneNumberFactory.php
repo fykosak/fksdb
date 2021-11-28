@@ -27,7 +27,7 @@ class PhoneNumberFactory {
             $region = $this->getRegion($number);
             if ($region) {
                 $flag = Html::el('span')
-                    ->addAttributes(['class' => 'phone-flag mr-3'])
+                    ->addAttributes(['class' => 'phone-flag me-3'])
                     ->addHtml(Html::el('img')
                         ->addAttributes(['src' => '/images/flags/4x3/' . \strtolower($region->country_iso) . '.svg']));
                 return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));

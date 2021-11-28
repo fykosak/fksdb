@@ -10,7 +10,7 @@ interface StateProps {
     visible: boolean;
 }
 
-class Images extends React.Component<StateProps, Record<string, never>> {
+class Images extends React.Component<StateProps> {
     private timerId: number;
 
     public componentDidMount() {

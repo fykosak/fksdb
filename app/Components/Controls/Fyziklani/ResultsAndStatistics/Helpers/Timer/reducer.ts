@@ -3,7 +3,7 @@ import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
-import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 export interface State {
     gameEnd?: Date;
@@ -14,7 +14,7 @@ export interface State {
     visible?: boolean;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.data;
     return {
         ...state,

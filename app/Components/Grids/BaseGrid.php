@@ -190,7 +190,7 @@ abstract class BaseGrid extends Grid
     public function addGlobalButton(string $name, ?string $label = null): GlobalButton
     {
         $button = parent::addGlobalButton($name, $label);
-        $button->setClass('btn btn-sm btn-primary');
+        $button->setClass('btn btn-sm btn-outline-primary');
         return $button;
     }
 
@@ -314,8 +314,7 @@ abstract class BaseGrid extends Grid
      */
     protected function addCSVDownloadButton(): GlobalButton
     {
-        return $this->addGlobalButton('csv')
-            ->setLabel(_('Download as csv'))
+        return $this->addGlobalButton('csv', _('Download as csv'))
             ->setLink($this->link('csv!'));
     }
 

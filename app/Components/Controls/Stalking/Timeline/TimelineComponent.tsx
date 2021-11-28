@@ -100,7 +100,7 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
                     <rect x={since}
                           width={until - since}
                           height={this.lineHeight}>
-                        <title>''</title>
+                        <title/>
                     </rect>
                     <text y={this.lineHeight / 2}
                           x={(since + until) / 2}>Org #{org.model.orgId}</text>

@@ -8,6 +8,7 @@ import { Action, Dispatch } from 'redux';
 import { addError } from '../../actions';
 import { handleFileUpload } from '../../middleware';
 import { Store } from '../../Reducers';
+import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 interface OwnProps {
     submit: ModelSubmit;
@@ -15,7 +16,7 @@ interface OwnProps {
 
 interface DispatchProps {
 
-    onDropItem(item: any): void;
+    onDropItem(item: FileList): void;
 
     onFileUpload(data: FormData, url: string): void;
 
@@ -23,7 +24,7 @@ interface DispatchProps {
 
     onDragEnd(): void;
 
-    onAddError(error): void;
+    onAddError(error: Message): void;
 }
 
 interface StateProps {
@@ -31,7 +32,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FormState extends React.Component<OwnProps & StateProps & DispatchProps, Record<string, never>> {
+class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
 
     public render() {
         const {dragged} = this.props;
@@ -107,7 +108,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
         onAddError: (error) => dispatch(addError(error)),
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
-        onDropItem: (item) => dispatch(dropItem<any>(item)),
+        onDropItem: (item) => dispatch(dropItem<FileList>(item)),
         onFileUpload: (values, url: string) => dispatchNetteFetch(url, dispatch, values),
     };
 };

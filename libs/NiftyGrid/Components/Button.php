@@ -1,4 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
+namespace NiftyGrid\Components;
+
+use Nette\Application\UI\Component;
+use Nette\Utils\Html;
+
 /**
  * NiftyGrid - DataGrid for Nette
  *
@@ -7,229 +15,98 @@
  * @license     New BSD Licence
  * @link        http://addons.nette.org/cs/niftygrid
  */
+class Button extends Component
+{
+    private ?string $label;
 
-namespace NiftyGrid\Components;
-
-use Nette\Utils\Html;
-use NiftyGrid\Grid;
-
-// For constant only
-
-class Button extends \Nette\Application\UI\Component {
-
-    /** @var callback|string */
-    private $label;
-
-    /** @var callback|string */
+    /** @var callback */
     private $link;
-
-    /** @var callback|string */
-    private $text;
-
-    /** @var callback|string */
-    private $target;
-
-    /** @var callback|string */
-    private $class;
-
-    /** @var bool */
-    private $ajax = true;
-
-    /** @var callback|string */
+    private string $text;
+    private string $target;
+    private string $class;
+    /** @var callback */
     private $dialog;
+    /** @var callback */
+    private $show;
 
-    /** @var callback|string */
-    private $show = true;
-
-    /**
-     * @param string $label
-     * @return Button
-     */
-    public function setLabel($label): self {
+    public function __construct(?string $label)
+    {
         $this->label = $label;
-
-        return $this;
     }
 
-    /**
-     * @param array $row
-     * @return string
-     */
-    private function getLabel($row) {
-        if (is_callable($this->label)) {
-            return call_user_func($this->label, $row);
-        }
-        return $this->label;
-    }
-
-    /**
-     * @param callback|string $link
-     * @return Button
-     */
-    public function setLink($link): self {
+    public function setLink(callable $link): self
+    {
         $this->link = $link;
-
         return $this;
     }
 
-    /**
-     * @param array $row
-     * @return string
-     */
-    private function getLink($row) {
-        if (is_callable($this->link)) {
-            return call_user_func($this->link, $row);
-        }
-        return $this->link;
-    }
-
-    /**
-     * @param $text
-     * @return static
-     */
-    public function setText($text): self {
+    public function setText(string $text): self
+    {
         $this->text = $text;
-
         return $this;
     }
 
-    /**
-     * @param array $row
-     * @return string
-     */
-    private function getText($row) {
-        if (is_callable($this->text)) {
-            return call_user_func($this->text, $row);
-        }
-        return $this->text;
-    }
-
-    /**
-     * @param callback|string $target
-     * @return Button
-     */
-    public function setTarget($target): self {
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
-     * @param array $row
-     * @return callback|mixed|string
-     */
-    private function getTarget($row) {
-        if (is_callable($this->target)) {
-            return call_user_func($this->target, $row);
-        }
-        return $this->target;
-    }
-
-    /**
-     * @param callback|string $class
-     * @return Button
-     */
-    public function setClass($class): self {
+    public function setClass(string $class): self
+    {
         $this->class = $class;
-
         return $this;
     }
 
-    /**
-     * @param array $row
-     * @return callback|mixed|string
-     */
-    private function getClass($row) {
-        if (is_callable($this->class)) {
-            return call_user_func($this->class, $row);
-        }
-        return $this->class;
-    }
-
-    public function setAjax(bool $ajax = true): self {
-        $this->ajax = $ajax;
-
-        return $this;
-    }
-
-    /**
-     * @param callback|string $message
-     * @return Button
-     */
-    public function setConfirmationDialog($message) {
+    public function setConfirmationDialog(callable $message): self
+    {
         $this->dialog = $message;
-
         return $this;
     }
 
     /**
-     * @param array $row
+     * @param mixed $row
      * @return callback|mixed|string
      */
-    public function getConfirmationDialog($row) {
+    public function getConfirmationDialog($row)
+    {
         if (is_callable($this->dialog)) {
-            return call_user_func($this->dialog, $row);
+            return ($this->dialog)($row);
         }
         return $this->dialog;
     }
 
     /**
-     * @return bool
+     * @param callback|string $show
      */
-    private function hasConfirmationDialog() {
-        return isset($this->dialog);
+    public function setShow(callable $show): self
+    {
+        $this->show = $show;
+        return $this;
     }
 
-    /**
-     * @param callback|string $show
-     * @return static
-     */
-    public function setShow($show): self {
-        $this->show = $show;
-
+    public function setTarget(string $target): self
+    {
+        $this->target = $target;
         return $this;
     }
 
     /**
-     * @param array $row
-     * @return callback|mixed|string
+     * @param mixed $row
      */
-    public function getShow($row) {
-        if (is_callable($this->show)) {
-            return (boolean)call_user_func($this->show, $row);
-        }
-        return $this->show;
-    }
-
-    /**
-     * @param array $row
-     */
-    public function render($row): void {
-        if (!$this->getShow($row)) {
+    public function render($row): void
+    {
+        if (isset($this->show) && !($this->show)($row)) {
             return;
         }
 
-        $el = Html::el("a")
-            ->href($this->getLink($row))
-            ->setText($this->getText($row))
-            ->addClass("grid-button")
-            ->addClass($this->getClass($row))
-            ->setTitle($this->getLabel($row))
-            ->setTarget($this->getTarget($row));
+        $el = Html::el('a')
+            ->href(($this->link)($row))
+            ->setText($this->text ?? null)
+            ->addClass('grid-button')
+            ->addClass($this->class ?? 'btn btn-secondary')
+            ->setTitle($this->label)
+            ->setTarget($this->target ?? null);
 
-        if ($this->getName() == Grid::ROW_FORM) {
-            $el->addClass("grid-editable");
+        if (isset($this->dialog)) {
+            $el->addClass('grid-confirm')
+                ->addData('grid-confirm', $this->getConfirmationDialog($row));
         }
 
-        if ($this->hasConfirmationDialog()) {
-            $el->addClass("grid-confirm")
-                ->addData("grid-confirm", $this->getConfirmationDialog($row));
-        }
-
-        if ($this->ajax) {
-            $el->addClass("grid-ajax");
-        }
         echo $el;
     }
-
 }

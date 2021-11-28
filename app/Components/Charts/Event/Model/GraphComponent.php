@@ -6,7 +6,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Controls\Events\ExpressionPrinter;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
-use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 class GraphComponent extends FrontEndComponent implements Chart

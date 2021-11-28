@@ -33,7 +33,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps, Record<string, never>> {
+class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
         const tasksSubmits: Stats = {};

@@ -4,7 +4,7 @@ import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
-import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 
@@ -18,7 +18,7 @@ export interface State {
     tasksOnBoard?: number;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     const {submits, tasks, teams, categories, availablePoints, tasksOnBoard} = action.data.data;
     return {
         ...state,

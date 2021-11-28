@@ -16,7 +16,7 @@ interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
 }
 
-class StatisticsComponentsRouter extends React.Component<StateProps & OwnProps, Record<string, never>> {
+class StatisticsComponentsRouter extends React.Component<StateProps & OwnProps> {
     public render() {
         const {mode, isOrg} = this.props;
         let content = null;

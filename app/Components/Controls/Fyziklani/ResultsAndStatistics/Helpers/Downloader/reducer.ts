@@ -4,7 +4,7 @@ import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
-import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 
 export interface State {
     lastUpdated?: string;
@@ -12,7 +12,7 @@ export interface State {
     isRefreshing?: boolean;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     const {lastUpdated, refreshDelay} = action.data.data;
     return {
         ...state,

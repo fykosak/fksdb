@@ -28,7 +28,7 @@ interface OwnProps {
     colors: string[];
 }
 
-export default class Chart extends ChartComponent<OwnProps, {}> {
+export default class Chart extends ChartComponent<OwnProps, Record<string, never>> {
     private simulation = null;
 
     public componentDidMount() {

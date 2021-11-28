@@ -14,7 +14,7 @@ interface StateProps {
     submit: ModelSubmit;
 }
 
-class UploadContainer extends React.Component<StateProps, Record<string, never>> {
+class UploadContainer extends React.Component<StateProps> {
 
     public render() {
 
@@ -23,7 +23,6 @@ class UploadContainer extends React.Component<StateProps, Record<string, never>>
             <h4>{submit.name}</h4>
             <small className="text-muted">{submit.deadline}</small>
         </>);
-        const {} = this.props;
         return <Card headline={headline} level={'info'}>
             <MessageBox/>
             {this.getInnerContainer()}

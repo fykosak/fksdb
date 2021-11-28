@@ -15,7 +15,7 @@ interface DispatchProps {
     onSetDelay(position: number): void;
 }
 
-class DelayField extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class DelayField extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {delay, onSetDelay} = this.props;

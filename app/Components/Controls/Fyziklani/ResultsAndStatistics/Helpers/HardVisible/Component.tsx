@@ -16,7 +16,7 @@ interface DispatchProps {
     onHardDisplayChange(status: boolean): void;
 }
 
-class HardVisibleSwitch extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class HardVisibleSwitch extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {onHardDisplayChange, hardVisible} = this.props;

@@ -3,8 +3,8 @@ import {
     PieArcDatum,
 } from 'd3-shape';
 
-export function getPieData<D extends { count: number }>(data: D[]): Array<PieArcDatum<D>> {
-    return pie<any, D>().value((item: D) => {
+export function getPieData<Datum extends { count: number }>(data: Datum[]): Array<PieArcDatum<Datum>> {
+    return pie<Datum>().value((item: Datum) => {
         return +item.count;
     })(data);
 }

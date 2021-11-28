@@ -28,7 +28,7 @@ export interface Params {
     };
 }
 
-class ScheduleField extends React.Component<OwnProps, Record<string, never>> {
+class ScheduleField extends React.Component<OwnProps> {
     public componentDidMount() {
         this.props.input.style.display = 'none';
     }

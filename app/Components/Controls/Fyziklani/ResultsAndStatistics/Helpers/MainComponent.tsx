@@ -3,15 +3,16 @@ import LoadingSwitch from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatist
 import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
+import { Action, Reducer } from 'redux';
 
-interface OwnProps {
+interface OwnProps <Store>{
     actions: NetteActions;
     data: ResponseData;
-    children: any;
-    app: any;
+    children: React.ReactNode;
+    app: Reducer<Store,Action<string>>;
 }
 
-export default class MainComponent extends React.Component<OwnProps, Record<string, never>> {
+export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
     public render() {
         const storeMap = {
             actions: this.props.actions,
@@ -23,7 +24,7 @@ export default class MainComponent extends React.Component<OwnProps, Record<stri
                 <div className={'fyziklani-results'}>
                     <Downloader data={this.props.data}/>
                     <LoadingSwitch>
-                        {...this.props.children}
+                        {this.props.children}
                     </LoadingSwitch>
                 </div>
             </ActionsStoreCreator>

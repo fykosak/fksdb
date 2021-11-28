@@ -18,7 +18,7 @@ interface DispatchProps {
     onSaveRouting(teams: ModelFyziklaniTeam[]): void;
 }
 
-class Form extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class Form extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {onSaveRouting, teams, saving, error} = this.props;

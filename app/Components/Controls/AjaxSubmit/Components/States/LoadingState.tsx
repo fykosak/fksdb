@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 
-export default class LoadingState extends React.Component<Record<string, never>, Record<string, never>> {
+export default class LoadingState extends React.Component {
     public render() {
         return <div className="text-center">
             <span className="d-block">{translator.getText('Loading')}</span>

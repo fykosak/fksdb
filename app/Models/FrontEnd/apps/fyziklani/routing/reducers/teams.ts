@@ -1,5 +1,8 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
-import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import {
+    ACTION_FETCH_SUCCESS,
+    ActionFetchSuccess,
+} from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { ACTION_DROP_ITEM, ActionDropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import {
@@ -64,7 +67,7 @@ const removePlace = (state: State, action: ActionRemoveTeamPlace): State => {
     };
 };
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     return {
         ...state,
         updatedTeams: action.data.data.updatedTeams,

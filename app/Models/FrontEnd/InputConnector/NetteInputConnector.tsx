@@ -22,7 +22,7 @@ export interface DispatchProps {
     onSetInitialData(value: InputConnectorItems): void;
 }
 
-class NetteInputConnector extends React.Component<OwnProps & StateProps & DispatchProps, Record<string, never>> {
+class NetteInputConnector extends React.Component<OwnProps & StateProps & DispatchProps> {
 
     public componentDidMount() {
         const {input, onSetInitialData} = this.props;

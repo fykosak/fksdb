@@ -13,7 +13,7 @@ import {
 } from 'redux';
 
 interface StateProps {
-    error: Error | any;
+    error: Response;
     isSubmitting: boolean;
     lastUpdated: string;
     refreshDelay: number;
@@ -31,13 +31,13 @@ interface OwnProps {
     data: ResponseData;
 }
 
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, Record<string, never>> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> {
 
-    public componentDidUpdate(nextProps: DispatchProps & StateProps & OwnProps) {
-        const {lastUpdated: oldLastUpdated} = this.props;
-        if (oldLastUpdated !== nextProps.lastUpdated) {
+    public componentDidUpdate(oldProps: DispatchProps & StateProps & OwnProps) {
+        const {lastUpdated: oldLastUpdated} = oldProps;
+        if (oldLastUpdated !== this.props.lastUpdated) {
 
-            const {onWaitForFetch, refreshDelay} = nextProps;
+            const {onWaitForFetch, refreshDelay} = this.props;
             if (refreshDelay) {
                 const url = this.props.actions.getAction('refresh');
                 onWaitForFetch(refreshDelay, url);

@@ -24,8 +24,9 @@ interface OwnProps {
         };
     };
 }
+
 /* predchádzajúce verzia vo graph-dracula*/
-export default class EventModelComponent extends React.Component<OwnProps, {}> {
+export default class EventModelComponent extends React.Component<OwnProps> {
 
     public render() {
         const {data: {links, nodes}} = this.props;
@@ -50,7 +51,9 @@ export default class EventModelComponent extends React.Component<OwnProps, {}> {
                 target: simNodes[link.to],
             };
         });
-        return <ChartContainer chart={Chart}
-                               chartProps={{links: simLinks, nodes: Object.values(simNodes), colors: ['#ccc']}}/>;
+        return <ChartContainer
+            chart={Chart}
+            chartProps={{links: simLinks, nodes: Object.values(simNodes), colors: ['#ccc']}}
+        />;
     }
 }

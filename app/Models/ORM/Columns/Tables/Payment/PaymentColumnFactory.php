@@ -36,8 +36,8 @@ class PaymentColumnFactory extends ColumnFactory {
     protected function createHtmlValue(AbstractModel $model): Html {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
-        $text = $html->getText();
-        $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
+        $text = $htms->getText();
+        $htms->setText('#' . $model->getPaymentId() . ' - ' . $text);
         return $html;
     }
 

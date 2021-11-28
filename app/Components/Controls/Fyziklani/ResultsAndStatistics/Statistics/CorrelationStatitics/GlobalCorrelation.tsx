@@ -25,7 +25,7 @@ interface DispatchProps {
     onChangeSecondTeam(id: number): void;
 }
 
-class GlobalCorrelation extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
 
     public render() {
 

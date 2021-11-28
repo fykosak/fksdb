@@ -3,7 +3,7 @@ import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
-import { Response } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import {
     ACTION_SET_HARD_VISIBLE,
     ActionSetHardVisible,
@@ -21,7 +21,7 @@ const setHardVisible = (state: State, action: ActionSetHardVisible): State => {
     };
 };
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     const {isOrg} = action.data.data;
     return {
         ...state,

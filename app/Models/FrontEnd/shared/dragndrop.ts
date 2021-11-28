@@ -18,11 +18,11 @@ export const dragEnd = (): Action<string> => {
 
 export const ACTION_DROP_ITEM = '@@drag-n-drop/ACTION_DROP_ITEM';
 
-export interface ActionDropItem<D> extends Action<string> {
-    data: D;
+export interface ActionDropItem<Data> extends Action<string> {
+    data: Data;
 }
 
-export function dropItem<D>(data: D): ActionDropItem<D> {
+export function dropItem<Data>(data: Data): ActionDropItem<Data> {
     return {
         data,
         type: ACTION_DROP_ITEM,

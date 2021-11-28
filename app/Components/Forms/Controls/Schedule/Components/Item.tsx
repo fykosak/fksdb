@@ -25,7 +25,7 @@ interface StateProps {
     value: number;
 }
 
-class Item extends React.Component<OwnProps & DispatchProps & StateProps, Record<string, never>> {
+class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
 
     public render() {
         const {item, value, onChange, params} = this.props;
@@ -40,7 +40,7 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps, Record
                         isChecked ? onChange(null) : onChange(scheduleItemId);
                     }}
                 />
-                    <span className="ml-3">
+                    <span className="ms-3">
                         {label[translator.getCurrentLocale()]} {
                         params.display.description && <DescriptionLabel description={description}/>
                     }</span>

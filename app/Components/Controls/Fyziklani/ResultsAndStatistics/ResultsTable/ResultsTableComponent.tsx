@@ -13,7 +13,7 @@ interface OwnProps {
     data: ResponseData;
 }
 
-export default class ResultsTableComponent extends React.Component<OwnProps, Record<string, never>> {
+export default class ResultsTableComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
             <FilterSelect/>

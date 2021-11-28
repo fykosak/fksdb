@@ -1,4 +1,5 @@
 import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import {
     Action,
     Dispatch,
@@ -12,7 +13,7 @@ export interface SubmitFormRequest {
     points: number;
 }
 
-export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<any> => {
+export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest> | void> => {
     const data = {
         ...values,
         code: getFullCode(values.code),

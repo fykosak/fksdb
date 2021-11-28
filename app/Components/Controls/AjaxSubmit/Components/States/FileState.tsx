@@ -22,7 +22,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FileState extends React.Component<OwnProps & DispatchProps & StateProps, Record<string, never>> {
+class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
 
     public render() {
         return <div className="uploaded-file">

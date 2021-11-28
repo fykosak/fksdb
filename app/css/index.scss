@@ -1,3 +1,9 @@
+$border-radius: 0;
+$btn-border-radius-sm: 0;
+$btn-border-radius-lg: 0;
+$input-border-radius-lg: 0;
+@import "/node_modules/bootstrap/scss/bootstrap";
+
 @import "fyziklani-theme";
 @import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
@@ -8,6 +14,7 @@
 @import "contests";
 @import "callout";
 @import "badge";
+
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -99,7 +106,8 @@ main {
   .card-columns {
     -webkit-column-count: 1;
     column-count: 1;
-}}
+  }
+}
 
 .state-timeline .line {
   height: 1px;

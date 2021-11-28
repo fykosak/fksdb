@@ -32,7 +32,7 @@ class TagsColumnFactory extends ColumnFactory {
             $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
             $baseEl->addHtml(Html::el('span')
                 ->addAttributes([
-                    'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
+                    'class' => 'badge badge-stored-query-tag-' . $tag->color,
                     'title' => $tag->description,
                 ])
                 ->addText($tag->name));

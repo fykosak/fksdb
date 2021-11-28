@@ -50,7 +50,7 @@ export const getTask = (fullCode: string, tasks: ModelFyziklaniTask[]): ModelFyz
     })[0];
 };
 
-export const validate = (values, props: OwnProps): FormErrors<any> => {
+export const validate = (values, props: OwnProps): FormErrors => {
     const errors: { code?: string } = {};
 
     if (!values.code) {

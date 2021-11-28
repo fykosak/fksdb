@@ -201,13 +201,6 @@ class StoredQuery implements IDataSource, Resource {
      * ****************************** */
 
     /**
-     * @throws NotImplementedException
-     */
-    public function filterData(array $filters): void {
-        throw new NotImplementedException();
-    }
-
-    /**
      * @throws \PDOException
      */
     public function getCount(string $column = '*'): int {
@@ -246,10 +239,6 @@ class StoredQuery implements IDataSource, Resource {
             $this->data = $statement;
         }
         return $this->data; // lazy load during iteration?
-    }
-
-    public function getPrimaryKey(): ?string {
-        return null;
     }
 
     public function limitData(int $limit, ?int $offset = null): void {

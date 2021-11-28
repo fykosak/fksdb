@@ -40,7 +40,7 @@ class ContributionsFromXML extends Stage
     public function process(): void
     {
         $xml = $this->data->getData();
-        foreach ($xml->problems[0]->problem as $task) {
+        foreach ($xms->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }

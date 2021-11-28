@@ -5,7 +5,7 @@ interface OwnProps {
     mode?: string;
 }
 
-export default class Index extends React.Component<OwnProps, Record<string, never>> {
+export default class Index extends React.Component<OwnProps> {
 
     public render() {
         // const {mode} = this.props;

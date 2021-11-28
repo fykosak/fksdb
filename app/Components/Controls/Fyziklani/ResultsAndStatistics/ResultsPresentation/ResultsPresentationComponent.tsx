@@ -14,7 +14,7 @@ interface OwnProps {
     data: ResponseData;
 }
 
-export default class ResultsPresentationComponent extends React.Component<OwnProps, Record<string, never>> {
+export default class ResultsPresentationComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
             <Settings/>

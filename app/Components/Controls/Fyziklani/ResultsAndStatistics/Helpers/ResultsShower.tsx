@@ -14,7 +14,7 @@ interface OwnProps {
     children: React.ReactNode;
 }
 
-class ResultsShower extends React.Component<StateProps & OwnProps, Record<string, never>> {
+class ResultsShower extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {visible, hardVisible} = this.props;

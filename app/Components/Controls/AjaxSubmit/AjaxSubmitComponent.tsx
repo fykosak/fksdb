@@ -6,12 +6,12 @@ import UploadContainer from './Components/Container';
 import { app } from './Reducers';
 import './style.scss';
 
-interface IProps {
+interface Props {
     data: ModelSubmit;
     actions: NetteActions;
 }
 
-export default class AjaxSubmitComponent extends React.Component<IProps, Record<string, never>> {
+export default class AjaxSubmitComponent extends React.Component<Props> {
 
     public render() {
         return <ActionsStoreCreator

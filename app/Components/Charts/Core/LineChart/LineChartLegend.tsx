@@ -5,7 +5,7 @@ interface OwnProps {
     data: LineChartData;
 }
 
-export default class LineChartLegend extends React.Component<OwnProps, Record<string, never>> {
+export default class LineChartLegend extends React.Component<OwnProps> {
 
     public render() {
         const {data} = this.props;

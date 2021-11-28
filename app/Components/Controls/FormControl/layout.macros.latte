@@ -24,17 +24,27 @@
 
 {define plain}
     {varType Nette\Forms\Controls\TextInput $field}
-    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        {label $field}
+    {switch $field->control->type}
+        {case 'range'}
+        <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
+            {label $field}
             {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
             {include metadata field => $field}
-    </div>
+        </div>
+        {default}
+        <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
+            {label $field}
+            {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
+            {include metadata field => $field}
+        </div>
+    {/switch}
+
 {/define}
 
 {define checkbox}
     {varType Nette\Forms\Controls\Checkbox $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        <div class="form-check">
+        <div class="form-check mb-3">
             {input $field class: 'form-check-input'}
             {label $field class: 'form-check-label'}
         </div>
@@ -47,7 +57,7 @@
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         {label $field}
         {foreach $field->getItems() as $key => $item}
-            <div class="form-check">
+            <div class="form-check mb-3">
                 {input $field:$key class: 'form-check-input'}
                 {label $field:$key class: 'form-check-label'}
             </div>
@@ -71,7 +81,7 @@
     {php ksort($buttonRows)}
     {foreach $buttonRows as $row}
         {if $row}
-            <div class="btn-group col-12">
+            <div class="col-12">
                 {foreach $row as $button}
                     {include button field => $button}
                 {/foreach}

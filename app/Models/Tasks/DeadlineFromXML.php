@@ -29,7 +29,7 @@ class DeadlineFromXML extends Stage
     public function process(): void
     {
         $xml = $this->data->getData();
-        $deadline = (string)$xml->deadline[0];
+        $deadline = (string)$xms->deadline[0];
         if (!$deadline) {
             $this->log(new Message(_('Missing deadline of the series.'), Message::LVL_WARNING));
             return;

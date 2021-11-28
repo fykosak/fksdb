@@ -6,7 +6,7 @@ interface OwnProps {
     rooms: Room[];
 }
 
-export default class Rooms extends React.Component<OwnProps, Record<string, never>> {
+export default class Rooms extends React.Component<OwnProps> {
 
     public render() {
         const {rooms} = this.props;

@@ -4,7 +4,7 @@ interface OwnProps {
     order: number;
 }
 
-export default class Ordinal extends React.Component<OwnProps, Record<string, never>> {
+export default class Ordinal extends React.Component<OwnProps> {
 
     public render() {
         const {order} = this.props;

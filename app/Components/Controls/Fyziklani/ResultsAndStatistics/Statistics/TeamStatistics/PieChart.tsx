@@ -23,7 +23,7 @@ interface PointGroupItem {
     count: number;
 }
 
-class Chart extends React.Component<StateProps & OwnProps, Record<string, never>> {
+class PieChart extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {submits, teamId, activePoints} = this.props;
@@ -36,7 +36,6 @@ class Chart extends React.Component<StateProps & OwnProps, Record<string, never>
         };
 
         let totalSubmits = 0;
-        let maxPoints = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
                 const submit: ModelFyziklaniSubmit = submits[index];
@@ -47,7 +46,6 @@ class Chart extends React.Component<StateProps & OwnProps, Record<string, never>
                         if (pointsCategories.hasOwnProperty(points)) {
                             totalSubmits++;
                             pointsCategories[points].count++;
-                            maxPoints += +points;
                         }
                     }
                 }
@@ -111,4 +109,4 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
     };
 };
 
-export default connect(mapStateToProps, null)(Chart);
+export default connect(mapStateToProps, null)(PieChart);

@@ -6,7 +6,7 @@ interface OwnProps {
     price: Price;
 }
 
-export default class PricePrinter extends React.Component<OwnProps, Record<string, never>> {
+export default class PricePrinter extends React.Component<OwnProps> {
 
     public render() {
         const {price: {eur, czk}} = this.props;

@@ -35,12 +35,12 @@ class TasksFromXML extends Stage {
 
     public function process(): void {
         $xml = $this->data->getData();
-        $sImported = (string)$xml->number;
+        $sImported = (string)$xms->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
             throw new PipelineException(sprintf(_('Imported (%s) and set (%s) series does not match.'), $sImported, $sSet));
         }
-        $problems = $xml->problems[0]->problem;
+        $problems = $xms->problems[0]->problem;
         foreach ($problems as $task) {
             $this->processTask($task);
         }

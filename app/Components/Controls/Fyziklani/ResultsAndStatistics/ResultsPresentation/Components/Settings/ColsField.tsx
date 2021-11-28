@@ -16,7 +16,7 @@ interface DispatchProps {
     onSetCols(cols: number): void;
 }
 
-class ColsField extends React.Component<StateProps & DispatchProps, Record<string, never>> {
+class ColsField extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {cols, onSetCols} = this.props;

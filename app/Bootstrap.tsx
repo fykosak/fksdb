@@ -26,7 +26,6 @@ import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';
 import '@fortawesome/fontawesome-free/css/all.css'
-import 'bootstrap/scss/bootstrap.scss'
 import 'bootstrap/dist/js/bootstrap.bundle'
 
 const renderer = new Renderer();
@@ -127,9 +126,7 @@ $(function () {
                 actualInput.focus();
             });
 
-            button.click(() => {
-                applyOverlay();
-            });
+            button.click(() => applyOverlay());
 
             if (actualInput.val() == originalValue) {
                 applyOverlay();
@@ -160,13 +157,13 @@ $(function () {
             const elContainer = $(this.element);
             this.transformContainer(elContainer, $('#' + elContainer.data('referenced-id')));
         },
-        transformContainer: function (elContainer, elRefId) {
+        transformContainer: function (elContainer: JQuery<HTMLElement>, elRefId) {
             const $searchInput = elContainer.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
             const $compactValueInput = elContainer.find('input[name*=\'' + this.options.compactValueMask + '\']');
             const originalSearchButton = elContainer.find('input[type=\'submit\'][name*=\'' + this.options.submitSearchMask + '\']');
             const $clearButton = elContainer.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
             let compacted = null;
-            const options = this.options;
+            //  const options = this.options;
             if (elRefId) {
                 this.options.refId = elRefId;
             }
@@ -175,9 +172,7 @@ $(function () {
 
                 // create search button
                 const searchButton = $('<button class="input-group-append btn btn-secondary" type="button"><span class="fa fa-search"></span></button>');
-                searchButton.click(function () {
-                    originalSearchButton.click();
-                });
+                searchButton.click(() => originalSearchButton.click());
 
                 const searchInputGroup = $('<div class="input-group"/>');
                 let elToReplace = $searchInput;
@@ -217,7 +212,7 @@ $(function () {
                 // elContainer.appendTo(searchGroup);// we need the group to working form
 
                 // ensure proper filling of the referenced id
-                const writableFields = elContainer.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton);
+                /*const writableFields = elContainer.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton);
                 writableFields.change(function () {
                     const filledFields = writableFields.filter(function () {
                         return $(this).val() != '';
@@ -227,7 +222,7 @@ $(function () {
                     } else if (filledFields.length == 0 && options.refId.val() == options.valuePromise) {
                         options.refId.val('');
                     }
-                });
+                });*/
 
             };
 
@@ -238,7 +233,7 @@ $(function () {
                 elContainer.show();
             }
 
-            function createCompactField(label, value) {
+            function createCompactField(label: string, value) {
                 const $compactGroup = $('<div class="form-group">\
         <label class="control-label"/>\
 <div class="input-group"><p class="form-control-static form-control"/></div></div>');
@@ -248,7 +243,7 @@ $(function () {
 
                 const elValue = $compactGroup.find('p.form-control-static');
                 const $label = $('<span></span>');
-                elValue.append('<span class="fa fa-user mr-3"></span>');
+                elValue.append('<span class="fa fa-user me-3"></span>');
                 $label.text(value);
                 elValue.append($label);
 
@@ -257,7 +252,7 @@ $(function () {
                 $buttonEdit.click(decompactifyContainer);
 
                 const $buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-times"></span></button>');
-                $buttonDel.click(function () {
+                $buttonDel.click(() => {
                     $clearButton.click();
                 });
                 $btnContainer.append($buttonEdit);
@@ -287,7 +282,7 @@ $(function () {
             function decorateClearButton() {
                 const well = elContainer.children('.bd-callout');
                 const buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
-                buttonDel.click(function () {
+                buttonDel.click(() => {
                     $clearButton.click();
                 });
                 $clearButton.closest('.btn-group').hide();
@@ -333,7 +328,7 @@ $(function () {
             const elSubmit = elForm.find('input[data-submit-on=\'this\']');
             elForm.find('input').not(':data(submit-on-handled)')
                 .data('submit-on-handled', true)
-                .keypress(function (e) {
+                .keypress((e) => {
                     if (e.which == 13) {
                         elSubmit.click();
                         return false;
@@ -353,12 +348,6 @@ $(function () {
     });
     // TODO form buttons aren't checked
 
-});
-$(function () {
-    // @ts-ignore
-    $('[data-toggle="popover"]').popover({
-        trigger: 'hover',
-    })
 });
 
 $(function () {
@@ -485,9 +474,7 @@ $(function () {
                     }), ['']).join(', '));
                     return false;
                 };
-                options.focus = () => {
-                    return false;
-                };
+                options.focus = () => false;
             } else {
                 options.select = (e, ui) => {
                     this.element.val(ui.item.value);

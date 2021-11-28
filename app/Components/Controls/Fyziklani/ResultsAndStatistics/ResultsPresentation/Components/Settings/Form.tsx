@@ -11,7 +11,7 @@ interface StateProps {
     isOrg: boolean;
 }
 
-class Form extends React.Component<StateProps, Record<string, never>> {
+class Form extends React.Component<StateProps> {
 
     public render() {
         const {isOrg} = this.props;
