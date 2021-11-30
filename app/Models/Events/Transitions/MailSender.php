@@ -182,9 +182,8 @@ class MailSender
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
-        return $event->name . ': ' . $application . ' ' . mb_strtolower(
-                $machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState())
-            );
+        return $event->name . ': ' . $application;
+        //state in subject: . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
     private function getUntil(ModelEvent $event): \DateTimeInterface
