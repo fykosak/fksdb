@@ -24,7 +24,7 @@ export default class PerYearsChart extends React.Component<OwnProps> {
         };
         const {aggregatedSeries, maxValue} = parseData(data);
 
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
         for (const series in aggregatedSeries) {
             if (aggregatedSeries.hasOwnProperty(series)) {
                 const points: Array<ExtendedPointData<number>> = [];

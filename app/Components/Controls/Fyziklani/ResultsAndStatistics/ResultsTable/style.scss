@@ -7,7 +7,7 @@ main.no-bg {
 
 .fyziklani-results, .fyziklani-statistics {
   h1 {
-    color: $fyziklaniMainColor;
+    color: $FOFMainColor;
     font-weight: bold;
   }
 
@@ -99,7 +99,7 @@ main.no-bg {
   }
 
   .image-wp, .clock {
-    color: $fyziklaniDarkColor;
+    color: $FOFMainColor;
   }
 
   .image-wp {
@@ -114,22 +114,18 @@ main.no-bg {
       tr td {
         &[data-points="5"] {
           background-color: #2d7dd2;
-
         }
 
         &[data-points="3"] {
           background-color: #98cc04;
-
         }
 
         &[data-points="2"] {
           background-color: #eeb902;
-
         }
 
         &[data-points="1"] {
           background-color: #f45d01;
-
         }
 
         text-align: center;
@@ -144,34 +140,34 @@ main.no-bg {
     }
 
     thead tr th {
-      &[data-task_label^="A"] {
-        background-color: lighten($fyziklaniMainColor, 30%);
+      &[data-task-label^="A"] {
+        background-color: lighten($FOFMainColor, 30%);
       }
 
-      &[data-task_label^="B"] {
-        background-color: lighten($fyziklaniMainColor, 20%);
+      &[data-task-label^="B"] {
+        background-color: lighten($FOFMainColor, 20%);
       }
 
-      &[data-task_label^="C"] {
-        background-color: lighten($fyziklaniMainColor, 10%);
+      &[data-task-label^="C"] {
+        background-color: lighten($FOFMainColor, 10%);
       }
 
-      &[data-task_label^="D"] {
-        background-color: $fyziklaniMainColor;
+      &[data-task-label^="D"] {
+        background-color: $FOFMainColor;
       }
 
-      &[data-task_label^="E"] {
-        background-color: darken($fyziklaniMainColor, 10%);
+      &[data-task-label^="E"] {
+        background-color: darken($FOFMainColor, 10%);
         color: white;
       }
 
-      &[data-task_label^="F"] {
-        background-color: darken($fyziklaniMainColor, 20%);
+      &[data-task-label^="F"] {
+        background-color: darken($FOFMainColor, 20%);
         color: white;
       }
 
-      &[data-task_label^="G"] {
-        background-color: darken($fyziklaniMainColor, 30%);
+      &[data-task-label^="G"] {
+        background-color: darken($FOFMainColor, 30%);
         color: white;
       }
     }

@@ -109,14 +109,17 @@ events:
                             - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
                             - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
                     pending->approved:
+                        behaviorType: success
                         condition: role('admin')
                         label: _('Schválit účast')
                         onExecuted:
                             - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
+                        behaviorType: warning
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
                     approved|spare->participated:
+                        behaviorType: success
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
                     approved|spare->missed:

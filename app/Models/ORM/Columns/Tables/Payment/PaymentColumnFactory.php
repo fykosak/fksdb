@@ -36,12 +36,12 @@ class PaymentColumnFactory extends ColumnFactory {
     protected function createHtmlValue(AbstractModel $model): Html {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
-        $text = $htms->getText();
-        $htms->setText('#' . $model->getPaymentId() . ' - ' . $text);
+        $text = $html->getText();
+        $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
         return $html;
     }
 
     protected function renderNullModel(): Html {
-        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Payment not found'));
+        return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText(_('Payment not found'));
     }
 }

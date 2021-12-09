@@ -86,7 +86,7 @@ const mapStateToProps = (state: SubmitStore): StateProps => {
     const selector = formValueSelector(FORM_NAME);
     return {
         code: selector(state, 'code'),
-        messages: state.fetchApi.messages,
+        messages: state.fetch.messages,
     };
 };
 

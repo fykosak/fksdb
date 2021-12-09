@@ -25,7 +25,7 @@ class LoadingSwitch extends React.Component<StateProps & OwnProps> {
 
 const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
     return {
-        isReady: state.fetchApi.initialLoaded,
+        isReady: state.fetch.initialLoaded,
     };
 };
 

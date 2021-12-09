@@ -99,7 +99,7 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
 
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        actions: state.fetchApi.actions,
+        actions: state.fetch.actions,
         dragged: state.dragNDrop.dragged,
     };
 };

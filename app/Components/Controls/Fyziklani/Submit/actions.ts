@@ -13,12 +13,12 @@ export interface SubmitFormRequest {
     points: number;
 }
 
-export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest> | void> => {
+export async function submitStart(dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest> | void> {
     const data = {
         ...values,
         code: getFullCode(values.code),
     };
-    return dispatchNetteFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data), () => {
-        dispatch(reset(FORM_NAME));
-    });
-};
+    const responseData = await dispatchNetteFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data));
+    dispatch(reset(FORM_NAME))
+    return responseData;
+}

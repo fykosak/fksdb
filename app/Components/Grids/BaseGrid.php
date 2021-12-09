@@ -179,7 +179,7 @@ abstract class BaseGrid extends Grid
     protected function addButton(string $name, ?string $label = null): Button
     {
         $button = parent::addButton($name, $label);
-        $button->setClass('btn btn-sm btn-secondary');
+        $button->setClass('btn btn-sm btn-outline-secondary');
         return $button;
     }
 

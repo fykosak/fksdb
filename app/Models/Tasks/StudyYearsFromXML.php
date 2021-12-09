@@ -41,7 +41,7 @@ class StudyYearsFromXML extends Stage
     public function process(): void
     {
         $xml = $this->data->getData();
-        foreach ($xms->problems[0]->problem as $task) {
+        foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
         }
     }

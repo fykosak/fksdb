@@ -30,7 +30,7 @@ class Index extends React.Component<StateProps> {
         }
 
         const headCools = tasks.map((task: ModelFyziklaniTask, taskIndex) => {
-            return (<th key={taskIndex} data-task_label={task.label}>{task.label}</th>);
+            return (<th key={taskIndex} data-task-label={task.label}>{task.label}</th>);
         });
 
         return (

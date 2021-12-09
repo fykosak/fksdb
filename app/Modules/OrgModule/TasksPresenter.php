@@ -141,6 +141,6 @@ class TasksPresenter extends BasePresenter
 
     private function isLegacyXml(\SimpleXMLElement $xml): bool
     {
-        return $xms->getName() === 'problems';
+        return $xml->getName() === 'problems';
     }
 }

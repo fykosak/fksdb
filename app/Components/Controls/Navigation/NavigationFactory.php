@@ -3,14 +3,12 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
 class NavigationFactory
 {
-
     private array $structure;
 
     public PresenterBuilder $presenterBuilder;

@@ -53,7 +53,7 @@ const mapStateToProps = (state: Store): StateProps => {
         submit: {
             ...state.uploadData.submit,
         },
-        submitting: state.fetchApi.submitting,
+        submitting: state.fetch.submitting,
     };
 };
 

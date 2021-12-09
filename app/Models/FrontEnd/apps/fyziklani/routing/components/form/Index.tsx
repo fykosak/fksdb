@@ -23,7 +23,7 @@ class Form extends React.Component<StateProps & DispatchProps> {
     public render() {
         const {onSaveRouting, teams, saving, error} = this.props;
         return (<>
-            <button disabled={saving} className="btn btn-success" onClick={() => {
+            <button disabled={saving} className="btn btn-outline-success" onClick={() => {
                 onSaveRouting(teams);
             }}>Save
             </button>
@@ -40,8 +40,8 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
 
 const mapStateToProps = (state: RoutingStore): StateProps => {
     return {
-        error: state.fetchApi.error,
-        saving: state.fetchApi.submitting,
+        error: state.fetch.error,
+        saving: state.fetch.submitting,
         teams: state.teams.availableTeams,
     };
 };

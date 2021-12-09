@@ -4,6 +4,7 @@
   text-align: center;
   color: $color;
   background-color: $background;
+  border: $color solid 1px;
   transition-duration: 200ms;
   .icon {
     font-size: 5rem;

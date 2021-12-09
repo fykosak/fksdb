@@ -8,6 +8,7 @@ import {
     ACTION_SET_HARD_VISIBLE,
     ActionSetHardVisible,
 } from './actions';
+import { Action } from 'redux';
 
 export interface State {
     hardVisible?: boolean;
@@ -29,11 +30,13 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
     };
 };
 
-export const fyziklaniOptions = (state: State = {}, action): State => {
+export const fyziklaniOptions = (state: State = {}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_SET_HARD_VISIBLE:
+            // @ts-ignore
             return setHardVisible(state, action);
         case ACTION_FETCH_SUCCESS:
+            // @ts-ignore
             return fetchSuccess(state, action);
         default:
             return state;

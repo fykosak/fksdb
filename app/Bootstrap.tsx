@@ -171,7 +171,7 @@ $(function () {
             const searchifyContainer = function () {
 
                 // create search button
-                const searchButton = $('<button class="input-group-append btn btn-secondary" type="button"><span class="fa fa-search"></span></button>');
+                const searchButton = $('<button class="input-group-append btn btn-outline-secondary" type="button"><span class="fa fa-search"></span></button>');
                 searchButton.click(() => originalSearchButton.click());
 
                 const searchInputGroup = $('<div class="input-group"/>');
@@ -248,10 +248,10 @@ $(function () {
                 elValue.append($label);
 
                 const $btnContainer = $('<div class="input-group-append"></div>');
-                const $buttonEdit = $('<button type="button" class="btn btn-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
+                const $buttonEdit = $('<button type="button" class="btn btn-outline-secondary" title="Upravit"><span class="fa fa-pencil"></span></button>');
                 $buttonEdit.click(decompactifyContainer);
 
-                const $buttonDel = $('<button type="button" class="btn btn-warning" title="Smazat"><span class="fa fa-times"></span></button>');
+                const $buttonDel = $('<button type="button" class="btn btn-outline-warning" title="Smazat"><span class="fa fa-times"></span></button>');
                 $buttonDel.click(() => {
                     $clearButton.click();
                 });
@@ -281,7 +281,7 @@ $(function () {
 
             function decorateClearButton() {
                 const well = elContainer.children('.bd-callout');
-                const buttonDel = $('<button type="button" class="btn btn-sm btn-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
+                const buttonDel = $('<button type="button" class="btn btn-sm btn-outline-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
                 buttonDel.click(() => {
                     $clearButton.click();
                 });
@@ -338,7 +338,7 @@ $(function () {
     });
 // @ts-ignore
     $('form[data-submit-on=\'enter\']').enterSubmitForm();
-    document.querySelectorAll('.btn-danger').forEach((el) => {
+    document.querySelectorAll('.btn-outline-danger,.btn-danger').forEach((el) => {
         el.addEventListener('click', () => {
             if (window.confirm('O RLY?')) {
                 // @ts-ignore

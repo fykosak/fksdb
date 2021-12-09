@@ -5,13 +5,13 @@
     {varType Fykosak\NetteORM\TypedTableSelection|FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType[] $tags}
     {varType array $activeTagIds}
     {varType array $nextActiveTagIds}
-    <p class="stored-query-tags">
+    <p>
         {var $isListMode = ($mode == $control::MODE_LIST)}
         {foreach $tags as $tagType}
             {var $active = ($isListMode && array_key_exists($tagType->tag_type_id, $activeTagIds))?'active':''}
             <a
                     n:tag-if="$isListMode"
-                    class="btn btn-sm btn-stored-query-tag-{$tagType->color} {$active}"
+                    class="btn btn-sm btn-color-{$tagType->color} {$active}"
                     href="{link onClick! $nextActiveTagIds[$tagType->tag_type_id]}"
                     title="{$tagType->description}">
                 {$tagType->name}

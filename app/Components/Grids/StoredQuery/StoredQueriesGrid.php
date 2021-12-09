@@ -60,11 +60,11 @@ class StoredQueriesGrid extends BaseGrid
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
 
         $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-primary');
+            ->setClass('btn btn-sm btn-outline-primary');
         $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-info');
+            ->setClass('btn btn-sm btn-outline-info');
         $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id'])
-            ->setClass('btn btn-sm btn-success');
+            ->setClass('btn btn-sm btn-outline-success');
     }
 
     protected function getModelClassName(): string

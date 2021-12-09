@@ -28,29 +28,19 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {
 
     public ModifiabilityResolver $modifiabilityResolver;
-
     public VisibilityResolver $visibilityResolver;
-
     public ModelContestYear $contestYear;
-
     private array $fieldsDefinition;
-
     protected ServicePerson $servicePerson;
-
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
     protected FlagFactory $flagFactory;
-
     protected AddressFactory $addressFactory;
-
     private PersonScheduleFactory $personScheduleFactory;
-
     protected ?ModelEvent $event;
 
     private bool $configured = false;

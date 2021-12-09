@@ -26,7 +26,7 @@ class EventRolePrinter
         if (!$roles->hasRoles()) {
             $container->addHtml(
                 Html::el('span')
-                    ->addAttributes(['class' => 'badge badge-danger'])
+                    ->addAttributes(['class' => 'badge bg-danger'])
                     ->addText(_('No role'))
             );
             return $container;
@@ -43,14 +43,14 @@ class EventRolePrinter
                 foreach ($role->teams as $team) {
                     $container->addHtml(
                         Html::el('span')
-                            ->addAttributes(['class' => 'badge badge-9'])
+                            ->addAttributes(['class' => 'badge bg-color-9'])
                             ->addText(_('Teacher') . ' - ' . $team->name)
                     );
                 }
             } elseif ($role instanceof EventOrgRole) {
                 $container->addHtml(
                     Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-7'])
+                        ->addAttributes(['class' => 'badge bg-color-7'])
                         ->addText(_('Event org') . ($role->eventOrg->note ? (' - ' . $role->eventOrg->note) : ''))
                 );
             } elseif ($role instanceof ParticipantRole) {
@@ -61,7 +61,7 @@ class EventRolePrinter
                 }
                 $container->addHtml(
                     Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-10'])
+                        ->addAttributes(['class' => 'badge bg-color-10'])
                         ->addText(
                             _('Participant') . ' - ' . _($role->eventParticipant->status) .
                             ($team ? (' - team: ' . $team->name) : '')
@@ -70,7 +70,7 @@ class EventRolePrinter
             } elseif ($role instanceof ContestOrgRole) {
                 $container->addHtml(
                     Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-6'])
+                        ->addAttributes(['class' => 'badge bg-color-6'])
                         ->addText(_('Contest org'))
                 );
             }

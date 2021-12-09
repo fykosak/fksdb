@@ -15,10 +15,10 @@ class OpenedSubmittingColumnFactory extends ColumnFactory {
     protected function createHtmlValue(AbstractModel $model): Html {
         $html = Html::el('span');
         if ($model->hasOpenSubmitting()) {
-            $htms->addAttributes(['class' => 'badge badge-1'])
+            $html->addAttributes(['class' => 'badge bg-color-1'])
                 ->addText(_('Opened'));
         } else {
-            $htms->addAttributes(['class' => 'badge badge-3'])
+            $html->addAttributes(['class' => 'badge bg-color-3'])
                 ->addText(_('Closed'));
         }
         return $html;

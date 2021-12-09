@@ -64,7 +64,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
         if (this.abortRun) {
             return;
         }
-        this.run();
+        await this.run();
     }
 
     private getCategory(): string {

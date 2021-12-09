@@ -102,7 +102,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
 
         $submit = $form->addSubmit('execute', _('Execute'))
             ->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-success']);
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-success']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->handleComposeExecute($button->getForm());
         };
@@ -154,13 +154,13 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
             $this->buildParameterMetadata($replContainer, $group);
 
             $submit = $replContainer->addSubmit('remove', _('Remove parameter'));
-            $submit->getControlPrototype()->addAttributes(['class' => 'btn-danger btn-sm']);
+            $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-danger btn-sm']);
             $submit->addRemoveOnClick();
         }, 0, true);
         $replicator->containerClass = ModelContainer::class;
         $replicator->setCurrentGroup($group);
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-outline-success']);
 
         $submit->setValidationScope(null)
             ->addCreateOnClick();

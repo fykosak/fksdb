@@ -52,7 +52,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
             yValue: number;
             xValue: Date;
         }> = [];
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<Date> = [];
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {

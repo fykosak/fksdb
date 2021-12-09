@@ -15,7 +15,7 @@ export default class AjaxSubmitComponent extends React.Component<Props> {
 
     public render() {
         return <ActionsStoreCreator
-            storeMap={{
+            initialData={{
                 actions: this.props.actions,
                 data: this.props.data,
                 messages: [],

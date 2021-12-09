@@ -38,7 +38,7 @@ export default class CommonChart extends React.Component<OwnProps> {
 
         let minTime = 0;
         let max = 0;
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
 
         const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {

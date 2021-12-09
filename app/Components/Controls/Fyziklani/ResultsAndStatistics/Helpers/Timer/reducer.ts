@@ -4,6 +4,7 @@ import {
     ActionFetchSuccess,
 } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { Action } from 'redux';
 
 export interface State {
     gameEnd?: Date;
@@ -27,9 +28,10 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
     };
 };
 
-export const fyziklaniTimer = (state: State = {}, action): State => {
+export const fyziklaniTimer = (state: State = {}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
+            //  @ts-ignore
             return fetchSuccess(state, action);
         default:
             return state;

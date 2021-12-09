@@ -19,7 +19,7 @@ export default class FilterComponent extends React.Component<OwnProps> {
 
         return <a
             href="#"
-            className={'badge ms-3 ' + (active ? 'badge-success' : ('badge-' + (type ? type : 'secondary')))}
+            className={'badge ms-3 ' + (active ? 'bg-success' : ('bg-' + (type ? type : 'secondary')))}
             onClick={() => {
                 if (onClick) {
                     onClick(filter);

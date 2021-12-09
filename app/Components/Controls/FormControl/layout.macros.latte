@@ -68,7 +68,7 @@
 
 {define button}
     {varType Nette\Forms\Controls\Button $field}
-    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-primary':''))}
+    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-outline-primary':''))}
 {/define}
 
 {define buttonArray}

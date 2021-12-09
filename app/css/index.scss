@@ -3,6 +3,7 @@ $btn-border-radius-sm: 0;
 $btn-border-radius-lg: 0;
 $input-border-radius-lg: 0;
 @import "/node_modules/bootstrap/scss/bootstrap";
+@import '/node_modules/flag-icon-css/sass/flag-icon';
 
 @import "fyziklani-theme";
 @import "inbox";
@@ -10,10 +11,29 @@ $input-border-radius-lg: 0;
 @import "colors";
 @import "fyziklani";
 @import "points";
-@import "storedquery-tag";
 @import "contests";
 @import "callout";
-@import "badge";
+
+@include color-variant(#1f77b4, color-1);
+@include color-variant(#ff7f0e, color-2);
+@include color-variant(#2ca02c, color-3);
+@include color-variant(#d62728, color-4);
+@include color-variant(#9467bd, color-5);
+@include color-variant(#8c564b, color-6);
+@include color-variant(#e377c2, color-7);
+@include color-variant(#cccccc, color-8);
+@include color-variant(#bcbd22, color-9);
+@include color-variant(#17becf, color-10);
+@include color-variant(#000000, color-11);
+
+@include color-variant($fykosMainColor, "fykos");
+@include color-variant($vyfukMainColor, "vyfuk");
+
+@include color-variant(deeppink, 'pink');
+@include color-variant(#dc3545, 'error');
+
+@include color-variant($FOLMainColor, "fol");
+@include color-variant($FOFMainColor, "fof");
 
 
 .bg-white-container {
@@ -30,7 +50,7 @@ html, body {
   /* The html and body elements cannot have any padding or margin. */
 }
 
-$footerHeight: 65px;
+$footerHeight: 100px;
 body {
   margin: 0 auto;
   padding: $footerHeight 0;
@@ -83,10 +103,6 @@ main {
   height: 10rem;
 }
 
-.bg-error {
-  background-color: #dc3545;
-}
-
 .image-error {
   width: 100%;
   text-align: center;
@@ -118,14 +134,6 @@ main {
   img {
     height: 1em;
   }
-}
-
-.bg-pink {
-  background-color: deeppink;
-}
-
-.border-pink {
-  border-color: deeppink;
 }
 
 .t-shirt-color {
@@ -164,21 +172,3 @@ footer {
     }
   }
 }
-
-/*
-.fa-vyfuk {
-  background-image: url('/images/contests/vyfuk.svg');
-}
-
-.fa-fykos {
-  background-image: url('/images/contests/fykos.svg');
-}
-
-.fa-vyfuk::before {
-  content: url('/images/contests/vyfuk.svg');
-}
-
-.fa-fykos::before {
-  content: url('/images/contests/fykos.svg');
-}
-*/

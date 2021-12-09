@@ -1,6 +1,6 @@
 {layout '../@layout.latte'}
 {define table-head}
-    <tr class="bg-contest">
+    <tr>
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
             <th>{$task->label}</th>

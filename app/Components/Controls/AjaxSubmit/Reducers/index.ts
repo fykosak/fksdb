@@ -8,22 +8,22 @@ import {
     uploadData,
 } from './uploadData';
 
-import { fetchApi, FetchApiState } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
+import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import {
     errorLogger,
     State as ErrorLoggerState,
 } from './errorLogger';
 
-export const app = combineReducers({
+export const app = combineReducers<Store>({
     dragNDrop,
     errorLogger,
-    fetchApi,
+    fetch: fetchReducer,
     uploadData,
 });
 
 export interface Store {
     uploadData: UploadDataStore;
-    fetchApi: FetchApiState;
+    fetch: FetchStateMap;
     dragNDrop: DragNDropState;
     errorLogger: ErrorLoggerState;
 }

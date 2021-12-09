@@ -1,5 +1,6 @@
 {varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
 {varType Fykosak\Utils\UI\PageTitle $pageTitle}
+{varType string[] $navRoots}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -27,12 +28,9 @@
                      class="d-inline-block align-top" alt=""/>
             </a>
         </div>
-        <!-- Brand and toggle get grouped for better mobile display -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="navbar">
             <div class="navbar-nav me-auto">
                 {block nav-left}
@@ -44,34 +42,34 @@
             <div class="navbar-nav ms-auto">
                 {block nav-right}
                     {control languageChooser}
-                    {*control themeChooser*}
                     {if $user->isLoggedIn()}
                         {var FKSDB\Models\ORM\Models\ModelLogin $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
+                               data-bs-toggle="dropdown">
                                 <span class="fas fa-user"></span>
                                 {if $login->getPerson()}
-                                    <b>{$login->getPerson()->getFullname()}</b>
+                                    <b>{$login->getPerson()->getFullName()}</b>
                                 {else}
                                 {_'User'} <b>{$login->login}</b>
-                                {/if}</a>
+                                {/if}
+                            </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" n:href=":Core:Settings:"><i
-                                            class="fas fa-cog me-3"/>{_'Settings'}</a>
-                                <a class="dropdown-item" n:href=":Core:MyPayments:default"><i
-                                            class="fas fa-credit-card me-3"/>{_'My payments'}</a>
-                                <a class="dropdown-item" n:href=":Core:MyApplications:default"><i
-                                            class="fas fa-calendar me-3"/>{_'My applications'}</a>
+                                <a class="dropdown-item" n:href=":Core:Settings:">
+                                    <i class="fas fa-cog me-3"></i>{_'Settings'}</a>
+                                <a class="dropdown-item" n:href=":Core:MyPayments:default">
+                                    <i class="fas fa-credit-card me-3"></i>{_'My payments'}</a>
+                                <a class="dropdown-item" n:href=":Core:MyApplications:default">
+                                    <i class="fas fa-calendar me-3"></i>{_'My applications'}</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" n:href=":Core:Authentication:logout">{_'Log out'}</a>
                             </div>
                         </div>
-
                     {/if}
                 {/block}
             </div>
         </div>
-    </div><!-- /.navbar-collapse -->
+    </div>
 </nav>
 {/block}
 {block main}
@@ -84,10 +82,7 @@
         {/block}
         {block flashes}
             {foreach $flashes as $flash}
-
-
-
-    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
         {include content}
@@ -95,19 +90,28 @@
 {/block}
 {block footer}
 <footer>
-    <div class="container text-center text-muted py-3">
-        <span class="">
+    <div class="container text-center py-3">
+        <div>
+            <img src="/images/logo/black.svg" alt="logo" style="height: 2rem"/>
+            <span>| </span>
+            <span>{_'Administrator'}: </span>
+            <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
+        </div>
+        <div>
             <a href="//fykos.cz/" title="{_'Physics correspondence seminar of MFF UK'}">FYKOS</a>
             <span>| </span>
             <a href="//vyfuk.mff.cuni.cz/"
                title="{_'Physics correspondence seminar of MFF UK for the students of elementary schools.'}">Výfuk</a>
             <span>| </span>
-            <a href="//fyziklani.cz/"
-               title="">Fyziklání</a>
+            <a href="//fyziklani.cz/">Fyziklání</a>
             <span>| </span>
-            <span>{_'Administrator'}: </span>
-            <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
-        </span>
+            <a href="//online.fyziklani.cz/">Fyziklání Online</a>
+        </div>
+        <div>
+            <span>Created with ♡</span>
+            <span>| </span>
+            <span>©FYKOS 2021</span>
+        </div>
     </div>
 </footer>
 {/block}

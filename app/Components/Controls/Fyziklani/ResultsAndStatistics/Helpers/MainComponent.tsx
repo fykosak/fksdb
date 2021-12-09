@@ -14,13 +14,13 @@ interface OwnProps <Store>{
 
 export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
     public render() {
-        const storeMap = {
+        const initialData = {
             actions: this.props.actions,
             data: this.props.data,
             messages: [],
         };
         return (
-            <ActionsStoreCreator storeMap={storeMap} app={this.props.app}>
+            <ActionsStoreCreator initialData={initialData} app={this.props.app}>
                 <div className={'fyziklani-results'}>
                     <Downloader data={this.props.data}/>
                     <LoadingSwitch>

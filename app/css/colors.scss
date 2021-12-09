@@ -1,10 +1,52 @@
-$fyziklaniMainColor: #f44336;
-$fyziklaniDarkColor: #d7392e;
+/* general setting */
+@import "/node_modules/bootstrap/scss/mixins/buttons";
+@import "/node_modules/bootstrap/scss/functions";
+@import "./mixins/navigation-item";
 
-$folMainColor: #18f3bd;
-$folBgColor: #18f3bd;
-$folBg2Color: #18f3bd;
+$FOFMainColor: #f44336;
+
+$FOLMainColor: rgb(0, 174, 107);
 
 $fykosMainColor: #1175da;
 
 $vyfukMainColor: #ff4800;
+
+@mixin color-variant($color,$index) {
+  .border-#{$index} {
+    border-color: $color;
+  }
+  .btn-#{$index} {
+    @include button-outline-variant($color);
+  }
+  .bg-#{$index} {
+    color: color-contrast($color);
+    background-color: $color;
+  }
+}
+
+@mixin page-theme($color) {
+  .navigation-item {
+    @include navigation-item($color, white);
+  }
+  .bd-callout {
+    border-left-color: $color;
+
+    h4 {
+      color: $color;
+    }
+  }
+  hr {
+    border-color: $color;
+    background-color: $color;
+  }
+  footer {
+    background-color: $color;
+    color: color-contrast($color);
+
+    a {
+      color: color-contrast($color);
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
+}

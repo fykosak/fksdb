@@ -26,7 +26,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
 
     public render() {
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-warning" title={translator.getText('Revoke')}
+            <button aria-hidden="true" className="pull-right btn btn-outline-warning" title={translator.getText('Revoke')}
                     onClick={() => {
                         if (window.confirm(translator.getText('Remove submit?'))) {
                             this.props.onDeleteFile(this.props.actions.getAction('revoke'));
@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
 };
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        actions: state.fetchApi.actions,
+        actions: state.fetch.actions,
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FileState);

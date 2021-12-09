@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import Container from 'FKSDB/Components/Forms/Controls/Schedule/Components/Container';
 import { app } from 'FKSDB/Components/Forms/Controls/Schedule/reducer';
-import NetteInputConnector from 'FKSDB/Models/FrontEnd/InputConnector/NetteInputConnector';
+import InputConnector from 'vendor/fykosak/nette-frontend-component/src/InputConnector/InputConnector';
 import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelScheduleGroup } from 'FKSDB/Models/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
@@ -36,7 +36,7 @@ class ScheduleField extends React.Component<OwnProps> {
     public render() {
         return <StoreCreator app={app}>
             <>
-                <NetteInputConnector input={this.props.input}/>
+                <InputConnector input={this.props.input}/>
                 {this.getComponentByMode()}
             </>
         </StoreCreator>;

@@ -16,7 +16,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & Recor
             })}
             <div className="text-center">
                 <label
-                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-secondary' : 'btn-primary')}>
+                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-outline-secondary' : 'btn-outline-primary')}>
                     <span className="h3">
                         {this.state.processing ?
                             <i className="fa fa-spinner fa-spin" aria-hidden="true"/>

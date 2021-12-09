@@ -76,7 +76,7 @@ class AllSubmitsGrid extends SubmitsGrid
         $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $this->addButton('delete')
-            ->setClass('btn btn-sm btn-danger')
+            ->setClass('btn btn-sm btn-outline-danger')
             ->setLink(fn(ModelFyziklaniSubmit $row): string => $this->link('delete!', $row->fyziklani_submit_id))
             ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
             ->setText(_('Delete'))

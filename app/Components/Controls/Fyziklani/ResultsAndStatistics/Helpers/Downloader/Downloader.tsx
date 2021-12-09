@@ -13,7 +13,7 @@ import {
 } from 'redux';
 
 interface StateProps {
-    error: Response;
+    error: Response | string | number | Error;
     isSubmitting: boolean;
     lastUpdated: string;
     refreshDelay: number;
@@ -50,10 +50,11 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
         return (
             <div className="last-update-info bg-white">
                 <i
+                    // @ts-ignore
                     title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
                     className={isRefreshing ? 'text-success fa fa-check' : 'text-danger fa fa-exclamation-triangle'}/>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
-                {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
+                {!isRefreshing && (<button className="btn btn-outline-primary btn-sm" onClick={() => {
                     const url = this.props.actions.getAction('refresh');
                     return onFetch(url);
                 }}>{translator.getText('Fetch')}</button>)}
@@ -64,10 +65,10 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
 
 const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
     return {
-        actions: state.fetchApi.actions,
-        error: state.fetchApi.error,
+        actions: state.fetch.actions,
+        error: state.fetch.error,
         isRefreshing: state.downloader.isRefreshing,
-        isSubmitting: state.fetchApi.submitting,
+        isSubmitting: state.fetch.submitting,
         lastUpdated: state.downloader.lastUpdated,
         refreshDelay: state.downloader.refreshDelay,
     };

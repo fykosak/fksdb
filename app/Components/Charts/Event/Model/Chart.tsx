@@ -107,19 +107,19 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
                     path = <path
                         stroke={item.color}
                         strokeDasharray={item.line === 'dashed' ? '5,5' : 'none'}
-                        //@ts-ignore
+                        // @ts-ignore
                         d={`M ${item.source.x} ${item.source.y} L ${item.target.x} ${item.target.y}`}
                         markerEnd={`url(#arrow-end-${markKey})`}
                         markerStart={`url(#arrow-start-${markKey})`}/>;
                 } else {
-                    //@ts-ignore
+                    // @ts-ignore
                     const r = Math.hypot(item.target.x - item.source.x, item.target.y - item.source.y);
-                    //@ts-ignore
+                    // @ts-ignore
                     const rot = Math.atan((item.target.y - item.source.y) / (item.target.x - item.source.x)) * 180 / Math.PI;
                     path = <path
                         stroke={item.color}
                         strokeDasharray={item.line === 'dashed' ? '5,5' : 'none'}
-                        //@ts-ignore
+                        // @ts-ignore
                         d={`M ${item.source.x} ${item.source.y} A ${r} ${r} ${rot} 0 1 ${item.target.x} ${item.target.y}`}
                         markerEnd={`url(#arrow-end-${markKey})`}/>;
                 }
