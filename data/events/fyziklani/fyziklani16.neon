@@ -106,16 +106,16 @@ events:
                         condition: %events.fyziklani16.appCond%
                         label: _('Register team')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2020/teacher,.primary)
-                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2020/participant,.secondary)
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/teacher,.primary)
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/participant,.secondary)
                     pending->approved:
                         condition: role('admin')
                         label: _('Schválit účast')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/spare,.secondary)
                     approved|spare->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Prezentovat')
@@ -138,7 +138,7 @@ events:
                         visible: true
                         modifiable: %events.fyziklani16.appCond%
                     game_lang:
-                        label: _('Jazyk, ve kterém chcete soutěžit.')
+                        label: _('Jazyk, ve kterém chcete soutěžit')
                         required: true
                         visible: true
                         modifiable: %events.fyziklani16.appCond%
@@ -197,7 +197,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Person')
+                        label: _('Participant')
                         visible: true
                         modifiable: %events.fyziklani16.appCond%
                         determining: true

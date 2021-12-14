@@ -63,8 +63,7 @@ class AnonymousMissMatchTest extends DsefTestCase
 
         $html = (string)$source;
         Assert::contains(
-            '<div
-            id="frm-application-form-form-participant-person_id_1-person_info-born-pair" class="form-group has-error">',
+            '<div class="form-group  has-error " id="frm-application-form-form-participant-person_id_1-person_info-born-pair">',
             $html
         );
 
