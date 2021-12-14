@@ -31,8 +31,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
 export const fyziklaniTimer = (state: State = {}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
-            //  @ts-ignore
-            return fetchSuccess(state, action);
+            return fetchSuccess(state, <ActionFetchSuccess<DataResponse<ResponseData>>>action);
         default:
             return state;
     }

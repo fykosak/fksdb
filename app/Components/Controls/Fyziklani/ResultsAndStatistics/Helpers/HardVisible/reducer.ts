@@ -33,11 +33,9 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
 export const fyziklaniOptions = (state: State = {}, action: Action<string>): State => {
     switch (action.type) {
         case ACTION_SET_HARD_VISIBLE:
-            // @ts-ignore
-            return setHardVisible(state, action);
+            return setHardVisible(state, <ActionSetHardVisible>action);
         case ACTION_FETCH_SUCCESS:
-            // @ts-ignore
-            return fetchSuccess(state, action);
+            return fetchSuccess(state, <ActionFetchSuccess<DataResponse<ResponseData>>>action);
         default:
             return state;
     }

@@ -25,7 +25,7 @@ export interface OwnProps {
 }
 
 interface DispatchProps {
-    onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest> | void>;
+    onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
 interface StateProps {

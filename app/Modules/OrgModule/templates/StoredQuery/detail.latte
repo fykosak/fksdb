@@ -1,8 +1,4 @@
 {block content}
-    {*do $presenter->registerJSFile('js/codemirror.min.js')*}
-    {*do $presenter->registerJSFile('js/sqlconsole.js')*}
-    {php $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
-
     <hr/>
     {control valuePrinter:row 'stored_query.description', $model,1024}
     {control valuePrinter:row 'stored_query.tags', $model,1024}

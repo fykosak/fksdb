@@ -41,7 +41,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & Recor
         </>;
     }
 
-    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>): void {
         event.persist();
         this.setState({processing: true, messages: []});
         this.preprocessImage(event).then((code) => {
@@ -52,7 +52,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & Recor
         });
     }
 
-    private preprocessImage(event: React.ChangeEvent<HTMLInputElement>) {
+    private async preprocessImage(event: React.ChangeEvent<HTMLInputElement>): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -72,7 +72,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & Recor
         });
     }
 
-    private parseURL(url: string, reject: (e) => void): string {
+    private parseURL(url: string, reject: (exception) => void): string {
         const match = /[0-9]{6}[A-Za-z]{2}[0-9]$/.exec(url);
         if (match[0]) {
             return match[0];

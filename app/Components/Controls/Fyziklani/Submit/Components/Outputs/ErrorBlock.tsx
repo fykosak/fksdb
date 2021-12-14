@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 
-export default class ErrorBlock extends React.Component<WrappedFieldProps & Record<string, never>> {
+export default class ErrorBlock extends React.Component<WrappedFieldProps> {
 
     public render() {
         const {meta: {valid, error}} = this.props;

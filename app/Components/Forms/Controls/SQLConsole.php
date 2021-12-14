@@ -10,12 +10,11 @@ use Nette\Utils\Html;
 class SQLConsole extends TextArea
 {
 
-    protected const CSS_CLASS = 'sqlConsole';
+    protected const CSS_CLASS = 'sql-console';
 
     public function getControl(): Html
     {
-        $control = parent::getControl();
-        $control->class = self::CSS_CLASS;
-        return $control;
+        $this->getControlPrototype()->addAttributes(['class' => self::CSS_CLASS]);
+        return parent::getControl();
     }
 }

@@ -7,7 +7,7 @@ import {
 } from 'redux';
 import { ResponseData } from '../middleware/interfaces';
 
-export const saveTeams = (dispatch: Dispatch<Action>, teams: ModelFyziklaniTeam[]): Promise<DataResponse<ResponseData> | void> => {
+export const saveTeams = (dispatch: Dispatch<Action>, teams: ModelFyziklaniTeam[]): Promise<DataResponse<ResponseData>> => {
     const data = {act: 'routing-save', requestData: teams};
     return dispatchNetteFetch<ResponseData>('#', dispatch, JSON.stringify(data));
 };

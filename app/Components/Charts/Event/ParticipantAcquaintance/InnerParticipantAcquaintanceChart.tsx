@@ -119,6 +119,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 if (datum.source.index === this.state.activeId || datum.target.index === this.state.activeId) {
                     className = 'active';
                 }
+
                 // @ts-ignore
                 const dAttr: string = ribbonCreator(datum);
                 return <path

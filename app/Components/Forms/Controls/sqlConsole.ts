@@ -1,16 +1,14 @@
-// @ts-ignore
-import CodeMirror from 'codemirror';
-import './sqlConsole.scss';
+import * as CodeMirror from 'codemirror';
+import { fromTextArea } from 'codemirror';
 
 $(() => {
-    document.querySelectorAll('.sqlConsole').forEach((el) => {
-        CodeMirror.fromTextArea(el,
+    document.querySelectorAll('.sql-console').forEach((el: HTMLTextAreaElement) => {
+        fromTextArea(el,
             {
-                mode: 'text/x-mysql',
+                mode: 'text/x-mariadb',
                 indentWithTabs: true,
                 smartIndent: true,
                 lineNumbers: true,
-                matchBrackets: true,
                 autofocus: true,
             });
     });
@@ -19,12 +17,11 @@ $(() => {
         el.innerHTML = '';
         CodeMirror(el, {
             value: code,
-            mode: 'text/x-mysql',
+            mode: 'text/x-mariadb',
             lineNumbers: true,
             readOnly: true,
             indentWithTabs: true,
             smartIndent: true,
-            matchBrackets: true,
             autofocus: true,
         });
     });

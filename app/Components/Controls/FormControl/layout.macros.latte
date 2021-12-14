@@ -28,13 +28,13 @@
         {case 'range'}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
             {label $field}
-            {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
+            {input $field class: 'form-control ' . $field->getControlPrototype()->class}
             {include metadata field => $field}
         </div>
         {default}
         <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
             {label $field}
-            {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
+            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class}
             {include metadata field => $field}
         </div>
     {/switch}
@@ -45,8 +45,8 @@
     {varType Nette\Forms\Controls\Checkbox $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         <div class="form-check mb-3">
-            {input $field class: 'form-check-input'}
-            {label $field class: 'form-check-label'}
+            {input $field class: 'form-check-input ' . $field->getControlPrototype()->class}
+            {label $field class: 'form-check-label ' . $field->getLabelPrototype()->class}
         </div>
         {include metadata field => $field}
     </div>
@@ -58,8 +58,8 @@
         {label $field}
         {foreach $field->getItems() as $key => $item}
             <div class="form-check mb-3">
-                {input $field:$key class: 'form-check-input'}
-                {label $field:$key class: 'form-check-label'}
+                {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
+                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class}
             </div>
         {/foreach}
         {include metadata field => $field}
@@ -105,6 +105,7 @@
     {varType Nette\Forms\Controls\BaseControl[] $controls}
     {var $buttons = []}
     {foreach $controls as $name => $field}
+        {dump $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}

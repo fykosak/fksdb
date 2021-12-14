@@ -9,7 +9,7 @@ interface OwnProps {
     availablePoints: number[];
     handleSubmit: SubmitHandler<{ code: string }>;
 
-    onSubmit?(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest> | void>;
+    onSubmit?(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
 export default class SubmitButtons extends React.Component<OwnProps> {
