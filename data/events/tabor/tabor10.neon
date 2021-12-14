@@ -13,7 +13,7 @@ parameters:
 events:
     tabor10:
         event_type_id: [10]
-        eventYears: [10] # specify for which years this machine is valid, by default all years
+        eventYears: [10, 11] # specify for which years this machine is valid, by default all years
         formLayout: tabor/tabor7.form
         paramScheme:
             notifyBcc:

@@ -19,15 +19,18 @@ use Nette\Utils\ArrayHash;
  * Creates required checkbox for whole application and then
  * sets agreed bit in all person_info containers found (even for editing).
  */
-class PrivacyPolicy implements Processing, FormAdjustment {
-
+class PrivacyPolicy implements Processing, FormAdjustment
+{
     use SmartObject;
 
     protected const CONTROL_NAME = 'privacy';
     private ServicePersonInfo $servicePersonInfo;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
+    public function __construct(
+        ServicePersonInfo $servicePersonInfo,
+        SingleReflectionFormFactory $singleReflectionFormFactory
+    ) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
@@ -36,7 +39,8 @@ class PrivacyPolicy implements Processing, FormAdjustment {
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function adjust(Form $form, Holder $holder): void {
+    public function adjust(Form $form, Holder $holder): void
+    {
         if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return;
         }
@@ -48,12 +52,20 @@ class PrivacyPolicy implements Processing, FormAdjustment {
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
 
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
+    public function process(
+        array $states,
+        ArrayHash $values,
+        Machine $machine,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form = null
+    ): ?array {
         $this->trySetAgreed($values);
         return null;
     }
 
-    private function trySetAgreed(ArrayHash $values): void {
+    private function trySetAgreed(ArrayHash $values): void
+    {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);

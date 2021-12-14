@@ -14,11 +14,13 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
-class CategoryProcessing extends AbstractCategoryProcessing {
+class CategoryProcessing extends AbstractCategoryProcessing
+{
 
     private int $rulesVersion;
 
-    public function __construct(int $rulesVersion, ServiceSchool $serviceSchool, ServicePerson $servicePerson) {
+    public function __construct(int $rulesVersion, ServiceSchool $serviceSchool, ServicePerson $servicePerson)
+    {
         parent::__construct($serviceSchool, $servicePerson);
 
         if (!in_array($rulesVersion, [1, 2])) {
@@ -27,7 +29,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $this->rulesVersion = $rulesVersion;
     }
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -37,7 +40,12 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $model = $holder->getPrimaryHolder()->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Message::LVL_INFO));
+            $logger->log(
+                new Message(
+                    sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
+                    Message::LVL_INFO
+                )
+            );
         }
     }
 
@@ -48,7 +56,8 @@ class CategoryProcessing extends AbstractCategoryProcessing {
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
      */
-    protected function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string
+    {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
@@ -59,7 +68,9 @@ class CategoryProcessing extends AbstractCategoryProcessing {
                 $olds += 1;
             } else {
                 /** @var ModelRegion|null $country */
-                $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
+                $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(
+                    ['school_id' => $competitor['school_id']]
+                )->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;
                 }

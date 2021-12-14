@@ -60,7 +60,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
 
     public function getTeacher(): ?ModelPerson
     {
-        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow($this->person) : null;
+        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow($this->ref('person', 'teacher_id')) : null;
     }
 
     public function getEvent(): ModelEvent
@@ -184,19 +184,19 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
         $node = $document->createElement('team');
         $node->setAttribute('teamId', (string)$this->e_fyziklani_team_id);
         XMLHelper::fillArrayToNode([
-                                       'teamId' => $this->e_fyziklani_team_id,
-                                       'name' => $this->name,
-                                       'status' => $this->status,
-                                       'category' => $this->category,
-                                       'created' => $this->created->format('c'),
-                                       'phone' => $this->phone,
-                                       'password' => $this->password,
-                                       'points' => $this->points,
-                                       'rankCategory' => $this->rank_category,
-                                       'rankTotal' => $this->rank_total,
-                                       'forceA' => $this->force_a,
-                                       'gameLang' => $this->game_lang,
-                                   ], $document, $node);
+            'teamId' => $this->e_fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->status,
+            'category' => $this->category,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'password' => $this->password,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ], $document, $node);
         return $node;
 
         // `teacher_id`           INT(11)     NULL     DEFAULT NULL
