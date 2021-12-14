@@ -130,8 +130,6 @@ class Holder
             } else {
                 $this->secondaryModelStrategy->loadSecondaryModels(
                     $group['service'],
-                    $group['joinOn'],
-                    $group['joinTo'],
                     $group['holders'],
                     $primaryModel
                 );
