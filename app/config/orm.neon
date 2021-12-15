@@ -865,7 +865,8 @@ orm:
                          weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
                          visa: [badge: 'badge badge-7', label: 'Visa']
                          dsef_morning: [badge: 'badge badge-8', label: 'DSEF morning']
-                         dsef_afternoon : [badge: 'badge badge-9', label: 'DSEF afternoon']
+                         dsef_afternoon: [badge: 'badge badge-9', label: 'DSEF afternoon']
+                         vaccination_covid: [badge: 'badge badge-10', label: 'Covid-19 Vaccination']
                  start:
                     type: dateTime
                     title: _(Schedule start)

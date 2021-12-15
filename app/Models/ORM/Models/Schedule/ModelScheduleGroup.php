@@ -38,6 +38,7 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
 
     public const TYPE_DSEF_MORNING = 'dsef_morning';
     public const TYPE_DSEF_AFTERNOON = 'dsef_afternoon';
+    public const TYPE_VACCINATION_COVID = 'vaccination_covid';
 
     public function getItems(): GroupedSelection
     {
