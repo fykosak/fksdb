@@ -48,7 +48,7 @@ class ScheduleField extends TextInput
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
             case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
-                return _('Accommodation with same gender');
+                return _('Accommodation with the same gender');
             case ModelScheduleGroup::TYPE_VISA:
                 return _('Visa');
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
@@ -61,6 +61,8 @@ class ScheduleField extends TextInput
                 return _('Morning');
             case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
                 return _('Afternoon');
+            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
+                return _('Covid-19 Vaccination');
             default:
                 throw new NotImplementedException();
         }
@@ -97,6 +99,7 @@ class ScheduleField extends TextInput
                 break;
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 break;
+            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
             case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
             case ModelScheduleGroup::TYPE_VISA:
