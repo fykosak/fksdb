@@ -35,6 +35,8 @@ parameters:
                         required: false
                     weekend:
                         required: false
+                    vaccination_covid:
+                        required: true
             participant:
                 person:
                     other_name:
@@ -63,6 +65,8 @@ parameters:
                         required: false
                     weekend:
                         required: false
+                    vaccination_covid:
+                        required: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
