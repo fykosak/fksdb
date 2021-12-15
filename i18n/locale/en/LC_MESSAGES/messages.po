@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-15 11:28+0100\n"
+"POT-Creation-Date: 2021-12-15 11:46+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -2288,7 +2288,7 @@ msgid "Accommodation"
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:51
-msgid "Accommodation with the same gender"
+msgid "Accommodation with persons of the same gender"
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:53

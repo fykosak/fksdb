@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-15 11:28+0100\n"
+"POT-Creation-Date: 2021-12-15 11:46+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -2318,7 +2318,7 @@ msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:51
 #, fuzzy
-msgid "Accommodation with the same gender"
+msgid "Accommodation with persons of the same gender"
 msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:53

@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-15 11:28+0100\n"
+"POT-Creation-Date: 2021-12-15 11:46+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -2296,9 +2296,8 @@ msgid "Accommodation"
 msgstr "Ubytování"
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:51
-#, fuzzy
-msgid "Accommodation with the same gender"
-msgstr "Ubytování s osobami stejného pohlaví"
+msgid "Accommodation with persons of the same gender"
+msgstr "Ubytování pouze s osobami stejného pohlaví"
 
 #: ../app/Components/Forms/Controls/Schedule/ScheduleField.php:53
 msgid "Visa"
@@ -5418,9 +5417,6 @@ msgstr ""
 
 #~ msgid "Confirm as applied."
 #~ msgstr "Potvrdit jako Účastní se"
-
-#~ msgid "Accommodation gender"
-#~ msgstr "Ubytování s osobami stejného pohlaví"
 
 #~ msgid "Accommodation teacher"
 #~ msgstr "Cena ubytování"
