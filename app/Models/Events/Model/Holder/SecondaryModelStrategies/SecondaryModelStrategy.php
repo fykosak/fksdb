@@ -3,7 +3,12 @@
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -35,20 +40,18 @@ abstract class SecondaryModelStrategy
      */
     public function loadSecondaryModels(
         $service,
-        ?string $joinOn,
-        ?string $joinTo,
         array $holders,
         ?ActiveRow $primaryModel = null
     ): void {
-        if ($primaryModel) {
-            $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $service->getTable()->where($joinOn, $joinValue);
-            if ($joinTo) {
-                $event = reset($holders)->getEvent();
-                $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
+        $secondary = [];
+        if ($primaryModel instanceof ModelFyziklaniTeam) {
+            /** @var ServiceMFyziklaniParticipant $service */
+            foreach ($primaryModel->getParticipants() as $row) {
+                $secondary[] = $service->composeModel(
+                    ModelEventParticipant::createFromActiveRow($row->event_participant),
+                    ModelFyziklaniParticipant::createFromActiveRow($row)
+                );
             }
-        } else {
-            $secondary = [];
         }
         $this->setSecondaryModels($holders, $secondary);
     }
