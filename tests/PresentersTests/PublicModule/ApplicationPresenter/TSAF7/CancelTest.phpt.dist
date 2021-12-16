@@ -9,6 +9,7 @@ $container = require '../../../../Bootstrap.php';
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
+use Tester\Environment;
 
 class CancelTest extends TsafTestCase
 {
@@ -48,6 +49,7 @@ class CancelTest extends TsafTestCase
 
     public function testCancel(): void
     {
+        Environment::skip();
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->personId,
