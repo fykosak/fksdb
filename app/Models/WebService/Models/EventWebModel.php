@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -120,8 +121,8 @@ class EventWebModel extends WebModel
                 $teamNode->appendChild($teacherNode);
             }
 
-            foreach ($team->getParticipants() as $participantRow) {
-                $participant = ModelEventParticipant::createFromActiveRow($participantRow->event_participant);
+            foreach ($team->getFyziklaniParticipants() as $participantRow) {
+                $participant = ModelFyziklaniParticipant::createFromActiveRow($participantRow)->getEventParticipant();
                 $pNode = $this->createParticipantNode($participant, $doc);
                 $teamNode->appendChild($pNode);
             }

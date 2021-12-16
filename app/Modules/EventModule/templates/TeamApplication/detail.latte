@@ -62,8 +62,8 @@
     <h2>{_'Participants'}</h2>
 
     {var $counter = 0;}
-    {foreach $model->getParticipants() as $row}
-        {var FKSDB\Models\ORM\Models\ModelEventParticipant $participant = FKSDB\Models\ORM\Models\ModelEventParticipant::createFromActiveRow($row->event_participant)}
+    {foreach $model->getFyziklaniParticipants() as $row}
+        {var FKSDB\Models\ORM\Models\ModelEventParticipant $participant = FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant::createFromActiveRow($row)->getEventParticipant()}
         {php $counter++}
         {var $history = $participant->getPersonHistory()}
 

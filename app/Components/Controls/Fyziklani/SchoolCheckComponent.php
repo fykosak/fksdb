@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
+use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -41,8 +42,8 @@ class SchoolCheckComponent extends BaseComponent {
      */
     private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array {
         $schools = [];
-        foreach ($team->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row->event_participant);
+        foreach ($team->getFyziklaniParticipants() as $row) {
+            $participant = ModelFyziklaniParticipant::createFromActiveRow($row)->getEventParticipant();
             $history = $participant->getPersonHistory();
             $schools[$history->school_id] = $history->getSchool();
         }
