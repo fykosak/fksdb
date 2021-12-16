@@ -67,7 +67,7 @@ class SingleEventSource implements HolderSource {
     private function loadData(): void {
         $joinToCheck=null;
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            if (isset($joinToCheck)) {
+            if (!isset($joinToCheck)) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
                 throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
