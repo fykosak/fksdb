@@ -100,7 +100,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new ApplicationComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity()->getPrimary())
+            $source->getHolder($this->getEntity())
         );
     }
 
@@ -117,7 +117,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new TransitionButtonsComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity()->getPrimary())
+            $source->getHolder($this->getEntity())
         );
     }
 

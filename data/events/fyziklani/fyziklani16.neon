@@ -35,6 +35,8 @@ parameters:
                         required: false
                     weekend:
                         required: false
+                    vaccination_covid:
+                        required: true
             participant:
                 person:
                     other_name:
@@ -63,6 +65,8 @@ parameters:
                         required: false
                     weekend:
                         required: false
+                    vaccination_covid:
+                        required: true
             dep:
                 require:
                     team.teacher_id.person_info.id_number: team.teacher_id.person_schedule.accommodation
@@ -112,12 +116,12 @@ events:
                         behaviorType: success
                         condition: role('admin')
                         label: _('Schválit účast')
-                        onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(team, *)
                     pending->spare:
                         behaviorType: warning
                         condition: role('admin')
                         label: _('Potvrdit jako náhradníka')
+                        onExecuted:
+                            - FKSDB\Models\Events\Transitions\MailSender(fyziklani/fyziklani2022/spare,.secondary)
                     approved|spare->participated:
                         behaviorType: success
                         condition: and(role('admin'),eventWas())
