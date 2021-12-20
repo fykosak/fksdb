@@ -9,7 +9,6 @@ import {
     LineChartData,
 } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import './style.scss';
 
 interface OwnProps<XValue extends Date | number> {
     data: LineChartData<XValue>;

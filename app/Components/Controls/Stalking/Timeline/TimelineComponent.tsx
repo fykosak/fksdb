@@ -1,5 +1,5 @@
 import { axisBottom } from 'd3-axis';
-import { scaleOrdinal, ScaleTime } from 'd3-scale';
+import { scaleOrdinal, scaleTime, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
@@ -118,6 +118,10 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
             </svg>
         </div>;
 
+    }
+
+    private createTimeXScale(gameStart: Date, gameEnd: Date): ScaleTime<number, number> {
+        return scaleTime<number, number>().domain([gameStart, gameEnd]).range(this.getInnerXSize());
     }
 
     private getCurrentY(): number {

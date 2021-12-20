@@ -6,9 +6,9 @@ $input-border-radius-lg: 0;
 @import '/node_modules/flag-icon-css/sass/flag-icon';
 @import '/node_modules/codemirror/lib/codemirror.css';
 
-@import "fyziklani-theme";
 @import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
+@import "../Components/Charts/style";
 @import "colors";
 @import "fyziklani";
 @import "points";
@@ -35,7 +35,6 @@ $input-border-radius-lg: 0;
 
 @include color-variant($FOLMainColor, "fol");
 @include color-variant($FOFMainColor, "fof");
-
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);
@@ -131,12 +130,6 @@ main {
   border: solid 2px;
 }
 
-.phone-flag {
-  img {
-    height: 1em;
-  }
-}
-
 .t-shirt-color {
   height: 1rem;
   width: 1rem;
@@ -148,28 +141,4 @@ main {
 footer {
   min-height: $footerHeight;
   background-color: rgba(255, 255, 255, .7);
-}
-
-.legend {
-  &.line-chart-legend {
-    .legend-item {
-      margin-bottom: 1rem;
-
-      .legend-item-icon {
-        display: flex;
-        align-items: center;
-
-        .line {
-          border-width: 1rem;
-          border-radius: 1rem;
-          width: 100%;
-          height: 2px;
-        }
-      }
-
-      .legend-item-name {
-        font-weight: bold;
-      }
-    }
-  }
 }

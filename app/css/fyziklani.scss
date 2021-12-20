@@ -1,55 +1,9 @@
-#imageWP {
-  text-align: center;
-}
-
 .last-update-info {
   position: fixed;
   right: 0;
   bottom: 0;
   padding: .5em;
   z-index: 10000;
-}
-
-.legend-item .icon {
-  display: inline-block;
-  height: 1rem;
-  width: 1rem;
-  border-radius: .5rem;
-  margin-right: .5rem;
-}
-
-.legend-item:hover strong {
-  text-decoration: underline;
-}
-
-.chart.points-in-time circle {
-  stroke: white;
-  stroke-width: 2.5;
-}
-
-.time-line.chart .tick line {
-  stroke-dasharray: 10 10;
-  stroke: #ccc;
-}
-
-.axis.grid .tick line {
-  stroke-dasharray: 10 10;
-  stroke: #ccc;
-}
-
-.chart.points-in-time path {
-  &.line {
-    stroke: #1175da;
-    stroke-width: 5px;
-    fill: none;
-  }
-
-  &.line-small {
-    stroke: gray;
-    opacity: 0.5;
-    stroke-width: 2px;
-    fill: none;
-  }
 }
 
 @keyframes load-confirm-text {

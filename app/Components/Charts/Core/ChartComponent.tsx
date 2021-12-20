@@ -1,4 +1,3 @@
-import { ScaleTime, scaleTime } from 'd3-scale';
 import * as React from 'react';
 
 export default abstract class ChartComponent<Props, State> extends React.Component<Props, State> {
@@ -31,9 +30,5 @@ export default abstract class ChartComponent<Props, State> extends React.Compone
 
     protected transformYAxis(): string {
         return 'translate(' + this.margin.left + ',0)';
-    }
-
-    protected createTimeXScale(gameStart: Date, gameEnd: Date): ScaleTime<number, number> {
-        return scaleTime<number, number>().domain([gameStart, gameEnd]).range(this.getInnerXSize());
     }
 }
