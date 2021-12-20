@@ -22,7 +22,7 @@ export interface ActionDropItem<Data> extends Action<string> {
     data: Data;
 }
 
-export function dropItem<Data>(data: Data): ActionDropItem<Data> {
+export const dropItem = <Data>(data: Data): ActionDropItem<Data> => {
     return {
         data,
         type: ACTION_DROP_ITEM,

@@ -211,9 +211,7 @@ class SubmitPresenter extends BasePresenter
 
             $form->setCurrentGroup();
             $form->addSubmit('upload', _('Submit'));
-            $form->onSuccess[] = function (Form $form) {
-                $this->handleUploadFormSuccess($form);
-            };
+            $form->onSuccess[] = fn(Form $form) => $this->handleUploadFormSuccess($form);
             // $form->addProtection(_('The form has expired. Please send it again.'));
         }
 

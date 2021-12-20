@@ -26,11 +26,11 @@ export default abstract class ChartComponent<Props, State> extends React.Compone
     }
 
     protected transformXAxis(): string {
-        return 'translate(' + 0 + ',' + (this.size.height - this.margin.bottom) + ')';
+        return 'translate(0,' + (this.size.height - this.margin.bottom) + ')';
     }
 
     protected transformYAxis(): string {
-        return 'translate(' + this.margin.left + ',' + 0 + ')';
+        return 'translate(' + this.margin.left + ',0)';
     }
 
     protected createTimeXScale(gameStart: Date, gameEnd: Date): ScaleTime<number, number> {

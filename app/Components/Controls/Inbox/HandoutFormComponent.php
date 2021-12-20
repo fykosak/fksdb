@@ -18,7 +18,8 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
-class HandoutFormComponent extends BaseComponent {
+class HandoutFormComponent extends BaseComponent
+{
 
     public const TASK_PREFIX = 'task';
 
@@ -30,12 +31,17 @@ class HandoutFormComponent extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    public function __construct(Container $container, SeriesTable $seriesTable) {
+    public function __construct(Container $container, SeriesTable $seriesTable)
+    {
         parent::__construct($container);
         $this->seriesTable = $seriesTable;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, ServiceTaskContribution $serviceTaskContribution): void {
+    final public function injectPrimary(
+        PersonFactory $personFactory,
+        ServicePerson $servicePerson,
+        ServiceTaskContribution $serviceTaskContribution
+    ): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -44,7 +50,8 @@ class HandoutFormComponent extends BaseComponent {
     /**
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
@@ -57,9 +64,7 @@ class HandoutFormComponent extends BaseComponent {
         }
 
         $form->addSubmit('save', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->handleFormSuccess($form);
 
         return $formControl;
     }
@@ -67,7 +72,8 @@ class HandoutFormComponent extends BaseComponent {
     /**
      * @throws ModelException
      */
-    public function handleFormSuccess(Form $form): void {
+    public function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
 
         $connection = $this->serviceTaskContribution->explorer->getConnection();
@@ -95,14 +101,16 @@ class HandoutFormComponent extends BaseComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
     }
 
     /**
      * @throws BadTypeException
      */
-    public function setDefaults(): void {
+    public function setDefaults(): void
+    {
         $taskIds = [];
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {

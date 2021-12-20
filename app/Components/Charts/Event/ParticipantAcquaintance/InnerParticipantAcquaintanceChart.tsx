@@ -126,7 +126,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                     key={index}
                     className={'ribbon ' + className}
                     d={dAttr}
-                    fill={colorScale(datum.source.index + '-' + datum.source.subindex)}
+                    fill={colorScale(datum.source.index + '-' /*+ datum.source.subindex*/)}
                 />;
             })}
         </>;

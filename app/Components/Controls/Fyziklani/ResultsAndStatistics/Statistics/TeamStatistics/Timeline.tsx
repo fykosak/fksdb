@@ -30,7 +30,7 @@ interface OwnProps {
 
 class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
 
-    private xAxis: SVGElement;
+    private xAxis: SVGGElement;
     private ySize: number;
 
     private xScale: ScaleTime<number, number>;
@@ -106,7 +106,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
 
     private getAxis() {
         const xAxis = axisBottom<Date>(this.xScale).tickSizeInner(-this.ySize).tickArguments([timeMinute.every(30)]);
-        select(this.xAxis).call(xAxis);
+        select<SVGGElement, null>(this.xAxis).call(xAxis);
     }
 }
 

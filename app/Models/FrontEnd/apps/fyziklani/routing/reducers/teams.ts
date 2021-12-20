@@ -21,7 +21,7 @@ export interface State {
     updatedTeams: number[];
 }
 
-function routeTeam(state: State, action: ActionDropItem<DragNDropData>): State {
+const routeTeam = (state: State, action: ActionDropItem<DragNDropData>): State => {
     const {teamId, place: {x, y, roomId}} = action.data;
     const newTeams = state.availableTeams.map((team) => {
         if (team.teamId !== teamId) {

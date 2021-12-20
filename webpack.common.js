@@ -1,7 +1,6 @@
 var path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
     entry: './app/Bootstrap.tsx',
@@ -38,9 +37,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
-        plugins: [
-            new TsConfigPathsPlugin(/* { configFileName, compiler } */)
-        ]
+        plugins: [new TsconfigPathsPlugin()],
     },
     externals: {
         jquery: 'jQuery',

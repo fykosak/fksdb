@@ -28,9 +28,12 @@ class PointsEntryComponent extends AjaxComponent
     {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
-        });
+        $this->monitor(
+            JavaScriptCollector::class,
+            fn(JavaScriptCollector $collector) => $collector->registerJSFile(
+                'https://dmla.github.io/jsqrcode/src/qr_packed.js'
+            )
+        );
     }
 
     final public function injectPrimary(

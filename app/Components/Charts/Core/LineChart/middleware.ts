@@ -25,12 +25,12 @@ export interface PointData<XValue extends Date | number> {
     yValue: number;
 }
 
-export function getLinePath<XValue extends Date | number>(
+export const getLinePath = <XValue extends Date | number>(
     xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>,
     yScale: ScaleLinear<number, number>,
     data: PointData<XValue>[],
     curve: CurveFactory = curveLinear,
-): string {
+): string => {
     return line<PointData<XValue>>()
         .x((element) => {
             return xScale(element.xValue);
@@ -41,13 +41,13 @@ export function getLinePath<XValue extends Date | number>(
         .curve(curve)(data);
 }
 
-export function getAreaPath<XValue extends Date | number>(
+export const getAreaPath = <XValue extends Date | number>(
     xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>,
     yScale: ScaleLinear<number, number>,
     data: PointData<XValue>[],
     y0: number,
     curve: CurveFactory = curveLinear,
-): string {
+): string => {
     return area<PointData<XValue>>()
         .x((element) => {
             return xScale(element.xValue);

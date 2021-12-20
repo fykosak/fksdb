@@ -16,7 +16,8 @@ use Nette\Utils\Html;
 /**
  * @deprecated use person_schedule UC
  */
-class MultiResourceAvailability extends AbstractAdjustment {
+class MultiResourceAvailability extends AbstractAdjustment
+{
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
@@ -39,7 +40,14 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(
+        array $fields,
+        $paramCapacity,
+        string $message,
+        Explorer $explorer,
+        array $includeStates = [Machine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
@@ -48,7 +56,8 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -110,9 +119,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 $model = $baseHolder->getModel2();
                 return $model ? $model->getPrimary(false) : null;
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();

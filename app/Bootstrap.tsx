@@ -21,7 +21,7 @@ import Attendance from './Models/FrontEnd/apps/events/attendance/Index';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
 
-import 'vendor/nette/forms/src/assets/netteForms';
+import 'vendor/nette/forms/src/assets/netteForms.js';
 import './Components/Forms/Controls/sqlConsole';
 import './css/index.scss';
 import EventModelComponent from 'FKSDB/Components/Charts/Event/Model/EventModelComponent';

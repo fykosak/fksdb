@@ -66,10 +66,7 @@ class ImportComponent extends BaseComponent
 
         $form->addSubmit('import', _('Import'));
 
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormImport($form);
-        };
-
+        $form->onSuccess[] = fn(Form $form) => $this->handleFormImport($form);
         return $control;
     }
 

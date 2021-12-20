@@ -2,11 +2,11 @@ import * as React from 'react';
 import { ConnectedComponent } from 'react-redux';
 
 interface OwnProps<ChartProps, LegendProps> {
-    chart: React.ComponentType<ChartProps> | ConnectedComponent<React.ComponentType<ChartProps>, ChartProps>;
+    chart: React.ComponentType<ChartProps> | ConnectedComponent<React.ComponentType<any>, ChartProps>; // TODO
     chartProps: ChartProps;
-    legendComponent?: React.ComponentType<LegendProps> | ConnectedComponent<React.ComponentType<LegendProps>, LegendProps>;
+    legendComponent?: React.ComponentType<LegendProps> | ConnectedComponent<React.ComponentType<any>, LegendProps>; // TODO
     legendProps?: LegendProps;
-    headline?: string;
+    headline?: React.ReactNode;
     containerClassName?: string;
 }
 

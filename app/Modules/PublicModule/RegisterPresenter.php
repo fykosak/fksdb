@@ -135,7 +135,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $person = $this->getPerson();
 
             if (!$person) {
-                $this->flashMessage(_('User must be a person in order to register as a contestant.'), Message::LVL_INFO);
+                $this->flashMessage(
+                    _('User must be a person in order to register as a contestant.'),
+                    Message::LVL_INFO
+                );
                 $this->redirect(':Core:Authentication:login');
             }
         } else {
@@ -253,9 +256,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->emailFormSucceeded($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->emailFormSucceeded($form);
         return $control;
     }
 

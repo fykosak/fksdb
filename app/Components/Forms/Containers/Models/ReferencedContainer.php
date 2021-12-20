@@ -40,9 +40,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
                 $this->attachedJS = true;
                 $this->updateHtmlData();
             }
-        }, function () {
-            $this->attachedJS = false;
-        });
+        }, fn() => $this->attachedJS = false);
         $this->createClearButton();
         $this->createCompactValue();
 

@@ -4,14 +4,14 @@ export interface State<Data> {
     data?: Data;
 }
 
-function dragEnd<Data>(state: State<Data>): State<Data> {
+const dragEnd = <Data>(state: State<Data>): State<Data> => {
     return {
         ...state,
         data: null,
     };
 }
 
-export function dragNDrop<Data>(state: State<Data> = {data: null}, action): State<Data> {
+export const dragNDrop = <Data>(state: State<Data> = {data: null}, action): State<Data> => {
     switch (action.type) {
         case ACTION_DROP_ITEM:
         case ACTION_DRAG_END:

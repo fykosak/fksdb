@@ -113,8 +113,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                     }
 
                     $control->addCondition(
-                        function (
-                        ): bool { // we use this workaround not to call getValue inside validation out of transaction
+                        function (): bool {
+                            // we use this workaround not to call getValue inside validation out of transaction
                             $personId = $this->getReferencedId()->getValue(false);
                             return $personId && $personId != ReferencedId::VALUE_PROMISE;
                         }

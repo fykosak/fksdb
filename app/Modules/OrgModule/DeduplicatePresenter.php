@@ -203,14 +203,12 @@ class DeduplicatePresenter extends BasePresenter
         $this->updateMergeForm($form);
         $submitButton = $form->addSubmit('send', _('Merge persons'));
         $submitButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $submitButton->onClick[] = function (SubmitButton $button) {
-            $this->handleMergeFormSuccess($button->getForm());
-        };
+        $submitButton->onClick[] = fn(SubmitButton $button) => $this->handleMergeFormSuccess($button->getForm());
+
         $cancelButton = $form->addSubmit('cancel', _('Cancel'));
         $cancelButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $cancelButton->onClick[] = function () {
-            $this->backLinkRedirect(true);
-        };
+        $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
+
 
         return $control;
     }
