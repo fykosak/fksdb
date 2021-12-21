@@ -63,7 +63,7 @@ class OwnerAssertion
         /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
 
-        return $contestant->contest_id == $grant->getContestId();
+        return $contestant->contest_id == $grant->getContest()->contest_id;
     }
 
     /**
@@ -105,7 +105,7 @@ class OwnerAssertion
         try {
             /** @var ModelContest $contest */
             $contest = ReferencedAccessor::accessModel($model, ModelContest::class);
-            if ($contest->contest_id !== $acl->getQueriedRole()->getContestId()) {
+            if ($contest->contest_id !== $acl->getQueriedRole()->getContest()->contest_id) {
                 return false;
             }
         } catch (CannotAccessModelException $exception) {

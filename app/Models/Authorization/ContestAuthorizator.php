@@ -46,7 +46,7 @@ class ContestAuthorizator
     public function isAllowed($resource, ?string $privilege, ModelContest $contest): bool
     {
         if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
+            $role = new Grant(ModelRole::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var ModelLogin $login */
@@ -60,7 +60,7 @@ class ContestAuthorizator
     final public function isAllowedForAnyContest($resource, ?string $privilege): bool
     {
         if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
+            $role = new Grant(ModelRole::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var ModelLogin $login */
@@ -81,13 +81,16 @@ class ContestAuthorizator
      * @param Resource|string $resource
      * @param ModelContest|int $contest
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool
-    {
-        $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
+    final public function isAllowedForLogin(
+        ModelLogin $login,
+        $resource,
+        ?string $privilege,
+        ModelContest $contest
+    ): bool {
         $roles = $login->getRoles();
 
         foreach ($roles as $role) {
-            if (($role->getContestId() !== Grant::CONTEST_ALL) && ($role->getContestId() != $contestId)) {
+            if (!is_null($role->getContest()) && ($role->getContest()->contest_id !== $contest->contest_id)) {
                 continue;
             }
             if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {

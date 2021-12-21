@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
+use FKSDB\Models\Events\EventRole\EventRole;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Security\Resource;
@@ -56,6 +57,18 @@ class EventAuthorizator
             return true;
         }
         return $this->isEventOrg($event);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return EventRole[]
+     */
+    private function getRolesForEvent(ModelEvent $event): array
+    {
+        $login = $this->user->getIdentity();
+        /** @var ModelLogin $login */
+        $person = $login ? $login->getPerson() : null;
+        return $person ? $person->getEventRoles($event) : [];
     }
 
     private function isEventOrg(ModelEvent $event): bool

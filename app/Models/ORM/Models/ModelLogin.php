@@ -39,7 +39,7 @@ class ModelLogin extends AbstractModel implements IIdentity
             $result = [];
             foreach ($this->getRoles() as $grant) {
                 if ($grant->getRoleId() == ModelRole::ORG) {
-                    $result[$grant->getContestId()] = null;
+                    $result[$grant->getContest()->contest_id] = null;
                 }
             }
             return $result;
@@ -97,7 +97,7 @@ class ModelLogin extends AbstractModel implements IIdentity
     {
         if (!isset($this->roles)) {
             $this->roles = [];
-            $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED, null);
+            $this->roles[] = new Grant( ModelRole::REGISTERED, null);
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
@@ -109,14 +109,12 @@ class ModelLogin extends AbstractModel implements IIdentity
             if ($person) {
                 foreach ($person->getActiveOrgs() as $org) {
                     $this->roles[] = new Grant(
-                        $org->contest_id,
                         ModelRole::ORG,
                         $org->getContest(),
                     );
                 }
                 foreach ($person->getActiveContestants() as $contestant) {
                     $this->roles[] = new Grant(
-                        $contestant->contest_id,
                         ModelRole::CONTESTANT,
                         $contestant->getContest(),
                     );

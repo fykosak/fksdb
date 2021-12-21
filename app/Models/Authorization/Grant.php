@@ -12,27 +12,16 @@ use Nette\Security\Role;
  */
 class Grant implements Role
 {
-
-    public const CONTEST_ALL = -1;
-
-    private int $contestId;
     private ?ModelContest $contest;
-
     private string $roleId;
 
-    public function __construct(int $contestId, string $roleId, ?ModelContest $contest = null)
+    public function __construct(string $roleId, ?ModelContest $contest = null)
     {
-        $this->contestId = $contestId;
         $this->roleId = $roleId;
         $this->contest = $contest;
     }
 
-    public function getContestId(): int
-    {
-        return isset($this->contest) ? $this->contest->contest_id : $this->contestId;
-    }
-
-    public function getContest(): ModelContest
+    public function getContest(): ?ModelContest
     {
         return $this->contest;
     }

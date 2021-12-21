@@ -6,7 +6,7 @@ namespace FKSDB\Models\ValuePrinters;
 
 use FKSDB\Models\Events\EventRole\ContestOrgRole;
 use FKSDB\Models\Events\EventRole\EventOrgRole;
-use FKSDB\Models\Events\EventRole\EventRoles;
+use FKSDB\Models\Events\EventRole\EventRole;
 use FKSDB\Models\Events\EventRole\FyziklaniTeacherRole;
 use FKSDB\Models\Events\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -23,7 +23,7 @@ class EventRolePrinter
     {
         $container = Html::el('span');
         $roles = $person->getEventRoles($event);
-        if (!$roles->hasRoles()) {
+        if (!count($roles)) {
             $container->addHtml(
                 Html::el('span')
                     ->addAttributes(['class' => 'badge badge-danger'])
@@ -34,11 +34,15 @@ class EventRolePrinter
         return $this->getHtml($roles);
     }
 
-    private function getHtml(EventRoles $roles): Html
+    /**
+     * @param EventRole[] $roles
+     * @return Html
+     */
+    private function getHtml(array $roles): Html
     {
         $container = Html::el('span');
 
-        foreach ($roles->getRoles() as $role) {
+        foreach ($roles as $role) {
             if ($role instanceof FyziklaniTeacherRole) {
                 foreach ($role->teams as $team) {
                     $container->addHtml(
