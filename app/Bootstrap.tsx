@@ -74,17 +74,20 @@ $(function () {
 // default options
         options: {},
         _create: function () {
-            const actualInput = $(this.element);
-            if (actualInput.data('writeonly-enabled')) {
+
+            const actElement = this.element as HTMLInputElement;
+            if (actElement.getAttribute('data-writeonly-enabled')) {
                 return;
             }
-            const originalValue = actualInput.data('writeonly-value');
-            const originalLabel = actualInput.data('writeonly-label');
+            const originalValue = actElement.getAttribute('data-writeonly-value');
+            const originalLabel = actElement.getAttribute('data-writeonly-label');
 
             const button = $('<i class="fa fa-times glyphicon glyphicon-remove"/>');
             const actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
+            const actualInput = $(actElement);
+
             const par = actualInput.parent();
             const prev = actualInput.prev();
 
@@ -154,10 +157,12 @@ $(function () {
             compactValueMask: '_c_compact',
         },
         _create: function () {
-            const elContainer = $(this.element);
-            this.transformContainer(elContainer, $('#' + elContainer.data('referenced-id')));
+            const container = this.element as HTMLElement;
+            this.transformContainer(container, document.getElementById(container.getAttribute('data-referenced-id')));
         },
-        transformContainer: function (elContainer: JQuery<HTMLElement>, elRefId) {
+        transformContainer: function (container: HTMLElement, refId: HTMLElement) {
+            const elContainer = $(container);
+            const elRefId = $(refId);
             const $searchInput = elContainer.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
             const $compactValueInput = elContainer.find('input[name*=\'' + this.options.compactValueMask + '\']');
             const originalSearchButton = elContainer.find('input[type=\'submit\'][name*=\'' + this.options.submitSearchMask + '\']');

@@ -105,13 +105,7 @@ class ReferencedPersonContainer extends ReferencedContainer
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $metadata);
                 $fullFieldName = "$sub.$fieldName";
-                if ($this->getReferencedId()->getHandler()->isSecondaryKey($fullFieldName)) {
-                    if ($fieldName != 'email') {
-                        throw new InvalidStateException(
-                            "Should define uniqueness validator for field $sub.$fieldName."
-                        );
-                    }
-
+                if ($sub === 'person_info' && $fieldName === 'email') {
                     $control->addCondition(
                         function (): bool {
                             // we use this workaround not to call getValue inside validation out of transaction
@@ -120,11 +114,10 @@ class ReferencedPersonContainer extends ReferencedContainer
                         }
                     )
                         ->addRule(
-                            function (BaseControl $control) use ($fullFieldName): bool {
+                            function (BaseControl $control): bool {
                                 $personId = $this->getReferencedId()->getValue(false);
 
                                 $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
-                                    $fullFieldName,
                                     $control->getValue()
                                 );
                                 if ($foundPerson && $foundPerson->getPrimary() != $personId) {

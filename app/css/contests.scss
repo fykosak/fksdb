@@ -1,22 +1,27 @@
 @import "colors";
 @import "mixins/navigation-item";
+@import "/node_modules/bootstrap/scss/bootstrap";
 
 .navigation-item {
-  @include navigation-item($fykosMainColor, white, false);
+  @include navigation-item($fykosMainColor, white, false,false);
 }
 
-[data-contest~="fykos"] {
+[data-style-id~="fykos"] {
   @include page-theme($fykosMainColor);
 }
 
-[data-contest~="vyfuk"] {
+[data-style-id~="vyfuk"] {
   @include page-theme($vyfukMainColor);
 }
 
-[data-contest~="event-type-1"] {
+[data-style-id~="event-type-1"] {
   @include page-theme($FOFMainColor);
 }
 
-[data-contest~="event-type-9"] {
+[data-style-id~="event-type-9"] {
   @include page-theme($FOLMainColor);
+}
+
+[data-style-id~="error"] {
+  @include page-theme($danger);
 }

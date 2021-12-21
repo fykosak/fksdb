@@ -17,8 +17,7 @@
     }
 </head>
 <!-- Random background generator -->
-<body data-bg="{rand(1,4)}" data-contest="{$pageStyleContainer->styleId}"
-      data-style-id="{$pageStyleContainer->styleId}">
+<body data-bg="{rand(1,4)}" data-style-id="{join(' ',$pageStyleContainer->styleIds)}">
 {block nav}
 <nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->getNavBarClassName()" role="navigation">
     <div class="container-fluid">
@@ -82,7 +81,8 @@
         {/block}
         {block flashes}
             {foreach $flashes as $flash}
-                <div class="alert alert-{$flash->type}">{$flash->message}</div>
+
+    <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
         {include content}

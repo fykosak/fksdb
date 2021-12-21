@@ -4,11 +4,8 @@
 @import "./mixins/navigation-item";
 
 $FOFMainColor: #e6060d;
-
 $FOLMainColor: rgb(0, 174, 107);
-
 $fykosMainColor: #1175da;
-
 $vyfukMainColor: #ff4800;
 
 @mixin color-variant($color,$index) {

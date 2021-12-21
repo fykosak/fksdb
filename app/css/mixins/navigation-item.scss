@@ -1,10 +1,15 @@
-@mixin navigation-item($color,$background,$apply-hover : true) {
+@mixin navigation-item($color,$background,$apply-hover : true,$apply-border:true) {
   height: 12rem;
   width: 12rem;
   text-align: center;
   color: $color;
   background-color: $background;
-  border: $color solid 1px;
+  @if $apply-border {
+    border: $color solid 1px;
+  } @else {
+    border: none;
+  }
+
   transition-duration: 200ms;
   .icon {
     font-size: 5rem;

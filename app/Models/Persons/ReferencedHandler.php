@@ -6,7 +6,8 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
-interface ReferencedHandler {
+interface ReferencedHandler
+{
 
     public const RESOLUTION_OVERWRITE = 'overwrite';
     public const RESOLUTION_KEEP = 'keep';
@@ -16,11 +17,9 @@ interface ReferencedHandler {
 
     public function setResolution(string $resolution): void;
 
-    public function update(ActiveRow $model, ArrayHash $values): void;
+    public function update(AbstractModel $model, array $values): void;
 
-    public function createFromValues(ArrayHash $values): AbstractModel;
+    public function createFromValues(array $values): AbstractModel;
 
-    public function isSecondaryKey(string $field): bool;
-
-    public function findBySecondaryKey(string $field, string $key): ?AbstractModel;
+    public function findBySecondaryKey(string $key): ?AbstractModel;
 }

@@ -215,11 +215,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(
             ExtendedPersonHandler::EL_PERSON
         );
-        if ($person) {
-            $referencedId->setDefaultValue($person);
-        } else {
-            $referencedId->setDefaultValue(ReferencedId::VALUE_PROMISE);
-        }
+        $referencedId->setDefaultValue($person ?? ReferencedId::VALUE_PROMISE);
     }
 
     public function getModel(): ?AbstractModel
@@ -356,7 +352,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
             $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
         }
         parent::beforeRender();
     }

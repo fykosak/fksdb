@@ -29,7 +29,7 @@ class DispatchPresenter extends AuthenticatedPresenter
 
     protected function beforeRender(): void
     {
-        $this->getPageStyleContainer()->styleId = 'event';
+        $this->getPageStyleContainer()->styleIds[] = 'event';
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();

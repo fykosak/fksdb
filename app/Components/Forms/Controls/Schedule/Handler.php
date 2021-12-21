@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -10,10 +12,9 @@ use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\Utils\ArrayHash;
 
-class Handler {
-
+class Handler
+{
     private ServicePersonSchedule $servicePersonSchedule;
     private ServiceScheduleItem $serviceScheduleItem;
 
@@ -30,7 +31,8 @@ class Handler {
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event): void {
+    public function prepareAndUpdate(array $data, ModelPerson $person, ModelEvent $event): void
+    {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
             $this->updateDataType($newScheduleData, $type, $person, $event);
         }
@@ -43,8 +45,12 @@ class Handler {
      * @throws \PDOException
      * @throws ModelException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
-        $oldRows = $person->getScheduleForEvent($event)->where('schedule_item.schedule_group.schedule_group_type', $type);
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void
+    {
+        $oldRows = $person->getScheduleForEvent($event)->where(
+            'schedule_item.schedule_group.schedule_group_type',
+            $type
+        );
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
         foreach ($oldRows as $oldRow) {
@@ -58,9 +64,12 @@ class Handler {
                     $modelPersonSchedule->delete();
                 } catch (\PDOException $exception) {
                     if (\preg_match('/payment/', $exception->getMessage())) {
-                        throw new ExistingPaymentException(\sprintf(
-                            _('The item "%s" has already a payment generated, so it cannot be deleted.'),
-                            $modelPersonSchedule->getLabel()));
+                        throw new ExistingPaymentException(
+                            \sprintf(
+                                _('The item "%s" has already a payment generated, so it cannot be deleted.'),
+                                $modelPersonSchedule->getLabel()
+                            )
+                        );
                     } else {
                         throw $exception;
                     }
@@ -72,18 +81,23 @@ class Handler {
             /** @var ModelScheduleItem $modelScheduleItem */
             $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
+                $this->servicePersonSchedule->createNewModel(
+                    ['person_id' => $person->person_id, 'schedule_item_id' => $id]
+                );
             } else {
-                throw new FullCapacityException(\sprintf(
-                    _('The person %s could not be registered for "%s" because of full capacity.'),
-                    $person->getFullName(),
-                    $modelScheduleItem->getLabel()
-                ));
+                throw new FullCapacityException(
+                    \sprintf(
+                        _('The person %s could not be registered for "%s" because of full capacity.'),
+                        $person->getFullName(),
+                        $modelScheduleItem->getLabel()
+                    )
+                );
             }
         }
     }
 
-    private function prepareData(ArrayHash $data): array {
+    private function prepareData(array $data): array
+    {
         $newData = [];
         foreach ($data as $type => $datum) {
             $newData[$type] = \array_values((array)\json_decode($datum));

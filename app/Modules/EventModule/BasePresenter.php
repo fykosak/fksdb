@@ -147,7 +147,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function beforeRender(): void
     {
-        $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
+        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 $this->getPageStyleContainer()->setNavBarClassName('bg-fof navbar-dark');

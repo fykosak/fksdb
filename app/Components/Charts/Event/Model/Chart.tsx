@@ -103,24 +103,24 @@ export default class Chart extends ChartComponent<OwnProps, Record<string, never
             <g fill="none" strokeWidth="1.5" className="links">{links.map((item, index) => {
                 let path;
                 const markKey = item.color.slice(1);
+                const source = item.source as Node;
+                const target = item.target as Node;
                 if (item.type === 'bi-dir') {
                     path = <path
                         stroke={item.color}
                         strokeDasharray={item.line === 'dashed' ? '5,5' : 'none'}
-                        // @ts-ignore
-                        d={`M ${item.source.x} ${item.source.y} L ${item.target.x} ${item.target.y}`}
+
+                        d={`M ${source.x} ${source.y} L ${target.x} ${target.y}`}
                         markerEnd={`url(#arrow-end-${markKey})`}
                         markerStart={`url(#arrow-start-${markKey})`}/>;
                 } else {
-                    // @ts-ignore
-                    const r = Math.hypot(item.target.x - item.source.x, item.target.y - item.source.y);
-                    // @ts-ignore
-                    const rot = Math.atan((item.target.y - item.source.y) / (item.target.x - item.source.x)) * 180 / Math.PI;
+
+                    const r = Math.hypot(target.x - source.x, target.y - source.y);
+                    const rot = Math.atan((target.y - source.y) / (target.x - source.x)) * 180 / Math.PI;
                     path = <path
                         stroke={item.color}
                         strokeDasharray={item.line === 'dashed' ? '5,5' : 'none'}
-                        // @ts-ignore
-                        d={`M ${item.source.x} ${item.source.y} A ${r} ${r} ${rot} 0 1 ${item.target.x} ${item.target.y}`}
+                        d={`M ${source.x} ${source.y} A ${r} ${r} ${rot} 0 1 ${target.x} ${target.y}`}
                         markerEnd={`url(#arrow-end-${markKey})`}/>;
                 }
                 return <g key={index}>
