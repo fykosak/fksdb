@@ -177,4 +177,4 @@ acl:
     - allow(org, warehouse.item, ::constant(Nette\Security\Permission::ALL))
 
 #CARTESIAN
-   # - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
+    - allow(cartesian, ::constant(Nette\Security\Permission::ALL), ::constant(Nette\Security\Permission::ALL))
