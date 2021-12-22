@@ -14,18 +14,11 @@ class QIDAssertion implements Assertion
 {
     use SmartObject;
 
-    private array $qIds;
+    private array $queryIds;
 
-    /**
-     * QIDAssertion constructor.
-     * @param array|string $qids
-     */
-    public function __construct($qids)
+    public function __construct(array $queryIds)
     {
-        if (!is_array($qids)) {
-            $qids = [$qids];
-        }
-        $this->qIds = $qids;
+        $this->queryIds = $queryIds;
     }
 
     public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
@@ -35,6 +28,6 @@ class QIDAssertion implements Assertion
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
         $qid = $storedQuery->getQId();
-        return $qid && in_array($qid, $this->qIds);
+        return $qid && in_array($qid, $this->queryIds);
     }
 }

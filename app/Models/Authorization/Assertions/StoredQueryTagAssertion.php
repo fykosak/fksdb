@@ -16,15 +16,8 @@ class StoredQueryTagAssertion implements Assertion
 
     private array $tagNames;
 
-    /**
-     * StoredQueryTagAssertion constructor.
-     * @param array|string $tagNames
-     */
-    public function __construct($tagNames)
+    public function __construct(array $tagNames)
     {
-        if (!is_array($tagNames)) {
-            $tagNames = [$tagNames];
-        }
         $this->tagNames = $tagNames;
     }
 

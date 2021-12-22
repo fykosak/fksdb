@@ -115,7 +115,7 @@ class SubmitPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+        return $this->isEventAllowed($resource, $privilege);
     }
 
     /**

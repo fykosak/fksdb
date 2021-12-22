@@ -20,6 +20,6 @@ class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
+        $this->setAuthorized($this->isEventAllowed('fyziklani.dashboard', 'default'));
     }
 }

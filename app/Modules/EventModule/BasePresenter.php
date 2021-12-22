@@ -51,7 +51,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
+    public function isEventAllowed($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isEventAllowed($resource, $privilege, $this->getEvent());
     }

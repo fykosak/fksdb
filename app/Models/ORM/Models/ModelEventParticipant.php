@@ -10,7 +10,6 @@ use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
@@ -78,18 +77,12 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         return new Price($this->price, Price::CURRENCY_CZK);
     }
 
-    /**
-     * @throws BadRequestException
-     */
-    public function getFyziklaniTeam(): ModelFyziklaniTeam
+    public function getFyziklaniTeam(): ?ModelFyziklaniTeam
     {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
             ->select('e_fyziklani_team.*')
             ->fetch();
-        if (!$row) {
-            throw new BadRequestException('Event is not fyziklani!');
-        }
-        return ModelFyziklaniTeam::createFromActiveRow($row);
+        return $row ? ModelFyziklaniTeam::createFromActiveRow($row) : null;
     }
 
     public function getResourceId(): string

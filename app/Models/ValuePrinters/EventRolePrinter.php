@@ -13,7 +13,6 @@ use FKSDB\Models\Authorization\EventRole\{
 };
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -60,11 +59,7 @@ class EventRolePrinter
                         ->addText(_('Event org') . ($role->eventOrg->note ? (' - ' . $role->eventOrg->note) : ''))
                 );
             } elseif ($role instanceof ParticipantRole) {
-                $team = null;
-                try {
-                    $team = $role->eventParticipant->getFyziklaniTeam();
-                } catch (BadRequestException $exception) {
-                }
+                $team = $role->eventParticipant->getFyziklaniTeam();
                 $container->addHtml(
                     Html::el('span')
                         ->addAttributes(['class' => 'badge badge-10'])

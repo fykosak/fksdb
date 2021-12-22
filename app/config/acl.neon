@@ -10,6 +10,7 @@ services:
     ownerAssertion: FKSDB\Models\Authorization\Assertions\OwnerAssertion
     selfAssertion: FKSDB\Models\Authorization\Assertions\SelfAssertion
     paymentEditableAssertion: FKSDB\Models\Authorization\Assertions\PaymentEditableAssertion
+    ownApplicationAssertion: FKSDB\Models\Authorization\Assertions\OwnApplicationAssertion
 
 acl:
     ## Roles
@@ -150,6 +151,8 @@ acl:
     - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
 
+    - allow([event.fyziklaniTeacher,event.participant], fyziklani.team, detail, @ownApplicationAssertion)
+    - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
 ## FYZIKLANI MODULE
     #base for org
     - allow([org,event.org], fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))

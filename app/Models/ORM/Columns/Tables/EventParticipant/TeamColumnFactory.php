@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 
 use FKSDB\Components\Badges\NotSetBadge;
@@ -10,17 +12,15 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
-class TeamColumnFactory extends ColumnFactory {
+class TeamColumnFactory extends ColumnFactory
+{
 
     /**
      * @param ModelEventParticipant|AbstractModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
-        try {
-            $team = $model->getFyziklaniTeam();
-            return (new StringPrinter())($team->name);
-        } catch (BadRequestException $exception) {
-            return NotSetBadge::getHtml();
-        }
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
+        $team = $model->getFyziklaniTeam();
+        return $team ? (new StringPrinter())($team->name) : NotSetBadge::getHtml();
     }
 }

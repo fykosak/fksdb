@@ -38,7 +38,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
+        $this->setAuthorized($this->isEventAllowed('fyziklani.task', 'list'));
     }
 
     /**
