@@ -169,9 +169,9 @@ acl:
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
 ##PAYMENTS (module)
-    - allow(registered, event.payment, detail, @selfAssertion)
-    - allow(registered, event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
-    - allow(registered, event.payment, create)
+    - allow([event.fyziklaniTeacher,event.participant], event.payment, detail, @selfAssertion)
+    - allow([event.fyziklaniTeacher,event.participant], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
+    - allow([event.fyziklaniTeacher,event.participant], event.payment, create)
     - allow(eventManager, event.payment, ::constant(Nette\Security\Permission::ALL))
 
 ## WAREHOUSE MODULE
