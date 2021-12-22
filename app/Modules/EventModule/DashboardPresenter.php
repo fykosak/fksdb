@@ -23,7 +23,7 @@ class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isEventAllowed('event.dashboard', 'default'));
+        $this->setAuthorized($this->isAllowed('event.dashboard', 'default'));
     }
 
     /**

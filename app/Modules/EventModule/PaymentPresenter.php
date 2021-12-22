@@ -80,7 +80,7 @@ class PaymentPresenter extends BasePresenter
      */
     public function actionEdit(): void
     {
-        if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
+        if (!$this->isAllowed($this->getEntity(), 'edit')) {
             $this->flashMessage(
                 \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
                 \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR
@@ -112,7 +112,7 @@ class PaymentPresenter extends BasePresenter
      */
     private function isOrg(): bool
     {
-        return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
+        return $this->isAllowed($this->getModelResource(), 'org');
     }
 
     /**
@@ -183,7 +183,7 @@ class PaymentPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function getORMService(): ServicePayment

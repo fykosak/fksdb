@@ -43,7 +43,7 @@ class ContestAuthorizator
      *
      * @param Resource|string|null $resource
      */
-    public function isAllowed($resource, ?string $privilege, ModelContest $contest): bool
+    public function isAllowed($resource, ?string $privilege, ?ModelContest $contest = null): bool
     {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(ModelRole::GUEST, null);
@@ -55,39 +55,20 @@ class ContestAuthorizator
     }
 
     /**
-     * @param Resource|string|null $resource
-     */
-    final public function isAllowedForAnyContest($resource, ?string $privilege): bool
-    {
-        if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(ModelRole::GUEST, null);
-            return $this->getPermission()->isAllowed($role, $resource, $privilege);
-        }
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-
-        $roles = $login->getRoles();
-
-        foreach ($roles as $role) {
-            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param Resource|string $resource
      */
     final public function isAllowedForLogin(
         ModelLogin $login,
         $resource,
         ?string $privilege,
-        ModelContest $contest
+        ?ModelContest $contest = null
     ): bool {
         foreach ($login->getRoles() as $role) {
-            if (is_null($role->getContest()) || $role->getContest()->contest_id === $contest->contest_id) {
+            if (
+                !isset($contest)
+                || is_null($role->getContest())
+                || $role->getContest()->contest_id === $contest->contest_id
+            ) {
                 if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
                     return true;
                 }

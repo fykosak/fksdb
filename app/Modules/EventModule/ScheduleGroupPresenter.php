@@ -116,6 +116,6 @@ class ScheduleGroupPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 }

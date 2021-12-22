@@ -68,8 +68,8 @@ class ApplicationPresenter extends BasePresenter
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if (
-            $this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
-            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())
+            $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
+            || $this->eventAuthorizator->isAllowed('fyziklani.team', 'edit', $event)
         ) {
             $this->setAuthorized(true);
             return;
@@ -188,10 +188,10 @@ class ApplicationPresenter extends BasePresenter
         if (
             !$this->relatedPersonAuthorizator->isRelatedPerson(
                 $this->getHolder()
-            ) && !$this->contestAuthorizator->isAllowed(
+            ) && !$this->eventAuthorizator->isAllowed(
                 $this->getEvent(),
                 'application',
-                $this->getEvent()->getContest()
+                $this->getEvent()
             )
         ) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {

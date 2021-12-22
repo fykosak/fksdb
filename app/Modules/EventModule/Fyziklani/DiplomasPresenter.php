@@ -29,7 +29,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'results'));
     }
 
     /**
@@ -37,7 +37,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizeDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'calculate'));
     }
 
     /**

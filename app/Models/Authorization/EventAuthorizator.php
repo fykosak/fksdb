@@ -28,19 +28,11 @@ class EventAuthorizator
     }
 
     /**
-     * @param Resource|string $resource
-     */
-    public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
-    }
-
-    /**
      * @param Resource|string|null $resource
      */
-    public function isEventAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool
     {
-        if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
+        if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest())) {
             return true;
         }
         foreach ($this->getRolesForEvent($event) as $role) {

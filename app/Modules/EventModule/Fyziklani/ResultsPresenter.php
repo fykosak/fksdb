@@ -46,7 +46,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'list'));
     }
 
     /**
@@ -54,7 +54,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedResultsTable(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'table'));
     }
 
     /**
@@ -62,7 +62,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedTaskStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'taskStatistics'));
     }
 
     /**
@@ -70,7 +70,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedTeamStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'teamStatistics'));
     }
 
     /**
@@ -78,7 +78,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedCorrelationStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'correlation'));
     }
 
     /**
@@ -86,7 +86,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedPresentation(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'presentation'));
     }
 
     /**

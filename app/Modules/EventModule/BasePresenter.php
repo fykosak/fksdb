@@ -51,9 +51,9 @@ abstract class BasePresenter extends AuthenticatedPresenter
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventAllowed($resource, ?string $privilege): bool
+    public function isAllowed($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isEventAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -117,16 +117,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     protected function isTeamEvent(): bool
     {
         return in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * Standard ACL from acl.neon
-     * @throws EventNotFoundException
-     */
-    protected function isContestsOrgAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /* ********************** GUI ************************ */

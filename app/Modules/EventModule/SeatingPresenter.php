@@ -33,7 +33,7 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedPreview(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
+        $this->setAuthorized($this->isAllowed('event.seating', 'preview'));
     }
 
     /**
@@ -41,7 +41,7 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
+        $this->setAuthorized($this->isAllowed('event.seating', 'list'));
     }
 
     /**
@@ -49,8 +49,8 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
-        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
+        $download = $this->isAllowed('event.seating', 'download');
+        $edit = $this->isAllowed('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
