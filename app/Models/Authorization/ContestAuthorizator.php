@@ -12,13 +12,13 @@ use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
+use Tracy\Debugger;
 
 class ContestAuthorizator
 {
     use SmartObject;
 
     private User $user;
-
     private Permission $permission;
 
     public function __construct(User $identity, Permission $permission)
@@ -79,7 +79,6 @@ class ContestAuthorizator
 
     /**
      * @param Resource|string $resource
-     * @param ModelContest|int $contest
      */
     final public function isAllowedForLogin(
         ModelLogin $login,
@@ -87,17 +86,13 @@ class ContestAuthorizator
         ?string $privilege,
         ModelContest $contest
     ): bool {
-        $roles = $login->getRoles();
-
-        foreach ($roles as $role) {
-            if (!is_null($role->getContest()) && ($role->getContest()->contest_id !== $contest->contest_id)) {
-                continue;
-            }
-            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
-                return true;
+        foreach ($login->getRoles() as $role) {
+            if (is_null($role->getContest()) || $role->getContest()->contest_id === $contest->contest_id) {
+                if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
 }

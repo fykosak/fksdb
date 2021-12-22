@@ -101,7 +101,7 @@ class ApplicationHandler {
                 $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
             } elseif ($transition->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
-            } elseif (isset($transition)) {
+            } else {
                 $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_INFO));
             }
         } catch (ModelDataConflictException $exception) {

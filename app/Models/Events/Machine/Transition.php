@@ -226,7 +226,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
             return true;
         }
 
-        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source);
+        return preg_match("/(^|\\|)$stateMask(\\||\$)/", $this->source);
     }
 
     /**

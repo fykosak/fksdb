@@ -30,6 +30,9 @@ trait ChartPresenterTrait
         $this->template->chart = $this->selectedChart;
     }
 
+    /**
+     * @throws EventNotFoundException
+     */
     final public function renderList(): void
     {
         $this->template->charts = $this->getCharts();

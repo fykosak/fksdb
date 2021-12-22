@@ -12,7 +12,9 @@ use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use Nette\Application\ForbiddenRequestException;
 
 class ChartPresenter extends BasePresenter
 {
@@ -39,6 +41,11 @@ class ChartPresenter extends BasePresenter
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
+    /**
+     * @throws EventNotFoundException
+     * @throws NotImplementedException
+     * @throws ForbiddenRequestException
+     */
     protected function startup(): void
     {
         parent::startup();

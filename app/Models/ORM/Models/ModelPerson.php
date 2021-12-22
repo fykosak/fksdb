@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Events\EventRole\ContestOrgRole;
-use FKSDB\Models\Events\EventRole\EventOrgRole;
-use FKSDB\Models\Events\EventRole\FyziklaniTeacherRole;
-use FKSDB\Models\Events\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\EventRole\{
+    ContestOrgRole,
+    EventOrgRole,
+    FyziklaniTeacherRole,
+    ParticipantRole,
+};
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;

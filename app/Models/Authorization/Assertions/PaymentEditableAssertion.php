@@ -1,21 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Events\Semantics\Role;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Transitions\Machine;
 use Nette\Security\Permission;
-use Nette\Security\Resource;
 
-class PaymentAssertion
+class PaymentEditableAssertion implements Assertion
 {
-
-    /**
-     * @param string|Role $role
-     * @param string|Resource $resourceId
-     */
-    public function isPaymentEditable(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
         /** @var ModelPayment $payment */
         $payment = $acl->getQueriedResource();

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\Events\EventRole\EventRole;
+use FKSDB\Models\Authorization\EventRole\EventRole;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Security\Resource;
@@ -28,15 +28,6 @@ class EventAuthorizator
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @deprecated
-     */
-    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool
-    {
-        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
-    }
-
-    /**
      * @param Resource|string $resource
      */
     public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
@@ -47,20 +38,20 @@ class EventAuthorizator
     /**
      * @param Resource|string|null $resource
      */
-    public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    public function isEventAllowed($resource, ?string $privilege, ModelEvent $event): bool
     {
-        $login = $this->user->getIdentity();
-        if (!$login) {
-            return false;
-        }
         if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
             return true;
         }
-        return $this->isEventOrg($event);
+        foreach ($this->getRolesForEvent($event) as $role) {
+            if ($this->permission->isAllowed($role, $resource, $privilege)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * @param ModelEvent $event
      * @return EventRole[]
      */
     private function getRolesForEvent(ModelEvent $event): array
@@ -69,16 +60,5 @@ class EventAuthorizator
         /** @var ModelLogin $login */
         $person = $login ? $login->getPerson() : null;
         return $person ? $person->getEventRoles($event) : [];
-    }
-
-    private function isEventOrg(ModelEvent $event): bool
-    {
-        $login = $this->user->getIdentity();
-        /** @var ModelLogin $login */
-        $person = $login ? $login->getPerson() : null;
-        if (!$person) {
-            return false;
-        }
-        return $event->getEventOrgs()->where('person_id', $person->person_id)->count() > 0;
     }
 }

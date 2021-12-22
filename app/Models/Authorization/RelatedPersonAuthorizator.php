@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -13,7 +15,6 @@ use Nette\SmartObject;
 
 class RelatedPersonAuthorizator
 {
-
     use SmartObject;
 
     private User $user;

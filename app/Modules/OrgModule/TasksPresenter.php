@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\SeriesCalculator;
@@ -15,6 +17,8 @@ use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\Http\FileUpload;
@@ -29,13 +33,16 @@ class TasksPresenter extends BasePresenter
 
     private PipelineFactory $pipelineFactory;
     private Downloader $downloader;
+    private SeriesTable $seriesTable;
 
     final public function injectQuarterly(
         PipelineFactory $pipelineFactory,
-        Downloader $downloader
+        Downloader $downloader,
+        SeriesTable $seriesTable
     ): void {
         $this->pipelineFactory = $pipelineFactory;
         $this->downloader = $downloader;
+        $this->seriesTable = $seriesTable;
     }
 
     public function authorizedImport(): void
@@ -43,13 +50,46 @@ class TasksPresenter extends BasePresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
+    public function authorizedDispatch(): void
+    {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest()));
+    }
+
     public function titleImport(): PageTitle
     {
         return new PageTitle(_('Task import'), 'fas fa-download');
     }
 
+    public function titleDispatch(): PageTitle
+    {
+        return new PageTitle(_('Handout'), 'fa fa-folder-open');
+    }
+
     /**
      * @throws BadTypeException
+     */
+    public function actionDispatch(): void
+    {
+        /** @var HandoutFormComponent $control */
+        $control = $this->getComponent('handoutForm');
+        $control->setDefaults();
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws BadRequestException
+     */
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
+    }
+
+
+    /**
+     * @throws BadTypeException
+     * TODO to separate Component
      */
     protected function createComponentSeriesForm(): FormControl
     {
@@ -87,6 +127,11 @@ class TasksPresenter extends BasePresenter
         return $control;
     }
 
+    protected function createComponentHandoutForm(): HandoutFormComponent
+    {
+        return new HandoutFormComponent($this->getContext(), $this->seriesTable);
+    }
+
     /**
      * @throws UploadException
      */
@@ -114,7 +159,7 @@ class TasksPresenter extends BasePresenter
         try {
             $xml = simplexml_load_file($file);
 
-            if ($this->isLegacyXml($xml)) {
+            if ($xml->getName() === 'problems') {
                 throw new DeprecatedException();
             } else {
                 $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
@@ -136,10 +181,5 @@ class TasksPresenter extends BasePresenter
             unlink($file);
         }
         $this->redirect('this');
-    }
-
-    private function isLegacyXml(\SimpleXMLElement $xml): bool
-    {
-        return $xml->getName() === 'problems';
     }
 }

@@ -53,7 +53,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isEventAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**

@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
-use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control as FormControl;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-abstract class AbstractProcessing implements Processing {
-
+abstract class AbstractProcessing implements Processing
+{
     use SmartObject;
 
     public const DELIMITER = '.';
@@ -24,7 +26,14 @@ abstract class AbstractProcessing implements Processing {
     private array $states;
     private Holder $holder;
 
-    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): ?array {
+    final public function process(
+        array $states,
+        ArrayHash $values,
+        Machine $machine,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form = null
+    ): ?array {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
@@ -33,16 +42,24 @@ abstract class AbstractProcessing implements Processing {
         return null;
     }
 
-    abstract protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void;
+    abstract protected function innerProcess(
+        array $states,
+        ArrayHash $values,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form
+    ): void;
 
-    final protected function hasWildCart(string $mask): bool {
+    final protected function hasWildCart(string $mask): bool
+    {
         return strpos($mask, self::WILD_CART) !== false;
     }
 
     /**
      * @return FormControl[]
      */
-    final protected function getValue(string $mask): array {
+    final protected function getValue(string $mask): array
+    {
         $keys = array_keys($this->valuesPathCache);
         $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -60,7 +77,8 @@ abstract class AbstractProcessing implements Processing {
     /**
      * @return FormControl[]
      */
-    final protected function getControl(string $mask): array {
+    final protected function getControl(string $mask): array
+    {
         $keys = array_keys($this->formPathCache);
         $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -81,18 +99,23 @@ abstract class AbstractProcessing implements Processing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      */
-    protected function isBaseReallyEmpty(string $name): bool {
+    protected function isBaseReallyEmpty(string $name): bool
+    {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
             return true; // it was empty since beginning
         }
-        if (isset($this->states[$name]) && $this->states[$name] == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
+        if (
+            isset($this->states[$name])
+            && $this->states[$name] == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED
+        ) {
             return true; // it has been deleted by user
         }
         return false;
     }
 
-    private function setValues(ArrayHash $values, string $prefix = ''): void {
+    private function setValues(ArrayHash $values, string $prefix = ''): void
+    {
         if (!$prefix) {
             $this->valuesPathCache = [];
         }
@@ -107,7 +130,8 @@ abstract class AbstractProcessing implements Processing {
         }
     }
 
-    private function setForm(?Form $form): void {
+    private function setForm(?Form $form): void
+    {
         $this->formPathCache = [];
         if (!$form) {
             return;
@@ -120,7 +144,7 @@ abstract class AbstractProcessing implements Processing {
             }
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
-            $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
+            $path = str_replace(IComponent::NAME_SEPARATOR, self::DELIMITER, $path);
             $this->formPathCache[$path] = $control;
         }
     }

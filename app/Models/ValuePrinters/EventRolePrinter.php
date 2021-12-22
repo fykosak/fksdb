@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Models\Events\EventRole\ContestOrgRole;
-use FKSDB\Models\Events\EventRole\EventOrgRole;
-use FKSDB\Models\Events\EventRole\EventRole;
-use FKSDB\Models\Events\EventRole\FyziklaniTeacherRole;
-use FKSDB\Models\Events\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\EventRole\{
+    ContestOrgRole,
+    EventOrgRole,
+    EventRole,
+    FyziklaniTeacherRole,
+    ParticipantRole,
+};
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;

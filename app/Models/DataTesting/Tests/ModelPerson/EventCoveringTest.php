@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use Fykosak\Utils\Logging\Message;
 
 class EventCoveringTest extends PersonTest
 {
@@ -86,7 +87,7 @@ class EventCoveringTest extends PersonTest
                 $typeP,
                 $typeO
             ),
-            TestLog::LVL_ERROR
+            Message::LVL_ERROR
         );
     }
 

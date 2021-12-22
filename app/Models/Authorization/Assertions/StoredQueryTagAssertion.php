@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
-use Nette\Security\Resource;
-use Nette\Security\Role;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
-class StoredQueryTagAssertion
+// TODO isnt used anymore
+class StoredQueryTagAssertion implements Assertion
 {
     use SmartObject;
 
@@ -27,11 +28,7 @@ class StoredQueryTagAssertion
         $this->tagNames = $tagNames;
     }
 
-    /**
-     * @param Role|string $role
-     * @param Resource|string|null $resourceId
-     */
-    public function __invoke(Permission $acl, $role, $resourceId, ?string $privilege): bool
+    public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {

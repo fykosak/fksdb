@@ -53,7 +53,7 @@ class Role extends EvaluatedExpression {
     }
 
     public function __toString(): string {
-        return "role({$this->role})";
+        return "role($this->role)";
     }
 
 }

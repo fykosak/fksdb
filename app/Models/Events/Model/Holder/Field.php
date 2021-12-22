@@ -150,6 +150,6 @@ class Field {
     }
 
     public function __toString(): string {
-        return "{$this->baseHolder}.{$this->name}";
+        return "$this->baseHolder.$this->name";
     }
 }
