@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceContest;
@@ -47,5 +48,14 @@ class SignaturesWebModel extends WebModel {
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+    }
+    /**
+     * @param array $params
+     * @return array
+     * @throws GoneException
+     */
+    public function getJsonResponse(array $params): array
+    {
+        throw new GoneException();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
@@ -188,5 +189,14 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+    /**
+     * @param array $params
+     * @return array
+     * @throws GoneException
+     */
+    public function getJsonResponse(array $params): array
+    {
+        throw new GoneException();
     }
 }
