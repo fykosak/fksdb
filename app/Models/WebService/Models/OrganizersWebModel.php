@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\GoneException;
@@ -7,31 +9,34 @@ use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\WebService\XMLHelper;
 
-class OrganizersWebModel extends WebModel {
+class OrganizersWebModel extends WebModel
+{
 
     private ServiceOrg $serviceOrg;
 
-    public function inject(ServiceOrg $serviceOrg): void {
+    public function inject(ServiceOrg $serviceOrg): void
+    {
         $this->serviceOrg = $serviceOrg;
     }
 
     /**
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $args->contestId);
+        $organisers = $this->serviceOrg->getTable()->where('contest_id', $args->contestId);
         if (isset($args->year)) {
-            $orgs->where('since<=?', $args->year)->where('until IS NULL OR until >=?', $args->year);
+            $organisers->where('since<=?', $args->year)->where('until IS NULL OR until >=?', $args->year);
         }
 
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
         $doc->appendChild($rootNode);
         /** @var ModelOrg $org */
-        foreach ($orgs as $org) {
+        foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
                 'name' => $org->getPerson()->getFullName(),
@@ -53,9 +58,8 @@ class OrganizersWebModel extends WebModel {
         $doc->formatOutput = true;
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
+
     /**
-     * @param array $params
-     * @return array
      * @throws GoneException
      */
     public function getJsonResponse(array $params): array

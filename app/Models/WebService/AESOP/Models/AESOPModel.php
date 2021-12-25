@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
@@ -11,8 +13,8 @@ use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
-abstract class AESOPModel {
-
+abstract class AESOPModel
+{
     use SmartObject;
 
     protected const ID_SCOPE = 'fksdb.person_id';
@@ -25,16 +27,19 @@ abstract class AESOPModel {
 
     protected Explorer $explorer;
 
-    public function __construct(Container $container, ModelContestYear $contestYear) {
+    public function __construct(Container $container, ModelContestYear $contestYear)
+    {
         $this->contestYear = $contestYear;
         $container->callInjects($this);
     }
 
-    public function injectExplorer(Explorer $explorer): void {
+    public function injectExplorer(Explorer $explorer): void
+    {
         $this->explorer = $explorer;
     }
 
-    protected function getDefaultParams(): array {
+    protected function getDefaultParams(): array
+    {
         return [
             'version' => 1,
             'event' => $this->getMask(),
@@ -45,7 +50,8 @@ abstract class AESOPModel {
         ];
     }
 
-    private function formatSchool(?ModelSchool $school): ?string {
+    private function formatSchool(?ModelSchool $school): ?string
+    {
         if (!$school) {
             return null;
         }
@@ -59,7 +65,8 @@ abstract class AESOPModel {
         return 'ufo';
     }
 
-    public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse {
+    public function formatResponse(array $params, iterable $data, array $cools): PlainTextResponse
+    {
         $text = '';
 
         foreach ($params as $key => $value) {
@@ -76,7 +83,8 @@ abstract class AESOPModel {
         return $response;
     }
 
-    protected function getAESOPContestant(ModelPerson $person): array {
+    protected function getAESOPContestant(ModelPerson $person): array
+    {
         $postContact = $person->getPermanentPostContact(false);
         $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->getSchool();
@@ -93,15 +101,17 @@ abstract class AESOPModel {
             'gender' => $person->gender,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
-            'end-year' => ($history->study_year < 5 && $history->study_year > 0) ?
-                ($history->ac_year + 5 - $history->study_year) :
+            'end-year' => ($history->study_year < 5 && $history->study_year > 0)
+                ?
+                ($history->ac_year + 5 - $history->study_year)
+                :
                 (($history->study_year > 5 && $history->study_year < 10) ?
                     ($history->ac_year + 14 - $history->study_year)
                     : null
                 ),
             'email' => $person->getInfo()->email,
             'spam-flag' => ($spamFlag->value === 1) ? 'Y' : (($spamFlag->value === 0) ? 'N' : null),
-            'spam-date' => date('Y-m-d', $spamFlag->modified),
+            'spam-date' => date('Y-m-d', $spamFlag->modified->getTimestamp()),
             'x-person_id' => $person->person_id,
             'x-birthplace' => $person->getInfo()->birthplace,
             'x-ac_year' => $history->ac_year,
@@ -111,5 +121,4 @@ abstract class AESOPModel {
     abstract public function createResponse(): PlainTextResponse;
 
     abstract protected function getMask(): string;
-
 }

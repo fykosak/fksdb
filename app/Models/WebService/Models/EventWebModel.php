@@ -247,8 +247,6 @@ class EventWebModel extends WebModel
     }
 
     /**
-     * @param array $params
-     * @return array|\SoapVar
      * @throws BadRequestException
      */
     public function getJsonResponse(array $params): array
@@ -268,7 +266,7 @@ class EventWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_id' => Expect::scalar()->castTo('int'),
+            'event_id' => Expect::scalar()->castTo('int')->required(),
         ]);
     }
 }

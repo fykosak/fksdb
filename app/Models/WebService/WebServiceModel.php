@@ -72,18 +72,18 @@ class WebServiceModel
     }
 
     /**
-     * @param \stdClass[] $arguments
+     * @param \stdClass[] $args
      * @throws \SoapFault
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments): \SoapVar
+    public function __call(string $name, array $args): \SoapVar
     {
         $this->checkAuthentication(__FUNCTION__);
         $webModel = $this->getWebModel($name);
         if (!$webModel) {
             throw new \SoapFault('Server', 'Undefined method');
         }
-        return $webModel->getResponse(...$arguments);
+        return $webModel->getResponse(...$args);
     }
 
     /**

@@ -97,8 +97,6 @@ class ExportWebModel extends WebModel
     }
 
     /**
-     * @param array $params
-     * @return array
      * @throws GoneException
      */
     public function getJsonResponse(array $params): array

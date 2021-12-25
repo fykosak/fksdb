@@ -83,8 +83,6 @@ class StatsWebModel extends WebModel
         return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
     }
     /**
-     * @param array $params
-     * @return array
      * @throws GoneException
      */
     public function getJsonResponse(array $params): array

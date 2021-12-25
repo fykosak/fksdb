@@ -1,16 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
-use Nette\Http\IResponse;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
-use Nette\Schema\Message;
-use Nette\Schema\Schema;
-use Tracy\Debugger;
 
 class EventListWebModel extends WebModel
 {
@@ -55,7 +52,7 @@ class EventListWebModel extends WebModel
     public function getExpectedParams(): Structure
     {
         return Expect::structure([
-            'event_type_ids' => Expect::arrayOf(Expect::scalar()->castTo('int'))->required(),
+            'event_type_ids' => Expect::listOf(Expect::scalar()->castTo('int'))->required(),
         ]);
     }
 }
