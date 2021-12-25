@@ -55,8 +55,6 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource {
     }
 
     /**
-     * @param bool $throws
-     * @return bool
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */

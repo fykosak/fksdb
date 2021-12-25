@@ -26,8 +26,6 @@ class ExportWebModel extends WebModel
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws BadRequestException
      * @throws \SoapFault
      */

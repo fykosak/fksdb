@@ -4,7 +4,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;

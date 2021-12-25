@@ -179,11 +179,7 @@ class StoredQuery implements IDataSource, Resource {
         // bind explicit parameters
         foreach ($this->getQueryParameters() as $parameter) {
             $key = $parameter->getName();
-            if (isset($this->parameterValues[$key])) {
-                $value = $this->parameterValues[$key];
-            } else {
-                $value = $parameter->getDefaultValue();
-            }
+            $value = $this->parameterValues[$key] ?? $parameter->getDefaultValue();
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
@@ -205,7 +201,6 @@ class StoredQuery implements IDataSource, Resource {
      * ****************************** */
 
     /**
-     * @param array $filters
      * @throws NotImplementedException
      */
     public function filterData(array $filters): void {
@@ -213,8 +208,6 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     /**
-     * @param string $column
-     * @return int
      * @throws \PDOException
      */
     public function getCount(string $column = '*'): int {
@@ -229,7 +222,6 @@ class StoredQuery implements IDataSource, Resource {
     }
 
     /**
-     * @return \PDOStatement
      * @throws \PDOException
      */
     public function getData(): \PDOStatement {

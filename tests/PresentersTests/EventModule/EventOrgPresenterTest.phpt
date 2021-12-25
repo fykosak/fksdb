@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../Bootstrap.php';
@@ -16,7 +18,8 @@ use Tester\Assert;
  * Class EventOrgPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventOrgPresenterTest extends EntityPresenterTestCase {
+class EventOrgPresenterTest extends EntityPresenterTestCase
+{
 
     private int $personId;
 
@@ -26,10 +29,14 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
 
     private int $eventId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->loginUser();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(
+            DbNames::TAB_ORG,
+            ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
         $this->eventId = $this->insert(DbNames::TAB_EVENT, [
             'event_type_id' => 1,
             'year' => 1,
@@ -39,11 +46,15 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPersonId = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->eventOrgId = $this->insert(DbNames::TAB_EVENT_ORG, ['event_id' => $this->eventId, 'person_id' => $this->eventOrgPersonId, 'note' => 'note-original']);
+        $this->eventOrgId = $this->insert(
+            DbNames::TAB_EVENT_ORG,
+            ['event_id' => $this->eventId, 'person_id' => $this->eventOrgPersonId, 'note' => 'note-original']
+        );
         $this->personId = $this->createPerson('Tester_C', 'Testrovič_C');
     }
 
-    public function testList(): void {
+    public function testList(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -52,7 +63,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::contains('note-original', $html);
     }
 
-    public function testCreate(): void {
+    public function testCreate(): void
+    {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
@@ -66,7 +78,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testModelErrorCreate(): void {
+    public function testModelErrorCreate(): void
+    {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
@@ -81,7 +94,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testEdit(): void {
+    public function testEdit(): void
+    {
         $response = $this->createFormRequest('edit', [
             EventOrgFormComponent::CONTAINER => [
                 'person_id__meta' => (string)$this->eventOrgPersonId,
@@ -95,7 +109,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal('note-edited', $org->note);
     }
 
-    public function testDetail(): void {
+    public function testDetail(): void
+    {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -104,26 +119,31 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::contains('note-original', $html);
     }
 
-    protected function getPresenterName(): string {
+    protected function getPresenterName(): string
+    {
         return 'Event:EventOrg';
     }
 
-    protected function createPostRequest(string $action, array $params, array $postData = []): Request {
+    protected function createPostRequest(string $action, array $params, array $postData = []): Request
+    {
         $params['eventId'] = $this->eventId;
         return parent::createPostRequest($action, $params, $postData);
     }
 
-    protected function createGetRequest(string $action, array $params, array $postData = []): Request {
+    protected function createGetRequest(string $action, array $params, array $postData = []): Request
+    {
         $params['eventId'] = $this->eventId;
         return parent::createGetRequest($action, $params, $postData);
     }
 
-    protected function tearDown(): void {
-         $this->truncateTables([DbNames::TAB_EVENT_ORG,DbNames::TAB_EVENT]);
+    protected function tearDown(): void
+    {
+        $this->truncateTables([DbNames::TAB_EVENT_ORG, DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
-    private function countEventOrgs(): int {
+    private function countEventOrgs(): int
+    {
         return $this->explorer->query('SELECT * FROM event_org where person_id=?', $this->personId)->getRowCount();
     }
 }

@@ -20,7 +20,6 @@ class BornColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new DatePrinter('d.m.Y'))($model->born);

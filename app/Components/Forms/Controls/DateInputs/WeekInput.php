@@ -5,10 +5,9 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 class WeekInput extends AbstractDateInput {
     /**
      * WeekInput constructor.
-     * @param null $label
-     * @param null $maxLength
+     * @param object|string $label
      */
-    public function __construct($label = null, $maxLength = null) {
+    public function __construct($label = null, int $maxLength = null) {
         parent::__construct('week', 'Y-\WW', $label, $maxLength);
     }
 }

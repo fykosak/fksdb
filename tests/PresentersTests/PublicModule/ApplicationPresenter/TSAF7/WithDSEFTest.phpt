@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
@@ -9,11 +11,13 @@ use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class WithDSEFTest extends TsafTestCase {
+class WithDSEFTest extends TsafTestCase
+{
 
     private int $tsafAppId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->authenticate($this->personId, $this->fixture);
 
@@ -36,7 +40,8 @@ class WithDSEFTest extends TsafTestCase {
         ]);
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => (string)$this->personId,

@@ -24,7 +24,6 @@ class TagsColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelStoredQuery $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $baseEl = Html::el('div')->addAttributes(['class' => 'stored-query-tags']);

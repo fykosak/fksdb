@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
@@ -16,8 +18,8 @@ use SplFileInfo;
 use Tester\Assert;
 use Tester\Environment;
 
-abstract class SubmitTestCase extends DatabaseTestCase {
-
+abstract class SubmitTestCase extends DatabaseTestCase
+{
     use MockApplicationTrait;
 
     public const TOKEN = 'foo';
@@ -32,12 +34,14 @@ abstract class SubmitTestCase extends DatabaseTestCase {
      * SubmitTestCase constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $this->setContainer($container);
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
@@ -91,7 +95,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->fakeProtection(self::TOKEN);
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables(['submit', 'task', 'contestant_base']);
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
@@ -107,7 +112,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest(array $formData): Request {
+    protected function createPostRequest(array $formData): Request
+    {
         $formData = Helpers::merge($formData, [
             '_do' => 'uploadForm-form-submit',
         ]);
@@ -119,7 +125,8 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         ], $formData);
     }
 
-    protected function createFileUpload(): array {
+    protected function createFileUpload(): array
+    {
         $file = tempnam(TEMP_DIR, 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
@@ -132,16 +139,17 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         ])];
     }
 
-    protected function innerTestSubmit(): void {
+    protected function innerTestSubmit(): void
+    {
         $request = $this->createPostRequest([
             'upload' => 'Odeslat',
-            'tasks' => "{$this->taskAll},{$this->taskRestricted}",
+            'tasks' => "$this->taskAll,$this->taskRestricted",
             '_token_' => self::TOKEN,
         ]);
 
         $request->setFiles([
-            "task{$this->taskAll}" => $this->createFileUpload(),
-            "task{$this->taskRestricted}" => $this->createFileUpload(),
+            "task$this->taskAll" => $this->createFileUpload(),
+            "task$this->taskRestricted" => $this->createFileUpload(),
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
@@ -149,14 +157,24 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): Row {
-        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+    protected function assertSubmit(int $contestantId, int $taskId): Row
+    {
+        $submit = $this->explorer->fetch(
+            'SELECT * FROM submit WHERE ct_id = ? AND task_id = ?',
+            $contestantId,
+            $taskId
+        );
         Assert::notEqual(null, $submit);
         return $submit;
     }
 
-    protected function assertNotSubmit(int $contestantId, int $taskId): void {
-        $submit = $this->explorer->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
+    protected function assertNotSubmit(int $contestantId, int $taskId): void
+    {
+        $submit = $this->explorer->fetch(
+            'SELECT * FROM submit WHERE ct_id = ? AND task_id = ?',
+            $contestantId,
+            $taskId
+        );
         Assert::equal(null, $submit);
     }
 }

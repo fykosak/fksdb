@@ -6,13 +6,13 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -49,12 +49,11 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
         $data['event_id'] = $this->event->event_id;
         /** @var ModelScheduleItem $model */
         $model = $this->serviceScheduleItem->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Logger::SUCCESS);
+        $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -67,8 +66,6 @@ class ScheduleItemFormContainer extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */

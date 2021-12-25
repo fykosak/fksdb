@@ -8,10 +8,10 @@ use FKSDB\Components\EntityForms\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\BadRequestException;
@@ -34,12 +34,12 @@ class EventOrgPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-user-tie');
+        return new PageTitle(_('Organisers of event'), 'fa fa-user-tie');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-user-plus');
+        return new PageTitle(_('Create organiser of event'), 'fa fa-user-plus');
     }
 
     /**
@@ -70,7 +70,6 @@ class EventOrgPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

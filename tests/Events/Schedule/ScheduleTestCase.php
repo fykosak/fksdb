@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
@@ -8,7 +10,8 @@ use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Utils\DateTime;
 
-abstract class ScheduleTestCase extends EventTestCase {
+abstract class ScheduleTestCase extends EventTestCase
+{
 
     /** @var int */
     protected $itemId;
@@ -17,11 +20,13 @@ abstract class ScheduleTestCase extends EventTestCase {
     protected array $persons = [];
     protected int $eventId;
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         return $this->eventId;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -57,11 +62,14 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->persons[] = $this->createPerson('Paní', 'Bílá',
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá',
             [
                 'email' => 'bila-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
+            ]
+        );
         $this->insert('event_participant', [
             'person_id' => end($this->persons),
             'event_id' => $this->eventId,
@@ -72,11 +80,14 @@ EOT
             'schedule_item_id' => $this->itemId,
         ]);
 
-        $this->persons[] = $this->createPerson('Paní', 'Bílá II.',
+        $this->persons[] = $this->createPerson(
+            'Paní',
+            'Bílá II.',
             [
                 'email' => 'bila2-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
+            ]
+        );
         $this->insert('event_participant', [
             'person_id' => end($this->persons),
             'event_id' => $this->eventId,
@@ -88,7 +99,8 @@ EOT
         ]);
     }
 
-    protected function createAccommodationRequest(): Request {
+    protected function createAccommodationRequest(): Request
+    {
         return $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
@@ -127,8 +139,11 @@ EOT
 
     abstract public function getAccommodationCapacity(): int;
 
-    protected function tearDown(): void {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']);
+    protected function tearDown(): void
+    {
+        $this->truncateTables(
+            [DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']
+        );
         parent::tearDown();
     }
 }

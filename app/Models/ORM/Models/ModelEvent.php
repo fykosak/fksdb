@@ -70,7 +70,6 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @return ModelFyziklaniGameSetup
      * @throws NotSetGameParametersException
      */
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup

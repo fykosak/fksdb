@@ -7,6 +7,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
@@ -41,9 +42,6 @@ class SingleEventSource implements HolderSource {
 
     /**
      * SingleEventSource constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -67,9 +65,9 @@ class SingleEventSource implements HolderSource {
     }
 
     private function loadData(): void {
-        $joinToCheck = false;
+        $joinToCheck=null;
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            if ($joinToCheck === false) {
+            if (!isset($joinToCheck)) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
                 throw new InvalidStateException(sprintf("SingleEventSource needs all secondary holders to be joined to the same column. Conflict '%s' and '%s'.", $group['joinTo'], $joinToCheck));
@@ -104,7 +102,6 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @return void
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
@@ -124,7 +121,7 @@ class SingleEventSource implements HolderSource {
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
             $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-            $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
+            $holder->setModel($primaryModel, $cache[$primaryPK] ?? []);
             $this->holders[$primaryPK] = $holder;
         }
     }
@@ -133,8 +130,6 @@ class SingleEventSource implements HolderSource {
      * Method propagates selected calls to internal primary models selection.
      *
      * @staticvar array $delegated
-     * @param string $name
-     * @param array $args
      * @return SingleEventSource|int
      */
     public function __call(string $name, array $args) {
@@ -168,22 +163,12 @@ class SingleEventSource implements HolderSource {
     }
 
     /**
-     * @param int $primaryKey
-     * @return Holder
      * @throws NeonSchemaException
      */
-    public function getHolder(int $primaryKey): Holder {
-        $primaryModel = $this->dummyHolder->getPrimaryHolder()->getService()->findByPrimary($primaryKey);
-
-        $cache = [];
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            $secondaryModel = $group['service']->findByPrimary($primaryModel->{$group['joinOn']});
-            $cache[$key] = $cache[$key] ?? [];
-            $cache[$key][] = $secondaryModel;
-        }
-
+    public function getHolder(AbstractModel $primaryModel): Holder
+    {
         $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
-        $holder->setModel($primaryModel, $cache);
+        $holder->setModel($primaryModel);
         return $holder;
     }
 }

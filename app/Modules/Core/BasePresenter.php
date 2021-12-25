@@ -6,7 +6,6 @@ namespace FKSDB\Modules\Core;
 
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
-use FKSDB\Components\Controls\Choosers\ThemeChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
@@ -18,12 +17,13 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Localization\GettextTranslator;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
-use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\Localization\GettextTranslator;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
@@ -45,10 +45,10 @@ abstract class BasePresenter extends Presenter implements
 {
     use CollectorPresenterTrait;
 
-    public const FLASH_SUCCESS = Logger::SUCCESS;
-    public const FLASH_INFO = Logger::INFO;
-    public const FLASH_WARNING = Logger::WARNING;
-    public const FLASH_ERROR = Logger::ERROR;
+    public const FLASH_SUCCESS = Message::LVL_SUCCESS;
+    public const FLASH_INFO = Message::LVL_INFO;
+    public const FLASH_WARNING = Message::LVL_WARNING;
+    public const FLASH_ERROR = Message::LVL_ERROR;
 
     /**
      * BackLink for tree construction for breadcrumbs.
@@ -60,6 +60,7 @@ abstract class BasePresenter extends Presenter implements
      * @internal
      */
     public ?string $lang = null;
+    private string $language;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
     protected PresenterBuilder $presenterBuilder;
@@ -134,7 +135,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @param bool $need
      * @throws BadTypeException
      * @throws \ReflectionException
      */
@@ -152,8 +152,6 @@ abstract class BasePresenter extends Presenter implements
     }
 
     /**
-     * @param string $destination
-     * @param array|null $args
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
@@ -232,9 +230,40 @@ abstract class BasePresenter extends Presenter implements
     protected function startup(): void
     {
         parent::startup();
-        /** @var LanguageChooserComponent $control */
-        $control = $this->getComponent('languageChooser');
-        $control->init();
+        if (!isset($this->language)) {
+            $this->language = $this->selectLang();
+            $this->translator->setLang($this->language);
+        }
+    }
+
+    /**
+     * @throws UnsupportedLanguageException
+     */
+    private function selectLang(): string
+    {
+        $candidate = $this->getUserPreferredLang() ?? $this->lang;
+        $supportedLanguages = $this->translator->getSupportedLanguages();
+        if (!$candidate || !in_array($candidate, $supportedLanguages)) {
+            $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+        }
+        if (!$candidate) {
+            $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
+        }
+        // final check
+        if (!in_array($candidate, $supportedLanguages)) {
+            throw new UnsupportedLanguageException($candidate);
+        }
+        return $candidate;
+    }
+
+    private function getUserPreferredLang(): ?string
+    {
+        /**@var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        if ($login && $login->getPerson()) {
+            return $login->getPerson()->getPreferredLang();
+        }
+        return null;
     }
 
     protected function createTemplate(): Template
@@ -248,7 +277,6 @@ abstract class BasePresenter extends Presenter implements
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException
-     * @throws UnsupportedLanguageException
      */
     protected function beforeRender(): void
     {
@@ -271,7 +299,7 @@ abstract class BasePresenter extends Presenter implements
                 $this->pageTitle = $this->{$method}();
             }
         }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle();
+        $this->pageTitle = $this->pageTitle ?? new PageTitle('');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
     }
@@ -279,8 +307,6 @@ abstract class BasePresenter extends Presenter implements
     /**
      * Formats title method name.
      * Method should set the title of the page using setTitle method.
-     *
-     * @param string
      */
     protected static function formatTitleMethod(string $view): string
     {
@@ -298,14 +324,9 @@ abstract class BasePresenter extends Presenter implements
         return $this->pageStyleContainer;
     }
 
-    /**
-     * @throws UnsupportedLanguageException
-     */
     public function getLang(): string
     {
-        /** @var LanguageChooserComponent $control */
-        $control = $this->getComponent('languageChooser');
-        return $control->getLang();
+        return $this->language;
     }
 
     protected function getNavRoots(): array
@@ -343,11 +364,6 @@ abstract class BasePresenter extends Presenter implements
         return new NavigationChooserComponent($this->getContext());
     }
 
-    protected function createComponentThemeChooser(): ThemeChooserComponent
-    {
-        return new ThemeChooserComponent($this->getContext());
-    }
-
     protected function createComponentValuePrinter(): ColumnPrinterComponent
     {
         return new ColumnPrinterComponent($this->getContext());
@@ -360,6 +376,6 @@ abstract class BasePresenter extends Presenter implements
 
     final protected function createComponentLanguageChooser(): LanguageChooserComponent
     {
-        return new LanguageChooserComponent($this->getContext(), $this->lang);
+        return new LanguageChooserComponent($this->getContext(), $this->language, !$this->getUserPreferredLang());
     }
 }

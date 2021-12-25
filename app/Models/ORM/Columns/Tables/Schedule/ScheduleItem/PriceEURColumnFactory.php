@@ -15,7 +15,6 @@ use Nette\Utils\Html;
 class PriceEURColumnFactory extends ColumnFactory {
     /**
      * @param AbstractModel|ModelScheduleItem $model
-     * @return Html
      * @throws UnsupportedCurrencyException
      */
     protected function createHtmlValue(AbstractModel $model): Html {

@@ -16,8 +16,8 @@ use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 /**
  * @deprecated
  */
-class GroupOptions implements OptionsProvider {
-
+class GroupOptions implements OptionsProvider
+{
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
@@ -32,8 +32,6 @@ class GroupOptions implements OptionsProvider {
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
-     * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
@@ -49,7 +47,8 @@ class GroupOptions implements OptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
-    private function transformGroups(iterable $groups): array {
+    private function transformGroups(iterable $groups): array
+    {
         $result = [];
         foreach ($groups as $name => $capacity) {
             $result[] = [
@@ -61,14 +60,15 @@ class GroupOptions implements OptionsProvider {
     }
 
     /**
-     * @param ModelEvent $event
      * @return ModelDsefGroup[]
      */
-    private function getGroups(ModelEvent $event): array {
+    private function getGroups(ModelEvent $event): array
+    {
         return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }
 
-    public function getOptions(Field $field): array {
+    public function getOptions(Field $field): array
+    {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         /** @var ModelDsefParticipant $model */
@@ -93,7 +93,7 @@ class GroupOptions implements OptionsProvider {
         $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
-            $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
+            $occupied = $groupOccupied[$key] ?? 0;
             if ($group->capacity > $occupied) {
                 $remains = $group->capacity - $occupied;
                 if ($selfGroup === $key) {

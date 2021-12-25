@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
@@ -8,9 +10,11 @@ use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class WithDSEFAnonymousTest extends TsafTestCase {
+class WithDSEFAnonymousTest extends TsafTestCase
+{
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
@@ -33,7 +37,8 @@ class WithDSEFAnonymousTest extends TsafTestCase {
         ]);
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
 
         $request = $this->createPostRequest([
             'participantTsaf' => [

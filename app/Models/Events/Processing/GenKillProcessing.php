@@ -6,7 +6,7 @@ use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -18,11 +18,18 @@ use Nette\Utils\ArrayHash;
  * @note Transition conditions are evaluated od pre-edited data.
  * @note All determining fields must be filled to consider application complete.
  */
-class GenKillProcessing implements Processing {
-
+class GenKillProcessing implements Processing
+{
     use SmartObject;
 
-    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, Logger $logger, ?Form $form = null): array {
+    public function process(
+        array $states,
+        ArrayHash $values,
+        Machine $machine,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form = null
+    ): array {
         $result = [];
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
@@ -42,11 +49,16 @@ class GenKillProcessing implements Processing {
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
                 $result[$name] = \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED;
-            } elseif ($holder->getBaseHolder($name)->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
+            } elseif (
+                $holder->getBaseHolder($name)->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+            ) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
-                    $transitions = $baseMachine->getAvailableTransitions($holder, $holder->getBaseHolder($name)->getModelState());
+                    $transitions = $baseMachine->getAvailableTransitions(
+                        $holder,
+                        $holder->getBaseHolder($name)->getModelState()
+                    );
                     if (count($transitions) == 0) {
                         throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));
                     } elseif (isset($states[$name])) {

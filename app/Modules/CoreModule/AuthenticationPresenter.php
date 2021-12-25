@@ -12,11 +12,11 @@ use FKSDB\Models\Authentication\GoogleAuthenticator;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -214,7 +214,6 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws \Exception
      */
     private function loginFormSubmitted(Form $form): void
@@ -249,7 +248,6 @@ final class AuthenticationPresenter extends BasePresenter
     }
 
     /**
-     * @param Form $form
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */

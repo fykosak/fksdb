@@ -20,9 +20,6 @@ final class ORMFactory {
     }
 
     /**
-     * @param string $tableName
-     * @param string $colName
-     * @return ColumnFactory
      * @throws BadTypeException
      * @throws MissingServiceException
      */
@@ -35,9 +32,6 @@ final class ORMFactory {
     }
 
     /**
-     * @param string $tableName
-     * @param string $linkId
-     * @return LinkFactory
      * @throws BadTypeException
      * @throws MissingServiceException
      */

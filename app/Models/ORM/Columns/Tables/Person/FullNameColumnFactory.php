@@ -13,8 +13,6 @@ use Nette\Utils\Html;
 class FullNameColumnFactory extends ColumnFactory {
 
     /**
-     * @param ...$args
-     * @return BaseControl
      * @throws AbstractColumnException
      */
     protected function createFormControl(...$args): BaseControl {
@@ -23,7 +21,6 @@ class FullNameColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPerson $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new StringPrinter())($model->getFullName());

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\Models\ORM\DbNames;
@@ -10,15 +12,23 @@ $container = require '../../Bootstrap.php';
  * Class OrgModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgModule extends AbstractPageDisplayTestCase {
+class OrgModule extends AbstractPageDisplayTestCase
+{
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(DbNames::TAB_ORG, [
+            'person_id' => $this->personId,
+            'contest_id' => 1,
+            'since' => 1,
+            'order' => 1,
+        ]);
         $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
     }
 
-    protected function transformParams(string $presenterName, string $action, array $params): array {
+    protected function transformParams(string $presenterName, string $action, array $params): array
+    {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['year'] = (string)1;
         $params['contestId'] = (string)1;
@@ -29,7 +39,8 @@ class OrgModule extends AbstractPageDisplayTestCase {
         return [$presenterName, $action, $params];
     }
 
-    public function getPages(): array {
+    public function getPages(): array
+    {
         return [
             ['Org:Inbox', 'corrected'],
 
@@ -86,7 +97,8 @@ class OrgModule extends AbstractPageDisplayTestCase {
         ];
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables(['person_info', 'org']);
         parent::tearDown();
     }

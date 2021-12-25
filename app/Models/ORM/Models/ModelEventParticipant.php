@@ -79,7 +79,6 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
     }
 
     /**
-     * @return ModelFyziklaniTeam
      * @throws BadRequestException
      */
     public function getFyziklaniTeam(): ModelFyziklaniTeam

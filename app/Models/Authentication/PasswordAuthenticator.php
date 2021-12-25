@@ -25,10 +25,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     /**
-     * Performs an authentication.
-     * @param string $user
-     * @param string $password
-     * @return ModelLogin
      * @throws InactiveLoginException
      * @throws InvalidCredentialsException
      * @throws NoLoginException
@@ -48,8 +44,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     /**
-     * @param string $id
-     * @return ModelLogin
      * @throws InactiveLoginException
      * @throws NoLoginException
      * @throws UnknownLoginException
@@ -80,9 +74,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     /**
-     * @param string $password
      * @param ModelLogin|object $login
-     * @return string
      */
     public static function calculateHash(string $password, $login): string {
         return sha1($login->login_id . md5($password));

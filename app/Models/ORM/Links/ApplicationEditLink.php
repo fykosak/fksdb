@@ -14,7 +14,6 @@ class ApplicationEditLink extends LinkFactory {
 
     /**
      * @param ModelEventParticipant|AbstractModel $model
-     * @return string
      */
     protected function getDestination(AbstractModel $model): string {
         return ':Public:Application:default';
@@ -22,7 +21,6 @@ class ApplicationEditLink extends LinkFactory {
 
     /**
      * @param AbstractModel|ModelEventParticipant $model
-     * @return array
      * @throws BadRequestException
      */
     protected function prepareParams(AbstractModel $model): array {

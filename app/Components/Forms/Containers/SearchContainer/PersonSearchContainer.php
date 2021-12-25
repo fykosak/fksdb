@@ -12,7 +12,8 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-class PersonSearchContainer extends SearchContainer {
+class PersonSearchContainer extends SearchContainer
+{
     public const SEARCH_EMAIL = 'email';
     public const SEARCH_ID = 'id';
     public const SEARCH_NONE = 'none';
@@ -25,25 +26,34 @@ class PersonSearchContainer extends SearchContainer {
 
     protected ServicePerson $servicePerson;
 
-    public function __construct(Container $container, string $searchType) {
+    public function __construct(Container $container, string $searchType)
+    {
         parent::__construct($container);
         $this->searchType = $searchType;
     }
 
-    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
+    final public function injectPrimary(
+        PersonFactory $personFactory,
+        ServicePerson $servicePerson,
+        PersonProvider $provider
+    ): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;
     }
 
-    protected function createSearchControl(): ?BaseControl {
+    protected function createSearchControl(): ?BaseControl
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Invalid e-mail.'));
-                $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
-                $control->setHtmlAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setOption(
+                    'description',
+                    _('First of all try to find the person in our database using e-mail address')
+                );
+                $control->setHtmlAttribute('placeholder', 'your-email@example.com');
                 $control->setHtmlAttribute('autocomplete', 'email');
                 return $control;
             case self::SEARCH_ID:
@@ -55,7 +65,8 @@ class PersonSearchContainer extends SearchContainer {
         }
     }
 
-    protected function getSearchCallback(): callable {
+    protected function getSearchCallback(): callable
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term): ?ModelPerson {
@@ -70,7 +81,8 @@ class PersonSearchContainer extends SearchContainer {
         }
     }
 
-    protected function getTermToValuesCallback(): callable {
+    protected function getTermToValuesCallback(): callable
+    {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term): array {

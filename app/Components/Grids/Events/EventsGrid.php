@@ -31,7 +31,6 @@ class EventsGrid extends EntityGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException

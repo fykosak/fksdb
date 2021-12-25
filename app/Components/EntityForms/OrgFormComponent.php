@@ -7,7 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -44,8 +44,6 @@ class OrgFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -75,7 +73,6 @@ class OrgFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -86,7 +83,6 @@ class OrgFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */

@@ -8,8 +8,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Forms\Controls\RadioList;
@@ -29,8 +29,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws NotSetGameParametersException
      */
     protected function configureForm(Form $form): void
@@ -39,7 +37,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void
@@ -68,7 +65,6 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return RadioList
      * TODO to table-reflection factory
      * @throws NotSetGameParametersException
      */

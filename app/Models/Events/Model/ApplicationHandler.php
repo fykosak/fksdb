@@ -15,8 +15,8 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelData
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
@@ -38,14 +38,12 @@ class ApplicationHandler {
 
     private string $errorMode = self::ERROR_ROLLBACK;
     private Connection $connection;
-    private Container $container;
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ModelEvent $event, Logger $logger, Container $container) {
         $this->event = $event;
         $this->logger = $logger;
-        $this->container = $container;
         $container->callInjects($this);
     }
 
@@ -100,26 +98,26 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
             } elseif ($transition->isTerminating()) {
-                $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
+                $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
             } elseif (isset($transition)) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_INFO));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
 
             $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
-            $this->logger->log(new Message($message, Logger::ERROR));
+            $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
-            $this->logger->log(new Message($message, Logger::ERROR));
+            $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
         } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException | UnavailableTransitionException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), Logger::ERROR));
+            $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
         }
     }
@@ -160,32 +158,31 @@ class ApplicationHandler {
             }
 
             $this->commit();
-
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
-                $this->logger->log(new Message(_('Application deleted.'), Logger::SUCCESS));
+                $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_INFO));
             }
-            if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Logger::SUCCESS));
+            if (($data||$form) && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
+                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
             $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
-            $this->logger->log(new Message($message, Logger::ERROR));
+            $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
-            $this->logger->log(new Message($message, Logger::ERROR));
+            $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
         } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), Logger::ERROR));
+            $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
         }
@@ -263,11 +260,10 @@ class ApplicationHandler {
     }
 
     /**
-     * @param \Exception $e
-     * @return void
+     * @return never|void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(\Exception $e): void {
+    private function reRaise(\Throwable $e): void {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

@@ -14,7 +14,6 @@ class ModelContainer extends ContainerWithOptions {
 
     /**
      * @param ActiveRow|iterable $data
-     * @param bool $erase
      * @return static
      */
     public function setValues($data, bool $erase = false): self {

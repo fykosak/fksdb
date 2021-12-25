@@ -10,7 +10,7 @@ use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 

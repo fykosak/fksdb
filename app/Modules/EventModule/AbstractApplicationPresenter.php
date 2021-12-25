@@ -15,15 +15,14 @@ use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
-use Throwable;
 
 abstract class AbstractApplicationPresenter extends BasePresenter
 {
@@ -45,7 +44,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
-     * @throws Throwable
+     * @throws \Throwable
      */
     final public function titleDetail(): PageTitle
     {
@@ -76,7 +75,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
@@ -102,7 +100,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new ApplicationComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity()->getPrimary())
+            $source->getHolder($this->getEntity())
         );
     }
 
@@ -119,7 +117,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
         return new TransitionButtonsComponent(
             $this->getContext(),
             new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
-            $source->getHolder($this->getEntity()->getPrimary())
+            $source->getHolder($this->getEntity())
         );
     }
 

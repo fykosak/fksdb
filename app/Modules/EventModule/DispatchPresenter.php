@@ -6,7 +6,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 
 class DispatchPresenter extends AuthenticatedPresenter

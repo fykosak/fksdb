@@ -27,8 +27,6 @@ class ModelRegion extends AbstractModel {
     }
 
     /**
-     * @param string $number
-     * @return string
      * @throws InvalidPhoneNumberException
      */
     public function formatPhoneNumber(string $number): string {

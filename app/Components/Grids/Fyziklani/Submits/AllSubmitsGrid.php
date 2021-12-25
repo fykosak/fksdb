@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -56,8 +56,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -142,7 +140,6 @@ class AllSubmitsGrid extends SubmitsGrid
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl

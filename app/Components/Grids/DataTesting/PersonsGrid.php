@@ -9,7 +9,7 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
@@ -37,8 +37,6 @@ class PersonsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
@@ -59,7 +57,6 @@ class PersonsGrid extends BaseGrid
 
     /**
      * @param TestLog[] $logs
-     * @return Html
      * @throws BadTypeException
      * @throws NotImplementedException
      */

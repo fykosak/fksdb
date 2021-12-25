@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Choosers\EventChooserComponent;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
@@ -11,7 +12,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -48,7 +48,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
@@ -122,25 +121,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
 
     /**
      * @param Resource|string|null $resource
-     * @param string|null $privilege
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
     protected function isContestsOrgAuthorized($resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isContestOrgAllowed($resource, $privilege, $this->getEvent());
-    }
-
-    /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * Check if is contest and event org
-     * TODO vyfakuje to aj cartesianov
-     * @throws EventNotFoundException
-     */
-    protected function isEventAndContestOrgAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /* ********************** GUI ************************ */
@@ -156,7 +142,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
-     * @throws UnsupportedLanguageException
      * @throws BadRequestException
      * @throws \ReflectionException
      */
@@ -175,6 +160,14 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');
         }
         parent::beforeRender();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    protected function createComponentEventChooser(): EventChooserComponent
+    {
+        return new EventChooserComponent($this->getContext(), $this->getEvent());
     }
 
     /**

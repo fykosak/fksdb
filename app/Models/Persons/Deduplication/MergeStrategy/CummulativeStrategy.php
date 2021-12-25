@@ -38,7 +38,6 @@ class CummulativeStrategy implements MergeStrategy {
     /**
      * @param mixed $trunk
      * @param mixed $merged
-     * @return bool
      */
     private function equals($trunk, $merged): bool {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {

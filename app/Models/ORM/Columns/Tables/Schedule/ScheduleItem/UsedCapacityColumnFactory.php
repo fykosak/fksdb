@@ -12,7 +12,6 @@ class UsedCapacityColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelScheduleItem $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new NumberPrinter(null, null, 0, NumberPrinter::NULL_VALUE_ZERO))($model->getUsedCapacity());

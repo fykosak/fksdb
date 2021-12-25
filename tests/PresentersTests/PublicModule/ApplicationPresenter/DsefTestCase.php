@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Models\ORM\DbNames;
@@ -7,17 +9,20 @@ use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
-abstract class DsefTestCase extends EventTestCase {
+abstract class DsefTestCase extends EventTestCase
+{
 
     protected ApplicationPresenter $fixture;
     protected int $personId;
     protected int $eventId;
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         return $this->eventId;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -39,10 +44,16 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
+        $this->personId = $this->createPerson(
+            'Paní',
+            'Bílá',
+            ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],
+            []
+        );
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, DbNames::TAB_E_DSEF_GROUP]);
         parent::tearDown();
     }

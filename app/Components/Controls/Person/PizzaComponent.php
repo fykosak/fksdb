@@ -25,7 +25,6 @@ class PizzaComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {

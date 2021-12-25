@@ -4,15 +4,12 @@ namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 
 class PersonInfoFieldTest extends PersonFileLevelTest {
 
     /**
-     * @param Logger $logger
-     * @param ModelPerson $person
-     * @return void
      * @throws BadTypeException
      */
     final public function run(Logger $logger, ModelPerson $person): void {

@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
 class MyApplicationsPresenter extends BasePresenter
 {

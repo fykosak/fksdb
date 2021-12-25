@@ -21,9 +21,6 @@ class ArrayProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $result = [];
@@ -46,7 +43,6 @@ class ArrayProvider implements FilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return void
      */
     public function setDefaultValue($id): void {
         /* intentionally blank */

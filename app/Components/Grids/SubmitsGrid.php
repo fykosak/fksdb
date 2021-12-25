@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -49,7 +48,6 @@ class SubmitsGrid extends BaseGrid
     }
 
     /**
-     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
@@ -107,7 +105,7 @@ class SubmitsGrid extends BaseGrid
             })->setShow(function (ActiveRow $row): bool {
                 $submit = ModelSubmit::createFromActiveRow($row);
                 if (!$submit->isQuiz()) {
-                    return $submit->corrected;
+                    return (bool)$submit->corrected;
                 } else {
                     return false;
                 }
@@ -124,18 +122,17 @@ class SubmitsGrid extends BaseGrid
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
                 sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()),
-                Logger::WARNING
+                Message::LVL_WARNING
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_DANGER);
+            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_ERROR);
         }
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void
@@ -144,12 +141,11 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void
@@ -158,7 +154,7 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 

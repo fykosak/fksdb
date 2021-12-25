@@ -36,10 +36,6 @@ class ImportHandler {
     }
 
     /**
-     * @param ApplicationHandler $handler
-     * @param string $errorMode
-     * @param string $stateless
-     * @return bool
      * @throws ImportHandlerException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -66,7 +62,7 @@ class ImportHandler {
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -90,8 +86,6 @@ class ImportHandler {
     }
 
     /**
-     * @param iterable $row
-     * @return array
      * @throws ImportHandlerException
      */
     private function rowToValues(iterable $row): array {

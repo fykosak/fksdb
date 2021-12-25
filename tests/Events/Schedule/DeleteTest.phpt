@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
@@ -11,29 +13,36 @@ use Tester\Assert;
 
 $container = require '../../Bootstrap.php';
 
-class DeleteTest extends ScheduleTestCase {
+class DeleteTest extends ScheduleTestCase
+{
 
     protected int $lastPersonId;
 
     protected int $dsefAppId;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
+        $this->lastPersonId = $this->createPerson(
+            'Paní',
+            'Bílá III.',
             [
                 'email' => 'bila3-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
+            ]
+        );
         $this->dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->lastPersonId,
             'event_id' => $this->eventId,
             'status' => 'cancelled',
         ]);
-        $this->insert(DbNames::TAB_E_DSEF_PARTICIPANT,
+        $this->insert(
+            DbNames::TAB_E_DSEF_PARTICIPANT,
             [
                 'event_participant_id' => $this->dsefAppId,
                 'e_dsef_group_id' => 2,
-            ]);
+            ]
+        );
         $this->insert('person_schedule', [
             'person_id' => $this->lastPersonId,
             'schedule_item_id' => $this->itemId,
@@ -43,7 +52,8 @@ class DeleteTest extends ScheduleTestCase {
         $this->authenticate($loginId, $this->fixture);
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         $formData = [
             'participant' => [
                 'person_id' => (string)$this->lastPersonId,
@@ -94,10 +104,18 @@ class DeleteTest extends ScheduleTestCase {
         Assert::type(RedirectResponse::class, $response);
 
         //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
-        Assert::equal(0, (int)$this->explorer->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
+        Assert::equal(
+            0,
+            (int)$this->explorer->fetchField(
+                'SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?',
+                $this->itemId,
+                $this->lastPersonId
+            )
+        );
     }
 
-    public function getAccommodationCapacity(): int {
+    public function getAccommodationCapacity(): int
+    {
         return 3;
     }
 }

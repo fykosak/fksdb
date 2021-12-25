@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Components\React\ReactComponentTrait;
@@ -11,8 +13,8 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 
-class ScheduleField extends TextInput {
-
+class ScheduleField extends TextInput
+{
     use ReactComponentTrait;
 
     private ModelEvent $event;
@@ -20,15 +22,15 @@ class ScheduleField extends TextInput {
     private ServiceScheduleItem $serviceScheduleItem;
 
     /**
-     * ScheduleField constructor.
-     * @param ModelEvent $event
-     * @param string $type
-     * @param ServiceScheduleItem $serviceScheduleItem
-     * @param string|null $label
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem, ?string $label) {
+    public function __construct(
+        ModelEvent $event,
+        string $type,
+        ServiceScheduleItem $serviceScheduleItem,
+        ?string $label
+    ) {
         parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
@@ -38,16 +40,15 @@ class ScheduleField extends TextInput {
     }
 
     /**
-     * @param string $type
-     * @return string
      * @throws NotImplementedException
      */
-    private function getDefaultLabel(string $type): string {
+    private function getDefaultLabel(string $type): string
+    {
         switch ($type) {
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return _('Accommodation');
             case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
-                return _('Accommodation with same gender');
+                return _('Accommodation with persons of the same gender');
             case ModelScheduleGroup::TYPE_VISA:
                 return _('Visa');
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
@@ -56,12 +57,19 @@ class ScheduleField extends TextInput {
                 return _('Weekend after competition');
             case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
                 return _('Program during competition');
+            case ModelScheduleGroup::TYPE_DSEF_MORNING:
+                return _('Morning');
+            case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
+                return _('Afternoon');
+            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
+                return _('Covid-19 Vaccination');
             default:
                 throw new NotImplementedException();
         }
     }
 
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {
@@ -72,7 +80,8 @@ class ScheduleField extends TextInput {
         return ['groups' => $groupList, 'options' => $options];
     }
 
-    private function getRenderOptions(): array {
+    private function getRenderOptions(): array
+    {
         $params = [
             'display' => [
                 'capacity' => true,
@@ -83,8 +92,14 @@ class ScheduleField extends TextInput {
             ],
         ];
         switch ($this->type) {
+            case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
+            case ModelScheduleGroup::TYPE_DSEF_MORNING:
+                $params['display']['price'] = false;
+                $params['display']['groupLabel'] = false;
+                break;
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 break;
+            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
             case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
             case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
             case ModelScheduleGroup::TYPE_VISA:
@@ -99,7 +114,8 @@ class ScheduleField extends TextInput {
         return $params;
     }
 
-    private function serializeGroup(ModelScheduleGroup $group): array {
+    private function serializeGroup(ModelScheduleGroup $group): array
+    {
         $groupArray = $group->__toArray();
         $itemList = [];
         foreach ($group->getItems() as $row) {

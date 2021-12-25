@@ -7,7 +7,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
 class DispatchPresenter extends BasePresenter
@@ -34,7 +34,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelPerson $person
      * @throws InvalidLinkException
      */
     private function getAllContestants(ModelPerson $person): array
@@ -55,7 +54,6 @@ class DispatchPresenter extends BasePresenter
     }
 
     /**
-     * @param ModelLogin $login
      * @throws InvalidLinkException
      */
     private function getAllOrganisers(ModelLogin $login): array
@@ -97,10 +95,5 @@ class DispatchPresenter extends BasePresenter
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();
-    }
-
-    private function getContestProperty(int $contestId): array
-    {
-        return $this->getContestsProperty()[$contestId];
     }
 }

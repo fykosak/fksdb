@@ -11,7 +11,6 @@ class PointsColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelFyziklaniSubmit $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $el = Html::el('span');

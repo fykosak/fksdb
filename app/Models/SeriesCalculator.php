@@ -35,8 +35,6 @@ class SeriesCalculator {
     /**
      * Check if specific year has a holiday series.
      * Made primarly for Výfuk contest.
-     * @param ModelContestYear $contestYear
-     * @return bool
      */
     public static function hasHolidaySeries(ModelContestYear $contestYear): bool {
         if ($contestYear->contest_id === ModelContest::ID_VYFUK && $contestYear->year >= 9) {

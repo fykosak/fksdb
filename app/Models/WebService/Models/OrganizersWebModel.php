@@ -16,8 +16,6 @@ class OrganizersWebModel extends WebModel {
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws \SoapFault
      */
     public function getResponse(\stdClass $args): \SoapVar {

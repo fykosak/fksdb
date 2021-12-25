@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -55,8 +55,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void
@@ -86,8 +84,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -113,8 +109,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -129,8 +123,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -221,7 +213,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
     protected function setDefaults(): void

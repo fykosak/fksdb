@@ -28,9 +28,6 @@ class GroupedContainer extends Container {
 
     /**
      * @note Copy+paste from Nette\Forms\Form.
-     * @param string $caption
-     * @param bool $setAsCurrent
-     * @return ControlGroup
      */
     public function addGroup(string $caption, bool $setAsCurrent = true): ControlGroup {
         $group = new ControlGroup();

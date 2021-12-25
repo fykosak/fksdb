@@ -857,15 +857,16 @@ orm:
                      type: state
                      title: _(Type)
                      states:
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_ACCOMMODATION: [badge: 'badge badge-1', label: 'Accommodation']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER: [badge: 'badge badge-2', label: 'Accommodation gender']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER: [badge: 'badge badge-3', label: 'Accommodation teacher']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_TEACHER_PRESENT: [badge: 'badge badge-4', label: 'Schedule during compotition']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_WEEKEND: [badge: 'badge badge-5', label: 'Weekend']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_WEEKEND_INFO: [badge: 'badge badge-6', label: 'Weekend info']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_VISA: [badge: 'badge badge-7', label: 'Visa']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_DSEF_MORNING: [badge: 'badge badge-8', label: 'DSEF morning']
-                         FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup::TYPE_DSEF_AFTERNOON : [badge: 'badge badge-9', label: 'DSEF afternoon']
+                         accommodation: [badge: 'badge badge-1', label: 'Accommodation']
+                         accommodation_gender: [badge: 'badge badge-2', label: 'Accommodation gender']
+                         accommodation_teacher: [badge: 'badge badge-3', label: 'Accommodation teacher']
+                         teacher_present: [badge: 'badge badge-4', label: 'Schedule during competition']
+                         weekend: [badge: 'badge badge-5', label: 'Weekend']
+                         weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
+                         visa: [badge: 'badge badge-7', label: 'Visa']
+                         dsef_morning: [badge: 'badge badge-8', label: 'DSEF morning']
+                         dsef_afternoon: [badge: 'badge badge-9', label: 'DSEF afternoon']
+                         vaccination_covid: [badge: 'badge badge-10', label: 'Covid-19 Vaccination']
                  start:
                     type: dateTime
                     title: _(Schedule start)

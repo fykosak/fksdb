@@ -36,8 +36,6 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return Machine
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
@@ -47,8 +45,6 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return string
      * @throws ConfigurationNotFoundException
      */
     public function getFormLayout(ModelEvent $event): string {
@@ -57,8 +53,6 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return array
      * @throws ConfigurationNotFoundException
      */
     private function findDefinition(ModelEvent $event): array {
@@ -77,8 +71,6 @@ class EventDispatchFactory {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return Holder
      * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */

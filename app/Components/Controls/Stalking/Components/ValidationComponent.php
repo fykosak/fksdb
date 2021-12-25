@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\DataTestingFactory;
 

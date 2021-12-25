@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -30,7 +30,7 @@ class SpamPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
-            sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()),
+            sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
             'fas fa-envelope-open'
         );
     }
@@ -83,8 +83,7 @@ class SpamPresenter extends BasePresenter
     }
 
     /**
-     * @param Resource|string $resource
-     * @param string|null $privilege
+     * @param Resource|string|null $resource
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {

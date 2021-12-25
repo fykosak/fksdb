@@ -17,7 +17,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\Resource;
@@ -171,7 +171,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param bool $throw
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(bool $throw = true): int
@@ -227,7 +226,6 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @param Resource|string $resource
-     * @param string|null $privilege
      * all auth method is overwritten
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool

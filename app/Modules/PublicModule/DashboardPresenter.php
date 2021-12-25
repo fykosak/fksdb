@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\News;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\UI\PageTitle;
 
 /**
  * Just proof of concept.

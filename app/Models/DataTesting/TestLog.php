@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\DataTesting;
 
-use FKSDB\Models\Messages\Message;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Utils\Html;
 
 class TestLog extends Message {
@@ -24,16 +24,15 @@ class TestLog extends Message {
      * @return string[]
      */
     public static function getAvailableLevels(): array {
-        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
+        return [self::LVL_ERROR, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
     public function mapLevelToIcon(): string {
         switch ($this->level) {
-            case self::LVL_DANGER:
+            case self::LVL_ERROR:
                 return 'fas fa-times';
             case self::LVL_WARNING:
                 return 'fa fa-warning';
@@ -49,7 +48,6 @@ class TestLog extends Message {
     }
 
     /**
-     * @return Html
      * @throws NotImplementedException
      */
     public function createHtmlIcon(): Html {

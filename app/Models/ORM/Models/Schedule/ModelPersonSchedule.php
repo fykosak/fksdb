@@ -56,7 +56,6 @@ class ModelPersonSchedule extends AbstractModel {
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
     public function getLabel(): string {

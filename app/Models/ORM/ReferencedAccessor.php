@@ -4,15 +4,14 @@ namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
-use Tracy\Debugger;
 
 final class ReferencedAccessor
 {
 
     /**
-     * @param ActiveRow $model
-     * @param string $modelClassName
-     * @return ActiveRow|null
+     * @template T
+     * @param class-string<T>|string $modelClassName
+     * @return T|ActiveRow|null
      * @throws CannotAccessModelException
      */
     public static function accessModel(ActiveRow $model, string $modelClassName): ?ActiveRow
@@ -24,7 +23,7 @@ final class ReferencedAccessor
         $modelReflection = new \ReflectionClass($model);
         $candidates = 0;
         foreach ($modelReflection->getMethods() as $method) {
-            $name = (string)$method->getName();
+            $name = $method->getName();
             $return = (string)$method->getReturnType();
             if (substr($return, 0, 1) == '?') {
                 $return = substr($return, 1);

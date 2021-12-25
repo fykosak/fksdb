@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 $container = require '../../../Bootstrap.php';
@@ -14,20 +16,24 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends EventTestCase {
+class ApplicationPresenterTest extends EventTestCase
+{
 
     private IPresenter $fixture;
 
-    protected function getEventId(): int {
+    protected function getEventId(): int
+    {
         return 0;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->fixture = $this->createPresenter('Public:Application');
     }
 
-    public function test404(): void {
+    public function test404(): void
+    {
         Assert::exception(function (): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
@@ -39,7 +45,8 @@ class ApplicationPresenterTest extends EventTestCase {
         }, EventNotFoundException::class, 'Event not found.', 404);
     }
 
-    public function test404Application(): void {
+    public function test404Application(): void
+    {
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 19,
@@ -59,7 +66,8 @@ class ApplicationPresenterTest extends EventTestCase {
         }, NotFoundException::class, 'Unknown application.', 404);
     }
 
-    public function testClosed(): void {
+    public function testClosed(): void
+    {
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,

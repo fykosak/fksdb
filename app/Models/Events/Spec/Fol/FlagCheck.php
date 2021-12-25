@@ -3,7 +3,6 @@
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
-use FKSDB\Models\Events\FormAdjustments\FormAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
@@ -13,26 +12,31 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
-class FlagCheck extends AbstractAdjustment implements FormAdjustment {
+class FlagCheck extends AbstractAdjustment
+{
 
     private ServiceSchool $serviceSchool;
     private ServicePersonHistory $servicePersonHistory;
     private Holder $holder;
 
-    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
+    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory)
+    {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    public function getHolder(): Holder {
+    public function getHolder(): Holder
+    {
         return $this->holder;
     }
 
-    public function setHolder(Holder $holder): void {
+    public function setHolder(Holder $holder): void
+    {
         $this->holder = $holder;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl('p*.person_id.person_history.study_year');
@@ -81,7 +85,8 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
 //                };
     }
 
-    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int {
+    private function getStudyYear(Control $studyYearControl, Control $personControl): ?int
+    {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -95,7 +100,8 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         return $personHistory->study_year;
     }
 
-    private function getSchoolId(Control $schoolControl, Control $personControl): int {
+    private function getSchoolId(Control $schoolControl, Control $personControl): ?int
+    {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
@@ -108,7 +114,8 @@ class FlagCheck extends AbstractAdjustment implements FormAdjustment {
         return $school->school_id;
     }
 
-    private function isStudent(?int $studyYear): bool {
+    private function isStudent(?int $studyYear): bool
+    {
         return !is_null($studyYear);
     }
 }

@@ -22,22 +22,12 @@ class CorrectedStorage implements SubmitStorage {
      */
     private string $directoryMask;
 
-    /**
-     * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
-     * File extension + metadata will be added to the name.
-     *
-     * @var string
-     */
-    private string $filenameMask;
-
-    public function __construct(string $root, string $directoryMask, string $filenameMask) {
+    public function __construct(string $root, string $directoryMask) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
-        $this->filenameMask = $filenameMask;
     }
 
     /**
-     * @param StorageProcessing $processing
      * @throws NotImplementedException
      */
     public function addProcessing(StorageProcessing $processing): void {
@@ -66,8 +56,6 @@ class CorrectedStorage implements SubmitStorage {
     }
 
     /**
-     * @param string $filename
-     * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
     public function storeFile(string $filename, ModelSubmit $submit): void {
@@ -97,16 +85,12 @@ class CorrectedStorage implements SubmitStorage {
 
     /**
      * Checks whether there exists valid file for the submit.
-     *
-     * @param ModelSubmit $submit
-     * @return bool
      */
     public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
     }
 
     /**
-     * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
     public function deleteFile(ModelSubmit $submit): void {
@@ -114,7 +98,6 @@ class CorrectedStorage implements SubmitStorage {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
     private function createDirname(ModelSubmit $submit): string {

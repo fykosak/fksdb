@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -18,10 +18,7 @@ class ErrorPresenter extends BasePresenter
         return new PageTitle(_('Error'));
     }
 
-    /**
-     * @param \Exception
-     */
-    final public function renderDefault($exception): void
+    final public function renderDefault(?\Throwable $exception): void
     {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = true;

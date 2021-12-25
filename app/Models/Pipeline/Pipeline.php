@@ -2,9 +2,9 @@
 
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\InvalidStateException;
 
 /**
@@ -38,8 +38,6 @@ class Pipeline {
 
     /**
      * Stages can be added only in the build phase (not after setting the data).
-     *
-     * @param Stage $stage
      */
     public function addStage(Stage $stage): void {
         if ($this->fixedStages) {

@@ -10,16 +10,11 @@ class Parameter {
 
     private string $parameter;
 
-    /**
-     * Parameter constructor.
-     * @param string $parameter
-     */
     public function __construct(string $parameter) {
         $this->parameter = $parameter;
     }
 
     /**
-     * @param ...$args
      * @return mixed
      */
     public function __invoke(...$args) {

@@ -4,7 +4,7 @@ namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Controls\BaseControl;
@@ -40,8 +40,6 @@ abstract class AbstractProcessing implements Processing {
     }
 
     /**
-     *
-     * @param string $mask
      * @return FormControl[]
      */
     final protected function getValue(string $mask): array {
@@ -60,8 +58,6 @@ abstract class AbstractProcessing implements Processing {
     }
 
     /**
-     *
-     * @param string $mask
      * @return FormControl[]
      */
     final protected function getControl(string $mask): array {
@@ -84,9 +80,6 @@ abstract class AbstractProcessing implements Processing {
      * from it wasn't loaded.
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
-     *
-     * @param string $name
-     * @return bool
      */
     protected function isBaseReallyEmpty(string $name): bool {
         $baseHolder = $this->holder->getBaseHolder($name);

@@ -11,10 +11,6 @@ use Nette\Utils\Html;
 
 class GenderColumnFactory extends ColumnFactory {
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     protected function createFormControl(...$args): BaseControl {
         $control = new RadioList($this->getTitle(), $this->createOptions());
         $control->setDefaultValue('M');
@@ -27,7 +23,6 @@ class GenderColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPerson $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if ($model->gender == 'F') {

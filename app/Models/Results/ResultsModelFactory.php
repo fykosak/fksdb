@@ -41,9 +41,6 @@ class ResultsModelFactory implements XMLNodeSerializer
     }
 
     /**
-     *
-     * @param ModelContestYear $contestYear
-     * @return CumulativeResultsModel
      * @throws BadRequestException
      */
     public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel
@@ -58,9 +55,6 @@ class ResultsModelFactory implements XMLNodeSerializer
     }
 
     /**
-     *
-     * @param ModelContestYear $contestYear
-     * @return DetailResultsModel
      * @throws BadRequestException
      */
     public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel
@@ -75,9 +69,6 @@ class ResultsModelFactory implements XMLNodeSerializer
     }
 
     /**
-     *
-     * @param ModelContestYear $contestYear
-     * @return BrojureResultsModel
      * @throws BadRequestException
      */
     public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel
@@ -92,9 +83,6 @@ class ResultsModelFactory implements XMLNodeSerializer
     }
 
     /**
-     *
-     * @param ModelContestYear $contestYear
-     * @return SchoolCumulativeResultsModel
      * @throws BadRequestException
      */
     public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel
@@ -109,8 +97,6 @@ class ResultsModelFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param ModelContestYear $contestYear
-     * @return EvaluationStrategy
      * @throws BadRequestException
      */
     public static function findEvaluationStrategy(ModelContestYear $contestYear): EvaluationStrategy
@@ -138,10 +124,6 @@ class ResultsModelFactory implements XMLNodeSerializer
 
     /**
      * @param AbstractResultsModel $dataSource
-     * @param \DOMNode $node
-     * @param \DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
      * @throws \SoapFault
      * @throws BadTypeException
      */
@@ -160,7 +142,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', (string)$category->id);
+                $categoryNode->setAttribute('id', $category->id);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);

@@ -9,6 +9,9 @@ use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 
+/**
+ * @deprecated
+ */
 class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
@@ -17,7 +20,6 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param AbstractModelMulti $model
      * @throws ModelException
      */
     public function dispose(AbstractModelMulti $model): void {
