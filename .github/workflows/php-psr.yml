@@ -3,13 +3,13 @@ name: PSR12 (PHP codesniffer)
 on: [ push, pull_request ]
 
 jobs:
-  test:
-    name: PHP PSR12 -- already updated dirs must pass
+  testAll:
+    name: PSR12
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
-        php: [ '7.4' ]
+        script: [ 'testPSRAll' , 'testPSRSafe' ]
     steps:
       - uses: actions/checkout@v2
         name: Checkout
@@ -24,7 +24,7 @@ jobs:
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
         run: composer install --no-progress --prefer-dist
-      - run: composer run-script testPSRsafe
+      - run: composer run-script ${{ matrix.script }}
         name: Test
       - if: failure()
         name: Failure output

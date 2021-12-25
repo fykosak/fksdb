@@ -81,13 +81,13 @@
       "@clearTestDatabase",
       "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 8"
     ],
-    "testPSRsafe": [
+    "testPSRSafe": [
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 app/Models/WebService/",
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 app/Models/UI/",
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 app/Components/Badges/",
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 app/Components/Charts/"
     ],
-    "testPSRall": [
+    "testPSRAll": [
       "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 app/"
     ]
   }
