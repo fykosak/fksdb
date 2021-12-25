@@ -6,6 +6,10 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
+use Nette\Schema\Message;
+use Nette\Schema\Schema;
 use Tracy\Debugger;
 
 class EventListWebModel extends WebModel
@@ -37,22 +41,21 @@ class EventListWebModel extends WebModel
         return new \SoapVar($document->saveXML($rootNode), XSD_ANYXML);
     }
 
-    /**
-     * @param array $params
-     * @return array
-     * @throws BadRequestException
-     */
     public function getJsonResponse(array $params): array
     {
-        if (!isset($params['event_type_ids'])) {
-            throw new BadRequestException('Unknown eventType.', IResponse::S400_BAD_REQUEST);
-        }
-        $query = $this->serviceEvent->getTable()->where('event_type_id', (array)$params['event_type_ids']);
+        $query = $this->serviceEvent->getTable()->where('event_type_id', $params['event_type_ids']);
         $events = [];
         /** @var ModelEvent $event */
         foreach ($query as $event) {
             $events[$event->event_id] = $event->__toArray();
         }
         return $events;
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'event_type_ids' => Expect::arrayOf(Expect::scalar()->castTo('int'))->required(),
+        ]);
     }
 }

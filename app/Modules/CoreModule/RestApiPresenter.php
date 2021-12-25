@@ -8,12 +8,15 @@ use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\WebService\WebServiceModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 
 class RestApiPresenter extends AuthenticatedPresenter
 {
 
     private WebServiceModel $server;
+    /** @persistent */
+    public string $webServiceName;
 
     final public function injectSoapServer(WebServiceModel $server, ContestAuthorizator $contestAuthorizator): void
     {
@@ -27,15 +30,15 @@ class RestApiPresenter extends AuthenticatedPresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('webService', 'default'));
     }
 
-    public function authorizedGetEvent(): void
-    {
-        $this->authorizedDefault();
-    }
-
+    /**
+     * @throws BadRequestException
+     * @throws \ReflectionException
+     * @throws \Throwable
+     */
     final protected function beforeRender(): void
     {
         try {
-            $response = $this->server->getJsonResponse($this->getView(), $this->getParameters());
+            $response = $this->server->getJsonResponse($this->webServiceName, $this->getParameters());
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;

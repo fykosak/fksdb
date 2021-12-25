@@ -15,6 +15,8 @@ use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
 
 class EventWebModel extends WebModel
 {
@@ -81,6 +83,25 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
+    private function createPersonScheduleArray(ModelEvent $event): array
+    {
+        $data = [];
+        $query = $this->servicePersonSchedule->getTable()
+            ->where('schedule_item.schedule_group.event_id', $event->event_id);
+        /** @var ModelPersonSchedule $model */
+        foreach ($query as $model) {
+            $data[] = [
+                'person' => [
+                    'name' => $model->getPerson()->getFullName(),
+                    'personId' => $model->person_id,
+                    'email' => $model->getPerson()->getInfo()->email,
+                ],
+                'scheduleItemId' => $model->schedule_item_id,
+            ];
+        }
+        return $data;
+    }
+
     private function createScheduleListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
     {
         $rootNode = $doc->createElement('schedule');
@@ -95,6 +116,23 @@ class EventWebModel extends WebModel
             $rootNode->appendChild($groupNode);
         }
         return $rootNode;
+    }
+
+    private function createScheduleListArray(ModelEvent $event): array
+    {
+        $data = [];
+        foreach ($event->getScheduleGroups() as $row) {
+            $group = ModelScheduleGroup::createFromActiveRow($row);
+            $datum = $group->__toArray();
+            $datum['schedule_items'] = [];
+
+            foreach ($group->getItems() as $itemRow) {
+                $item = ModelScheduleItem::createFromActiveRow($itemRow);
+                $datum['schedule_items'][] = $item->__toArray();
+            }
+            $data[] = $datum;
+        }
+        return $data;
     }
 
     public function createEventDetailNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
@@ -212,25 +250,25 @@ class EventWebModel extends WebModel
      * @param array $params
      * @return array|\SoapVar
      * @throws BadRequestException
-     * @throws \SoapFault
      */
     public function getJsonResponse(array $params): array
     {
-        if (!isset($params['event_id'])) {
-            throw new \SoapFault('Sender', 'Unknown eventId.');
-        }
-        $event = $this->serviceEvent->findByPrimary(+$params['event_id']);
+        $event = $this->serviceEvent->findByPrimary($params['event_id']);
         if (is_null($event)) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
         $data = $event->__toArray();
         $data['teams'] = $this->createTeamListArray($event);
         $data['participants'] = $this->createParticipantListArray($event);
-        // $root->appendChild($this->createScheduleListNode($doc, $event));
-        // $root->appendChild($this->createPersonScheduleNode($doc, $event));
-        // $root->appendChild($this->createParticipantListNode($doc, $event));
-        // $doc->formatOutput = true;
-        //return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
+        $data['schedule'] = $this->createScheduleListArray($event);
+        $data['person_schedule'] = $this->createPersonScheduleArray($event);
         return $data;
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'event_id' => Expect::scalar()->castTo('int'),
+        ]);
     }
 }

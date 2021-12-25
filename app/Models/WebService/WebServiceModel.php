@@ -1,32 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\WebService\Models\WebModel;
+use Nette\Schema\Processor;
+use FKSDB\Models\WebService\Models\{
+    WebModel,
+    OrganizersWebModel,
+    EventListWebModel,
+    EventWebModel,
+    ExportWebModel,
+    SignaturesWebModel,
+    ResultsWebModel,
+    StatsWebModel,
+};
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\DI\Container;
 use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
+use Nette\SmartObject;
 use Tracy\Debugger;
 
 class WebServiceModel
 {
+    use SmartObject;
 
     private ModelLogin $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
 
     private const WEB_MODELS = [
-        'GetOrganizers' => Models\OrganizersWebModel::class,
-        'GetEventList' => Models\EventListWebModel::class,
-        'GetEvent' => Models\EventWebModel::class,
-        'GetExport' => Models\ExportWebModel::class,
-        'GetSignatures' => Models\SignaturesWebModel::class,
-        'GetResults' => Models\ResultsWebModel::class,
-        'GetStats' => Models\StatsWebModel::class,
+        'GetOrganizers' => OrganizersWebModel::class,
+        'GetEventList' => EventListWebModel::class,
+        'GetEvent' => EventWebModel::class,
+        'GetExport' => ExportWebModel::class,
+        'GetSignatures' => SignaturesWebModel::class,
+        'GetResults' => ResultsWebModel::class,
+        'GetStats' => StatsWebModel::class,
     ];
 
     public function __construct(Container $container, PasswordAuthenticator $authenticator)
@@ -97,8 +112,6 @@ class WebServiceModel
     }
 
     /**
-     * @param string $name
-     * @return WebModel
      * @throws \ReflectionException
      */
     private function getWebModel(string $name): ?WebModel
@@ -115,9 +128,6 @@ class WebServiceModel
     }
 
     /**
-     * @param string $name
-     * @param array $arguments
-     * @return JsonResponse
      * @throws \ReflectionException|BadRequestException
      */
     public function getJsonResponse(string $name, array $arguments): JsonResponse
@@ -126,7 +136,21 @@ class WebServiceModel
         if (!$webModel) {
             throw new BadRequestException('Undefined method', IResponse::S404_NOT_FOUND);
         }
-        //$webModel->setLogin($this->authenticatedLogin);
+        $arguments = $this->processArguments($webModel, $arguments);
         return new JsonResponse($webModel->getJsonResponse($arguments));
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    private function processArguments(WebModel $webModel, array $arguments): array
+    {
+        static $processor;
+        if (!isset($processor)) {
+            $processor = new Processor();
+        }
+        $schema = $webModel->getExpectedParams();
+        $schema->otherItems()->castTo('array');
+        return $processor->process($schema, $arguments);
     }
 }
