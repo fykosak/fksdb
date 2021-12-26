@@ -17,7 +17,7 @@ class UnavailableTransitionException extends InvalidStateException
      * @param EventTransition|Transition $transition
      * @param ActiveRow|ModelHolder|null $holder
      */
-    public function __construct($transition, $holder)
+    public function __construct(EventTransition|Transition $transition, $holder)
     {
         $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {

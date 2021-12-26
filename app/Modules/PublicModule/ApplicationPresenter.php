@@ -24,6 +24,7 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\AbstractModel;
@@ -110,7 +111,9 @@ class ApplicationPresenter extends BasePresenter
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
-
+            if (is_null($id)) {
+                return null;
+            }
             $this->eventApplication = $service->findByPrimary($id);
         }
 
@@ -169,18 +172,18 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-        !$this->getMachine()
-            ->getPrimaryMachine()
-            ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
+            !$this->getMachine()
+                ->getPrimaryMachine()
+                ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
                 ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
             ) {
                 $this->setView('closed');
-                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), MessageLevel::INFO->value);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), MessageLevel::INFO->value);
             }
         }
 

@@ -11,6 +11,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -60,10 +61,10 @@ class EventOrgPresenter extends BasePresenter
     {
         try {
             $this->traitHandleDelete();
-            $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
+            $this->flashMessage(_('Entity has been deleted'), MessageLevel::WARNING->value);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
-            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during deleting'), MessageLevel::ERROR->value);
             $this->redirect('list');
         }
     }

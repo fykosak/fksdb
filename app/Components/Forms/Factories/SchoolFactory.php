@@ -18,11 +18,11 @@ class SchoolFactory {
     public function createContainer(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name_full', _('Full name'))
-            ->addRule(Form::MAX_LENGTH, null, 255)
+            ->addRule(Form::MAX_LENGTH, _('Max length reached'), 255)
             ->setOption('description', _('Full name of the school.'));
 
         $container->addText('name', _('Name'))
-            ->addRule(Form::MAX_LENGTH, null, 255)
+            ->addRule(Form::MAX_LENGTH, _('Max length reached'), 255)
             ->addRule(Form::FILLED, _('Name is required.'))
             ->setOption('description', _('Envelope name.'));
 

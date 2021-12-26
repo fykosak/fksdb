@@ -15,6 +15,7 @@ use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -91,7 +92,7 @@ class HandoutFormComponent extends BaseComponent {
 
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(_('Handout saved.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Handout saved.'), MessageLevel::SUCCESS->value);
         $this->getPresenter()->redirect('this');
     }
 

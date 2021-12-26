@@ -6,6 +6,7 @@ use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Models\Pipeline\Stage;
+use Fykosak\Utils\Logging\MessageLevel;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -75,7 +76,7 @@ class StudyYearsFromXML extends Stage
                 $hasYears = true;
 
                 if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), Message::LVL_INFO));
+                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), MessageLevel::INFO));
                     continue;
                 }
 
@@ -85,7 +86,7 @@ class StudyYearsFromXML extends Stage
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Message::LVL_INFO));
+                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), MessageLevel::INFO));
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }

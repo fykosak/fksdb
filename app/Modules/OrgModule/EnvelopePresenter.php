@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson\PageComponent;
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
+use FKSDB\Components\PDFGenerators\Providers\PageFormat;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -22,7 +23,7 @@ class EnvelopePresenter extends BasePresenter
     /** @persistent */
     public array $personIds = [];
     /** @persistent */
-    public string $format = AbstractPageComponent::FORMAT_B5_LANDSCAPE;
+    public string|null $format = null;
 
     public function injectDatabase(ServicePerson $servicePerson): void
     {
@@ -38,7 +39,7 @@ class EnvelopePresenter extends BasePresenter
     protected function createComponentOutput(): ProviderComponent
     {
         return new ProviderComponent(
-            new PageComponent($this->getSelectedContest(), $this->getContext(), $this->format),
+            new PageComponent($this->getSelectedContest(), $this->getContext(), PageFormat::from($this->format)),
             $this->servicePerson->getTable()->where('person_id', $this->personIds),
             $this->getContext(),
         );
@@ -56,7 +57,7 @@ class EnvelopePresenter extends BasePresenter
         $form->addSelect(
             'format',
             _('Format'),
-            PageComponent::getAvailableFormats(),
+            PageFormat::cases() // TODO
         );
 
         $testButton = $form->addSubmit('preview', _('Preview'));

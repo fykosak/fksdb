@@ -136,12 +136,12 @@ abstract class AbstractResultsModel {
      * @param int[]|int $series
      * TODO int[] OR int
      */
-    abstract public function setSeries($series): void;
+    abstract public function setSeries(array|int $series): void;
 
     /**
      * @return int[]|int (see setSeries)
      */
-    abstract public function getSeries();
+    abstract public function getSeries(): array|int;
 
     abstract public function getDataColumns(ModelCategory $category): array;
 }

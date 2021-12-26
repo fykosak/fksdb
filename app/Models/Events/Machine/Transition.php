@@ -7,6 +7,7 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Transition\TransitionBehaviorType;
 use Nette\InvalidArgumentException;
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
@@ -20,7 +21,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     private $visible;
     public array $onExecuted = [];
 
-    public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
+    public function __construct(string $mask, ?string $label = null, ?string $type =null) {
         $this->setMask($mask);
         $this->setLabel($label ?? '');
         $this->setBehaviorType($type);
@@ -33,12 +34,12 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
         return $this->name;
     }
 
-    public function getBehaviorType(): string {
+    public function getBehaviorType(): TransitionBehaviorType {
         if ($this->isTerminating()) {
-            return self::TYPE_DANGEROUS;
+            return TransitionBehaviorType::DANGEROUS;
         }
         if ($this->isCreating()) {
-            return self::TYPE_SUCCESS;
+            return TransitionBehaviorType::SUCCESS;
         }
         return parent::getBehaviorType();
     }

@@ -19,6 +19,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -126,7 +127,7 @@ class PersonFormComponent extends AbstractEntityFormComponent
         $this->logger->log(
             new Message(
                 isset($this->model) ? _('Data has been updated') : _('Person has been created'),
-                Message::LVL_SUCCESS
+                MessageLevel::SUCCESS
             )
         );
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
@@ -157,7 +158,7 @@ class PersonFormComponent extends AbstractEntityFormComponent
             if (count($datum)) {
                 if ($oldAddress) {
                     $this->serviceAddress->updateModel($oldAddress, $datum);
-                    $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
+                    $this->logger->log(new Message(_('Address has been updated'), MessageLevel::INFO));
                 } else {
                     $address = $this->serviceAddress->createNewModel($datum);
                     $postContactData = [
@@ -166,7 +167,7 @@ class PersonFormComponent extends AbstractEntityFormComponent
                         'address_id' => $address->address_id,
                     ];
                     $this->servicePostContact->createNewModel($postContactData);
-                    $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
+                    $this->logger->log(new Message(_('Address has been created'), MessageLevel::INFO));
                 }
             } elseif ($oldAddress) {
                 $this->servicePostContact->getTable()->where([
@@ -174,7 +175,7 @@ class PersonFormComponent extends AbstractEntityFormComponent
                     'person_id' => $person->person_id,
                 ])->delete();
                 $oldAddress->delete();
-                $this->logger->log(new Message(_('Address has been deleted'), Message::LVL_INFO));
+                $this->logger->log(new Message(_('Address has been deleted'), MessageLevel::INFO));
             }
         }
     }

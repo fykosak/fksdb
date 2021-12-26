@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -56,7 +57,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent
         $this->serviceEventOrg->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Event org has been updated') : _('Event org has been created'),
-            Message::LVL_SUCCESS
+            MessageLevel::SUCCESS->value
         );
         $this->getPresenter()->redirect('list');
     }

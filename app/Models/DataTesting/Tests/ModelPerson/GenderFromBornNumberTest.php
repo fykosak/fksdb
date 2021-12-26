@@ -3,10 +3,10 @@
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Models\DataTesting\TestLogLevel;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
-use Fykosak\Utils\Logging\Message;
 
 class GenderFromBornNumberTest extends PersonTest {
 
@@ -18,23 +18,23 @@ class GenderFromBornNumberTest extends PersonTest {
         $info = $person->getInfo();
 
         if (!$info) {
-            $logger->log(new TestLog($this->title, 'Person info is not set', TestLog::LVL_SKIP));
+            $logger->log(new TestLog($this->title, 'Person info is not set', TestLogLevel::SKIP));
             return;
         }
 
         if (!$person->gender) {
-            $logger->log(new TestLog($this->title, _('Gender is not set'), Message::LVL_WARNING));
+            $logger->log(new TestLog($this->title, _('Gender is not set'), TestLogLevel::WARNING));
             return;
         }
         if (!$info->born_id) {
-            $logger->log(new TestLog($this->title, _('Born number is not set'), TestLog::LVL_SKIP));
+            $logger->log(new TestLog($this->title, _('Born number is not set'), TestLogLevel::SKIP));
             return;
         }
 
         if (BornNumber::getGender($info->born_id) != $person->gender) {
-            $logger->log(new TestLog($this->title, 'Gender not match born number', Message::LVL_ERROR));
+            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLogLevel::ERROR));
         } else {
-            $logger->log(new TestLog($this->title, 'Gender match born number', Message::LVL_SUCCESS));
+            $logger->log(new TestLog($this->title, 'Gender match born number', TestLogLevel::SUCCESS));
         }
     }
 }

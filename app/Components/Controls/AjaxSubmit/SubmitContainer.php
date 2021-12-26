@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -28,7 +29,7 @@ class SubmitContainer extends BaseComponent {
     protected function createComponent(string $name): ?IComponent {
         $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
-            $this->flashMessage(_('Task is not available'), Message::LVL_ERROR);
+            $this->flashMessage(_('Task is not available'), MessageLevel::ERROR->value);
             $this->redirect('this');
         }
         return $component;

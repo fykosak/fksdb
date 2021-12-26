@@ -16,6 +16,7 @@ use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Modules\Core\BasePresenter;
@@ -71,7 +72,7 @@ final class AuthenticationPresenter extends BasePresenter
         if ($this->isLoggedIn()) {
             $this->getUser()->logout(true); //clear identity
         }
-        $this->flashMessage(_('You were logged out.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('You were logged out.'), MessageLevel::SUCCESS->value);
         $this->redirect('login');
     }
 
@@ -97,10 +98,10 @@ final class AuthenticationPresenter extends BasePresenter
             if ($this->getParameter(self::PARAM_REASON)) {
                 switch ($this->getParameter(self::PARAM_REASON)) {
                     case UserStorage::LOGOUT_INACTIVITY:
-                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), self::FLASH_INFO);
+                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), MessageLevel::INFO->value);
                         break;
                     case UserStorage::LOGOUT_MANUAL:
-                        $this->flashMessage(_('You must be logged in to continue.'), self::FLASH_ERROR);
+                        $this->flashMessage(_('You must be logged in to continue.'), MessageLevel::ERROR->value);
                         break;
                 }
             }
@@ -143,7 +144,7 @@ final class AuthenticationPresenter extends BasePresenter
     public function actionGoogle(): void
     {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
-            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
+            $this->flashMessage(_('Invalid CSRF token'), MessageLevel::ERROR->value);
             $this->redirect('login');
         }
         try {
@@ -158,10 +159,10 @@ final class AuthenticationPresenter extends BasePresenter
             $this->getUser()->login($login);
             $this->initialRedirect();
         } catch (UnknownLoginException $exception) {
-            $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
+            $this->flashMessage(_('No account is associated with this profile'), MessageLevel::ERROR->value);
             $this->redirect('login');
         } catch (IdentityProviderException | AuthenticationException $exception) {
-            $this->flashMessage(_('Error'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error'), MessageLevel::ERROR->value);
             $this->redirect('login');
         }
     }
@@ -224,7 +225,7 @@ final class AuthenticationPresenter extends BasePresenter
             /** @var ModelLogin $login */
             $this->initialRedirect();
         } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 
@@ -263,16 +264,16 @@ final class AuthenticationPresenter extends BasePresenter
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(
                 sprintf(_('Further instructions for the recovery have been sent to %s.'), $email),
-                self::FLASH_SUCCESS
+                MessageLevel::SUCCESS->value
             );
             $connection->commit();
             $this->redirect('login');
         } catch (AuthenticationException | RecoveryException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
             $connection->rollBack();
         } catch (SendFailedException $exception) {
             $connection->rollBack();
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 

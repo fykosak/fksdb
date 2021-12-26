@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Models\ModelTaskContribution;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -106,9 +107,9 @@ class PointsPresenter extends BasePresenter
     {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContestYear());
-            $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points invalidated.'), MessageLevel::INFO->value);
         } catch (\Exception $exception) {
-            $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during invalidation.'), MessageLevel::ERROR->value);
             Debugger::log($exception);
         }
 
@@ -129,9 +130,9 @@ class PointsPresenter extends BasePresenter
                 $this->SQLResultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
             }
 
-            $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points recounted.'), MessageLevel::INFO->value);
         } catch (InvalidArgumentException $exception) {
-            $this->flashMessage(_('Error while recounting.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error while recounting.'), MessageLevel::ERROR->value);
             Debugger::log($exception);
         }
 
@@ -142,9 +143,9 @@ class PointsPresenter extends BasePresenter
     {
         try {
             $this->SQLResultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
-            $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
+            $this->flashMessage(_('Calculate quiz points.'), MessageLevel::INFO->value);
         } catch (\Exception $exception) {
-            $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during calculation.'), MessageLevel::ERROR->value);
             Debugger::log($exception);
         }
     }

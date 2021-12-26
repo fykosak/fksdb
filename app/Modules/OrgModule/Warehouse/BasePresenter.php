@@ -9,10 +9,7 @@ use Nette\Security\Resource;
 abstract class BasePresenter extends \FKSDB\Modules\OrgModule\BasePresenter
 {
 
-    /**
-     * @param Resource|string|null $resource
-     */
-    protected function isAllowed($resource, ?string $privilege): bool
+    protected function isAllowed(Resource|string|null $resource, ?string $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }

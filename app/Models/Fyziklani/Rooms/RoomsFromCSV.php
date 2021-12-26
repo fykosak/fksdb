@@ -8,6 +8,7 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\Utils\CSVParser;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
+use Fykosak\Utils\Logging\MessageLevel;
 
 class RoomsFromCSV extends Stage
 {
@@ -51,7 +52,7 @@ class RoomsFromCSV extends Stage
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), Message::LVL_WARNING));
+                $this->getPipeline()->log(new Message(sprintf(_('Nonexistent team ID %d skipped'), $teamId), MessageLevel::WARNING));
 
                 continue;
             }
@@ -67,7 +68,7 @@ class RoomsFromCSV extends Stage
         $this->serviceTeam->explorer->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), Message::LVL_WARNING));
+            $this->getPipeline()->log(new Message(sprintf(_('Team %s (%d, %s) does not have an assigned room.'), $team->name, $team->e_fyziklani_team_id, $team->status), MessageLevel::WARNING));
         }
     }
 

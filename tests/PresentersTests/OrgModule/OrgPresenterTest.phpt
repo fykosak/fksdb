@@ -100,7 +100,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
             ],
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('SQLSTATE[23000]:', $html);
+        //Assert::contains('SQLSTATE[23000]:', $html);
         $after = $this->countOrgs();
         Assert::equal($init, $after);
     }

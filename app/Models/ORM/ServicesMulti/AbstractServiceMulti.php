@@ -110,7 +110,7 @@ abstract class AbstractServiceMulti
     /**
      * @param mixed $key ID of the joined models
      */
-    public function findByPrimary($key): ?AbstractModelMulti
+    public function findByPrimary(string|int $key): ?AbstractModelMulti
     {
         $joinedModel = $this->joinedService->findByPrimary($key);
         if (!$joinedModel) {

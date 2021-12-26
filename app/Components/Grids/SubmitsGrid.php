@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Presenter;
@@ -122,13 +123,13 @@ class SubmitsGrid extends BaseGrid
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->flashMessage(
                 sprintf(_('Submitting of task %s cancelled.'), $submit->getTask()->getFQName()),
-                Message::LVL_WARNING
+                MessageLevel::WARNING->value
             );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('There was an error during the deletion of task %s.'), Message::LVL_ERROR);
+            $this->flashMessage(_('There was an error during the deletion of task %s.'), MessageLevel::ERROR->value);
         }
     }
 
@@ -141,7 +142,7 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 
@@ -154,7 +155,7 @@ class SubmitsGrid extends BaseGrid
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 

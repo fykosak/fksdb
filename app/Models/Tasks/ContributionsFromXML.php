@@ -7,6 +7,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
+use Fykosak\Utils\Logging\MessageLevel;
 
 /**
  * @note Assumes TasksFromXML has been run previously.
@@ -79,7 +80,7 @@ class ContributionsFromXML extends Stage
                     ->fetch();
 
                 if (!$row) {
-                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
+                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), MessageLevel::INFO));
                     continue;
                 }
                 $contributors[] = ModelOrg::createFromActiveRow($row);

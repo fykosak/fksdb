@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
@@ -73,7 +74,7 @@ class DiplomasPresenter extends BasePresenter
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
             ),
-            \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS
+            MessageLevel::SUCCESS->value
         );
         $this->redirect('this');
     }

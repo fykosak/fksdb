@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Forms\Form;
 
 /**
@@ -60,7 +61,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent
         $this->serviceTeacher->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
-            Message::LVL_SUCCESS
+            MessageLevel::SUCCESS->value
         );
         $this->getPresenter()->redirect('list');
     }

@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -41,7 +42,7 @@ class InboxFormComponent extends SeriesTableFormComponent {
                     //   $serviceSubmit->updateModel($submit, ['submitted_on' => $submittedOn]);
                     //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), I\Fykosak\Utils\Logging\Message::LVL_INFO);
                 } elseif (!$submittedOn && $submit) {
-                    $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
+                    $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), MessageLevel::WARNING->value);
                     $submit->delete();
                 } elseif ($submittedOn && !$submit) {
                     $this->serviceSubmit->createNewModel([
@@ -50,7 +51,7 @@ class InboxFormComponent extends SeriesTableFormComponent {
                         'submitted_on' => $submittedOn,
                         'source' => ModelSubmit::SOURCE_POST,
                     ]);
-                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), Message::LVL_SUCCESS);
+                    $this->flashMessage(\sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo), MessageLevel::SUCCESS->value);
                 } else {
                     // do nothing
                 }

@@ -23,6 +23,7 @@ use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedTableSelection;
@@ -246,7 +247,7 @@ class SubmitPresenter extends BasePresenter
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(
                         sprintf(_('Task %s cannot be submitted anymore.'), $task->label),
-                        self::FLASH_ERROR
+                        MessageLevel::ERROR->value
                     );
                     continue;
                 }
@@ -288,7 +289,7 @@ class SubmitPresenter extends BasePresenter
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), MessageLevel::SUCCESS->value);
             }
 
             $this->uploadedSubmitStorage->commit();
@@ -298,7 +299,7 @@ class SubmitPresenter extends BasePresenter
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->explorer->getConnection()->rollBack();
             Debugger::log($exception);
-            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), MessageLevel::ERROR->value);
         }
     }
 

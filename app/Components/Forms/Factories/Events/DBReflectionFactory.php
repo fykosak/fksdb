@@ -61,7 +61,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label must be an integer.'));
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
@@ -70,7 +70,7 @@ class DBReflectionFactory extends AbstractFactory {
             } else {
                 $element = new TextInput($field->getLabel());
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             }
         }

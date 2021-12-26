@@ -5,31 +5,19 @@ namespace FKSDB\Models\Transitions\Transition;
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use FKSDB\Models\Transitions\Machine\Machine;
 
 class Transition
 {
-
     use SmartObject;
 
-    public const TYPE_SUCCESS = Message::LVL_SUCCESS;
-    public const TYPE_WARNING = Message::LVL_WARNING;
-    public const TYPE_DANGEROUS = Message::LVL_ERROR;
-    public const TYPE_PRIMARY = Message::LVL_PRIMARY;
-    public const TYPE_DEFAULT = 'secondary';
 
-    protected const AVAILABLE_BEHAVIOR_TYPE = [
-        self::TYPE_SUCCESS,
-        self::TYPE_WARNING,
-        self::TYPE_DANGEROUS,
-        self::TYPE_DEFAULT,
-        self::TYPE_PRIMARY,
-    ];
     /** @var callable|bool */
     protected $condition;
-    private string $behaviorType = self::TYPE_DEFAULT;
+    private TransitionBehaviorType $behaviorType = TransitionBehaviorType::DEFAULT;
     private string $label;
     /** @var callable[] */
     public array $beforeExecuteCallbacks = [];
@@ -84,17 +72,18 @@ class Transition
         return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
     }
 
-    public function getBehaviorType(): string
+    public function getBehaviorType(): TransitionBehaviorType
     {
         return $this->behaviorType;
     }
 
-    public function setBehaviorType(string $behaviorType): void
+    public function setBehaviorType(?string $behaviorType): void
     {
-        if (!in_array($behaviorType, static::AVAILABLE_BEHAVIOR_TYPE)) {
+        $type = TransitionBehaviorType::tryFrom($behaviorType);
+        if (!isset($type)) {
             throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $behaviorType));
         }
-        $this->behaviorType = $behaviorType;
+        $this->behaviorType = $type;
     }
 
     protected function getEvaluator(): ExpressionEvaluator

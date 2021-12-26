@@ -19,6 +19,7 @@ use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
@@ -78,7 +79,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent
         $connection->commit();
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Query has been edited') : _('Query has been created'),
-            Message::LVL_SUCCESS
+            MessageLevel::SUCCESS->value
         );
         $this->getPresenter()->redirect('list');
     }

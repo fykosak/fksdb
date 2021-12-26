@@ -19,7 +19,7 @@ class StringColumnFactory extends ColumnFactory {
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {
-            $control->addRule(Form::MAX_LENGTH, null, $this->getMetaData()['size']);
+            $control->addRule(Form::MAX_LENGTH, _('Max length'), $this->getMetaData()['size']);
         }
 
         // if (!$this->metaData['nullable']) {

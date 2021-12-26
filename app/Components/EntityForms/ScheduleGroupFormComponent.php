@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -47,7 +48,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
         $model = $this->serviceScheduleGroup->storeModel($data, $this->model);
-        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
+        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), MessageLevel::SUCCESS->value);
         $this->getPresenter()->redirect('list');
     }
 

@@ -43,7 +43,7 @@ class ImportComponent extends BaseComponent
         $form = $control->getForm();
 
         $form->addUpload('file', _('File with applications'))
-            ->addRule(Form::FILLED)
+            ->addRule(Form::FILLED,_('The field is required.'))
             ->addRule(
                 Form::MIME_TYPE,
                 _('Only CSV files are accepted.'),

@@ -11,7 +11,7 @@ class HomepageColumnFactory extends ColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
-        $control->addCondition(Form::FILLED)->addRule(Form::URL);
+        $control->addCondition(Form::FILLED)->addRule(Form::URL, _('Must be a valid URL'));
         return $control;
     }
 }

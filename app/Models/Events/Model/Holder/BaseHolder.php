@@ -22,7 +22,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
-class BaseHolder {
+class BaseHolder
+{
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
@@ -34,8 +35,7 @@ class BaseHolder {
     private ?EventRelation $eventRelation;
     private ModelEvent $event;
     private string $label;
-    /** @var AbstractService|AbstractServiceMulti */
-    private $service;
+    private AbstractService|AbstractServiceMulti $service;
     private ?string $joinOn = null;
     private ?string $joinTo = null;
     private string $eventIdColumn;
@@ -53,11 +53,13 @@ class BaseHolder {
 
     public array $data = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->name = $name;
     }
 
-    public function addField(Field $field): void {
+    public function addField(Field $field): void
+    {
         $field->setBaseHolder($this);
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -81,18 +83,12 @@ class BaseHolder {
         $this->holder = $holder;
     }
 
-    /**
-     * @param bool|callable $modifiable
-     */
-    public function setModifiable($modifiable): void
+    public function setModifiable(bool|callable $modifiable): void
     {
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * @param bool|callable $visible
-     */
-    public function setVisible($visible): void
+    public function setVisible(bool|callable $visible): void
     {
         $this->visible = $visible;
     }
@@ -217,18 +213,12 @@ class BaseHolder {
         return $this->name;
     }
 
-    /**
-     * @return AbstractService|AbstractServiceMulti
-     */
-    public function getService()
+    public function getService(): AbstractService|AbstractServiceMulti
     {
         return $this->service;
     }
 
-    /**
-     * @param AbstractService|AbstractServiceMulti $service
-     */
-    public function setService($service): void
+    public function setService(AbstractService|AbstractServiceMulti $service): void
     {
         $this->service = $service;
     }
@@ -285,7 +275,7 @@ class BaseHolder {
 
     private function resolveColumnJoins(string $column): string
     {
-        if (strpos($column, '.') === false && strpos($column, ':') === false) {
+        if (!str_contains($column, '.') && !str_contains($column, ':')) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
         }
         return $column;
@@ -361,12 +351,7 @@ class BaseHolder {
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
     }
 
-    /**
-     * @param string|int $name
-     * @param mixed $default
-     * @return mixed
-     */
-    public function getParameter($name, $default = null)
+    public function getParameter(string|int $name, mixed $default = null): mixed
     {
         try {
             return $this->parameters[$name] ?? $default;

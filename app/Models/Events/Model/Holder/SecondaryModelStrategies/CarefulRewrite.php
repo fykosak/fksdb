@@ -31,10 +31,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $holder->setModel($foundModel); // "swap" models
     }
 
-    /**
-     * @param AbstractService|AbstractServiceMulti $service
-     */
-    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
+    private function getConflicts(ActiveRow $foundModel, array $joinData, AbstractService|AbstractServiceMulti $service, BaseHolder $holder): array {
         $foundArray = $foundModel->toArray();
         $result = [];
         foreach ($holder->data as $key => $value) {
@@ -52,10 +49,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    /**
-     * @param AbstractService|AbstractServiceMulti $service
-     */
-    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
+    private function updateFoundModel(ActiveRow $foundModel, array $joinData, AbstractService|AbstractServiceMulti $service, BaseHolder $holder): void {
         $data = [];
         foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {

@@ -199,7 +199,7 @@ class ResultsComponent extends BaseComponent
                     $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
-                        $valueElement->addRule(\Nette\Application\UI\Form::INTEGER, _('Parameter %label is numeric.'));
+                        $valueElement->addRule(Form::INTEGER, _('Parameter is numeric.'));
                     }
 
                     $valueElement->setDefaultValue($parameter->getDefaultValue());

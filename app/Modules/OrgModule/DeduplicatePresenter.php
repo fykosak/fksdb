@@ -17,6 +17,7 @@ use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Controls\SubmitButton;
@@ -104,7 +105,7 @@ class DeduplicatePresenter extends BasePresenter
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), MessageLevel::SUCCESS->value);
         $this->backLinkRedirect(true);
     }
 
@@ -231,11 +232,11 @@ class DeduplicatePresenter extends BasePresenter
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
         if ($merger->merge()) {
-            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Persons successfully merged.'), MessageLevel::SUCCESS->value);
             FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
-            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), MessageLevel::INFO->value);
             $this->redirect('this'); //this is correct
         }
     }

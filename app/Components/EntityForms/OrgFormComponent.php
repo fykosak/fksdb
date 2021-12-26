@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\Utils\FormUtils;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -67,7 +68,7 @@ class OrgFormComponent extends AbstractEntityFormComponent
         $this->serviceOrg->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
-            Message::LVL_SUCCESS
+            MessageLevel::SUCCESS->value
         );
         $this->getPresenter()->redirect('list');
     }

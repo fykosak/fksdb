@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
@@ -97,9 +98,9 @@ class ExtendedPersonHandler
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), MessageLevel::INFO->value);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), MessageLevel::ERROR->value);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -115,7 +116,7 @@ class ExtendedPersonHandler
                     $create ? $presenter->messageCreate() : $presenter->messageEdit(),
                     $this->person->getFullName()
                 ),
-                ContestantPresenter::FLASH_SUCCESS
+                MessageLevel::SUCCESS->value
             );
 
             if (!$hasLogin) {
@@ -126,10 +127,10 @@ class ExtendedPersonHandler
         } catch (ModelException $exception) {
             $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), MessageLevel::ERROR->value);
             } else {
                 Debugger::log($exception, Debugger::ERROR);
-                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageError(), MessageLevel::ERROR->value);
             }
 
             return self::RESULT_ERROR;

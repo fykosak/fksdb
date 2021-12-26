@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
+use FKSDB\Components\PDFGenerators\Providers\PageFormat;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 
 abstract class SeatingPageComponent extends AbstractPageComponent
@@ -33,6 +34,6 @@ abstract class SeatingPageComponent extends AbstractPageComponent
 
     public function getPagesTemplatePath(): string
     {
-        return $this->formatPathByFormat(self::FORMAT_A5_PORTRAIT);
+        return $this->formatPathByFormat(PageFormat::FORMAT_A5_PORTRAIT);
     }
 }

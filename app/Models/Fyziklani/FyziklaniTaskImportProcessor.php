@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\Utils\CSVParser;
 use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -47,10 +48,10 @@ class FyziklaniTaskImportProcessor {
                         'label' => $row['label'],
                         'name' => $row['name'],
                     ]);
-                    $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
+                    $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), MessageLevel::INFO));
                 } else {
                     $logger->log(new Message(
-                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Message::LVL_WARNING));
+                        sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), MessageLevel::WARNING));
                 }
             } catch (\Exception $exception) {
                 $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));

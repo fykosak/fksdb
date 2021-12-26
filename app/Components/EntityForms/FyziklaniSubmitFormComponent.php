@@ -12,6 +12,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
@@ -59,7 +60,7 @@ class FyziklaniSubmitFormComponent extends AbstractEntityFormComponent
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
             $this->redirect('this');
         }
     }

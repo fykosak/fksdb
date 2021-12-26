@@ -10,6 +10,7 @@ use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
@@ -130,12 +131,12 @@ abstract class AuthenticatedPresenter extends BasePresenter
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log("$login signed in using token $tokenData.", 'token-login');
-            $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
+            $this->flashMessage(_('Successful token authentication.'), MessageLevel::INFO->value);
 
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 

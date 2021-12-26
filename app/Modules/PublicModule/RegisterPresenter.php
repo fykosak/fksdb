@@ -22,6 +22,7 @@ use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\NetteORM\AbstractModel;
@@ -134,7 +135,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $person = $this->getPerson();
 
             if (!$person) {
-                $this->flashMessage(_('User must be a person in order to register as a contestant.'), self::FLASH_INFO);
+                $this->flashMessage(_('User must be a person in order to register as a contestant.'), MessageLevel::INFO->value);
                 $this->redirect(':Core:Authentication:login');
             }
         } else {
@@ -159,7 +160,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
                 // TODO FIXME persistent flash
                 $this->flashMessage(
                     sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name),
-                    self::FLASH_INFO
+                    MessageLevel::INFO->value
                 );
                 $this->redirect(':Core:Authentication:login');
             }

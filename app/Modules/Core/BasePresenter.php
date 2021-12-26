@@ -23,6 +23,7 @@ use FKSDB\Models\UI\PageStyleContainer;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
@@ -45,10 +46,10 @@ abstract class BasePresenter extends Presenter implements
 {
     use CollectorPresenterTrait;
 
-    public const FLASH_SUCCESS = Message::LVL_SUCCESS;
-    public const FLASH_INFO = Message::LVL_INFO;
-    public const FLASH_WARNING = Message::LVL_WARNING;
-    public const FLASH_ERROR = Message::LVL_ERROR;
+    public const FLASH_SUCCESS = MessageLevel::SUCCESS;
+    public const FLASH_INFO = MessageLevel::INFO;
+    public const FLASH_WARNING = MessageLevel::WARNING;
+    public const FLASH_ERROR = MessageLevel::ERROR;
 
     /**
      * BackLink for tree construction for breadcrumbs.
@@ -300,7 +301,13 @@ abstract class BasePresenter extends Presenter implements
             }
         }
         $this->pageTitle = $this->pageTitle ?? new PageTitle('');
-        $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
+        if (!isset($this->pageTitle->subTitle)) {
+            $this->pageTitle = new PageTitle(
+                title: $this->pageTitle->title,
+                icon: $this->pageTitle->icon,
+                subTitle: $this->getDefaultSubTitle()
+            );
+        }
         return $this->pageTitle;
     }
 

@@ -10,6 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -43,7 +44,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
             $logger->log(
                 new Message(
                     sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
-                    Message::LVL_INFO
+                    MessageLevel::INFO
                 )
             );
         }

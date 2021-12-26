@@ -47,11 +47,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-     * @param Resource|string|null $resource
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
+    public function isEventOrContestOrgAuthorized(Resource|string|null $resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
@@ -120,11 +119,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
     }
 
     /**
-     * @param Resource|string|null $resource
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
-    protected function isContestsOrgAuthorized($resource, ?string $privilege): bool
+    protected function isContestsOrgAuthorized(Resource|string|null $resource, ?string $privilege): bool
     {
         return $this->eventAuthorizator->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }

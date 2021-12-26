@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
@@ -23,19 +25,17 @@ use Fykosak\Utils\Logging\FlashMessageDump;
  */
 class ApplicationComponent extends BaseComponent
 {
-
-    private ApplicationHandler $handler;
-    private Holder $holder;
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
     private string $templateFile;
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
-    {
+    public function __construct(
+        Container $container,
+        private ApplicationHandler $handler,
+        private Holder $holder,
+    ) {
         parent::__construct($container);
-        $this->handler = $handler;
-        $this->holder = $holder;
     }
 
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator): void
@@ -145,7 +145,7 @@ class ApplicationComponent extends BaseComponent
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()->value]);
         }
 
         /*
@@ -194,7 +194,7 @@ class ApplicationComponent extends BaseComponent
     {
         if ($this->redirectCallback) {
             $model = $this->holder->getPrimaryHolder()->getModel2();
-            $id = $model ? $model->getPrimary(false) : null;
+            $id = $model?->getPrimary(false);
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');

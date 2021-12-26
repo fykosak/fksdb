@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -99,14 +100,14 @@ class AjaxSubmitComponent extends AjaxComponent
             }
 
             if (!$fileContainer->isOk()) {
-                $this->getLogger()->log(new Message(_('File is not Ok'), Message::LVL_ERROR));
+                $this->getLogger()->log(new Message(_('File is not Ok'), MessageLevel::ERROR));
                 $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
             $this->serviceSubmit->explorer->getConnection()->commit();
-            $this->getLogger()->log(new Message(_('Upload successful'), Message::LVL_SUCCESS));
+            $this->getLogger()->log(new Message(_('Upload successful'), MessageLevel::SUCCESS));
             $this->sendAjaxResponse();
         }
     }
@@ -116,12 +117,12 @@ class AjaxSubmitComponent extends AjaxComponent
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), Message::LVL_ERROR));
+            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), MessageLevel::ERROR));
         } catch (ForbiddenRequestException | NotFoundException$exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), MessageLevel::ERROR));
         } catch (StorageException | ModelException$exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), Message::LVL_ERROR));
+            $this->getLogger()->log(new Message(_('There was an error during the task deletion.'), MessageLevel::ERROR));
         }
 
         $this->sendAjaxResponse();
@@ -135,7 +136,7 @@ class AjaxSubmitComponent extends AjaxComponent
         try {
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $this->getSubmit(true));
         } catch (ForbiddenRequestException | StorageException | NotFoundException$exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), MessageLevel::ERROR));
         }
         $this->sendAjaxResponse();
     }

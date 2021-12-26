@@ -18,7 +18,7 @@ class GoogleProvider extends Google {
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
             'scope' => 'openid email',
-            'redirectUri' => $linkGenerator->link('Core:Authentication:google', ['bc' => null]),
+            'redirectUri' => $linkGenerator->link(':Core:Authentication:google', ['bc' => null]),
         ]);
     }
 }

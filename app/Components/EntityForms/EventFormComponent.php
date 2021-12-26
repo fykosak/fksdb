@@ -20,6 +20,7 @@ use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -77,7 +78,7 @@ class EventFormComponent extends AbstractEntityFormComponent
         /** @var ModelEvent $model */
         $model = $this->serviceEvent->storeModel($data, $this->model);
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), MessageLevel::SUCCESS->value);
         $this->getPresenter()->redirect('list');
     }
 

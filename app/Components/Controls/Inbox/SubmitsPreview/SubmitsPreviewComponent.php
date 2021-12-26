@@ -9,6 +9,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -36,7 +37,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 
@@ -49,7 +50,7 @@ class SubmitsPreviewComponent extends SeriesTableComponent
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException | NotFoundException | StorageException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+            $this->flashMessage($exception->getMessage(), MessageLevel::ERROR->value);
         }
     }
 }

@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -48,10 +49,10 @@ class PreferredLangFormComponent extends FormComponent
                 ['preferred_lang' => $lang, 'person_id' => $this->person->person_id],
                 $this->person->getInfo()
             );
-            $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
+            $this->flashMessage(_('Preferred language has been set'), MessageLevel::SUCCESS->value);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
-            $this->flashMessage(_('Error'), Message::LVL_ERROR);
+            $this->flashMessage(_('Error'), MessageLevel::ERROR->value);
         }
     }
 

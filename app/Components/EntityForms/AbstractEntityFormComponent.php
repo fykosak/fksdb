@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;
@@ -46,14 +47,14 @@ abstract class AbstractEntityFormComponent extends FormComponent
             $previous = $exception->getPrevious();
             // catch NotNull|ForeignKey|Unique
             if ($previous instanceof ConstraintViolationException) {
-                $this->flashMessage($previous->getMessage(), Message::LVL_ERROR);
+                $this->flashMessage($previous->getMessage(), MessageLevel::ERROR->value);
             } else {
-                $this->flashMessage(_('Error when storing model'), Message::LVL_ERROR);
+                $this->flashMessage(_('Error when storing model'), MessageLevel::ERROR->value);
             }
         } catch (AbortException $exception) {
             throw $exception;
         } catch (\Throwable $exception) {
-            $this->flashMessage(_('Error'), Message::LVL_ERROR);
+            $this->flashMessage(_('Error'), MessageLevel::ERROR->value);
         }
     }
 

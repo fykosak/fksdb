@@ -8,6 +8,7 @@ use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Fykosak\Utils\Logging\MessageLevel;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -33,7 +34,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
         $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Message::LVL_INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), MessageLevel::INFO));
         }
     }
 
