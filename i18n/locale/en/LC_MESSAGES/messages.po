@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-15 11:46+0100\n"
+"POT-Creation-Date: 2021-12-24 14:33+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -1705,7 +1705,7 @@ msgstr ""
 #: ../data/events/soustredeni/sous34p.neon.neon2php:207
 #: ../data/events/soustredeni/sous34j.neon.neon2php:207
 #: ../data/events/soustredeni/sous35p.neon.neon2php:221
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:204
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:206
 #: ../data/events/fov/fov.neon.neon2php:100
 #: ../data/events/fov/fov34.neon.neon2php:77
 #: ../data/events/dsef/defaultDsef.neon.neon2php:58
@@ -2270,7 +2270,7 @@ msgstr ""
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:51
 #: ../app/config/orm.neon.neon2php:182 ../app/config/orm.neon.neon2php:229
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:168
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:172
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:174
 msgid "Note"
 msgstr ""
 
@@ -3753,7 +3753,7 @@ msgstr "Register contestant"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:100
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:121
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:106
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:125
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:127
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:111
 #: ../data/events/dsef/dsef27.neon.neon2php:30
 #: ../data/events/dsef/defaultDsef.neon.neon2php:18
@@ -3785,7 +3785,7 @@ msgstr "Present"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:103
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:124
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:109
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:128
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:130
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:114
 #: ../data/events/dsef/dsef27.neon.neon2php:33
 #: ../data/events/dsef/defaultDsef.neon.neon2php:21
@@ -4659,7 +4659,7 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:87
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:107
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:111
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
 #, fuzzy
 msgid "Register team"
@@ -4676,7 +4676,7 @@ msgstr "Not participated"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:107
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:128
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:113
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:132
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:134
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:118
 msgid "Zrušit tým"
 msgstr "Cancel team"
@@ -4687,7 +4687,7 @@ msgstr "Cancel team"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:111
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:132
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:117
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:136
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:138
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:122
 msgid "Smazat tým"
 msgstr "Delete team"
@@ -4697,7 +4697,7 @@ msgstr "Delete team"
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:79
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:115
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:136
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:140
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:142
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:126
 msgid "Název týmu"
 msgstr "Team name"
@@ -4707,7 +4707,7 @@ msgstr "Team name"
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:90
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:120
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:147
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:151
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:153
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:137
 msgid "Kategorie"
 msgstr "Category"
@@ -4895,7 +4895,7 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:92
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:98
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:117
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:119
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:103
 msgid "Schválit účast"
 msgstr "Approve participation"
@@ -4904,7 +4904,7 @@ msgstr "Approve participation"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:97
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:118
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:103
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:120
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:122
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:108
 msgid "Potvrdit jako náhradníka"
 msgstr "Confirm as a substitute"
@@ -4916,29 +4916,29 @@ msgstr "The language you want to compete in."
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:95
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:152
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:156
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:158
 msgid "Chceme soutěžit v kategorii A"
 msgstr "We want to take a part in category A"
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:97
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:154
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:158
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:160
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:144
 msgid ""
 "Po zaškrtnutí této možnosti budete zařazeni do nejvyšší kategorie (s "
 "nejstaršími účastníky) bez ohledu na ročníky členů vašeho týmu. Tato "
 "kategorie je také jediná, která je součástí programu MŠMT Excelence SŠ."
 msgstr ""
-"If you choose this option, you will compete in  the  highest category ( with "
+"If you choose this option, you will compete in  the  highest category (with "
 "the oldest participants) without consideration of  school grade of "
-"participants in your team.  ( This category is the only one which is a part "
+"participants in your team.  (This category is the only one which is a part "
 "of czech program MŠMT Excelence SŠ.)"
 
 #: ../data/events/fyziklani/fyziklani15.neon.neon2php:158
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:205
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:215
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:216
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:219
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:221
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:206
 msgid "Tým"
 msgstr "Team"
@@ -4947,7 +4947,7 @@ msgstr "Team"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:210
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:220
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:221
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:224
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:226
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:211
 msgid "1. člen"
 msgstr "Member 1"
@@ -4956,7 +4956,7 @@ msgstr "Member 1"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:214
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:224
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:225
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:228
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:230
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:215
 msgid "2. člen"
 msgstr "Member 2"
@@ -4965,7 +4965,7 @@ msgstr "Member 2"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:217
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:227
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:228
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:231
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:233
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:218
 msgid "3. člen"
 msgstr "Member 3"
@@ -4974,7 +4974,7 @@ msgstr "Member 3"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:220
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:230
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:231
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:234
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:236
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:221
 msgid "4. člen"
 msgstr "Member 4"
@@ -4983,7 +4983,7 @@ msgstr "Member 4"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:223
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:233
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:234
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:237
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:239
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:224
 msgid "5. člen"
 msgstr "Member 5"
@@ -5018,7 +5018,7 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:130
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:157
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:136
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:161
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:163
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:147
 msgid "Kontaktní telefon"
 msgstr "Contact phone"
@@ -5026,7 +5026,7 @@ msgstr "Contact phone"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:141
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:166
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:168
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:152
 msgid "Učitel/doprovod"
 msgstr "Teacher/escort"
@@ -5054,7 +5054,7 @@ msgstr "Accommodation the night before the competition."
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:165
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:184
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:177
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:188
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:190
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:174
 msgid "Přihlásit člena"
 msgstr "Login"
@@ -5062,7 +5062,7 @@ msgstr "Login"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:170
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:187
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:182
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:191
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:193
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:177
 msgid "Odebrat člena"
 msgstr "Add event"
@@ -5097,7 +5097,7 @@ msgstr "The teacher is interested in the program"
 msgid "Místnost"
 msgstr "Place"
 
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:145
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:147
 #, fuzzy
 msgid "Jazyk, ve kterém chcete soutěžit"
 msgstr "The language you want to compete in."
