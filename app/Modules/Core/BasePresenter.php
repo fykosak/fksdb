@@ -8,8 +8,6 @@ use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
@@ -20,7 +18,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
-use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
@@ -37,13 +34,9 @@ use Nette\DI\Container;
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Presenter implements
-    JavaScriptCollector,
-    StylesheetCollector,
     AutocompleteJSONProvider,
     NavigablePresenter
 {
-    use CollectorPresenterTrait;
-
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent

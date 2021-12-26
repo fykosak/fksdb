@@ -1,6 +1,8 @@
 {varType FKSDB\Models\UI\PageStyleContainer $pageStyleContainer}
 {varType Fykosak\Utils\UI\PageTitle $pageTitle}
 {varType string[] $navRoots}
+{varType string $lang}
+{varType ?string $robots}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -11,10 +13,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
     <link rel="icon" href="{$basePath}/images/favicon.png" type="image/png" sizes="16x16">
-    {control cssLoader
-    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css' => [all],
-    'assets/main.css'=>[all]
-    }
+    <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
+    <link href="/assets/main.css" rel="stylesheet"/>
 </head>
 <!-- Random background generator -->
 <body data-bg="{rand(1,4)}" data-style-id="{join(' ',$pageStyleContainer->styleIds)}">
@@ -82,6 +82,8 @@
         {block flashes}
             {foreach $flashes as $flash}
 
+
+
     <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
@@ -116,16 +118,9 @@
 </footer>
 {/block}
 <div id="spinner"></div>
-{block scripts}
-{*TODO store this library localy*}
-{control jsLoader
-'//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js',
-'//cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js',
-'assets/bundle.min.js'
-}
-{control jsLoader:inline}
-{/block}
-{control cssLoader}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="/assets/bundle.min.js"></script>
 </body>
 </html>

@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
 use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\Database\Table\ActiveRow;
@@ -35,7 +37,7 @@ abstract class ReferencedContainer extends ContainerWithOptions
     public function __construct(DIContainer $container, bool $allowClear)
     {
         parent::__construct($container);
-        $this->monitor(JavaScriptCollector::class, function () {
+        $this->monitor(IPresenter::class, function () {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
                 $this->updateHtmlData();

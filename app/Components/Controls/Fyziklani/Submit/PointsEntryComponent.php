@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
@@ -28,12 +27,13 @@ class PointsEntryComponent extends AjaxComponent
     {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-        $this->monitor(
+        // TODO !!!!
+        /*$this->monitor(
             JavaScriptCollector::class,
             fn(JavaScriptCollector $collector) => $collector->registerJSFile(
                 'https://dmla.github.io/jsqrcode/src/qr_packed.js'
             )
-        );
+        );*/
     }
 
     final public function injectPrimary(
