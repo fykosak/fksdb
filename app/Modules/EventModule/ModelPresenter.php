@@ -22,7 +22,7 @@ class ModelPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Model of event'), 'fa fa-project-diagram');
+        return new PageTitle(null, _('Model of event'), 'fa fa-project-diagram');
     }
 
     /**

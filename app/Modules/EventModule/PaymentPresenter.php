@@ -39,7 +39,7 @@ class PaymentPresenter extends BasePresenter
     /* ********* titles *****************/
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('New payment'), 'fa fa-credit-card');
+        return new PageTitle(null, _('New payment'), 'fa fa-credit-card');
     }
 
     /**
@@ -50,7 +50,11 @@ class PaymentPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
+        return new PageTitle(
+            null,
+            \sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()),
+            'fa fa-credit-card'
+        );
     }
 
     /**
@@ -62,6 +66,7 @@ class PaymentPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
+            null,
             \sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()),
             'fa fa-credit-card',
         );
@@ -69,7 +74,7 @@ class PaymentPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of payments'), 'fa fa-credit-card');
+        return new PageTitle(null, _('List of payments'), 'fa fa-credit-card');
     }
 
     /**

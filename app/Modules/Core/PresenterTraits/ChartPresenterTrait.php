@@ -17,12 +17,12 @@ trait ChartPresenterTrait
 
     public function titleChart(): PageTitle
     {
-        return new PageTitle($this->selectedChart->getTitle(), 'fas fa-chart-pie');
+        return new PageTitle(null, $this->selectedChart->getTitle(), 'fas fa-chart-pie');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Charts'), 'fas fa-chart-pie');
+        return new PageTitle(null, _('Charts'), 'fas fa-chart-pie');
     }
 
     final public function renderChart(): void

@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Payment;
 
-use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
+use Fykosak\Utils\Price\Currency;
 use Nette\Forms\Controls\SelectBox;
 
-class CurrencyField extends SelectBox {
+class CurrencyField extends SelectBox
+{
     /**
      * CurrencyField constructor.
      * @throws UnsupportedCurrencyException
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(_('Currency'));
         $items = [];
-        foreach (Price::getAllCurrencies() as $currency) {
-            $items[$currency] = Price::getLabel($currency);
+        foreach (Currency::cases() as $currency) {
+            $items[$currency->value] = $currency->getLabel();
         }
         $this->setItems($items)->setPrompt(_('Select currency'));
     }

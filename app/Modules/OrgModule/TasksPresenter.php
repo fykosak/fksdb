@@ -57,7 +57,7 @@ class TasksPresenter extends BasePresenter
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(_('Task import'), 'fas fa-download');
+        return new PageTitle(null, _('Task import'), 'fas fa-download');
     }
 
     public function titleDispatch(): PageTitle

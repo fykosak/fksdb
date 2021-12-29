@@ -6,10 +6,12 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
+use Fykosak\Utils\Price\Currency;
+use Fykosak\Utils\Price\Price;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
@@ -74,7 +76,7 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
 
     public function getPrice(): Price
     {
-        return new Price($this->price, Price::CURRENCY_CZK);
+        return new Price(Currency::from(Currency::CZK), $this->price);
     }
 
     public function getFyziklaniTeam(): ?ModelFyziklaniTeam

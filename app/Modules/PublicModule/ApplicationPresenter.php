@@ -90,6 +90,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if ($this->getEventApplication()) {
             return new PageTitle(
+                null,
                 \sprintf(
                     _('Application for %s: %s'),
                     $this->getEvent()->name,
@@ -98,7 +99,7 @@ class ApplicationPresenter extends BasePresenter
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle((string)$this->getEvent(), 'fas fa-calendar-plus');
+            return new PageTitle(null, (string)$this->getEvent(), 'fas fa-calendar-plus');
         }
     }
 

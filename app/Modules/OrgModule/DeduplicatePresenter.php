@@ -75,6 +75,7 @@ class DeduplicatePresenter extends BasePresenter
     public function titleMerge(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(
                 _('Merging persons %s (%d) and %s (%d)'),
                 $this->trunkPerson->getFullName(),
@@ -87,7 +88,7 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titlePerson(): PageTitle
     {
-        return new PageTitle(_('Duplicate persons'), 'fa fa-exchange');
+        return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
     }
 
     /**

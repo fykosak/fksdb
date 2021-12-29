@@ -299,7 +299,7 @@ abstract class BasePresenter extends Presenter implements
                 $this->pageTitle = $this->{$method}();
             }
         }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle('');
+        $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
     }

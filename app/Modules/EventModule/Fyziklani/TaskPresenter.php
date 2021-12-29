@@ -25,12 +25,12 @@ class TaskPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Tasks'), 'fas fa-tasks');
+        return new PageTitle(null, _('Tasks'), 'fas fa-tasks');
     }
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(_('Tasks Import'), 'fas fa-download');
+        return new PageTitle(null, _('Tasks Import'), 'fas fa-download');
     }
 
     /**

@@ -15,17 +15,17 @@ class SeatingPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Rooming'), 'fa map-marked-alt');
+        return new PageTitle(null, _('Rooming'), 'fa map-marked-alt');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of all teams'), 'fa fa-print');
+        return new PageTitle(null, _('List of all teams'), 'fa fa-print');
     }
 
     public function titlePreview(): PageTitle
     {
-        return new PageTitle(_('Preview'), 'fa fa-search');
+        return new PageTitle(null, _('Preview'), 'fa fa-search');
     }
 
     /**
