@@ -17,7 +17,7 @@ class DispatchPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Menu'), 'fa fa-home');
+        return new PageTitle(null, _('Menu'), 'fa fa-home');
     }
 
     /**

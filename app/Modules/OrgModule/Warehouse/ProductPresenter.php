@@ -20,17 +20,17 @@ class ProductPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Products'), 'fas fa-dolly');
+        return new PageTitle(null, _('Products'), 'fas fa-dolly');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(_('Edit product'), 'fas fa-pen');
+        return new PageTitle(null, _('Edit product'), 'fas fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create product'), 'fa fa-plus');
+        return new PageTitle(null, _('Create product'), 'fa fa-plus');
     }
 
     public function injectService(ServiceProduct $serviceProduct): void

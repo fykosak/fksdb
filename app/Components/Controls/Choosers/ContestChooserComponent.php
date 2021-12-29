@@ -29,13 +29,13 @@ final class ContestChooserComponent extends ChooserComponent
         /** @var ModelContest $contest */
         foreach ($this->availableContests as $contest) {
             $items[] = new NavItem(
-                new Title($contest->name),
+                new Title(null, $contest->name),
                 'this',
                 ['contestId' => $contest->contest_id],
                 [],
                 $contest->contest_id === $this->contest->contest_id
             );
         }
-        return new NavItem(new Title($this->contest->name), '#', [], $items);
+        return new NavItem(new Title(null, $this->contest->name), '#', [], $items);
     }
 }

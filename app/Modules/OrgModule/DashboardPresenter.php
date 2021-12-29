@@ -14,12 +14,12 @@ class DashboardPresenter extends BasePresenter
     {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $access = $login ? $login->isOrg() : false;
+        $access = $login && $login->isOrg();
         $this->setAuthorized($access);
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Organiser\'s dashboard'), 'fas fa-chalkboard');
+        return new PageTitle(null, _('Organiser\'s dashboard'), 'fas fa-chalkboard');
     }
 }

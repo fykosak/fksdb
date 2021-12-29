@@ -25,7 +25,7 @@ class MyApplicationsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('My applications'), 'fa fa-calendar-alt');
+        return new PageTitle(null, _('My applications'), 'fa fa-calendar-alt');
     }
 
     protected function createComponentNewApplicationsGrid(): NewApplicationsGrid

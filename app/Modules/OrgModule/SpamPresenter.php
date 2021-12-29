@@ -30,6 +30,7 @@ class SpamPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(_('Detail of e-mail #%s'), $this->getEntity()->getPrimary()),
             'fas fa-envelope-open'
         );
@@ -37,7 +38,7 @@ class SpamPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of emails'), 'fas fa-mail-bulk');
+        return new PageTitle(null, _('List of emails'), 'fas fa-mail-bulk');
     }
 
     public function authorizedDetail(): void

@@ -26,13 +26,13 @@ final class SeriesChooserComponent extends ChooserComponent
         $items = [];
         foreach ($this->allowedSeries as $series) {
             $items[] = new NavItem(
-                new Title(sprintf(_('Series %d'), $series)),
+                new Title(null, sprintf(_('Series %d'), $series)),
                 'this',
                 ['series' => $series],
                 [],
                 $series === $this->series
             );
         }
-        return new NavItem(new Title(sprintf(_('Series %d'), $this->series)), '#', [], $items);
+        return new NavItem(new Title(null, sprintf(_('Series %d'), $this->series)), '#', [], $items);
     }
 }

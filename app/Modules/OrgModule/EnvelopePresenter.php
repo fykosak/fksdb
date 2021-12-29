@@ -32,7 +32,7 @@ class EnvelopePresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Envelopes for person generator'), 'fa fa-envelope');
+        return new PageTitle(null, _('Envelopes for person generator'), 'fa fa-envelope');
     }
 
     protected function createComponentOutput(): ProviderComponent

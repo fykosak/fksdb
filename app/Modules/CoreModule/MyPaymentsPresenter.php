@@ -18,7 +18,7 @@ class MyPaymentsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('My payments'), 'fa fa-credit-card');
+        return new PageTitle(null, _('My payments'), 'fa fa-credit-card');
     }
 
     protected function createComponentMyPaymentGrid(): PersonRelatedGrid

@@ -1,3 +1,5 @@
+{varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[] $rests}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
 {block content}
     {if count($rests)}
         <h3>{$person->getFullName()}</h3>
@@ -6,7 +8,8 @@
             {foreach $rests as $rest}
                 <tr>
                     <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice('czk')}/{$rest->getScheduleItem()->getPrice('eur')}</td>
+                    <td>{$rest->getScheduleItem()->getPrice(Fykosak\Utils\Price\Currency::from(Fykosak\Utils\Price\Currency::CZK))} /
+                        {$rest->getScheduleItem()->getPrice(Fykosak\Utils\Price\Currency::from(Fykosak\Utils\Price\Currency::EUR))}</td>
                 </tr>
             {/foreach}
             </tbody>
