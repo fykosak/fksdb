@@ -34,13 +34,13 @@ final class YearChooserComponent extends ChooserComponent
         foreach ($this->availableYears as $row) {
             $year = ModelContestYear::createFromActiveRow($row);
             $items[] = new NavItem(
-                new Title(sprintf(_('Year %d'), $year->year)),
+                new Title(null, sprintf(_('Year %d'), $year->year)),
                 'this',
                 ['year' => $year->year],
                 [],
                 $this->contestYear->year === $year->year
             );
         }
-        return new NavItem(new Title(sprintf(_('Year %d'), $this->contestYear->year)), '#', [], $items);
+        return new NavItem(new Title(null, sprintf(_('Year %d'), $this->contestYear->year)), '#', [], $items);
     }
 }

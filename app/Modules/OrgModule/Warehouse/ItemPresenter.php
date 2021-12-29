@@ -25,17 +25,17 @@ class ItemPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Items'), 'fa fa-barcode');
+        return new PageTitle(null, _('Items'), 'fa fa-barcode');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(_('Edit item'), 'fas fa-pen');
+        return new PageTitle(null, _('Edit item'), 'fas fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create item'), 'fa fa-plus');
     }
 
     protected function createComponentCreateForm(): Control

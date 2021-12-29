@@ -87,12 +87,12 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     /* ********************* TITLE ***************** */
     public function titleContest(): PageTitle
     {
-        return new PageTitle(_('Select contest'));
+        return new PageTitle(null, _('Select contest'));
     }
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(_('Select year'), '', $this->getSelectedContest()->name);
+        return new PageTitle(null, _('Select year'), '', $this->getSelectedContest()->name);
     }
 
     public function getSelectedContest(): ?ModelContest
@@ -102,7 +102,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
+        return new PageTitle(null, _('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
     }
 
     /* ********************* ACTIONS ***************** */
@@ -110,6 +110,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     public function titleContestant(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,

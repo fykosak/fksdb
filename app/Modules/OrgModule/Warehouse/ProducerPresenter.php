@@ -32,17 +32,17 @@ class ProducerPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Producers'), 'fas fa-store-alt');
+        return new PageTitle(null, _('Producers'), 'fas fa-store-alt');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(_('Edit producer'), 'fas fa-pen');
+        return new PageTitle(null, _('Edit producer'), 'fas fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create producer'), 'fa fa-plus');
+        return new PageTitle(null, _('Create producer'), 'fa fa-plus');
     }
 
     /**

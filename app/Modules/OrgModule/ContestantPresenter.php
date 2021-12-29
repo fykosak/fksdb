@@ -29,6 +29,7 @@ class ContestantPresenter extends ExtendedPersonPresenter
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
             'fa fa-user-edit'
         );
@@ -36,12 +37,12 @@ class ContestantPresenter extends ExtendedPersonPresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create contestant'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create contestant'), 'fa fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Contestants'), 'fa fa-user-graduate');
+        return new PageTitle(null, _('Contestants'), 'fa fa-user-graduate');
     }
 
     public function messageCreate(): string

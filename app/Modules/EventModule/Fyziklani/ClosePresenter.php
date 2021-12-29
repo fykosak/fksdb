@@ -34,7 +34,7 @@ class ClosePresenter extends BasePresenter
     /* ******* TITLE ***********/
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
+        return new PageTitle(null, _('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -57,6 +57,7 @@ class ClosePresenter extends BasePresenter
     public function titleTeam(): PageTitle
     {
         return new PageTitle(
+            null,
             \sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name),
             'fas fa-stamp'
         );

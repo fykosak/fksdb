@@ -56,22 +56,22 @@ class InboxPresenter extends BasePresenter
 
     public function titleInbox(): PageTitle
     {
-        return new PageTitle(_('Inbox'), 'fa fa-envelope');
+        return new PageTitle(null, _('Inbox'), 'fa fa-envelope');
     }
 
     public function titleHandout(): PageTitle
     {
-        return new PageTitle(_('Handout'), 'fa fa-folder-open');
+        return new PageTitle(null, _('Handout'), 'fa fa-folder-open');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of submits'), 'fa fa-list-ul');
+        return new PageTitle(null, _('List of submits'), 'fa fa-list-ul');
     }
 
     public function titleCorrected(): PageTitle
     {
-        return new PageTitle(_('Corrected'), 'fa fa-file-signature');
+        return new PageTitle(null, _('Corrected'), 'fa fa-file-signature');
     }
 
     /* *********** LIVE CYCLE *************/
