@@ -29,7 +29,7 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Dashboard'), 'fas fa-chalkboard');
+        return new PageTitle(null, _('Dashboard'), 'fas fa-chalkboard');
     }
 
     /**

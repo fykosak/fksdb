@@ -31,7 +31,7 @@ class PaymentHolder implements ModelHolder {
         return isset($this->model) ? $this->model->state : Machine::STATE_INIT;
     }
 
-    public function getModel(): ?AbstractModel {
+    public function getModel(): ?ModelPayment {
         return $this->model;
     }
 

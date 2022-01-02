@@ -12,17 +12,17 @@ class ValidationPresenter extends BasePresenter
 {
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Data validation'), 'fas fa-clipboard-check');
+        return new PageTitle(null, _('Data validation'), 'fas fa-clipboard-check');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('All tests'), 'fas fa-tasks');
+        return new PageTitle(null, _('All tests'), 'fas fa-tasks');
     }
 
     public function titlePreview(): PageTitle
     {
-        return new PageTitle(_('Select test'), 'fas fa-check');
+        return new PageTitle(null, _('Select test'), 'fas fa-check');
     }
 
     public function authorizedList(): void

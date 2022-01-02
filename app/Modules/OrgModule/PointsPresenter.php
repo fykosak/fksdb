@@ -44,12 +44,12 @@ class PointsPresenter extends BasePresenter
 
     public function titleEntry(): PageTitle
     {
-        return new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
+        return new PageTitle(null, sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fas fa-pen');
     }
 
     public function titlePreview(): PageTitle
     {
-        return new PageTitle(_('Points list'), 'fas fa-clipboard-list');
+        return new PageTitle(null, _('Points list'), 'fas fa-clipboard-list');
     }
 
     public function authorizedEntry(): void

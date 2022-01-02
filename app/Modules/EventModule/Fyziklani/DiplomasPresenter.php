@@ -16,12 +16,12 @@ class DiplomasPresenter extends BasePresenter
 
     public function titleResults(): PageTitle
     {
-        return new PageTitle(_('Final results'), 'fa fa-trophy');
+        return new PageTitle(null, _('Final results'), 'fa fa-trophy');
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Calculate ranking'), 'fa fa-calculator');
+        return new PageTitle(null, _('Calculate ranking'), 'fa fa-calculator');
     }
 
     /**

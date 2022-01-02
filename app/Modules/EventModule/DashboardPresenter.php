@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter
      */
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
+        return new PageTitle(null, \sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
     }
 
     /**

@@ -55,12 +55,12 @@ final class AuthenticationPresenter extends BasePresenter
 
     public function titleLogin(): PageTitle
     {
-        return new PageTitle(_('Login'));
+        return new PageTitle(null, _('Login'));
     }
 
     public function titleRecover(): PageTitle
     {
-        return new PageTitle(_('Password recovery'));
+        return new PageTitle(null, _('Password recovery'));
     }
 
     /**

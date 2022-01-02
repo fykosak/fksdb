@@ -41,7 +41,7 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Settings'), 'fa fa-cogs');
+        return new PageTitle(null, _('Settings'), 'fa fa-cogs');
     }
 
     /**

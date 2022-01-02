@@ -25,7 +25,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(_('Application import'), 'fas fa-download');
+        return new PageTitle(null, _('Application import'), 'fas fa-download');
     }
 
     /**
