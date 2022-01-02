@@ -15,6 +15,7 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelData
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -209,7 +210,7 @@ class ApplicationHandler {
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($state == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $newState == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)) {
+                } elseif (!($state == AbstractMachine::STATE_INIT && $newState == AbstractMachine::STATE_TERMINATED)) {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }

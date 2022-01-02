@@ -16,6 +16,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -177,7 +178,7 @@ class ApplicationPresenter extends BasePresenter
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
-                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                ) == AbstractMachine::STATE_INIT
             ) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
@@ -288,7 +289,7 @@ class ApplicationPresenter extends BasePresenter
             $this->initializeMachine();
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
-                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                ) == AbstractMachine::STATE_INIT
             ) {
                 return;
             }

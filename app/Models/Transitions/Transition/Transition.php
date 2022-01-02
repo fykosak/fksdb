@@ -4,14 +4,13 @@ namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Message;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Models\Transitions\Machine\Machine;
 
 class Transition
 {
-
     use SmartObject;
 
     public const TYPE_SUCCESS = Message::LVL_SUCCESS;
@@ -51,7 +50,7 @@ class Transition
 
     public function matchSource(string $source): bool
     {
-        return $this->getSourceState() === $source || $this->getSourceState() === Machine::STATE_ANY;
+        return $this->getSourceState() === $source || $this->getSourceState() === AbstractMachine::STATE_ANY;
     }
 
     public function setTargetState(string $targetState): void
@@ -66,12 +65,12 @@ class Transition
 
     public function isCreating(): bool
     {
-        return $this->sourceState === Machine::STATE_INIT;
+        return $this->sourceState === AbstractMachine::STATE_INIT;
     }
 
     public function isTerminating(): bool
     {
-        return $this->getTargetState() === Machine::STATE_TERMINATED;
+        return $this->getTargetState() === AbstractMachine::STATE_TERMINATED;
     }
 
     public function getId(): string
@@ -86,6 +85,12 @@ class Transition
 
     public function getBehaviorType(): string
     {
+        if ($this->isTerminating()) {
+            return self::TYPE_DANGEROUS;
+        }
+        if ($this->isCreating()) {
+            return self::TYPE_SUCCESS;
+        }
         return $this->behaviorType;
     }
 

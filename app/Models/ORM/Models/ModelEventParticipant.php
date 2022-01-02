@@ -74,6 +74,9 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         return ModelEvent::createFromActiveRow($this->event);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getPrice(): Price
     {
         return new Price(Currency::from(Currency::CZK), $this->price);

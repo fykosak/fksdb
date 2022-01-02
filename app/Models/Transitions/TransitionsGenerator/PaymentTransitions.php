@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
@@ -50,7 +51,7 @@ abstract class PaymentTransitions implements TransitionsDecorator {
      * @throws \Exception
      */
     private function decorateTransitionInitToNew(PaymentMachine $machine): void {
-        $transition = $machine->getTransitionById(Transition::createId(Machine::STATE_INIT, ModelPayment::STATE_NEW));
+        $transition = $machine->getTransitionById(Transition::createId(AbstractMachine::STATE_INIT, ModelPayment::STATE_NEW));
         $transition->setCondition($this->getDatesCondition());
     }
 

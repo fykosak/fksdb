@@ -7,6 +7,7 @@ use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
@@ -41,7 +42,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
      */
     public function adjust(Form $form, Holder $holder): void
     {
-        if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() != AbstractMachine::STATE_INIT) {
             return;
         }
 

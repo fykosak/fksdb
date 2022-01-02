@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
@@ -47,7 +48,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]);
     }
 
     /**
@@ -60,7 +61,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === AbstractMachine::STATE_INIT ? 'init' : ($state === AbstractMachine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

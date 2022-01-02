@@ -5,9 +5,9 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -39,7 +39,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(array $fields, $paramCapacity, string $message, Explorer $explorer, array $includeStates = [AbstractMachine::STATE_ANY], array $excludeStates = ['cancelled']) {
         $this->fields = $fields;
         $this->database = $explorer;
         $this->paramCapacity = $paramCapacity;
@@ -97,10 +97,10 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $table = $this->database->table($tableName);
 
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');

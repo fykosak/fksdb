@@ -14,6 +14,6 @@ class PaymentEditableAssertion implements Assertion
     {
         /** @var ModelPayment $payment */
         $payment = $acl->getQueriedResource();
-        return \in_array($payment->state, [Machine\Machine::STATE_INIT, ModelPayment::STATE_NEW]);
+        return \in_array($payment->state, [Machine\AbstractMachine::STATE_INIT, ModelPayment::STATE_NEW]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Models\Payment\Transition;
 
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
@@ -28,7 +29,7 @@ class PaymentHolder implements ModelHolder {
     }
 
     public function getState(): string {
-        return isset($this->model) ? $this->model->state : Machine::STATE_INIT;
+        return isset($this->model) ? $this->model->state : AbstractMachine::STATE_INIT;
     }
 
     public function getModel(): ?ModelPayment {
