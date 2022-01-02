@@ -65,7 +65,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param null $returnType
-     * @return array|ArrayHash
+     * @return array|object
      */
     public function getUnsafeValues($returnType = null, array $controls = null) {
         $values = parent::getUnsafeValues($returnType);

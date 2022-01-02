@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 class TeamColumnFactory extends ColumnFactory

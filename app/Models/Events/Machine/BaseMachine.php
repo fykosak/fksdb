@@ -6,7 +6,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 /**
  * @property Transition[] $transitions

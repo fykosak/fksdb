@@ -267,7 +267,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException|UnsupportedLanguageException
+     * @throws \ReflectionException
      */
     protected function createComponentContestantForm(): FormControl
     {

@@ -3,11 +3,9 @@
 namespace FKSDB\Models\Payment\Transition;
 
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\Machine;
 
 class PaymentHolder implements ModelHolder {
 

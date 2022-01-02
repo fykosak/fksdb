@@ -10,7 +10,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;

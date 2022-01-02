@@ -7,12 +7,10 @@ namespace FKSDB\Models\Authorization;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelRole;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
-use Tracy\Debugger;
 
 class ContestAuthorizator
 {

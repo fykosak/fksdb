@@ -11,7 +11,6 @@ use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 

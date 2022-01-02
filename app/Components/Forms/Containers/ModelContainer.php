@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\BaseControl;
 

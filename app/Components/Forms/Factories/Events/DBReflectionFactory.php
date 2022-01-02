@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;

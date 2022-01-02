@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Security\User;
 use Nette\SmartObject;
 

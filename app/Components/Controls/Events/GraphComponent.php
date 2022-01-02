@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
 class GraphComponent extends BaseComponent {
