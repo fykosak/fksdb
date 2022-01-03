@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-24 14:33+0100\n"
+"POT-Creation-Date: 2022-01-03 20:01+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -81,21 +81,21 @@ msgstr ""
 msgid "Detail of person %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:68
+#: ../app/Modules/OrgModule/PersonPresenter.php:69
 #, php-format
 msgid "Edit person \"%s\""
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:73
+#: ../app/Modules/OrgModule/PersonPresenter.php:75
 #: ../app/Modules/OrgModule/templates/Person/search.latte.latte2php:2
 msgid "Create person"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:78
+#: ../app/Modules/OrgModule/PersonPresenter.php:80
 msgid "Pizza"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:145
+#: ../app/Modules/OrgModule/PersonPresenter.php:147
 #: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:87
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:11
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:11
@@ -115,6 +115,7 @@ msgstr ""
 #: ../data/events/tabor/tabor9.neon.neon2php:117
 #: ../data/events/tabor/tabor1-6.neon.neon2php:160
 #: ../data/events/tabor/tabor8.neon.neon2php:116
+#: ../data/events/soustredeni/sous35j.neon.neon2php:187
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:221
 #: ../data/events/soustredeni/sous34p.neon.neon2php:178
 #: ../data/events/soustredeni/sous34j.neon.neon2php:178
@@ -149,11 +150,11 @@ msgstr ""
 msgid "Person"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:149
+#: ../app/Modules/OrgModule/PersonPresenter.php:151
 msgid "Let's stalk"
 msgstr ""
 
-#: ../app/Modules/OrgModule/PersonPresenter.php:155
+#: ../app/Modules/OrgModule/PersonPresenter.php:157
 #: ../app/Models/ORM/Links/ApplicationEditLink.php:12
 #: ../app/Components/Grids/ContestantsGrid.php:63
 #: ../app/Components/Grids/Schedule/GroupsGrid.php:53
@@ -195,12 +196,12 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-#: ../app/Modules/OrgModule/SpamPresenter.php:33
+#: ../app/Modules/OrgModule/SpamPresenter.php:34
 #, fuzzy, php-format
 msgid "Detail of e-mail #%s"
 msgstr "Detail of query %s"
 
-#: ../app/Modules/OrgModule/SpamPresenter.php:40
+#: ../app/Modules/OrgModule/SpamPresenter.php:41
 msgid "List of emails"
 msgstr ""
 
@@ -288,22 +289,22 @@ msgstr ""
 msgid "Select test"
 msgstr ""
 
-#: ../app/Modules/OrgModule/TeacherPresenter.php:36
+#: ../app/Modules/OrgModule/TeacherPresenter.php:37
 #, php-format
 msgid "Edit teacher %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/TeacherPresenter.php:43
+#: ../app/Modules/OrgModule/TeacherPresenter.php:44
 msgid "Create new teacher"
 msgstr ""
 
-#: ../app/Modules/OrgModule/TeacherPresenter.php:48
+#: ../app/Modules/OrgModule/TeacherPresenter.php:49
 #: ../app/Models/ValuePrinters/EventRolePrinter.php:41
 #: ../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:54
 msgid "Teacher"
 msgstr ""
 
-#: ../app/Modules/OrgModule/TeacherPresenter.php:53
+#: ../app/Modules/OrgModule/TeacherPresenter.php:54
 msgid "Teacher detail"
 msgstr ""
 
@@ -329,38 +330,38 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:32
+#: ../app/Modules/OrgModule/ContestantPresenter.php:33
 #, php-format
 msgid "Edit the contestant %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:39
+#: ../app/Modules/OrgModule/ContestantPresenter.php:40
 #: ../app/Components/Grids/ContestantsGrid.php:67
 msgid "Create contestant"
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:44
+#: ../app/Modules/OrgModule/ContestantPresenter.php:45
 #: ../app/Modules/OrgModule/templates/School/detail.latte.latte2php:56
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:30
 msgid "Contestants"
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:49
+#: ../app/Modules/OrgModule/ContestantPresenter.php:50
 #, php-format
 msgid "Contestant %s created."
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:54
-#: ../app/Modules/PublicModule/RegisterPresenter.php:233
+#: ../app/Modules/OrgModule/ContestantPresenter.php:55
+#: ../app/Modules/PublicModule/RegisterPresenter.php:234
 #, php-format
 msgid "Contestant %s modified."
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:59
+#: ../app/Modules/OrgModule/ContestantPresenter.php:60
 msgid "Error while creating the contestant."
 msgstr ""
 
-#: ../app/Modules/OrgModule/ContestantPresenter.php:64
+#: ../app/Modules/OrgModule/ContestantPresenter.php:65
 msgid "Contestant already exists."
 msgstr ""
 
@@ -412,25 +413,25 @@ msgstr ""
 msgid "Create producer"
 msgstr ""
 
-#: ../app/Modules/OrgModule/OrgPresenter.php:37
+#: ../app/Modules/OrgModule/OrgPresenter.php:38
 #, php-format
 msgid "Edit of organiser %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/OrgPresenter.php:51
+#: ../app/Modules/OrgModule/OrgPresenter.php:52
 msgid "Editing of organiser outside chosen seminar."
 msgstr ""
 
-#: ../app/Modules/OrgModule/OrgPresenter.php:62
+#: ../app/Modules/OrgModule/OrgPresenter.php:63
 #, php-format
 msgid "Org %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/OrgPresenter.php:67
+#: ../app/Modules/OrgModule/OrgPresenter.php:68
 msgid "Create an organiser"
 msgstr ""
 
-#: ../app/Modules/OrgModule/OrgPresenter.php:72
+#: ../app/Modules/OrgModule/OrgPresenter.php:73
 #: ../app/Components/Grids/Events/EventsGrid.php:48
 msgid "Organisers"
 msgstr ""
@@ -448,48 +449,48 @@ msgstr ""
 msgid "Edit school %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/SchoolPresenter.php:54
+#: ../app/Modules/OrgModule/SchoolPresenter.php:56
 #, php-format
 msgid "Detail of school %s"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:79
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:80
 #, php-format
 msgid "Merging persons %s (%d) and %s (%d)"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:90
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:91
 msgid "Duplicate persons"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:107
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:108
 msgid "Persons not merged."
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:160
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:161
 msgid "Trunk"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:172
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:173
 msgid "Merged"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:205
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:206
 msgid "Merge persons"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:210
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:211
 #: ../app/Components/Grids/SubmitsGrid.php:74
 #: ../app/Components/Grids/SubmitsGrid.php:76
 #: ../app/Components/Controls/Events/ApplicationComponent.php:154
 msgid "Cancel"
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:234
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:235
 msgid "Persons successfully merged."
 msgstr ""
 
-#: ../app/Modules/OrgModule/DeduplicatePresenter.php:238
+#: ../app/Modules/OrgModule/DeduplicatePresenter.php:239
 msgid "Manual conflict resolution is necessary."
 msgstr ""
 
@@ -517,20 +518,20 @@ msgstr ""
 msgid "%d. year"
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:93
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:94
 #, php-format
 msgid "Application for %s: %s"
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:152
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:153
 msgid "Unknown application."
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:181
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:182
 msgid "Registration is not open."
 msgstr ""
 
-#: ../app/Modules/PublicModule/ApplicationPresenter.php:183
+#: ../app/Modules/PublicModule/ApplicationPresenter.php:184
 msgid "Application machine has no available transitions."
 msgstr ""
 
@@ -601,56 +602,56 @@ msgstr ""
 msgid "Type e-mail"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:114
+#: ../app/Modules/PublicModule/RegisterPresenter.php:115
 #, php-format
 msgid "%s – contestant application (year %s)"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:137
+#: ../app/Modules/PublicModule/RegisterPresenter.php:138
 msgid "User must be a person in order to register as a contestant."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:145
+#: ../app/Modules/PublicModule/RegisterPresenter.php:146
 msgid "An existing account found. To continue, please sign in."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:161
+#: ../app/Modules/PublicModule/RegisterPresenter.php:162
 #, php-format
 msgid "%s is already contestant in %s."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:228
+#: ../app/Modules/PublicModule/RegisterPresenter.php:229
 #, php-format
 msgid "Contestant %s registered."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:238
+#: ../app/Modules/PublicModule/RegisterPresenter.php:239
 msgid "Error while registering."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:243
+#: ../app/Modules/PublicModule/RegisterPresenter.php:244
 msgid "Contestant already registered."
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:253
+#: ../app/Modules/PublicModule/RegisterPresenter.php:254
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:49
 #: ../app/config/orm.neon.neon2php:476
 msgid "E-mail"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:254
+#: ../app/Modules/PublicModule/RegisterPresenter.php:255
 #: ../app/Components/Grids/BaseGrid.php:158
 #: ../app/Components/Forms/Containers/SearchContainer/SearchContainer.php:42
 msgid "Find"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:303
+#: ../app/Modules/PublicModule/RegisterPresenter.php:304
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:9
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:7
 msgid "Register"
 msgstr ""
 
-#: ../app/Modules/PublicModule/RegisterPresenter.php:319
+#: ../app/Modules/PublicModule/RegisterPresenter.php:320
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:209
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:242
 msgid "The form has expired. Please send it again."
@@ -670,12 +671,12 @@ msgstr ""
 msgid "List of applications"
 msgstr ""
 
-#: ../app/Modules/EventModule/AbstractApplicationPresenter.php:51
+#: ../app/Modules/EventModule/AbstractApplicationPresenter.php:53
 #, php-format
 msgid "Application detail \"%s\""
 msgstr ""
 
-#: ../app/Modules/EventModule/AbstractApplicationPresenter.php:56
+#: ../app/Modules/EventModule/AbstractApplicationPresenter.php:60
 msgid "Group transitions"
 msgstr ""
 
@@ -752,7 +753,7 @@ msgstr ""
 msgid "Change of scoring"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:63
+#: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:64
 #, php-format
 msgid "Detail of the submit #%d"
 msgstr ""
@@ -769,7 +770,7 @@ msgstr ""
 msgid "Sealing of the scoring"
 msgstr ""
 
-#: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:60
+#: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:61
 #, php-format
 msgid "Sealing of the scoring for the team \"%s\""
 msgstr ""
@@ -802,16 +803,16 @@ msgstr ""
 msgid "Create organiser of event"
 msgstr ""
 
-#: ../app/Modules/EventModule/EventOrgPresenter.php:54
+#: ../app/Modules/EventModule/EventOrgPresenter.php:55
 #, php-format
 msgid "Edit Organiser of event \"%s\""
 msgstr ""
 
-#: ../app/Modules/EventModule/EventOrgPresenter.php:63
+#: ../app/Modules/EventModule/EventOrgPresenter.php:64
 msgid "Entity has been deleted"
 msgstr ""
 
-#: ../app/Modules/EventModule/EventOrgPresenter.php:66
+#: ../app/Modules/EventModule/EventOrgPresenter.php:67
 #: ../app/Modules/Core/PresenterTraits/EntityPresenterTrait.php:163
 msgid "Error during deleting"
 msgstr ""
@@ -820,26 +821,26 @@ msgstr ""
 msgid "New payment"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:53
+#: ../app/Modules/EventModule/PaymentPresenter.php:55
 #, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:65
+#: ../app/Modules/EventModule/PaymentPresenter.php:70
 #, php-format
 msgid "Payment detail #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:72
+#: ../app/Modules/EventModule/PaymentPresenter.php:77
 msgid "List of payments"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:85
+#: ../app/Modules/EventModule/PaymentPresenter.php:90
 #, php-format
 msgid "Payment #%s can not be edited"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:100
+#: ../app/Modules/EventModule/PaymentPresenter.php:105
 msgid "Payment is not allowed in this time!"
 msgstr ""
 
@@ -856,7 +857,6 @@ msgid "Whole program"
 msgstr ""
 
 #: ../app/Modules/EventModule/ScheduleGroupPresenter.php:48
-#, php-format
 msgid "Schedule items"
 msgstr ""
 
@@ -868,17 +868,17 @@ msgstr ""
 msgid "List of all teams"
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleItemPresenter.php:46
+#: ../app/Modules/EventModule/ScheduleItemPresenter.php:47
 #, php-format
 msgid "Schedule item \"%s\""
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleItemPresenter.php:57
+#: ../app/Modules/EventModule/ScheduleItemPresenter.php:61
 #, php-format
 msgid "Edit schedule item \"%s\""
 msgstr ""
 
-#: ../app/Modules/EventModule/ScheduleItemPresenter.php:62
+#: ../app/Modules/EventModule/ScheduleItemPresenter.php:68
 msgid "Create schedule item"
 msgstr ""
 
@@ -1374,7 +1374,7 @@ msgstr "jS \\of M Y"
 msgid "__date_time"
 msgstr "jS \\of M Y H:i:s"
 
-#: ../app/Models/ORM/Models/Schedule/ModelScheduleItem.php:102
+#: ../app/Models/ORM/Models/Schedule/ModelScheduleItem.php:103
 msgid "Unlimited capacity"
 msgstr ""
 
@@ -1701,6 +1701,7 @@ msgid "Event org"
 msgstr ""
 
 #: ../app/Models/ValuePrinters/EventRolePrinter.php:58
+#: ../data/events/soustredeni/sous35j.neon.neon2php:216
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:250
 #: ../data/events/soustredeni/sous34p.neon.neon2php:207
 #: ../data/events/soustredeni/sous34j.neon.neon2php:207
@@ -1752,7 +1753,7 @@ msgstr ""
 msgid "variable_symbol overflow"
 msgstr ""
 
-#: ../app/Models/Payment/PriceCalculator/UnsupportedCurrencyException.php:13
+#: ../app/Models/Payment/PriceCalculator/UnsupportedCurrencyException.php:14
 #, php-format
 msgid "Currency %s in not supported"
 msgstr ""
@@ -2336,11 +2337,11 @@ msgstr ""
 msgid "Field %s requires JavaScript enabled."
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Payment/CurrencyField.php:15
+#: ../app/Components/Forms/Controls/Payment/CurrencyField.php:19
 msgid "Currency"
 msgstr ""
 
-#: ../app/Components/Forms/Controls/Payment/CurrencyField.php:20
+#: ../app/Components/Forms/Controls/Payment/CurrencyField.php:24
 msgid "Select currency"
 msgstr ""
 
@@ -3491,6 +3492,7 @@ msgid "Diet"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:223
+#: ../data/events/soustredeni/sous35j.neon.neon2php:196
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:230
 #: ../data/events/soustredeni/sous34p.neon.neon2php:187
 #: ../data/events/soustredeni/sous34j.neon.neon2php:187
@@ -4160,6 +4162,364 @@ msgstr ""
 msgid "Mám zájem o společnou jízdenku"
 msgstr ""
 
+#: ../data/events/soustredeni/sous35j.neon.neon2php:31
+#: ../data/events/soustredeni/sous35j.neon.neon2php:36
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:75
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:80
+#: ../data/events/soustredeni/sous34p.neon.neon2php:36
+#: ../data/events/soustredeni/sous34p.neon.neon2php:41
+#: ../data/events/soustredeni/sous34j.neon.neon2php:26
+#: ../data/events/soustredeni/sous34j.neon.neon2php:31
+#: ../data/events/soustredeni/sous35p.neon.neon2php:36
+#: ../data/events/soustredeni/sous35p.neon.neon2php:41
+#: ../data/events/fov/fov.neon.neon2php:54
+#: ../data/events/fov/fov.neon.neon2php:59
+#: ../data/events/fov/fov34.neon.neon2php:30
+#: ../data/events/fov/fov34.neon.neon2php:35
+msgid "Invite participant"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:41
+#: ../data/events/soustredeni/sous35j.neon.neon2php:46
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:85
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:90
+#: ../data/events/soustredeni/sous34p.neon.neon2php:46
+#: ../data/events/soustredeni/sous34p.neon.neon2php:51
+#: ../data/events/soustredeni/sous34j.neon.neon2php:36
+#: ../data/events/soustredeni/sous34j.neon.neon2php:41
+#: ../data/events/soustredeni/sous35p.neon.neon2php:46
+#: ../data/events/soustredeni/sous35p.neon.neon2php:51
+msgid "Invite Spare"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:51
+#: ../data/events/soustredeni/sous35j.neon.neon2php:96
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:95
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:140
+#: ../data/events/soustredeni/sous34p.neon.neon2php:56
+#: ../data/events/soustredeni/sous34j.neon.neon2php:46
+#: ../data/events/soustredeni/sous35p.neon.neon2php:56
+#: ../data/events/soustredeni/sous35p.neon.neon2php:101
+#: ../data/events/fov/fov.neon.neon2php:64
+#: ../data/events/fov/fov34.neon.neon2php:40
+msgid "Confirm participation"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:54
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:98
+#: ../data/events/soustredeni/sous34p.neon.neon2php:59
+#: ../data/events/soustredeni/sous34j.neon.neon2php:49
+#: ../data/events/soustredeni/sous35p.neon.neon2php:59
+msgid "I want to go"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:57
+#: ../data/events/soustredeni/sous35j.neon.neon2php:92
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:101
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:136
+#: ../data/events/soustredeni/sous34p.neon.neon2php:62
+#: ../data/events/soustredeni/sous34j.neon.neon2php:52
+#: ../data/events/soustredeni/sous35p.neon.neon2php:62
+#: ../data/events/soustredeni/sous35p.neon.neon2php:97
+#: ../data/events/fov/fov.neon.neon2php:67
+#: ../data/events/fov/fov34.neon.neon2php:43
+msgid "Decline participation"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:62
+#: ../data/events/soustredeni/sous35j.neon.neon2php:67
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:106
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:111
+#: ../data/events/soustredeni/sous34p.neon.neon2php:67
+#: ../data/events/soustredeni/sous34p.neon.neon2php:72
+#: ../data/events/soustredeni/sous34j.neon.neon2php:57
+#: ../data/events/soustredeni/sous34j.neon.neon2php:62
+#: ../data/events/soustredeni/sous35p.neon.neon2php:67
+#: ../data/events/soustredeni/sous35p.neon.neon2php:72
+msgid "Send first call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:72
+#: ../data/events/soustredeni/sous35j.neon.neon2php:77
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:116
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:121
+#: ../data/events/soustredeni/sous34p.neon.neon2php:77
+#: ../data/events/soustredeni/sous34p.neon.neon2php:82
+#: ../data/events/soustredeni/sous34j.neon.neon2php:67
+#: ../data/events/soustredeni/sous34j.neon.neon2php:72
+#: ../data/events/soustredeni/sous35p.neon.neon2php:77
+#: ../data/events/soustredeni/sous35p.neon.neon2php:82
+msgid "Send second call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:82
+#: ../data/events/soustredeni/sous35j.neon.neon2php:87
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:126
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:131
+#: ../data/events/soustredeni/sous34p.neon.neon2php:87
+#: ../data/events/soustredeni/sous34p.neon.neon2php:92
+#: ../data/events/soustredeni/sous34j.neon.neon2php:77
+#: ../data/events/soustredeni/sous34j.neon.neon2php:82
+#: ../data/events/soustredeni/sous35p.neon.neon2php:87
+#: ../data/events/soustredeni/sous35p.neon.neon2php:92
+msgid "Send last call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:101
+#: ../data/events/soustredeni/sous35j.neon.neon2php:106
+#: ../data/events/soustredeni/sous35j.neon.neon2php:111
+#: ../data/events/soustredeni/sous35j.neon.neon2php:116
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:143
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:146
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:149
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:152
+#: ../data/events/soustredeni/sous35p.neon.neon2php:106
+#: ../data/events/soustredeni/sous35p.neon.neon2php:111
+#: ../data/events/soustredeni/sous35p.neon.neon2php:116
+#: ../data/events/soustredeni/sous35p.neon.neon2php:121
+msgid "Invite as participant"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:121
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:155
+#: ../data/events/soustredeni/sous34p.neon.neon2php:112
+#: ../data/events/soustredeni/sous34j.neon.neon2php:112
+#: ../data/events/soustredeni/sous35p.neon.neon2php:126
+#: ../data/events/fov/fov.neon.neon2php:71
+#: ../data/events/fov/fov34.neon.neon2php:47
+msgid "Participated"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:124
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:158
+#: ../data/events/soustredeni/sous34p.neon.neon2php:115
+#: ../data/events/soustredeni/sous34j.neon.neon2php:115
+#: ../data/events/soustredeni/sous35p.neon.neon2php:129
+#: ../data/events/fov/fov.neon.neon2php:74
+#: ../data/events/fov/fov34.neon.neon2php:50
+msgid "Missed"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:128
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:162
+#: ../data/events/soustredeni/sous35p.neon.neon2php:133
+#: ../data/events/fov/fov.neon.neon2php:77
+#: ../data/events/fov/fov34.neon.neon2php:54
+msgid "Cancel application"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:131
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:165
+#: ../data/events/soustredeni/sous34p.neon.neon2php:122
+#: ../data/events/soustredeni/sous34j.neon.neon2php:122
+#: ../data/events/soustredeni/sous35p.neon.neon2php:136
+msgid "Deal with outside FKSDB"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:134
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:168
+#: ../data/events/soustredeni/sous34p.neon.neon2php:125
+#: ../data/events/soustredeni/sous34j.neon.neon2php:125
+#: ../data/events/soustredeni/sous35p.neon.neon2php:139
+msgid "Return to DB as Invited"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:137
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:171
+#: ../data/events/soustredeni/sous34p.neon.neon2php:128
+#: ../data/events/soustredeni/sous34j.neon.neon2php:128
+#: ../data/events/soustredeni/sous35p.neon.neon2php:142
+msgid "Return to DB as Invited, first call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:140
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:174
+#: ../data/events/soustredeni/sous34p.neon.neon2php:131
+#: ../data/events/soustredeni/sous34j.neon.neon2php:131
+#: ../data/events/soustredeni/sous35p.neon.neon2php:145
+msgid "Return to DB as Invited, second call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:143
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:177
+#: ../data/events/soustredeni/sous34p.neon.neon2php:134
+#: ../data/events/soustredeni/sous34j.neon.neon2php:134
+#: ../data/events/soustredeni/sous35p.neon.neon2php:148
+msgid "Return to DB as Invited, last call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:146
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:180
+#: ../data/events/soustredeni/sous34p.neon.neon2php:137
+#: ../data/events/soustredeni/sous34j.neon.neon2php:137
+#: ../data/events/soustredeni/sous35p.neon.neon2php:151
+msgid "Return to DB as Invited (auto)"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:149
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:183
+#: ../data/events/soustredeni/sous34p.neon.neon2php:140
+#: ../data/events/soustredeni/sous34j.neon.neon2php:140
+#: ../data/events/soustredeni/sous35p.neon.neon2php:154
+msgid "Return to DB as Spare"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:152
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:186
+#: ../data/events/soustredeni/sous34p.neon.neon2php:143
+#: ../data/events/soustredeni/sous34j.neon.neon2php:143
+#: ../data/events/soustredeni/sous35p.neon.neon2php:157
+msgid "Return to DB as Spare, first call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:155
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:189
+#: ../data/events/soustredeni/sous34p.neon.neon2php:146
+#: ../data/events/soustredeni/sous34j.neon.neon2php:146
+#: ../data/events/soustredeni/sous35p.neon.neon2php:160
+msgid "Return to DB as Spare, second call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:158
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:192
+#: ../data/events/soustredeni/sous34p.neon.neon2php:149
+#: ../data/events/soustredeni/sous34j.neon.neon2php:149
+#: ../data/events/soustredeni/sous35p.neon.neon2php:163
+msgid "Return to DB as Spare, last call"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:161
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:195
+#: ../data/events/soustredeni/sous34p.neon.neon2php:152
+#: ../data/events/soustredeni/sous34j.neon.neon2php:152
+#: ../data/events/soustredeni/sous35p.neon.neon2php:166
+msgid "Return to DB as Spare (auto)"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:164
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:198
+#: ../data/events/soustredeni/sous34p.neon.neon2php:155
+#: ../data/events/soustredeni/sous34j.neon.neon2php:155
+#: ../data/events/soustredeni/sous35p.neon.neon2php:169
+msgid "Return to DB as Applied"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:167
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:201
+#: ../data/events/soustredeni/sous34p.neon.neon2php:158
+#: ../data/events/soustredeni/sous34j.neon.neon2php:158
+#: ../data/events/soustredeni/sous35p.neon.neon2php:172
+msgid "Return to DB as Interested"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:170
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:204
+#: ../data/events/soustredeni/sous34p.neon.neon2php:161
+#: ../data/events/soustredeni/sous34j.neon.neon2php:161
+#: ../data/events/soustredeni/sous35p.neon.neon2php:175
+msgid "Return to DB as Participated"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:173
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:207
+#: ../data/events/soustredeni/sous34p.neon.neon2php:164
+#: ../data/events/soustredeni/sous34j.neon.neon2php:164
+#: ../data/events/soustredeni/sous35p.neon.neon2php:178
+msgid "Return to DB as Rejected"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:176
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:210
+#: ../data/events/soustredeni/sous35p.neon.neon2php:181
+msgid "Return to DB as missed"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:179
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:213
+#: ../data/events/soustredeni/sous35p.neon.neon2php:184
+msgid "Return to DB as cancelled"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:183
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:217
+#: ../data/events/soustredeni/sous34p.neon.neon2php:174
+#: ../data/events/soustredeni/sous34j.neon.neon2php:174
+#: ../data/events/soustredeni/sous35p.neon.neon2php:188
+#: ../data/events/fov/fov.neon.neon2php:81
+#: ../data/events/fov/fov34.neon.neon2php:58
+msgid "Delete application"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:193
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:227
+#: ../data/events/soustredeni/sous34p.neon.neon2php:184
+#: ../data/events/soustredeni/sous34j.neon.neon2php:184
+#: ../data/events/soustredeni/sous35p.neon.neon2php:198
+msgid "Food"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:194
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:228
+#: ../data/events/soustredeni/sous34j.neon.neon2php:185
+#: ../data/events/soustredeni/sous35p.neon.neon2php:199
+msgid ""
+"Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If "
+"so, do you want us to get you the special diet or will you bring your own "
+"food?"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:197
+msgid ""
+"Do you have any health restriction, that could pose a problem for your "
+"participation or due to which you could not participate in certain "
+"physically demanding (or night) activities? E.g. allergies, diabetes, "
+"epilepsy, other chronic diseases... Do you take any medications, be it "
+"periodically or in case of problems? Which? Is there anything else about "
+"your health we should know about?"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:199
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:233
+#: ../data/events/soustredeni/sous35p.neon.neon2php:204
+msgid "What size of T-shirt do you wear?"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:201
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:235
+#: ../data/events/soustredeni/sous34j.neon.neon2php:192
+#: ../data/events/soustredeni/sous35p.neon.neon2php:206
+msgid "Choose a size"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:203
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
+#: ../data/events/soustredeni/sous34p.neon.neon2php:194
+#: ../data/events/soustredeni/sous34j.neon.neon2php:194
+#: ../data/events/soustredeni/sous35p.neon.neon2php:208
+msgid "Price of camp (CZK)"
+msgstr ""
+
+#: ../data/events/soustredeni/sous35j.neon.neon2php:205
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:239
+#: ../data/events/soustredeni/sous34p.neon.neon2php:196
+#: ../data/events/soustredeni/sous34j.neon.neon2php:196
+#: ../data/events/soustredeni/sous35p.neon.neon2php:210
+msgid "Price calculated according to the rules on our website."
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:15
+msgid "For the insurance company."
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:20
+msgid ""
+"Telephone number (including state prefix), that you will carry with you."
+msgstr ""
+
+#: ../data/events/soustredeni/soustredeni.neon.neon2php:27
+msgid "If you cannot find your school, e-mail the webmaster."
+msgstr ""
+
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:29
 msgid "S men"
 msgstr ""
@@ -4196,270 +4556,6 @@ msgstr ""
 msgid "XL women"
 msgstr ""
 
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:75
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:80
-#: ../data/events/soustredeni/sous34p.neon.neon2php:36
-#: ../data/events/soustredeni/sous34p.neon.neon2php:41
-#: ../data/events/soustredeni/sous34j.neon.neon2php:26
-#: ../data/events/soustredeni/sous34j.neon.neon2php:31
-#: ../data/events/soustredeni/sous35p.neon.neon2php:36
-#: ../data/events/soustredeni/sous35p.neon.neon2php:41
-#: ../data/events/fov/fov.neon.neon2php:54
-#: ../data/events/fov/fov.neon.neon2php:59
-#: ../data/events/fov/fov34.neon.neon2php:30
-#: ../data/events/fov/fov34.neon.neon2php:35
-msgid "Invite participant"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:85
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:90
-#: ../data/events/soustredeni/sous34p.neon.neon2php:46
-#: ../data/events/soustredeni/sous34p.neon.neon2php:51
-#: ../data/events/soustredeni/sous34j.neon.neon2php:36
-#: ../data/events/soustredeni/sous34j.neon.neon2php:41
-#: ../data/events/soustredeni/sous35p.neon.neon2php:46
-#: ../data/events/soustredeni/sous35p.neon.neon2php:51
-msgid "Invite Spare"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:95
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:140
-#: ../data/events/soustredeni/sous34p.neon.neon2php:56
-#: ../data/events/soustredeni/sous34j.neon.neon2php:46
-#: ../data/events/soustredeni/sous35p.neon.neon2php:56
-#: ../data/events/soustredeni/sous35p.neon.neon2php:101
-#: ../data/events/fov/fov.neon.neon2php:64
-#: ../data/events/fov/fov34.neon.neon2php:40
-msgid "Confirm participation"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:98
-#: ../data/events/soustredeni/sous34p.neon.neon2php:59
-#: ../data/events/soustredeni/sous34j.neon.neon2php:49
-#: ../data/events/soustredeni/sous35p.neon.neon2php:59
-msgid "I want to go"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:101
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:136
-#: ../data/events/soustredeni/sous34p.neon.neon2php:62
-#: ../data/events/soustredeni/sous34j.neon.neon2php:52
-#: ../data/events/soustredeni/sous35p.neon.neon2php:62
-#: ../data/events/soustredeni/sous35p.neon.neon2php:97
-#: ../data/events/fov/fov.neon.neon2php:67
-#: ../data/events/fov/fov34.neon.neon2php:43
-msgid "Decline participation"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:106
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:111
-#: ../data/events/soustredeni/sous34p.neon.neon2php:67
-#: ../data/events/soustredeni/sous34p.neon.neon2php:72
-#: ../data/events/soustredeni/sous34j.neon.neon2php:57
-#: ../data/events/soustredeni/sous34j.neon.neon2php:62
-#: ../data/events/soustredeni/sous35p.neon.neon2php:67
-#: ../data/events/soustredeni/sous35p.neon.neon2php:72
-msgid "Send first call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:116
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:121
-#: ../data/events/soustredeni/sous34p.neon.neon2php:77
-#: ../data/events/soustredeni/sous34p.neon.neon2php:82
-#: ../data/events/soustredeni/sous34j.neon.neon2php:67
-#: ../data/events/soustredeni/sous34j.neon.neon2php:72
-#: ../data/events/soustredeni/sous35p.neon.neon2php:77
-#: ../data/events/soustredeni/sous35p.neon.neon2php:82
-msgid "Send second call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:126
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:131
-#: ../data/events/soustredeni/sous34p.neon.neon2php:87
-#: ../data/events/soustredeni/sous34p.neon.neon2php:92
-#: ../data/events/soustredeni/sous34j.neon.neon2php:77
-#: ../data/events/soustredeni/sous34j.neon.neon2php:82
-#: ../data/events/soustredeni/sous35p.neon.neon2php:87
-#: ../data/events/soustredeni/sous35p.neon.neon2php:92
-msgid "Send last call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:143
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:146
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:149
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:152
-#: ../data/events/soustredeni/sous35p.neon.neon2php:106
-#: ../data/events/soustredeni/sous35p.neon.neon2php:111
-#: ../data/events/soustredeni/sous35p.neon.neon2php:116
-#: ../data/events/soustredeni/sous35p.neon.neon2php:121
-msgid "Invite as participant"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:155
-#: ../data/events/soustredeni/sous34p.neon.neon2php:112
-#: ../data/events/soustredeni/sous34j.neon.neon2php:112
-#: ../data/events/soustredeni/sous35p.neon.neon2php:126
-#: ../data/events/fov/fov.neon.neon2php:71
-#: ../data/events/fov/fov34.neon.neon2php:47
-msgid "Participated"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:158
-#: ../data/events/soustredeni/sous34p.neon.neon2php:115
-#: ../data/events/soustredeni/sous34j.neon.neon2php:115
-#: ../data/events/soustredeni/sous35p.neon.neon2php:129
-#: ../data/events/fov/fov.neon.neon2php:74
-#: ../data/events/fov/fov34.neon.neon2php:50
-msgid "Missed"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:162
-#: ../data/events/soustredeni/sous35p.neon.neon2php:133
-#: ../data/events/fov/fov.neon.neon2php:77
-#: ../data/events/fov/fov34.neon.neon2php:54
-msgid "Cancel application"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:165
-#: ../data/events/soustredeni/sous34p.neon.neon2php:122
-#: ../data/events/soustredeni/sous34j.neon.neon2php:122
-#: ../data/events/soustredeni/sous35p.neon.neon2php:136
-msgid "Deal with outside FKSDB"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:168
-#: ../data/events/soustredeni/sous34p.neon.neon2php:125
-#: ../data/events/soustredeni/sous34j.neon.neon2php:125
-#: ../data/events/soustredeni/sous35p.neon.neon2php:139
-msgid "Return to DB as Invited"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:171
-#: ../data/events/soustredeni/sous34p.neon.neon2php:128
-#: ../data/events/soustredeni/sous34j.neon.neon2php:128
-#: ../data/events/soustredeni/sous35p.neon.neon2php:142
-msgid "Return to DB as Invited, first call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:174
-#: ../data/events/soustredeni/sous34p.neon.neon2php:131
-#: ../data/events/soustredeni/sous34j.neon.neon2php:131
-#: ../data/events/soustredeni/sous35p.neon.neon2php:145
-msgid "Return to DB as Invited, second call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:177
-#: ../data/events/soustredeni/sous34p.neon.neon2php:134
-#: ../data/events/soustredeni/sous34j.neon.neon2php:134
-#: ../data/events/soustredeni/sous35p.neon.neon2php:148
-msgid "Return to DB as Invited, last call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:180
-#: ../data/events/soustredeni/sous34p.neon.neon2php:137
-#: ../data/events/soustredeni/sous34j.neon.neon2php:137
-#: ../data/events/soustredeni/sous35p.neon.neon2php:151
-msgid "Return to DB as Invited (auto)"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:183
-#: ../data/events/soustredeni/sous34p.neon.neon2php:140
-#: ../data/events/soustredeni/sous34j.neon.neon2php:140
-#: ../data/events/soustredeni/sous35p.neon.neon2php:154
-msgid "Return to DB as Spare"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:186
-#: ../data/events/soustredeni/sous34p.neon.neon2php:143
-#: ../data/events/soustredeni/sous34j.neon.neon2php:143
-#: ../data/events/soustredeni/sous35p.neon.neon2php:157
-msgid "Return to DB as Spare, first call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:189
-#: ../data/events/soustredeni/sous34p.neon.neon2php:146
-#: ../data/events/soustredeni/sous34j.neon.neon2php:146
-#: ../data/events/soustredeni/sous35p.neon.neon2php:160
-msgid "Return to DB as Spare, second call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:192
-#: ../data/events/soustredeni/sous34p.neon.neon2php:149
-#: ../data/events/soustredeni/sous34j.neon.neon2php:149
-#: ../data/events/soustredeni/sous35p.neon.neon2php:163
-msgid "Return to DB as Spare, last call"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:195
-#: ../data/events/soustredeni/sous34p.neon.neon2php:152
-#: ../data/events/soustredeni/sous34j.neon.neon2php:152
-#: ../data/events/soustredeni/sous35p.neon.neon2php:166
-msgid "Return to DB as Spare (auto)"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:198
-#: ../data/events/soustredeni/sous34p.neon.neon2php:155
-#: ../data/events/soustredeni/sous34j.neon.neon2php:155
-#: ../data/events/soustredeni/sous35p.neon.neon2php:169
-msgid "Return to DB as Applied"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:201
-#: ../data/events/soustredeni/sous34p.neon.neon2php:158
-#: ../data/events/soustredeni/sous34j.neon.neon2php:158
-#: ../data/events/soustredeni/sous35p.neon.neon2php:172
-msgid "Return to DB as Interested"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:204
-#: ../data/events/soustredeni/sous34p.neon.neon2php:161
-#: ../data/events/soustredeni/sous34j.neon.neon2php:161
-#: ../data/events/soustredeni/sous35p.neon.neon2php:175
-msgid "Return to DB as Participated"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:207
-#: ../data/events/soustredeni/sous34p.neon.neon2php:164
-#: ../data/events/soustredeni/sous34j.neon.neon2php:164
-#: ../data/events/soustredeni/sous35p.neon.neon2php:178
-msgid "Return to DB as Rejected"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:210
-#: ../data/events/soustredeni/sous35p.neon.neon2php:181
-msgid "Return to DB as missed"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:213
-#: ../data/events/soustredeni/sous35p.neon.neon2php:184
-msgid "Return to DB as cancelled"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:217
-#: ../data/events/soustredeni/sous34p.neon.neon2php:174
-#: ../data/events/soustredeni/sous34j.neon.neon2php:174
-#: ../data/events/soustredeni/sous35p.neon.neon2php:188
-#: ../data/events/fov/fov.neon.neon2php:81
-#: ../data/events/fov/fov34.neon.neon2php:58
-msgid "Delete application"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:227
-#: ../data/events/soustredeni/sous34p.neon.neon2php:184
-#: ../data/events/soustredeni/sous34j.neon.neon2php:184
-#: ../data/events/soustredeni/sous35p.neon.neon2php:198
-msgid "Food"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:228
-#: ../data/events/soustredeni/sous34j.neon.neon2php:185
-#: ../data/events/soustredeni/sous35p.neon.neon2php:199
-msgid ""
-"Do you have any special diet – vegetarianism, veganism, ketogenic etc.? If "
-"so, do you want us to get you the special diet or will you bring your own "
-"food?"
-msgstr ""
-
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:231
 #: ../data/events/soustredeni/sous34p.neon.neon2php:188
 #: ../data/events/soustredeni/sous34j.neon.neon2php:188
@@ -4471,31 +4567,6 @@ msgid ""
 "epilepsy, other chronic diseases... Do you taky any medications, be it "
 "periodically or in case of problems? Which? Is there anything else about "
 "your health we should know about?"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:233
-#: ../data/events/soustredeni/sous35p.neon.neon2php:204
-msgid "What size of T-shirt do you wear?"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:235
-#: ../data/events/soustredeni/sous34j.neon.neon2php:192
-#: ../data/events/soustredeni/sous35p.neon.neon2php:206
-msgid "Choose a size"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:237
-#: ../data/events/soustredeni/sous34p.neon.neon2php:194
-#: ../data/events/soustredeni/sous34j.neon.neon2php:194
-#: ../data/events/soustredeni/sous35p.neon.neon2php:208
-msgid "Price of camp (CZK)"
-msgstr ""
-
-#: ../data/events/soustredeni/soustredeni.neon.neon2php:239
-#: ../data/events/soustredeni/sous34p.neon.neon2php:196
-#: ../data/events/soustredeni/sous34j.neon.neon2php:196
-#: ../data/events/soustredeni/sous35p.neon.neon2php:210
-msgid "Price calculated according to the rules on our website."
 msgstr ""
 
 #: ../data/events/soustredeni/sous34p.neon.neon2php:97
