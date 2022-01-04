@@ -12,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
@@ -130,8 +131,9 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     /**
      * @return ModelPersonSchedule[]
      */
-    public function getScheduleRest(array $types = ['accommodation', 'weekend']): array
-    {
+    public function getScheduleRest(
+        array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]
+    ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
             $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
@@ -214,15 +216,15 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     public static function mapCategoryToName(string $category): string
     {
         switch ($category) {
-            case self::CATEGORY_HIGH_SCHOOL_A :
+            case self::CATEGORY_HIGH_SCHOOL_A:
                 return _('High-school students A');
-            case self::CATEGORY_HIGH_SCHOOL_B :
+            case self::CATEGORY_HIGH_SCHOOL_B:
                 return _('High-school students B');
-            case self::CATEGORY_HIGH_SCHOOL_C :
+            case self::CATEGORY_HIGH_SCHOOL_C:
                 return _('High-school students C');
-            case self::CATEGORY_ABROAD :
+            case self::CATEGORY_ABROAD:
                 return _('Abroad high-school students');
-            case self::CATEGORY_OPEN :
+            case self::CATEGORY_OPEN:
                 return _('Open');
             default:
                 throw new \InvalidArgumentException();

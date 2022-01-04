@@ -87,7 +87,7 @@ trait ContestPresenterTrait
                     return $this->serviceContest->getTable()->where('1=0');
                 }
                 $contestsIds = [];
-                foreach ($login->getActiveOrgs() as $org) {
+                foreach ($login->getPerson()->getActiveOrgs() as $org) {
                     $contestsIds[] = $org->getContest();
                 }
                 return $this->serviceContest->getTable()->where('contest_id', $contestsIds);

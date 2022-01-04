@@ -20,6 +20,6 @@ class State extends EvaluatedExpression {
     }
 
     public function __toString(): string {
-        return "state == {$this->state}";
+        return "state == $this->state";
     }
 }

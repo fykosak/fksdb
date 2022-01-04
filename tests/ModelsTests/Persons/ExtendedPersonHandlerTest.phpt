@@ -30,6 +30,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
     private ReferencedPersonFactory $referencedPersonFactory;
     private ModelContestYear $contestYear;
 
+
     /**
      * ExtendedPersonHandlerTest constructor.
      * @param Container $container
@@ -149,8 +150,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $person = $this->fixture->getPerson();
         Assert::same('Jana', $person->other_name);
         Assert::same('Triková', $person->family_name);
-
-        $contestants = $person->getContestants(ModelContest::ID_FYKOS);
+        $contestants = $person->getContestants($this->contestYear->getContest());
         Assert::same(1, count($contestants));
 
         $info = $person->getInfo();

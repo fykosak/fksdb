@@ -30,7 +30,7 @@ class TeamComponent extends ReactComponent implements Chart
         ];
         foreach ($this->eventType->getEventsByType() as $row) {
             $event = ModelEvent::createFromActiveRow($row);
-            $data['teams'][$event->event_id] = ServiceFyziklaniTeam::getTeamsAsArray($event);
+            $data['teams'][$event->event_id] = ServiceFyziklaniTeam::serialiseTeams($event);
             $data['events'][$event->event_id] = $event->__toArray();
         }
         return $data;

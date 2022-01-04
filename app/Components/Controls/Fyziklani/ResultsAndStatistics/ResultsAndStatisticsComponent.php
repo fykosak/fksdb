@@ -15,7 +15,8 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
-class ResultsAndStatisticsComponent extends AjaxComponent {
+class ResultsAndStatisticsComponent extends AjaxComponent
+{
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
@@ -24,12 +25,14 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     private ModelEvent $event;
     private ?string $lastUpdated = null;
 
-    public function __construct(Container $container, ModelEvent $event, string $reactId) {
+    public function __construct(Container $container, ModelEvent $event, string $reactId)
+    {
         parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    final protected function getEvent(): ModelEvent {
+    final protected function getEvent(): ModelEvent
+    {
         return $this->event;
     }
 
@@ -45,7 +48,8 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    public function handleRefresh(string $lastUpdated): void {
+    public function handleRefresh(string $lastUpdated): void
+    {
         $this->lastUpdated = $lastUpdated;
         $this->sendAjaxResponse();
     }
@@ -54,14 +58,15 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
      * @throws NotSetGameParametersException
      * @throws BadTypeException
      */
-    protected function getData(): array {
+    protected function getData(): array
+    {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
 
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
-        $isOrg = $this->eventAuthorizator->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $this->eventAuthorizator->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
@@ -81,12 +86,12 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($this->getEvent(), $this->lastUpdated);
         }
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
+        $result['teams'] = $this->serviceFyziklaniTeam->serialiseTeams($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->serialiseTasks($this->getEvent());
         $result['categories'] = ['A', 'B', 'C'];
         //  }
         return $result;
@@ -95,7 +100,8 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     /**
      * @throws InvalidLinkException
      */
-    protected function getActions(): array {
+    protected function getActions(): array
+    {
         return [
             'refresh' => $this->link('refresh!', ['lastUpdated' => (new DateTime())->format('c')]),
         ];
@@ -104,7 +110,8 @@ class ResultsAndStatisticsComponent extends AjaxComponent {
     /**
      * @throws NotSetGameParametersException
      */
-    private function isResultsVisible(): bool {
+    private function isResultsVisible(): bool
+    {
         return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();
     }
 }
