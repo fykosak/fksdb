@@ -43,7 +43,9 @@ class ScheduleItemPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard');
+        return new PageTitle(
+            null, \sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard'
+        );
     }
 
     /**
@@ -54,12 +56,16 @@ class ScheduleItemPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-pen');
+        return new PageTitle(
+            null,
+            \sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()),
+            'fas fa-pen'
+        );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create schedule item'), 'fa fa-plus');
+        return new PageTitle(null, _('Create schedule item'), 'fa fa-plus');
     }
 
     /**
@@ -114,7 +120,7 @@ class ScheduleItemPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function createComponentGrid(): BaseGrid

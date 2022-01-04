@@ -107,6 +107,6 @@ class BornCheck extends AbstractAdjustment
 
     private function isStudent(?int $studyYear): bool
     {
-        return ($studyYear === null) ? false : true;
+        return isset($studyYear);
     }
 }

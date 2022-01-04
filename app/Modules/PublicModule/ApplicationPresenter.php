@@ -16,6 +16,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
@@ -24,6 +25,7 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\NetteORM\AbstractModel;
@@ -67,8 +69,8 @@ class ApplicationPresenter extends BasePresenter
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if (
-            $this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
-            || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())
+            $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
+            || $this->eventAuthorizator->isAllowed('fyziklani.team', 'edit', $event)
         ) {
             $this->setAuthorized(true);
             return;
@@ -89,6 +91,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if ($this->getEventApplication()) {
             return new PageTitle(
+                null,
                 \sprintf(
                     _('Application for %s: %s'),
                     $this->getEvent()->name,
@@ -97,7 +100,7 @@ class ApplicationPresenter extends BasePresenter
                 'fas fa-calendar-day',
             );
         } else {
-            return new PageTitle((string)$this->getEvent(), 'fas fa-calendar-plus');
+            return new PageTitle(null, (string)$this->getEvent(), 'fas fa-calendar-plus');
         }
     }
 
@@ -169,28 +172,28 @@ class ApplicationPresenter extends BasePresenter
         }
 
         if (
-        !$this->getMachine()
-            ->getPrimaryMachine()
-            ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
+            !$this->getMachine()
+                ->getPrimaryMachine()
+                ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
         ) {
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
-                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                ) == AbstractMachine::STATE_INIT
             ) {
                 $this->setView('closed');
-                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), Message::LVL_INFO);
             }
         }
 
         if (
             !$this->relatedPersonAuthorizator->isRelatedPerson(
                 $this->getHolder()
-            ) && !$this->contestAuthorizator->isAllowed(
+            ) && !$this->eventAuthorizator->isAllowed(
                 $this->getEvent(),
                 'application',
-                $this->getEvent()->getContest()
+                $this->getEvent()
             )
         ) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
@@ -286,7 +289,7 @@ class ApplicationPresenter extends BasePresenter
             $this->initializeMachine();
             if (
                 $this->getHolder()->getPrimaryHolder()->getModelState(
-                ) == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                ) == AbstractMachine::STATE_INIT
             ) {
                 return;
             }

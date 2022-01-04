@@ -25,7 +25,7 @@ class RoutingEditComponent extends AjaxComponent {
 
     public function getData(...$args): string {
         return json_encode([
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
+            'teams' => $this->serviceFyziklaniTeam->serialiseTeams($this->getEvent()),
             'rooms' => $this->getRooms(),
         ]);
     }

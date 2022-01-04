@@ -44,7 +44,7 @@ class DeduplicatePresenter extends BasePresenter
 
     public function authorizedPerson(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('person', 'list'));
     }
 
     /**
@@ -67,14 +67,15 @@ class DeduplicatePresenter extends BasePresenter
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        $authorized = $this->contestAuthorizator->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
-            $this->contestAuthorizator->isAllowedForAnyContest($this->mergedPerson, 'merge');
+        $authorized = $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
+            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge');
         $this->setAuthorized($authorized);
     }
 
     public function titleMerge(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(
                 _('Merging persons %s (%d) and %s (%d)'),
                 $this->trunkPerson->getFullName(),
@@ -87,7 +88,7 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titlePerson(): PageTitle
     {
-        return new PageTitle(_('Duplicate persons'), 'fa fa-exchange');
+        return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
     }
 
     /**

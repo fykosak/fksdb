@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Authorization\EventRole\{
+    ContestOrgRole,
+    EventOrgRole,
+    FyziklaniTeacherRole,
+    ParticipantRole,
+};
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
@@ -69,20 +75,11 @@ class ModelPerson extends AbstractModel implements Resource
         return null;
     }
 
-    /**
-     * @param int|ModelContest|null $contest
-     */
-    public function getContestants($contest = null): GroupedSelection
+    public function getContestants(?ModelContest $contest = null): GroupedSelection
     {
-        $contestId = null;
-        if ($contest instanceof ModelContest) {
-            $contestId = $contest->contest_id;
-        } else {
-            $contestId = $contest;
-        }
         $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
-        if ($contestId) {
-            $related->where('contest_id', $contestId);
+        if ($contest) {
+            $related->where('contest_id', $contest->contest_id);
         }
         return $related;
     }
@@ -332,7 +329,7 @@ class ModelPerson extends AbstractModel implements Resource
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
-            ->where('schedule_item.price_czk IS NOT NULL');
+            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL ');
         foreach ($schedule as $pSchRow) {
             $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
             $payment = $pSchedule->getPayment();
@@ -343,41 +340,31 @@ class ModelPerson extends AbstractModel implements Resource
         return $toPay;
     }
 
-    /**
-     * @return array[]
-     */
-    public function getRolesForEvent(ModelEvent $event): array
+    public function getEventRoles(ModelEvent $event): array
     {
         $roles = [];
+
         $eventId = $event->event_id;
         $teachers = $this->getEventTeachers()->where('event_id', $eventId);
-        foreach ($teachers as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
-            $roles[] = [
-                'type' => 'teacher',
-                'team' => $team,
-            ];
+        if ($teachers->count('*')) {
+            $teams = [];
+            foreach ($teachers as $row) {
+                $teams[] = ModelFyziklaniTeam::createFromActiveRow($row);
+            }
+            $roles[] = new FyziklaniTeacherRole($event, $teams);
         }
-        $eventOrgs = $this->getEventOrgs()->where('event_id', $eventId);
-        foreach ($eventOrgs as $row) {
-            $org = ModelEventOrg::createFromActiveRow($row);
-            $roles[] = [
-                'type' => 'org',
-                'org' => $org,
-            ];
+
+        $eventOrg = $this->getEventOrgs()->where('event_id', $eventId)->fetch();
+        if (isset($eventOrg)) {
+            $roles[] = new EventOrgRole($event, ModelEventOrg::createFromActiveRow($eventOrg));
         }
-        $eventParticipants = $this->getEventParticipants()->where('event_id', $eventId);
-        foreach ($eventParticipants as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
-            $roles[] = [
-                'type' => 'participant',
-                'participant' => $participant,
-            ];
+        $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
+        if (isset($eventParticipant)) {
+            $roles[] = new ParticipantRole($event, ModelEventParticipant::createFromActiveRow($eventParticipant));
         }
-        if ($this->getActiveOrgsAsQuery($event->getEventType()->getContest())->fetch()) {
-            $roles[] = [
-                'type' => 'contest_org',
-            ];
+        $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
+        if (isset($org)) {
+            $roles[] = new ContestOrgRole($event, ModelOrg::createFromActiveRow($org));
         }
         return $roles;
     }

@@ -2,9 +2,11 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Fykosak\NetteORM\AbstractService;
@@ -89,16 +91,11 @@ class ServiceAuthToken extends AbstractService {
         }
     }
 
-    public function findTokensByEventId(int $eventId): array {
-        $res = $this->getTable()
+    public function findTokensByEventId(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $eventId . ':%');
-        $tokens = [];
-        foreach ($res as $token) {
-            $tokens[] = ModelAuthToken::createFromActiveRow($token);
-        }
-        return $tokens;
+            ->where('data LIKE ?', $event->event_id . ':%');
     }
 }

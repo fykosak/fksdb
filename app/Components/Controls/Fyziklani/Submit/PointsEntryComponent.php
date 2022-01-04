@@ -46,8 +46,8 @@ class PointsEntryComponent extends AjaxComponent {
     protected function getData(): array {
         return [
             'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
+            'tasks' => $this->serviceFyziklaniTask->serialiseTasks($this->event),
+            'teams' => $this->serviceFyziklaniTeam->serialiseTeams($this->event),
         ];
     }
 

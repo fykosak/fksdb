@@ -9,7 +9,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -59,7 +59,7 @@ class NewApplicationsGrid extends BaseGrid
                 $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
                 $transitions = $machine->getPrimaryMachine()->getAvailableTransitions(
                     $holder,
-                    Machine::STATE_INIT,
+                    AbstractMachine::STATE_INIT,
                     true,
                     true
                 );

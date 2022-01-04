@@ -108,7 +108,7 @@ abstract class BasePresenter extends Presenter implements
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider && $provider instanceof FilteredDataProvider) {
+            if ($provider instanceof FilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
             $response = new JsonResponse($data);
@@ -299,7 +299,7 @@ abstract class BasePresenter extends Presenter implements
                 $this->pageTitle = $this->{$method}();
             }
         }
-        $this->pageTitle = $this->pageTitle ?? new PageTitle('');
+        $this->pageTitle = $this->pageTitle ?? new PageTitle(null, '');
         $this->pageTitle->subTitle = $this->pageTitle->subTitle ?? $this->getDefaultSubTitle();
         return $this->pageTitle;
     }

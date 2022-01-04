@@ -38,17 +38,17 @@ class SubmitPresenter extends BasePresenter
     /* ***** Title methods *****/
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Scoring'), 'fas fa-pen');
+        return new PageTitle(null, _('Scoring'), 'fas fa-pen');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Submits'), 'fa fa-table');
+        return new PageTitle(null, _('Submits'), 'fa fa-table');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(_('Change of scoring'), 'fas fa-pen');
+        return new PageTitle(null, _('Change of scoring'), 'fas fa-pen');
     }
 
     /**
@@ -60,6 +60,7 @@ class SubmitPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id),
             'fas fa-search'
         );
@@ -115,7 +116,7 @@ class SubmitPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     /**

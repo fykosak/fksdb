@@ -33,19 +33,21 @@ class DefaultGenerator extends AbstractSymbolGenerator {
 
     /**
      * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
     protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array {
-        if (array_key_exists($modelPayment->currency, $this->info)) {
-            $info = $this->info[$modelPayment->currency];
+        if (array_key_exists($modelPayment->getCurrency()->value, $this->info)) {
+            $info = $this->info[$modelPayment->getCurrency()->value];
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->currency, Response::S501_NOT_IMPLEMENTED);
+        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), Response::S501_NOT_IMPLEMENTED);
     }
 
     /**
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
     protected function create(ModelPayment $modelPayment, ...$args): array {
 

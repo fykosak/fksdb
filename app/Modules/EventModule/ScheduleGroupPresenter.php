@@ -35,17 +35,17 @@ class ScheduleGroupPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Schedule'), 'fas fa-list');
+        return new PageTitle(null, _('Schedule'), 'fas fa-list');
     }
 
     public function titlePersons(): PageTitle
     {
-        return new PageTitle(_('Whole program'), 'fas fa-list');
+        return new PageTitle(null, _('Whole program'), 'fas fa-list');
     }
 
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Schedule items')), 'fas fa-clipboard-list');
+        return new PageTitle(null, _('Schedule items'), 'fas fa-clipboard-list');
     }
 
     /**
@@ -116,6 +116,6 @@ class ScheduleGroupPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 }

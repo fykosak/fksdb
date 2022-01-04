@@ -36,17 +36,17 @@ class StoredQueryPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen');
+        return new PageTitle(null, sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pen');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create query'), 'fa fa-plus');
+        return new PageTitle(null, _('Create query'), 'fa fa-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Exports'), 'fa fa-file-csv');
+        return new PageTitle(null, _('Exports'), 'fa fa-file-csv');
     }
 
     /**
@@ -60,7 +60,7 @@ class StoredQueryPresenter extends BasePresenter
             $title .= " ($qid)";
         }
 
-        return new PageTitle($title, 'fa fa-file-csv');
+        return new PageTitle(null, $title, 'fa fa-file-csv');
     }
 
     /**

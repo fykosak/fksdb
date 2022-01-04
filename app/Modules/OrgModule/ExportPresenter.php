@@ -80,7 +80,7 @@ class ExportPresenter extends BasePresenter
      */
     public function titleExecute(): PageTitle
     {
-        return new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle');
+        return new PageTitle(null, sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle');
     }
 
     /**

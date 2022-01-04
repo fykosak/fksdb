@@ -22,7 +22,7 @@ class Not extends EvaluatedExpression {
     }
 
     public function __toString(): string {
-        return "!({$this->expression})";
+        return "!($this->expression)";
     }
 
 }

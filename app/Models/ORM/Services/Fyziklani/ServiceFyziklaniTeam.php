@@ -14,7 +14,7 @@ class ServiceFyziklaniTeam extends OldAbstractServiceSingle {
     /**
      * @return ModelFyziklaniTeam[]
      */
-    public static function getTeamsAsArray(ModelEvent $event): array {
+    public static function serialiseTeams(ModelEvent $event): array {
         $teams = [];
         foreach ($event->getPossiblyAttendingTeams() as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);

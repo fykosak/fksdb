@@ -37,7 +37,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     final public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of applications'), 'fas fa-address-book');
+        return new PageTitle(null, _('List of applications'), 'fas fa-address-book');
     }
 
     /**
@@ -48,12 +48,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     final public function titleDetail(): PageTitle
     {
-        return new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user');
+        return new PageTitle(
+            null,
+            sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()),
+            'fa fa-user'
+        );
     }
 
     final public function titleTransitions(): PageTitle
     {
-        return new PageTitle(_('Group transitions'), 'fa fa-exchange-alt');
+        return new PageTitle(null, _('Group transitions'), 'fa fa-exchange-alt');
     }
 
     /**
@@ -79,7 +83,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function createComponentPersonScheduleGrid(): PersonGrid

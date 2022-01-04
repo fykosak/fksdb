@@ -30,7 +30,7 @@ class ModelStoredQueryParameter extends AbstractModel {
             case self::TYPE_STRING:
                 return $this->default_string;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
+                throw new InvalidStateException("Unsupported parameter type '$this->type'.");
         }
     }
 
@@ -47,7 +47,7 @@ class ModelStoredQueryParameter extends AbstractModel {
                 $this->default_string = $value;
                 break;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
+                throw new InvalidStateException("Unsupported parameter type '$this->type'.");
         }
     }
 
@@ -65,7 +65,7 @@ class ModelStoredQueryParameter extends AbstractModel {
                 $data['default_string'] = $value;
                 break;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+                throw new InvalidStateException("Unsupported parameter type '$type'.");
         }
         return $data;
     }
@@ -83,7 +83,7 @@ class ModelStoredQueryParameter extends AbstractModel {
             case self::TYPE_STRING:
                 return \PDO::PARAM_STR;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+                throw new InvalidStateException("Unsupported parameter type '$type'.");
         }
     }
 }
