@@ -33,6 +33,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
 
     /**
      * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
     protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array {
         if (array_key_exists($modelPayment->getCurrency()->value, $this->info)) {
@@ -46,6 +47,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
     /**
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
     protected function create(ModelPayment $modelPayment, ...$args): array {
 

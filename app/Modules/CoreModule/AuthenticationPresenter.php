@@ -249,7 +249,6 @@ final class AuthenticationPresenter extends BasePresenter
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form): void
     {

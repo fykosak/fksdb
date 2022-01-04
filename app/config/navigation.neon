@@ -5,7 +5,7 @@ navigation:
 
             Org.Inbox.list: []
             Org.Inbox.inbox: []
-            Org.Inbox.handout: []
+            Org.Tasks.dispatch: []
             Org.Inbox.corrected: []
             Org.Points.entry: []
             Org.Points.preview: []
@@ -30,10 +30,10 @@ navigation:
         Org.Dashboard.inbox:
             Org.Inbox.list: []
             Org.Inbox.inbox: []
-            Org.Inbox.handout: []
-            Org.Points.preview: []
             Org.Inbox.corrected: []
+            Org.Points.preview: []
             Org.Points.entry: []
+            Org.Tasks.dispatch: []
             Org.Tasks.import: []
         Org.Dashboard.person:
             Org.Person.search: []

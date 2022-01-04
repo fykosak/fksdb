@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e113a57ed56fd5a94610055a62495a5",
+    "content-hash": "93cacc0259ac6127881b6595c520bd7f",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",

@@ -139,6 +139,7 @@ class ResultsWebModel extends WebModel
     }
 
     /**
+     * @throws \SoapFault
      * @throws BadTypeException
      * @throws \SoapFault
      */

@@ -51,6 +51,6 @@ class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
+        $this->setAuthorized($this->isAllowed('fyziklani.gameSetup', 'default'));
     }
 }

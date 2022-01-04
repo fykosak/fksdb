@@ -18,7 +18,7 @@ class ServiceFyziklaniTask extends AbstractService {
     /**
      * @return ModelFyziklaniTask[]
      */
-    public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {
+    public function serialiseTasks(ModelEvent $event, bool $hideName = false): array {
         $tasks = [];
 
         foreach ($event->getFyziklaniTasks()->order('label') as $row) {

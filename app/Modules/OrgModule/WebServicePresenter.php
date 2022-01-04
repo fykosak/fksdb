@@ -24,7 +24,7 @@ class WebServicePresenter extends BasePresenter
     /* TODO */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('webService', 'default'));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('webService', 'default'));
     }
 
     final public function renderDefault(): void

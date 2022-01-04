@@ -17,7 +17,7 @@ class ModelPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
+        $this->setAuthorized($this->isAllowed('event.model', 'default'));
     }
 
     public function titleDefault(): PageTitle

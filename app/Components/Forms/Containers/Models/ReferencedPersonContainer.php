@@ -28,7 +28,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {

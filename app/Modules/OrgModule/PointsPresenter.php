@@ -7,10 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Models\ModelTaskContribution;
+use FKSDB\Models\ORM\Models\{ModelContest, ModelLogin, ModelTask, ModelTaskContribution};
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
@@ -28,16 +25,16 @@ class PointsPresenter extends BasePresenter
      * @persistent
      */
     public ?bool $all = null;
-    private SQLResultsCache $SQLResultsCache;
+    private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
     private ServiceTaskContribution $serviceTaskContribution;
 
     final public function injectQuarterly(
-        SQLResultsCache $SQLResultsCache,
+        SQLResultsCache $resultsCache,
         SeriesTable $seriesTable,
         ServiceTaskContribution $serviceTaskContribution
     ): void {
-        $this->SQLResultsCache = $SQLResultsCache;
+        $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
@@ -54,12 +51,12 @@ class PointsPresenter extends BasePresenter
 
     public function authorizedEntry(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('points', 'entry', $this->getSelectedContest()));
     }
 
     public function authorizedPreview(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'points', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('points', 'detail', $this->getSelectedContest()));
     }
 
     public function actionEntry(): void
@@ -75,17 +72,11 @@ class PointsPresenter extends BasePresenter
         if (!$person) {
             return [];
         }
-
-        $taskIds = [];
-        /** @var ModelTask $task */
-        foreach ($this->seriesTable->getTasks() as $task) {
-            $taskIds[] = $task->task_id;
-        }
         $gradedTasks = $this->serviceTaskContribution->getTable()
             ->where(
                 [
                     'person_id' => $person->person_id,
-                    'task_id' => $taskIds,
+                    'task_id' => (clone $this->seriesTable->getTasks())->select('task_id'),
                     'type' => ModelTaskContribution::TYPE_GRADE,
                 ]
             )->fetchPairs('task_id', 'task_id');
@@ -105,7 +96,7 @@ class PointsPresenter extends BasePresenter
     public function handleInvalidate(): void
     {
         try {
-            $this->SQLResultsCache->invalidate($this->getSelectedContestYear());
+            $this->resultsCache->invalidate($this->getSelectedContestYear());
             $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
         } catch (\Exception $exception) {
             $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
@@ -126,7 +117,7 @@ class PointsPresenter extends BasePresenter
                 ->group('year');
             /** @var ModelTask|ActiveRow $year */
             foreach ($years as $year) {
-                $this->SQLResultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
+                $this->resultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
             }
 
             $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
@@ -141,7 +132,7 @@ class PointsPresenter extends BasePresenter
     public function handleCalculateQuizPoints(): void
     {
         try {
-            $this->SQLResultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
+            $this->resultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
         } catch (\Exception $exception) {
             $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
@@ -159,7 +150,7 @@ class PointsPresenter extends BasePresenter
     protected function createComponentPointsForm(): PointsFormComponent
     {
         return new PointsFormComponent(
-            fn() => $this->SQLResultsCache->recalculate($this->getSelectedContestYear()),
+            fn() => $this->resultsCache->recalculate($this->getSelectedContestYear()),
             $this->getContext(),
             $this->seriesTable,
         );
