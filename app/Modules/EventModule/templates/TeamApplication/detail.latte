@@ -82,6 +82,10 @@
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
     <hr/>
-    <h2>{_'Seating'}</h2>
-    {control seating}
+    {if $event->event_type_id === 1}
+        <h2>{_'Seating'}</h2>
+        {FKSDB\Components\Badges\NotSetBadge::getHtml()}
+        {*control seating*}
+    {/if}
+
 {/block}

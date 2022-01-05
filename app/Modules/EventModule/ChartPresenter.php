@@ -26,7 +26,7 @@ class ChartPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
     }
 
     protected function getModelResource(): string
@@ -39,7 +39,7 @@ class ChartPresenter extends BasePresenter
      */
     public function authorizedChart(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'chart'));
     }
 
     /**

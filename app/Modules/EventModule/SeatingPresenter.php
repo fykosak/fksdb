@@ -15,17 +15,17 @@ class SeatingPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Rooming'), 'fa map-marked-alt');
+        return new PageTitle(null, _('Rooming'), 'fa map-marked-alt');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of all teams'), 'fa fa-print');
+        return new PageTitle(null, _('List of all teams'), 'fa fa-print');
     }
 
     public function titlePreview(): PageTitle
     {
-        return new PageTitle(_('Preview'), 'fa fa-search');
+        return new PageTitle(null, _('Preview'), 'fa fa-search');
     }
 
     /**
@@ -33,7 +33,7 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedPreview(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
+        $this->setAuthorized($this->isAllowed('event.seating', 'preview'));
     }
 
     /**
@@ -41,7 +41,7 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
+        $this->setAuthorized($this->isAllowed('event.seating', 'list'));
     }
 
     /**
@@ -49,8 +49,8 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $download = $this->isContestsOrgAuthorized('event.seating', 'download');
-        $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
+        $download = $this->isAllowed('event.seating', 'download');
+        $edit = $this->isAllowed('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 

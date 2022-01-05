@@ -68,7 +68,7 @@ class ResultsAndStatisticsComponent extends AjaxComponent
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
-        $isOrg = $this->eventAuthorizator->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $this->eventAuthorizator->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),

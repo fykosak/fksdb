@@ -3,14 +3,18 @@
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\InvalidArgumentException;
 
-class BaseMachine
+/**
+ * @property Transition[] $transitions
+ */
+class BaseMachine extends AbstractMachine
 {
 
     private string $name;
     private array $states;
-    private array $transitions = [];
     private Machine $machine;
 
     public function __construct(string $name)
@@ -43,8 +47,14 @@ class BaseMachine
         $this->machine = $machine;
     }
 
-    public function addTransition(Transition $transition): void
+    /**
+     * @throws BadTypeException
+     */
+    public function addTransition(\FKSDB\Models\Transitions\Transition\Transition $transition): void
     {
+        if (!$transition instanceof Transition) {
+            throw new BadTypeException(Transition::class, $transition);
+        }
         $transition->setBaseMachine($this);
         $this->transitions[$transition->getName()] = $transition;
     }
@@ -67,21 +77,13 @@ class BaseMachine
     public function getStateName(string $state): string
     {
         switch ($state) {
-            case \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT:
+            case static::STATE_INIT:
                 return _('initial');
-            case \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED:
+            case static::STATE_TERMINATED:
                 return _('terminated');
             default:
                 return _($state);
         }
-    }
-
-    /**
-     * @return Transition[]
-     */
-    public function getTransitions(): array
-    {
-        return $this->transitions;
     }
 
     /**
@@ -95,10 +97,8 @@ class BaseMachine
     ): array {
         return array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => (
-                    !$executable
-                    || $transition->canExecute($holder))
-                && (!$visible || $transition->isVisible($holder))
+            fn(Transition $transition): bool => (!$executable || $transition->canExecute($holder))
+                && (!$visible || $transition->isVisible())
         );
     }
 

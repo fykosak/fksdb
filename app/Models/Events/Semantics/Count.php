@@ -24,7 +24,7 @@ class Count {
     }
 
     public function __toString(): string {
-        return "count({$this->state})";
+        return "count($this->state)";
     }
 
 }

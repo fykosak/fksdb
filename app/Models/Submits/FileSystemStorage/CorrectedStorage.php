@@ -76,7 +76,7 @@ class CorrectedStorage implements SubmitStorage {
         if (count($files) == 0) {
             return null;
         } elseif (count($files) > 1) {
-            throw new InvalidStateException("Ambiguity in file database for submit #{$submit->submit_id}.");
+            throw new InvalidStateException("Ambiguity in file database for submit #$submit->submit_id.");
         } else {
             $file = array_pop($files);
             return $file->getRealPath();

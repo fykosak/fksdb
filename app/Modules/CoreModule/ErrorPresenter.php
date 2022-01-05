@@ -15,7 +15,7 @@ class ErrorPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Error'));
+        return new PageTitle(null, _('Error'));
     }
 
     final public function renderDefault(?\Throwable $exception): void

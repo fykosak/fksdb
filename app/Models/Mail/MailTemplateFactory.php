@@ -81,7 +81,6 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     final public function createFromFile(string $filename, ?string $lang): Template
     {

@@ -17,7 +17,7 @@ class DispatchPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Menu'), 'fa fa-home');
+        return new PageTitle(null, _('Menu'), 'fa fa-home');
     }
 
     /**
@@ -59,7 +59,7 @@ class DispatchPresenter extends BasePresenter
     private function getAllOrganisers(ModelLogin $login): array
     {
         $results = [];
-        foreach ($login->getActiveOrgs() as $contestId => $org) {
+        foreach ($login->getPerson()->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(
                     ':Org:Dashboard:default',

@@ -31,7 +31,7 @@ class PersonFlag extends SelectBox {
     }
 
     /**
-     * @return bool|float|int|mixed|string|null
+     * @return bool|int|string|null
      */
     public function getValue() {
         if ($this->useExplicitValues) {

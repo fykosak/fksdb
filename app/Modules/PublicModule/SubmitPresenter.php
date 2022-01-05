@@ -73,7 +73,7 @@ class SubmitPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt');
+        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
     public function titleAjax(): PageTitle
@@ -83,7 +83,7 @@ class SubmitPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
+        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
     final public function renderDefault(): void

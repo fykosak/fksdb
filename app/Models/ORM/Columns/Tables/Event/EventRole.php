@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -13,11 +15,13 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Security\User;
 use Nette\Utils\Html;
 
-class EventRole extends ColumnFactory {
+class EventRole extends ColumnFactory
+{
 
     private User $user;
 
-    public function __construct(User $user, MetaDataFactory $metaDataFactory) {
+    public function __construct(User $user, MetaDataFactory $metaDataFactory)
+    {
         parent::__construct($metaDataFactory);
         $this->user = $user;
     }
@@ -25,7 +29,8 @@ class EventRole extends ColumnFactory {
     /**
      * @throws CannotAccessModelException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         try {
             $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
@@ -37,7 +42,8 @@ class EventRole extends ColumnFactory {
         return (new EventRolePrinter())($person, $event);
     }
 
-    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel {
+    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel
+    {
         return $modelSingle; // need to be original model because of referenced access
     }
 }

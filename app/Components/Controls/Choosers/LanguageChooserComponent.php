@@ -34,7 +34,7 @@ final class LanguageChooserComponent extends ChooserComponent
             $items = [];
             foreach ($this->supportedLanguages as $language) {
                 $items[] = new NavItem(
-                    new Title(self::$languageNames[$language]),
+                    new Title(null, self::$languageNames[$language]),
                     'this',
                     ['lang' => $language],
                     [],
@@ -43,12 +43,12 @@ final class LanguageChooserComponent extends ChooserComponent
             }
 
             return new NavItem(
-                new Title(self::$languageNames[$this->lang] ?? _('Language'), 'fa fa-language'),
+                new Title(null, self::$languageNames[$this->lang] ?? _('Language'), 'fa fa-language'),
                 '#',
                 [],
                 $items
             );
         }
-        return new NavItem(new Title(self::$languageNames[$this->lang]));
+        return new NavItem(new Title(null, self::$languageNames[$this->lang]));
     }
 }

@@ -4,37 +4,24 @@ namespace FKSDB\Models\Transitions\Machine;
 
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Explorer;
 
-abstract class Machine
+abstract class Machine extends AbstractMachine
 {
 
-    public const STATE_INIT = '__init';
-    public const STATE_TERMINATED = '__terminated';
-    public const STATE_ANY = '*';
-    /** @var Transition[] */
-    private array $transitions = [];
     protected Explorer $explorer;
-    private AbstractService $service;
     /**
      * @var callable|null
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
     private $implicitCondition = null;
 
-    public function __construct(Explorer $explorer, AbstractService $service)
+    public function __construct(Explorer $explorer)
     {
         $this->explorer = $explorer;
-        $this->service = $service;
-    }
-
-    final public function addTransition(Transition $transition): void
-    {
-        $this->transitions[] = $transition;
     }
 
     final public function setImplicitCondition(callable $implicitCondition): void
@@ -42,23 +29,16 @@ abstract class Machine
         $this->implicitCondition = $implicitCondition;
     }
     /* **************** Select transition ****************/
-    /**
-     * @return Transition[]
-     */
-    public function getTransitions(): array
-    {
-        return $this->transitions;
-    }
+
 
     /**
      * @return Transition[]
      */
     public function getAvailableTransitions(ModelHolder $holder): array
     {
-        return \array_filter(
-            $this->getTransitions(),
-            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
-        );
+        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder): bool {
+            return $this->isAvailable($transition, $holder);
+        });
     }
 
     /**

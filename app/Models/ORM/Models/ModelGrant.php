@@ -15,6 +15,11 @@ use Fykosak\NetteORM\AbstractModel;
 class ModelGrant extends AbstractModel
 {
 
+    public function getRole(): ModelRole
+    {
+        return ModelRole::createFromActiveRow($this->role);
+    }
+
     public function getContest(): ModelContest
     {
         return ModelContest::createFromActiveRow($this->contest);

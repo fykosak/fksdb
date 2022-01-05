@@ -49,7 +49,7 @@ class PersonPresenter extends BasePresenter
     /* *********** TITLE ***************/
     public function titleSearch(): PageTitle
     {
-        return new PageTitle(_('Find person'), 'fa fa-search');
+        return new PageTitle(null, _('Find person'), 'fa fa-search');
     }
 
     /**
@@ -57,7 +57,7 @@ class PersonPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
+        return new PageTitle(null, sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
     }
 
     /**
@@ -65,17 +65,19 @@ class PersonPresenter extends BasePresenter
      */
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit');
+        return new PageTitle(
+            null, sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit'
+        );
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create person'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create person'), 'fa fa-user-plus');
     }
 
     public function titlePizza(): PageTitle
     {
-        return new PageTitle(_('Pizza'), 'fa fa-pizza-slice');
+        return new PageTitle(null, _('Pizza'), 'fa fa-pizza-slice');
     }
 
     /* *********** AUTH ***************/

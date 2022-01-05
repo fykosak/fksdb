@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization\Assertions\QIDAssertion;
@@ -8,18 +10,21 @@ use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;
 
-class ACLExtension extends CompilerExtension {
+class ACLExtension extends CompilerExtension
+{
     /** @var string[] */
     public static array $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
     ];
 
-    public function __construct() {
+    public function __construct()
+    {
         Helpers::registerSemantic(self::$semanticMap);
     }
 
-    public function loadConfiguration(): void {
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();

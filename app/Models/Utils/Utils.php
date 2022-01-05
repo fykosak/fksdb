@@ -141,7 +141,7 @@ class Utils {
         } else {
             $b = substr($user, 0, 1);
             $e = substr($user, -1);
-            return "{$b}…{$e}@$host";
+            return "{$b}…$e@$host";
         }
     }
 

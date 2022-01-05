@@ -7,11 +7,7 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
     private array $validationResult;
 
     public function __construct(array $validationResult, int $code = 0, ?\Throwable $previous = null) {
-        $message = '';
-        foreach ($validationResult as $result) {
-            $message .= $result;
-        }
-        parent::__construct($message, $code, $previous);
+        parent::__construct(implode('', $validationResult), $code, $previous);
         $this->validationResult = $validationResult;
     }
 }

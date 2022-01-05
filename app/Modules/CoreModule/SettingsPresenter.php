@@ -42,7 +42,7 @@ class SettingsPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Settings'), 'fa fa-cogs');
+        return new PageTitle(null, _('Settings'), 'fa fa-cogs');
     }
 
     /**
@@ -141,9 +141,7 @@ class SettingsPresenter extends BasePresenter
         $login = $container->addText('login', _('Username'));
         $login->setHtmlAttribute('autocomplete', 'username');
 
-        if ($loginRule) {
-            $login->addRule($loginRule, _('This username is already taken.'));
-        }
+        $login->addRule($loginRule, _('This username is already taken.'));
 
         if ($showPassword) {
             if ($verifyOldPassword) {

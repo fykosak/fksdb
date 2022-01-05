@@ -6,6 +6,7 @@ use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
@@ -48,9 +49,9 @@ class GenKillProcessing implements Processing
 
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
-                $result[$name] = \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED;
+                $result[$name] = AbstractMachine::STATE_TERMINATED;
             } elseif (
-                $holder->getBaseHolder($name)->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT
+                $holder->getBaseHolder($name)->getModelState() == AbstractMachine::STATE_INIT
             ) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];

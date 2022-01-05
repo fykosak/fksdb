@@ -25,12 +25,12 @@ class TaskPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Tasks'), 'fas fa-tasks');
+        return new PageTitle(null, _('Tasks'), 'fas fa-tasks');
     }
 
     public function titleImport(): PageTitle
     {
-        return new PageTitle(_('Tasks Import'), 'fas fa-download');
+        return new PageTitle(null, _('Tasks Import'), 'fas fa-download');
     }
 
     /**
@@ -38,7 +38,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
+        $this->setAuthorized($this->isAllowed('fyziklani.task', 'list'));
     }
 
     /**
@@ -46,7 +46,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedImport(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
+        $this->setAuthorized($this->isAllowed('fyziklani.task', 'import'));
     }
 
     /**

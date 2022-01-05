@@ -70,7 +70,7 @@ class NavigationChooserComponent extends NavigationItemComponent
             $presenter->setView($presenter->getView()); // to force update the title
             return $presenter->getTitle();
         }
-        return new Title('');
+        return new Title(null, '');
     }
 
     protected function getItems(): iterable
@@ -137,7 +137,7 @@ class NavigationChooserComponent extends NavigationItemComponent
 
             return $presenter->getTitle();
         }
-        return new Title('');
+        return new Title(null, '');
     }
 
     /**

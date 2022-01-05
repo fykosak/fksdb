@@ -13,32 +13,32 @@ class ResultsPresenter extends BasePresenter
 
     public function titleCorrelationStatistics(): PageTitle
     {
-        return new PageTitle(_('Correlation statistics'), 'fas fa-chart-pie');
+        return new PageTitle(null, _('Correlation statistics'), 'fas fa-chart-pie');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Results and statistics'), 'fas fa-chart-area');
+        return new PageTitle(null, _('Results and statistics'), 'fas fa-chart-area');
     }
 
     public function titleTable(): PageTitle
     {
-        return new PageTitle(_('Detailed results'), 'fas fa-info');
+        return new PageTitle(null, _('Detailed results'), 'fas fa-info');
     }
 
     public function titlePresentation(): PageTitle
     {
-        return new PageTitle(_('Results presentation'), 'fas fa-chalkboard');
+        return new PageTitle(null, _('Results presentation'), 'fas fa-chalkboard');
     }
 
     public function titleTeamStatistics(): PageTitle
     {
-        return new PageTitle(_('Teams statistics'), 'fas fa-chart-line');
+        return new PageTitle(null, _('Teams statistics'), 'fas fa-chart-line');
     }
 
     public function titleTaskStatistics(): PageTitle
     {
-        return new PageTitle(_('Tasks statistics'), 'fas fa-chart-bar');
+        return new PageTitle(null, _('Tasks statistics'), 'fas fa-chart-bar');
     }
 
     /**
@@ -46,7 +46,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'list'));
     }
 
     /**
@@ -54,7 +54,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedResultsTable(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'table'));
     }
 
     /**
@@ -62,7 +62,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedTaskStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'taskStatistics'));
     }
 
     /**
@@ -70,7 +70,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedTeamStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'teamStatistics'));
     }
 
     /**
@@ -78,7 +78,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedCorrelationStatistics(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'correlation'));
     }
 
     /**
@@ -86,7 +86,7 @@ class ResultsPresenter extends BasePresenter
      */
     public function authorizedPresentation(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
+        $this->setAuthorized($this->isAllowed('fyziklani.results', 'presentation'));
     }
 
     /**

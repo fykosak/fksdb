@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Events\EventRole\ContestOrgRole;
-use FKSDB\Models\Events\EventRole\EventOrgRole;
-use FKSDB\Models\Events\EventRole\EventRoles;
-use FKSDB\Models\Events\EventRole\FyziklaniTeacherRole;
-use FKSDB\Models\Events\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\EventRole\{
+    ContestOrgRole,
+    EventOrgRole,
+    FyziklaniTeacherRole,
+    ParticipantRole,
+};
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
@@ -339,9 +340,9 @@ class ModelPerson extends AbstractModel implements Resource
         return $toPay;
     }
 
-    public function getEventRoles(ModelEvent $event): EventRoles
+    public function getEventRoles(ModelEvent $event): array
     {
-        $roles = new EventRoles($this, $event);
+        $roles = [];
 
         $eventId = $event->event_id;
         $teachers = $this->getEventTeachers()->where('event_id', $eventId);
@@ -350,20 +351,20 @@ class ModelPerson extends AbstractModel implements Resource
             foreach ($teachers as $row) {
                 $teams[] = ModelFyziklaniTeam::createFromActiveRow($row);
             }
-            $roles->addRole(new FyziklaniTeacherRole($teams));
+            $roles[] = new FyziklaniTeacherRole($event, $teams);
         }
 
         $eventOrg = $this->getEventOrgs()->where('event_id', $eventId)->fetch();
         if (isset($eventOrg)) {
-            $roles->addRole(new EventOrgRole(ModelEventOrg::createFromActiveRow($eventOrg)));
+            $roles[] = new EventOrgRole($event, ModelEventOrg::createFromActiveRow($eventOrg));
         }
         $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
         if (isset($eventParticipant)) {
-            $roles->addRole(new ParticipantRole(ModelEventParticipant::createFromActiveRow($eventParticipant)));
+            $roles[] = new ParticipantRole($event, ModelEventParticipant::createFromActiveRow($eventParticipant));
         }
         $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
         if (isset($org)) {
-            $roles->addRole(new ContestOrgRole(ModelOrg::createFromActiveRow($org)));
+            $roles[] = new ContestOrgRole($event, ModelOrg::createFromActiveRow($org));
         }
         return $roles;
     }

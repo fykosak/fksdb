@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Models\Events\EventRole\ContestOrgRole;
-use FKSDB\Models\Events\EventRole\EventOrgRole;
-use FKSDB\Models\Events\EventRole\EventRoles;
-use FKSDB\Models\Events\EventRole\FyziklaniTeacherRole;
-use FKSDB\Models\Events\EventRole\ParticipantRole;
+use FKSDB\Models\Authorization\EventRole\{
+    ContestOrgRole,
+    EventOrgRole,
+    EventRole,
+    FyziklaniTeacherRole,
+    ParticipantRole,
+};
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -23,7 +24,7 @@ class EventRolePrinter
     {
         $container = Html::el('span');
         $roles = $person->getEventRoles($event);
-        if (!$roles->hasRoles()) {
+        if (!count($roles)) {
             $container->addHtml(
                 Html::el('span')
                     ->addAttributes(['class' => 'badge bg-danger'])
@@ -34,11 +35,15 @@ class EventRolePrinter
         return $this->getHtml($roles);
     }
 
-    private function getHtml(EventRoles $roles): Html
+    /**
+     * @param EventRole[] $roles
+     * @return Html
+     */
+    private function getHtml(array $roles): Html
     {
         $container = Html::el('span');
 
-        foreach ($roles->getRoles() as $role) {
+        foreach ($roles as $role) {
             if ($role instanceof FyziklaniTeacherRole) {
                 foreach ($role->teams as $team) {
                     $container->addHtml(
@@ -54,11 +59,7 @@ class EventRolePrinter
                         ->addText(_('Event org') . ($role->eventOrg->note ? (' - ' . $role->eventOrg->note) : ''))
                 );
             } elseif ($role instanceof ParticipantRole) {
-                $team = null;
-                try {
-                    $team = $role->eventParticipant->getFyziklaniTeam();
-                } catch (BadRequestException $exception) {
-                }
+                $team = $role->eventParticipant->getFyziklaniTeam();
                 $container->addHtml(
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-10'])

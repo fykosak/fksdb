@@ -29,12 +29,9 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Dashboard'), 'fas fa-chalkboard');
+        return new PageTitle(null, _('Dashboard'), 'fas fa-chalkboard');
     }
 
-    /**
-     * @throws UnsupportedLanguageException
-     */
     final public function renderDefault(): void
     {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {

@@ -34,7 +34,7 @@ class ClosePresenter extends BasePresenter
     /* ******* TITLE ***********/
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Sealing of the scoring'), 'fas fa-stamp');
+        return new PageTitle(null, _('Sealing of the scoring'), 'fas fa-stamp');
     }
 
     /**
@@ -57,6 +57,7 @@ class ClosePresenter extends BasePresenter
     public function titleTeam(): PageTitle
     {
         return new PageTitle(
+            null,
             \sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name),
             'fas fa-stamp'
         );
@@ -69,7 +70,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'team'));
     }
 
     protected function getModelResource(): string
@@ -82,7 +83,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizeHard(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
     }
     /* *********** ACTIONS **************** */
 
@@ -110,7 +111,7 @@ class ClosePresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     /**

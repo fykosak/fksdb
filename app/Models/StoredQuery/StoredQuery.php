@@ -230,7 +230,7 @@ class StoredQuery implements IDataSource, Resource {
             }
 
             if ($this->limit !== null && $this->offset !== null) {
-                $sql .= " LIMIT {$this->offset}, {$this->limit}";
+                $sql .= " LIMIT $this->offset, $this->limit";
             }
 
             $statement = $this->bindParams($sql);
