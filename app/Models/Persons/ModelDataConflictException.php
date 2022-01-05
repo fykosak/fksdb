@@ -15,7 +15,7 @@ class ModelDataConflictException extends \RuntimeException
 
     public function __construct(iterable $conflicts, ?\Throwable $previous = null)
     {
-        parent::__construct(null, IResponse::S409_CONFLICT, $previous);
+        parent::__construct('', IResponse::S409_CONFLICT, $previous);
         $this->conflicts = $conflicts;
     }
 
