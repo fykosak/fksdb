@@ -27,7 +27,6 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {

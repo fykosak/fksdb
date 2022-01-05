@@ -45,7 +45,7 @@ class MultiResourceAvailability extends AbstractAdjustment
         $paramCapacity,
         string $message,
         Explorer $explorer,
-        array $includeStates = [Machine::STATE_ANY],
+        array $includeStates = [AbstractMachine::STATE_ANY],
         array $excludeStates = ['cancelled']
     ) {
         $this->fields = $fields;

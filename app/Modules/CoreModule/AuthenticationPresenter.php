@@ -15,7 +15,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\SendFailedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;

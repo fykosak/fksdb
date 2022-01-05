@@ -3,8 +3,6 @@
 namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\AbstractModel;
-use Nette\Database\Table\ActiveRow;
-use Nette\Utils\ArrayHash;
 
 interface ReferencedHandler
 {

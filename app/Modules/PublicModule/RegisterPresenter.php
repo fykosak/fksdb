@@ -21,7 +21,6 @@ use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
