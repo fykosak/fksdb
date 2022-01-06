@@ -37,11 +37,11 @@ $vyfukMainColor: #ff4800;
     background-color: $color;
   }
   footer {
-    background-color: $color;
-    color: color-contrast($color);
+   // background-color: $color;
+   // color: color-contrast($color);
 
     a {
-      color: color-contrast($color);
+     // color: color-contrast($color);
       font-weight: bold;
       text-decoration: none;
     }

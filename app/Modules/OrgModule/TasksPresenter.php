@@ -63,7 +63,7 @@ class TasksPresenter extends BasePresenter
 
     public function titleDispatch(): PageTitle
     {
-        return new PageTitle(_('Handout'), 'fa fa-folder-open');
+        return new PageTitle(null, _('Handout'), 'fa fa-folder-open');
     }
 
     /**

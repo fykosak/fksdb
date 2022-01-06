@@ -81,8 +81,8 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
         this.rowNumber = 0;
         const {
             events: {eventOrgs, eventParticipants, eventTeachers},
-            scale: {max, min},
             states: {orgs, contestants},
+            scale: {max, min},
         } = this.props.data;
         this.scale = this.createTimeXScale(new Date(min), new Date(max));
         const content = <g transform="translate(0,15)" className="content">
@@ -120,8 +120,8 @@ export default class TimelineComponent extends ChartComponent<Props, Record<stri
 
     }
 
-    private createTimeXScale(gameStart: Date, gameEnd: Date): ScaleTime<number, number> {
-        return scaleTime<number, number>().domain([gameStart, gameEnd]).range(this.getInnerXSize());
+    private createTimeXScale(start: Date, end: Date): ScaleTime<number, number> {
+        return scaleTime<number>().domain([start, end]).range(this.getInnerXSize());
     }
 
     private getCurrentY(): number {

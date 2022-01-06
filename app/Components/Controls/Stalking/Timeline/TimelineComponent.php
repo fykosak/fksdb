@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -20,7 +22,7 @@ class TimelineComponent extends FrontEndComponent
 
     public function __construct(Container $container, ModelPerson $person)
     {
-        parent::__construct($container, 'person.detail.timeline');
+        parent::__construct($container, 'chart.person.detail.timeline');
         $this->person = $person;
     }
 
