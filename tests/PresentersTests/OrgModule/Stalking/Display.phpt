@@ -48,7 +48,7 @@ class Display extends StalkingTestCase
         Assert::contains('+420 123 456 789', $html); // check phone number formating
         Assert::contains('href="mailto:tester&#64;example.com"', $html); // email
         Assert::contains('(111) Všeobecná zdravotní pojišťovna ČR', $html); // Health insurance mapping
-        Assert::contains('data-frontend-id="person.detail.timeline"', $html); // timeline working?
+        Assert::contains('data-frontend-id="chart.person.detail.timeline"', $html); // timeline working?
     }
 
     protected function getUserRoleId(): int
