@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\Mail\Message;

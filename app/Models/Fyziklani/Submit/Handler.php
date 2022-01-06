@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use Fykosak\NetteORM\Exceptions\ModelException;

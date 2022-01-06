@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Badges\ContestBadge;

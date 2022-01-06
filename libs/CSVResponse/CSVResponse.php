@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PePa;
 
 use Nette\Application\IResponse;

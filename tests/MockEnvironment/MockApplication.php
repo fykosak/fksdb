@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\MockEnvironment;
 
 use FKSDB\Modules\Core\BasePresenter;

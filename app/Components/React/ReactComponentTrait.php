@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\React;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;

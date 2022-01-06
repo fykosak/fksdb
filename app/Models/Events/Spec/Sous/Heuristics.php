@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Sous;
 
 use FKSDB\Models\ORM\Models\ModelEventParticipant;

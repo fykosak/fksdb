@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;

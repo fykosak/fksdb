@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\EventOrg;
 
 use FKSDB\Components\Grids\RelatedGrid;

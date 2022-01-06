@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;

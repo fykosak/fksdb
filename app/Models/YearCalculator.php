@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models;
 
 use FKSDB\Models\ORM\Models\ModelContest;

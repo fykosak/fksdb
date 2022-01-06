@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;

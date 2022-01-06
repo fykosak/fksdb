@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;

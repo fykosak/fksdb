@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Machine\Machine;

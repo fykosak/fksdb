@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\AbstractColumnException;

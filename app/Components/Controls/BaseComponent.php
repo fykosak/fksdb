@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls;
 
 use Fykosak\Utils\Localization\GettextTranslator;

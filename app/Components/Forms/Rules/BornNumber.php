@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;

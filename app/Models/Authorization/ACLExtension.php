@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization\Assertions\QIDAssertion;

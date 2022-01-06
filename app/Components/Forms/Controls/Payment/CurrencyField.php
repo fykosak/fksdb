@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Payment;
 
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Nette\DI\Container;
 

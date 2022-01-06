@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 
 use FKSDB\Models\Exceptions\NotImplementedException;

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\{ModelContestant, ModelContestYear, ModelSubmit};

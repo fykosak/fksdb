@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use Fykosak\Utils\UI\PageTitle;

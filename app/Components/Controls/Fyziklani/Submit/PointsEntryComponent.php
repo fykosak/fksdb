@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Loaders\JavaScriptCollector;

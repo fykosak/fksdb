@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\Transition\TransitionsGenerator;
 
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween;

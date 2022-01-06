@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use Nette\Application\IPresenter;

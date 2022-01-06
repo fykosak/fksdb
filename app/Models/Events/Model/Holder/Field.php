@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
