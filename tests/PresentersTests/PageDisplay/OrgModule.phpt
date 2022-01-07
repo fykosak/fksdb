@@ -95,12 +95,6 @@ class OrgModule extends AbstractPageDisplayTestCase
             ['Warehouse:Product', 'list'],
         ];
     }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(['person_info', 'org']);
-        parent::tearDown();
-    }
 }
 
 $testCase = new OrgModule($container);

@@ -6,7 +6,6 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -79,12 +78,6 @@ class Authorization extends FyziklaniTestCase
         ]);
 
         $this->mockApplication();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
-        parent::tearDown();
     }
 
     public function getTestData(): array

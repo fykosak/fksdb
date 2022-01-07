@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 
 $container = require '../../Bootstrap.php';
@@ -33,12 +32,6 @@ class PublicModule extends AbstractPageDisplayTestCase
             ['Public:Submit', 'default'],
             ['Public:Submit', 'ajax'],
         ];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
-        parent::tearDown();
     }
 }
 

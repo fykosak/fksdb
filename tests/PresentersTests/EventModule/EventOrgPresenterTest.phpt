@@ -8,7 +8,6 @@ $container = require '../../Bootstrap.php';
 
 use DateTime;
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -24,11 +23,8 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
 {
 
     private ModelPerson $person;
-
     private ModelPerson $eventOrgPerson;
-
     private ModelEventOrg $eventOrg;
-
     private ModelEvent $event;
 
     protected function setUp(): void
@@ -140,12 +136,6 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         $params['eventId'] = $this->event->event_id;
         return parent::createGetRequest($action, $params, $postData);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_EVENT_ORG, DbNames::TAB_EVENT]);
-        parent::tearDown();
     }
 
     private function countEventOrgs(): int

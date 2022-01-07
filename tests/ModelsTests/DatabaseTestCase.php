@@ -85,15 +85,40 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function tearDown(): void
     {
-        $this->truncateTables([
+        $tables = [
+            DbNames::TAB_EMAIL_MESSAGE,
+            DbNames::TAB_SUBMIT,
+            DbNames::TAB_TASK,
+
+            DbNames::TAB_FYZIKLANI_SUBMIT,
+            DbNames::TAB_FYZIKLANI_TASK,
+
+            DbNames::TAB_PERSON_SCHEDULE,
+            DbNames::TAB_SCHEDULE_ITEM,
+            DbNames::TAB_SCHEDULE_GROUP,
+
+            DbNames::TAB_E_DSEF_PARTICIPANT,
+            DbNames::TAB_E_DSEF_GROUP,
+            DbNames::TAB_E_FYZIKLANI_PARTICIPANT,
+            DbNames::TAB_EVENT_PARTICIPANT,
+            DbNames::TAB_E_FYZIKLANI_TEAM,
+            DbNames::TAB_FYZIKLANI_GAME_SETUP,
+            DbNames::TAB_EVENT_ORG,
+            DbNames::TAB_EVENT,
+
             DbNames::TAB_ORG,
-            DbNames::TAB_LOGIN,
             DbNames::TAB_PERSON_HISTORY,
+            DbNames::TAB_CONTESTANT_BASE,
             DbNames::TAB_CONTEST_YEAR,
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
+            DbNames::TAB_AUTH_TOKEN,
+            DbNames::TAB_LOGIN,
             DbNames::TAB_PERSON,
-        ]);
+        ];
+        foreach ($tables as $table) {
+            $this->explorer->query("DELETE FROM `$table`");
+        }
     }
 
     protected function createPerson(
@@ -151,13 +176,6 @@ abstract class DatabaseTestCase extends TestCase
             'class' => $class,
             'study_year' => $studyYear,
         ]);
-    }
-
-    protected function truncateTables(array $tables): void
-    {
-        foreach ($tables as $table) {
-            $this->explorer->query("DELETE FROM `$table`");
-        }
     }
 
     protected function mockApplication(): void

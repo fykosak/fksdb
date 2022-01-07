@@ -122,12 +122,6 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
         return 'Org:School';
     }
 
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_SCHOOL, DbNames::TAB_ADDRESS]);
-        parent::tearDown();
-    }
-
     private function countSchools(): int
     {
         return $this->getContainer()->getByType(ServiceSchool::class)->getTable()->count('*');

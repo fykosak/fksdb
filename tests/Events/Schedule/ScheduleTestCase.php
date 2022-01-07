@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
@@ -146,12 +145,4 @@ EOT
     }
 
     abstract public function getAccommodationCapacity(): int;
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(
-            [DbNames::TAB_E_DSEF_PARTICIPANT, 'e_dsef_group', 'person_schedule', 'schedule_item', 'schedule_group']
-        );
-        parent::tearDown();
-    }
 }

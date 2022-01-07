@@ -7,7 +7,6 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
@@ -15,13 +14,6 @@ use Tester\Assert;
 
 class AnonymousMatchTest extends DsefTestCase
 {
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
-        parent::tearDown();
-    }
-
     public function testRegistration(): void
     {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)

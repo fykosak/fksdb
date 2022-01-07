@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
@@ -84,16 +83,5 @@ EOT
             'event_participant_id' => $application->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([
-            DbNames::TAB_E_DSEF_PARTICIPANT,
-            DbNames::TAB_E_DSEF_GROUP,
-            DbNames::TAB_EVENT_PARTICIPANT,
-            DbNames::TAB_EVENT,
-        ]);
-        parent::tearDown();
     }
 }

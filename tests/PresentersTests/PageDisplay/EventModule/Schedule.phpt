@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use DateTime;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 
@@ -26,8 +24,8 @@ class Schedule extends EventModuleTestCase
             'name_cs' => 'name CS',
             'name_en' => 'name EN',
             'event_id' => $this->event->event_id,
-            'start' => new DateTime(),
-            'end' => new DateTime(),
+            'start' => new \DateTime(),
+            'end' => new \DateTime(),
         ]);
     }
 
@@ -37,8 +35,8 @@ class Schedule extends EventModuleTestCase
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'TEST FOF',
         ];
     }
@@ -59,12 +57,6 @@ class Schedule extends EventModuleTestCase
             ['Event:ScheduleGroup', 'detail'],
             ['Event:ScheduleGroup', 'edit'],
         ];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(['schedule_group', DbNames::TAB_EVENT]);
-        parent::tearDown();
     }
 }
 

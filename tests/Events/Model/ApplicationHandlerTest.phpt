@@ -9,7 +9,6 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
@@ -63,12 +62,6 @@ class ApplicationHandlerTest extends EventTestCase
         $this->fixture = new ApplicationHandler($event, new DevNullLogger(), $this->getContainer());
 
         $this->mockApplication();
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
-        parent::tearDown();
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
@@ -27,11 +26,5 @@ abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['eventId'] = $this->event->event_id;
         return [$presenterName, $action, $params];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_EVENT]);
-        parent::tearDown();
     }
 }

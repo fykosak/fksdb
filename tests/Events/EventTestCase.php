@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -18,13 +17,6 @@ use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_EVENT_PARTICIPANT, DbNames::TAB_EVENT, DbNames::TAB_AUTH_TOKEN]);
-        parent::tearDown();
-    }
-
     protected function createEvent(array $data): ModelEvent
     {
         if (!isset($data['year'])) {

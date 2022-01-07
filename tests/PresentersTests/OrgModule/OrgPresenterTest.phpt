@@ -7,7 +7,6 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\EntityForms\OrgFormComponent;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceOrg;
@@ -137,12 +136,6 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     protected function getPresenterName(): string
     {
         return 'Org:Org';
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_ORG]);
-        parent::tearDown();
     }
 
     private function countOrgs(): int

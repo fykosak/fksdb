@@ -92,7 +92,6 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     protected function tearDown(): void
     {
-        $this->truncateTables(['submit', 'task', 'contestant_base']);
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
         /** @var SplFileInfo $f */

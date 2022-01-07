@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
@@ -60,12 +59,6 @@ class FyziklaniModule extends EventModuleTestCase
             ['Fyziklani:Task', 'import'],
             ['Fyziklani:Task', 'list'],
         ];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_FYZIKLANI_GAME_SETUP]);
-        parent::tearDown();
     }
 }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -37,14 +36,6 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(
-            ['fyziklani_submit', 'fyziklani_task', DbNames::TAB_E_FYZIKLANI_TEAM, 'fyziklani_game_setup', 'event']
-        );
-        parent::tearDown();
     }
 
     protected function createEvent(array $data): ModelEvent

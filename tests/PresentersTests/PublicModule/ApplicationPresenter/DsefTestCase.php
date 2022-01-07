@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
@@ -53,11 +52,5 @@ EOT
             ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT, DbNames::TAB_E_DSEF_GROUP]);
-        parent::tearDown();
     }
 }

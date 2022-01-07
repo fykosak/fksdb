@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceGrant;
@@ -73,10 +72,4 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
     }
 
     abstract public function getPages(): array;
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_GRANT, DbNames::TAB_LOGIN, DbNames::TAB_PERSON]);
-        parent::tearDown();
-    }
 }
