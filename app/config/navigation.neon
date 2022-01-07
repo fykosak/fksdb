@@ -96,7 +96,6 @@ navigation:
             Fyziklani.Dashboard.default: []
             Event.ScheduleGroup.list: []
             Event.Seating.default: []
-            Event.Model.default: []
             Event.Chart.list: []
             Event.Dispatch.default: []
             Event.Dashboard.default: []

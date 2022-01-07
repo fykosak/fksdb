@@ -11,8 +11,8 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\Utils\FormUtils;
-use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 /**
@@ -77,7 +77,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent
 
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('School has been updated') : _('School has been created'),
-            BasePresenter::FLASH_SUCCESS
+            Message::LVL_SUCCESS
         );
         $this->getPresenter()->redirect('list');
     }

@@ -68,9 +68,8 @@ class TaskPresenter extends BasePresenter
             ]
         );
         $form->addSubmit('import', _('Import'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->taskImportFormSucceeded($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->taskImportFormSucceeded($form);
+
         return $control;
     }
 

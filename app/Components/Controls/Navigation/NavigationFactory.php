@@ -9,7 +9,6 @@ use Nette\Application\UI\Presenter;
 
 class NavigationFactory
 {
-
     private array $structure;
 
     public PresenterBuilder $presenterBuilder;

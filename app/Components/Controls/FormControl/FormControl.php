@@ -41,10 +41,10 @@ class FormControl extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
     }
 
-    public static function buildContainerAttributes(BaseControl $control): array
+    public static function buildContainerAttributes(BaseControl $control, ?string $class = null): array
     {
         return [
-            'class' => 'form-group '
+            'class' => ($class ?? 'form-group') . ' mb-3'
                 . ($control->hasErrors() ? ' has-error ' : ' ')
                 . ($control->isRequired() ? 'required' : ''),
             'id' => $control->getHtmlId() . '-pair',

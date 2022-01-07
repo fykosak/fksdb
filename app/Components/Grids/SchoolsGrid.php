@@ -57,7 +57,7 @@ class SchoolsGrid extends EntityGrid
         });
         $this->addColumn('active', _('Active?'))->setRenderer(
             fn(ModelSchool $row): Html => Html::el('span')
-                ->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])
+                ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
                 ->addText(($row->active))
         );
 

@@ -9,11 +9,11 @@
                         <span class="col-5">{_'Value'}</span>
                         <div class="col-7">
                             {if $flag->value == 1}
-                                <span class="badge badge-success">1</span>
+                                <span class="badge bg-success">1</span>
                             {elseif $flag->value == 0}
-                                <span class="badge badge-danger">0</span>
+                                <span class="badge bg-danger">0</span>
                             {else}
-                                <span class="badge badge-warning">{$flag->value}</span>
+                                <span class="badge bg-warning">{$flag->value}</span>
                             {/if}
                         </div>
                     </div>

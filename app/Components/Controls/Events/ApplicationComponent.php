@@ -141,13 +141,9 @@ class ApplicationComponent extends BaseComponent
             };
 
             if ($transition->isCreating()) {
-                if ($transitionSubmit !== false) {
-                    $transitionSubmit = $submit;
-                } elseif ($transitionSubmit) {
-                    $transitionSubmit = false; // if there is more than one submit set no one
-                }
+                $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()]);
         }
 
         /*
@@ -155,10 +151,8 @@ class ApplicationComponent extends BaseComponent
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
-        $submit->onClick[] = function (): void {
-            $this->finalRedirect();
-        };
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-warning']);
+        $submit->onClick[] = fn() => $this->finalRedirect();
 
         /*
          * Custom adjustments

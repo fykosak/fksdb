@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Nette\OutOfRangeException;
 
-class DefaultGenerator extends AbstractSymbolGenerator {
+class DefaultGenerator extends AbstractSymbolGenerator
+{
 
     private int $variableSymbolStart;
 
@@ -17,17 +20,20 @@ class DefaultGenerator extends AbstractSymbolGenerator {
 
     private array $info;
 
-    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void {
+    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void
+    {
         $this->variableSymbolEnd = $variableSymbolEnd;
         $this->variableSymbolStart = $variableSymbolStart;
         $this->info = $info;
     }
 
-    protected function getVariableSymbolStart(): int {
+    protected function getVariableSymbolStart(): int
+    {
         return $this->variableSymbolStart;
     }
 
-    protected function getVariableSymbolEnd(): int {
+    protected function getVariableSymbolEnd(): int
+    {
         return $this->variableSymbolEnd;
     }
 
@@ -41,7 +47,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), Response::S501_NOT_IMPLEMENTED);
+        throw new UnsupportedCurrencyException($modelPayment->getCurrency(), IResponse::S501_NOT_IMPLEMENTED);
     }
 
     /**
@@ -49,10 +55,13 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @throws UnsupportedCurrencyException
      * @throws \Exception
      */
-    protected function create(ModelPayment $modelPayment, ...$args): array {
+    protected function create(ModelPayment $modelPayment, ...$args): array
+    {
 
         if ($modelPayment->hasGeneratedSymbols()) {
-            throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));
+            throw new AlreadyGeneratedSymbolsException(
+                \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId())
+            );
         }
         $maxVariableSymbol = $modelPayment->getEvent()->related(DbNames::TAB_PAYMENT)
             ->where('variable_symbol>=?', $this->getVariableSymbolStart())

@@ -189,13 +189,13 @@ class ReferencedId extends HiddenField
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
-                    $model = $this->handler->createFromValues($values);
+                    $model = $this->handler->createFromValues((array)$values);
                     $this->setValue($model, self::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {
                     $model = $this->service->findByPrimary($referencedId);
-                    $this->handler->update($model, $values);
+                    $this->handler->update($model, (array)$values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                     $model = $this->service->findByPrimary($model->getPrimary());
                     $this->setValue($model, self::MODE_FORCE);

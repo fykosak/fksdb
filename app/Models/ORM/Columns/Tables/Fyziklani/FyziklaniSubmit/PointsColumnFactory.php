@@ -17,6 +17,6 @@ class PointsColumnFactory extends ColumnFactory {
         if (!\is_null($model->points)) {
             return $el->addText($model->points);
         }
-        return $el->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
+        return $el->addAttributes(['class' => 'badge bg-warning'])->addText(_('revoked'));
     }
 }

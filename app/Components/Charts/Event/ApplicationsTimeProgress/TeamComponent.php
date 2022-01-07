@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\ApplicationsTimeProgress;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventType;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-class TeamComponent extends ReactComponent implements Chart
+class TeamComponent extends FrontEndComponent implements Chart
 {
 
     private ModelEventType $eventType;

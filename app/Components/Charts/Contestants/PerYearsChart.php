@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-class PerYearsChart extends ReactComponent implements Chart
+class PerYearsChart extends FrontEndComponent implements Chart
 {
 
     private ServiceSubmit $serviceSubmit;

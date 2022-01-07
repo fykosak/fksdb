@@ -106,9 +106,7 @@ class BaseMachine extends AbstractMachine
     {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
-            function (Transition $transition) use ($targetState): bool {
-                return $transition->getTargetState() == $targetState;
-            }
+            fn(Transition $transition): bool => $transition->getTargetState() == $targetState
         );
         if (count($candidates) == 0) {
             return null;
@@ -126,8 +124,9 @@ class BaseMachine extends AbstractMachine
      */
     private function getMatchingTransitions(string $sourceStateMask): array
     {
-        return array_filter($this->transitions, function (Transition $transition) use ($sourceStateMask): bool {
-            return $transition->matches($sourceStateMask);
-        });
+        return array_filter(
+            $this->transitions,
+            fn(Transition $transition): bool => $transition->matches($sourceStateMask)
+        );
     }
 }

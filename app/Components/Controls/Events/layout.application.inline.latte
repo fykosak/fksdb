@@ -2,12 +2,13 @@
 
 {varType FKSDB\Models\Events\Machine\Transition[] $transitions}
 {varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType array $transitions}
 {block content}
     {if count($transitions)}
         <div class="btn-group">
             {varType FKSDB\Models\Events\Machine\Transition $transition}
         {foreach $transitions as $transition}
-                {var $className = 'btn btn-sm btn-' . $transition->getBehaviorType()}
+                {var $className = 'btn btn-sm btn-outline-' . $transition->getBehaviorType()}
                 {if $transition->isCreating()}
                     <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
                        class="{$className}">{$transition->getLabel()}</a>

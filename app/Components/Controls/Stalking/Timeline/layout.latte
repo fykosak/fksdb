@@ -30,7 +30,7 @@
                             {if in_array($contest->contest_id,$contestntsContests)}
                             {else}
                                 {php $rowNumber++}
-                                {var $contestntsContests[]=$contest->contest_id}
+                                {php $contestntsContests[]=$contest->contest_id}
                             {/if}
                         {/if}
                         {var $x1 = $scale($row['since'])*$width}

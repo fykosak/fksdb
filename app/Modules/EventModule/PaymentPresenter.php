@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Machine;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -88,7 +89,7 @@ class PaymentPresenter extends BasePresenter
         if (!$this->isAllowed($this->getEntity(), 'edit')) {
             $this->flashMessage(
                 \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
-                \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR
+                Message::LVL_ERROR
             );
             $this->redirect(':Core:MyPayments:');
         }

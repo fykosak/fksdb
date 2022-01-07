@@ -8,7 +8,7 @@ interface StateProps {
     stateTeams: ModelFyziklaniTeam[];
 }
 
-class UnRoutedTeams extends React.Component<StateProps, {}> {
+class UnRoutedTeams extends React.Component<StateProps> {
 
     public render() {
         const {stateTeams} = this.props;

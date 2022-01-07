@@ -2,12 +2,22 @@
 {varType FKSDB\Models\ORM\Models\ModelPerson $person}
 {varType int $userPermissions}
 {define person}
-    <div class="card-columns mt-3">
-        {control stalkingComponent "base_info", $person, $userPermissions}
-        {control stalkingComponent "extended_info", $person, $userPermissions}
-        {control stalkingComponent "academic_degree", $person, $userPermissions}
-        {control stalkingComponent "login", $person, $userPermissions}
-        {control flag $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control stalkingComponent "base_info", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control stalkingComponent "extended_info", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control stalkingComponent "academic_degree", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control stalkingComponent "login", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control flag $person, $userPermissions}
+        </div>
     </div>
 {/define}
 
@@ -17,10 +27,16 @@
 {/define}
 
 {define contact}
-    <div class="card-columns mt-3">
-        {control stalkingComponent "contact_info", $person, $userPermissions}
-        {control stalkingComponent "contact_parents", $person, $userPermissions}
-        {control address $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control stalkingComponent "contact_info", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control stalkingComponent "contact_parents", $person, $userPermissions}
+        </div>
+        <div class="col">
+            {control address $person, $userPermissions}
+        </div>
     </div>
     <h3>{_'Emails'}</h3>
     {control emailMessageGrid}
@@ -53,27 +69,29 @@
 {/define}
 
 {define validation}
-    <div class="card-columns mt-3">
-        {control validation $person, $userPermissions}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            {control validation $person, $userPermissions}
+        </div>
     </div>
 {/define}
 
 {block content}
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-item nav-link active" data-toggle="tab" href="#nav-person"
-           role="tab"><i class="fa fa-user mr-1"></i>{_'Person'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-person-history"
-           role="tab"><i class="fa fa-university mr-1"></i>{_'Person history'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contact"
-           role="tab"><i class="fa fa-phone mr-1"></i>{_'Contact'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-contests"
-           role="tab"><i class="fa fa-trophy mr-1"></i>{_'Contests'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-events"
-           role="tab"><i class="fa fa-calendar mr-1"></i>{_'Events'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-validation"
-           role="tab"><i class="fa fa-check mr-1"></i>{_'Validation'}</a>
-        <a class="nav-item nav-link" data-toggle="tab" href="#nav-timeline"
-           role="tab"><i class="fa fa-clock-o mr-1"></i>{_'Timeline'}</a>
+        <a class="nav-item nav-link active" data-bs-toggle="tab" data-bs-target="#nav-person"
+           role="tab"><i class="fa fa-user me-1"></i>{_'Person'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-person-history"
+           role="tab"><i class="fa fa-university me-1"></i>{_'Person history'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contact"
+           role="tab"><i class="fa fa-phone me-1"></i>{_'Contact'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-contests"
+           role="tab"><i class="fa fa-trophy me-1"></i>{_'Contests'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-events"
+           role="tab"><i class="fa fa-calendar me-1"></i>{_'Events'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-validation"
+           role="tab"><i class="fa fa-check me-1"></i>{_'Validation'}</a>
+        <a class="nav-item nav-link" data-bs-toggle="tab" data-bs-target="#nav-timeline"
+           role="tab"><i class="fa fa-clock-o me-1"></i>{_'Timeline'}</a>
     </div>
 
     <div class="tab-content mt-3" id="nav-tabContent">

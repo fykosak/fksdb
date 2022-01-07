@@ -27,7 +27,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}> {
+class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {
@@ -88,7 +88,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps, {}>
                 });
             }
         }
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<Date> = [];
         availablePoints.forEach((points) => {
             if (!activePoints || activePoints === points) {
                 lineChartData.push({

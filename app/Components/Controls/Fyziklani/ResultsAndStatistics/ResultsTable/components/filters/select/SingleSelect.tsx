@@ -20,7 +20,7 @@ interface DispatchProps {
     onSetFilter(filter: Filter): void;
 }
 
-class SingleSelect extends React.Component<StateProps & DispatchProps, {}> {
+class SingleSelect extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {categories, filters, onSetFilter, isOrg} = this.props;

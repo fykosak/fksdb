@@ -30,6 +30,7 @@ abstract class Machine extends AbstractMachine
     }
     /* **************** Select transition ****************/
 
+
     /**
      * @return Transition[]
      */
@@ -45,9 +46,10 @@ abstract class Machine extends AbstractMachine
      */
     public function getTransitionById(string $id): Transition
     {
-        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) use ($id): bool {
-            return $transition->getId() === $id;
-        });
+        $transitions = \array_filter(
+            $this->getTransitions(),
+            fn(Transition $transition): bool => $transition->getId() === $id
+        );
         return $this->selectTransition($transitions);
     }
 

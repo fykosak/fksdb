@@ -19,8 +19,8 @@ use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
-use FKSDB\Modules\Core\BasePresenter;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -127,7 +127,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent
             $this->serviceSchedulePayment->storeItems((array)$values['payment_accommodation'], $model); // TODO
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException | EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
             return;
         }

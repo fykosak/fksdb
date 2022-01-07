@@ -25,7 +25,7 @@ interface DispatchProps {
     onChangeSecondTeam(id: number): void;
 }
 
-class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> {
+class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
 
     public render() {
 
@@ -51,7 +51,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> 
                     <td>{countFiltered}</td>
                     <td>{countTotal}</td>
                     <td>
-                        <span className={'btn btn-primary btn-sm'} onClick={() => {
+                        <span className={'btn btn-outline-primary btn-sm'} onClick={() => {
                             this.props.onChangeFirstTeam(firstTeam.teamId);
                             this.props.onChangeSecondTeam(secondTeam.teamId);
                         }}>Detail</span>

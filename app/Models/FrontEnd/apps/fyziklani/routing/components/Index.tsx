@@ -1,4 +1,4 @@
-import StoreCreator from 'FKSDB/Models/FrontEnd/Loader/StoreCreator';
+import StoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/StoreCreator';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { Room } from '../../helpers/interfaces';
@@ -10,7 +10,7 @@ interface OwnProps {
     rooms: Room[];
 }
 
-export default class extends React.Component<OwnProps, {}> {
+export default class Index extends React.Component<OwnProps> {
     public render() {
         const {teams, rooms} = this.props;
 

@@ -1,8 +1,8 @@
 import { translator } from '@translator/translator';
 import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import {
 } from 'redux';
 
 interface StateProps {
-    error: Error | any;
+    error: Response | string | number | Error;
     isSubmitting: boolean;
     lastUpdated: string;
     refreshDelay: number;
@@ -31,13 +31,13 @@ interface OwnProps {
     data: ResponseData;
 }
 
-class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, {}> {
+class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> {
 
-    public componentDidUpdate(nextProps: DispatchProps & StateProps & OwnProps) {
-        const {lastUpdated: oldLastUpdated} = this.props;
-        if (oldLastUpdated !== nextProps.lastUpdated) {
+    public componentDidUpdate(oldProps: DispatchProps & StateProps & OwnProps) {
+        const {lastUpdated: oldLastUpdated} = oldProps;
+        if (oldLastUpdated !== this.props.lastUpdated) {
 
-            const {onWaitForFetch, refreshDelay} = nextProps;
+            const {onWaitForFetch, refreshDelay} = this.props;
             if (refreshDelay) {
                 const url = this.props.actions.getAction('refresh');
                 onWaitForFetch(refreshDelay, url);
@@ -50,10 +50,11 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
         return (
             <div className="last-update-info bg-white">
                 <i
+                    // @ts-ignore
                     title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
                     className={isRefreshing ? 'text-success fa fa-check' : 'text-danger fa fa-exclamation-triangle'}/>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
-                {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
+                {!isRefreshing && (<button className="btn btn-outline-primary btn-sm" onClick={() => {
                     const url = this.props.actions.getAction('refresh');
                     return onFetch(url);
                 }}>{translator.getText('Fetch')}</button>)}
@@ -64,10 +65,10 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
 
 const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
     return {
-        actions: state.fetchApi.actions,
-        error: state.fetchApi.error,
+        actions: state.fetch.actions,
+        error: state.fetch.error,
         isRefreshing: state.downloader.isRefreshing,
-        isSubmitting: state.fetchApi.submitting,
+        isSubmitting: state.fetch.submitting,
         lastUpdated: state.downloader.lastUpdated,
         refreshDelay: state.downloader.refreshDelay,
     };
@@ -75,9 +76,9 @@ const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onFetch: (url) => dispatchFetch<ResponseData>(url, dispatch, null),
-        onWaitForFetch: (delay: number, url: string): number => setTimeout(() => {
-            return dispatchFetch<ResponseData>(url, dispatch, null);
+        onFetch: (url) => dispatchNetteFetch<ResponseData>(url, dispatch, null),
+        onWaitForFetch: (delay: number, url: string): number => window.setTimeout(() => {
+            return dispatchNetteFetch<ResponseData>(url, dispatch, null);
         }, delay),
     };
 };
