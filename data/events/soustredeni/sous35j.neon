@@ -8,15 +8,15 @@ events:
             notifyBcc:
                 default: vercah@fykos.cz
             notifyFrom:
-                default: soustredeni@fykos.cz
+                default: <FYKOSí Soustředění> soustredeni@fykos.cz
             letterWhere:
                 default: Hejnice
             letterSignature:
-                default: #todo
+                default: Veronika Hendrychová
             letterDecisionDeadline:
-                default: #todo
+                default: 2022-04-04
             letterResolutionTime:
-                default: #todo
+                default: 2022-04-06
 
 
         baseMachines:

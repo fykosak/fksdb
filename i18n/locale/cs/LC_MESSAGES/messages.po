@@ -2663,7 +2663,7 @@ msgstr "Pouze CSV soubory jsou přijímány."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:53
 msgid "Error mode"
-msgstr "Cování při chybě."
+msgstr "Chování při chybě."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:55
 msgid "Stop import and rollback."
@@ -2675,7 +2675,7 @@ msgstr "Přeskočit přihlášku a pokračovat."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:60
 msgid "Stateless applications."
-msgstr "Přihlláška bez stavu."
+msgstr "Přihláška bez stavu."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:62
 msgid "Ignore."
@@ -2776,7 +2776,7 @@ msgstr "Rozdělení úloh opravovatelům uloženo"
 
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:31
 msgid "Comma separated submitIDs"
-msgstr "Čárkou oddělený seznam submitID"
+msgstr "Čárkami oddělený seznam submitID"
 
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:47
 #, php-format

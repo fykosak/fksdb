@@ -6,12 +6,12 @@
 {var $link = $control->link(...$linkArgs)}
 
 <p>
-    {if $person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if} Fyzikálního korespondenčního semináře,<br/>
-    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} dobrý výkon v uplynulých sériích FYKOSu, zveme Tě jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
+    {if $person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if} FYKOSu,<br/>
+    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} dobrý výkon v uplynulých sériích, zveme Tě jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>
-    Pandemická situace je stále nejistá, avšak pevně doufáme, že nám opatření během jara dovolí soustředění opět uskutečnit. Zatím můžeme s jistotou říct jen to, že bude potřeba očkování nebo alespoň negativní PCR test. Budeme také počítat s tím, že pokud se zúčastníš, přijedeš na celý pobyt.
+    Pandemická situace je stále nejistá, avšak pevně doufáme, že nám opatření během jara dovolí soustředění opět uskutečnit. Zatím můžeme s jistotou říct jen to, že bude potřeba očkování nebo minimálně negativní PCR test (nevylučujeme ani možnost, že obojí). Budeme také počítat s tím, že pokud se zúčastníš, přijedeš na celý pobyt.
 </p>
 
 <p>
@@ -20,8 +20,7 @@
 {include ../inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
 <p>
 <p>
-    Své rozhodnutí, zda bys chtěl{if $person->gender == 'F'}a{/if} přijet, kdyby se nám uvolnilo místo, nám dej vědět co nejdříve, nejpozději však do <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB, nebo pomocí
-    odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $person->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své případné účasti nám pak dej vědět
+    Své rozhodnutí, zda bys chtěl{if $person->gender == 'F'}a{/if} přijet, kdyby se nám uvolnilo místo, nám dej vědět co nejdříve, nejpozději však do <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím <a href="https://db.fykos.cz/">FKSDB</a>, nebo pomocí odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $person->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své případné účasti nám pak dej vědět
     na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře je dole tlačítko na odmítnutí účasti). Alespoň Ti pak nebudou chodit upomínky.
 </p>
 <p>
@@ -38,6 +37,7 @@
     na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>
-    Za organizátory se na Tebe moc těší<br>
+    Těšíme se na Tebe!<br>
+    Za organizátory<br>
     {$holder->getParameter('letterSignature')}
 </p>
