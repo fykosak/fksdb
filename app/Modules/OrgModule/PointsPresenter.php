@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\{ModelContest, ModelLogin, ModelTask, ModelTaskContr
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -97,9 +98,9 @@ class PointsPresenter extends BasePresenter
     {
         try {
             $this->resultsCache->invalidate($this->getSelectedContestYear());
-            $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points invalidated.'), Message::LVL_INFO);
         } catch (\Exception $exception) {
-            $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during invalidation.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
 
@@ -120,9 +121,9 @@ class PointsPresenter extends BasePresenter
                 $this->resultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
             }
 
-            $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
-            $this->flashMessage(_('Error while recounting.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
 
@@ -133,9 +134,9 @@ class PointsPresenter extends BasePresenter
     {
         try {
             $this->resultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
-            $this->flashMessage(_('Calculate quiz points.'), self::FLASH_INFO);
+            $this->flashMessage(_('Calculate quiz points.'), Message::LVL_INFO);
         } catch (\Exception $exception) {
-            $this->flashMessage(_('Error during calculation.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during calculation.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
     }

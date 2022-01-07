@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-abstract class AbstractPerSeriesChart extends ReactComponent implements Chart
+abstract class AbstractPerSeriesChart extends FrontEndComponent implements Chart
 {
 
     protected ModelContest $contest;

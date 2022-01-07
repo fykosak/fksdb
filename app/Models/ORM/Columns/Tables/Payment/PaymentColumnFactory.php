@@ -42,6 +42,6 @@ class PaymentColumnFactory extends ColumnFactory {
     }
 
     protected function renderNullModel(): Html {
-        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Payment not found'));
+        return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText(_('Payment not found'));
     }
 }

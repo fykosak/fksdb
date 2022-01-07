@@ -1,21 +1,21 @@
 import { ACTION_DRAG_END, ACTION_DROP_ITEM } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 
-export interface State<D> {
-    data?: D;
+export interface State<Data> {
+    data?: Data;
 }
 
-function dragEnd<D>(state: State<D>): State<D> {
+const dragEnd = <Data>(state: State<Data>): State<Data> => {
     return {
         ...state,
         data: null,
     };
 }
 
-export function dragNDrop<D = any>(state: State<D> = {data: null}, action): State<D> {
+export const dragNDrop = <Data>(state: State<Data> = {data: null}, action): State<Data> => {
     switch (action.type) {
         case ACTION_DROP_ITEM:
         case ACTION_DRAG_END:
-            return dragEnd<D>(state);
+            return dragEnd<Data>(state);
         default:
             return state;
     }

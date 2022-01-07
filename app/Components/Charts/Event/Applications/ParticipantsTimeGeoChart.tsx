@@ -34,7 +34,7 @@ export default class ParticipantsTimeGeoChart extends React.Component<OwnProps, 
             <div className="form-group">
                 <input type="range"
                        step={day}
-                       className="form-control"
+                       className="form-range"
                        max={Math.ceil(maxTimestamp / day) * day}
                        min={Math.floor(minTimestamp / day) * day}
                        onChange={(event) => {

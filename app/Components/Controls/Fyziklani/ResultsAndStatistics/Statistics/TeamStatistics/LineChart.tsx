@@ -24,7 +24,7 @@ interface OwnProps {
     teamId: number;
 }
 
-class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
+class PointsInTime extends React.Component<StateProps & OwnProps> {
 
     public render() {
         const {
@@ -52,7 +52,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
             yValue: number;
             xValue: Date;
         }> = [];
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<Date> = [];
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {

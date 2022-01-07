@@ -24,19 +24,29 @@
 
 {define plain}
     {varType Nette\Forms\Controls\TextInput $field}
-    <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        {label $field}
-            {input $field class: $field->getControlPrototype()->type != 'file'?'form-control':'form-control-file'}
+    {switch $field->control->type}
+        {case 'range'}
+        <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field,'form-range')">
+            {label $field}
+            {input $field class: 'form-control ' . $field->getControlPrototype()->class}
             {include metadata field => $field}
-    </div>
+        </div>
+        {default}
+        <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
+            {label $field}
+            {input $field class: ($field->getControlPrototype()->type != 'file'?'form-control':'form-control-file') . ' ' . $field->getControlPrototype()->class}
+            {include metadata field => $field}
+        </div>
+    {/switch}
+
 {/define}
 
 {define checkbox}
     {varType Nette\Forms\Controls\Checkbox $field}
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
-        <div class="form-check">
-            {input $field class: 'form-check-input'}
-            {label $field class: 'form-check-label'}
+        <div class="form-check mb-3">
+            {input $field class: 'form-check-input ' . $field->getControlPrototype()->class}
+            {label $field class: 'form-check-label ' . $field->getLabelPrototype()->class}
         </div>
         {include metadata field => $field}
     </div>
@@ -47,9 +57,9 @@
     <div n:attr="(expand) FKSDB\Components\Controls\FormControl\FormControl::buildContainerAttributes($field)">
         {label $field}
         {foreach $field->getItems() as $key => $item}
-            <div class="form-check">
-                {input $field:$key class: 'form-check-input'}
-                {label $field:$key class: 'form-check-label'}
+            <div class="form-check mb-3">
+                {input $field:$key class: 'form-check-input ' . $field->getControlPrototype()->class}
+                {label $field:$key class: 'form-check-label ' . $field->getLabelPrototype()->class}
             </div>
         {/foreach}
         {include metadata field => $field}
@@ -58,7 +68,7 @@
 
 {define button}
     {varType Nette\Forms\Controls\Button $field}
-    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-primary':''))}
+    {input $field class:('btn ' . (!\Nette\Utils\Strings::contains('btn-',(string)$field->getControlPrototype()->getAttribute('class'))?'btn btn-outline-primary':''))}
 {/define}
 
 {define buttonArray}
@@ -71,7 +81,7 @@
     {php ksort($buttonRows)}
     {foreach $buttonRows as $row}
         {if $row}
-            <div class="btn-group col-12">
+            <div class="col-12">
                 {foreach $row as $button}
                     {include button field => $button}
                 {/foreach}
@@ -95,6 +105,7 @@
     {varType Nette\Forms\Controls\BaseControl[] $controls}
     {var $buttons = []}
     {foreach $controls as $name => $field}
+        {dump $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}

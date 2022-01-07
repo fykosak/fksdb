@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { LineChartData } from './middleware';
 
-interface OwnProps {
-    data: LineChartData;
+interface OwnProps<XValue extends Date | number> {
+    data: LineChartData<XValue>;
 }
 
-export default class LineChartLegend extends React.Component<OwnProps, {}> {
+export default class LineChartLegend<XValue extends Date | number> extends React.Component<OwnProps<XValue>> {
 
     public render() {
         const {data} = this.props;

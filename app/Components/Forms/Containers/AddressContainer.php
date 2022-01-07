@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
-use Nette\Utils\ArrayHash;
 
 class AddressContainer extends ModelContainer {
 

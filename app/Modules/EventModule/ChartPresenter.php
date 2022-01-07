@@ -10,6 +10,7 @@ use FKSDB\Components\Charts\Event\Applications\ParticipantsTimeGeoChart;
 use FKSDB\Components\Charts\Event\Applications\TeamsGeoChart;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\SingleComponent;
 use FKSDB\Components\Charts\Event\ApplicationsTimeProgress\TeamComponent;
+use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Components\Charts\Event\ParticipantAcquaintance\ParticipantAcquaintanceChart;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
@@ -65,6 +66,10 @@ class ChartPresenter extends BasePresenter
             'teamsPerCountry' => new TeamsGeoChart($this->getContext(), $this->getEvent()),
             'ratioPerCountry' => new ApplicationRationGeoChart($this->getContext(), $this->getEvent()),
             'participantsInTimeGeo' => new ParticipantsTimeGeoChart($this->getContext(), $this->getEvent()),
+            'model' => new GraphComponent(
+                $this->getContext(),
+                $this->eventDispatchFactory->getEventMachine($this->getEvent())->getPrimaryMachine()
+            ),
         ];
     }
 }

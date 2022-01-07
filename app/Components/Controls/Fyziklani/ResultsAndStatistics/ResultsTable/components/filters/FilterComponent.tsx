@@ -12,21 +12,21 @@ interface OwnProps {
 
 }
 
-export default class FilterComponent extends React.Component<OwnProps, {}> {
+export default class FilterComponent extends React.Component<OwnProps> {
 
     public render() {
         const {active, onClick, onCloseClick, filter, type} = this.props;
 
         return <a
             href="#"
-            className={'badge ml-3 ' + (active ? 'badge-success' : ('badge-' + (type ? type : 'secondary')))}
+            className={'badge ms-3 ' + (active ? 'bg-success' : ('bg-' + (type ? type : 'secondary')))}
             onClick={() => {
                 if (onClick) {
                     onClick(filter);
                 }
             }}
         >{filter.getHeadline()}
-            {onCloseClick && (<span className="ml-3" onClick={() => {
+            {onCloseClick && (<span className="ms-3" onClick={() => {
                 onCloseClick(filter);
             }}>&times;</span>)}
         </a>;

@@ -12,7 +12,7 @@ interface StateProps {
     onActivePoints: (points: number) => void;
 }
 
-class Legend extends React.Component<StateProps, {}> {
+class Legend extends React.Component<StateProps> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];

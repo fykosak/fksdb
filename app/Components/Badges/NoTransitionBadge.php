@@ -11,7 +11,7 @@ class NoTransitionBadge extends Badge
     public static function getHtml(...$args): Html
     {
         return Html::el('span')
-            ->addAttributes(['class' => 'badge badge-warning'])
+            ->addAttributes(['class' => 'badge bg-warning'])
             ->addText(_('No transitions available'));
     }
 }

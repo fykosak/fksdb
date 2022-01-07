@@ -11,7 +11,7 @@ interface OwnProps {
     data: YearsData;
 }
 
-export default class PerSeriesChart extends React.Component<OwnProps, {}> {
+export default class PerSeriesChart extends React.Component<OwnProps> {
 
     public render() {
         const colorScale = scaleOrdinal(schemeCategory10);
@@ -39,7 +39,7 @@ export default class PerSeriesChart extends React.Component<OwnProps, {}> {
             }
         }
 
-        const legendData: LineChartData = [];
+        const legendData: LineChartData<number> = [];
         for (let series = 1; series <= maxSeries; series++) {
             legendData.push({
                 color: colorScale(series.toString()),

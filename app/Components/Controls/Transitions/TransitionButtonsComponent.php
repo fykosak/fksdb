@@ -6,9 +6,9 @@ namespace FKSDB\Components\Controls\Transitions;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
@@ -37,11 +37,11 @@ class TransitionButtonsComponent extends BaseComponent
         try {
             $this->machine->executeTransitionById($name, $this->holder);
         } catch (ForbiddenRequestException | UnavailableTransitionsException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return;
         } catch (\Exception $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage(_('Some error emerged'), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->redirect('this');
     }

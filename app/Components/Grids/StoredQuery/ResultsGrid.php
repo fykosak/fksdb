@@ -62,9 +62,8 @@ class ResultsGrid extends BaseGrid
                         $parameters[ResultsComponent::PARAMETER_URL_PREFIX . $key] = $queryParameters[$key];
                     }
                 }
-                $this->addGlobalButton('qid')
-                    ->setLabel(_('Link'))
-                    ->setClass('btn btn-sm btn-secondary')
+                $this->addGlobalButton('qid', _('Link'))
+                    ->setClass('btn btn-sm btn-outline-secondary')
                     ->setLink($this->getPresenter()->link(':Org:Export:execute', $parameters));
             }
         }

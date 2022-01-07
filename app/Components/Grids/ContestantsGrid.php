@@ -63,8 +63,7 @@ class ContestantsGrid extends BaseGrid
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
-        $this->addGlobalButton('add')
-            ->setLabel(_('Create contestant'))
+        $this->addGlobalButton('add',_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
         $this->paginate = false;

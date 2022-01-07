@@ -69,13 +69,9 @@ class PersonSearchContainer extends SearchContainer
     {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term): ?ModelPerson {
-                    return $this->servicePerson->findByEmail($term);
-                };
+                return fn($term): ?ModelPerson => $this->servicePerson->findByEmail($term);
             case self::SEARCH_ID:
-                return function ($term): ?ModelPerson {
-                    return $this->servicePerson->findByPrimary($term);
-                };
+                return fn($term): ?ModelPerson => $this->servicePerson->findByPrimary($term);
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
@@ -85,13 +81,9 @@ class PersonSearchContainer extends SearchContainer
     {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term): array {
-                    return ['person_info' => ['email' => $term]];
-                };
+                return fn($term): array => ['person_info' => ['email' => $term]];
             case self::SEARCH_ID:
-                return function (): array {
-                    return [];
-                };
+                return fn(): array => [];
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }

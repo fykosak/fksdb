@@ -58,9 +58,10 @@ class Holder
     public function setPrimaryHolder(string $name): void
     {
         $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
-            return $baseHolder !== $this->primaryHolder;
-        });
+        $this->secondaryBaseHolders = array_filter(
+            $this->baseHolders,
+            fn(BaseHolder $baseHolder): bool => $baseHolder !== $this->primaryHolder
+        );
     }
 
     public function getPrimaryHolder(): BaseHolder

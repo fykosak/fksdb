@@ -1,4 +1,5 @@
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import {
     Action,
     Dispatch,
@@ -12,12 +13,12 @@ export interface SubmitFormRequest {
     points: number;
 }
 
-export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<any> => {
+export const submitStart = async (dispatch: Dispatch<Action<string>>, values: SubmitFormRequest, url): Promise<DataResponse<SubmitFormRequest>> => {
     const data = {
         ...values,
         code: getFullCode(values.code),
     };
-    return dispatchFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data), () => {
-        dispatch(reset(FORM_NAME));
-    });
-};
+    const responseData = await dispatchNetteFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data));
+    dispatch(reset(FORM_NAME))
+    return responseData;
+}

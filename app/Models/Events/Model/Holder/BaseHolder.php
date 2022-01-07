@@ -22,7 +22,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
-class BaseHolder {
+class BaseHolder
+{
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
@@ -53,11 +54,13 @@ class BaseHolder {
 
     public array $data = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->name = $name;
     }
 
-    public function addField(Field $field): void {
+    public function addField(Field $field): void
+    {
         $field->setBaseHolder($this);
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -303,9 +306,7 @@ class BaseHolder {
      */
     public function getDeterminingFields(): array
     {
-        return array_filter($this->fields, function (Field $field): bool {
-            return $field->isDetermining();
-        });
+        return array_filter($this->fields, fn(Field $field): bool => $field->isDetermining());
     }
 
     public function createFormContainer(): ContainerWithOptions

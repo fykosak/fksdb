@@ -15,7 +15,7 @@ class AvailablePointsColumnFactory extends ColumnFactory{
         $container = Html::el('span');
         foreach ($model->getAvailablePoints() as $points) {
             $container->addHtml(Html::el('span')
-                ->addAttributes(['class' => 'badge badge-secondary mr-1'])
+                ->addAttributes(['class' => 'badge bg-secondary me-1'])
                 ->addText($points));
         }
         return $container;

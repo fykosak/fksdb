@@ -8,8 +8,6 @@ use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsComponent;
 use FKSDB\Components\Controls\Choosers\LanguageChooserComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\StylesheetCollector;
 use FKSDB\Components\Controls\Navigation\NavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooserComponent;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
@@ -22,11 +20,9 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\UI\PageStyleContainer;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
-use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\YearCalculator;
-use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
@@ -38,18 +34,9 @@ use Nette\DI\Container;
  * Base presenter for all application presenters.
  */
 abstract class BasePresenter extends Presenter implements
-    JavaScriptCollector,
-    StylesheetCollector,
     AutocompleteJSONProvider,
     NavigablePresenter
 {
-    use CollectorPresenterTrait;
-
-    public const FLASH_SUCCESS = Message::LVL_SUCCESS;
-    public const FLASH_INFO = Message::LVL_INFO;
-    public const FLASH_WARNING = Message::LVL_WARNING;
-    public const FLASH_ERROR = Message::LVL_ERROR;
-
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent

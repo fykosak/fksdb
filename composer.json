@@ -35,8 +35,9 @@
     "setasign/fpdf": "1.8.2",
     "setasign/fpdi": "1.5.4",
     "league/oauth2-google": "3.0.3",
-    "fykosak/nette-orm": "dev-master#eb50e74",
-    "fykosak/nette-fks-utils": "dev-master#469ab13"
+    "fykosak/nette-orm": "^v0.4.0",
+    "fykosak/nette-fks-utils": "dev-master#42c5458",
+    "fykosak/nette-frontend-component": "dev-master#21fe118"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "3.6.0"

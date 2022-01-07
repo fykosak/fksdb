@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Authorization\EventAuthorizator;
-use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
@@ -11,6 +12,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
@@ -74,8 +76,8 @@ class ResultsAndStatisticsComponent extends AjaxComponent
             'gameStart' => $gameSetup->game_start->format('c'),
             'gameEnd' => $gameSetup->game_end->format('c'),
             'times' => [
-                'toStart' => strtotime($gameSetup->game_start) - time(),
-                'toEnd' => strtotime($gameSetup->game_end) - time(),
+                'toStart' => $gameSetup->game_start->getTimestamp() - time(),
+                'toEnd' => $gameSetup->game_end->getTimestamp() - time(),
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
@@ -100,11 +102,10 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     /**
      * @throws InvalidLinkException
      */
-    protected function getActions(): array
+    protected function configure(): void
     {
-        return [
-            'refresh' => $this->link('refresh!', ['lastUpdated' => (new DateTime())->format('c')]),
-        ];
+        $this->addAction('refresh', 'refresh!', ['lastUpdated' => (new DateTime())->format('c')]);
+        parent::configure();
     }
 
     /**

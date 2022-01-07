@@ -8,11 +8,11 @@ interface OwnProps {
     params: Params;
 }
 
-export default class Container extends React.Component<OwnProps, {}> {
+export default class Container extends React.Component<OwnProps> {
 
     public render() {
         const {groups, params} = this.props;
-        return <div className="schedule-container schedule-container-accommodation ml-3">
+        return <div className="schedule-container schedule-container-accommodation ms-3">
             {groups.map((group, index) => {
                 return <Group key={index} group={group} params={params}/>;
             })}
