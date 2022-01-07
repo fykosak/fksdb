@@ -1022,6 +1022,9 @@ orm:
         e_dsef_group:
             service: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
             model: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
+        unsubscribed_email:
+            model: Fykosak\NetteORM\DummyModel
+            service: FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail
 
 services:
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
