@@ -24,7 +24,7 @@ class AnonymousTest extends FolTestCase
             'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
-            'eventId' => $this->eventId,
+            'eventId' => $this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -57,7 +57,7 @@ class AnonymousTest extends FolTestCase
                     ],
                     'person_history' => [
                         'school_id__meta' => 'JS',
-                        'school_id' => (string)1,
+                        'school_id' => (string)$this->genericSchool->school_id,
                         'study_year' => '',
                     ],
                 ],
@@ -70,11 +70,11 @@ class AnonymousTest extends FolTestCase
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $teamApplication = $this->assertTeamApplication($this->eventId, 'Okurkový tým');
+        $teamApplication = $this->assertTeamApplication($this->event, 'Okurkový tým');
         Assert::equal(sha1('1234'), $teamApplication->password);
         Assert::equal(ModelFyziklaniTeam::CATEGORY_OPEN, $teamApplication->category);
 
-        $application = $this->assertApplication($this->eventId, 'ksaad@kalo.cz');
+        $application = $this->assertApplication($this->event, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_fyziklani_participant');

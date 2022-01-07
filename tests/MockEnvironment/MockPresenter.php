@@ -16,7 +16,7 @@ class MockPresenter extends BasePresenter
      * @param mixed ...$args
      * @throws InvalidLinkException
      */
-    public function link($destination, ...$args): string
+    public function link(string $destination, $args=[]): string
     {
         return '';
     }

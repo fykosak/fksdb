@@ -6,11 +6,21 @@ namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelPersonHistory;
+use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Services\ServiceAddress;
+use FKSDB\Models\ORM\Services\ServiceContestYear;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\YearCalculator;
 use Nette\Database\Explorer;
-use Nette\Database\Row;
 use Nette\DI\Container;
-use Tester\Assert;
 use Tester\Environment;
 use Tester\TestCase;
 
@@ -20,6 +30,8 @@ abstract class DatabaseTestCase extends TestCase
     private Container $container;
     protected Explorer $explorer;
     private int $instanceNo;
+
+    protected ModelSchool $genericSchool;
 
     /**
      * DatabaseTestCase constructor.
@@ -43,19 +55,17 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $this->explorer->query(
-            "INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)"
+        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel(
+            ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
         );
-        $this->explorer->query(
-            "INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)"
+        $this->genericSchool = $this->container->getByType(ServiceSchool::class)->createNewModel(
+            ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
-        $this->explorer->query(
-            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, ?)",
-            YearCalculator::getCurrentAcademicYear()
+        $this->getContainer()->getByType(ServiceContestYear::class)->createNewModel(
+            ['contest_id' => ModelContest::ID_FYKOS, 'year' => 1, 'ac_year' => YearCalculator::getCurrentAcademicYear()]
         );
-        $this->explorer->query(
-            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, ?)",
-            YearCalculator::getCurrentAcademicYear()
+        $this->getContainer()->getByType(ServiceContestYear::class)->createNewModel(
+            ['contest_id' => ModelContest::ID_VYFUK, 'year' => 1, 'ac_year' => YearCalculator::getCurrentAcademicYear()]
         );
     }
 
@@ -72,66 +82,61 @@ abstract class DatabaseTestCase extends TestCase
         ]);
     }
 
-    protected function createPerson(string $name, string $surname, array $info = [], ?array $loginData = null): int
-    {
-        $this->explorer->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
-        $personId = $this->explorer->getInsertId();
+    protected function createPerson(
+        string $name,
+        string $surname,
+        array $info = [],
+        ?array $loginData = null
+    ): ModelPerson {
+        $person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel(
+            ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
+        );
 
         if ($info) {
-            $info['person_id'] = $personId;
-            $this->insert(DbNames::TAB_PERSON_INFO, $info);
+            $info['person_id'] = $person->person_id;
+            $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel($info);
         }
 
         if (!is_null($loginData)) {
             $data = [
-                'login_id' => $personId,
-                'person_id' => $personId,
+                'login_id' => $person->person_id,
+                'person_id' => $person->person_id,
                 'active' => 1,
             ];
             $loginData = array_merge($data, $loginData);
 
-            $this->insert(DbNames::TAB_LOGIN, $loginData);
+            $this->getContainer()->getByType(ServiceLogin::class)->createNewModel($loginData);
 
             if (isset($loginData['hash'])) {
                 // TODO
                 $pseudoLogin = (object)$loginData;
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
-                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $personId);
+                $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
             }
         }
 
-        return (int)$personId;
+        return $person;
     }
 
-    protected function assertPersonInfo(int $personId): Row
+    protected function assertPersonInfo(ModelPerson $person): ModelPersonInfo
     {
-        $personInfo = $this->explorer->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
-        Assert::notEqual(null, $personInfo);
-        return $personInfo;
+        return $person->getInfo();
     }
 
     protected function createPersonHistory(
-        int $personId,
+        ModelPerson $person,
         int $acYear,
-        ?int $school = null,
+        ?ModelSchool $school = null,
         ?int $studyYear = null,
         ?string $class = null
-    ): int {
-        $this->explorer->query(
-            'INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)',
-            $personId,
-            $acYear,
-            $school,
-            $class,
-            $studyYear
-        );
-        return (int)$this->explorer->getInsertId();
-    }
-
-    protected function insert(string $table, array $data): int
-    {
-        $this->explorer->query("INSERT INTO `$table`", $data);
-        return (int)$this->explorer->getInsertId();
+    ): ModelPersonHistory {
+        return $this->getContainer()->getByType(ServicePersonHistory::class)->createNewModel([
+            'person_id' => $person->person_id,
+            'ac_year' => $acYear,
+            'school_id' => $school ? $school->school_id : null,
+            'class' => $class,
+            'study_year' => $studyYear,
+        ]);
     }
 
     protected function truncateTables(array $tables): void

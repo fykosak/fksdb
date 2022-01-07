@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\ServiceContestant;
 
 $container = require '../../Bootstrap.php';
 
@@ -18,7 +19,7 @@ class PublicModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->personId, 'contest_id' => 1, 'year' => 1]);
+        $this->getContainer()->getByType(ServiceContestant::class)->createNewModel(['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1]);
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array

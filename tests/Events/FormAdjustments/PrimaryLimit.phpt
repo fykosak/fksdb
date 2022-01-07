@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
@@ -23,7 +24,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
+            'eventId' => (string)$this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -77,10 +78,11 @@ class PrimaryLimit extends ResourceAvailabilityTestCase
 
         Assert::equal(
             2,
-            (int)$this->explorer->fetchField(
-                'SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?',
-                $this->eventId
-            )
+            (int)$this->getContainer()
+                ->getByType(ServiceEventParticipant::class)
+                ->getTable()
+                ->where(['event_id' => $this->event->event_id])
+                ->sum('accomodation')
         );
     }
 

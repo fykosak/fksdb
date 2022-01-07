@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServiceGrant;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
@@ -19,9 +24,7 @@ abstract class StalkingTestCase extends DatabaseTestCase
 {
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $personId;
-
+    protected ModelPerson $person;
     protected IPresenter $fixture;
 
     /**
@@ -37,15 +40,15 @@ abstract class StalkingTestCase extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->personId = $this->insert(DbNames::TAB_PERSON, [
+        $this->person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'born_family_name' => 'Travisový',
             'display_name' => 'Tester Githubový',
             'gender' => 'M',
         ]);
-        $this->insert(DbNames::TAB_PERSON_INFO, [
-            'person_id' => $this->personId,
+        $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel([
+            'person_id' => $this->person->person_id,
             'preferred_lang' => 'cs',
             'born' => '1989-11-17',
             'id_number' => 'ABCD1234',
@@ -68,21 +71,23 @@ abstract class StalkingTestCase extends DatabaseTestCase
             'email_parent_d' => 'tester_d@example.com',
             'email_parent_m' => 'tester_m@example.com',
         ]);
-
-        $userPersonId = $this->insert(DbNames::TAB_PERSON, [
+        $userPerson = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $userPersonId, 'active' => 1]);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $userPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
-        $this->insert(
-            DbNames::TAB_GRANT,
-            ['login_id' => $loginId, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
+        $login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+            ['person_id' => $userPerson->person_id, 'active' => 1]
+        );
+        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+            ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
+        );
+        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+            ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
         );
         $this->fixture = $this->createPresenter('Org:Person');
-        $this->authenticate($loginId, $this->fixture);
+        $this->authenticate($login, $this->fixture);
     }
 
     abstract protected function getUserRoleId(): int;
@@ -95,7 +100,7 @@ abstract class StalkingTestCase extends DatabaseTestCase
             'contestId' => 1,
             'year' => 1,
             'series' => 1,
-            'id' => $this->personId,
+            'id' => $this->person->person_id,
         ]);
     }
 }

@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
@@ -24,16 +31,12 @@ abstract class SubmitTestCase extends DatabaseTestCase
 
     public const TOKEN = 'foo';
     public const FILE_01 = 'file01.pdf';
-    protected int $taskAll;
-    protected int $taskRestricted;
-    protected int $personId;
-    protected int $contestantId;
+    protected ModelTask $taskAll;
+    protected ModelTask $taskRestricted;
+    protected ModelPerson $person;
+    protected ModelContestant $contestant;
     protected IPresenter $fixture;
 
-    /**
-     * SubmitTestCase constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);
@@ -44,54 +47,56 @@ abstract class SubmitTestCase extends DatabaseTestCase
     {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
-
-        $this->taskAll = $this->insert('task', [
+        $serviceTask = $this->getContainer()->getByType(ServiceTask::class);
+        $serviceTaskStudyYear = $this->getContainer()->getByType(ServiceTaskStudyYear::class);
+        $this->taskAll = $serviceTask->createNewModel([
             'label' => '1',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '6',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '7',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '8',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskAll,
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskAll->task_id,
             'study_year' => '9',
         ]);
 
-        $this->taskRestricted = $this->insert('task', [
+        $this->taskRestricted = $serviceTask->createNewModel([
             'label' => '2',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskRestricted,
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskRestricted->task_id,
             'study_year' => '6',
         ]);
-        $this->insert('task_study_year', [
-            'task_id' => $this->taskRestricted,
+        $serviceTaskStudyYear->createNewModel([
+            'task_id' => $this->taskRestricted->task_id,
             'study_year' => '7',
         ]);
 
-        $this->personId = $this->createPerson('Matyáš', 'Korvín', [], []);
-        $this->contestantId = $this->insert('contestant_base', [
+        $this->person = $this->createPerson('Matyáš', 'Korvín', [], []);
+        $this->contestant = $this->getContainer()->getByType(ServiceContestant::class)->createNewModel([
             'contest_id' => 1,
             'year' => 1,
-            'person_id' => $this->personId,
+            'person_id' => $this->person->person_id,
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
-        $this->authenticate($this->personId, $this->fixture);
+        $this->authenticate($this->person->person_id, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
 
@@ -143,38 +148,38 @@ abstract class SubmitTestCase extends DatabaseTestCase
     {
         $request = $this->createPostRequest([
             'upload' => 'Odeslat',
-            'tasks' => "$this->taskAll,$this->taskRestricted",
+            'tasks' => $this->taskAll->task_id . ',' . $this->taskRestricted->task_id,
             '_token_' => self::TOKEN,
         ]);
 
         $request->setFiles([
-            "task$this->taskAll" => $this->createFileUpload(),
-            "task$this->taskRestricted" => $this->createFileUpload(),
+            'task' . $this->taskAll->task_id => $this->createFileUpload(),
+            'task' . $this->taskRestricted->task_id => $this->createFileUpload(),
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $this->assertSubmit($this->contestantId, $this->taskAll);
+        $this->assertSubmit($this->contestant, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): Row
+    protected function assertSubmit(ModelContestant $contestant, ModelTask $task): ModelSubmit
     {
-        $submit = $this->explorer->fetch(
-            'SELECT * FROM submit WHERE ct_id = ? AND task_id = ?',
-            $contestantId,
-            $taskId
-        );
+        $submit = $this->getContainer()
+            ->getByType(ServiceSubmit::class)
+            ->getTable()
+            ->where(['ct_id' => $contestant->ct_id, 'task_id' => $task->task_id])
+            ->fetch();
         Assert::notEqual(null, $submit);
         return $submit;
     }
 
-    protected function assertNotSubmit(int $contestantId, int $taskId): void
+    protected function assertNotSubmit(ModelContestant $contestant, ModelTask $task): void
     {
-        $submit = $this->explorer->fetch(
-            'SELECT * FROM submit WHERE ct_id = ? AND task_id = ?',
-            $contestantId,
-            $taskId
-        );
+        $submit = $this->getContainer()
+            ->getByType(ServiceSubmit::class)
+            ->getTable()
+            ->where(['ct_id' => $contestant->ct_id, 'task_id' => $task->task_id])
+            ->fetch();
         Assert::equal(null, $submit);
     }
 }

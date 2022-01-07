@@ -120,7 +120,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
                         ],
                         'person_history' => [
                             'school_id__meta' => "JS",
-                            'school_id' => "1",
+                            'school_id' => (string)$this->genericSchool->school_id,
                             'study_year' => "2",
                             'class' => "2.F",
                         ],

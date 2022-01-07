@@ -45,7 +45,7 @@ class ApplicationHandlerTest extends EventTestCase
         $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
     }
 
-    protected function getEventId(): int
+    protected function getEvent(): ModelEvent
     {
         throw new BadRequestException();
     }
@@ -53,17 +53,15 @@ class ApplicationHandlerTest extends EventTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel([
+            'event_type_id' => 1,
+            'year' => 1,
+            'event_year' => 1,
+            'begin' => '2001-01-02',
+            'end' => '2001-01-02',
+            'name' => 'Testovací Fyziklání',
+        ]);
 
-        $this->explorer->query(
-            "INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
-            . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')"
-        );
-
-        /** @var ServiceEvent $serviceEvent */
-        $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
-
-        /** @var ModelEvent $event */
-        $event = $serviceEvent->findByPrimary(1);
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
         $this->holder = $factory->getDummyHolder($event);
@@ -86,9 +84,9 @@ class ApplicationHandlerTest extends EventTestCase
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
-        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), 1, 1);
+        $this->createPersonHistory($id2, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
         $id3 = $this->createPerson('Kristína', 'Nešporová', ['email' => 'kiki@fykos.cz']);
-        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), 1, 1);
+        $this->createPersonHistory($id3, YearCalculator::getCurrentAcademicYear(), $this->genericSchool, 1);
 
         $teamName = '\'); DROP TABLE student; --';
 
@@ -98,7 +96,7 @@ class ApplicationHandlerTest extends EventTestCase
                     'name' => $teamName,
                     'phone' => '+420987654321',
                     'force_a' => false,
-                    'teacher_id' => (string)$id1,
+                    'teacher_id' => (string)$id1->person_id,
                     'teacher_id_1' =>
                         [
                             '_c_compact' => 'Karel Kolář',
@@ -117,7 +115,7 @@ class ApplicationHandlerTest extends EventTestCase
                 ],
             'p1' =>
                 [
-                    'person_id' => (string)$id2,
+                    'person_id' => (string)$id2->person_id,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Michal Koutný',
@@ -133,7 +131,7 @@ class ApplicationHandlerTest extends EventTestCase
                                 ],
                             'person_history' =>
                                 [
-                                    'school_id' => 1,
+                                    'school_id' => $this->genericSchool->school_id,
                                     'study_year' => 2,
                                 ],
                         ],
@@ -141,7 +139,7 @@ class ApplicationHandlerTest extends EventTestCase
                 ],
             'p2' =>
                 [
-                    'person_id' => (string)$id3,
+                    'person_id' => (string)$id3->person_id,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Kristína Nešporová',
@@ -156,7 +154,7 @@ class ApplicationHandlerTest extends EventTestCase
                                 ],
                             'person_history' =>
                                 [
-                                    'school_id' => 1,
+                                    'school_id' => $this->genericSchool->school_id,
                                     'study_year' => 3,
                                 ],
                         ],
