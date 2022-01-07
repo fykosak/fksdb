@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
+use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail;
 use Nette\DI\Container;
 use Nette\Mail\Mailer;
 use Tracy\Debugger;
@@ -19,6 +23,7 @@ $mailer = $container->getByType(Mailer::class);
 
 /** @var ServiceEmailMessage $serviceEmailMessage */
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
+$serviceUnsubscribedEmail = $container->getByType(ServiceUnsubscribedEmail::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $container->getParameters()['spamMailer']['defaultLimit']);
 $counter = 0;
@@ -30,11 +35,15 @@ foreach ($query as $model) {
         break;
     }
     try {
+        $serviceUnsubscribedEmail->checkEmail($model->recipient);
         $message = $model->toMessage();
         $mailer->send($message);
         $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
-    } catch (Throwable $e) {
+    } catch (UnsubscribedEmailException $exception) {
+        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_REJECTED]);
+        Debugger::log($exception, 'mailer-exceptions-unsubscribed');
+    } catch (Throwable $exception) {
         $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_FAILED]);
-        Debugger::log($e, 'mailer-exceptions');
+        Debugger::log($exception, 'mailer-exceptions');
     }
 }
