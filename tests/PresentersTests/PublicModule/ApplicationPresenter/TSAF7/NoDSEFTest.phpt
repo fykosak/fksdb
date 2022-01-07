@@ -21,7 +21,7 @@ class NoDSEFTest extends TsafTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authenticate($this->person->person_id, $this->fixture);
+        $this->authenticatePerson($this->person, $this->fixture);
 
         $this->tsafApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
             'person_id' => $this->person,

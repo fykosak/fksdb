@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\ServicePersonInfo;
 
 $container = require '../../Bootstrap.php';
 
-/**
- * Class OrgModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class OrgModule extends AbstractPageDisplayTestCase
 {
 

@@ -10,10 +10,6 @@ use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
 $container = require '../../Bootstrap.php';
 
-/**
- * Class FyziklaniModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class FyziklaniModule extends EventModuleTestCase
 {
 

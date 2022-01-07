@@ -9,37 +9,20 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceGrant;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
-use Nette\DI\Container;
 use Tester\Assert;
 
-/**
- * Class EntityPresenterTestCase
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class EntityPresenterTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
 
     protected ModelPerson $cartesianPerson;
     protected ModelLogin $login;
     protected Presenter $fixture;
-
-    /**
-     * OrgPresenter constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -75,7 +58,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
         $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
             ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
-        $this->authenticate($this->login, $this->fixture);
+        $this->authenticateLogin($this->login, $this->fixture);
     }
 
     protected function assertPageDisplay(Response $response): string

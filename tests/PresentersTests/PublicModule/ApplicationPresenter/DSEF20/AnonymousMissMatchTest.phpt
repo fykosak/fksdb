@@ -13,9 +13,6 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-/**
- * Class ApplicationPresenterTest
- */
 class AnonymousMissMatchTest extends DsefTestCase
 {
 

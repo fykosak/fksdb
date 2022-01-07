@@ -10,34 +10,16 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceGrant;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
-use Nette\DI\Container;
 use Tester\Assert;
 
-/**
- * Class PageDisplayTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
     protected ModelPerson $person;
     private ModelLogin $login;
-
-    /**
-     * PageDisplayTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -55,7 +37,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
         $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
             ['login_id' => $this->login->login_id, 'role_id' => 1000, 'contest_id' => 1]
         );
-        $this->authenticate($this->login->login_id);
+        $this->authenticateLogin($this->login);
     }
 
     final protected function createRequest(string $presenterName, string $action, array $params): Request
@@ -72,7 +54,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
     {
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
-        $this->authenticate($this->login->login_id, $fixture);
+        $this->authenticateLogin($this->login, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
         /** @var TextResponse $response */

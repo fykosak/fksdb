@@ -58,7 +58,7 @@ class DeleteTest extends ScheduleTestCase
         $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
             ['login_id' => $login->login_id, 'role_id' => 5, 'contest_id' => 1]
         );
-        $this->authenticate($login->login_id, $this->fixture);
+        $this->authenticateLogin($login, $this->fixture);
     }
 
     public function testRegistration(): void

@@ -11,10 +11,6 @@ use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 
 $container = require '../../../Bootstrap.php';
 
-/**
- * Class EventModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Schedule extends EventModuleTestCase
 {
 

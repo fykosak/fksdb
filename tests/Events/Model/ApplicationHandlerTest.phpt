@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -26,12 +25,9 @@ use Tester\Assert;
 
 class ApplicationHandlerTest extends EventTestCase
 {
-    use MockApplicationTrait;
 
     private ApplicationHandler $fixture;
-
     private ServiceFyziklaniTeam $serviceTeam;
-
     private Holder $holder;
 
     /**
@@ -41,7 +37,6 @@ class ApplicationHandlerTest extends EventTestCase
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->setContainer($container);
         $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
     }
 

@@ -56,13 +56,13 @@ class WriteOnlyTraitTest extends DsefTestCase
         ]);
 
         // create admin
-        $admin = $this->createPerson('Admin', 'Adminovič', [], []);
+        $admin = $this->createPerson('Admin', 'Adminovič', null, []);
         $this->getContainer()->getByType(ServiceGrant::class)->createNewModel([
             'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($admin->person_id, $this->fixture);
+        $this->authenticatePerson($admin, $this->fixture);
     }
 
     public function testDisplay(): void

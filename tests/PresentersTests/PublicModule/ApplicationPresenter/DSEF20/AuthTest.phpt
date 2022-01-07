@@ -20,7 +20,7 @@ class AuthTest extends DsefTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authenticate($this->person->person_id, $this->fixture);
+        $this->authenticatePerson($this->person, $this->fixture);
     }
 
     public function testDisplay(): void

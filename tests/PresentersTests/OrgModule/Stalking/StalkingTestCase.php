@@ -10,32 +10,14 @@ use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
-use Nette\DI\Container;
 
-/**
- * Class Stalking
- * @package Persons
- */
 abstract class StalkingTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
     protected ModelPerson $person;
     protected IPresenter $fixture;
-
-    /**
-     * Stalking constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -87,7 +69,7 @@ abstract class StalkingTestCase extends DatabaseTestCase
             ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
         );
         $this->fixture = $this->createPresenter('Org:Person');
-        $this->authenticate($login, $this->fixture);
+        $this->authenticateLogin($login, $this->fixture);
     }
 
     abstract protected function getUserRoleId(): int;

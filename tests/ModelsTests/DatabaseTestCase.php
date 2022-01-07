@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
@@ -19,28 +21,27 @@ use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\YearCalculator;
+use FKSDB\Tests\MockEnvironment\MockApplication;
+use FKSDB\Tests\MockEnvironment\MockPresenter;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Explorer;
 use Nette\DI\Container;
+use Nette\Http\Session;
+use Nette\Security\UserStorage;
 use Tester\Environment;
 use Tester\TestCase;
 
 abstract class DatabaseTestCase extends TestCase
 {
-
     private Container $container;
     protected Explorer $explorer;
     private int $instanceNo;
-
     protected ModelSchool $genericSchool;
 
-    /**
-     * DatabaseTestCase constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         $this->container = $container;
-
         $this->explorer = $container->getByType(Explorer::class);
         $max = $container->parameters['tester']['dbInstances'];
         $this->instanceNo = (getmypid() % $max) + 1;
@@ -58,14 +59,27 @@ abstract class DatabaseTestCase extends TestCase
         $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel(
             ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
         );
-        $this->genericSchool = $this->container->getByType(ServiceSchool::class)->createNewModel(
+        $this->genericSchool = $this->getContainer()->getByType(ServiceSchool::class)->createNewModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
-        $this->getContainer()->getByType(ServiceContestYear::class)->createNewModel(
-            ['contest_id' => ModelContest::ID_FYKOS, 'year' => 1, 'ac_year' => YearCalculator::getCurrentAcademicYear()]
+        $serviceContestYear = $this->getContainer()->getByType(ServiceContestYear::class);
+        $fykosData = [
+            'contest_id' => ModelContest::ID_FYKOS,
+            'year' => 1,
+            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+        ];
+        $vyfukData = [
+            'contest_id' => ModelContest::ID_VYFUK,
+            'year' => 1,
+            'ac_year' => YearCalculator::getCurrentAcademicYear(),
+        ];
+        $serviceContestYear->storeModel(
+            $fykosData,
+            $serviceContestYear->getTable()->where($fykosData)->fetch()
         );
-        $this->getContainer()->getByType(ServiceContestYear::class)->createNewModel(
-            ['contest_id' => ModelContest::ID_VYFUK, 'year' => 1, 'ac_year' => YearCalculator::getCurrentAcademicYear()]
+        $serviceContestYear->storeModel(
+            $vyfukData,
+            $serviceContestYear->getTable()->where($vyfukData)->fetch()
         );
     }
 
@@ -85,7 +99,7 @@ abstract class DatabaseTestCase extends TestCase
     protected function createPerson(
         string $name,
         string $surname,
-        array $info = [],
+        ?array $info = null,
         ?array $loginData = null
     ): ModelPerson {
         $person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel(
@@ -144,5 +158,52 @@ abstract class DatabaseTestCase extends TestCase
         foreach ($tables as $table) {
             $this->explorer->query("DELETE FROM `$table`");
         }
+    }
+
+    protected function mockApplication(): void
+    {
+        $mockPresenter = new MockPresenter();
+        $application = new MockApplication($mockPresenter);
+        $this->getContainer()->callInjects($mockPresenter);
+        $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
+        $mailFactory->injectApplication($application);
+    }
+
+    /**
+     * @param $token
+     * @param null $timeout
+     */
+    protected function fakeProtection($token, $timeout = null): void
+    {
+        /** @var Session $session */
+        $session = $this->getContainer()->getService('session');
+        $section = $session->getSection('Nette.Forms.Form/CSRF');
+        $key = "key$timeout";
+        $section->$key = $token;
+    }
+
+    protected function authenticateLogin(ModelLogin $login, ?Presenter $presenter = null): void
+    {
+        /** @var UserStorage $storage */
+        $storage = $this->getContainer()->getByType(UserStorage::class);
+        $storage->saveAuthentication($login);
+
+        if ($presenter) {
+            $presenter->getUser()->login($login);
+        }
+    }
+
+    protected function authenticatePerson(ModelPerson $person, ?Presenter $presenter = null): void
+    {
+        $this->authenticateLogin($person->getLogin(), $presenter);
+    }
+
+    protected function createPresenter(string $presenterName): Presenter
+    {
+        $_COOKIE['_nss'] = '1';
+        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
+        $presenter = $presenterFactory->createPresenter($presenterName);
+        $presenter->autoCanonicalize = false;
+        return $presenter;
     }
 }

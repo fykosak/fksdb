@@ -9,10 +9,6 @@ use FKSDB\Models\ORM\Services\ServiceContestant;
 
 $container = require '../../Bootstrap.php';
 
-/**
- * Class OrgModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class PublicModule extends AbstractPageDisplayTestCase
 {
 

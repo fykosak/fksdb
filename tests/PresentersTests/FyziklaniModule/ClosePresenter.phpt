@@ -87,7 +87,7 @@ class ClosePresenter extends FyziklaniTestCase
         $this->fixture = $this->createPresenter('Fyziklani:Close');
         $this->mockApplication();
 
-        $this->authenticate($this->userPerson->person_id, $this->fixture);
+        $this->authenticatePerson($this->userPerson, $this->fixture);
     }
 
     private function createCloseTeamRequest(array $formData, array $params = []): Request

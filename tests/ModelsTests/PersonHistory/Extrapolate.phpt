@@ -20,15 +20,10 @@ use Tester\Assert;
 
 class Extrapolate extends DatabaseTestCase
 {
-
     private ServicePersonHistory $service;
     private ModelPerson $person;
     private ModelSchool $school;
 
-    /**
-     * Extrapolate constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);

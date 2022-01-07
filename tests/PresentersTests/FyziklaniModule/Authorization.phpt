@@ -14,35 +14,21 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class Authorization extends FyziklaniTestCase
 {
-    use MockApplicationTrait;
-
     private ModelPerson $perPerson;
     private ModelPerson $perOrg;
     private ModelPerson $perOrgOther;
     private ModelPerson $perContestant;
     private ModelFyziklaniSubmit $submit;
-
-    /**
-     * AuthorizationTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -104,11 +90,11 @@ class Authorization extends FyziklaniTestCase
     public function getTestData(): array
     {
         return [
-            [null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perPerson', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perOrg', 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
-            ['perOrgOther', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perContestant', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perPerson, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perOrg, 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrgOther, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perContestant, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
         ];
     }
 
@@ -129,7 +115,7 @@ class Authorization extends FyziklaniTestCase
     /**
      * @dataProvider getTestData
      */
-    public function testAccess(?string $personCol, string $presenterName, array $actions, bool $results): void
+    public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
         if (!is_array($actions)) {
             $actions = [$actions];
@@ -138,9 +124,9 @@ class Authorization extends FyziklaniTestCase
             $results = array_fill(0, count($actions), $results);
         }
         $presenter = $this->createPresenter($presenterName);
-        if ($personCol) {
+        if ($person()) {
             /* Use indirect access because data provider is called before test set up. */
-            $this->authenticate($this->{$personCol}->person_id, $presenter);
+            $this->authenticatePerson($person(), $presenter);
         }
 
         foreach ($actions as $i => $action) {

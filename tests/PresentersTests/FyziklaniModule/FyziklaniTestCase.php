@@ -16,27 +16,13 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
     protected ModelEvent $event;
     protected ModelPerson $userPerson;
-
-    /**
-     * FyziklaniTestCase constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {

@@ -43,7 +43,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase
             'event_participant_id' => $this->app->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
-        $this->authenticate($person->person_id, $this->fixture);
+        $this->authenticatePerson($person, $this->fixture);
     }
 
     public function testDisplay(): void

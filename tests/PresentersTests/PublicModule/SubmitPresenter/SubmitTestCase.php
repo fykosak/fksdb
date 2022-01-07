@@ -12,12 +12,10 @@ use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Schema\Helpers;
 use Nette\Utils\Finder;
@@ -27,8 +25,6 @@ use Tester\Environment;
 
 abstract class SubmitTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
     public const TOKEN = 'foo';
     public const FILE_01 = 'file01.pdf';
     protected ModelTask $taskAll;
@@ -36,12 +32,6 @@ abstract class SubmitTestCase extends DatabaseTestCase
     protected ModelPerson $person;
     protected ModelContestant $contestant;
     protected IPresenter $fixture;
-
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -88,7 +78,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
             'study_year' => '7',
         ]);
 
-        $this->person = $this->createPerson('Matyáš', 'Korvín', [], []);
+        $this->person = $this->createPerson('Matyáš', 'Korvín', null, []);
         $this->contestant = $this->getContainer()->getByType(ServiceContestant::class)->createNewModel([
             'contest_id' => 1,
             'year' => 1,
@@ -96,7 +86,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
-        $this->authenticate($this->person->person_id, $this->fixture);
+        $this->authenticatePerson($this->person, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
 

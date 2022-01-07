@@ -15,10 +15,6 @@ use FKSDB\Models\ORM\Services\ServiceOrg;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-/**
- * Class EventPresenterTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventPresenterTest extends AbstractOrgPresenterTestCase
 {
 

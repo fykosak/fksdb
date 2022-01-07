@@ -19,13 +19,13 @@ class WithDSEFAnonymousTest extends TsafTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $admin = $this->createPerson('Admin', 'Adminovič', [], []);
+        $admin = $this->createPerson('Admin', 'Adminovič', null, []);
         $this->getContainer()->getByType(ServiceGrant::class)->createNewModel([
             'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($admin->person_id, $this->fixture);
+        $this->authenticatePerson($admin, $this->fixture);
 
         $dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
             'person_id' => $this->person->person_id,

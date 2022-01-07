@@ -20,10 +20,6 @@ use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-/**
- * Class EventOrgPresenterTest
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class EventOrgPresenterTest extends EntityPresenterTestCase
 {
 

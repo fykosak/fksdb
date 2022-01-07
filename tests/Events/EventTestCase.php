@@ -10,27 +10,14 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Database\Row;
-use Nette\DI\Container;
 use Nette\Schema\Helpers;
 use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
-    /**
-     * EventTestCase constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function tearDown(): void
     {
