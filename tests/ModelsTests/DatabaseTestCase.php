@@ -42,19 +42,24 @@ abstract class DatabaseTestCase extends TestCase
 
     protected function setUp(): void
     {
+        // TODO complete refactoring!!!!!
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->explorer->query(
-            "INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)"
+            "INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3) 
+ON DUPLICATE KEY UPDATE address_id=address_id"
         );
         $this->explorer->query(
-            "INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)"
+            "INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)  
+ON DUPLICATE KEY UPDATE school_id=school_id"
         );
         $this->explorer->query(
-            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, ?)",
+            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(1, 1, ?) 
+ON DUPLICATE KEY UPDATE contest_id=contest_id",
             YearCalculator::getCurrentAcademicYear()
         );
         $this->explorer->query(
-            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, ?)",
+            "INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, ?) 
+ON DUPLICATE KEY UPDATE contest_id=contest_id",
             YearCalculator::getCurrentAcademicYear()
         );
     }
