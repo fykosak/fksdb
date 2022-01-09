@@ -17,7 +17,7 @@ use FKSDB\Models\WebService\Models\{
     ExportWebModel,
     SignaturesWebModel,
     ResultsWebModel,
-    StatsWebModel
+    StatsWebModel,
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
