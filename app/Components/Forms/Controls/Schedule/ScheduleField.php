@@ -35,7 +35,7 @@ class ScheduleField extends TextInput
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
-        $this->registerFrontend('event.schedule.' . $type);
+        $this->registerFrontend('event.schedule');
         $this->appendProperty();
     }
 
