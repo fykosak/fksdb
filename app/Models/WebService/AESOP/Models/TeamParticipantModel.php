@@ -1,22 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 
-class TeamParticipantModel extends EventModel {
-
+class TeamParticipantModel extends EventModel
+{
     private string $category;
 
-    public function __construct(Container $container, ModelContestYear $contestYear, string $eventName, string $category) {
+    public function __construct(
+        Container $container,
+        ModelContestYear $contestYear,
+        string $eventName,
+        string $category
+    ) {
         parent::__construct($container, $contestYear, $eventName);
         $this->category = $category;
     }
 
-    public function createResponse(): PlainTextResponse {
-        $query = $this->explorer->query("select ap.*,
+    public function createResponse(): PlainTextResponse
+    {
+        $query = $this->explorer->query(
+            "select ap.*,
        eft.`rank_category`                        as `rank`,
        eft.`points`,
        if(eft.`status` = 'participated', '', 'N') as `status`
@@ -47,22 +56,28 @@ order by surname, name;",
         );
     }
 
-    private function mapCategory(): string {
+    private function mapCategory(): string
+    {
         switch ($this->category) {
             case 'zahranicni':
                 return 'F';
-            case'open':
+            case 'open':
                 return 'O';
             default:
                 return $this->category;
         }
     }
 
-    protected function getMask(): string {
+    protected function getMask(): string
+    {
         $mapping = [
             'fol' => 'Fol',
             'klani' => 'fyziklani',
         ];
-        return $this->contestYear->getContest()->getContestSymbol() . '.' . $mapping[$this->eventName] . '.' . $this->category;
+        return $this->contestYear->getContest()->getContestSymbol()
+            . '.'
+            . $mapping[$this->eventName]
+            . '.'
+            . $this->category;
     }
 }

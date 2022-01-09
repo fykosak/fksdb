@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use Nette\InvalidArgumentException;
+use Nette\SmartObject;
 
 class XMLHelper
 {
+    use SmartObject;
 
     public function __construct()
     {

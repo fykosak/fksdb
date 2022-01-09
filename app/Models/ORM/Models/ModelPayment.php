@@ -98,6 +98,26 @@ class ModelPayment extends AbstractModel implements Resource
         return Currency::from($this->currency);
     }
 
+    public function __toArray(): array
+    {
+        return [
+            'personId' => $this->person_id,
+            'paymentId' => $this->payment_id,
+            'paymentUId' => $this->getPaymentId(),
+            'state' => $this->state,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'constantSymbol' => $this->constant_symbol,
+            'variableSymbol' => $this->variable_symbol,
+            'specificSymbol' => $this->specific_symbol,
+            'bankAccount' => $this->bank_account,
+            'bankName' => $this->bank_name,
+            'recipient' => $this->recipient,
+            'iban' => $this->iban,
+            'swift' => $this->swift,
+        ];
+    }
+
     public function hasGeneratedSymbols(): bool
     {
         return $this->constant_symbol
