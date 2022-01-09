@@ -15,6 +15,7 @@
     <link rel="icon" href="{$basePath}/images/favicon.png" type="image/png" sizes="16x16">
     <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/smoothness/jquery-ui.css" rel="stylesheet"/>
     <link href="/assets/main.css" rel="stylesheet"/>
+
 </head>
 <!-- Random background generator -->
 <body data-bg="{rand(1,4)}" data-style-id="{join(' ',$pageStyleContainer->styleIds)}">
@@ -81,10 +82,7 @@
         {/block}
         {block flashes}
             {foreach $flashes as $flash}
-
-
-
-    <div class="alert alert-{$flash->type}">{$flash->message}</div>
+                <div class="alert alert-{$flash->type}">{$flash->message}</div>
             {/foreach}
         {/block}
         {include content}
@@ -117,10 +115,9 @@
     </div>
 </footer>
 {/block}
-<div id="spinner"></div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="/assets/bundle.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js" type="text/javascript"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" type="text/javascript"></script>
+<script src="/assets/bundle.min.js" type="text/javascript"></script>
 </body>
 </html>
