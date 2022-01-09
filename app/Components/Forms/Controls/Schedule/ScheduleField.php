@@ -76,26 +76,23 @@ class ScheduleField extends TextInput
             $group = ModelScheduleGroup::createFromActiveRow($row);
             $groupList[] = $this->serializeGroup($group);
         }
-        $options = $this->getRenderOptions();
-        return ['groups' => $groupList, 'options' => $options];
+        return ['groups' => $groupList, 'options' => $this->getRenderOptions()];
     }
 
     private function getRenderOptions(): array
     {
         $params = [
-            'display' => [
-                'capacity' => true,
-                'description' => true,
-                'groupLabel' => true,
-                'price' => true,
-                'groupTime' => false,
-            ],
+            'capacity' => true,
+            'description' => true,
+            'groupLabel' => true,
+            'price' => true,
+            'groupTime' => false,
         ];
         switch ($this->type) {
             case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
             case ModelScheduleGroup::TYPE_DSEF_MORNING:
-                $params['display']['price'] = false;
-                $params['display']['groupLabel'] = false;
+                $params['price'] = false;
+                $params['groupLabel'] = false;
                 break;
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 break;
@@ -104,12 +101,12 @@ class ScheduleField extends TextInput
             case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
             case ModelScheduleGroup::TYPE_VISA:
             case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
-                $params['display']['capacity'] = false;
-                $params['display']['price'] = false;
-                $params['display']['groupLabel'] = false;
+                $params['capacity'] = false;
+                $params['price'] = false;
+                $params['groupLabel'] = false;
                 break;
             case ModelScheduleGroup::TYPE_WEEKEND:
-                $params['display']['groupTime'] = true;
+                $params['groupTime'] = true;
         }
         return $params;
     }

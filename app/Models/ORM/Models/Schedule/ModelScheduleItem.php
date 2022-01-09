@@ -6,11 +6,11 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\Utils\Price\Currency;
+use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -47,16 +47,12 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
     /**
      * @throws \Exception
      */
-    public function getPrice(Currency $currency): Price
+    public function getPrice(): MultiCurrencyPrice
     {
-        switch ($currency->value) {
-            case Currency::EUR:
-                return new Price($currency, +$this->price_eur);
-            case Currency::CZK:
-                return new Price($currency, +$this->price_czk);
-            default:
-                throw new UnsupportedCurrencyException($currency);
-        }
+        return new MultiCurrencyPrice([
+            new Price(Currency::from(Currency::EUR), +$this->price_eur),
+            new Price(Currency::from(Currency::CZK), +$this->price_czk),
+        ]);
     }
 
     public function getInterested(): GroupedSelection

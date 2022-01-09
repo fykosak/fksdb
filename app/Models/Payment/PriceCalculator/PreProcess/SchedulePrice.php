@@ -7,6 +7,7 @@ namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
+use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 
 class SchedulePrice implements Preprocess
@@ -14,11 +15,11 @@ class SchedulePrice implements Preprocess
     /**
      * @throws UnsupportedCurrencyException|\Exception
      */
-    public static function calculate(ModelPayment $modelPayment): Price
+    public static function calculate(ModelPayment $modelPayment): MultiCurrencyPrice
     {
-        $price = new Price($modelPayment->getCurrency(), 0);
+        $price = MultiCurrencyPrice::createFromCurrencies([$modelPayment->getCurrency()]);
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
-            $modelPrice = $model->getScheduleItem()->getPrice($modelPayment->getCurrency());
+            $modelPrice = $model->getScheduleItem()->getPrice();
             $price->add($modelPrice);
         }
         return $price;
@@ -37,7 +38,7 @@ class SchedulePrice implements Preprocess
             $scheduleItem = $model->getScheduleItem();
             $items[] = [
                 'label' => $model->getLabel(),
-                'price' => $scheduleItem->getPrice($modelPayment->getCurrency()),
+                'price' => $scheduleItem->getPrice(),
             ];
         }
         return $items;

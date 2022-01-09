@@ -6,12 +6,13 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
-use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
@@ -23,6 +24,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
@@ -38,6 +40,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent
     private PaymentMachine $machine;
     private ServicePayment $servicePayment;
     private ServiceSchedulePayment $serviceSchedulePayment;
+    private SingleReflectionFormFactory $reflectionFormFactory;
 
     public function __construct(
         Container $container,
@@ -54,12 +57,14 @@ class PaymentFormComponent extends AbstractEntityFormComponent
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
-        ServiceSchedulePayment $serviceSchedulePayment
+        ServiceSchedulePayment $serviceSchedulePayment,
+        SingleReflectionFormFactory $reflectionFormFactory
     ): void {
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
         $this->serviceSchedulePayment = $serviceSchedulePayment;
+        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton
@@ -67,6 +72,10 @@ class PaymentFormComponent extends AbstractEntityFormComponent
         return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
     }
 
+    /**
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void
     {
         if ($this->isOrg) {
@@ -77,14 +86,16 @@ class PaymentFormComponent extends AbstractEntityFormComponent
         } else {
             $form->addHidden('person_id');
         }
-        $currencyField = new CurrencyField();
+        /** @var SelectBox $currencyField */
+        $currencyField = $this->reflectionFormFactory->createField('payment', 'currency');
+        // $currencyField->setItems($this->machine->priceCalculator->getAllowedCurrencies());
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
         $form->addComponent(
             new PersonPaymentContainer(
                 $this->getContext(),
-                $this->machine->getEvent(),
-                $this->machine->getScheduleGroupTypes(),
+                $this->machine->event,
+                $this->machine->scheduleGroupTypes,
                 !$this->isCreating()
             ),
             'payment_accommodation'
@@ -114,7 +125,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent
             $this->machine->saveAndExecuteImplicitTransition(
                 $holder,
                 array_merge($data, [
-                    'event_id' => $this->machine->getEvent()->event_id,
+                    'event_id' => $this->machine->event->event_id,
                 ])
             );
             $model = $holder->getModel();

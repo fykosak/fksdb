@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -11,9 +13,11 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class OrderColumnFactory extends ColumnFactory {
+class OrderColumnFactory extends ColumnFactory
+{
 
-    public function getOrderMapping(): array {
+    public function getOrderMapping(): array
+    {
         return [
             0 => '0 - ' . _('Passive organiser'),
             1 => '1 - ' . _('Organiser'),
@@ -29,16 +33,18 @@ class OrderColumnFactory extends ColumnFactory {
     }
 
     /**
-     * @param AbstractModel|ModelOrg $model
+     * @param ModelOrg $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         if (\array_key_exists($model->order, $this->getOrderMapping())) {
             return (new StringPrinter())($this->getOrderMapping()[$model->order]);
         }
         return (new StringPrinter())($model->order);
     }
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems($this->getOrderMapping());

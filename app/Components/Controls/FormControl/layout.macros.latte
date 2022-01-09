@@ -105,7 +105,6 @@
     {varType Nette\Forms\Controls\BaseControl[] $controls}
     {var $buttons = []}
     {foreach $controls as $name => $field}
-        {dump $field}
         {if method_exists($field,'getOption')}
             {continueIf !$field->getOption('visible', true)}
             {if !$field instanceof Nette\Forms\Controls\Button}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -9,22 +11,26 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
 use Nette\Utils\Html;
 
-class GenderColumnFactory extends ColumnFactory {
+class GenderColumnFactory extends ColumnFactory
+{
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new RadioList($this->getTitle(), $this->createOptions());
         $control->setDefaultValue('M');
         return $control;
     }
 
-    private function createOptions(): array {
+    private function createOptions(): array
+    {
         return ['M' => _('Male'), 'F' => _('Female')];
     }
 
     /**
-     * @param AbstractModel|ModelPerson $model
+     * @param ModelPerson $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         if ($model->gender == 'F') {
             return Html::el('span')->addAttributes(['class' => 'fa fa-venus']);
         } elseif ($model->gender == 'M') {

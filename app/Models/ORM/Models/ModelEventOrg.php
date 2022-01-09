@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
@@ -12,27 +14,33 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string note
  * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModel implements Resource {
+class ModelEventOrg extends AbstractModel implements Resource
+{
 
     public const RESOURCE_ID = 'event.org';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return $this->getEvent()->getContest();
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->getPerson()->__toString();
     }
 }

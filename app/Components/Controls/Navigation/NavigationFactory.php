@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -29,12 +30,11 @@ class NavigationFactory
     }
 
     /**
-     * @return Presenter|NavigablePresenter
      * @throws BadRequestException
      * @throws BadTypeException
      */
     public function preparePresenter(
-        Presenter $ownPresenter,
+        BasePresenter $ownPresenter,
         string $presenterName,
         string $action,
         ?array $providedParams
@@ -45,8 +45,8 @@ class NavigationFactory
             $providedParams,
             $ownPresenter->getParameters()
         );
-        if (!$presenter instanceof NavigablePresenter) {
-            throw new BadTypeException(NavigablePresenter::class, $presenter);
+        if (!$presenter instanceof BasePresenter) {
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
         return $presenter;
     }

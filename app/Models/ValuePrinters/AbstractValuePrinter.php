@@ -7,7 +7,7 @@ use Nette\Utils\Html;
 
 abstract class AbstractValuePrinter {
     /**
-     * @param null $value
+     * @param mixed $value
      */
     abstract protected function getHtml($value): Html;
 

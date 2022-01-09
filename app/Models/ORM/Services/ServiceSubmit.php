@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
@@ -12,11 +14,13 @@ use Fykosak\NetteORM\AbstractService;
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
  */
-class ServiceSubmit extends AbstractService {
+class ServiceSubmit extends AbstractService
+{
 
     private array $submitCache = [];
 
-    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
+    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit
+    {
         $key = $ctId . ':' . $taskId;
         if (!isset($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
@@ -28,7 +32,8 @@ class ServiceSubmit extends AbstractService {
         return $this->submitCache[$key];
     }
 
-    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?ModelSubmit {
+    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?ModelSubmit
+    {
         $key = $contestant->ct_id . ':' . $task->task_id;
         if (!isset($this->submitCache[$key]) || !$useCache) {
             $row = $contestant->related(DbNames::TAB_SUBMIT)->where('task_id', $task->task_id)->fetch();
@@ -37,7 +42,8 @@ class ServiceSubmit extends AbstractService {
         return $this->submitCache[$key];
     }
 
-    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
+    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array
+    {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -11,12 +13,14 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
-class StudyYearColumnFactory extends ColumnFactory {
+class StudyYearColumnFactory extends ColumnFactory
+{
 
     /**
      * @throws \InvalidArgumentException
      */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         [$contestYear] = $args;
         if (\is_null($contestYear)) {
             throw new \InvalidArgumentException();
@@ -28,19 +32,24 @@ class StudyYearColumnFactory extends ColumnFactory {
         return $control;
     }
 
-    private function createOptions(ModelContestYear $contestYear): array {
+    private function createOptions(ModelContestYear $contestYear): array
+    {
         $hsYears = [];
         foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
+            $hsYears[$studyYear] = sprintf(
+                _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear));
+                YearCalculator::getGraduationYear($studyYear, $contestYear)
+            );
         }
 
         $primaryYears = [];
         foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
+            $primaryYears[$studyYear] = sprintf(
+                _('grade %d (expected graduation in %d)'),
                 $studyYear,
-                YearCalculator::getGraduationYear($studyYear, $contestYear));
+                YearCalculator::getGraduationYear($studyYear, $contestYear)
+            );
         }
 
         return [
@@ -49,7 +58,8 @@ class StudyYearColumnFactory extends ColumnFactory {
         ];
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -10,9 +12,8 @@ final class ReferencedAccessor
 
     /**
      * @template T
-     * @param class-string<T>|string $modelClassName
-     * @return T|ActiveRow|null
-     * @throws CannotAccessModelException
+     * @param string $modelClassName
+     * @return ?T
      */
     public static function accessModel(ActiveRow $model, string $modelClassName): ?ActiveRow
     {

@@ -15,7 +15,7 @@ class TeamColumnFactory extends ColumnFactory
 {
 
     /**
-     * @param ModelEventParticipant|AbstractModel $model
+     * @param ModelEventParticipant $model
      */
     protected function createHtmlValue(AbstractModel $model): Html
     {

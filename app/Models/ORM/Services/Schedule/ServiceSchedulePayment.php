@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
@@ -12,7 +14,8 @@ use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 
-class ServiceSchedulePayment extends AbstractService {
+class ServiceSchedulePayment extends AbstractService
+{
 
     /**
      * @throws DuplicatePaymentException
@@ -21,7 +24,8 @@ class ServiceSchedulePayment extends AbstractService {
      * @throws StorageException
      * @throws ModelException
      */
-    public function storeItems(array $data, ModelPayment $payment): void {
+    public function storeItems(array $data, ModelPayment $payment): void
+    {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }
@@ -46,9 +50,10 @@ class ServiceSchedulePayment extends AbstractService {
         }
     }
 
-    private function filerData(array $data): array {
+    private function filerData(array $data): array
+    {
         $results = [];
-        foreach ($data as $person => $values) {
+        foreach ($data as $values) {
             foreach ($values as $id => $value) {
                 if ($value) {
                     $results[] = $id;

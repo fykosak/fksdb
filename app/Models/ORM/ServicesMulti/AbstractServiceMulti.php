@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\ServicesMulti;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -7,7 +9,6 @@ use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
-use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
 /**
@@ -17,7 +18,6 @@ use Nette\SmartObject;
  */
 abstract class AbstractServiceMulti
 {
-
     use SmartObject;
 
     public OldAbstractServiceSingle $mainService;
@@ -56,10 +56,9 @@ abstract class AbstractServiceMulti
     }
 
     /**
-     * @param ActiveRow|AbstractModelMulti $model
      * @throws ModelException
      */
-    public function updateModel(ActiveRow $model, array $data): bool
+    public function updateModel(AbstractModelMulti $model, array $data): bool
     {
         $this->checkType($model);
         $this->mainService->updateModel($model->mainModel, $data);

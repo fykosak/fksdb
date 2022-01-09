@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Events;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -13,13 +15,16 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int e_fyziklani_team_id
  * @property-read ActiveRow e_fyziklani_team
  */
-class ModelFyziklaniParticipant extends AbstractModel {
+class ModelFyziklaniParticipant extends AbstractModel
+{
 
-    public function getEventParticipant(): ModelEventParticipant {
+    public function getEventParticipant(): ModelEventParticipant
+    {
         return ModelEventParticipant::createFromActiveRow($this->event_participant);
     }
 
-    public function getFyziklaniTeam(): ModelFyziklaniTeam {
+    public function getFyziklaniTeam(): ModelFyziklaniTeam
+    {
         return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
     }
 }

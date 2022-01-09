@@ -87,7 +87,7 @@ class ModelPayment extends AbstractModel implements Resource
      */
     public function getPrice(): Price
     {
-        return new  Price($this->getCurrency(), $this->price);
+        return new Price($this->getCurrency(), $this->price);
     }
 
     /**

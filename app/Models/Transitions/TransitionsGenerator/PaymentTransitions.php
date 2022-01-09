@@ -41,7 +41,7 @@ abstract class PaymentTransitions implements TransitionsDecorator
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
         $machine->setImplicitCondition(
-            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID)
+            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->event, ModelPayment::RESOURCE_ID)
         );
 
         $this->decorateTransitionInitToNew($machine);

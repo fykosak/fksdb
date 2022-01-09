@@ -4,15 +4,16 @@ namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\Results\ModelCategory;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
  */
-class EvaluationVyfuk2011 extends EvaluationStrategy {
+class EvaluationVyfuk2011 implements EvaluationStrategy
+{
 
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
             new ModelCategory(ModelCategory::CAT_ES_7),
@@ -24,7 +25,8 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
     /**
      * @return int[]
      */
-    public function categoryToStudyYears(ModelCategory $category): array {
+    public function categoryToStudyYears(ModelCategory $category): array
+    {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
                 return [6];
@@ -39,22 +41,23 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
         }
     }
 
-    public function getPointsColumn(ActiveRow $task): string {
+    public function getPointsColumn(ModelTask $task): string
+    {
         return 's.raw_points';
     }
 
-    public function getSumColumn(): string {
+    public function getSumColumn(): string
+    {
         return 's.raw_points';
     }
 
-    /**
-     * @param ActiveRow|ModelTask $task
-     */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
+    public function getTaskPoints(ModelTask $task, ModelCategory $category): int
+    {
         return $task->points;
     }
 
-    public function getTaskPointsColumn(ModelCategory $category): string {
+    public function getTaskPointsColumn(ModelCategory $category): string
+    {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }
 }

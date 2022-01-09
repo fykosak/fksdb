@@ -29,17 +29,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 
 const renderer = new Renderer();
-[
-    'accommodation',
-    'visa',
-    'accommodation_gender',
-    'accommodation_teacher',
-    'teacher_present',
-    'weekend',
-    'weekend_info',
-    'dsef_morning',
-    'dsef_afternoon',
-].forEach((value) => renderer.hashMapLoader.register('event.schedule.' + value, eventSchedule));
+renderer.hashMapLoader.register('event.schedule', eventSchedule);
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
 renderer.hashMapLoader.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
