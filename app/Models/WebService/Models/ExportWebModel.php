@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\StoredQuery\StoredQuery;
