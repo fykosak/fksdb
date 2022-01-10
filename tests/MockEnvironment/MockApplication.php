@@ -11,10 +11,6 @@ class MockApplication
 
     private BasePresenter $presenter;
 
-    /**
-     * MockApplication constructor.
-     * @param BasePresenter $presenter
-     */
     public function __construct(BasePresenter $presenter)
     {
         $this->presenter = $presenter;

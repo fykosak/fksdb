@@ -14,13 +14,18 @@ class RestrictedUpload extends SubmitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->createPersonHistory($this->personId, YearCalculator::getCurrentAcademicYear(), 1, 9);
+        $this->createPersonHistory(
+            $this->person,
+            YearCalculator::getCurrentAcademicYear(),
+            $this->genericSchool,
+            9
+        );
     }
 
     public function testSubmit(): void
     {
         $this->innerTestSubmit();
-        $this->assertNotSubmit($this->contestantId, $this->taskRestricted);
+        $this->assertNotSubmit($this->contestant, $this->taskRestricted);
     }
 }
 
