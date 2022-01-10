@@ -21,7 +21,7 @@ class PaymentMachine extends Machine {
     private ServicePayment $servicePayment;
 
     public function __construct(Explorer $explorer, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
-        parent::__construct($explorer, $servicePayment);
+        parent::__construct($explorer);
         $this->serviceEvent = $serviceEvent;
         $this->servicePayment = $servicePayment;
     }

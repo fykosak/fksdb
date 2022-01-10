@@ -6,11 +6,12 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
+use Fykosak\Utils\Price\Currency;
+use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -44,15 +45,15 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
     }
 
     /**
-     * @throws UnsupportedCurrencyException
+     * @throws \Exception
      */
-    public function getPrice(string $currency): Price
+    public function getPrice(Currency $currency): Price
     {
-        switch ($currency) {
-            case Price::CURRENCY_EUR:
-                return new Price(+$this->price_eur, $currency);
-            case Price::CURRENCY_CZK:
-                return new Price(+$this->price_czk, $currency);
+        switch ($currency->value) {
+            case Currency::EUR:
+                return new Price($currency, +$this->price_eur);
+            case Currency::CZK:
+                return new Price($currency, +$this->price_czk);
             default:
                 throw new UnsupportedCurrencyException($currency);
         }
@@ -142,12 +143,12 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
         $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', (string)$this->schedule_item_id);
         XMLHelper::fillArrayToNode([
-                                       'scheduleGroupId' => $this->schedule_group_id,
-                                       'totalCapacity' => $this->capacity,
-                                       'usedCapacity' => $this->getUsedCapacity(),
-                                       'scheduleItemId' => $this->schedule_item_id,
-                                       'requireIdNumber' => $this->require_id_number,
-                                   ], $document, $node);
+            'scheduleGroupId' => $this->schedule_group_id,
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'requireIdNumber' => $this->require_id_number,
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'description' => [
                 'cs' => $this->description_cs,
@@ -157,13 +158,13 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
             ],
-        ],                                  $document, $node);
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => [
                 'eur' => $this->price_eur,
                 'czk' => $this->price_czk,
             ],
-        ],                                  $document, $node);
+        ], $document, $node);
         return $node;
     }
 

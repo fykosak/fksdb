@@ -1,13 +1,13 @@
 import {
-    inputConnector,
-    State as InputConnectorState,
-} from 'FKSDB/Models/FrontEnd/InputConnector/reducer';
+    inputConnectorReducer,
+    InputConnectorStateMap,
+} from 'vendor/fykosak/nette-frontend-component/src/InputConnector/reducer';
 import { combineReducers } from 'redux';
 
 export const app = combineReducers({
-    inputConnector,
+    inputConnector: inputConnectorReducer,
 });
 
 export interface Store {
-    inputConnector: InputConnectorState;
+    inputConnector: InputConnectorStateMap;
 }

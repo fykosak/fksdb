@@ -4,7 +4,6 @@ namespace FKSDB\Models\Fyziklani;
 
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\Utils\CSVParser;
@@ -41,19 +40,19 @@ class FyziklaniTaskImportProcessor {
                         'event_id' => $this->event->event_id,
                     ]);
 
-                    $logger->log(new Message(sprintf(_('Task %s "%s" added'), $row['label'], $row['name']), BasePresenter::FLASH_SUCCESS));
+                    $logger->log(new Message(sprintf(_('Task %s "%s" added'), $row['label'], $row['name']), Message::LVL_SUCCESS));
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                     $this->serviceFyziklaniTask->updateModel($task, [
                         'label' => $row['label'],
                         'name' => $row['name'],
                     ]);
-                    $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
+                    $logger->log(new Message(sprintf(_('Task %s "%s" updated'), $row['label'], $row['name']), Message::LVL_INFO));
                 } else {
                     $logger->log(new Message(
                         sprintf(_('Task %s "%s" not updated'), $row['label'], $row['name']), Message::LVL_WARNING));
                 }
             } catch (\Exception $exception) {
-                $logger->log(new Message(_('There was an error'), BasePresenter::FLASH_ERROR));
+                $logger->log(new Message(_('There was an error'), Message::LVL_ERROR));
                 Debugger::log($exception);
                 $connection->rollBack();
                 return;

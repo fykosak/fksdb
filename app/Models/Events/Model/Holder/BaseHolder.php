@@ -11,18 +11,19 @@ use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractModel;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
-class BaseHolder {
+class BaseHolder
+{
 
     public const STATE_COLUMN = 'status';
     public const EVENT_COLUMN = 'event_id';
@@ -53,11 +54,13 @@ class BaseHolder {
 
     public array $data = [];
 
-    public function __construct(string $name) {
+    public function __construct(string $name)
+    {
         $this->name = $name;
     }
 
-    public function addField(Field $field): void {
+    public function addField(Field $field): void
+    {
         $field->setBaseHolder($this);
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -184,12 +187,12 @@ class BaseHolder {
 
     public function saveModel(): void
     {
-        if ($this->getModelState() == Machine::STATE_TERMINATED) {
+        if ($this->getModelState() == AbstractMachine::STATE_TERMINATED) {
             $model = $this->getModel2();
             if ($model) {
                 $this->service->dispose($model);
             }
-        } elseif ($this->getModelState() != Machine::STATE_INIT) {
+        } elseif ($this->getModelState() != AbstractMachine::STATE_INIT) {
             $this->model = $this->service->storeModel($this->data, $this->getModel2());
         }
     }
@@ -204,7 +207,7 @@ class BaseHolder {
             return $model[self::STATE_COLUMN];
         }
 
-        return Machine::STATE_INIT;
+        return AbstractMachine::STATE_INIT;
     }
 
     public function setModelState(string $state): void
@@ -303,9 +306,7 @@ class BaseHolder {
      */
     public function getDeterminingFields(): array
     {
-        return array_filter($this->fields, function (Field $field): bool {
-            return $field->isDetermining();
-        });
+        return array_filter($this->fields, fn(Field $field): bool => $field->isDetermining());
     }
 
     public function createFormContainer(): ContainerWithOptions

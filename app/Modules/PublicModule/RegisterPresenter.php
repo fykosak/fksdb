@@ -21,7 +21,7 @@ use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
 use FKSDB\Models\Persons\SelfResolver;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use Fykosak\NetteORM\AbstractModel;
@@ -87,12 +87,12 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     /* ********************* TITLE ***************** */
     public function titleContest(): PageTitle
     {
-        return new PageTitle(_('Select contest'));
+        return new PageTitle(null, _('Select contest'));
     }
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(_('Select year'), '', $this->getSelectedContest()->name);
+        return new PageTitle(null, _('Select year'), '', $this->getSelectedContest()->name);
     }
 
     public function getSelectedContest(): ?ModelContest
@@ -102,7 +102,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(_('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
+        return new PageTitle(null, _('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
     }
 
     /* ********************* ACTIONS ***************** */
@@ -110,6 +110,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     public function titleContestant(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,
@@ -134,7 +135,10 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $person = $this->getPerson();
 
             if (!$person) {
-                $this->flashMessage(_('User must be a person in order to register as a contestant.'), self::FLASH_INFO);
+                $this->flashMessage(
+                    _('User must be a person in order to register as a contestant.'),
+                    Message::LVL_INFO
+                );
                 $this->redirect(':Core:Authentication:login');
             }
         } else {
@@ -159,7 +163,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
                 // TODO FIXME persistent flash
                 $this->flashMessage(
                     sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name),
-                    self::FLASH_INFO
+                    Message::LVL_INFO
                 );
                 $this->redirect(':Core:Authentication:login');
             }
@@ -211,11 +215,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(
             ExtendedPersonHandler::EL_PERSON
         );
-        if ($person) {
-            $referencedId->setDefaultValue($person);
-        } else {
-            $referencedId->setDefaultValue(ReferencedId::VALUE_PROMISE);
-        }
+        $referencedId->setDefaultValue($person ?? ReferencedId::VALUE_PROMISE);
     }
 
     public function getModel(): ?AbstractModel
@@ -252,9 +252,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->emailFormSucceeded($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->emailFormSucceeded($form);
         return $control;
     }
 
@@ -266,7 +264,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     /**
      * @throws BadTypeException
-     * @throws \ReflectionException|UnsupportedLanguageException
+     * @throws \ReflectionException
      */
     protected function createComponentContestantForm(): FormControl
     {
@@ -354,7 +352,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
             $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
-            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->styleIds[] = $contest->getContestSymbol();
         }
         parent::beforeRender();
     }

@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
 
@@ -16,12 +17,12 @@ class DiplomasPresenter extends BasePresenter
 
     public function titleResults(): PageTitle
     {
-        return new PageTitle(_('Final results'), 'fa fa-trophy');
+        return new PageTitle(null, _('Final results'), 'fa fa-trophy');
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Calculate ranking'), 'fa fa-calculator');
+        return new PageTitle(null, _('Calculate ranking'), 'fa fa-calculator');
     }
 
     /**
@@ -29,7 +30,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizedResults(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'results'));
     }
 
     /**
@@ -37,7 +38,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function authorizeDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
+        $this->setAuthorized($this->isAllowed('fyziklani.diplomas', 'calculate'));
     }
 
     /**
@@ -73,7 +74,7 @@ class DiplomasPresenter extends BasePresenter
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
             ),
-            \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS
+            Message::LVL_SUCCESS
         );
         $this->redirect('this');
     }

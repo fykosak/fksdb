@@ -6,8 +6,9 @@ import TextInput from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Inp
 import ErrorBlock from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ErrorBlock';
 import ValueDisplay from 'FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay';
 import { Store as SubmitStore } from 'FKSDB/Components/Controls/Fyziklani/Submit/reducer';
-import { Message } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { Message } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
@@ -24,7 +25,7 @@ export interface OwnProps {
 }
 
 interface DispatchProps {
-    onSubmit(values: SubmitFormRequest): Promise<any>;
+    onSubmit(values: SubmitFormRequest): Promise<DataResponse<SubmitFormRequest>>;
 }
 
 interface StateProps {
@@ -85,12 +86,12 @@ const mapStateToProps = (state: SubmitStore): StateProps => {
     const selector = formValueSelector(FORM_NAME);
     return {
         code: selector(state, 'code'),
-        messages: state.fetchApi.messages,
+        messages: state.fetch.messages,
     };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(
-    reduxForm<{ code: string }, any, string>({
+    reduxForm<{ code: string }, OwnProps, string>({
         form: FORM_NAME,
         validate,
     })(Container),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Events\GraphComponent;
+use FKSDB\Components\Charts\Event\Model\GraphComponent;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use Fykosak\Utils\UI\PageTitle;
@@ -17,12 +17,12 @@ class ModelPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
+        $this->setAuthorized($this->isAllowed('event.model', 'default'));
     }
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Model of event'), 'fa fa-project-diagram');
+        return new PageTitle(null, _('Model of event'), 'fa fa-project-diagram');
     }
 
     /**

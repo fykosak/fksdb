@@ -23,6 +23,7 @@ use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\TypedTableSelection;
@@ -72,7 +73,7 @@ class SubmitPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Submitted solutions'), 'fas fa-cloud-upload-alt');
+        return new PageTitle(null, _('Submitted solutions'), 'fas fa-cloud-upload-alt');
     }
 
     public function titleAjax(): PageTitle
@@ -82,7 +83,7 @@ class SubmitPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Submit a solution'), 'fas fa-cloud-upload-alt');
+        return new PageTitle(null, _('Submit a solution'), 'fas fa-cloud-upload-alt');
     }
 
     final public function renderDefault(): void
@@ -210,9 +211,7 @@ class SubmitPresenter extends BasePresenter
 
             $form->setCurrentGroup();
             $form->addSubmit('upload', _('Submit'));
-            $form->onSuccess[] = function (Form $form) {
-                $this->handleUploadFormSuccess($form);
-            };
+            $form->onSuccess[] = fn(Form $form) => $this->handleUploadFormSuccess($form);
             // $form->addProtection(_('The form has expired. Please send it again.'));
         }
 
@@ -246,7 +245,7 @@ class SubmitPresenter extends BasePresenter
                 if (!isset($validIds[$taskId])) {
                     $this->flashMessage(
                         sprintf(_('Task %s cannot be submitted anymore.'), $task->label),
-                        self::FLASH_ERROR
+                        Message::LVL_ERROR
                     );
                     continue;
                 }
@@ -288,7 +287,7 @@ class SubmitPresenter extends BasePresenter
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), Message::LVL_SUCCESS);
             }
 
             $this->uploadedSubmitStorage->commit();
@@ -298,7 +297,7 @@ class SubmitPresenter extends BasePresenter
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->explorer->getConnection()->rollBack();
             Debugger::log($exception);
-            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), Message::LVL_ERROR);
         }
     }
 

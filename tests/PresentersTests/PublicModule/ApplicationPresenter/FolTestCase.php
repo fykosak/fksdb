@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
-use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -15,12 +17,12 @@ abstract class FolTestCase extends EventTestCase
 {
 
     protected IPresenter $fixture;
-    protected int $personId;
-    protected int $eventId;
+    protected ModelPerson $person;
+    protected ModelEvent $event;
 
-    protected function getEventId(): int
+    protected function getEvent(): ModelEvent
     {
-        return $this->eventId;
+        return $this->event;
     }
 
     protected function setUp(): void
@@ -28,7 +30,7 @@ abstract class FolTestCase extends EventTestCase
         parent::setUp();
 
         $future = DateTime::from(time() + DateTime::DAY);
-        $this->eventId = $this->createEvent([
+        $this->event = $this->createEvent([
             'event_type_id' => 9,
             'event_year' => 4,
             'begin' => $future,
@@ -41,7 +43,7 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson(
+        $this->person = $this->createPerson(
             'Paní',
             'Bílá',
             ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],
@@ -49,19 +51,13 @@ EOT
         );
     }
 
-    protected function tearDown(): void
+    protected function assertTeamApplication(ModelEvent $event, string $teamName): ModelFyziklaniTeam
     {
-        $this->truncateTables([DbNames::TAB_E_FYZIKLANI_PARTICIPANT, DbNames::TAB_E_FYZIKLANI_TEAM]);
-        parent::tearDown();
-    }
-
-    protected function assertTeamApplication(int $eventId, string $teamName): Row
-    {
-        $application = $this->explorer->fetch(
-            'SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?',
-            $eventId,
-            $teamName
-        );
+        $application = $this->getContainer()
+            ->getByType(ServiceFyziklaniTeam::class)
+            ->getTable()
+            ->where(['event_id' => $event->event_id, 'name' => $teamName])
+            ->fetch();
         Assert::notEqual(null, $application);
         return $application;
     }

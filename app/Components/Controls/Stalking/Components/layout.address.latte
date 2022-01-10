@@ -3,7 +3,6 @@
     {varType Nette\Database\Table\GroupedSelection $postContacts}
     {varType int $personId}
     {if count($postContacts)}
-        {varType Nette\Database\Table\ActiveRow $row}
         {foreach $postContacts as $row}
             {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
             {var $address = $postContact->getAddress()}
@@ -15,25 +14,22 @@
                 {/if}
             </h3>
             <div class="card-body">
-                {if !is_null($address->first_row)}
+                {if isset($address->first_row)}
                     <div>{$address->first_row}</div>
                 {/if}
-                {if !is_null($address->second_row)}
+                {if isset($address->second_row)}
                     <div>{$address->second_row}</div>
                 {/if}
-
-                {if !is_null($address->target)}
+                {if isset($address->target)}
                     <div>{$address->target}</div>
                 {/if}
-
-                {if !is_null($address->city)}
+                {if isset($address->city)}
                     <div>{$address->city}</div>
                 {/if}
-
-                {if !is_null($address->postal_code)}
+                {if isset($address->postal_code)}
                     <div>{$address->postal_code}</div>
                 {/if}
-                {if !is_null($address->region_id)}
+                {if isset($address->region_id)}
                     <div>{$address->getRegion()->name}</div>
                 {/if}
             </div>

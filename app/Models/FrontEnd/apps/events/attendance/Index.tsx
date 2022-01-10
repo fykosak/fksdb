@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import * as React from 'react';
 
-export default class Attendance extends React.Component<{}, { processing: boolean; messages: string[] }> {
+export default class Attendance extends React.Component<Record<string, never>, { processing: boolean; messages: string[] }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, messages: []};
@@ -14,7 +14,7 @@ export default class Attendance extends React.Component<{}, { processing: boolea
             })}
             <div className="text-center">
                 <label
-                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-secondary' : 'btn-primary')}>
+                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-outline-secondary' : 'btn-outline-primary')}>
         <span className="h3">
             {this.state.processing ?
                 <i className="fa fa-spinner fa-spin" aria-hidden="true"/>

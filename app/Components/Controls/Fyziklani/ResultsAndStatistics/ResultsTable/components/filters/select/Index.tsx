@@ -5,10 +5,10 @@ interface OwnProps {
     mode?: string;
 }
 
-export default class Index extends React.Component<OwnProps, {}> {
+export default class Index extends React.Component<OwnProps> {
 
     public render() {
-       // const {mode} = this.props;
+        // const {mode} = this.props;
         /*  if (mode === 'presentation') {
               return <MultiSelect/>;
           }*/

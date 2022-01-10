@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Core\GeoCharts;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-abstract class GeoChart extends ReactComponent implements Chart
+abstract class GeoChart extends FrontEndComponent implements Chart
 {
     protected const KEY_COUNT = 'count';
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -37,8 +36,6 @@ class AutocompleteSelectBox extends TextBase {
 
     private bool $attachedJSON = false;
 
-    private bool $attachedJS = false;
-
     public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 
@@ -49,12 +46,6 @@ class AutocompleteSelectBox extends TextBase {
                 $this->ajaxUrl = $provider->link('autocomplete!', [
                     self::PARAM_NAME => $name,
                 ]);
-            }
-        });
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/autocompleteSelect.js');
             }
         });
 

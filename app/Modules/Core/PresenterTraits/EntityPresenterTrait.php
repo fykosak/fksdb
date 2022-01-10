@@ -128,27 +128,27 @@ trait EntityPresenterTrait
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('List of entities'), 'fa fa-table');
+        return new PageTitle(null, _('List of entities'), 'fa fa-table');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create an entity'), 'fa fa-plus');
+        return new PageTitle(null, _('Create an entity'), 'fa fa-plus');
     }
 
     public function titleEdit(): PageTitle
     {
-        return new PageTitle(_('Edit an entity'), 'fa fa-pencil');
+        return new PageTitle(null, _('Edit an entity'), 'fa fa-pencil');
     }
 
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(_('Detail of the entity'), 'fa fa-eye');
+        return new PageTitle(null, _('Detail of the entity'), 'fa fa-eye');
     }
 
     public function titleDelete(): PageTitle
     {
-        return new PageTitle(_('Delete an entity'), 'fa fa-minus');
+        return new PageTitle(null, _('Delete an entity'), 'fa fa-minus');
     }
 
     /**

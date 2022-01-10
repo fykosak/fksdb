@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use DateTime;
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 
 $container = require '../../../Bootstrap.php';
 
-/**
- * Class EventModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class Schedule extends EventModuleTestCase
 {
 
-    private int $scheduleGroupId;
+    private ModelScheduleGroup $scheduleGroup;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->scheduleGroupId = $this->insert(DbNames::TAB_SCHEDULE_GROUP, [
+        $this->scheduleGroup = $this->getContainer()
+            ->getByType(ServiceScheduleGroup::class)
+            ->createNewModel([
             'schedule_group_type' => 'accommodation',
             'name_cs' => 'name CS',
             'name_en' => 'name EN',
-            'event_id' => $this->eventId,
-            'start' => new DateTime(),
-            'end' => new DateTime(),
+            'event_id' => $this->event->event_id,
+            'start' => new \DateTime(),
+            'end' => new \DateTime(),
         ]);
     }
 
@@ -37,8 +35,8 @@ class Schedule extends EventModuleTestCase
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
-            'begin' => new DateTime(),
-            'end' => new DateTime(),
+            'begin' => new \DateTime(),
+            'end' => new \DateTime(),
             'name' => 'TEST FOF',
         ];
     }
@@ -46,7 +44,7 @@ class Schedule extends EventModuleTestCase
     protected function transformParams(string $presenterName, string $action, array $params): array
     {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        $params['id'] = $this->scheduleGroupId;
+        $params['id'] = $this->scheduleGroup->schedule_group_id;
         return [$presenterName, $action, $params];
     }
 
@@ -59,12 +57,6 @@ class Schedule extends EventModuleTestCase
             ['Event:ScheduleGroup', 'detail'],
             ['Event:ScheduleGroup', 'edit'],
         ];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(['schedule_group', DbNames::TAB_EVENT]);
-        parent::tearDown();
     }
 }
 

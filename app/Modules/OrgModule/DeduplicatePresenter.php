@@ -44,7 +44,7 @@ class DeduplicatePresenter extends BasePresenter
 
     public function authorizedPerson(): void
     {
-        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('person', 'list'));
     }
 
     /**
@@ -67,14 +67,15 @@ class DeduplicatePresenter extends BasePresenter
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
-        $authorized = $this->contestAuthorizator->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
-            $this->contestAuthorizator->isAllowedForAnyContest($this->mergedPerson, 'merge');
+        $authorized = $this->contestAuthorizator->isAllowed($this->trunkPerson, 'merge') &&
+            $this->contestAuthorizator->isAllowed($this->mergedPerson, 'merge');
         $this->setAuthorized($authorized);
     }
 
     public function titleMerge(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(
                 _('Merging persons %s (%d) and %s (%d)'),
                 $this->trunkPerson->getFullName(),
@@ -87,7 +88,7 @@ class DeduplicatePresenter extends BasePresenter
 
     public function titlePerson(): PageTitle
     {
-        return new PageTitle(_('Duplicate persons'), 'fa fa-exchange');
+        return new PageTitle(null, _('Duplicate persons'), 'fa fa-exchange');
     }
 
     /**
@@ -177,7 +178,6 @@ class DeduplicatePresenter extends BasePresenter
                 }
             }
         }
-        $this->registerJSFile('js/mergeForm.js');
     }
 
     protected function createComponentPersonsGrid(): PersonsGrid
@@ -204,14 +204,12 @@ class DeduplicatePresenter extends BasePresenter
         $this->updateMergeForm($form);
         $submitButton = $form->addSubmit('send', _('Merge persons'));
         $submitButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $submitButton->onClick[] = function (SubmitButton $button) {
-            $this->handleMergeFormSuccess($button->getForm());
-        };
+        $submitButton->onClick[] = fn(SubmitButton $button) => $this->handleMergeFormSuccess($button->getForm());
+
         $cancelButton = $form->addSubmit('cancel', _('Cancel'));
         $cancelButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
-        $cancelButton->onClick[] = function () {
-            $this->backLinkRedirect(true);
-        };
+        $cancelButton->onClick[] = fn() => $this->backLinkRedirect(true);
+
 
         return $control;
     }
@@ -231,11 +229,11 @@ class DeduplicatePresenter extends BasePresenter
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
         if ($merger->merge()) {
-            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Persons successfully merged.'), Message::LVL_SUCCESS);
             FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
-            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), Message::LVL_INFO);
             $this->redirect('this'); //this is correct
         }
     }

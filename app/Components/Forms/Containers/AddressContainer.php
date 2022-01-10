@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
-use Nette\Utils\ArrayHash;
 
 class AddressContainer extends ModelContainer {
 
@@ -65,7 +64,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param null $returnType
-     * @return array|ArrayHash
+     * @return array|object
      */
     public function getUnsafeValues($returnType = null, array $controls = null) {
         $values = parent::getUnsafeValues($returnType);

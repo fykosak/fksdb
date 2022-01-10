@@ -33,6 +33,7 @@ class TeacherPresenter extends BasePresenter
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
             'fas fa-user-edit'
         );
@@ -40,17 +41,17 @@ class TeacherPresenter extends BasePresenter
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create new teacher'), 'fas fa-user-plus');
+        return new PageTitle(null, _('Create new teacher'), 'fas fa-user-plus');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Teacher'), 'fas fa-chalkboard-teacher');
+        return new PageTitle(null, _('Teacher'), 'fas fa-chalkboard-teacher');
     }
 
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(_('Teacher detail'), 'fas fa-chalkboard-teacher');
+        return new PageTitle(null, _('Teacher detail'), 'fas fa-chalkboard-teacher');
     }
 
     /**

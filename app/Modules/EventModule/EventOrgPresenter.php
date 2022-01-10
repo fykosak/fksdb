@@ -34,12 +34,12 @@ class EventOrgPresenter extends BasePresenter
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(_('Organisers of event'), 'fa fa-user-tie');
+        return new PageTitle(null, _('Organisers of event'), 'fa fa-user-tie');
     }
 
     public function titleCreate(): PageTitle
     {
-        return new PageTitle(_('Create organiser of event'), 'fa fa-user-plus');
+        return new PageTitle(null, _('Create organiser of event'), 'fa fa-user-plus');
     }
 
     /**
@@ -51,6 +51,7 @@ class EventOrgPresenter extends BasePresenter
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
+            null,
             sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
             'fa fa-user-edit'
         );
@@ -63,7 +64,7 @@ class EventOrgPresenter extends BasePresenter
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
-            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during deleting'), Message::LVL_ERROR);
             $this->redirect('list');
         }
     }
@@ -74,7 +75,7 @@ class EventOrgPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function getORMService(): ServiceEventOrg

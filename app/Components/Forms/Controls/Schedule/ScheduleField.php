@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 
 class ScheduleField extends TextInput
 {
-    use ReactComponentTrait;
+    use FrontEndComponentTrait;
 
     private ModelEvent $event;
     private string $type;
@@ -35,7 +35,7 @@ class ScheduleField extends TextInput
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
-        $this->registerReact('event.schedule.' . $type);
+        $this->registerFrontend('event.schedule.' . $type);
         $this->appendProperty();
     }
 

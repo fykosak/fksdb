@@ -7,7 +7,7 @@
     {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end','event.registration_begin','event.registration_end'] as $fieldName}
         {control valuePrinter:row $fieldName, $event}
     {/foreach}
-    <a class="btn btn-secondary mt-3"
+    <a class="btn btn-outline-secondary mt-3"
        href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Edit'}</a>
     <hr/>
     <p><a class="col-12 row" href="{$webUrl}">{_'Event web-site'}</a></p>

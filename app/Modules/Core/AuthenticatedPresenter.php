@@ -10,9 +10,10 @@ use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
@@ -71,7 +72,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
         }
     }
 
-    protected static function formatAuthorizedMethod(string $action): string
+    public static function formatAuthorizedMethod(string $action): string
     {
         return 'authorized' . $action;
     }
@@ -130,12 +131,12 @@ abstract class AuthenticatedPresenter extends BasePresenter
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
             Debugger::log("$login signed in using token $tokenData.", 'token-login');
-            $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
+            $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
 
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -209,7 +210,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Authentication failure.'), Response::S403_FORBIDDEN, $exception);
+            throw new ForbiddenRequestException(_('Authentication failure.'), IResponse::S403_FORBIDDEN, $exception);
         }
     }
 

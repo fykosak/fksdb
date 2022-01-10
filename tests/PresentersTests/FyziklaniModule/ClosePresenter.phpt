@@ -6,6 +6,7 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
 
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -21,18 +22,18 @@ class ClosePresenter extends FyziklaniTestCase
     {
         parent::setUp();
 
-        $this->eventId = $this->createEvent([]);
+        $this->event = $this->createEvent([]);
 
-        $teamIds = [];
-        $teamIds[] = $this->createTeam(['e_fyziklani_team_id' => 1, 'status' => 'participated']);
-        $teamIds[] = $this->createTeam(['e_fyziklani_team_id' => 2, 'status' => 'participated']);
-        $teamIds[] = $this->createTeam(['e_fyziklani_team_id' => 3, 'status' => 'participated']);
-        $teamIds[] = $this->createTeam(['e_fyziklani_team_id' => 4, 'status' => 'participated', 'category' => 'B']);
+        $teams = [];
+        $teams[] = $this->createTeam(['e_fyziklani_team_id' => 1, 'status' => 'participated']);
+        $teams[] = $this->createTeam(['e_fyziklani_team_id' => 2, 'status' => 'participated']);
+        $teams[] = $this->createTeam(['e_fyziklani_team_id' => 3, 'status' => 'participated']);
+        $teams[] = $this->createTeam(['e_fyziklani_team_id' => 4, 'status' => 'participated', 'category' => 'B']);
 
-        $taskIds = [];
-        $taskIds[] = $this->createTask(['label' => 'AA']);
-        $taskIds[] = $this->createTask(['label' => 'AB']);
-        $taskIds[] = $this->createTask(['label' => 'AC']);
+        $tasks = [];
+        $tasks[] = $this->createTask(['label' => 'AA']);
+        $tasks[] = $this->createTask(['label' => 'AB']);
+        $tasks[] = $this->createTask(['label' => 'AC']);
 
         /* Rest is just to fill board */
         $this->createTask(['label' => 'AD']);
@@ -41,42 +42,42 @@ class ClosePresenter extends FyziklaniTestCase
         $this->createTask(['label' => 'AG']);
 
         /* Team 1 all correct */
-        $teamId = $teamIds[0];
-        foreach ($taskIds as $taskId) {
+        $team = $teams[0];
+        foreach ($tasks as $task) {
             $this->createSubmit([
-                'fyziklani_task_id' => $taskId,
-                'e_fyziklani_team_id' => $teamId,
+                'fyziklani_task_id' => $task->fyziklani_task_id,
+                'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
                 'points' => 5,
                 'state' => 'checked',
             ]);
         }
 
         /* Team 2 one problem only */
-        $teamId = $teamIds[1];
+        $team = $teams[1];
         $this->createSubmit([
-            'fyziklani_task_id' => $taskIds[0],
-            'e_fyziklani_team_id' => $teamId,
+            'fyziklani_task_id' => $tasks[0]->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
             'points' => 3,
             'state' => 'checked',
         ]);
 
         /* Team 3 retrier */
-        $teamId = $teamIds[2];
-        foreach ($taskIds as $taskId) {
+        $team = $teams[2];
+        foreach ($tasks as $task) {
             $this->createSubmit([
-                'fyziklani_task_id' => $taskId,
-                'e_fyziklani_team_id' => $teamId,
+                'fyziklani_task_id' => $task->fyziklani_task_id,
+                'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
                 'points' => 1,
                 'state' => 'checked',
             ]);
         }
 
         /* Team 4 is another category */
-        $teamId = $teamIds[3];
-        foreach ($taskIds as $taskId) {
+        $team = $teams[3];
+        foreach ($tasks as $task) {
             $this->createSubmit([
-                'fyziklani_task_id' => $taskId,
-                'e_fyziklani_team_id' => $teamId,
+                'fyziklani_task_id' => $task->fyziklani_task_id,
+                'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
                 'points' => 2,
                 'state' => 'checked',
             ]);
@@ -86,7 +87,7 @@ class ClosePresenter extends FyziklaniTestCase
         $this->fixture = $this->createPresenter('Fyziklani:Close');
         $this->mockApplication();
 
-        $this->authenticate($this->userPersonId, $this->fixture);
+        $this->authenticatePerson($this->userPerson, $this->fixture);
     }
 
     private function createCloseTeamRequest(array $formData, array $params = []): Request
@@ -96,7 +97,7 @@ class ClosePresenter extends FyziklaniTestCase
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',
-                'eventId' => $this->eventId,
+                'eventId' => $this->event->event_id,
             ]),
             $formData
         );
@@ -109,7 +110,7 @@ class ClosePresenter extends FyziklaniTestCase
             'POST',
             Helpers::merge($params, [
                 'lang' => 'cs',
-                'eventId' => $this->eventId,
+                'eventId' => $this->event->event_id,
             ]),
             $formData
         );
@@ -142,18 +143,16 @@ class ClosePresenter extends FyziklaniTestCase
     /**
      * Not a real test method.
      */
-    private function innerTestCloseTeam(int $teamId, int $pointsSum): void
+    private function innerTestCloseTeam(ModelFyziklaniTeam $team, int $pointsSum): void
     {
         $request = $this->createCloseTeamRequest([
             '_do' => 'closeTeamControl-close',
         ], [
-            'id' => (string)$teamId,
+            'id' => (string)$team->e_fyziklani_team_id,
             'action' => 'team',
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
-        $team = $this->findTeam($teamId);
-        Assert::notEqual(false, $team);
         Assert::equal($pointsSum, $team->points);
     }
 

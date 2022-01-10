@@ -27,30 +27,19 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 class ReferencedPersonContainer extends ReferencedContainer
 {
 
     public ModifiabilityResolver $modifiabilityResolver;
-
     public VisibilityResolver $visibilityResolver;
-
     public ModelContestYear $contestYear;
-
     private array $fieldsDefinition;
-
     protected ServicePerson $servicePerson;
-
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
     protected FlagFactory $flagFactory;
-
     protected AddressFactory $addressFactory;
-
     private PersonScheduleFactory $personScheduleFactory;
-
     protected ?ModelEvent $event;
 
     private bool $configured = false;
@@ -115,26 +104,19 @@ class ReferencedPersonContainer extends ReferencedContainer
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $metadata);
                 $fullFieldName = "$sub.$fieldName";
-                if ($this->getReferencedId()->getHandler()->isSecondaryKey($fullFieldName)) {
-                    if ($fieldName != 'email') {
-                        throw new InvalidStateException(
-                            "Should define uniqueness validator for field $sub.$fieldName."
-                        );
-                    }
-
+                if ($sub === 'person_info' && $fieldName === 'email') {
                     $control->addCondition(
-                        function (
-                        ): bool { // we use this workaround not to call getValue inside validation out of transaction
+                        function (): bool {
+                            // we use this workaround not to call getValue inside validation out of transaction
                             $personId = $this->getReferencedId()->getValue(false);
                             return $personId && $personId != ReferencedId::VALUE_PROMISE;
                         }
                     )
                         ->addRule(
-                            function (BaseControl $control) use ($fullFieldName): bool {
+                            function (BaseControl $control): bool {
                                 $personId = $this->getReferencedId()->getValue(false);
 
                                 $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey(
-                                    $fullFieldName,
                                     $control->getValue()
                                 );
                                 if ($foundPerson && $foundPerson->getPrimary() != $personId) {

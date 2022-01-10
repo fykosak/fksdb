@@ -12,6 +12,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\OmittedControlException;
@@ -157,7 +158,8 @@ class EventFormComponent extends AbstractEntityFormComponent
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
-        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+        /** @var ModelAuthToken $token $token */
+        foreach ($this->serviceAuthToken->findTokensByEventId($event) as $token) {
             $this->serviceAuthToken->updateModel($token, $tokenData);
         }
         $connection->commit();

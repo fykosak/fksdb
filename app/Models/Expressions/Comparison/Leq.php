@@ -26,6 +26,6 @@ class Leq extends EvaluatedExpression {
     }
 
     public function __toString(): string {
-        return "{$this->aValue} <= {$this->bValue}";
+        return "$this->aValue <= $this->bValue";
     }
 }

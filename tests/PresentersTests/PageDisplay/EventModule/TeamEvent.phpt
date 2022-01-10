@@ -8,10 +8,6 @@ use DateTime;
 
 $container = require '../../../Bootstrap.php';
 
-/**
- * Class EventModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class TeamEvent extends EventModuleTestCase
 {
     protected function getEventData(): array
@@ -33,11 +29,11 @@ class TeamEvent extends EventModuleTestCase
             ['Event:Chart', 'participantAcquaintance'],
             ['Event:Chart', 'singleApplicationProgress'],
             ['Event:Chart', 'teamApplicationProgress'],
+            ['Event:Chart', 'model'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
-            ['Event:Model', 'default'],
             ['Event:Seating', 'default'],
             ['Event:Seating', 'preview'],
             ['Event:Seating', 'list'],

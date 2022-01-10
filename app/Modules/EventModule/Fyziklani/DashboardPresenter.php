@@ -12,7 +12,7 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Fyziklani game app'), 'fas fa-laptop-code');
+        return new PageTitle(null, _('Fyziklani game app'), 'fas fa-laptop-code');
     }
 
     /**
@@ -20,6 +20,6 @@ class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
+        $this->setAuthorized($this->isAllowed('fyziklani.dashboard', 'default'));
     }
 }

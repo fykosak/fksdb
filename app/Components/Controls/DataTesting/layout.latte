@@ -5,7 +5,7 @@
         <h3>
             {*control valuePrinter:onlyValue person, person_link, $log['model']*}
             <a href="{plink :Org:Person:detail id=>$log['model']->person_id}">{$log['model']->getFullName()}</a>
-            <span class="badge badge-secondary">#{$log['model']->person_id}</span>
+            <span class="badge bg-secondary">#{$log['model']->person_id}</span>
         </h3>
         {foreach $log['log'] as $simpleLog}
             <div class="alert alert-{$simpleLog->level}"><b>{$simpleLog->testName}</b>: {$simpleLog->text}

@@ -13,7 +13,7 @@ interface StateProps {
     taskId: number;
 }
 
-class TaskStats extends React.Component<StateProps, {}> {
+class TaskStats extends React.Component<StateProps> {
     public render() {
         const {taskId} = this.props;
         const availablePoints = [5, 3, 2, 1];

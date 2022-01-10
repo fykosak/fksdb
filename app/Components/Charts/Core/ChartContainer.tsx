@@ -1,15 +1,16 @@
 import * as React from 'react';
+import { ConnectedComponent } from 'react-redux';
 
-interface OwnProps<T extends {}, L extends {} = {}> {
-    chart: React.ComponentClass<T> | any; // TODO fix ConnectedComponent
-    chartProps: T;
-    legendComponent?: React.ComponentClass<T> | any;
-    legendProps?: L;
-    headline?: string;
+interface OwnProps<ChartProps, LegendProps> {
+    chart: React.ComponentType<ChartProps> | ConnectedComponent<React.ComponentType<any>, ChartProps>; // TODO
+    chartProps: ChartProps;
+    legendComponent?: React.ComponentType<LegendProps> | ConnectedComponent<React.ComponentType<any>, LegendProps>; // TODO
+    legendProps?: LegendProps;
+    headline?: React.ReactNode;
     containerClassName?: string;
 }
 
-export default class ChartContainer<T, L> extends React.Component<OwnProps<T, L>, {}> {
+export default class ChartContainer<ChartProps, LegendProps> extends React.Component<OwnProps<ChartProps, LegendProps>> {
 
     public render() {
         const {legendComponent, legendProps, headline, chartProps, chart, containerClassName} = this.props;
@@ -18,10 +19,10 @@ export default class ChartContainer<T, L> extends React.Component<OwnProps<T, L>
                 {headline && <h3>{headline}</h3>}
                 <div className={'row'}>
                     <div className="col-xl-9 col-lg-8 col-md-12">
-                        {React.createElement<T>(chart, chartProps)}
+                        {React.createElement<ChartProps>(chart, chartProps)}
                     </div>
                     {legendComponent && <div className="col-xl-3 col-lg-4 col-md-12">
-                        {React.createElement<L>(legendComponent, legendProps)}
+                        {React.createElement<LegendProps>(legendComponent, legendProps)}
                     </div>}
                 </div>
             </div>

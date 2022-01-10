@@ -10,7 +10,6 @@
             ?('col-12 bd-callout ' . ($level == 1?'bd-callout-info':($level == 2?'bd-callout-warning':'bd-callout-danger')))
             :''}
             <fieldset class="{$className}" data-level={$level}>
-                {dump $container}
                 {if $level > 0 && $withOptions && $container->getOption('label')}
                     <h4>{$container->getOption('label')}</h4>
                 {/if}

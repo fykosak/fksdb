@@ -14,7 +14,7 @@ class DispatchPresenter extends AuthenticatedPresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('List of events'), 'fa fa-calendar-alt');
+        return new PageTitle(null, _('List of events'), 'fa fa-calendar-alt');
     }
 
     protected function createComponentContestBadge(): ContestBadge
@@ -29,7 +29,7 @@ class DispatchPresenter extends AuthenticatedPresenter
 
     protected function beforeRender(): void
     {
-        $this->getPageStyleContainer()->styleId = 'event';
+        $this->getPageStyleContainer()->styleIds[] = 'event';
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
         parent::beforeRender();

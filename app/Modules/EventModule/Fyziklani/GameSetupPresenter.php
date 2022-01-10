@@ -16,7 +16,7 @@ class GameSetupPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs');
+        return new PageTitle(null, _('Fyziklani game setup'), 'fa fa-cogs');
     }
 
     /**
@@ -51,6 +51,6 @@ class GameSetupPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
+        $this->setAuthorized($this->isAllowed('fyziklani.gameSetup', 'default'));
     }
 }

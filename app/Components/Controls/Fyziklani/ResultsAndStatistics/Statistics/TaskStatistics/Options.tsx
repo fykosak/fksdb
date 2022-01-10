@@ -35,7 +35,7 @@ interface DispatchProps {
     onSetToDate(date: Date): void;
 }
 
-class Options extends React.Component<StateProps & DispatchProps, {}> {
+class Options extends React.Component<StateProps & DispatchProps> {
 
     public componentDidMount() {
         const {onSetFromDate, onSetToDate, gameEnd, gameStart} = this.props;
@@ -82,14 +82,14 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                     <div className={'col-6'}>
                         <div className={'form-group'}>
                             <label>{translator.getText('Aggregation time')}</label>
-                            <input type={'range'} max={30 * 60 * 1000} min={60 * 1000}
+                            <input type="range" max={30 * 60 * 1000} min={60 * 1000}
                                    value={aggregationTime}
                                    step={60 * 1000}
-                                   className={'form-control'}
+                                   className="form-range"
                                    onChange={(e) => {
                                        onChangeAggregationTime(+e.target.value);
                                    }}/>
-                            <span className={'form-text'}>{aggregationTime / (60 * 1000)} min</span>
+                            <span className="form-text">{aggregationTime / (60 * 1000)} min</span>
                         </div>
                     </div>
                 </div>
@@ -97,8 +97,8 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                     <div className={'col-6'}>
                         <div className={'form-group'}>
                             <label>{translator.getText('From')}</label>
-                            <input type={'range'}
-                                   className={'form-control'}
+                            <input type="range"
+                                   className="form-range"
                                    value={fromDate.getTime()}
                                    min={gameStart.getTime()}
                                    max={toDate.getTime()}
@@ -112,8 +112,8 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                     <div className={'col-6'}>
                         <div className={'form-group'}>
                             <label>{translator.getText('To')}</label>
-                            <input type={'range'}
-                                   className={'form-control'}
+                            <input type="range"
+                                   className="form-range"
                                    value={toDate.getTime()}
                                    min={fromDate.getTime()}
                                    max={gameEnd.getTime()}

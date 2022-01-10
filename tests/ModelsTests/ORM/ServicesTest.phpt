@@ -14,7 +14,6 @@ use Tester\Assert;
 
 class ServicesTest extends DatabaseTestCase
 {
-
     /**
      * @dataProvider getServices
      */

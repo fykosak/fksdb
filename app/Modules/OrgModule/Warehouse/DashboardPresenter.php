@@ -11,6 +11,6 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(_('Warehouse'), 'fa fa-warehouse');
+        return new PageTitle(null, _('Warehouse'), 'fa fa-warehouse');
     }
 }

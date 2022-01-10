@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter
      */
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
+        return new PageTitle(null, \sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-calendar-alt');
     }
 
     /**
@@ -23,7 +23,7 @@ class DashboardPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
+        $this->setAuthorized($this->isAllowed('event.dashboard', 'default'));
     }
 
     /**

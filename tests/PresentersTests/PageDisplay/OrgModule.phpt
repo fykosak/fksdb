@@ -4,27 +4,26 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
 
 $container = require '../../Bootstrap.php';
 
-/**
- * Class OrgModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class OrgModule extends AbstractPageDisplayTestCase
 {
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->insert(DbNames::TAB_ORG, [
-            'person_id' => $this->personId,
+        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel([
+            'person_id' => $this->person->person_id,
             'contest_id' => 1,
             'since' => 1,
             'order' => 1,
         ]);
-        $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
+        $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel(
+            ['person_id' => $this->person->person_id]
+        );
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array
@@ -34,7 +33,7 @@ class OrgModule extends AbstractPageDisplayTestCase
         $params['contestId'] = (string)1;
         $params['series'] = (string)1;
         if ($presenterName === 'Org:Person') {
-            $params['id'] = (string)$this->personId;
+            $params['id'] = (string)$this->person->person_id;
         }
         return [$presenterName, $action, $params];
     }
@@ -46,7 +45,7 @@ class OrgModule extends AbstractPageDisplayTestCase
 
             ['Org:Contestant', 'list'],
 
-            ['Org:Inbox', 'handout'],
+            ['Org:Tasks', 'dispatch'],
             ['Org:Inbox', 'inbox'],
             ['Org:Inbox', 'list'],
 
@@ -95,12 +94,6 @@ class OrgModule extends AbstractPageDisplayTestCase
 
             ['Warehouse:Product', 'list'],
         ];
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables(['person_info', 'org']);
-        parent::tearDown();
     }
 }
 

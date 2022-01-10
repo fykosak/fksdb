@@ -1,7 +1,7 @@
 import {
-    fetchApi,
-    FetchApiState,
-} from 'FKSDB/Models/FrontEnd/Fetch/reducer';
+    fetchReducer,
+    FetchStateMap,
+} from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import { combineReducers } from 'redux';
 import { DragNDropData } from '../middleware/interfaces';
 import {
@@ -13,15 +13,14 @@ import {
     teams,
 } from './teams';
 
-export const app = combineReducers({
+export const app = combineReducers<Store>({
     dragNDrop,
-    fetchApi,
+    fetch: fetchReducer,
     teams,
-
 });
 
 export interface Store {
     teams: RoutingTeamsState;
     dragNDrop: DragNDropState<DragNDropData>;
-    fetchApi: FetchApiState;
+    fetch: FetchStateMap;
 }

@@ -9,7 +9,8 @@ use Nette\Utils\Arrays;
  * So far only helper methods to "checked" laoding of Neon configuration.
  * The scheme (metamodel) for the configuration is Neon-encoded as well.
  */
-class NeonScheme {
+class NeonScheme
+{
 
     public const TYPE_NEON = 'neon';
     public const TYPE_EXPRESSION = 'expression';
@@ -18,7 +19,8 @@ class NeonScheme {
     /**
      * @throws NeonSchemaException
      */
-    public static function readSection(array $section, array $sectionScheme): array {
+    public static function readSection(array $section, array $sectionScheme): array
+    {
         if (!is_array($section)) {
             throw new NeonSchemaException('Expected array got \'' . $section . '\'.');
         }
@@ -45,9 +47,7 @@ class NeonScheme {
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {
-                    $result[$key] = array_map(function ($it) {
-                        return Helpers::statementFromExpression($it);
-                    }, $result[$key]);
+                    $result[$key] = array_map(fn($it) => Helpers::statementFromExpression($it), $result[$key]);
                 } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {

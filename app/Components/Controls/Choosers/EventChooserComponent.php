@@ -36,13 +36,13 @@ final class EventChooserComponent extends ChooserComponent
         /** @var ModelEvent $event */
         foreach ($query as $event) {
             $items[] = new NavItem(
-                new Title($event->name),
+                new Title(null, $event->name),
                 'this',
                 ['eventId' => $event->event_id],
                 [],
                 $event->event_id === $this->event->event_id
             );
         }
-        return new NavItem(new Title(_('Event')), '#', [], $items);
+        return new NavItem(new Title(null, _('Event')), '#', [], $items);
     }
 }

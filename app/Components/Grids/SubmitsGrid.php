@@ -72,7 +72,7 @@ class SubmitsGrid extends BaseGrid
         // operations
         //
         $this->addButton('revoke', _('Cancel'))
-            ->setClass('btn btn-sm btn-warning')
+            ->setClass('btn btn-sm btn-outline-warning')
             ->setText(_('Cancel'))
             ->setShow(function (ActiveRow $row): bool {
                 $submit = ModelSubmit::createFromActiveRow($row);

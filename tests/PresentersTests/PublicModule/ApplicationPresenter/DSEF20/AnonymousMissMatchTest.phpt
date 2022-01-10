@@ -13,9 +13,6 @@ use Nette\Application\UI\Template;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-/**
- * Class ApplicationPresenterTest
- */
 class AnonymousMissMatchTest extends DsefTestCase
 {
 
@@ -63,11 +60,11 @@ class AnonymousMissMatchTest extends DsefTestCase
 
         $html = (string)$source;
         Assert::contains(
-            '<div class="form-group  has-error " id="frm-application-form-form-participant-person_id_1-person_info-born-pair">',
+            '<div class="form-group mb-3 has-error " id="frm-application-form-form-participant-person_id_1-person_info-born-pair">',
             $html
         );
 
-        $info = $this->assertPersonInfo($this->personId);
+        $info = $this->assertPersonInfo($this->person);
         Assert::equal(null, $info->id_number); // shouldn't be rewritten
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
     }

@@ -11,7 +11,7 @@ export interface PreprocessedSubmit extends ModelFyziklaniSubmit {
 export const calculateCorrelation = (
     firstTeamData: { [taskId: number]: PreprocessedSubmit },
     secondTeamData: { [taskId: number]: PreprocessedSubmit },
-    threshold: number = 120000,
+    threshold = 120000,
 ): { avgNStdDev: StdDevOutput; countTotal: number; countFiltered: number } => {
     const deltas = [];
     let countTotal = 0;
