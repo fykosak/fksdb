@@ -29,6 +29,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 
 const renderer = new Renderer();
+
 renderer.hashMapLoader.register('event.schedule', eventSchedule);
 
 renderer.hashMapLoader.registerActionsComponent('public.ajax-submit', AjaxSubmitComponent);
@@ -56,32 +57,30 @@ renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo
 renderer.hashMapLoader.registerComponent('attendance.qr-code', Attendance);
 renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent);
 
-renderer.run();
 
-$(function () {
+window.addEventListener('DOMContentLoaded', () => {
+
 // @ts-ignore
     $.widget('fks.writeonlyInput', {
 // default options
         options: {},
         _create: function () {
 
-            const actElement = this.element as HTMLInputElement;
-            if (actElement.getAttribute('data-writeonly-enabled')) {
+            const actElement = this.element as JQuery<HTMLInputElement>;
+            if (actElement.attr('data-writeonly-enabled')) {
                 return;
             }
-            const originalValue = actElement.getAttribute('data-writeonly-value');
-            const originalLabel = actElement.getAttribute('data-writeonly-label');
+            const originalValue = actElement.attr('data-writeonly-value');
+            const originalLabel = actElement.attr('data-writeonly-label');
 
             const button = $('<i class="fa fa-times glyphicon glyphicon-remove"/>');
             const actualGroup = $('<div class="right-inner-addon"/>');
 
             // Workardound: .replaceWith breaks datepicker.
-            const actualInput = $(actElement);
+            const par = actElement.parent();
+            const prev = actElement.prev();
 
-            const par = actualInput.parent();
-            const prev = actualInput.prev();
-
-            actualGroup.append(actualInput);
+            actualGroup.append(actElement);
             actualGroup.append(button);
             if (prev.length) {
                 actualGroup.insertAfter(prev);
@@ -89,7 +88,7 @@ $(function () {
                 actualGroup.prependTo(par);
             }
 
-            const overlayInput = actualInput.clone();
+            const overlayInput = actElement.clone();
             // @ts-ignore
             overlayInput.removeAttr('id', null).val('').attr('placeholder', originalLabel);
             overlayInput.removeClass('date').removeAttr('name');
@@ -102,13 +101,13 @@ $(function () {
 
             function applyOverlay() {
                 actualGroup.hide();
-                actualInput.val(originalValue);
+                actElement.val(originalValue);
                 overlayInput.show();
             }
 
             function removeOverlay() {
-                if (actualInput.val() == originalValue) {
-                    actualInput.val('');
+                if (actElement.val() == originalValue) {
+                    actElement.val('');
                 }
                 overlayInput.hide();
                 actualGroup.show();
@@ -116,25 +115,22 @@ $(function () {
 
             overlayInput.focus(() => {
                 removeOverlay();
-                actualInput.focus();
+                actElement.focus();
             });
 
             button.click(() => applyOverlay());
 
-            if (actualInput.val() == originalValue) {
+            if (actElement.val() == originalValue) {
                 applyOverlay();
             } else {
                 removeOverlay();
             }
-            actualInput.data('writeonly-enabled', true);
+            actElement.data('writeonly-enabled', true);
         },
     });
     // @ts-ignore
     $('input[data-writeonly],input:data(writeonly)').writeonlyInput();
 
-});
-
-$(function () {
 // @ts-ignore
     $.widget('fks.referencedContainer', {
 // default options
@@ -147,16 +143,15 @@ $(function () {
             compactValueMask: '_c_compact',
         },
         _create: function () {
-            const container = this.element as HTMLElement;
-            this.transformContainer(container, document.getElementById(container.getAttribute('data-referenced-id')));
+            const container = this.element as JQuery<HTMLElement>;
+            this.transformContainer(container, document.getElementById(container.attr('data-referenced-id')));
         },
-        transformContainer: function (container: HTMLElement, refId: HTMLElement) {
-            const elContainer = $(container);
+        transformContainer: function (container: JQuery<HTMLElement>, refId: HTMLElement) {
             const elRefId = $(refId);
-            const $searchInput = elContainer.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
-            const $compactValueInput = elContainer.find('input[name*=\'' + this.options.compactValueMask + '\']');
-            const originalSearchButton = elContainer.find('input[type=\'submit\'][name*=\'' + this.options.submitSearchMask + '\']');
-            const $clearButton = elContainer.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
+            const $searchInput = container.find('input[name*=\'' + this.options.searchMask + '\'][type!=\'hidden\']');
+            const $compactValueInput = container.find('input[name*=\'' + this.options.compactValueMask + '\']');
+            const originalSearchButton = container.find('input[type=\'submit\'][name*=\'' + this.options.submitSearchMask + '\']');
+            const $clearButton = container.find('input[type=\'submit\'][name*=\'' + this.options.clearMask + '\']');
             let compacted = null;
             //  const options = this.options;
             if (elRefId) {
@@ -225,7 +220,7 @@ $(function () {
                 if (compacted !== null) {
                     compacted.hide();
                 }
-                elContainer.show();
+                container.show();
             }
 
             function createCompactField(label: string, value) {
@@ -262,20 +257,20 @@ $(function () {
             function compactifyContainer() {
 
                 if (compacted === null) {
-                    const label = elContainer.find('> fieldset > h4').text();
+                    const label = container.find('> fieldset > h4').text();
                     const value = $compactValueInput.val();
                     compacted = createCompactField(label, value); //TODO clear button
-                    compacted.insertAfter(elContainer);
+                    compacted.insertAfter(container);
                     compacted.find('.value').click(decompactifyContainer);
                     //elContainer.find('legend').click(compactifyContainer);
                     decorateClearButton(); //in original container
                 }
                 compacted.show();
-                elContainer.hide();
+                container.hide();
             }
 
             function decorateClearButton() {
-                const well = elContainer.children('.bd-callout');
+                const well = container.children('.bd-callout');
                 const buttonDel = $('<button type="button" class="btn btn-sm btn-outline-warning clear-referenced" title="Smazat"><span class="fa fa-times"></span></button>');
                 buttonDel.click(() => {
                     $clearButton.click();
@@ -284,11 +279,11 @@ $(function () {
                 buttonDel.prependTo(well);
             }
 
-            const hasAnyFields = elContainer.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
+            const hasAnyFields = container.find(':input[type!=\'hidden\'][disabled!=\'disabled\']').not($clearButton).filter(function () {
                 return $(this).val() == '' && !$(this).attr('data-writeonly-overlay');
             });
 
-            const hasErrors = elContainer.find('.has-error');
+            const hasErrors = container.find('.has-error');
 
             if ($searchInput.length) {
                 searchifyContainer();
@@ -302,8 +297,7 @@ $(function () {
     // @ts-ignore
     $('[data-referenced]').referencedContainer();
 
-});
-jQuery(function () {
+
     document.querySelectorAll('div.mergeSource').forEach((el) => {
         const field = document.getElementById(el.getAttribute('data-field'));
         field.addEventListener('click', () => {
@@ -311,8 +305,7 @@ jQuery(function () {
             field.value = el.querySelector('.value').innerText;
         });
     });
-});
-$(function () {
+
     // @ts-ignore
     $.widget('fks.enterSubmitForm', {
         _create: function () {
@@ -343,9 +336,6 @@ $(function () {
     });
     // TODO form buttons aren't checked
 
-});
-
-$(function () {
     // @ts-ignore
     $.widget('fks.autocomplete-select', $.ui.autocomplete, {
 // default options
@@ -505,4 +495,6 @@ $(function () {
     })
 
     $('input[data-ac]')['autocomplete-select']();
+
+    renderer.run();
 });

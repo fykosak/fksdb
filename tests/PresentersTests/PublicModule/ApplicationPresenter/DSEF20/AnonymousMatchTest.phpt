@@ -7,7 +7,6 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
@@ -15,13 +14,6 @@ use Tester\Assert;
 
 class AnonymousMatchTest extends DsefTestCase
 {
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_E_DSEF_PARTICIPANT]);
-        parent::tearDown();
-    }
-
     public function testRegistration(): void
     {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
@@ -61,11 +53,11 @@ class AnonymousMatchTest extends DsefTestCase
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->event, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int)$this->personId, $application->person_id);
+        Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->personId);
+        $info = $this->assertPersonInfo($this->person);
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 

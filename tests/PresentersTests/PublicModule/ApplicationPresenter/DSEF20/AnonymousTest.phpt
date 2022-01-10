@@ -23,7 +23,7 @@ class AnonymousTest extends DsefTestCase
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
-            'eventId' => $this->eventId,
+            'eventId' => $this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -73,7 +73,7 @@ class AnonymousTest extends DsefTestCase
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->eventId, 'ksaad@kalo.cz');
+        $application = $this->assertApplication($this->event, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');

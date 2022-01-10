@@ -20,7 +20,7 @@ class AuthTest extends DsefTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authenticate($this->personId, $this->fixture);
+        $this->authenticatePerson($this->person, $this->fixture);
     }
 
     public function testDisplay(): void
@@ -32,7 +32,7 @@ class AuthTest extends DsefTestCase
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
+            'eventId' => (string)$this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -53,7 +53,7 @@ class AuthTest extends DsefTestCase
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => (string)$this->personId,
+                'person_id' => (string)$this->person->person_id,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -86,11 +86,11 @@ class AuthTest extends DsefTestCase
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->event, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int)$this->personId, $application->person_id);
+        Assert::equal($this->person->person_id, $application->person_id);
 
-        $info = $this->assertPersonInfo($this->personId);
+        $info = $this->assertPersonInfo($this->person);
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
 
