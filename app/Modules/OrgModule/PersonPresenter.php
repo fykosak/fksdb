@@ -66,7 +66,9 @@ class PersonPresenter extends BasePresenter
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
-            null, sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user-edit'
+            null,
+            sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()),
+            'fa fa-user-edit'
         );
     }
 

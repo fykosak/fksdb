@@ -6,7 +6,6 @@ namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
-use Fykosak\Utils\Price\Price;
 
 interface Preprocess
 {

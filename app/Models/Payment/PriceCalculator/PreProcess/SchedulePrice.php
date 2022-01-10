@@ -8,7 +8,6 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
-use Fykosak\Utils\Price\Price;
 
 class SchedulePrice implements Preprocess
 {

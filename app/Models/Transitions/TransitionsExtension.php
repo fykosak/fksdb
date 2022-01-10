@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 
-class TransitionsExtension extends CompilerExtension {
-
-    public function loadConfiguration(): void {
+class TransitionsExtension extends CompilerExtension
+{
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
@@ -21,7 +24,8 @@ class TransitionsExtension extends CompilerExtension {
         }
     }
 
-    public function beforeCompile(): void {
+    public function beforeCompile(): void
+    {
         parent::beforeCompile();
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
@@ -29,7 +33,8 @@ class TransitionsExtension extends CompilerExtension {
         }
     }
 
-    private function setUpMachine(string $machineName, array $machineConfig): void {
+    private function setUpMachine(string $machineName, array $machineConfig): void
+    {
         $builder = $this->getContainerBuilder();
         $machineDefinition = $builder->getDefinition($machineConfig['machine']);
         foreach ($builder->findByTag($machineName) as $name => $transition) {
@@ -40,7 +45,12 @@ class TransitionsExtension extends CompilerExtension {
         }
     }
 
-    private function createTransition(string $machineName, string $source, string $target, array $transitionConfig): void {
+    private function createTransition(
+        string $machineName,
+        string $source,
+        string $target,
+        array $transitionConfig
+    ): void {
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
             ->addTag($machineName)
@@ -63,7 +73,8 @@ class TransitionsExtension extends CompilerExtension {
         }
     }
 
-    public static function parseMask(string $mask): array {
+    public static function parseMask(string $mask): array
+    {
         [$source, $target] = explode('->', $mask);
         return [explode('|', $source), $target];
     }

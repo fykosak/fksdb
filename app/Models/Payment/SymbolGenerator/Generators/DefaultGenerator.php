@@ -41,7 +41,8 @@ class DefaultGenerator extends AbstractSymbolGenerator
      * @throws UnsupportedCurrencyException
      * @throws \Exception
      */
-    protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array {
+    protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array
+    {
         if (array_key_exists($modelPayment->getCurrency()->value, $this->info)) {
             $info = $this->info[$modelPayment->getCurrency()->value];
             $info['variable_symbol'] = $variableNumber;

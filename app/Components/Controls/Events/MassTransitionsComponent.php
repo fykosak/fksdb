@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
@@ -12,23 +14,24 @@ use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
-class MassTransitionsComponent extends BaseComponent {
-
+class MassTransitionsComponent extends BaseComponent
+{
     private ModelEvent $event;
-
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event)
+    {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory): void {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory): void
+    {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    final public function render(): void {
-        /** @var  $machine */
+    final public function render(): void
+    {
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
@@ -37,12 +40,13 @@ class MassTransitionsComponent extends BaseComponent {
     /**
      * @throws NeonSchemaException
      */
-    public function handleTransition(string $name): void {
+    public function handleTransition(string $name): void
+    {
         $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;
-        foreach ($source->getHolders() as $key => $holder) {
+        foreach ($source->getHolders() as $holder) {
             $handler = new ApplicationHandler($this->event, $logger, $this->getContext());
             $total++;
             try {
@@ -52,12 +56,14 @@ class MassTransitionsComponent extends BaseComponent {
             }
         }
         FlashMessageDump::dump($logger, $this->getPresenter(), true);
-        $this->getPresenter()->flashMessage(sprintf(
-            _('Total %d applications, state changed %d, unavailable %d. '),
-            $total,
-            $total - $errored,
-            $errored
-        ));
+        $this->getPresenter()->flashMessage(
+            sprintf(
+                _('Total %d applications, state changed %d, unavailable %d. '),
+                $total,
+                $total - $errored,
+                $errored
+            )
+        );
         $this->getPresenter()->redirect('this');
     }
 }

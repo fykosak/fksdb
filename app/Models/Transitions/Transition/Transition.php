@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
@@ -13,22 +15,9 @@ class Transition
 {
     use SmartObject;
 
-    public const TYPE_SUCCESS = Message::LVL_SUCCESS;
-    public const TYPE_WARNING = Message::LVL_WARNING;
-    public const TYPE_DANGEROUS = Message::LVL_ERROR;
-    public const TYPE_PRIMARY = Message::LVL_PRIMARY;
-    public const TYPE_DEFAULT = 'secondary';
-
-    protected const AVAILABLE_BEHAVIOR_TYPE = [
-        self::TYPE_SUCCESS,
-        self::TYPE_WARNING,
-        self::TYPE_DANGEROUS,
-        self::TYPE_DEFAULT,
-        self::TYPE_PRIMARY,
-    ];
     /** @var callable|bool */
     protected $condition;
-    private string $behaviorType = self::TYPE_DEFAULT;
+    private ?BehaviorType $behaviorType = null;
     private string $label;
     /** @var callable[] */
     public array $beforeExecuteCallbacks = [];
@@ -83,23 +72,20 @@ class Transition
         return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
     }
 
-    public function getBehaviorType(): string
+    public function getBehaviorType(): BehaviorType
     {
         if ($this->isTerminating()) {
-            return self::TYPE_DANGEROUS;
+            return new BehaviorType(BehaviorType::TYPE_DANGEROUS);
         }
         if ($this->isCreating()) {
-            return self::TYPE_SUCCESS;
+            return new BehaviorType(BehaviorType::TYPE_SUCCESS);
         }
         return $this->behaviorType;
     }
 
     public function setBehaviorType(string $behaviorType): void
     {
-        if (!in_array($behaviorType, static::AVAILABLE_BEHAVIOR_TYPE)) {
-            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $behaviorType));
-        }
-        $this->behaviorType = $behaviorType;
+        $this->behaviorType = new BehaviorType($behaviorType);
     }
 
     protected function getEvaluator(): ExpressionEvaluator

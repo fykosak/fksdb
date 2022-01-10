@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Payment;
 
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
@@ -7,10 +9,12 @@ use FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use Nette\DI\CompilerExtension;
 
-class PaymentExtension extends CompilerExtension {
+class PaymentExtension extends CompilerExtension
+{
     public const MACHINE_PREFIX = 'machine.';
 
-    public function loadConfiguration(): void {
+    public function loadConfiguration(): void
+    {
         $builder = $this->getContainerBuilder();
         foreach ($this->config as $item) {
             $symbolGenerator = $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))

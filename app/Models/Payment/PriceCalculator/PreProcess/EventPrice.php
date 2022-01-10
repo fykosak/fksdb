@@ -7,7 +7,6 @@ namespace FKSDB\Models\Payment\PriceCalculator\PreProcess;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
-use Fykosak\Utils\Price\Price;
 
 class EventPrice implements Preprocess
 {

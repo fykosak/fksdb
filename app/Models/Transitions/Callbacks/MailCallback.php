@@ -8,12 +8,13 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
+use Fykosak\NetteORM\ReferencedAccessor;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
 
-class MailCallback implements TransitionCallback {
+class MailCallback implements TransitionCallback
+{
 
     protected ServiceEmailMessage $serviceEmailMessage;
     protected MailTemplateFactory $mailTemplateFactory;
@@ -36,7 +37,8 @@ class MailCallback implements TransitionCallback {
      * @throws BadTypeException
      * @throws CannotAccessModelException|UnsupportedLanguageException
      */
-    public function __invoke(ModelHolder $holder, ...$args): void {
+    public function __invoke(ModelHolder $holder, ...$args): void
+    {
         $this->invoke($holder, ...$args);
     }
 
@@ -44,7 +46,9 @@ class MailCallback implements TransitionCallback {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function invoke(ModelHolder $holder, ...$args): void {
+    public function invoke(ModelHolder $holder, ...$args): void
+    {
+        /** @var ModelPerson|null $person */
         $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
         if (is_null($person)) {
             throw new BadTypeException(ModelPerson::class, $person);
