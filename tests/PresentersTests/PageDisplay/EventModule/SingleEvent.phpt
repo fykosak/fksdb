@@ -8,10 +8,6 @@ use DateTime;
 
 $container = require '../../../Bootstrap.php';
 
-/**
- * Class EventModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class SingleEvent extends EventModuleTestCase
 {
     protected function getEventData(): array

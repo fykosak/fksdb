@@ -18,10 +18,6 @@ class ServiceAddressTest extends TestCase
 
     private ServiceAddress $fixture;
 
-    /**
-     * ServiceAddressTest constructor.
-     * @param ServiceAddress $service
-     */
     public function __construct(ServiceAddress $service)
     {
         $this->fixture = $service;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
@@ -15,12 +18,12 @@ $container = require '../../Bootstrap.php';
 class SecondaryLimitOk extends ResourceAvailabilityTestCase
 {
 
-    private int $tsafEventId;
+    private ModelEvent $tsafEvent;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tsafEventId = $this->createEvent([
+        $this->tsafEvent = $this->createEvent([
             'event_type_id' => 7,
             'event_year' => 7,
             'parameters' => <<<EOT
@@ -28,10 +31,10 @@ EOT
             ,
         ]);
 
-        foreach ($this->persons as $personId) {
-            $this->insert('event_participant', [
-                'person_id' => $personId,
-                'event_id' => $this->tsafEventId,
+        foreach ($this->persons as $person) {
+            $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+                'person_id' => $person->person_id,
+                'event_id' => $this->tsafEvent->event_id,
                 'status' => 'applied',
                 'accomodation' => 1,
             ]);
@@ -53,25 +56,22 @@ EOT
     {
         Assert::equal(
             2,
-            (int)$this->explorer->query(
-                'SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?',
-                $this->eventId
-            )->fetchField()
+            (int)$this->getContainer()
+                ->getByType(ServiceEventParticipant::class)
+                ->getTable()
+                ->where(['event_id' => $this->event->event_id])
+                ->sum('accomodation')
         );
-        $this->explorer->query(
-            'UPDATE event SET parameters = ? WHERE event_id = ?',
-            <<<EOT
+        $this->getContainer()->getByType(ServiceEvent::class)->updateModel($this->event, [
+            'parameters' => <<<EOT
 accomodationCapacity: $capacity                
-EOT
-            ,
-            $this->eventId
-        );
+EOT]);
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->tsafEventId,
+            'eventId' => (string)$this->tsafEvent->event_id,
         ]);
         $response = $this->fixture->run($request);
 

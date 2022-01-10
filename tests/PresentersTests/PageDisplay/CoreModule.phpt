@@ -6,10 +6,6 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 $container = require '../../Bootstrap.php';
 
-/**
- * Class OrgModule
- * @author Michal Červeňák <miso@fykos.cz>
- */
 class CoreModule extends AbstractPageDisplayTestCase
 {
     public function getPages(): array
