@@ -37,7 +37,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
-        $model = $holder->getPrimaryHolder()->getModel2();
+        $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(

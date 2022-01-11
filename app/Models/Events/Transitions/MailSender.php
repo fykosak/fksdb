@@ -126,11 +126,11 @@ class MailSender
     ): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
 
-        $holder = $baseHolder->getHolder();
+        $holder = $baseHolder->holder;
         $person = $login->getPerson();
-        $event = $baseHolder->getEvent();
+        $event = $baseHolder->event;
         $email = $person->getInfo()->email;
-        $application = $holder->getPrimaryHolder()->getModel2();
+        $application = $holder->primaryHolder->getModel2();
 
         $token = $this->createToken($login, $event, $application);
 
@@ -218,14 +218,14 @@ class MailSender
                     $names = [$transition->getBaseMachine()->getName()];
                     break;
                 case self::ADDR_PRIMARY:
-                    $names = [$holder->getPrimaryHolder()->getName()];
+                    $names = [$holder->primaryHolder->name];
                     break;
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
                         $names = array_merge(
                             $names,
-                            array_map(fn(BaseHolder $it): string => $it->getName(), $group['holders'])
+                            array_map(fn(BaseHolder $it): string => $it->name, $group['holders'])
                         );
                     }
                     break;

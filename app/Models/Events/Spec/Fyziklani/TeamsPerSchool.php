@@ -81,8 +81,8 @@ class TeamsPerSchool extends SchoolCheck
 
     private function checkMulti(bool $first, ?Control $control, array $schools): bool
     {
-        $team = $this->getHolder()->getPrimaryHolder()->getModel2();
-        $event = $this->getHolder()->getPrimaryHolder()->getEvent();
+        $team = $this->getHolder()->primaryHolder->getModel2();
+        $event = $this->getHolder()->primaryHolder->event;
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
         $group = reset($secondaryGroups);
         $baseHolders = $group['holders'];
@@ -98,7 +98,7 @@ class TeamsPerSchool extends SchoolCheck
                 ->select(
                     "GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams"
                 )
-                ->where($baseHolder->getEventIdColumn(), $event->getPrimary())
+                ->where($baseHolder->eventIdColumn, $event->getPrimary())
                 ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
                 ->where('person.person_history:school_id', $schools);
 

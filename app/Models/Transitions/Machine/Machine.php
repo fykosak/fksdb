@@ -140,7 +140,7 @@ abstract class Machine extends AbstractMachine
             throw $exception;
         }
         $this->explorer->getConnection()->commit();
-        $holder->updateState($transition->getTargetState());
+        $holder->updateState($transition->targetState);
         $transition->callAfterExecute($holder);
     }
 

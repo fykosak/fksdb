@@ -28,7 +28,7 @@ class Captcha implements FormAdjustment
 
     public function adjust(Form $form, Holder $holder): void
     {
-        if ($holder->getPrimaryHolder()->getModelState() != AbstractMachine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->primaryHolder->getModelState() != AbstractMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
         $control = new CaptchaBox();

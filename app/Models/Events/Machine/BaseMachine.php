@@ -106,7 +106,7 @@ class BaseMachine extends AbstractMachine
     {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => $transition->getTargetState() == $targetState
+            fn(Transition $transition): bool => $transition->targetState == $targetState
         );
         if (count($candidates) == 0) {
             return null;

@@ -15,8 +15,8 @@ class PasswordProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
-        $model = $holder->getPrimaryHolder()->getModel2();
-        $original = $model ? $model->password : ($holder->getPrimaryHolder()->data['password'] ?? null);
+        $model = $holder->primaryHolder->getModel2();
+        $original = $model ? $model->password : ($holder->primaryHolder->data['password'] ?? null);
 
         if (isset($values['team']['password']) && $values['team']['password']) {
             $result = $values['team']['password'] = $this->hash($values['team']['password']);

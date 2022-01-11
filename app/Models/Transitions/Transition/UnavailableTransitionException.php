@@ -19,11 +19,10 @@ class UnavailableTransitionException extends InvalidStateException
      */
     public function __construct($transition, $holder)
     {
-        $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
         } elseif ($transition instanceof Transition) {
-            $source = $transition->getSourceState();
+            $source = $transition->sourceState;
         } else {
             throw new InvalidStateException();
         }
@@ -31,7 +30,7 @@ class UnavailableTransitionException extends InvalidStateException
             sprintf(
                 _('Transition from %s to %s is unavailable for %s'),
                 $source,
-                $target,
+                $transition->targetState,
                 $holder instanceof ModelHolder ? $holder->getModel() : $holder
             )
         );

@@ -12,7 +12,6 @@ use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Database\Connection;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -35,24 +34,16 @@ class Holder
     private array $baseHolders = [];
     /** @var BaseHolder[] */
     private array $secondaryBaseHolders = [];
-    private BaseHolder $primaryHolder;
-    private Connection $connection;
+    public BaseHolder $primaryHolder;
     private SecondaryModelStrategy $secondaryModelStrategy;
 
-    public function __construct(Connection $connection)
+    public function __construct()
     {
-        $this->connection = $connection;
-
         /*
          * This implicit processing is the first. It's not optimal
          * and it may be subject to change.
          */
         $this->processings[] = new GenKillProcessing();
-    }
-
-    public function getConnection(): Connection
-    {
-        return $this->connection;
     }
 
     public function setPrimaryHolder(string $name): void
@@ -64,15 +55,10 @@ class Holder
         );
     }
 
-    public function getPrimaryHolder(): BaseHolder
-    {
-        return $this->primaryHolder;
-    }
-
     public function addBaseHolder(BaseHolder $baseHolder): void
     {
         $baseHolder->setHolder($this);
-        $name = $baseHolder->getName();
+        $name = $baseHolder->name;
         $this->baseHolders[$name] = $baseHolder;
     }
 
@@ -190,7 +176,7 @@ class Holder
     ): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->getTargetState();
+            $newStates[$name] = $transition->targetState;
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
@@ -227,8 +213,8 @@ class Holder
                 $key = spl_object_hash($baseHolder->getService());
                 if (!isset($this->groupedHolders[$key])) {
                     $this->groupedHolders[$key] = [
-                        'joinOn' => $baseHolder->getJoinOn(),
-                        'joinTo' => $baseHolder->getJoinTo(),
+                        'joinOn' => $baseHolder->joinOn,
+                        'joinTo' => $baseHolder->joinTo,
                         'service' => $baseHolder->getService(),
                         'holders' => [],
                     ];

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\Utils\Logging\Message;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
 class Transition
@@ -19,12 +18,12 @@ class Transition
     protected $condition;
     private ?BehaviorType $behaviorType = null;
     private string $label;
-    /** @var callable[] */
+    /** @var TransitionCallback[] */
     public array $beforeExecuteCallbacks = [];
-    /** @var callable[] */
+    /** @var TransitionCallback[] */
     public array $afterExecuteCallbacks = [];
-    protected string $sourceState;
-    protected string $targetState;
+    public string $sourceState;
+    public string $targetState;
     protected ExpressionEvaluator $evaluator;
 
     public function setSourceState(string $sourceState): void
@@ -32,24 +31,14 @@ class Transition
         $this->sourceState = $sourceState;
     }
 
-    public function getSourceState(): string
-    {
-        return $this->sourceState;
-    }
-
     public function matchSource(string $source): bool
     {
-        return $this->getSourceState() === $source || $this->getSourceState() === AbstractMachine::STATE_ANY;
+        return $this->sourceState === $source || $this->sourceState === AbstractMachine::STATE_ANY;
     }
 
     public function setTargetState(string $targetState): void
     {
         $this->targetState = $targetState;
-    }
-
-    public function getTargetState(): string
-    {
-        return $this->targetState;
     }
 
     public function isCreating(): bool
@@ -59,7 +48,7 @@ class Transition
 
     public function isTerminating(): bool
     {
-        return $this->getTargetState() === AbstractMachine::STATE_TERMINATED;
+        return $this->targetState === AbstractMachine::STATE_TERMINATED;
     }
 
     public function getId(): string
@@ -88,11 +77,6 @@ class Transition
         $this->behaviorType = new BehaviorType($behaviorType);
     }
 
-    protected function getEvaluator(): ExpressionEvaluator
-    {
-        return $this->evaluator;
-    }
-
     public function setEvaluator(ExpressionEvaluator $evaluator): void
     {
         $this->evaluator = $evaluator;
@@ -118,7 +102,7 @@ class Transition
 
     protected function isConditionFulfilled(...$args): bool
     {
-        return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
+        return (bool)$this->evaluator->evaluate($this->condition, ...$args);
     }
 
     public function canExecute2(ModelHolder $model): bool
@@ -136,10 +120,10 @@ class Transition
         $this->afterExecuteCallbacks[] = $callBack;
     }
 
-    final public function callBeforeExecute(...$args): void
+    final public function callBeforeExecute(ModelHolder $holder, ...$args): void
     {
         foreach ($this->beforeExecuteCallbacks as $callback) {
-            $callback(...$args);
+            $callback($holder, ...$args);
         }
     }
 

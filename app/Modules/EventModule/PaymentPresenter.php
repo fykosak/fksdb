@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
-use FKSDB\Models\Transitions\Machine;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;

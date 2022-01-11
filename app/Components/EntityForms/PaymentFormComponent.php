@@ -74,6 +74,7 @@ class PaymentFormComponent extends EntityFormComponent
     /**
      * @throws BadTypeException
      * @throws OmittedControlException
+     * @throws NotImplementedException
      */
     protected function configureForm(Form $form): void
     {
@@ -93,8 +94,7 @@ class PaymentFormComponent extends EntityFormComponent
         $form->addComponent(
             new PersonPaymentContainer(
                 $this->getContext(),
-                $this->machine->event,
-                $this->machine->scheduleGroupTypes,
+                $this->machine,
                 !$this->isCreating()
             ),
             'payment_accommodation'

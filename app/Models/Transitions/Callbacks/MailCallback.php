@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Callbacks;
 
-use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -35,18 +34,9 @@ class MailCallback implements TransitionCallback
 
     /**
      * @throws BadTypeException
-     * @throws CannotAccessModelException|UnsupportedLanguageException
-     */
-    public function __invoke(ModelHolder $holder, ...$args): void
-    {
-        $this->invoke($holder, ...$args);
-    }
-
-    /**
-     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function invoke(ModelHolder $holder, ...$args): void
+    public function __invoke(ModelHolder $holder, ...$args): void
     {
         /** @var ModelPerson|null $person */
         $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);

@@ -31,7 +31,7 @@ class RelatedPersonAuthorizator
     public function isRelatedPerson(Holder $holder): bool
     {
         // everyone is related
-        if ($holder->getPrimaryHolder()->getModelState() == AbstractMachine::STATE_INIT) {
+        if ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
             return true;
         }
         $login = $this->user->getIdentity();

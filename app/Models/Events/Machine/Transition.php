@@ -145,7 +145,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         }
 
         $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
-        $validator = $baseHolder->getValidator();
+        $validator = $baseHolder->validator;
         $validator->validate($baseHolder);
         return $validator->getValidationResult();
     }
@@ -215,7 +215,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      */
     private function changeState(BaseHolder $holder): void
     {
-        $holder->setModelState($this->getTargetState());
+        $holder->setModelState($this->targetState);
     }
 
     /**
@@ -225,7 +225,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     {
         $parts = self::parseMask($mask);
 
-        if (count($parts) == 2 && $parts[1] != $this->getTargetState()) {
+        if (count($parts) == 2 && $parts[1] != $this->targetState) {
             return false;
         }
         $stateMask = $parts[0];

@@ -1,8 +1,8 @@
 {layout '../../app/Components/Controls/Events/layout.application.form.latte'}
-
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
 {block content}
 <ul>
-    {if $holder->getPrimaryHolder()->getModelState() == '__init' && !$control->isEventAdmin()}
+    {if $holder->primaryHolder->getModelState() == '__init' && !$control->isEventAdmin()}
         {if $presenter->getLang() == 'cs'}
             <li>Vyplnění této přihlášky přihlásíte tým na Fyziklání Online.
                 Každému členu týmu přijde e-mail s odkazem umožňujícím úpravu přihlášky.

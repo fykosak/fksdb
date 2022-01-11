@@ -97,7 +97,7 @@ class EventFormComponent extends EntityFormComponent
             $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $paramControl->setOption('description', $this->createParamDescription($holder));
             $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
-                $scheme = $holder->getPrimaryHolder()->getParamScheme();
+                $scheme = $holder->primaryHolder->paramScheme;
                 $parameters = $control->getValue();
                 try {
                     if ($parameters) {
@@ -136,7 +136,7 @@ class EventFormComponent extends EntityFormComponent
 
     private function createParamDescription(Holder $holder): Html
     {
-        $scheme = $holder->getPrimaryHolder()->getParamScheme();
+        $scheme = $holder->primaryHolder->paramScheme;
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
             $item = Html::el('li');

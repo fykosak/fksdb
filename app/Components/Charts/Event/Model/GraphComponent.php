@@ -73,7 +73,7 @@ class GraphComponent extends FrontEndComponent implements Chart
                 if ($transition->matches($state)) {
                     $edges[] = [
                         'from' => $state,
-                        'to' => $transition->getTargetState(),
+                        'to' => $transition->targetState,
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

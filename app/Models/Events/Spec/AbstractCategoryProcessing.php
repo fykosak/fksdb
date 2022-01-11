@@ -58,11 +58,10 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     }
 
     private function getPersonHistory(BaseHolder $baseHolder): ?ModelPersonHistory {
-        $name = $baseHolder->getName();
-        $personControls = $this->getControl("$name.person_id");
+        $personControls = $this->getControl("$baseHolder->name.person_id");
         $value = reset($personControls)->getValue(false);
         $person = $this->servicePerson->findByPrimary($value);
-        return $person->getHistoryByContestYear($baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getContestYear());
+        return $person->getHistoryByContestYear($baseHolder->holder->primaryHolder->event->getContestYear());
     }
 
     public function getOptions(Field $field): array {

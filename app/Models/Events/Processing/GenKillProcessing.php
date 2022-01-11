@@ -67,7 +67,7 @@ class GenKillProcessing implements Processing
                     } elseif (count($transitions) > 1) {
                         throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
                     } else {
-                        $result[$name] = reset($transitions)->getTargetState();
+                        $result[$name] = reset($transitions)->targetState;
                     }
                 }
             }

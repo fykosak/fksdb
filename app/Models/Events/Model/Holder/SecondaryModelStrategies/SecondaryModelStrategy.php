@@ -44,7 +44,7 @@ abstract class SecondaryModelStrategy
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
             $secondary = $service->getTable()->where($joinOn, $joinValue);
             if ($joinTo) {
-                $event = reset($holders)->getEvent();
+                $event = reset($holders)->event;
                 $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }
         } else {
@@ -70,7 +70,7 @@ abstract class SecondaryModelStrategy
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(
                     BaseHolder::EVENT_COLUMN,
-                    $baseHolder->getEvent()->getPrimary()
+                    $baseHolder->event->getPrimary()
                 );
                 $conflicts = [];
                 foreach ($existing as $secondaryModel) {

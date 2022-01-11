@@ -79,7 +79,7 @@ class PersonFactory extends AbstractFactory
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
-        $event = $field->getBaseHolder()->getEvent();
+        $event = $field->getBaseHolder()->event;
 
         $modifiableResolver = new PersonContainerResolver(
             $field,
@@ -127,7 +127,7 @@ class PersonFactory extends AbstractFactory
         parent::validate($field, $validator);
 
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $event = $field->getBaseHolder()->getEvent();
+        $event = $field->getBaseHolder()->event;
         $contestYear = $event->getContestYear();
         $personId = $field->getValue();
         $person = $personId ? $this->servicePerson->findByPrimary($personId) : null;
@@ -153,7 +153,7 @@ class PersonFactory extends AbstractFactory
                     $validator->addError(
                         sprintf(
                             _('%s: %s is a required field.'),
-                            $field->getBaseHolder()->getLabel(),
+                            $field->getBaseHolder()->label,
                             $field->getLabel() . '.' . $subName . '.' . $fieldName
                         )
                     ); //TODO better GUI name than DB identifier

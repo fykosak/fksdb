@@ -44,8 +44,8 @@ class ImportHandler {
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $baseHolderName = $primaryBaseHolder->getName();
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
+        $baseHolderName = $primaryBaseHolder->name;
 
         $handler->setErrorMode($errorMode);
         $handler->beginTransaction();
@@ -79,7 +79,7 @@ class ImportHandler {
     private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
         $parts = explode('.', $columnName);
         if (count($parts) == 1) {
-            return [$baseHolder->getName(), $parts[0]];
+            return [$baseHolder->name, $parts[0]];
         } else {
             return $parts;
         }
@@ -89,7 +89,7 @@ class ImportHandler {
      * @throws ImportHandlerException
      */
     private function rowToValues(iterable $row): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
         $values = [];
         $fieldExists = false;
         $fieldNames = array_keys($primaryBaseHolder->getFields());
@@ -118,7 +118,7 @@ class ImportHandler {
      * @throws NeonSchemaException
      */
     private function createHoldersMap(): array {
-        $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
+        $primaryBaseHolder = $this->source->getDummyHolder()->primaryHolder;
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 
         $result = [];
@@ -126,7 +126,7 @@ class ImportHandler {
             if (self::KEY_NAME == $pkName) {
                 $keyValue = $pkValue;
             } else {
-                $fields = $holder->getPrimaryHolder()->getFields();
+                $fields = $holder->primaryHolder->getFields();
                 $keyValue = $fields[self::KEY_NAME]->getValue();
             }
             $result[$keyValue] = $holder;

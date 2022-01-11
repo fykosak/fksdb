@@ -99,8 +99,8 @@ class ApplicationHandler
         try {
             $this->beginTransaction();
             $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
-            if (!$transition->matches($holder->getPrimaryHolder()->getModelState())) {
-                throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel2());
+            if (!$transition->matches($holder->primaryHolder->getModelState())) {
+                throw new UnavailableTransitionException($transition, $holder->primaryHolder->getModel2());
             }
 
             $transition->execute($holder);
@@ -112,7 +112,7 @@ class ApplicationHandler
             if ($transition->isCreating()) {
                 $this->logger->log(
                     new Message(
-                        sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
                         Message::LVL_SUCCESS
                     )
                 );
@@ -123,7 +123,7 @@ class ApplicationHandler
                     new Message(
                         sprintf(
                             _('State of application "%s" changed.'),
-                            (string)$holder->getPrimaryHolder()->getModel2()
+                            (string)$holder->primaryHolder->getModel2()
                         ),
                         Message::LVL_INFO
                     )
@@ -142,7 +142,7 @@ class ApplicationHandler
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(
                 _('Data in group "%s" collide with an existing application.'),
-                $exception->getBaseHolder()->getLabel()
+                $exception->getBaseHolder()->label
             );
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, Message::LVL_ERROR));
@@ -207,7 +207,7 @@ class ApplicationHandler
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
                 $this->logger->log(
                     new Message(
-                        sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        sprintf(_('Application "%s" created.'), (string)$holder->primaryHolder->getModel2()),
                         Message::LVL_SUCCESS
                     )
                 );
@@ -220,7 +220,7 @@ class ApplicationHandler
                     new Message(
                         sprintf(
                             _('State of application "%s" changed.'),
-                            (string)$holder->getPrimaryHolder()->getModel2()
+                            (string)$holder->primaryHolder->getModel2()
                         ),
                         Message::LVL_INFO
                     )
@@ -232,7 +232,7 @@ class ApplicationHandler
             ) {
                 $this->logger->log(
                     new Message(
-                        sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        sprintf(_('Application "%s" saved.'), (string)$holder->primaryHolder->getModel2()),
                         Message::LVL_SUCCESS
                     )
                 );
@@ -250,7 +250,7 @@ class ApplicationHandler
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(
                 _('Data in group "%s" collide with an existing application.'),
-                $exception->getBaseHolder()->getLabel()
+                $exception->getBaseHolder()->label
             );
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, Message::LVL_ERROR));
@@ -276,7 +276,7 @@ class ApplicationHandler
             $values = $data;
         }
         Debugger::log(json_encode((array)$values), 'app-form');
-        $primaryName = $holder->getPrimaryHolder()->getName();
+        $primaryName = $holder->primaryHolder->name;
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
             $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
@@ -302,7 +302,7 @@ class ApplicationHandler
                         sprintf(
                             $msg,
                             $this->machine->getBaseMachine($name)->getStateName($state),
-                            $holder->getBaseHolder($name)->getLabel(),
+                            $holder->getBaseHolder($name)->label,
                             $this->machine->getBaseMachine($name)->getStateName($newState)
                         )
                     );

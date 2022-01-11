@@ -37,16 +37,4 @@ abstract class AbstractSymbolGenerator implements TransitionCallback
         $info = $this->create($model, ...$args);
         $this->servicePayment->updateModel($model, $info);
     }
-
-    /**
-     * @throws AlreadyGeneratedSymbolsException
-     * @throws UnsupportedCurrencyException
-     */
-    final public function invoke(ModelHolder $holder, ...$args): void
-    {
-        /** @var ModelPayment $model */
-        $model = $holder->getModel();
-        $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel($model, $info);
-    }
 }
