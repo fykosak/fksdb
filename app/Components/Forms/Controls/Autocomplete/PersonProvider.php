@@ -7,11 +7,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PersonProvider implements FilteredDataProvider {
 
     private const PLACE = 'place';
@@ -27,7 +22,6 @@ class PersonProvider implements FilteredDataProvider {
 
     /**
      * Syntactic sugar, should be solved more generally.
-     * @param ModelContest $contest
      */
     public function filterOrgs(ModelContest $contest): void {
         $this->searchTable = $this->servicePerson->getTable()
@@ -40,9 +34,6 @@ class PersonProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $search = trim($search);
@@ -71,7 +62,7 @@ class PersonProvider implements FilteredDataProvider {
 
     private function getItem(ModelPerson $person): array {
         $place = null;
-        $address = $person->getDeliveryAddress2();
+        $address = $person->getDeliveryAddress();
         if ($address) {
             $place = $address->city;
         }

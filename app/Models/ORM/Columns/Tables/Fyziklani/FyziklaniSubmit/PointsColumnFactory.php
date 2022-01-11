@@ -11,13 +11,12 @@ class PointsColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelFyziklaniSubmit $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $el = Html::el('span');
         if (!\is_null($model->points)) {
             return $el->addText($model->points);
         }
-        return $el->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
+        return $el->addAttributes(['class' => 'badge bg-warning'])->addText(_('revoked'));
     }
 }

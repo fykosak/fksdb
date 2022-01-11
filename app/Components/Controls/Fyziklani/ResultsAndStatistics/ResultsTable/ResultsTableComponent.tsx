@@ -1,7 +1,7 @@
 import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
 import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
 import ResultsShower from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/ResultsShower';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
 import FilterSelect from './components/filters/select/Index';
 import App from './components/Index';
@@ -13,7 +13,7 @@ interface OwnProps {
     data: ResponseData;
 }
 
-export default class ResultsTableComponent extends React.Component<OwnProps, {}> {
+export default class ResultsTableComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
             <FilterSelect/>

@@ -14,12 +14,8 @@ use Nette\DI\Definitions\Statement;
 use Nette\DI\ServiceCreationException;
 use Nette\NotImplementedException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class Helpers {
+class Helpers
+{
 
     /** @var string[] */
     private static array $semanticMap = [
@@ -32,7 +28,8 @@ class Helpers {
         'leq' => Leq::class,
     ];
 
-    public static function registerSemantic(array $semanticMap): void {
+    public static function registerSemantic(array $semanticMap): void
+    {
         self::$semanticMap += $semanticMap;
     }
 
@@ -42,7 +39,8 @@ class Helpers {
      * @param Statement|mixed $expression
      * @return array|Statement|mixed
      */
-    public static function statementFromExpression($expression) {
+    public static function statementFromExpression($expression)
+    {
         if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
@@ -58,9 +56,7 @@ class Helpers {
 
             return new Statement($class, $arguments);
         } elseif (is_array($expression)) {
-            return array_map(function ($subExpresion) {
-                return self::statementFromExpression($subExpresion);
-            }, $expression);
+            return array_map(fn($subExpresion) => self::statementFromExpression($subExpresion), $expression);
         } else {
             return $expression;
         }
@@ -70,12 +66,12 @@ class Helpers {
      * Transforms and evalutes the expression during runtime.
      *
      * @param mixed $expression
-     * @param Container $container
      * @return mixed
      * @throws ServiceCreationException
      * @throws \ReflectionException
      */
-    public static function evalExpression($expression, Container $container) {
+    public static function evalExpression($expression, Container $container)
+    {
         if ($expression instanceof Statement) {
             $arguments = [];
             foreach ($expression->arguments as $attribute) {
@@ -89,10 +85,10 @@ class Helpers {
                 return $entity(...$arguments);
             } else {
                 throw new NotImplementedException();
-              /*  $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
-                    return $this->getByType($type);
-                }));*/
+                /*  $rc = ClassType::from($entity);
+                  return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
+                      return $this->getByType($type);
+                  }));*/
                 // TODO!!!
             }
         } else {
@@ -102,11 +98,11 @@ class Helpers {
 
     /**
      * @param mixed $expressionArray
-     * @param Container $container
      * @return mixed
      * @throws \ReflectionException
      */
-    public static function evalExpressionArray($expressionArray, Container $container) {
+    public static function evalExpressionArray($expressionArray, Container $container)
+    {
         if (is_iterable($expressionArray)) {
             $result = [];
             foreach ($expressionArray as $key => $expression) {
@@ -117,11 +113,13 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
+
     /**
      * @param $statement
      * @return Statement|string
      */
-    public static function translate($statement) {
+    public static function translate($statement)
+    {
         if ($statement instanceof Statement && $statement->entity === '_') {
             return _(...$statement->arguments);
         }

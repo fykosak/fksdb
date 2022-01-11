@@ -1,23 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
-use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\Logger;
+use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonScheme;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
@@ -28,8 +31,8 @@ use Nette\Utils\Html;
 /**
  * @property ModelEvent|null $model
  */
-class EventFormComponent extends EntityFormComponent {
-
+class EventFormComponent extends EntityFormComponent
+{
     public const CONT_EVENT = 'event';
 
     private ModelContestYear $contestYear;
@@ -38,7 +41,8 @@ class EventFormComponent extends EntityFormComponent {
     private ServiceEvent $serviceEvent;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model) {
+    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model)
+    {
         parent::__construct($container, $model);
         $this->contestYear = $contestYear;
     }
@@ -56,34 +60,34 @@ class EventFormComponent extends EntityFormComponent {
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->contestYear->year;
         /** @var ModelEvent $model */
         $model = $this->serviceEvent->storeModel($data, $this->model);
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Logger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONT_EVENT => $this->model->toArray(),
@@ -112,11 +116,11 @@ class EventFormComponent extends EntityFormComponent {
     }
 
     /**
-     * @return ModelContainer
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    private function createEventContainer(): ModelContainer {
+    private function createEventContainer(): ModelContainer
+    {
         return $this->singleReflectionFormFactory->createContainer('event', [
             'event_type_id',
             'event_year',
@@ -130,7 +134,8 @@ class EventFormComponent extends EntityFormComponent {
         ], $this->contestYear->getContest());
     }
 
-    private function createParamDescription(Holder $holder): Html {
+    private function createParamDescription(Holder $holder): Html
+    {
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -146,15 +151,16 @@ class EventFormComponent extends EntityFormComponent {
         return $result;
     }
 
-    private function updateTokens(ModelEvent $event): void {
+    private function updateTokens(ModelEvent $event): void
+    {
         $connection = $this->serviceAuthToken->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
-        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+        /** @var ModelAuthToken $token $token */
+        foreach ($this->serviceAuthToken->findTokensByEventId($event) as $token) {
             $this->serviceAuthToken->updateModel($token, $tokenData);
         }
         $connection->commit();
     }
-
 }

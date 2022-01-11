@@ -8,18 +8,16 @@ use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
 use FKSDB\Models\ORM\Models\Events\ModelDsefParticipant;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\SmartObject;
 use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated
  */
-class GroupOptions implements OptionsProvider {
-
+class GroupOptions implements OptionsProvider
+{
     use SmartObject;
 
     private ServiceMDsefParticipant $serviceMParticipant;
@@ -34,15 +32,13 @@ class GroupOptions implements OptionsProvider {
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
-     * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
     public function __construct(
         ServiceMDsefParticipant $serviceMParticipant,
         ServiceDsefGroup $serviceDsefGroup,
-        $includeStates = Machine::STATE_ANY,
+        $includeStates = AbstractMachine::STATE_ANY,
         $excludeStates = ['cancelled']
     ) {
         $this->includeStates = $includeStates;
@@ -51,7 +47,8 @@ class GroupOptions implements OptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
-    private function transformGroups(iterable $groups): array {
+    private function transformGroups(iterable $groups): array
+    {
         $result = [];
         foreach ($groups as $name => $capacity) {
             $result[] = [
@@ -63,14 +60,15 @@ class GroupOptions implements OptionsProvider {
     }
 
     /**
-     * @param ModelEvent $event
      * @return ModelDsefGroup[]
      */
-    private function getGroups(ModelEvent $event): array {
+    private function getGroups(ModelEvent $event): array
+    {
         return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }
 
-    public function getOptions(Field $field): array {
+    public function getOptions(Field $field): array
+    {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         /** @var ModelDsefParticipant $model */
@@ -82,10 +80,10 @@ class GroupOptions implements OptionsProvider {
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)
             ->where('NOT event_participant.event_participant_id', $model ? $model->getPrimary(false) : null);
-        if ($this->includeStates !== Machine::STATE_ANY) {
+        if ($this->includeStates !== AbstractMachine::STATE_ANY) {
             $selection->where('event_participant.status', $this->includeStates);
         }
-        if ($this->excludeStates !== Machine::STATE_ANY) {
+        if ($this->excludeStates !== AbstractMachine::STATE_ANY) {
             $selection->where('NOT event_participant.status', $this->excludeStates);
         } else {
             $selection->where('1=0');
@@ -95,7 +93,7 @@ class GroupOptions implements OptionsProvider {
         $selfGroup = $model ? $model->e_dsef_group_id : $baseHolder->data['e_dsef_group_id'];
         $result = [];
         foreach ($groups as $key => $group) {
-            $occupied = isset($groupOccupied[$key]) ? $groupOccupied[$key] : 0;
+            $occupied = $groupOccupied[$key] ?? 0;
             if ($group->capacity > $occupied) {
                 $remains = $group->capacity - $occupied;
                 if ($selfGroup === $key) {

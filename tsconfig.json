@@ -13,6 +13,9 @@
       "FKSDB/*": [
         "./app/*"
       ],
+      "vendor/*": [
+        "./vendor/*"
+      ],
       "@translator/*": [
         "./app/Models/Localization/*"
       ]

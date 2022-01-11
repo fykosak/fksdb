@@ -10,12 +10,10 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Lukáš Timko <lukast@fykos.cz>
- *
  * @property-read string state
  * @property-read int e_fyziklani_team_id
- * @property-read int points
+ * @property-read int|null points
+ * @property-read bool|null skipped
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id
@@ -57,8 +55,6 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource {
     }
 
     /**
-     * @param bool $throws
-     * @return bool
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */

@@ -32,10 +32,7 @@ use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
  * It's a f**** magic!
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EventsExtension extends CompilerExtension {
 
@@ -78,7 +75,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @return void
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -235,9 +231,6 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param string $name
-     * @param array $definition
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -281,10 +274,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param string $eventName
-     * @param string $baseName
-     * @param string $instanceName
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -328,8 +317,6 @@ class EventsExtension extends CompilerExtension {
      */
 
     /**
-     * @param string $name
-     * @param array $definition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -370,11 +357,6 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param string $eventName
-     * @param string $baseName
-     * @param string $instanceName
-     * @param array $instanceDefinition
-     * @return ServiceDefinition
      * @throws MachineDefinitionException
      * @throws NeonSchemaException
      */
@@ -410,7 +392,7 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);
 
         $config = $this->getConfig();
-        $paramScheme = isset($definition['paramScheme']) ? $definition['paramScheme'] : $config[$eventName]['paramScheme'];
+        $paramScheme = $definition['paramScheme'] ?? $config[$eventName]['paramScheme'];
         foreach (array_keys($paramScheme) as $paramKey) {
             $this->validateConfigName($paramKey);
         }

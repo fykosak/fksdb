@@ -7,7 +7,7 @@ interface OwnProps {
     options?: DateTimeFormatOptions;
 }
 
-export default class TimeDisplay extends React.Component<OwnProps, {}> {
+export default class TimeDisplay extends React.Component<OwnProps> {
 
     public render() {
         const {options} = this.props;

@@ -19,9 +19,6 @@ abstract class LinkFactory {
     }
 
     /**
-     * @param Presenter $presenter
-     * @param AbstractModel $model
-     * @return string
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
@@ -30,8 +27,6 @@ abstract class LinkFactory {
     }
 
     /**
-     * @param AbstractModel $modelSingle
-     * @return AbstractModel|null
      * @throws CannotAccessModelException
      */
     protected function getModel(AbstractModel $modelSingle): ?AbstractModel {
@@ -42,8 +37,6 @@ abstract class LinkFactory {
     }
 
     /**
-     * @param AbstractModel $model
-     * @return array
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */

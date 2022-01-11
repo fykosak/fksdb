@@ -1,52 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use Fykosak\Utils\Logging\FlashMessageDump;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
  */
-class ApplicationComponent extends BaseComponent {
+class ApplicationComponent extends BaseComponent
+{
 
     private ApplicationHandler $handler;
     private Holder $holder;
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
     private string $templateFile;
-    private ContestAuthorizator $contestAuthorizator;
+    private EventAuthorizator $eventAuthorizator;
 
-    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder) {
+    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
+    {
         parent::__construct($container);
         $this->handler = $handler;
         $this->holder = $holder;
     }
 
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator): void {
-        $this->contestAuthorizator = $contestAuthorizator;
+    public function injectContestAuthorizator(EventAuthorizator $eventAuthorizator): void
+    {
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate(string $template): void {
+    public function setTemplate(string $template): void
+    {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
@@ -54,23 +57,27 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    public function setRedirectCallback(callable $redirectCallback): void {
+    public function setRedirectCallback(callable $redirectCallback): void
+    {
         $this->redirectCallback = $redirectCallback;
     }
 
     /**
      * Syntactic sugar for the template.
      */
-    public function isEventAdmin(): bool {
+    public function isEventAdmin(): bool
+    {
         $event = $this->holder->getPrimaryHolder()->getEvent();
-        return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
+        return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $this->renderForm();
     }
 
-    final public function renderForm(): void {
+    final public function renderForm(): void
+    {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
@@ -82,10 +89,10 @@ class ApplicationComponent extends BaseComponent {
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl
+    {
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
@@ -117,7 +124,14 @@ class ApplicationComponent extends BaseComponent {
         $primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
 
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), true, true) as $transition) {
+        foreach (
+            $primaryMachine->getAvailableTransitions(
+                $this->holder,
+                $this->holder->getPrimaryHolder()->getModelState(),
+                true,
+                true
+            ) as $transition
+        ) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -127,13 +141,9 @@ class ApplicationComponent extends BaseComponent {
             };
 
             if ($transition->isCreating()) {
-                if ($transitionSubmit !== false) {
-                    $transitionSubmit = $submit;
-                } elseif ($transitionSubmit) {
-                    $transitionSubmit = false; // if there is more than one submit set no one
-                }
+                $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()]);
         }
 
         /*
@@ -141,10 +151,8 @@ class ApplicationComponent extends BaseComponent {
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
-        $submit->onClick[] = function (): void {
-            $this->finalRedirect();
-        };
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-warning']);
+        $submit->onClick[] = fn() => $this->finalRedirect();
 
         /*
          * Custom adjustments
@@ -160,7 +168,8 @@ class ApplicationComponent extends BaseComponent {
         return $result;
     }
 
-    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void {
+    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void
+    {
         try {
             $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
@@ -168,17 +177,17 @@ class ApplicationComponent extends BaseComponent {
         } catch (ApplicationHandlerException $exception) {
             /* handled elsewhere, here it's to just prevent redirect */
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
-            if (!$form) { // w/out form we don't want to show anything with the same GET params
-                $this->finalRedirect();
-            }
         }
     }
 
-    private function canEdit(): bool {
-        return $this->holder->getPrimaryHolder()->getModelState() != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+    private function canEdit(): bool
+    {
+        return $this->holder->getPrimaryHolder()->getModelState()
+            != AbstractMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
-    private function finalRedirect(): void {
+    private function finalRedirect(): void
+    {
         if ($this->redirectCallback) {
             $model = $this->holder->getPrimaryHolder()->getModel2();
             $id = $model ? $model->getPrimary(false) : null;

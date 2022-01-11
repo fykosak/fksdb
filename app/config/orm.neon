@@ -1,31 +1,31 @@
 parameters:
     event_participant:
         states:
-            applied: [badge : 'badge badge-1', label : 'Applied']
-            applied.nodsef: [badge : 'badge badge-1', label : 'applied.nodsef']
-            applied.notsaf: [badge : 'badge badge-1', label : 'applied.notsaf']
-            applied.tsaf: [badge : 'badge badge-1', label : 'applied.tsaf']
-            approved: [badge : 'badge badge-1', label : 'Approved']
-            interested: [badge : 'badge badge-2', label : 'Interested']
-            pending: [badge : 'badge badge-2', label : 'Pending']
-            participated: [badge : 'badge badge-3', label : 'Participated']
-            missed: [badge : 'badge badge-4', label : 'Missed']
-            disqualified : [badge : 'badge badge-5', label : 'Disqualified']
-            rejected : [badge : 'badge badge-6', label : 'Rejected']
-            cancelled : [badge : 'badge badge-6', label : 'Cancelled']
-            paid : [badge : 'badge badge-7', label : 'Paid']
-            out_of_db: [badge : 'badge badge-8', label : 'Out of FKSDB']
-            spare: [badge : 'badge badge-9', label : 'Spare']
-            spare1: [badge : 'badge badge-9', label : 'spare1']
-            spare2: [badge : 'badge badge-9', label : 'spare2']
-            spare3: [badge : 'badge badge-9', label : 'spare3']
-            spare.tsaf: [badge : 'badge badge-9', label : 'spare.tsaf']
-            auto.spare: [badge : 'badge badge-9', label : 'auto.spare']
-            invited: [badge : 'badge badge-10', label : 'Invited']
-            invited1: [badge : 'badge badge-10', label : 'invited1']
-            invited2: [badge : 'badge badge-10', label : 'invited2']
-            invited3: [badge : 'badge badge-10', label : 'invited3']
-            auto.invited: [badge : 'badge badge-10', label : 'auto.invited']
+            applied: [badge : 'badge bg-color-1', label : 'Applied']
+            applied.nodsef: [badge : 'badge bg-color-1', label : 'applied.nodsef']
+            applied.notsaf: [badge : 'badge bg-color-1', label : 'applied.notsaf']
+            applied.tsaf: [badge : 'badge bg-color-1', label : 'applied.tsaf']
+            approved: [badge : 'badge bg-color-1', label : 'Approved']
+            interested: [badge : 'badge bg-color-2', label : 'Interested']
+            pending: [badge : 'badge bg-color-2', label : 'Pending']
+            participated: [badge : 'badge bg-color-3', label : 'Participated']
+            missed: [badge : 'badge bg-color-4', label : 'Missed']
+            disqualified : [badge : 'badge bg-color-5', label : 'Disqualified']
+            rejected : [badge : 'badge bg-color-6', label : 'Rejected']
+            cancelled : [badge : 'badge bg-color-6', label : 'Cancelled']
+            paid : [badge : 'badge bg-color-7', label : 'Paid']
+            out_of_db: [badge : 'badge bg-color-8', label : 'Out of FKSDB']
+            spare: [badge : 'badge bg-color-9', label : 'Spare']
+            spare1: [badge : 'badge bg-color-9', label : 'spare1']
+            spare2: [badge : 'badge bg-color-9', label : 'spare2']
+            spare3: [badge : 'badge bg-color-9', label : 'spare3']
+            spare.tsaf: [badge : 'badge bg-color-9', label : 'spare.tsaf']
+            auto.spare: [badge : 'badge bg-color-9', label : 'auto.spare']
+            invited: [badge : 'badge bg-color-10', label : 'Invited']
+            invited1: [badge : 'badge bg-color-10', label : 'invited1']
+            invited2: [badge : 'badge bg-color-10', label : 'invited2']
+            invited3: [badge : 'badge bg-color-10', label : 'invited3']
+            auto.invited: [badge : 'badge bg-color-10', label : 'auto.invited']
 
 
 orm:
@@ -96,11 +96,11 @@ orm:
                     type: state
                     title: _(State)
                     states:
-                        saved: [badge :'badge badge-1', label: Saved]
-                        waiting: [badge :'badge badge-2', label: Waiting]
-                        sent: [badge :'badge badge-3', label: Sent]
-                        failed: [badge :'badge badge-4', label: Failed]
-                        canceled: [badge :'badge badge-6', label: Canceled]
+                        saved: [badge :'badge bg-color-1', label: Saved]
+                        waiting: [badge :'badge bg-color-2', label: Waiting]
+                        sent: [badge :'badge bg-color-3', label: Sent]
+                        failed: [badge :'badge bg-color-4', label: Failed]
+                        canceled: [badge :'badge bg-color-6', label: Canceled]
              #created:
              #send:
         event:
@@ -388,10 +388,10 @@ orm:
                      type: state
                      title: _(State)
                      states:
-                         waiting: [badge: 'badge badge-warning', label: 'Waiting for paying']
-                         canceled: [badge: 'badge badge-secondary', label: 'Payment canceled']
-                         received: [badge: 'badge badge-success', label: 'Payment received']
-                         new: [badge: 'badge badge-primary', label: 'New payment']
+                         waiting: [badge: 'badge bg-warning', label: 'Waiting for paying']
+                         canceled: [badge: 'badge bg-secondary', label: 'Payment canceled']
+                         received: [badge: 'badge bg-success', label: 'Payment received']
+                         new: [badge: 'badge bg-primary', label: 'New payment']
              linkFactories:
                  detail:
                       destination: ':Event:Payment:detail'
@@ -669,10 +669,10 @@ orm:
                  state:
                     type: state
                     states:
-                        proposal: [badge: 'badge badge-info', label: 'Proposal']
-                        cooperate: [badge: 'badge badge-success', label: 'Cooperate']
-                        ended: [badge: 'badge badge-dark',  label: 'Ended']
-                        undefined: [badge: 'badge badge-secondary',  label: 'Undefined']
+                        proposal: [badge: 'badge bg-info', label: 'Proposal']
+                        cooperate: [badge: 'badge bg-success', label: 'Cooperate']
+                        ended: [badge: 'badge bg-dark',  label: 'Ended']
+                        undefined: [badge: 'badge bg-secondary',  label: 'Undefined']
                     title: _('Cooperation status')
                  since:
                     type: date
@@ -717,8 +717,8 @@ orm:
                     type: state
                     title: _(State)
                     states:
-                        not_checked: [badge: 'badge badge-danger', label: 'not checked']
-                        checked: [badge: 'badge badge-success', label: 'checked']
+                        not_checked: [badge: 'badge bg-danger', label: 'not checked']
+                        checked: [badge: 'badge bg-success', label: 'checked']
                 created:
                     type: dateTime
                     title: _(Created)
@@ -857,15 +857,16 @@ orm:
                      type: state
                      title: _(Type)
                      states:
-                         accommodation: [badge: 'badge badge-1', label: 'Accommodation']
-                         accommodation_gender: [badge: 'badge badge-2', label: 'Accommodation gender']
-                         accommodation_teacher: [badge: 'badge badge-3', label: 'Accommodation teacher']
-                         teacher_present: [badge: 'badge badge-4', label: 'Schedule during compotition']
-                         weekend: [badge: 'badge badge-5', label: 'Weekend']
-                         weekend_info: [badge: 'badge badge-6', label: 'Weekend info']
-                         visa: [badge: 'badge badge-7', label: 'Visa']
-                         dsef_morning: [badge: 'badge badge-8', label: 'DSEF morning']
-                         dsef_afternoon: [badge: 'badge badge-9', label: 'DSEF afternoon']
+                         accommodation: [badge: 'badge bg-color-1', label: 'Accommodation']
+                         accommodation_gender: [badge: 'badge bg-color-2', label: 'Accommodation gender']
+                         accommodation_teacher: [badge: 'badge bg-color-3', label: 'Accommodation teacher']
+                         teacher_present: [badge: 'badge bg-color-4', label: 'Schedule during competition']
+                         weekend: [badge: 'badge bg-color-5', label: 'Weekend']
+                         weekend_info: [badge: 'badge bg-color-6', label: 'Weekend info']
+                         visa: [badge: 'badge bg-color-7', label: 'Visa']
+                         dsef_morning: [badge: 'badge bg-color-8', label: 'DSEF morning']
+                         dsef_afternoon: [badge: 'badge bg-color-9', label: 'DSEF afternoon']
+                         vaccination_covid: [badge: 'badge bg-color-10', label: 'Covid-19 Vaccination']
                  start:
                     type: dateTime
                     title: _(Schedule start)
@@ -1000,11 +1001,12 @@ orm:
                      type: state
                      title: _(Category)
                      states:
-                         game: {badge: 'badge badge-1', label: 'Game'}
-                         game-extension: {badge: 'badge badge-1', label: 'Game extension'}
-                         apparel: {badge: 'badge badge-2', label: 'Apparel'}
-                         book: {badge: 'badge badge-3', label: 'Book'}
-                         other: {badge: 'badge badge-4', label: 'Book'}
+                         game: {badge: 'badge bg-color-1', label: 'Game'}
+                         game-extension: {badge: 'badge bg-color-1', label: 'Game extension'}
+                         apparel: {badge: 'badge bg-color-2', label: 'Apparel'}
+                         book: {badge: 'badge bg-color-3', label: 'Book'}
+                         other: {badge: 'badge bg-color-4', label: 'Book'}
+
         warehouse_producer:
              service: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
              model: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
@@ -1031,6 +1033,9 @@ orm:
         e_dsef_group:
             service: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
             model: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
+        unsubscribed_email:
+            model: Fykosak\NetteORM\DummyModel
+            service: FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail
 
 services:
     event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant

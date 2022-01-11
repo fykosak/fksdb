@@ -6,11 +6,6 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\FieldFactory;
 use Nette\Forms\Controls\BaseControl;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Field {
 
     private string $name;
@@ -73,7 +68,6 @@ class Field {
 
     /**
      * @param mixed $default
-     * @return void
      */
     public function setDefault($default): void {
         $this->default = $default;
@@ -128,7 +122,6 @@ class Field {
 
     /**
      * @param callable|bool $visible
-     * @return void
      */
     public function setVisible($visible): void {
         $this->visible = $visible;
@@ -157,6 +150,6 @@ class Field {
     }
 
     public function __toString(): string {
-        return "{$this->baseHolder}.{$this->name}";
+        return "$this->baseHolder.$this->name";
     }
 }

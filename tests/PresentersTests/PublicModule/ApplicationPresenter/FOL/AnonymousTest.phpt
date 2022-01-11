@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
 $container = require '../../../../Bootstrap.php';
@@ -12,15 +14,17 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
 use Tester\Assert;
 
-class AnonymousTest extends FolTestCase {
+class AnonymousTest extends FolTestCase
+{
 
-    public function testDisplay(): void {
+    public function testDisplay(): void
+    {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
-            'eventId' => $this->eventId,
+            'eventId' => $this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);
@@ -33,7 +37,8 @@ class AnonymousTest extends FolTestCase {
         Assert::contains('Register team', $html);
     }
 
-    public function testAnonymousRegistration(): void {
+    public function testAnonymousRegistration(): void
+    {
         $request = $this->createPostRequest([
             'team' => [
                 'name' => 'Okurkový tým',
@@ -52,7 +57,7 @@ class AnonymousTest extends FolTestCase {
                     ],
                     'person_history' => [
                         'school_id__meta' => 'JS',
-                        'school_id' => (string)1,
+                        'school_id' => (string)$this->genericSchool->school_id,
                         'study_year' => '',
                     ],
                 ],
@@ -65,11 +70,11 @@ class AnonymousTest extends FolTestCase {
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $teamApplication = $this->assertTeamApplication($this->eventId, 'Okurkový tým');
+        $teamApplication = $this->assertTeamApplication($this->event, 'Okurkový tým');
         Assert::equal(sha1('1234'), $teamApplication->password);
         Assert::equal(ModelFyziklaniTeam::CATEGORY_OPEN, $teamApplication->category);
 
-        $application = $this->assertApplication($this->eventId, 'ksaad@kalo.cz');
+        $application = $this->assertApplication($this->event, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_fyziklani_participant');

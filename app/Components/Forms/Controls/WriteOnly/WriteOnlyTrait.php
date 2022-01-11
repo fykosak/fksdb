@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
-use FKSDB\Components\Controls\Loaders\JavaScriptCollector;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -15,8 +14,6 @@ use Nette\Utils\Html;
  *           writeOnlyAdjustControl in getControl
  *           writeOnlyLoadHttpData in loadHttpData after original loadHttpData
  *       and writeOnlyAttached in attached.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 trait WriteOnlyTrait {
 
@@ -28,24 +25,16 @@ trait WriteOnlyTrait {
 
     private bool $writeOnlyAttachedOnValidate = false;
 
-    private bool $writeOnlyAttachedJS = false;
-
     private function writeOnlyAppendMonitors(): void {
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->writeOnlyAttachedOnValidate) {
                 $form->onValidate = $form->onValidate ?: [];
-                array_unshift($form->onValidate, function (Form $form): void {
+                array_unshift($form->onValidate, function (): void {
                     if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
                         $this->writeOnlyDisable();
                     }
                 });
                 $this->writeOnlyAttachedOnValidate = true;
-            }
-        });
-        $this->monitor(JavaScriptCollector::class, function (JavaScriptCollector $collector) {
-            if (!$this->writeOnlyAttachedJS) {
-                $this->writeOnlyAttachedJS = true;
-                $collector->registerJSFile('js/writeOnlyInput.js');
             }
         });
     }

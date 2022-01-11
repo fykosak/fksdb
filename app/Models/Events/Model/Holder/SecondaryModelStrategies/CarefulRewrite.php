@@ -7,11 +7,6 @@ use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class CarefulRewrite extends SecondaryModelStrategy {
 
     private array $safeKeys;
@@ -37,11 +32,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     /**
-     * @param ActiveRow $foundModel
-     * @param array $joinData
      * @param AbstractService|AbstractServiceMulti $service
-     * @param BaseHolder $holder
-     * @return array
      */
     private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
         $foundArray = $foundModel->toArray();
@@ -62,10 +53,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     }
 
     /**
-     * @param ActiveRow $foundModel
-     * @param array $joinData
      * @param AbstractService|AbstractServiceMulti $service
-     * @param BaseHolder $holder
      */
     private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
         $data = [];

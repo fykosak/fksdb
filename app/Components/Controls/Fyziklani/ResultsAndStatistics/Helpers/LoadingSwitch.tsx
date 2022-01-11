@@ -3,14 +3,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 interface OwnProps {
-    children: any;
+    children: React.ReactNode;
 }
 
 interface StateProps {
     isReady: boolean;
 }
 
-class LoadingSwitch extends React.Component<StateProps & OwnProps, {}> {
+class LoadingSwitch extends React.Component<StateProps & OwnProps> {
     public render() {
 
         const {isReady} = this.props;
@@ -25,7 +25,7 @@ class LoadingSwitch extends React.Component<StateProps & OwnProps, {}> {
 
 const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
     return {
-        isReady: state.fetchApi.initialLoaded,
+        isReady: state.fetch.initialLoaded,
     };
 };
 

@@ -14,11 +14,6 @@ use Nette\DI\MissingServiceException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ImportHandler {
 
     use SmartObject;
@@ -41,10 +36,6 @@ class ImportHandler {
     }
 
     /**
-     * @param ApplicationHandler $handler
-     * @param string $errorMode
-     * @param string $stateless
-     * @return bool
      * @throws ImportHandlerException
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
@@ -71,7 +62,7 @@ class ImportHandler {
             }
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
+            $holder = $holdersMap[$keyValue] ?? $factory->getDummyHolder($this->source->getEvent());
             try {
                 $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
@@ -95,8 +86,6 @@ class ImportHandler {
     }
 
     /**
-     * @param iterable $row
-     * @return array
      * @throws ImportHandlerException
      */
     private function rowToValues(iterable $row): array {

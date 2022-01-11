@@ -2,7 +2,7 @@ import { translator } from '@translator/translator';
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
 
-export default class ScanInput extends React.Component<WrappedFieldProps & {}, { processing: boolean; messages: string[] }> {
+export default class ScanInput extends React.Component<WrappedFieldProps & Record<string, never>, { processing: boolean; messages: string[] }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, messages: []};
@@ -16,7 +16,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
             })}
             <div className="text-center">
                 <label
-                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-secondary' : 'btn-primary')}>
+                    className={'btn btn-large ' + (this.state.processing ? 'disabled btn-outline-secondary' : 'btn-outline-primary')}>
                     <span className="h3">
                         {this.state.processing ?
                             <i className="fa fa-spinner fa-spin" aria-hidden="true"/>
@@ -41,7 +41,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
         </>;
     }
 
-    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>) {
+    private handleOnChange(event: React.ChangeEvent<HTMLInputElement>): void {
         event.persist();
         this.setState({processing: true, messages: []});
         this.preprocessImage(event).then((code) => {
@@ -52,7 +52,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
         });
     }
 
-    private preprocessImage(event: React.ChangeEvent<HTMLInputElement>) {
+    private async preprocessImage(event: React.ChangeEvent<HTMLInputElement>): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -72,7 +72,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
         });
     }
 
-    private parseURL(url: string, reject: (e) => void): string {
+    private parseURL(url: string, reject: (exception) => void): string {
         const match = /[0-9]{6}[A-Za-z]{2}[0-9]$/.exec(url);
         if (match[0]) {
             return match[0];

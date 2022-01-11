@@ -7,10 +7,6 @@ use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Tracy\Debugger;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class SoapResponse implements Response {
 
     private \SoapServer $soapServer;

@@ -9,8 +9,6 @@ use Nette\InvalidArgumentException;
 
 /**
  * Introduced in Výfuk 2011 (1st official year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2012 extends EvaluationStrategy {
 
@@ -51,8 +49,6 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
-     * @return int
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         return $task->points;

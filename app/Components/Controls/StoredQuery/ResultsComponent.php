@@ -1,29 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
+use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
-use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\NotFoundException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ResultsComponent extends BaseComponent {
+class ResultsComponent extends BaseComponent
+{
 
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
@@ -37,43 +36,52 @@ class ResultsComponent extends BaseComponent {
     private ?string $error;
     private bool $showParametrizeForm = true;
 
-    final public function injectPrimary(ContestAuthorizator $contestAuthorizator, ExportFormatFactory $exportFormatFactory): void {
+    final public function injectPrimary(
+        ContestAuthorizator $contestAuthorizator,
+        ExportFormatFactory $exportFormatFactory
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    public function setShowParametrizeForm(bool $showParametersForm): void {
+    public function setShowParametrizeForm(bool $showParametersForm): void
+    {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    public function setStoredQuery(StoredQuery $storedQuery): void {
+    public function setStoredQuery(StoredQuery $storedQuery): void
+    {
         $this->storedQuery = $storedQuery;
     }
 
-    private function hasStoredQuery(): bool {
+    private function hasStoredQuery(): bool
+    {
         return isset($this->storedQuery);
     }
 
-    public function setParameters(array $parameters): void {
+    public function setParameters(array $parameters): void
+    {
         $this->parameters = $parameters;
     }
 
-    public function updateParameters(array $parameters): void {
+    public function updateParameters(array $parameters): void
+    {
         if (!$this->parameters) {
             $this->parameters = [];
         }
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    protected function createComponentGrid(): ResultsGrid {
+    protected function createComponentGrid(): ResultsGrid
+    {
         return new ResultsGrid($this->storedQuery, $this->getContext());
     }
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentParametrizeForm(): FormControl {
+    protected function createComponentParametrizeForm(): FormControl
+    {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -91,7 +99,8 @@ class ResultsComponent extends BaseComponent {
         return $control;
     }
 
-    public function getSqlError(): ?string {
+    public function getSqlError(): ?string
+    {
         if (!isset($this->error)) {
             $this->error = null;
             try {
@@ -104,11 +113,10 @@ class ResultsComponent extends BaseComponent {
     }
 
     /**
-     * @return void
      * @throws BadTypeException
-     * @throws \ReflectionException
      */
-    final public function render(): void {
+    final public function render(): void
+    {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
@@ -124,17 +132,16 @@ class ResultsComponent extends BaseComponent {
         $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
-        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
+        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 
     /**
-     * @param string $format
-     * @return void
      * @throws ForbiddenRequestException
-     * @throws NotFoundException
+     * @throws NotFoundException|GoneException
      */
-    public function handleFormat(string $format): void {
+    public function handleFormat(string $format): void
+    {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }
@@ -152,7 +159,8 @@ class ResultsComponent extends BaseComponent {
     /**
      * TODO is this really need?
      * G*/
-    private function isAuthorized(): bool {
+    private function isAuthorized(): bool
+    {
         if (!$this->hasStoredQuery()) {
             return false;
         }
@@ -163,16 +171,19 @@ class ResultsComponent extends BaseComponent {
         if (!isset($implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST])) {
             return false;
         }
-        return $this->contestAuthorizator->isAllowed($this->storedQuery, 'execute', $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]);
+        return $this->contestAuthorizator->isAllowed(
+            $this->storedQuery,
+            'execute',
+            $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]
+        );
     }
 
     /**
      * @param ModelStoredQueryParameter[] $queryParameters
-     * @param ControlGroup|null $group
-     * @return ModelContainer
      * TODO
      */
-    private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer {
+    private function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer
+    {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 

@@ -6,11 +6,6 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PDFStamper implements StorageProcessing {
 
     private string $inputFile;
@@ -54,7 +49,6 @@ class PDFStamper implements StorageProcessing {
     }
 
     /**
-     * @param ModelSubmit $submit
      * @throws ProcessingException
      */
     public function process(ModelSubmit $submit): void {

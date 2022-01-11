@@ -7,8 +7,6 @@ use FKSDB\Models\ORM\Models\ModelSubmit;
 /**
  * Storage for signle file for each submit. Storage must keep original file
  * which can be modified by processings for later use.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 interface SubmitStorage {
 
@@ -18,7 +16,6 @@ interface SubmitStorage {
     public function beginTransaction(): void;
 
     /**
-     * @return void
      * @throws StorageException for unsuccessful commit
      */
     public function commit(): void;
@@ -29,17 +26,10 @@ interface SubmitStorage {
 
     /**
      * File is renamed/moved to own purposes.
-     *
-     * @param string $filename
-     * @param ModelSubmit $submit
-     * @return void
      */
     public function storeFile(string $filename, ModelSubmit $submit): void;
 
     /**
-     *
-     * @param ModelSubmit $submit
-     * @param int $type
      * @return string filename with absolute path
      */
     public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string;

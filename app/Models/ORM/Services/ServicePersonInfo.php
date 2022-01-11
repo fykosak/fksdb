@@ -8,7 +8,6 @@ use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractService {
@@ -22,8 +21,6 @@ class ServicePersonInfo extends AbstractService {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @param array $data
-     * @return bool
      * @throws ModelException
      */
     public function updateModel(AbstractModel $model, array $data): bool {

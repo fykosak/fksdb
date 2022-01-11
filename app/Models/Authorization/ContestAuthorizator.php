@@ -1,39 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelRole;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ContestAuthorizator {
-
+class ContestAuthorizator
+{
     use SmartObject;
 
     private User $user;
-
     private Permission $permission;
 
-    public function __construct(User $identity, Permission $permission) {
+    public function __construct(User $identity, Permission $permission)
+    {
         $this->user = $identity;
         $this->permission = $permission;
     }
 
-    public function getUser(): User {
+    public function getUser(): User
+    {
         return $this->user;
     }
 
-    protected function getPermission(): Permission {
+    protected function getPermission(): Permission
+    {
         return $this->permission;
     }
 
@@ -42,13 +40,11 @@ class ContestAuthorizator {
      * of the queried contest.
      *
      * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @param int|ModelContest $contest queried contest
-     * @return bool
      */
-    public function isAllowed($resource, ?string $privilege, $contest): bool {
+    public function isAllowed($resource, ?string $privilege, ?ModelContest $contest = null): bool
+    {
         if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
+            $role = new Grant(ModelRole::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var ModelLogin $login */
@@ -57,49 +53,25 @@ class ContestAuthorizator {
     }
 
     /**
-     * @param Resource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     */
-    final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
-        if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->getPermission()->isAllowed($role, $resource, $privilege);
-        }
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-
-        $roles = $login->getRoles();
-
-        foreach ($roles as $role) {
-            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param ModelLogin $login
      * @param Resource|string $resource
-     * @param string|null $privilege
-     * @param ModelContest|int $contest
-     * @return bool
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool {
-        $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
-        $roles = $login->getRoles();
-
-        foreach ($roles as $role) {
-            if (($role->getContestId() !== Grant::CONTEST_ALL) && ($role->getContestId() != $contestId)) {
-                continue;
-            }
-            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
-                return true;
+    final public function isAllowedForLogin(
+        ModelLogin $login,
+        $resource,
+        ?string $privilege,
+        ?ModelContest $contest = null
+    ): bool {
+        foreach ($login->getRoles() as $role) {
+            if (
+                !isset($contest)
+                || is_null($role->getContest())
+                || $role->getContest()->contest_id === $contest->contest_id
+            ) {
+                if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
 }

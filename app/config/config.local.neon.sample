@@ -18,10 +18,6 @@ parameters:
         host: astrid.fykos.cz
         user:
         password:
-    ro-database:
-        dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user:
-        password:
     github:
         # login name in fksdb of Github webhook user
         login: github
@@ -58,9 +54,14 @@ parameters:
 session:
     cookie_secure: true
 database:
-    dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-    user:
-    password:
+    default:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
+        user:
+        password:
+    ro:
+        dsn: 'mysql:host=127.0.0.1;dbname=fksdb'
+        user:
+        password:
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
 #fksrouter:

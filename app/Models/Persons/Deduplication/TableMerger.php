@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\Persons\Deduplication;
 
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
@@ -12,12 +12,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
  * @note Works with single column primary keys only.
  * @note Assumes name of the FK column is the same like the referenced PK column.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class TableMerger {
 
@@ -65,11 +61,7 @@ class TableMerger {
             $this->trunkRow->update($values);
             return true;
         } else {
-            if (isset($this->columnMergeStrategies[$column])) {
-                $strategy = $this->columnMergeStrategies[$column];
-            } else {
-                $strategy = $this->globalMergeStrategy;
-            }
+            $strategy = $this->columnMergeStrategies[$column] ?? $this->globalMergeStrategy;
             try {
                 $values = [
                     $column => $strategy->mergeValues($this->trunkRow[$column], $this->mergedRow[$column]),
@@ -112,9 +104,9 @@ class TableMerger {
                 $secondaryKeys = array_merge(array_keys($groupedTrunks), array_keys($groupedMerged));
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
-                    $refTrunk = isset($groupedTrunks[$secondaryKey]) ? $groupedTrunks[$secondaryKey] : null;
+                    $refTrunk = $groupedTrunks[$secondaryKey] ?? null;
                     /** @var ActiveRow|null $refMerged */
-                    $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
+                    $refMerged = $groupedMerged[$secondaryKey] ?? null;
                     if ($refTrunk && $refMerged) {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
                         $referencingMerger->merge($newParent); // recursive merge
@@ -200,16 +192,16 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), Logger::INFO));
+            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), Message::LVL_INFO));
         }
     }
 
     private function logDelete(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), Message::LVL_INFO));
     }
 
     private function logTrunk(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), Logger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), Message::LVL_INFO));
     }
 
     /* ******************************

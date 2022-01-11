@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Stats\StatsModelFactory;
 
-class StatsWebModel extends WebModel {
+class StatsWebModel extends WebModel
+{
 
     private ServiceContest $serviceContest;
     private StatsModelFactory $statsModelFactory;
@@ -19,15 +22,20 @@ class StatsWebModel extends WebModel {
     }
 
     /**
-     * @param \stdClass $args
-     * @return \SoapVar
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
-        if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
+        if (
+            !isset($args->contest) || !isset(
+                $this->container->getParameters()['inverseContestMapping'][$args->contest]
+            )
+        ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest]);
+        $contest = $this->serviceContest->findByPrimary(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest]
+        );
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
@@ -53,17 +61,17 @@ class StatsWebModel extends WebModel {
                     $taskNode = $doc->createElement('task');
                     $statsNode->appendChild($taskNode);
 
-                    $taskNode->setAttribute('series', $seriesNo);
-                    $taskNode->setAttribute('label', $task['label']);
-                    $taskNode->setAttribute('tasknr', $task['tasknr']);
+                    $taskNode->setAttribute('series', (string)$seriesNo);
+                    $taskNode->setAttribute('label', (string)$task['label']);
+                    $taskNode->setAttribute('tasknr', (string)$task['tasknr']);
 
-                    $node = $doc->createElement('points', $task['points']);
+                    $node = $doc->createElement('points', (string)$task['points']);
                     $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('solvers', $task['task_count']);
+                    $node = $doc->createElement('solvers', (string)$task['task_count']);
                     $taskNode->appendChild($node);
 
-                    $node = $doc->createElement('average', $task['task_avg']);
+                    $node = $doc->createElement('average', (string)$task['task_avg']);
                     $taskNode->appendChild($node);
                 }
             }

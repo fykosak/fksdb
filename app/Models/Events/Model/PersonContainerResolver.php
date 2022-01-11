@@ -10,11 +10,6 @@ use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\SelfResolver;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver {
 
     use SmartObject;
@@ -30,10 +25,7 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
 
     /**
      * PersonContainerResolver constructor.
-     * @param Field $field
      * @param callable|bool $condition
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
      */
     public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;

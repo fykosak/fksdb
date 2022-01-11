@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
@@ -10,9 +12,11 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class ProductsGrid extends EntityGrid {
+class ProductsGrid extends EntityGrid
+{
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container, ServiceProduct::class, [
             'warehouse_product.product_id',
             'warehouse_product.name_cs',

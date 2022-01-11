@@ -7,11 +7,6 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider;
 use Nette\Forms\Form;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolFactory {
 
     private SchoolProvider $schoolProvider;

@@ -5,11 +5,6 @@ namespace FKSDB\Models\Events\Semantics;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Count {
     use SmartObject;
     use WithEventTrait;
@@ -29,7 +24,7 @@ class Count {
     }
 
     public function __toString(): string {
-        return "count({$this->state})";
+        return "count($this->state)";
     }
 
 }

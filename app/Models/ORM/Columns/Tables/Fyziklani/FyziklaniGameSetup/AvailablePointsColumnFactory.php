@@ -10,13 +10,12 @@ use Nette\Utils\Html;
 class AvailablePointsColumnFactory extends ColumnFactory{
     /**
      * @param AbstractModel|ModelFyziklaniGameSetup $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         $container = Html::el('span');
         foreach ($model->getAvailablePoints() as $points) {
             $container->addHtml(Html::el('span')
-                ->addAttributes(['class' => 'badge badge-secondary mr-1'])
+                ->addAttributes(['class' => 'badge bg-secondary me-1'])
                 ->addText($points));
         }
         return $container;

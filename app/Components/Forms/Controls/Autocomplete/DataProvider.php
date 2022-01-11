@@ -2,10 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-/**
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface DataProvider {
 
     public const LABEL = 'label';
@@ -22,7 +18,6 @@ interface DataProvider {
      * Provider may or may not use knowledge of this update.
      *
      * @param int id
-     * @return void
      */
     public function setDefaultValue($id): void;
 }

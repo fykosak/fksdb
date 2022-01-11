@@ -1,6 +1,6 @@
 {layout '../@layout.latte'}
-{define #table-head}
-    <tr class="bg-contest">
+{define table-head}
+    <tr>
         <th>{_'Person'}</th>
         {foreach $seriesTable->getTasks() as $task}
             <th>{$task->label}</th>
@@ -11,24 +11,24 @@
     {var $table = $seriesTable->getSubmitsTable()}
     <table class="table table-striped table-sm">
         <thead>
-        {include #table-head}
+        {include table-head}
         </thead>
         <tbody>
         {var $counter = 0}
         {foreach $seriesTable->getContestants() as $contestant}
             {if $displayAll || isset($table[$contestant->ct_id])}
-                {do $counter++}
+                {php $counter++}
                 <tr>
                     <th scope="row">{$contestant->getPerson()->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
                         {var $submit = isset($table[$contestant->ct_id][$task->task_id])?$table[$contestant->ct_id][$task->task_id]:null}
-                        {include #submit-row, submit=>$submit,ctId=>$contestant->ct_id,taskId=>$task->task_id}
+                        {include submit-row, submit=>$submit,ctId=>$contestant->ct_id,taskId=>$task->task_id}
                     {/foreach}
                 </tr>
             {/if}
             {if $counter>14}
                 {var $counter = 0}
-                {include #table-head}
+                {include table-head}
             {/if}
         {/foreach}
         </tbody>

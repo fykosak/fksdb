@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\Utils;
 
-/**
- * Description of Utils
- *
- * @author michal
- */
 class Utils {
 
     public static function toRoman(int $arabic): string {
@@ -94,7 +89,6 @@ class Utils {
      * Uses __toString conversion.
      *
      * @param mixed $object
-     * @return string
      */
     public static function getFingerprint($object): string {
         if (is_iterable($object)) {
@@ -118,7 +112,6 @@ class Utils {
      * Returns string representation of iterable objects.
      *
      * @param mixed $object
-     * @return string
      */
     public static function getRepresentation($object): string {
         if (is_iterable($object)) {
@@ -140,9 +133,6 @@ class Utils {
 
     /**
      * Tranform an address in order only the owner could recongize it.
-     *
-     * @param string $email
-     * @return string
      */
     public static function cryptEmail(string $email): string {
         [$user, $host] = preg_split('/@/', $email);
@@ -151,7 +141,7 @@ class Utils {
         } else {
             $b = substr($user, 0, 1);
             $e = substr($user, -1);
-            return "{$b}…{$e}@$host";
+            return "{$b}…$e@$host";
         }
     }
 
@@ -159,10 +149,6 @@ class Utils {
      * Converts string to (hopefully) valid XML element name.
      *
      * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
-     *
-     * @param string $string
-     * @param string $prefix
-     * @return string
      */
     public static function xmlName(string $string, string $prefix = '_'): string {
         if (preg_match('/^[0-9\.-]/', $string)) {

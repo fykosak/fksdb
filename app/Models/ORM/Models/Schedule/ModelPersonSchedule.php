@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Class ModelPersonSchedule
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -57,7 +56,6 @@ class ModelPersonSchedule extends AbstractModel {
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
     public function getLabel(): string {

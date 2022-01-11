@@ -8,8 +8,6 @@ use Nette\InvalidStateException;
 
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class DetailResultsModel extends AbstractResultsModel {
 
@@ -19,9 +17,6 @@ class DetailResultsModel extends AbstractResultsModel {
 
     /**
      * Definition of header.
-     *
-     * @param ModelCategory $category
-     * @return array
      */
     public function getDataColumns(ModelCategory $category): array {
         if (!isset($this->dataColumns[$category->id])) {

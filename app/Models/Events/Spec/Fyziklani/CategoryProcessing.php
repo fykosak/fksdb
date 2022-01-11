@@ -5,21 +5,20 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
- *
- * @author Aleš Podolník <ales@fykos.cz>
- * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
-class CategoryProcessing extends AbstractCategoryProcessing {
+class CategoryProcessing extends AbstractCategoryProcessing
+{
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void {
+    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
+    {
         if (!isset($values['team'])) {
             return;
         }
@@ -34,11 +33,12 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Logger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Message::LVL_INFO));
         }
     }
 
-    protected function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string
+    {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;

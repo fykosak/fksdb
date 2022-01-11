@@ -1,45 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\EventModule\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use FKSDB\Models\UI\PageTitle;
+use Fykosak\Utils\UI\PageTitle;
 
-class GameSetupPresenter extends BasePresenter {
+class GameSetupPresenter extends BasePresenter
+{
     private ModelFyziklaniGameSetup $gameSetup;
 
-    public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
+    public function titleDefault(): PageTitle
+    {
+        return new PageTitle(null, _('Fyziklani game setup'), 'fa fa-cogs');
     }
 
     /**
-     * @return void
      * @throws EventNotFoundException
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
-    final public function renderDefault(): void {
+    final public function renderDefault(): void
+    {
         $this->template->gameSetup = $this->getGameSetup();
     }
 
     /**
-     * @return void
-     * @throws EventNotFoundException
-     */
-    public function authorizedDefault(): void {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
-    }
-
-    /**
-     * @return ModelFyziklaniGameSetup
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException
      */
-    protected function getGameSetup(): ModelFyziklaniGameSetup {
+    protected function getGameSetup(): ModelFyziklaniGameSetup
+    {
         if (!isset($this->gameSetup)) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
@@ -48,5 +44,13 @@ class GameSetupPresenter extends BasePresenter {
             $this->gameSetup = $gameSetup;
         }
         return $this->gameSetup;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedDefault(): void
+    {
+        $this->setAuthorized($this->isAllowed('fyziklani.gameSetup', 'default'));
     }
 }

@@ -1,1 +1,0 @@
-../../vendor/nette/forms/src/assets/netteForms.js

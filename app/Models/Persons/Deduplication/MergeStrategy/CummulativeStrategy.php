@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class CummulativeStrategy implements MergeStrategy {
 
     private ?string $precedence;
@@ -43,7 +38,6 @@ class CummulativeStrategy implements MergeStrategy {
     /**
      * @param mixed $trunk
      * @param mixed $merged
-     * @return bool
      */
     private function equals($trunk, $merged): bool {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {

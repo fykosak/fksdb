@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -14,7 +16,8 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class PersonRelatedGrid extends BaseGrid {
+class PersonRelatedGrid extends BaseGrid
+{
 
     protected ModelPerson $person;
 
@@ -22,32 +25,33 @@ class PersonRelatedGrid extends BaseGrid {
 
     protected int $userPermissions;
 
-    public function __construct(string $section, ModelPerson $person, int $userPermissions, Container $container) {
+    public function __construct(string $section, ModelPerson $person, int $userPermissions, Container $container)
+    {
         $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
         $this->person = $person;
         $this->userPermissions = $userPermissions;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
-            $this->flashMessage('Access denied', Message::LVL_DANGER);
+            $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
         return new NDataSource($query);
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         $this->paginate = false;
         parent::configure($presenter);
         $this->addColumns($this->definition['rows'], $this->userPermissions);
@@ -57,7 +61,8 @@ class PersonRelatedGrid extends BaseGrid {
         $this->addCSVDownloadButton();
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return $this->definition['model'];
     }
 }

@@ -1,27 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use Nette\Utils\DateTime;
+use FKSDB\Models\ORM\Models\ModelEvent;
 
-abstract class TsafTestCase extends DsefTestCase {
+abstract class TsafTestCase extends DsefTestCase
+{
+    protected ModelEvent $dsefEvent;
+    protected ModelEvent $tsafEvent;
 
-    protected int $dsefEventId;
-
-    protected int $tsafEventId;
-
-    protected function getEventId(): int {
-        return $this->eventId;
+    protected function getEvent(): ModelEvent
+    {
+        return $this->event;
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->dsefEventId = $this->eventId;
+        $this->dsefEvent = $this->event;
 
-        $this->tsafEventId = $this->createEvent([
+        $this->tsafEvent = $this->createEvent([
             'event_type_id' => 7,
             'event_year' => 7,
-            'registration_end' => new DateTime(date('c', time() + 1000)),
+            'registration_end' => new \DateTime(date('c', time() + 1000)),
             'parameters' => <<<EOT
 capacity: 5
 EOT

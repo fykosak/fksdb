@@ -30,7 +30,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, {}> {
+class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

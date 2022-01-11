@@ -1,7 +1,7 @@
 import { translator } from '@translator/translator';
 import { Store } from 'FKSDB/Components/Controls/AjaxSubmit/Reducers';
-import { dispatchFetch } from 'FKSDB/Models/FrontEnd/Fetch/netteFetch';
-import { NetteActions } from 'FKSDB/Models/FrontEnd/Loader/netteActions';
+import { dispatchNetteFetch } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/netteFetch';
+import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import { ModelSubmit } from 'FKSDB/Models/ORM/Models/modelSubmit';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -22,11 +22,11 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class FileState extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
+class FileState extends React.Component<OwnProps & DispatchProps & StateProps> {
 
     public render() {
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-warning" title={translator.getText('Revoke')}
+            <button aria-hidden="true" className="pull-right btn btn-outline-warning" title={translator.getText('Revoke')}
                     onClick={() => {
                         if (window.confirm(translator.getText('Remove submit?'))) {
                             this.props.onDeleteFile(this.props.actions.getAction('revoke'));
@@ -44,12 +44,12 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps, {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchNetteFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store): StateProps => {
     return {
-        actions: state.fetchApi.actions,
+        actions: state.fetch.actions,
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FileState);

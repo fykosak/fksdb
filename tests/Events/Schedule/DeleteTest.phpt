@@ -1,8 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
+use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\ServiceGrant;
+use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Schema\Helpers;
@@ -11,42 +19,53 @@ use Tester\Assert;
 
 $container = require '../../Bootstrap.php';
 
-class DeleteTest extends ScheduleTestCase {
+class DeleteTest extends ScheduleTestCase
+{
 
-    protected int $lastPersonId;
+    protected ModelPerson $lastPerson;
 
-    protected int $dsefAppId;
+    protected ModelEventParticipant $dsefApp;
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         parent::setUp();
-        $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
+        $this->lastPerson = $this->createPerson(
+            'Paní',
+            'Bílá III.',
             [
                 'email' => 'bila3-acc@hrad.cz',
                 'born' => DateTime::from('2000-01-01'),
-            ]);
-        $this->dsefAppId = $this->insert('event_participant', [
-            'person_id' => $this->lastPersonId,
-            'event_id' => $this->eventId,
+            ]
+        );
+        $this->dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+            'person_id' => $this->lastPerson->person_id,
+            'event_id' => $this->event->event_id,
             'status' => 'cancelled',
         ]);
-        $this->insert(DbNames::TAB_E_DSEF_PARTICIPANT,
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel(
             [
-                'event_participant_id' => $this->dsefAppId,
+                'event_participant_id' => $this->dsefApp->event_participant_id,
                 'e_dsef_group_id' => 2,
-            ]);
-        $this->insert('person_schedule', [
-            'person_id' => $this->lastPersonId,
-            'schedule_item_id' => $this->itemId,
+            ]
+        );
+        $this->getContainer()->getByType(ServicePersonSchedule::class)->createNewModel([
+            'person_id' => $this->lastPerson->person_id,
+            'schedule_item_id' => $this->item->schedule_item_id,
         ]);
-        $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
-        $this->authenticate($loginId, $this->fixture);
+        $login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+            ['person_id' => $this->lastPerson->person_id, 'active' => 1]
+        );
+        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+            ['login_id' => $login->login_id, 'role_id' => 5, 'contest_id' => 1]
+        );
+        $this->authenticateLogin($login, $this->fixture);
     }
 
-    public function testRegistration(): void {
+    public function testRegistration(): void
+    {
         $formData = [
             'participant' => [
-                'person_id' => (string)$this->lastPersonId,
+                'person_id' => (string)$this->lastPerson->person_id,
                 'person_id_1' => [
                     '_c_compact' => ' ',
                     'person' => [
@@ -67,7 +86,9 @@ class DeleteTest extends ScheduleTestCase {
                         ],
                     ],
                     'person_schedule' => [
-                        'accommodation' => json_encode([$this->groupId => $this->itemId]),
+                        'accommodation' => json_encode(
+                            [$this->group->schedule_group_id => $this->item->schedule_item_id]
+                        ),
                     ],
                 ],
                 'e_dsef_group_id' => (string)2,
@@ -85,8 +106,8 @@ class DeleteTest extends ScheduleTestCase {
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
-            'id' => (string)$this->dsefAppId,
+            'eventId' => (string)$this->event->event_id,
+            'id' => (string)$this->dsefApp->event_participant_id,
         ]);
         $request = new Request('Public:Application', 'POST', $params, $formData);
 
@@ -94,10 +115,16 @@ class DeleteTest extends ScheduleTestCase {
         Assert::type(RedirectResponse::class, $response);
 
         //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
-        Assert::equal(0, (int)$this->explorer->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
+        Assert::equal(
+            0,
+            $this->getContainer()->getByType(ServicePersonSchedule::class)->getTable()->where(
+                ['schedule_item_id' => $this->item->schedule_item_id, 'person_id' => $this->lastPerson->person_id]
+            )->count('*')
+        );
     }
 
-    public function getAccommodationCapacity(): int {
+    public function getAccommodationCapacity(): int
+    {
         return 3;
     }
 }

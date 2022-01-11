@@ -9,11 +9,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DuplicateFinder {
 
     public const IDX_PERSON = 'person';
@@ -75,7 +70,6 @@ class DuplicateFinder {
     /**
      * @param ModelPerson|ModelPersonInfo $a
      * @param ModelPerson|ModelPersonInfo $b
-     * @return float
      * @todo Implement more than binary score.
      */
     private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
@@ -108,7 +102,6 @@ class DuplicateFinder {
 
     /**
      * @param ActiveRow|ModelPersonInfo $person
-     * @return array
      */
     private function getDifferentPersons(ActiveRow $person): array {
         if (!isset($person->duplicates)) {
@@ -126,7 +119,7 @@ class DuplicateFinder {
     private function stringScore(string $a, string $b): float {
         return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
-    
+
     private function relativeDistance(string $a, string $b): float {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {

@@ -2,11 +2,6 @@
 
 namespace FKSDB\Models\WebService;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 interface XMLNodeSerializer {
 
     public const EXPORT_FORMAT_1 = 1;
@@ -14,10 +9,6 @@ interface XMLNodeSerializer {
 
     /**
      * @param mixed $dataSource
-     * @param \DOMNode $node
-     * @param \DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
      */
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void;
 }

@@ -1,49 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Models\UI\Title;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\UI\Navigation\NavigationItemComponent;
+use Fykosak\Utils\UI\Navigation\NavItem;
 
-abstract class ChooserComponent extends BaseComponent {
-
-    protected function beforeRender(): void {
-        $this->template->items = $this->getItems();
-        $this->template->title = $this->getTitle();
-    }
-
-    public function render(): void {
-        $this->beforeRender();
+abstract class ChooserComponent extends BaseComponent
+{
+    public function render(): void
+    {
+        $this->template->navItem = $this->getItem();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.chooser.latte');
     }
 
-    abstract protected function getTitle(): Title;
-
-    abstract protected function getItems(): iterable;
-
-    /**
-     * @param mixed $item
-     * @return bool
-     */
-    abstract public function isItemActive($item): bool;
-
-    /**
-     * @param mixed $item
-     * @return Title
-     */
-    abstract public function getItemTitle($item): Title;
-
-    /**
-     * @param mixed $item
-     * @return string
-     */
-    abstract public function getItemLink($item): string;
-
-    /**
-     * @param mixed $item
-     * @return bool
-     */
-    public function isItemVisible($item): bool {
-        return true;
+    protected function createComponentNav(): NavigationItemComponent
+    {
+        return new NavigationItemComponent($this->getContext());
     }
+
+    abstract protected function getItem(): NavItem;
 }

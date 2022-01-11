@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\WebService\XMLNodeSerializer;
-use Nette\Application\BadRequestException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
 use FKSDB\Models\Results\ResultsModelFactory;
+use FKSDB\Models\WebService\XMLNodeSerializer;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
-class ResultsWebModel extends WebModel {
+class ResultsWebModel extends WebModel
+{
 
     private ServiceContest $serviceContest;
     private ResultsModelFactory $resultsModelFactory;
@@ -27,20 +30,25 @@ class ResultsWebModel extends WebModel {
     }
 
     /**
-     * @param $args
-     * @return \SoapVar
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \SoapFault
      */
-    public function getResponse(\stdClass $args): \SoapVar {
-        if (!isset($args->contest) || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])) {
+    public function getResponse(\stdClass $args): \SoapVar
+    {
+        if (
+            !isset($args->contest) || !isset(
+                $this->container->getParameters()['inverseContestMapping'][$args->contest]
+            )
+        ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
         if (!isset($args->year)) {
             throw new \SoapFault('Sender', 'Unknown year.');
         }
-        $contestYear = $this->serviceContest->findByPrimary($this->container->getParameters()['inverseContestMapping'][$args->contest])->getContestYear($args->year);
+        $contestYear = $this->serviceContest->findByPrimary(
+            $this->container->getParameters()['inverseContestMapping'][$args->contest]
+        )->getContestYear($args->year);
         $doc = new \DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
@@ -88,7 +96,7 @@ class ResultsWebModel extends WebModel {
 
             $series = explode(' ', $args->brojure);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setListedSeries($seriesSingle);
+                $resultsModel->setListedSeries((int)$seriesSingle);
                 $resultsModel->setSeries(range(1, $seriesSingle));
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
             }
@@ -104,7 +112,7 @@ class ResultsWebModel extends WebModel {
             foreach ($args->brojures->brojure as $brojure) {
                 $series = explode(' ', $brojure);
                 $listedSeries = $series[count($series) - 1];
-                $resultsModel->setListedSeries($listedSeries);
+                $resultsModel->setListedSeries((int)$listedSeries);
                 $resultsModel->setSeries($series);
                 $resultsNode->appendChild($this->createBrojureNode($resultsModel, $doc));
             }
@@ -116,28 +124,24 @@ class ResultsWebModel extends WebModel {
     }
 
     /**
-     * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createDetailNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $detailNode = $doc->createElement('detail');
-        $detailNode->setAttribute('series', $resultsModel->getSeries());
+        $detailNode->setAttribute('series', (string)$resultsModel->getSeries());
 
         $this->resultsModelFactory->fillNode($resultsModel, $detailNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $detailNode;
     }
 
     /**
-     * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $cumulativeNode = $doc->createElement('cumulative');
         $cumulativeNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -146,13 +150,11 @@ class ResultsWebModel extends WebModel {
     }
 
     /**
-     * @param AbstractResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $schoolNode = $doc->createElement('school-cumulative');
         $schoolNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
 
@@ -162,15 +164,14 @@ class ResultsWebModel extends WebModel {
 
     /**
      * @param AbstractResultsModel|BrojureResultsModel $resultsModel
-     * @param \DOMDocument $doc
-     * @return \DOMElement
      * @throws \SoapFault
      * @throws BadTypeException
      */
-    private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement {
+    private function createBrojureNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
+    {
         $brojureNode = $doc->createElement('brojure');
         $brojureNode->setAttribute('series', implode(' ', $resultsModel->getSeries()));
-        $brojureNode->setAttribute('listed-series', $resultsModel->getListedSeries());
+        $brojureNode->setAttribute('listed-series', (string)$resultsModel->getListedSeries());
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;

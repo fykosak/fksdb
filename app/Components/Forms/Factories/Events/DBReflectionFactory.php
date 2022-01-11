@@ -5,9 +5,9 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractService;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -16,11 +16,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class DBReflectionFactory extends AbstractFactory {
 
     private Connection $connection;
@@ -88,7 +83,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     protected function setDefaultValue(BaseControl $control, Field $field): void {
-        if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
+        if ($field->getBaseHolder()->getModelState() == AbstractMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -127,10 +122,6 @@ class DBReflectionFactory extends AbstractFactory {
             }
             $this->columns[$table] = $columns;
         }
-        if (isset($this->columns[$table][$column])) {
-            return $this->columns[$table][$column];
-        } else {
-            return null;
-        }
+        return $this->columns[$table][$column] ?? null;
     }
 }

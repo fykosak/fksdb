@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -12,12 +14,8 @@ use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\XMLNodeSerializer;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class StoredQueryFactory implements XMLNodeSerializer {
+class StoredQueryFactory implements XMLNodeSerializer
+{
 
     public const PARAM_CONTEST_ID = 'contest_id';
     public const PARAM_CONTEST = 'contest';
@@ -27,41 +25,45 @@ class StoredQueryFactory implements XMLNodeSerializer {
     private Connection $connection;
     private ServiceStoredQuery $serviceStoredQuery;
 
-    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
+    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery)
+    {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @param string|null $postProcessingClass
-     * @return StoredQuery
      */
-    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
-        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
+    public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
+    {
+        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
-    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
+    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery
+    {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
-    public function createQueryFromQid(string $qid, array $parameters): StoredQuery {
+    public function createQueryFromQid(string $qid, array $parameters): StoredQuery
+    {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
-        $storedQuery->setContextParameters($parameters, false); // treat all parameters as implicit (better API for web service)
+        $storedQuery->setContextParameters(
+            $parameters,
+            false
+        ); // treat all parameters as implicit (better API for web service)
         return $storedQuery;
     }
 
-    private function presenterContextParameters(BasePresenter $presenter): array {
+    private function presenterContextParameters(BasePresenter $presenter): array
+    {
         return [
             self::PARAM_CONTEST_ID => $presenter->getSelectedContestYear()->contest_id,
             self::PARAM_CONTEST => $presenter->getSelectedContestYear()->contest_id,
@@ -73,13 +75,10 @@ class StoredQueryFactory implements XMLNodeSerializer {
 
     /**
      * @param StoredQuery $dataSource
-     * @param \DOMNode $node
-     * @param \DOMDocument $doc
-     * @param int $formatVersion
-     * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
+    {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }
@@ -90,8 +89,8 @@ class StoredQueryFactory implements XMLNodeSerializer {
         $parametersNode = $doc->createElement('parameters');
         $node->appendChild($parametersNode);
         foreach ($dataSource->getImplicitParameters() as $name => $value) {
-            $parameterNode = $doc->createElement('parameter', $value);
-            $parameterNode->setAttribute('name', $name);
+            $parameterNode = $doc->createElement('parameter', (string)$value);
+            $parameterNode->setAttribute('name', (string)$name);
             $parametersNode->appendChild($parameterNode);
         }
 
@@ -100,7 +99,7 @@ class StoredQueryFactory implements XMLNodeSerializer {
         $node->appendChild($columnDefinitionsNode);
         foreach ($dataSource->getColumnNames() as $column) {
             $columnDefinitionNode = $doc->createElement('column-definition');
-            $columnDefinitionNode->setAttribute('name', $column);
+            $columnDefinitionNode->setAttribute('name', (string)$column);
             $columnDefinitionsNode->appendChild($columnDefinitionNode);
         }
 
@@ -121,14 +120,20 @@ class StoredQueryFactory implements XMLNodeSerializer {
                 } else {
                     throw new BadRequestException(_('Unsupported format'));
                 }
-                $textNode = $doc->createTextNode($value);
+                $textNode = $doc->createTextNode((string)$value);
                 $colNode->appendChild($textNode);
                 $rowNode->appendChild($colNode);
             }
         }
     }
 
-    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter {
-        return new StoredQueryParameter($model->name, $model->getDefaultValue(), $model->getPDOType(), $model->description);
+    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter
+    {
+        return new StoredQueryParameter(
+            $model->name,
+            $model->getDefaultValue(),
+            $model->getPDOType(),
+            $model->description
+        );
     }
 }

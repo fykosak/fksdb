@@ -9,12 +9,7 @@ use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
-use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class AddressContainer extends ModelContainer {
 
     private ServiceRegion $serviceRegion;
@@ -47,7 +42,6 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param ModelPostContact|mixed $data
-     * @param bool $erase
      * @return static
      */
     public function setValues($data, bool $erase = false): self {
@@ -70,8 +64,7 @@ class AddressContainer extends ModelContainer {
 
     /**
      * @param null $returnType
-     * @param array|null $controls
-     * @return array|ArrayHash
+     * @return array|object
      */
     public function getUnsafeValues($returnType = null, array $controls = null) {
         $values = parent::getUnsafeValues($returnType);

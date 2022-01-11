@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\Payment\Price;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
-use Nette\Application\BadRequestException;
+use Fykosak\Utils\Price\Currency;
+use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
  * @property-read int event_participant_id
  * @property-read int event_id
@@ -41,53 +41,61 @@ use Nette\Security\Resource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator {
+class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator
+{
 
     public const RESOURCE_ID = 'event.participant';
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    public function getPersonHistory(): ?ModelPersonHistory {
-        return $this->getPerson()->getHistory($this->getEvent()->getAcYear());
+    public function getPersonHistory(): ?ModelPersonHistory
+    {
+        return $this->getPerson()->getHistoryByContestYear($this->getEvent()->getContestYear());
     }
 
-    public function getContest(): ModelContest {
+    public function getContest(): ModelContest
+    {
         return $this->getEvent()->getContest();
     }
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         return $this->getPerson()->__toString();
     }
 
-    public function getEvent(): ModelEvent {
+    public function getEvent(): ModelEvent
+    {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    public function getPrice(): Price {
-        return new Price($this->price, Price::CURRENCY_CZK);
-    }
-
     /**
-     * @return ModelFyziklaniTeam
-     * @throws BadRequestException
+     * @throws \Exception
      */
-    public function getFyziklaniTeam(): ModelFyziklaniTeam {
-        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
-        if (!$row) {
-            throw new BadRequestException('Event is not fyziklani!');
-        }
-        return ModelFyziklaniTeam::createFromActiveRow($row);
+    public function getPrice(): Price
+    {
+        return new Price(Currency::from(Currency::CZK), $this->price);
     }
 
-    public function getResourceId(): string {
+    public function getFyziklaniTeam(): ?ModelFyziklaniTeam
+    {
+        $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
+            ->select('e_fyziklani_team.*')
+            ->fetch();
+        return $row ? ModelFyziklaniTeam::createFromActiveRow($row) : null;
+    }
+
+    public function getResourceId(): string
+    {
         return self::RESOURCE_ID;
     }
 
-    public function __toArray(): array {
+    public function __toArray(): array
+    {
         return [
             'participantId' => $this->event_participant_id,
             'eventId' => $this->event_id,
@@ -113,9 +121,10 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         ];
     }
 
-    public function createXMLNode(\DOMDocument $document): \DOMElement {
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
         $node = $document->createElement('participant');
-        $node->setAttribute('eventParticipantId', $this->event_participant_id);
+        $node->setAttribute('eventParticipantId', (string)$this->event_participant_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }

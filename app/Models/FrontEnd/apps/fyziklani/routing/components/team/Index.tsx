@@ -26,7 +26,7 @@ interface OwnProps {
     team: ModelFyziklaniTeam;
 }
 
-class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
+class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps> {
     public render() {
 
         const {onDragStart, onDragEnd, team, onRemovePlace, isUpdated, isDragged} = this.props;
@@ -54,7 +54,7 @@ class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProp
                                     onRemovePlace(team.teamId);
                                 }}>&times;</button>
                             )}</h6>
-                        <span className={'badge badge-fyziklani'}>Category: {team.category}</span>
+                        <span className={'badge bg-fof'}>Category: {team.category}</span>
                         <small className="text-muted">{team.status}</small>
                         <p>
                             {isUpdated && (<span className="updated-confirm-text text-center">updated</span>)}

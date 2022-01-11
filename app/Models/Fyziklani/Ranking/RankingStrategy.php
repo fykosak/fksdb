@@ -9,9 +9,6 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
-/**
- * @author Lukáš Timko
- */
 class RankingStrategy {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
@@ -24,9 +21,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param string|null $category
-     * @return Html
-     *
      * @throws NotClosedTeamException
      * @internal
      */
@@ -42,8 +36,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param string|null $category
-     * @return Html
      * @throws NotClosedTeamException
      */
     public function __invoke(?string $category = null): Html {
@@ -67,7 +59,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param GroupedSelection $teams
      * @return array[]
      * @throws NotClosedTeamException
      */
@@ -115,7 +106,6 @@ class RankingStrategy {
     }
 
     /**
-     * @param ModelFyziklaniTeam $team
      * @return array[]|int[]
      */
     protected function getAllSubmits(ModelFyziklaniTeam $team): array {

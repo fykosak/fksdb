@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
+use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -18,13 +19,8 @@ use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class ReferencedPersonFactory {
-
+class ReferencedPersonFactory
+{
     use SmartObject;
 
     private ServicePerson $servicePerson;
@@ -57,45 +53,60 @@ class ReferencedPersonFactory {
 
     public function createReferencedPerson(
         array $fieldsDefinition,
-        int $acYear,
+        ModelContestYear $contestYear,
         string $searchType,
         bool $allowClear,
         ModifiabilityResolver $modifiabilityResolver,
         VisibilityResolver $visibilityResolver,
         ?ModelEvent $event = null
     ): ReferencedId {
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event);
+        $handler = $this->referencedPersonHandlerFactory->create($contestYear, null, $event);
         return new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
-            new ReferencedPersonContainer($this->context, $modifiabilityResolver, $visibilityResolver, $acYear, $fieldsDefinition, $event, $allowClear),
+            new ReferencedPersonContainer(
+                $this->context,
+                $modifiabilityResolver,
+                $visibilityResolver,
+                $contestYear,
+                $fieldsDefinition,
+                $event,
+                $allowClear
+            ),
             $this->servicePerson,
             $handler
         );
     }
 
-    final public static function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, ?ModelEvent $event = null): bool {
-        $value = self::getPersonValue($person, $sub, $field, $acYear,  false, false, true, $event);
+    final public static function isFilled(
+        ModelPerson $person,
+        string $sub,
+        string $field,
+        ModelContestYear $contestYear,
+        ?ModelEvent $event = null
+    ): bool {
+        $value = self::getPersonValue($person, $sub, $field, $contestYear, false, false, true, $event);
         return !($value === null || $value === '');
     }
 
     /**
-     * @param ModelPerson|null $person
-     * @param string $sub
-     * @param string $field
-     * @param int $acYear
-     * @param bool $extrapolate
-     * @param bool $hasDelivery
-     * @param bool $targetValidation
-     * @param ModelEvent|null $event
      * @return mixed
      */
-    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, int $acYear, bool $extrapolate = false, bool $hasDelivery = false, bool $targetValidation = false, ?ModelEvent $event = null) {
+    public static function getPersonValue(
+        ?ModelPerson $person,
+        string $sub,
+        string $field,
+        ModelContestYear $contestYear,
+        bool $extrapolate = false,
+        bool $hasDelivery = false,
+        bool $targetValidation = false,
+        ?ModelEvent $event = null
+    ) {
         if (!$person) {
             return null;
         }
         switch ($sub) {
             case 'person_schedule':
-                return $person->getSerializedSchedule($event->event_id, $field);
+                return $person->getSerializedSchedule($event, $field);
             case 'person':
                 return $person[$field];
             case 'person_info':
@@ -106,7 +117,8 @@ class ReferencedPersonFactory {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, $extrapolate)) ? $history[$field] : null;
+                return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history[$field]
+                    : null;
             case 'post_contact_d':
                 return $person->getDeliveryPostContact();
             case 'post_contact_p':

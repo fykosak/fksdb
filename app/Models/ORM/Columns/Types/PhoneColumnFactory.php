@@ -3,14 +3,16 @@
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Badges\NotSetBadge;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Models\Logging\Logger;
+use Fykosak\Utils\Logging\Logger;
 use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\DataTesting\TestLog;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -43,7 +45,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
             ->addRule(function (BaseControl $control): bool {
-                if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
+                if ($control->getValue() === WriteOnly::VALUE_ORIGINAL) {
                     return true;
                 }
                 return $this->phoneNumberFactory->isValid($control->getValue());
@@ -58,9 +60,9 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), Message::LVL_ERROR));
         } else {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS));
         }
     }
 

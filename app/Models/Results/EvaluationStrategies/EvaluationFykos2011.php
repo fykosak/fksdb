@@ -10,8 +10,6 @@ use Nette\InvalidArgumentException;
 /**
  * First two categories have doubled points for the first two problems.
  * Introduced in FYKOS 2011 (25 th year).
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationFykos2011 extends EvaluationStrategy {
 
@@ -41,7 +39,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @return string
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1' || $task->label == '2') {
@@ -57,7 +54,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
 
     /**
      * @param ActiveRow|ModelTask $task
-     * @param ModelCategory $category
      * @return float|int
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {

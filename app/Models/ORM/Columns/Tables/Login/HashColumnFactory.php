@@ -12,7 +12,6 @@ class HashColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelLogin $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return (new HashPrinter())($model->hash);

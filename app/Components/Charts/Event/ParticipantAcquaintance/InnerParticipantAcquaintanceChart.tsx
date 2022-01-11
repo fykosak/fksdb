@@ -61,6 +61,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
             }
 
             return <path
+                key={index}
                 className={'arc ' + className}
                 d={arcGenerator(datum)}
                 cursor={'pointer'}
@@ -88,7 +89,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 count = datum.value;
             }
 
-            return <g transform={'translate(' + textArc.centroid(datum).join(',') + ')'}>
+            return <g key={index} transform={'translate(' + textArc.centroid(datum).join(',') + ')'}>
                 <text
                     transform={'rotate(' + ((isOther ? (angle - Math.PI / 2) : angle + Math.PI / 2) * 180 / Math.PI) + ')'}
                     textAnchor={isOther ? 'start' : 'end'}
@@ -110,7 +111,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
         const colorScale = scaleOrdinal(schemeCategory10);
         const ribbonCreator = ribbon<Chord, string>().radius(this.innerRadius);
         return <>
-            {layout.map((datum) => {
+            {layout.map((datum, index) => {
                 let className = 'default';
                 if (this.state.activeId !== null) {
                     className = 'inactive';
@@ -118,12 +119,14 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 if (datum.source.index === this.state.activeId || datum.target.index === this.state.activeId) {
                     className = 'active';
                 }
-                // @ts-ignore: Type 'void' is not assignable to type 'string'.
+
+                // @ts-ignore
                 const dAttr: string = ribbonCreator(datum);
                 return <path
+                    key={index}
                     className={'ribbon ' + className}
                     d={dAttr}
-                    fill={colorScale(datum.source.index + '-' + datum.source.subindex)}
+                    fill={colorScale(datum.source.index + '-' /*+ datum.source.subindex*/)}
                 />;
             })}
         </>;

@@ -1,43 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Models\Logging\FlashMessageDump;
-use FKSDB\Models\Logging\MemoryLogger;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitFormComponent extends EntityFormComponent {
+class FyziklaniSubmitFormComponent extends EntityFormComponent
+{
+
 
     private HandlerFactory $handlerFactory;
 
-    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void
+    {
         $this->handlerFactory = $handlerFactory;
     }
 
     /**
-     * @param Form $form
-     * @return void
      * @throws NotSetGameParametersException
      */
-    protected function configureForm(Form $form): void {
+    protected function configureForm(Form $form): void
+    {
         $form->addComponent($this->createPointsField(), 'points');
     }
 
     /**
-     * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(): void {
+    protected function setDefaults(): void
+    {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 'team_id' => $this->model->e_fyziklani_team_id,
@@ -46,7 +50,8 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent {
         }
     }
 
-    protected function handleFormSuccess(Form $form): void {
+    protected function handleFormSuccess(Form $form): void
+    {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
@@ -55,17 +60,17 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent {
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('this');
         }
     }
 
     /**
-     * @return RadioList
      * TODO to table-reflection factory
      * @throws NotSetGameParametersException
      */
-    private function createPointsField(): RadioList {
+    private function createPointsField(): RadioList
+    {
         $field = new RadioList(_('Number of points'));
         $items = [];
         foreach ($this->model->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {

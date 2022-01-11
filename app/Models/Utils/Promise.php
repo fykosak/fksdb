@@ -7,10 +7,9 @@ use Nette\SmartObject;
 /**
  * Pseudopromise where we want to evaluate a value (provided as callback)
  * later than promise creation.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class Promise {
+class Promise
+{
     use SmartObject;
 
     /** @var callable */
@@ -20,14 +19,16 @@ class Promise {
     /** @var mixed */
     private $value;
 
-    public function __construct(callable $callback) {
+    public function __construct(callable $callback)
+    {
         $this->callback = $callback;
     }
 
     /**
      * @return mixed
      */
-    public function getValue() {
+    public function getValue()
+    {
         if (!$this->called) {
             $this->value = ($this->callback)();
             $this->called = true;

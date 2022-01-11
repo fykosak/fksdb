@@ -6,9 +6,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Lukáš Timko <lukast@fykos.cz>
- */
 class ServiceFyziklaniTask extends AbstractService {
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
@@ -19,11 +16,9 @@ class ServiceFyziklaniTask extends AbstractService {
     }
 
     /**
-     * @param ModelEvent $event
-     * @param bool $hideName
      * @return ModelFyziklaniTask[]
      */
-    public function getTasksAsArray(ModelEvent $event, bool $hideName = false): array {
+    public function serialiseTasks(ModelEvent $event, bool $hideName = false): array {
         $tasks = [];
 
         foreach ($event->getFyziklaniTasks()->order('label') as $row) {

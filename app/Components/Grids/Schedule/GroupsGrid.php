@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\RelatedGrid;
@@ -12,20 +14,21 @@ use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
-class GroupsGrid extends RelatedGrid {
+class GroupsGrid extends RelatedGrid
+{
 
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container)
+    {
         parent::__construct($container, $event, 'schedule_group');
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -54,7 +57,8 @@ class GroupsGrid extends RelatedGrid {
             });
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelScheduleGroup::class;
     }
 }

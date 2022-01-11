@@ -8,24 +8,21 @@ use Nette\Utils\Arrays;
 /**
  * So far only helper methods to "checked" laoding of Neon configuration.
  * The scheme (metamodel) for the configuration is Neon-encoded as well.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class NeonScheme {
+class NeonScheme
+{
 
     public const TYPE_NEON = 'neon';
     public const TYPE_EXPRESSION = 'expression';
     public const QUALIFIER_ARRAY = 'array';
 
     /**
-     * @param array $section
-     * @param array $sectionScheme
-     * @return array
      * @throws NeonSchemaException
      */
-    public static function readSection(array $section, array $sectionScheme): array {
+    public static function readSection(array $section, array $sectionScheme): array
+    {
         if (!is_array($section)) {
-            throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
+            throw new NeonSchemaException('Expected array got \'' . $section . '\'.');
         }
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
@@ -40,7 +37,7 @@ class NeonScheme {
                     continue;
                 }
             } else {
-                $result[$key] = isset($section[$key]) ? $section[$key] : $metadata['default'];
+                $result[$key] = $section[$key] ?? $metadata['default'];
             }
 
             $typeDef = $metadata['type'] ?? self::TYPE_NEON;
@@ -50,9 +47,7 @@ class NeonScheme {
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {
-                    $result[$key] = array_map(function ($it) {
-                        return Helpers::statementFromExpression($it);
-                    }, $result[$key]);
+                    $result[$key] = array_map(fn($it) => Helpers::statementFromExpression($it), $result[$key]);
                 } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {

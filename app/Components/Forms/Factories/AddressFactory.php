@@ -12,12 +12,8 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-class AddressFactory {
+class AddressFactory
+{
 
     private ServiceAddress $serviceAddress;
 
@@ -25,19 +21,26 @@ class AddressFactory {
 
     private Container $container;
 
-    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion)
+    {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
         $this->container = $container;
     }
 
-    public function createAddress(?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): AddressContainer {
+    public function createAddress(
+        ?Control $conditioningField = null,
+        bool $required = false,
+        bool $notWriteOnly = false,
+        bool $showExtendedRows = false
+    ): AddressContainer {
         $container = new AddressContainer($this->container);
         $this->buildAddress2($container, $conditioningField, $required, $notWriteOnly, $showExtendedRows);
         return $container;
     }
 
-    public function createAddressContainer(string $type): AddressContainer {
+    public function createAddressContainer(string $type): AddressContainer
+    {
         $container = new AddressContainer($this->container);
         $this->buildAddress2($container, null, false, true); // TODO is not safe
         switch ($type) {
@@ -51,7 +54,13 @@ class AddressFactory {
         return $container;
     }
 
-    public function buildAddress2(AddressContainer $container, ?Control $conditioningField = null, bool $required = false, bool $notWriteOnly = false, bool $showExtendedRows = false): void {
+    public function buildAddress2(
+        AddressContainer $container,
+        ?Control $conditioningField = null,
+        bool $required = false,
+        bool $notWriteOnly = false,
+        bool $showExtendedRows = false
+    ): void {
         if ($showExtendedRows) {
             $container->addText('first_row', _('First row'))
                 ->setOption('description', _('First optional row of the address (e.g. title)'));
@@ -90,36 +99,51 @@ class AddressFactory {
         $country->setPrompt(_('Detect country from postal code (CR, SK only)'));
 
         // check valid address structure
-        $target->addConditionOn($city, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the city is filled.'));
-        $target->addConditionOn($postalCode, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the postal code is filled.'));
-        $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the country is filled.'));
+        $target->addConditionOn($city, Form::FILLED)->addRule(
+            Form::FILLED,
+            _('You have to fill in the place when the city is filled.')
+        );
+        $target->addConditionOn($postalCode, Form::FILLED)->addRule(
+            Form::FILLED,
+            _('You have to fill in the place when the postal code is filled.')
+        );
+        $target->addConditionOn($country, Form::FILLED)->addRule(
+            Form::FILLED,
+            _('You have to fill in the place when the country is filled.')
+        );
 
         /* Country + postal code validation */
-        $validPostalCode = function (BaseControl $control): bool {
-            return $this->serviceAddress->tryInferRegion($control->getValue());
-        };
+        $validPostalCode = fn(BaseControl $control): bool => $this->serviceAddress->tryInferRegion(
+            $control->getValue()
+        );
 
         if ($required) {
-            $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
-            $conditioned->addConditionOn($country, function (BaseControl $control): bool {
-                $value = $control->getValue();
-                return in_array($value, ['CZ', 'SK']);
-            })->addRule(Form::FILLED, _('Postal code is required.'));
+            $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED)
+                : $postalCode;
+            $conditioned->addConditionOn(
+                $country,
+                fn(BaseControl $control): bool => in_array($control->getValue(), ['CZ', 'SK'])
+            )->addRule(Form::FILLED, _('Postal code is required.'));
         }
         $postalCode->addCondition(Form::FILLED)
             ->addRule($validPostalCode, _('Invalid postal code.'));
 
         if ($required) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
-            $conditioned->addConditionOn($postalCode, function (BaseControl $control): bool {
-                return !$this->serviceAddress->tryInferRegion($control->getValue());
-            })->addRule(Form::FILLED, _('Country is required.'));
+            $conditioned->addConditionOn(
+                $postalCode,
+                fn(BaseControl $control): bool => !$this->serviceAddress->tryInferRegion($control->getValue())
+            )
+                ->addRule(Form::FILLED, _('Country is required.'));
         }
         $country->addCondition(Form::FILLED)
-            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode): bool {
-                $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
-                $region = $this->serviceRegion->findByPrimary($regionId);
-                return $region->country_iso == $control->getValue();
-            }, _('Chosen country does not match provided postal code.'));
+            ->addConditionOn($postalCode, $validPostalCode)->addRule(
+                function (BaseControl $control) use ($postalCode): bool {
+                    $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
+                    $region = $this->serviceRegion->findByPrimary($regionId);
+                    return $region->country_iso == $control->getValue();
+                },
+                _('Chosen country does not match provided postal code.')
+            );
     }
 }

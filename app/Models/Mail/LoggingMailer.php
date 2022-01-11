@@ -8,11 +8,6 @@ use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class LoggingMailer implements Mailer {
     use SmartObject;
 
@@ -37,7 +32,7 @@ class LoggingMailer implements Mailer {
 
     public function setLogPath(string $logPath): void {
         $this->logPath = $logPath;
-        mkdir($this->logPath, 0770, true);
+        @mkdir($this->logPath, 0770, true);
     }
 
     public function getLogging(): bool {
@@ -49,8 +44,6 @@ class LoggingMailer implements Mailer {
     }
 
     /**
-     * @param Message $mail
-     * @return void
      * @throws \Exception
      */
     public function send(Message $mail): void {

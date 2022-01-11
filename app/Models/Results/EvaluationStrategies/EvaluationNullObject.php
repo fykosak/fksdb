@@ -2,19 +2,17 @@
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
+use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
 use FKSDB\Models\Exceptions\NotImplementedException;
 
 /**
- * Null Object pattern for FKSDB\Results\EvaluationStrategies\IEvaluationStrategy.
- *
- * @author Lukáš Timko <lukast@fykos.cz>
+ * Null Object pattern for FKSDB\Results\EvaluationStrategies\EvaluationStrategy.
  */
 class EvaluationNullObject extends EvaluationStrategy {
 
     /**
-     * @return array|void
      * @throws NotImplementedException
      */
     public function getCategories(): array {
@@ -22,8 +20,6 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @param ModelCategory $category
-     * @return array|void
      * @throws NotImplementedException
      */
     public function categoryToStudyYears(ModelCategory $category): array {
@@ -32,7 +28,6 @@ class EvaluationNullObject extends EvaluationStrategy {
 
     /**
      * @param ActiveRow $task
-     * @return string
      * @throws NotImplementedException
      */
     public function getPointsColumn(ActiveRow $task): string {
@@ -40,7 +35,6 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @return string
      * @throws NotImplementedException
      */
     public function getSumColumn(): string {
@@ -48,9 +42,7 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @param ActiveRow $task
-     * @param ModelCategory $category
-     * @return int|null
+     * @param ActiveRow|ModelTask $task
      * @throws NotImplementedException
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
@@ -58,8 +50,6 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @param ModelCategory $category
-     * @return string
      * @throws NotImplementedException
      */
     public function getTaskPointsColumn(ModelCategory $category): string {

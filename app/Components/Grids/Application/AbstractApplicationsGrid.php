@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -17,18 +19,21 @@ use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-abstract class AbstractApplicationsGrid extends BaseGrid {
+abstract class AbstractApplicationsGrid extends BaseGrid
+{
 
     protected ModelEvent $event;
     private Holder $holder;
 
-    public function __construct(ModelEvent $event, Holder $holder, Container $container) {
+    public function __construct(ModelEvent $event, Holder $holder, Container $container)
+    {
         parent::__construct($container);
         $this->event = $event;
         $this->holder = $holder;
     }
 
-    protected function getData(): IDataSource {
+    protected function getData(): IDataSource
+    {
         $participants = $this->getSource();
         $source = new SearchableDataSource($participants);
         $source->setFilterCallback($this->getFilterCallBack());
@@ -38,10 +43,10 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     abstract protected function getSource(): Selection;
 
     /**
-     * @return FormControl
      * @throws BadTypeException
      */
-    protected function createComponentSearchForm(): FormControl {
+    protected function createComponentSearchForm(): FormControl
+    {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
 
         $states = [];
@@ -61,14 +66,14 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
             $label = Html::el('span')
                 ->addHtml(Html::el('b')->addText($state['state']))
                 ->addText(': ')
-                ->addHtml(Html::el('i')->addText(_($state['description'])))
+                ->addHtml(Html::el('i')->addText(_((string)$state['description'])))
                 ->addText(' (' . $state['count'] . ')');
             $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
         $form->onSuccess[] = function (Form $form): void {
-            $values = $form->getValues();
+            $values = $form->getValues('array');
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);
             $count = $this->dataSource->getCount();
@@ -78,20 +83,20 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addHolderColumns();
     }
 
-    public function getFilterCallBack(): callable {
-        return function (Selection $table, $value): void {
+    public function getFilterCallBack(): callable
+    {
+        return function (Selection $table, array $value): void {
             $states = [];
-            foreach ($value->status as $state => $value) {
+            foreach ($value['status'] as $state => $value) {
                 if ($value) {
                     $states[] = str_replace('__', '.', $state);
                 }
@@ -105,11 +110,11 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     abstract protected function getHoldersColumns(): array;
 
     /**
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addHolderColumns(): void {
+    protected function addHolderColumns(): void
+    {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
         $fields = [];
         foreach ($holderFields as $name => $def) {

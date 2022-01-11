@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceMDsefParticipant extends AbstractServiceMulti {
 
@@ -20,7 +20,6 @@ class ServiceMDsefParticipant extends AbstractServiceMulti {
 
     /**
      * Delete post contact including the address.
-     * @param AbstractModelMulti $model
      * @throws ModelException
      */
     public function dispose(AbstractModelMulti $model): void {

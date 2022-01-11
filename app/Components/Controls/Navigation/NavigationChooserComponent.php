@@ -1,58 +1,111 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\Choosers\ChooserComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\UI\PageTitle;
-use FKSDB\Models\UI\Title;
+use Fykosak\Utils\UI\Navigation\NavigationItemComponent;
+use Fykosak\Utils\UI\Navigation\NavItem;
+use Fykosak\Utils\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 
-class NavigationChooserComponent extends ChooserComponent {
+class NavigationChooserComponent extends NavigationItemComponent
+{
 
     private NavigationFactory $navigationFactory;
 
     protected array $structure;
 
-    final public function injectPrimary(NavigationFactory $navigationFactory): void {
+    final public function injectPrimary(NavigationFactory $navigationFactory): void
+    {
         $this->navigationFactory = $navigationFactory;
     }
 
-    final public function render(string $root = ''): void {
-        $this->structure = $this->navigationFactory->getStructure($root);
-        parent::render();
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException|\ReflectionException
+     */
+    final public function renderNav(string $root = ''): void
+    {
+        $structure = $this->navigationFactory->getStructure($root);
+        parent::render($this->getItem($structure));
     }
 
-    final public function renderBoard(string $root): void {
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     */
+    protected function beforeRender(): void
+    {
+        $this->template->items = $this->getItems();
+        $this->template->title = $this->getTitle();
+    }
+
+    /**
+     * @throws BadRequestException
+     * @throws BadTypeException
+     */
+    final public function renderBoard(string $root): void
+    {
         $this->structure = $this->navigationFactory->getStructure($root);
         $this->beforeRender();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.board.latte');
     }
 
     /**
-     * @return Title
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    protected function getTitle(): Title {
+    protected function getTitle(): Title
+    {
         if (isset($this->structure['linkPresenter'])) {
-            $presenter = $this->navigationFactory->preparePresenter($this->getPresenter(), $this->structure['linkPresenter'], $this->structure['linkAction'], $this->structure['linkParams']);
+            $presenter = $this->navigationFactory->preparePresenter(
+                $this->getPresenter(),
+                $this->structure['linkPresenter'],
+                $this->structure['linkAction'],
+                $this->structure['linkParams']
+            );
             $presenter->setView($presenter->getView()); // to force update the title
             return $presenter->getTitle();
         }
-        return new PageTitle('');
+        return new Title(null, '');
     }
 
-    protected function getItems(): iterable {
+    protected function getItems(): iterable
+    {
         return $this->structure['parents'];
     }
 
     /**
-     * @param array $item
-     * @return bool
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws \ReflectionException
      */
-    public function isItemActive($item): bool {
+    private function getItem(array $structure): NavItem
+    {
+        $items = [];
+        foreach ($structure['parents'] as $item) {
+            [$destination, $params] = $this->navigationFactory->createLinkParams($this->getPresenter(), $item);
+            if ($this->isItemVisible($item)) {
+                $items[] = new NavItem(
+                    $this->getItemTitle($item),
+                    $destination,
+                    $params,
+                    [],
+                    $this->isItemActive($item)
+                );
+            }
+        }
+        return new NavItem($this->getItemTitle($structure), '#', [], $items);
+    }
+
+    public function isItemActive(array $item): bool
+    {
+        if ($item instanceof NavItem) {
+            return false;
+        }
         if (isset($item['linkPresenter'])) {
             try {
                 $this->navigationFactory->createLink($this->getPresenter(), $item);
@@ -68,30 +121,33 @@ class NavigationChooserComponent extends ChooserComponent {
     }
 
     /**
-     * @param array $item
-     * @return Title
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function getItemTitle($item): Title {
+    public function getItemTitle(array $item): Title
+    {
         if (isset($item['linkPresenter'])) {
-            $presenter = $this->navigationFactory->preparePresenter($this->getPresenter(), $item['linkPresenter'], $item['linkAction'], $item['linkParams']);
+            $presenter = $this->navigationFactory->preparePresenter(
+                $this->getPresenter(),
+                $item['linkPresenter'],
+                $item['linkAction'],
+                $item['linkParams']
+            );
             $presenter->setView($presenter->getView()); // to force update the title
 
             return $presenter->getTitle();
         }
-        return new Title('');
+        return new Title(null, '');
     }
 
     /**
-     * @param array $item
-     * @return string
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    public function getItemLink($item): string {
+    public function getItemLink(array $item): string
+    {
         if (isset($item['linkPresenter'])) {
             return $this->navigationFactory->createLink($this->getPresenter(), $item);
         }
@@ -99,13 +155,15 @@ class NavigationChooserComponent extends ChooserComponent {
     }
 
     /**
-     * @param array $item
-     * @return bool
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException
      */
-    public function isItemVisible($item): bool {
+    public function isItemVisible(array $item): bool
+    {
+        if ($item instanceof NavItem) {
+            return true;
+        }
         if (isset($item['visible'])) {
             return $item['visible'];
         }

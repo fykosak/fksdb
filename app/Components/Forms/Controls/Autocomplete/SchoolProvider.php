@@ -7,11 +7,6 @@ use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class SchoolProvider implements FilteredDataProvider {
 
     private const LIMIT = 50;
@@ -32,9 +27,6 @@ class SchoolProvider implements FilteredDataProvider {
 
     /**
      * Prefix search.
-     *
-     * @param string|null $search
-     * @return array
      */
     public function getFilteredItems(?string $search): array {
         $search = trim($search);
@@ -74,7 +66,6 @@ class SchoolProvider implements FilteredDataProvider {
     }
 
     /**
-     * @return array
      * @throws NotImplementedException
      */
     public function getItems(): array {
@@ -90,7 +81,6 @@ class SchoolProvider implements FilteredDataProvider {
 
     /**
      * @param mixed $id
-     * @return void
      */
     public function setDefaultValue($id): void {
         $this->defaultValue = $id;

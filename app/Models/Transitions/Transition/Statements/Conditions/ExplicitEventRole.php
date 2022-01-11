@@ -18,6 +18,6 @@ class ExplicitEventRole extends EventRole {
     }
 
     protected function evaluate(...$args): bool {
-        return $this->eventAuthorizator->isContestOrgAllowed($this->resource, $this->privilege, $this->event);
+        return $this->eventAuthorizator->isAllowed($this->resource, $this->privilege, $this->event);
     }
 }

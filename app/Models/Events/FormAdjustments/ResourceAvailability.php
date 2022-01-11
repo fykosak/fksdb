@@ -5,19 +5,17 @@ namespace FKSDB\Models\Events\FormAdjustments;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
  * @deprecated use person_schedule UC
  */
-class ResourceAvailability extends AbstractAdjustment {
+class ResourceAvailability extends AbstractAdjustment
+{
 
     /** @var array fields that specifies amount used (string masks) */
     private array $fields;
@@ -36,7 +34,13 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array $includeStates any state or array of state
      * @param array $excludeStates any state or array of state
      */
-    public function __construct(array $fields, string $paramCapacity, string $message, array $includeStates = [Machine::STATE_ANY], array $excludeStates = ['cancelled']) {
+    public function __construct(
+        array $fields,
+        string $paramCapacity,
+        string $message,
+        array $includeStates = [AbstractMachine::STATE_ANY],
+        array $excludeStates = ['cancelled']
+    ) {
         $this->fields = $fields;
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -44,7 +48,8 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function innerAdjust(Form $form, Holder $holder): void {
+    protected function innerAdjust(Form $form, Holder $holder): void
+    {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -94,10 +99,10 @@ class ResourceAvailability extends AbstractAdjustment {
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
-            if (!in_array(Machine::STATE_ANY, $this->includeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if (!in_array(Machine::STATE_ANY, $this->excludeStates)) {
+            if (!in_array(AbstractMachine::STATE_ANY, $this->excludeStates)) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');
@@ -107,9 +112,7 @@ class ResourceAvailability extends AbstractAdjustment {
                 $model = $baseHolder->getModel2();
                 return $model ? $model->getPrimary(false) : null;
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary): bool {
-                return (bool)$primary;
-            });
+            $primaries = array_filter($primaries, fn($primary): bool => (bool)$primary);
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();

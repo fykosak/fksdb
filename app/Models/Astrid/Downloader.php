@@ -5,11 +5,6 @@ namespace FKSDB\Models\Astrid;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use Nette\DI\Container;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class Downloader {
 
     private string $httpUser;
@@ -40,7 +35,7 @@ class Downloader {
     }
 
     private function download(string $path): string {
-        $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
+        $src = "https://$this->httpUser:$this->httpPassword@$this->host$path";
         $dst = tempnam($this->tmpDir, 'task');
 
         if (!copy($src, $dst)) {

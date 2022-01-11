@@ -11,7 +11,6 @@ class UIdColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPayment $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         return Html::el('span')->addText('#' . $model->getPaymentId());

@@ -25,7 +25,6 @@ class HealthInsuranceColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelPersonInfo $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
@@ -34,10 +33,6 @@ class HealthInsuranceColumnFactory extends ColumnFactory {
         return Html::el('span')->addText($model->health_insurance);
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems(self::ID_MAPPING);

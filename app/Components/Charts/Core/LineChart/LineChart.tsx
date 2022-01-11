@@ -9,11 +9,10 @@ import {
     LineChartData,
 } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
-import './style.scss';
 
-interface OwnProps<> {
-    data: LineChartData;
-    xScale: ScaleLinear<number, number> | ScaleTime<number, number>;
+interface OwnProps<XValue extends Date | number> {
+    data: LineChartData<XValue>;
+    xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>;
     yScale: ScaleLinear<number, number>;
     display?: {
         xGrid: boolean;
@@ -21,7 +20,7 @@ interface OwnProps<> {
     };
 }
 
-export default class LineChart extends ChartComponent<OwnProps, {}> {
+export default class LineChart<XValue extends Date | number> extends ChartComponent<OwnProps<XValue>, Record<string, never>> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -45,12 +44,12 @@ export default class LineChart extends ChartComponent<OwnProps, {}> {
         const lines = [];
         data.forEach((datum, index) => {
             if (datum.display.lines) {
-                const lineEl = getLinePath(xScale, yScale, datum.points,
+                const lineEl = getLinePath<XValue>(xScale, yScale, datum.points,
                     datum.curveFactory ? datum.curveFactory : curveBasis);
                 lines.push(<path key={index} d={lineEl} className={'line'} stroke={datum.color}/>);
             }
             if (datum.display.area) {
-                const areaPath = getAreaPath(xScale, yScale, datum.points, yScale(0),
+                const areaPath = getAreaPath<XValue>(xScale, yScale, datum.points, yScale(0),
                     datum.curveFactory ? datum.curveFactory : curveMonotoneX);
                 areas.push(<path d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
             }

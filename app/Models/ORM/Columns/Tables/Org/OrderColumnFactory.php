@@ -30,7 +30,6 @@ class OrderColumnFactory extends ColumnFactory {
 
     /**
      * @param AbstractModel|ModelOrg $model
-     * @return Html
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if (\array_key_exists($model->order, $this->getOrderMapping())) {

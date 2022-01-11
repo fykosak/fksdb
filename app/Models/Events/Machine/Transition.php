@@ -7,13 +7,8 @@ use FKSDB\Models\Events\Exceptions\TransitionOnExecutedException;
 use FKSDB\Models\Events\Exceptions\TransitionUnsatisfiedTargetException;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\InvalidArgumentException;
-
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 
 class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
@@ -22,8 +17,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     private string $mask;
     private string $name;
     private string $source;
-    /** @var bool|callable */
-    private $visible;
+    private bool $visible;
     public array $onExecuted = [];
 
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
@@ -37,16 +31,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
      */
     public function getName(): string {
         return $this->name;
-    }
-
-    public function getBehaviorType(): string {
-        if ($this->isTerminating()) {
-            return self::TYPE_DANGEROUS;
-        }
-        if ($this->isCreating()) {
-            return self::TYPE_SUCCESS;
-        }
-        return parent::getBehaviorType();
     }
 
     private function setName(string $mask): void {
@@ -80,18 +64,14 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     }
 
     public function isCreating(): bool {
-        return strpos($this->source, \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) !== false;
+        return strpos($this->source, AbstractMachine::STATE_INIT) !== false;
     }
 
-    public function isVisible(Holder $holder): bool {
-        return $this->getEvaluator()->evaluate($this->visible, $holder);
+    public function isVisible(): bool {
+        return $this->visible;
     }
 
-    /**
-     * @param callable|bool $visible
-     * @return void
-     */
-    public function setVisible($visible): void {
+    public function setVisible(bool $visible): void {
         $this->visible = $visible;
     }
 
@@ -107,7 +87,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     }
 
     /**
-     * @param Holder $holder
      * @return Transition[]
      */
     private function getInducedTransitions(Holder $holder): array {
@@ -136,9 +115,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     }
 
     /**
-     * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return null|array
      */
     private function validateTarget(Holder $holder, array $inducedTransitions): ?array {
         foreach ($inducedTransitions as $inducedTransition) {
@@ -167,9 +144,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * Launch induced transitions and sets new state.
-     *
-     * @param Holder $holder
-     * @return array
      * @throws TransitionConditionFailedException
      * @throws TransitionUnsatisfiedTargetException
      * @todo Induction work only for one level.
@@ -199,7 +173,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
     /**
      * Triggers onExecuted event.
      *
-     * @param Holder $holder
      * @param Transition[] $inducedTransitions
      * @throws TransitionOnExecutedException
      */
@@ -216,7 +189,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @note Assumes the condition is fulfilled.
-     * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {
         $holder->setModelState($this->getTargetState());
@@ -224,7 +196,6 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
 
     /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
-     * @return bool
      */
     public function matches(string $mask): bool {
         $parts = self::parseMask($mask);
@@ -237,19 +208,16 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
         /*
          * Star matches any state but meta-states (initial and terminal)
          */
-        if (strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false &&
-                ($mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED))) {
+        if (strpos(AbstractMachine::STATE_ANY, $stateMask) !== false || (strpos(AbstractMachine::STATE_ANY, $this->source) !== false &&
+                ($mask != AbstractMachine::STATE_INIT && $mask != AbstractMachine::STATE_TERMINATED))) {
             return true;
         }
 
-        return preg_match("/(^|\\|){$stateMask}(\\||\$)/", $this->source);
+        return preg_match("/(^|\\|)$stateMask(\\||\$)/", $this->source);
     }
 
     /**
      * @note Assumes mask is valid.
-     *
-     * @param string $mask
-     * @return array
      */
     private static function parseMask(string $mask): array {
         return explode('->', $mask);
@@ -265,11 +233,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, [\FKSDB\Models\Transitions\Machine\Machine::STATE_ANY, \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT]))) {
+            if (!in_array($source, array_merge($states, [AbstractMachine::STATE_ANY, AbstractMachine::STATE_INIT]))) {
                 return false;
             }
         }
-        if (!in_array($target, array_merge($states, [\FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED]))) {
+        if (!in_array($target, array_merge($states, [AbstractMachine::STATE_TERMINATED]))) {
             return false;
         }
         return true;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Transitions;
 
 use FKSDB\Models\Authentication\AccountManager;
@@ -10,17 +12,16 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\Localization\UnsupportedLanguageException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -29,11 +30,9 @@ use Nette\Utils\Strings;
  * Sends email with given template name (in standard template directory)
  * to the person that is found as the primary of the application that is
  * experienced the transition.
- *
- * @author Michal Koutný <michal@fykos.cz>
  */
-class MailSender {
-
+class MailSender
+{
     use SmartObject;
 
     public const BCC_PARAM = 'notifyBcc';
@@ -57,13 +56,7 @@ class MailSender {
 
     /**
      * MailSender constructor.
-     * @param string $filename
      * @param array|string $addresees
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param AccountManager $accountManager
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServicePerson $servicePerson
-     * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
         string $filename,
@@ -84,24 +77,20 @@ class MailSender {
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function __invoke(Transition $transition, Holder $holder): void {
+    public function __invoke(Transition $transition, Holder $holder): void
+    {
         $this->send($transition, $holder);
     }
 
     /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    private function send(Transition $transition, Holder $holder): void {
+    private function send(Transition $transition, Holder $holder): void
+    {
         $personIds = $this->resolveAdressees($transition, $holder);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)
@@ -109,7 +98,6 @@ class MailSender {
             ->fetchPairs('person_id');
 
         $logins = [];
-        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $login = $person->getLogin();
             if (!$login) {
@@ -119,20 +107,23 @@ class MailSender {
         }
 
         foreach ($logins as $login) {
-            $this->createMessage($login, $transition->getBaseMachine(), $holder->getBaseHolder($transition->getBaseMachine()->getName()));
+            $this->createMessage(
+                $login,
+                $transition->getBaseMachine(),
+                $holder->getBaseHolder($transition->getBaseMachine()->getName())
+            );
         }
     }
 
     /**
-     * @param ModelLogin $login
-     * @param BaseMachine $baseMachine
-     * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
-     * @throws ModelException
+     * @throws ModelException|UnsupportedLanguageException
      */
-    private function createMessage(ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
+    private function createMessage(
+        ModelLogin $login,
+        BaseMachine $baseMachine,
+        BaseHolder $baseHolder
+    ): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->getHolder();
@@ -178,37 +169,42 @@ class MailSender {
         return $this->serviceEmailMessage->createNewModel($data);
     }
 
-    private function createToken(ModelLogin $login, ModelEvent $event, ActiveRow $application): ModelAuthToken {
+    private function createToken(ModelLogin $login, ModelEvent $event, ActiveRow $application): ModelAuthToken
+    {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
         return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param ActiveRow $application
-     * @param Holder $holder
-     * @param Machine $machine
-     * @return string
-     * TODO extension point
-     */
-    private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string {
+    private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string
+    {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
         }
         $application = Strings::truncate((string)$application, 20);
-        return $event->name . ': ' . $application . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()));
+        return $event->name . ': ' . $application;
+        //state in subject: . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
-    private function getUntil(ModelEvent $event): \DateTimeInterface {
+    private function getUntil(ModelEvent $event): \DateTimeInterface
+    {
         return $event->registration_end ?? $event->end;
     }
 
-    private function hasBcc(): bool {
-        return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
+    private function hasBcc(): bool
+    {
+        return !is_array($this->addressees) && substr(
+                $this->addressees,
+                0,
+                strlen(self::BCC_PREFIX)
+            ) == self::BCC_PREFIX;
     }
 
-    private function resolveAdressees(Transition $transition, Holder $holder): array {
+    /**
+     * @return int[]
+     */
+    private function resolveAdressees(Transition $transition, Holder $holder): array
+    {
         if (is_array($this->addressees)) {
             $names = $this->addressees;
         } else {
@@ -227,9 +223,10 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
-                            return $it->getName();
-                        }, $group['holders']));
+                        $names = array_merge(
+                            $names,
+                            array_map(fn(BaseHolder $it): string => $it->getName(), $group['holders'])
+                        );
                     }
                     break;
                 case self::ADDR_ALL:

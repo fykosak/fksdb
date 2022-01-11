@@ -5,11 +5,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\SelectBox;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 class ChooserFactory extends AbstractFactory {
 
     public const FORMAT_KEY_VALUE = 'key-value';

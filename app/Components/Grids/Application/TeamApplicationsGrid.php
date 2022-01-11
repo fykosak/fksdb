@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Badges\NotSetBadge;
@@ -14,18 +16,18 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
-class TeamApplicationsGrid extends AbstractApplicationsGrid {
+class TeamApplicationsGrid extends AbstractApplicationsGrid
+{
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
 
         $this->paginate = false;
 
@@ -47,11 +49,13 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid {
         parent::configure($presenter);
     }
 
-    protected function getSource(): GroupedSelection {
+    protected function getSource(): GroupedSelection
+    {
         return $this->event->getTeams();
     }
 
-    protected function getHoldersColumns(): array {
+    protected function getHoldersColumns(): array
+    {
         return [
             'note',
             'game_lang',
@@ -62,11 +66,13 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid {
         ];
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelFyziklaniTeam::class;
     }
 
-    protected function getTableName(): string {
+    protected function getTableName(): string
+    {
         return DbNames::TAB_E_FYZIKLANI_TEAM;
     }
 }

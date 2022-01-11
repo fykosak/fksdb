@@ -5,7 +5,7 @@ namespace FKSDB\Models\ORM\Services\Events;
 use Fykosak\NetteORM\AbstractService;
 
 /**
- * @author Michal Koutný <xm.koutny@gmail.com>
+ * @deprecated
  */
 class ServiceDsefGroup extends AbstractService {
 }

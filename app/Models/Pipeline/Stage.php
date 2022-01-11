@@ -2,13 +2,8 @@
 
 namespace FKSDB\Models\Pipeline;
 
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 
-/**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
 abstract class Stage {
 
     private Pipeline $pipeline;

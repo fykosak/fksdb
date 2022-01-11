@@ -13,7 +13,6 @@ class ImplicitEventRole extends EventRole {
 
     /**
      * @param AbstractModel[] $args
-     * @return bool
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
@@ -24,6 +23,6 @@ class ImplicitEventRole extends EventRole {
         }
         /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);
-        return $this->eventAuthorizator->isContestOrgAllowed($model, $this->privilege, $event);
+        return $this->eventAuthorizator->isAllowed($model, $this->privilege, $event);
     }
 }

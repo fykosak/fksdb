@@ -2,29 +2,20 @@
 
 namespace FKSDB\Models\ORM\Services;
 
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
+use Fykosak\NetteORM\TypedTableSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceAuthToken extends AbstractService {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**
-     *
-     * @param ModelLogin $login
-     * @param string $type
-     * @param \DateTimeInterface|null $until
-     * @param null|string $data
-     * @param bool $refresh
-     * @param \DateTimeInterface|null $since
-     * @return ModelAuthToken
      * @throws ModelException
      */
     public function createToken(ModelLogin $login, string $type, ?\DateTimeInterface $until, ?string $data = null, bool $refresh = false, ?\DateTimeInterface $since = null): ModelAuthToken {
@@ -90,7 +81,6 @@ class ServiceAuthToken extends AbstractService {
 
     /**
      * @param string|ModelAuthToken $token
-     * @return void
      */
     public function disposeToken($token): void {
         if (!$token instanceof ModelAuthToken) {
@@ -101,16 +91,11 @@ class ServiceAuthToken extends AbstractService {
         }
     }
 
-    public function findTokensByEventId(int $eventId): array {
-        $res = $this->getTable()
+    public function findTokensByEventId(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
-            ->where('data LIKE ?', $eventId . ':%');
-        $tokens = [];
-        foreach ($res as $token) {
-            $tokens[] = ModelAuthToken::createFromActiveRow($token);
-        }
-        return $tokens;
+            ->where('data LIKE ?', $event->event_id . ':%');
     }
 }

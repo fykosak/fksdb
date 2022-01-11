@@ -9,7 +9,6 @@ use Nette\Mail\Message;
 use Nette\Security\Resource;
 
 /**
- * Class ModelEmailMessage
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read int|null recipient_person_id
@@ -31,6 +30,7 @@ class ModelEmailMessage extends AbstractModel implements Resource {
     public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
     public const STATE_FAILED = 'failed'; // posielanie zlyhalo
     public const STATE_CANCELED = 'canceled'; // posielanie zrušené
+    public const STATE_REJECTED = 'rejected'; // zastavené kvôli GDPR
 
     public const RESOURCE_ID = 'emailMessage';
 

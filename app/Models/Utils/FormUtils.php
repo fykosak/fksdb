@@ -6,17 +6,12 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
-/**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class FormUtils {
 
     /**
      * Convert empty strings to nulls.
      *
      * @param string|iterable $values
-     * @param bool $asArray
      * @return iterable|null
      * @todo Move to general utils.
      */
@@ -35,9 +30,6 @@ class FormUtils {
     }
 
     /**
-     * @param ArrayHash $values
-     * @param bool $ignoreNulls
-     * @return ArrayHash
      * @todo Move to general utils.
      */
     public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash {

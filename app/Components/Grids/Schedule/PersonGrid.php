@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
@@ -12,21 +14,22 @@ use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
 
-class PersonGrid extends BaseGrid {
+class PersonGrid extends BaseGrid
+{
 
-    public function setData(ModelEvent $event, ModelPerson $person): void {
+    public function setData(ModelEvent $event, ModelPerson $person): void
+    {
         $query = $person->getScheduleForEvent($event);
         $dataSource = new NDataSource($query);
         $this->setDataSource($dataSource);
     }
 
     /**
-     * @param ModelPerson|null $person
-     * @param ModelEvent|null $event
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
+    final public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void
+    {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }
@@ -35,12 +38,11 @@ class PersonGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
-     * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->paginate = false;
 
@@ -54,7 +56,8 @@ class PersonGrid extends BaseGrid {
         ]);
     }
 
-    protected function getModelClassName(): string {
+    protected function getModelClassName(): string
+    {
         return ModelPersonSchedule::class;
     }
 }

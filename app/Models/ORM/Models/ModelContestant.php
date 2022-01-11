@@ -8,8 +8,6 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
  * @property-read int person_id
  * @property-read ActiveRow contest
@@ -34,7 +32,7 @@ class ModelContestant extends AbstractModel implements Resource {
     }
 
     public function getPersonHistory(): ModelPersonHistory {
-        return $this->getPerson()->getHistory($this->getContestYear()->ac_year);
+        return $this->getPerson()->getHistoryByContestYear($this->getContestYear());
     }
 
     public function getResourceId(): string {

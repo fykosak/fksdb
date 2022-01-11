@@ -7,9 +7,6 @@ use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelTask;
 use Fykosak\NetteORM\AbstractService;
 
-/**
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
 class ServiceTask extends AbstractService {
 
     public function findBySeries(ModelContestYear $contestYear, int $series, int $taskNumber): ?ModelTask {

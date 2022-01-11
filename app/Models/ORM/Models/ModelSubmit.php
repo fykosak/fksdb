@@ -3,12 +3,11 @@
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read \DateTimeInterface submitted_on
  * @property-read int submit_id
  * @property-read string source
@@ -16,7 +15,9 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int raw_points
  * @property-read int points
  * @property-read int ct_id
+ * @property-read ActiveRow contestant_base
  * @property-read int task_id
+ * @property-read ActiveRow task
  * @property-read bool corrected
  */
 class ModelSubmit extends AbstractModel implements Resource {
@@ -30,10 +31,11 @@ class ModelSubmit extends AbstractModel implements Resource {
     }
 
     public function getTask(): ModelTask {
-        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
+        return ModelTask::createFromActiveRow($this->task);
     }
 
     public function getContestant(): ModelContestant {
+        // TODO why?
         return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 

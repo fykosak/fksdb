@@ -3,8 +3,8 @@
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\Logging\Logger;
-use FKSDB\Models\Messages\Message;
+use Fykosak\Utils\Logging\Logger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -40,10 +40,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param string $code
-     * @param int $points
-     * @return void
      * @throws PointsMismatchException
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
@@ -54,10 +50,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param string $code
-     * @param int $points
-     * @return void
      * @throws PointsMismatchException
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
@@ -74,13 +66,11 @@ class Handler {
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
         } else {
-            throw new TaskCodeException(\sprintf(_('Task given and validated.')));
+            throw new TaskCodeException(_('Task given and validated.'));
         }
     }
 
     /**
-     * @param string $code
-     * @return void
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
@@ -99,10 +89,6 @@ class Handler {
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @param int $points
-     * @return void
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
@@ -125,13 +111,10 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Message::LVL_SUCCESS));
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @return void
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      * @throws ModelException
@@ -148,15 +131,11 @@ class Handler {
                 'modified' => null,
             ]);
             $this->logEvent($submit, 'revoked');
-            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Logger::SUCCESS));
+            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Message::LVL_SUCCESS));
         }
     }
 
     /**
-     * @param Logger $logger
-     * @param ModelFyziklaniSubmit $submit
-     * @param int $points
-     * @return void
      * @throws ClosedSubmittingException
      * @throws PointsMismatchException
      * @throws ModelException
@@ -183,7 +162,7 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), Logger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Message::LVL_SUCCESS));
     }
 
     public function createSubmit(Logger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
@@ -204,7 +183,7 @@ class Handler {
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name), Logger::SUCCESS));
+            $task->name), Message::LVL_SUCCESS));
     }
 
     private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void {

@@ -6,8 +6,6 @@ use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
 use Fykosak\NetteORM\AbstractModel;
 
 /**
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int region_id
  * @property-read string country_iso
  * @property-read string country_iso3
@@ -29,8 +27,6 @@ class ModelRegion extends AbstractModel {
     }
 
     /**
-     * @param string $number
-     * @return string
      * @throws InvalidPhoneNumberException
      */
     public function formatPhoneNumber(string $number): string {

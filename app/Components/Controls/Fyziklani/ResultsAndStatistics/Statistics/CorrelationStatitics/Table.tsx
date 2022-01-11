@@ -18,7 +18,7 @@ interface StateProps {
     secondTeamId: number;
 }
 
-class Table extends React.Component<StateProps, {}> {
+class Table extends React.Component<StateProps> {
 
     public render() {
 
