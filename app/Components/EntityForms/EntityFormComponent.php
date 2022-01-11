@@ -15,7 +15,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
-abstract class AbstractEntityFormComponent extends FormComponent
+abstract class EntityFormComponent extends FormComponent
 {
 
     protected ?AbstractModel $model;
