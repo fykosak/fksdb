@@ -9,15 +9,12 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServicePayment;
-use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Explorer;
 
 class PaymentMachine extends Machine
 {
-
-    public PriceCalculator $priceCalculator;
     public ModelEvent $event;
     private ServiceEvent $serviceEvent;
     public array $scheduleGroupTypes;
@@ -46,11 +43,6 @@ class PaymentMachine extends Machine
     final public function setScheduleGroupTypes(array $types): void
     {
         $this->scheduleGroupTypes = $types;
-    }
-
-    final public function setPriceCalculator(PriceCalculator $priceCalculator): void
-    {
-        $this->priceCalculator = $priceCalculator;
     }
 
     public function getCreatingState(): string

@@ -56,7 +56,6 @@ services:
         factory: FKSDB\Models\Payment\Transition\PaymentMachine
         setup:
             - setEventId(137)
-            - setPriceCalculator(@fyziklaniPayment.priceCalculator)
             - setScheduleGroupTypes([accommodation])
 
     fyziklani14payment.symbolGenerator:
@@ -68,7 +67,6 @@ services:
         factory: FKSDB\Models\Payment\Transition\PaymentMachine
         setup:
             - setEventId(145)
-            - setPriceCalculator(@fyziklaniPayment.priceCalculator)
             - setScheduleGroupTypes([accommodation])
 
     fyziklani16payment.symbolGenerator:
@@ -80,7 +78,6 @@ services:
         factory: FKSDB\Models\Payment\Transition\PaymentMachine
         setup:
             - setEventId(165)
-            - setPriceCalculator(@fyziklaniPayment.priceCalculator)
             - setScheduleGroupTypes([accommodation, accommodation_teacher, weekend])
 
 transitions:

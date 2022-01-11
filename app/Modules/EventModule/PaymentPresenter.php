@@ -12,6 +12,7 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Machine;
 use Fykosak\Utils\Logging\Message;
@@ -29,12 +30,13 @@ class PaymentPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private Machine\Machine $machine;
     private ServicePayment $servicePayment;
+    private PriceCalculator $priceCalculator;
 
-    final public function injectServicePayment(ServicePayment $servicePayment): void
+    final public function injectServicePayment(ServicePayment $servicePayment, PriceCalculator $priceCalculator): void
     {
         $this->servicePayment = $servicePayment;
+        $this->priceCalculator = $priceCalculator;
     }
 
     /* ********* titles *****************/
@@ -135,7 +137,6 @@ class PaymentPresenter extends BasePresenter
     /* ********* render *****************/
 
     /**
-     * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -144,7 +145,7 @@ class PaymentPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $payment = $this->getEntity();
-        $this->template->items = $this->getMachine()->priceCalculator->getGridItems($payment);
+        $this->template->items = $this->priceCalculator->getGridItems($payment);
         $this->template->model = $payment;
         $this->template->isOrg = $this->isOrg();
     }
@@ -171,16 +172,16 @@ class PaymentPresenter extends BasePresenter
      */
     private function getMachine(): PaymentMachine
     {
-        if (!isset($this->machine)) {
+        static $machine;
+        if (!isset($machine)) {
             $machine = $this->getContext()->getService(
                 sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year)
             );
             if (!$machine instanceof PaymentMachine) {
-                throw new BadTypeException(PaymentMachine::class, $this->machine);
+                throw new BadTypeException(PaymentMachine::class, $machine);
             }
-            $this->machine = $machine;
         }
-        return $this->machine;
+        return $machine;
     }
 
     /**
