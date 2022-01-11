@@ -523,8 +523,8 @@ orm:
                 id_number:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IdNumberColumnFactory
-                    description: _('For foreigners passport ID.')
-                    title: _('Passport Id')
+                    description: _('Number of the ID which you will carry with you during the event')
+                    title: _('Passport no.')
                     permission: FULL
                 born:
                     type: class
