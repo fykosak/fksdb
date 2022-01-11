@@ -988,6 +988,15 @@ orm:
                  name_en:
                      type: string
                      title: _(Name en)
+                 description_cs:
+                     type: string
+                     title: _(Description cs)
+                 description_en:
+                     type: string
+                     title: _(Description en)
+                 note:
+                     type: text
+                     title: _(Note)
                  category:
                      type: state
                      title: _(Category)
@@ -996,6 +1005,8 @@ orm:
                          game-extension: {badge: 'badge bg-color-1', label: 'Game extension'}
                          apparel: {badge: 'badge bg-color-2', label: 'Apparel'}
                          book: {badge: 'badge bg-color-3', label: 'Book'}
+                         other: {badge: 'badge bg-color-4', label: 'Book'}
+
         warehouse_producer:
              service: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
              model: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
