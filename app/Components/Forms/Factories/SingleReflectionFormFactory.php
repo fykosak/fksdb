@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ORMFactory;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
 
 class SingleReflectionFormFactory {
@@ -35,6 +36,16 @@ class SingleReflectionFormFactory {
     }
 
     /**
+     * @param mixed ...$args
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    public function createFieldInto(IContainer $container, string $tableName, string $fieldName, ...$args): void {
+        $container->addComponent($this->createField($tableName, $fieldName, ...$args), $fieldName);
+    }
+
+    /**
+     * @param array $args
      * @throws BadTypeException
      * @throws OmittedControlException
      */
@@ -42,8 +53,7 @@ class SingleReflectionFormFactory {
         $container = new ModelContainer();
 
         foreach ($fields as $field) {
-            $control = $this->createField($table, $field, ...$args);
-            $container->addComponent($control, $field);
+            $this->createFieldInto($container, $table, $field, ...$args);
         }
         return $container;
     }
