@@ -144,7 +144,7 @@ transitions:
                     - @fyziklani16payment.symbolGenerator
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/create',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender': 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': _('New payment'),])
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/create',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender': 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': New payment,])
             new|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
@@ -152,4 +152,4 @@ transitions:
                 behaviorType: success
                 label: _('Paid')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': _('Payment received'),])
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': Payment received,])
