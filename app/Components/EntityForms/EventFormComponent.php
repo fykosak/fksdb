@@ -31,9 +31,8 @@ use Nette\Utils\Html;
 /**
  * @property ModelEvent|null $model
  */
-class EventFormComponent extends AbstractEntityFormComponent
+class EventFormComponent extends EntityFormComponent
 {
-
     public const CONT_EVENT = 'event';
 
     private ModelContestYear $contestYear;

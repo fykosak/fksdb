@@ -18,7 +18,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelSchool|null $model
  */
-class SchoolFormComponent extends AbstractEntityFormComponent
+class SchoolFormComponent extends EntityFormComponent
 {
 
     public const CONT_ADDRESS = 'address';

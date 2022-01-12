@@ -4,38 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServiceGrant;
+use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Presenter;
 use Nette\Application\UI\Template;
-use Nette\DI\Container;
 use Tester\Assert;
 
-/**
- * Class EntityPresenterTestCase
- * @author Michal Červeňák <miso@fykos.cz>
- */
 abstract class EntityPresenterTestCase extends DatabaseTestCase
 {
-    use MockApplicationTrait;
 
-    protected int $cartesianPersonId;
-    protected int $loginId;
+    protected ModelPerson $cartesianPerson;
+    protected ModelLogin $login;
     protected Presenter $fixture;
-
-    /**
-     * OrgPresenter constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp(): void
     {
@@ -59,15 +46,19 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 
     protected function loginUser(int $roleId = 1000): void
     {
-        $this->cartesianPersonId = $this->insert(DbNames::TAB_PERSON, [
+        $this->cartesianPerson = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->cartesianPersonId, 'active' => 1]);
+        $this->login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+            ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
+        );
 
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $this->loginId, 'role_id' => $roleId, 'contest_id' => 1]);
-        $this->authenticate($this->loginId, $this->fixture);
+        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+            ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
+        );
+        $this->authenticateLogin($this->login, $this->fixture);
     }
 
     protected function assertPageDisplay(Response $response): string

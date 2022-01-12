@@ -22,7 +22,7 @@ class PrimaryLimitOk extends ResourceAvailabilityTestCase
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
+            'eventId' => (string)$this->event->event_id,
         ]);
 
         $response = $this->fixture->run($request);

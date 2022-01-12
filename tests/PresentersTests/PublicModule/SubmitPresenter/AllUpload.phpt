@@ -14,14 +14,19 @@ class AllUpload extends SubmitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->createPersonHistory($this->personId, YearCalculator::getCurrentAcademicYear(), 1, 6);
+        $this->createPersonHistory(
+            $this->person,
+            YearCalculator::getCurrentAcademicYear(),
+            $this->genericSchool,
+            6
+        );
     }
 
     public function testSubmit(): void
     {
         $this->innerTestSubmit();
 
-        $this->assertSubmit($this->contestantId, $this->taskRestricted);
+        $this->assertSubmit($this->contestant, $this->taskRestricted);
     }
 }
 

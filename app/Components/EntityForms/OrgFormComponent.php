@@ -19,7 +19,7 @@ use Nette\Forms\Form;
 /**
  * @property ModelOrg|null $model
  */
-class OrgFormComponent extends AbstractEntityFormComponent
+class OrgFormComponent extends EntityFormComponent
 {
     use ReferencedPersonTrait;
 

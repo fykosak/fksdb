@@ -6,29 +6,12 @@ namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
 $container = require '../../../Bootstrap.php';
 
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
-use Nette\DI\Container;
 use Tester\Assert;
 
-/**
- * Class Stalking
- * @package Persons
- */
 class Display extends StalkingTestCase
 {
-    use MockApplicationTrait;
-
-    /**
-     * Stalking constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     public function testDisplay(): void
     {
