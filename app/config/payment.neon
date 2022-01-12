@@ -78,7 +78,7 @@ services:
         factory: FKSDB\Models\Payment\Transition\PaymentMachine
         setup:
             - setEventId(165)
-            - setScheduleGroupTypes([accommodation, accommodation_teacher, weekend])
+            - setScheduleGroupTypes([accommodation])
 
 transitions:
     fyziklani13payment:
