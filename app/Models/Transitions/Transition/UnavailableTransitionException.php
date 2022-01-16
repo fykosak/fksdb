@@ -11,20 +11,15 @@ use Nette\InvalidStateException;
 
 class UnavailableTransitionException extends InvalidStateException
 {
-
     /**
-     * UnavailableTransitionException constructor.
-     * @param EventTransition|Transition $transition
      * @param ActiveRow|ModelHolder|null $holder
      */
-    public function __construct($transition, $holder)
+    public function __construct(Transition $transition, $holder)
     {
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
-        } elseif ($transition instanceof Transition) {
-            $source = $transition->sourceState;
         } else {
-            throw new InvalidStateException();
+            $source = $transition->sourceState;
         }
         parent::__construct(
             sprintf(

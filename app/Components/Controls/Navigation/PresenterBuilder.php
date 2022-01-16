@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 
-class PresenterBuilder {
+class PresenterBuilder
+{
 
     private IPresenterFactory $presenterFactory;
-
     private array $presenterCache = [];
 
-    public function __construct(IPresenterFactory $presenterFactory) {
+    public function __construct(IPresenterFactory $presenterFactory)
+    {
         $this->presenterFactory = $presenterFactory;
     }
 
@@ -21,7 +25,13 @@ class PresenterBuilder {
      * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @throws BadRequestException
      */
-    public function preparePresenter(string $presenterName, string $action, ?array $params = [], ?array $baseParams = [], bool $newInstance = false): Presenter {
+    public function preparePresenter(
+        string $presenterName,
+        string $action,
+        ?array $params = [],
+        ?array $baseParams = [],
+        bool $newInstance = false
+    ): BasePresenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
@@ -38,7 +48,8 @@ class PresenterBuilder {
         return $presenter;
     }
 
-    private function getCachePresenter(string $presenterName): Presenter {
+    private function getCachePresenter(string $presenterName): Presenter
+    {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }

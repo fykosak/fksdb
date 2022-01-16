@@ -8,15 +8,12 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Models\StoredQuery\StoredQuery;
-use FKSDB\Models\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -31,16 +28,12 @@ class ResultsComponent extends BaseComponent
      */
     public ?array $parameters = [];
     private ?StoredQuery $storedQuery = null;
-    private ContestAuthorizator $contestAuthorizator;
     private ExportFormatFactory $exportFormatFactory;
-    private ?string $error;
     private bool $showParametrizeForm = true;
 
     final public function injectPrimary(
-        ContestAuthorizator $contestAuthorizator,
         ExportFormatFactory $exportFormatFactory
     ): void {
-        $this->contestAuthorizator = $contestAuthorizator;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
@@ -99,17 +92,20 @@ class ResultsComponent extends BaseComponent
         return $control;
     }
 
-    public function getSqlError(): ?string
+    public function getSqlError(): ?\Throwable
     {
-        if (!isset($this->error)) {
-            $this->error = null;
+        static $error;
+        if (!isset($error)) {
+            $error = null;
             try {
-                $this->storedQuery->getColumnNames(); // this may throw \PDOException in the main query
+                if (isset($this->storedQuery)) {
+                    $this->storedQuery->getColumnNames(); // this may throw \PDOException in the main query
+                }
             } catch (\PDOException $exception) {
-                $this->error = $exception->getMessage();
+                $error = $exception->getMessage();
             }
         }
-        return $this->error;
+        return $error;
     }
 
     /**
@@ -127,7 +123,7 @@ class ResultsComponent extends BaseComponent
             $formControl = $this->getComponent('parametrizeForm');
             $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
-        $this->template->error = $this->isAuthorized() ? $this->getSqlError() : _('Permission denied');
+        $this->template->error = $this->getSqlError();
         $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
         $this->template->showParametrizeForm = $this->showParametrizeForm;
         $this->template->hasStoredQuery = $this->hasStoredQuery();
@@ -137,7 +133,6 @@ class ResultsComponent extends BaseComponent
     }
 
     /**
-     * @throws ForbiddenRequestException
      * @throws NotFoundException|GoneException
      */
     public function handleFormat(string $format): void
@@ -145,37 +140,12 @@ class ResultsComponent extends BaseComponent
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }
-        if (!$this->isAuthorized()) {
-            throw new ForbiddenRequestException();
-        }
         try {
             $response = $this->exportFormatFactory->createFormat($format, $this->storedQuery)->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
             throw new NotFoundException(sprintf('Undefined format \'%s\'.', $format), $exception);
         }
-    }
-
-    /**
-     * TODO is this really need?
-     * G*/
-    private function isAuthorized(): bool
-    {
-        if (!$this->hasStoredQuery()) {
-            return false;
-        }
-        $implicitParameters = $this->storedQuery->getImplicitParameters();
-        /*
-         * Beware, that when export doesn't depend on contest_id directly further checks has to be done!
-         */
-        if (!isset($implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST])) {
-            return false;
-        }
-        return $this->contestAuthorizator->isAllowed(
-            $this->storedQuery,
-            'execute',
-            $implicitParameters[StoredQueryFactorySQL::PARAM_CONTEST]
-        );
     }
 
     /**

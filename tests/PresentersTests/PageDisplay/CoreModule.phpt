@@ -12,7 +12,7 @@ class CoreModule extends AbstractPageDisplayTestCase
     {
         return [
             ['Core:MyApplications', 'default'],
-            ['Core:Dispatch', 'default'],
+           // ['Core:Dispatch', 'default'], disable cause of fast links
             ['Core:MyPayments', 'default'],
             ['Core:Settings', 'default'],
         ];

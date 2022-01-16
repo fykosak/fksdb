@@ -115,15 +115,6 @@ class ExportPresenter extends BasePresenter
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    public function getAllowedAuthMethods(): array
-    {
-        $methods = parent::getAllowedAuthMethods();
-        if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
-            $methods[self::AUTH_HTTP] = true;
-        }
-        return $methods;
-    }
-
     protected function startup(): void
     {
         switch ($this->getAction()) {
@@ -134,7 +125,7 @@ class ExportPresenter extends BasePresenter
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
                 break;
             case 'list':
-                $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
+                $this->forward(':Org:StoredQuery:list', $this->getParameters());
                 break;
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
