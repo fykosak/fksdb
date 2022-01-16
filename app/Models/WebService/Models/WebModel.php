@@ -1,31 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\DI\Container;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Schema;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
-abstract class WebModel {
-
+abstract class WebModel
+{
     use SmartObject;
 
     protected Container $container;
     protected ?ModelLogin $authenticatedLogin;
 
-    final public function __construct(Container $container) {
+    final public function __construct(Container $container)
+    {
         $this->container = $container;
         $container->callInjects($this);
     }
 
-    final public function setLogin(?ModelLogin $authenticatedLogin): void {
+    final public function setLogin(?ModelLogin $authenticatedLogin): void
+    {
         $this->authenticatedLogin = $authenticatedLogin;
     }
 
     abstract public function getResponse(\stdClass $args): \SoapVar;
 
-    protected function log(string $msg): void {
+    protected function log(string $msg): void
+    {
         if (!isset($this->authenticatedLogin)) {
             $message = 'unauthenticated@';
         } else {
@@ -33,5 +41,18 @@ abstract class WebModel {
         }
         $message .= $_SERVER['REMOTE_ADDR'] . "\t" . $msg;
         Debugger::log($message);
+    }
+
+    public function getJsonResponse(array $params): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function getExpectedParams(): Structure
+    {
+        throw new NotImplementedException();
     }
 }

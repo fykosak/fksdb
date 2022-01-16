@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Results\Models\AbstractResultsModel;
 use FKSDB\Models\Results\Models\BrojureResultsModel;
@@ -80,7 +81,8 @@ class ResultsWebModel extends WebModel
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+                $args->{'school-cumulatives'}->{'school-cumulative'}
+                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
@@ -139,6 +141,7 @@ class ResultsWebModel extends WebModel
     /**
      * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \SoapFault
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -175,5 +178,13 @@ class ResultsWebModel extends WebModel
 
         $this->resultsModelFactory->fillNode($resultsModel, $brojureNode, $doc, XMLNodeSerializer::EXPORT_FORMAT_1);
         return $brojureNode;
+    }
+
+    /**
+     * @throws GoneException
+     */
+    public function getJsonResponse(array $params): array
+    {
+        throw new GoneException();
     }
 }
