@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-03 20:01+0100\n"
+"POT-Creation-Date: 2022-01-16 15:39+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -19,6 +19,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:47
+#, php-format
 msgid "Grade series %d"
 msgstr ""
 
@@ -76,10 +77,12 @@ msgid "Find person"
 msgstr ""
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:60
+#, php-format
 msgid "Detail of person %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:69
+#, php-format
 msgid "Edit person \"%s\""
 msgstr ""
 
@@ -194,6 +197,7 @@ msgid "Print"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SpamPresenter.php:34
+#, php-format
 msgid "Detail of e-mail #%s"
 msgstr ""
 
@@ -237,10 +241,12 @@ msgid "Tasks successfully imported."
 msgstr ""
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:128
+#, php-format
 msgid "Error during import. %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:131
+#, php-format
 msgid "Error during import."
 msgstr ""
 
@@ -249,6 +255,7 @@ msgid "Legacy XML format is deprecated"
 msgstr ""
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:39
+#, php-format
 msgid "Edit query %s"
 msgstr ""
 
@@ -261,10 +268,12 @@ msgid "Exports"
 msgstr ""
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:57
+#, php-format
 msgid "Detail of the query \"%s\""
 msgstr ""
 
 #: ../app/Modules/OrgModule/BasePresenter.php:39
+#, php-format
 msgid "%d. year, %s. series"
 msgstr ""
 
@@ -281,6 +290,7 @@ msgid "Select test"
 msgstr ""
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:37
+#, php-format
 msgid "Edit teacher %s"
 msgstr ""
 
@@ -321,6 +331,7 @@ msgid "Save"
 msgstr ""
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:33
+#, php-format
 msgid "Edit the contestant %s"
 msgstr ""
 
@@ -336,11 +347,13 @@ msgid "Contestants"
 msgstr ""
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:50
+#, php-format
 msgid "Contestant %s created."
 msgstr ""
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:55
 #: ../app/Modules/PublicModule/RegisterPresenter.php:234
+#, php-format
 msgid "Contestant %s modified."
 msgstr ""
 
@@ -353,6 +366,7 @@ msgid "Contestant already exists."
 msgstr ""
 
 #: ../app/Modules/OrgModule/ExportPresenter.php:83
+#, php-format
 msgid "%s"
 msgstr ""
 
@@ -400,6 +414,7 @@ msgid "Create producer"
 msgstr ""
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:38
+#, php-format
 msgid "Edit of organiser %s"
 msgstr ""
 
@@ -408,6 +423,7 @@ msgid "Editing of organiser outside chosen seminar."
 msgstr ""
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:63
+#, php-format
 msgid "Org %s"
 msgstr ""
 
@@ -429,14 +445,17 @@ msgid "Create school"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:46
+#, php-format
 msgid "Edit school %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:56
+#, php-format
 msgid "Detail of school %s"
 msgstr ""
 
 #: ../app/Modules/OrgModule/DeduplicatePresenter.php:80
+#, php-format
 msgid "Merging persons %s (%d) and %s (%d)"
 msgstr ""
 
@@ -486,6 +505,7 @@ msgid "Add event"
 msgstr ""
 
 #: ../app/Modules/OrgModule/EventPresenter.php:46
+#, php-format
 msgid "Edit event %s"
 msgstr ""
 
@@ -494,10 +514,12 @@ msgid "Dashboard"
 msgstr ""
 
 #: ../app/Modules/PublicModule/BasePresenter.php:60
+#, php-format
 msgid "%d. year"
 msgstr ""
 
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:94
+#, php-format
 msgid "Application for %s: %s"
 msgstr ""
 
@@ -529,6 +551,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:148
 #: ../app/Models/ORM/Services/ServiceSubmit.php:44
+#, php-format
 msgid "Deadline %s"
 msgstr ""
 
@@ -554,10 +577,12 @@ msgid "Submit"
 msgstr ""
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:248
+#, php-format
 msgid "Task %s cannot be submitted anymore."
 msgstr ""
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:291
+#, php-format
 msgid "Task %s submitted."
 msgstr ""
 
@@ -578,6 +603,7 @@ msgid "Type e-mail"
 msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:115
+#, php-format
 msgid "%s – contestant application (year %s)"
 msgstr ""
 
@@ -590,10 +616,12 @@ msgid "An existing account found. To continue, please sign in."
 msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:162
+#, php-format
 msgid "%s is already contestant in %s."
 msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:229
+#, php-format
 msgid "Contestant %s registered."
 msgstr ""
 
@@ -634,6 +662,7 @@ msgid "Model of event"
 msgstr ""
 
 #: ../app/Modules/EventModule/DashboardPresenter.php:18
+#, php-format
 msgid "Event %s"
 msgstr ""
 
@@ -643,6 +672,7 @@ msgid "List of applications"
 msgstr ""
 
 #: ../app/Modules/EventModule/AbstractApplicationPresenter.php:53
+#, php-format
 msgid "Application detail \"%s\""
 msgstr ""
 
@@ -724,6 +754,7 @@ msgid "Change of scoring"
 msgstr ""
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:64
+#, php-format
 msgid "Detail of the submit #%d"
 msgstr ""
 
@@ -740,6 +771,7 @@ msgid "Sealing of the scoring"
 msgstr ""
 
 #: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:61
+#, php-format
 msgid "Sealing of the scoring for the team \"%s\""
 msgstr ""
 
@@ -772,6 +804,7 @@ msgid "Create organiser of event"
 msgstr ""
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:55
+#, php-format
 msgid "Edit Organiser of event \"%s\""
 msgstr ""
 
@@ -789,10 +822,12 @@ msgid "New payment"
 msgstr ""
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:55
+#, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:70
+#, php-format
 msgid "Payment detail #%s"
 msgstr ""
 
@@ -801,6 +836,7 @@ msgid "List of payments"
 msgstr ""
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:90
+#, php-format
 msgid "Payment #%s can not be edited"
 msgstr ""
 
@@ -833,10 +869,12 @@ msgid "List of all teams"
 msgstr ""
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:47
+#, php-format
 msgid "Schedule item \"%s\""
 msgstr ""
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:61
+#, php-format
 msgid "Edit schedule item \"%s\""
 msgstr ""
 
@@ -886,6 +924,7 @@ msgid "Password"
 msgstr ""
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:162
+#, php-format
 msgid "The password must have at least %d characters."
 msgstr ""
 
@@ -989,6 +1028,7 @@ msgid "Continue"
 msgstr ""
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:265
+#, php-format
 msgid "Further instructions for the recovery have been sent to %s."
 msgstr ""
 
@@ -997,10 +1037,12 @@ msgid "Menu"
 msgstr ""
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:50
+#, php-format
 msgid "Contestant %s"
 msgstr ""
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:70
+#, php-format
 msgid "Organiser %s"
 msgstr ""
 
@@ -1093,6 +1135,7 @@ msgid "Organization and participation at same year"
 msgstr ""
 
 #: ../app/Models/DataTesting/Tests/ModelPerson/EventCoveringTest.php:73
+#, php-format
 msgid ""
 "Organization and participation at same year %d and contestId %d %s<->%s."
 msgstr ""
@@ -1118,18 +1161,22 @@ msgid "No item selected."
 msgstr ""
 
 #: ../app/Models/ORM/Services/Schedule/ServiceSchedulePayment.php:41
+#, php-format
 msgid "Item \"%s\" has already another payment."
 msgstr ""
 
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:11
+#, php-format
 msgid "Person %s is already applied to the event."
 msgstr ""
 
 #: ../app/Models/ORM/Services/Exceptions/InvalidPostalCode.php:8
+#, php-format
 msgid "Invalid postal code %d."
 msgstr ""
 
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:11
+#, php-format
 msgid "Person %s is already organiser"
 msgstr ""
 
@@ -1149,6 +1196,7 @@ msgid "Detail"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/Org/SinceColumnFactory.php:20
+#, php-format
 msgid "First year is not in interval [%d, %d]."
 msgstr ""
 
@@ -1194,11 +1242,13 @@ msgid "Still organizes"
 msgstr "Still organises"
 
 #: ../app/Models/ORM/Columns/Tables/Org/UntilColumnFactory.php:36
+#, php-format
 msgid "Final year is not in interval [%d, %d]."
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/Org/TexSignatureColumnFactory.php:17
 #: ../app/Models/ORM/Columns/Tables/Org/DomainAliasColumnFactory.php:37
+#, php-format
 msgid "%s contains forbidden characters."
 msgstr ""
 
@@ -1250,6 +1300,7 @@ msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:34
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:41
+#, php-format
 msgid "grade %d (expected graduation in %d)"
 msgstr ""
 
@@ -1328,6 +1379,7 @@ msgid "Unlimited capacity"
 msgstr ""
 
 #: ../app/Models/ORM/Models/Schedule/ModelPersonSchedule.php:66
+#, php-format
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr ""
 
@@ -1352,6 +1404,7 @@ msgid "Open"
 msgstr "Open"
 
 #: ../app/Models/ORM/Models/ModelQuiz.php:17
+#, php-format
 msgid "%s. question"
 msgstr ""
 
@@ -1372,26 +1425,32 @@ msgid "Rank"
 msgstr ""
 
 #: ../app/Models/Fyziklani/Ranking/NotClosedTeamException.php:12
+#, php-format
 msgid "Team %s (%d) has not closed submitting"
 msgstr ""
 
 #: ../app/Models/Fyziklani/Closing/AlreadyClosedException.php:12
+#, php-format
 msgid "Team %s has already closed submitting."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Closing/NotCheckedSubmitsException.php:12
+#, php-format
 msgid "Team %s has non checked submits"
 msgstr ""
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:44
+#, php-format
 msgid "Task %s \"%s\" added"
 msgstr ""
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:50
+#, php-format
 msgid "Task %s \"%s\" updated"
 msgstr ""
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:53
+#, php-format
 msgid "Task %s \"%s\" not updated"
 msgstr ""
 
@@ -1400,6 +1459,7 @@ msgid "There was an error"
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/ClosedSubmittingException.php:12
+#, php-format
 msgid "Team %s has closed submitting."
 msgstr ""
 
@@ -1416,18 +1476,22 @@ msgid "Task given and validated."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:109
+#, php-format
 msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Points have been edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:134
+#, php-format
 msgid "Submit %d has been revoked."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:160
+#, php-format
 msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:181
+#, php-format
 msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr ""
 
@@ -1436,10 +1500,12 @@ msgid "Code is too long"
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:69
+#, php-format
 msgid "Team %s does not exists."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:83
+#, php-format
 msgid "Task %s does not exists."
 msgstr ""
 
@@ -1448,10 +1514,12 @@ msgid "Wrong task number."
 msgstr ""
 
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:54
+#, php-format
 msgid "Nonexistent team ID %d skipped"
 msgstr ""
 
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:70
+#, php-format
 msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr ""
 
@@ -1473,6 +1541,7 @@ msgstr "Failed to send the e-mail."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:101
 #: ../app/Models/Events/Model/ApplicationHandler.php:162
+#, php-format
 msgid "Application \"%s\" created."
 msgstr ""
 
@@ -1483,24 +1552,29 @@ msgstr ""
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:105
 #: ../app/Models/Events/Model/ApplicationHandler.php:166
+#, php-format
 msgid "State of application \"%s\" changed."
 msgstr ""
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:111
 #: ../app/Models/Events/Model/ApplicationHandler.php:174
+#, php-format
 msgid "Some fields of group \"%s\" don't match an existing record."
 msgstr ""
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:115
 #: ../app/Models/Events/Model/ApplicationHandler.php:179
+#, php-format
 msgid "Data in group \"%s\" collide with an existing application."
 msgstr ""
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:169
+#, php-format
 msgid "Application \"%s\" saved."
 msgstr ""
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:213
+#, php-format
 msgid ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
@@ -1540,10 +1614,12 @@ msgstr ""
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
 #: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
+#, php-format
 msgid "Team inserted to category %s."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:28
+#, php-format
 msgid "Team registered for the category %s."
 msgstr ""
 
@@ -1556,18 +1632,22 @@ msgid "This option is only available to secondary school students."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Dsef/GroupOptions.php:102
+#, php-format
 msgid "(%d vacancies)"
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:62
+#, php-format
 msgid "A school cannot have more than %d teams in the contest."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:121
+#, php-format
 msgid "Registered teams from the same school %s."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fyziklani/SchoolCheck.php:54
+#, php-format
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr ""
 
@@ -1576,6 +1656,7 @@ msgid "Cannot determine category."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fyziklani/SchoolsInTeam.php:54
+#, php-format
 msgid "Only %d different schools can be represented in the team."
 msgstr ""
 
@@ -1589,6 +1670,7 @@ msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:12
+#, php-format
 msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr "Cannot execute action '%s' in the machine '%s'."
 
@@ -1597,6 +1679,7 @@ msgid "Event not found."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/ConfigurationNotFoundException.php:11
+#, php-format
 msgid "Configuration for event %s (%d-%s) not found"
 msgstr ""
 
@@ -1642,10 +1725,12 @@ msgid "Model not found"
 msgstr ""
 
 #: ../app/Models/Exceptions/ContestNotFoundException.php:11
+#, php-format
 msgid "Contest %d not found"
 msgstr ""
 
 #: ../app/Models/Exceptions/BadTypeException.php:11
+#, php-format
 msgid "Expected type %s, got %s."
 msgstr ""
 
@@ -1659,6 +1744,7 @@ msgid "Unsupported format"
 msgstr ""
 
 #: ../app/Models/Payment/SymbolGenerator/Generators/DefaultGenerator.php:53
+#, php-format
 msgid "Payment #%s has already generated symbols."
 msgstr ""
 
@@ -1667,6 +1753,7 @@ msgid "variable_symbol overflow"
 msgstr ""
 
 #: ../app/Models/Payment/PriceCalculator/UnsupportedCurrencyException.php:14
+#, php-format
 msgid "Currency %s in not supported"
 msgstr ""
 
@@ -1683,14 +1770,17 @@ msgid "Data don't match already stored data."
 msgstr ""
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:195
+#, php-format
 msgid "%s(%s) new values: %s"
 msgstr ""
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:200
+#, php-format
 msgid "%s(%s) merged and deleted."
 msgstr ""
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:204
+#, php-format
 msgid "%s(%s) extended by merge."
 msgstr ""
 
@@ -1725,10 +1815,12 @@ msgid "Prechod sa nedá vykonať"
 msgstr "Transition cannot be done"
 
 #: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:32
+#, php-format
 msgid "Transition from %s to %s is unavailable for %s"
 msgstr ""
 
 #: ../app/Models/Tasks/StudyYearsFromXML.php:78
+#, php-format
 msgid "Unknown year \"%s\"."
 msgstr ""
 
@@ -1741,10 +1833,12 @@ msgid "Missing deadline of the series."
 msgstr ""
 
 #: ../app/Models/Tasks/TasksFromXML.php:41
+#, php-format
 msgid "Imported (%s) and set (%s) series does not match."
 msgstr ""
 
 #: ../app/Models/Tasks/ContributionsFromXML.php:82
+#, php-format
 msgid "Unknown TeX ident '%s'."
 msgstr ""
 
@@ -1862,6 +1956,7 @@ msgid "Method of handing"
 msgstr ""
 
 #: ../app/Components/Grids/SubmitsGrid.php:88
+#, php-format
 msgid "Do you really want to take the solution of task %s back?"
 msgstr ""
 
@@ -1874,10 +1969,12 @@ msgid "Download corrected"
 msgstr ""
 
 #: ../app/Components/Grids/SubmitsGrid.php:124
+#, php-format
 msgid "Submitting of task %s cancelled."
 msgstr ""
 
 #: ../app/Components/Grids/SubmitsGrid.php:131
+#, php-format
 msgid "There was an error during the deletion of task %s."
 msgstr ""
 
@@ -2089,14 +2186,17 @@ msgid "%label must be an integer."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:36
+#, php-format
 msgid "%s is required."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:42
+#, php-format
 msgid "%s is required"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/PersonFactory.php:155
+#, php-format
 msgid "%s: %s is a required field."
 msgstr ""
 
@@ -2123,6 +2223,7 @@ msgid "Abbreviated name"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:30
+#, php-format
 msgid ""
 "The length of the abbreviated name is restricted to a maximum %d characters."
 msgstr ""
@@ -2145,6 +2246,7 @@ msgid "IČ (Czech schools only)"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:39
+#, php-format
 msgid "The length of IČ is restricted to %d characters."
 msgstr ""
 
@@ -2154,6 +2256,7 @@ msgid "IZO (Czech schools only)"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:42
+#, php-format
 msgid "The length of IZO is restricted to %d characters."
 msgstr ""
 
@@ -2171,6 +2274,7 @@ msgid "Note"
 msgstr ""
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:56
+#, php-format
 msgid "If you cannot find the school, ask on e-mail %s."
 msgstr ""
 
@@ -2215,16 +2319,19 @@ msgid "Covid-19 Vaccination"
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:62
+#, php-format
 msgid ""
 "The item \"%s\" has already a payment generated, so it cannot be deleted."
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:78
+#, php-format
 msgid ""
 "The person %s could not be registered for \"%s\" because of full capacity."
 msgstr ""
 
 #: ../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:141
+#, php-format
 msgid "Field %s requires JavaScript enabled."
 msgstr ""
 
@@ -2373,6 +2480,7 @@ msgid "Address has been deleted"
 msgstr ""
 
 #: ../app/Components/EntityForms/ScheduleGroupFormComponent.php:50
+#, php-format
 msgid "Group \"%s\" has been saved."
 msgstr ""
 
@@ -2449,6 +2557,7 @@ msgid "Teacher has been created"
 msgstr ""
 
 #: ../app/Components/EntityForms/ScheduleItemFormContainer.php:52
+#, php-format
 msgid "Item \"%s\" has been saved."
 msgstr ""
 
@@ -2457,6 +2566,7 @@ msgid "Schedule group Id"
 msgstr ""
 
 #: ../app/Components/EntityForms/EventFormComponent.php:80
+#, php-format
 msgid "Event \"%s\" has been saved."
 msgstr ""
 
@@ -2485,10 +2595,12 @@ msgid "Number of points"
 msgstr ""
 
 #: ../app/Components/Controls/DataTesting/PersonTestComponent.php:51
+#, php-format
 msgid "From %s"
 msgstr ""
 
 #: ../app/Components/Controls/DataTesting/PersonTestComponent.php:54
+#, php-format
 msgid "To %s"
 msgstr ""
 
@@ -2501,6 +2613,7 @@ msgid "Tests"
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/CloseTeamComponent.php:34
+#, php-format
 msgid "Team \"%s\" has successfully closed submitting, with total %d points."
 msgstr ""
 
@@ -2558,14 +2671,17 @@ msgid "Keep original state."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:108
+#, php-format
 msgid "Import succesfull (%.2f s)."
 msgstr ""
 
 #: ../app/Components/Controls/Events/ImportComponent.php:113
+#, php-format
 msgid "Import ran with errors (%.2f s)."
 msgstr ""
 
 #: ../app/Components/Controls/Events/MassTransitionsComponent.php:56
+#, php-format
 msgid "Total %d applications, state changed %d, unavailable %d. "
 msgstr ""
 
@@ -2597,6 +2713,7 @@ msgid "Upload successful"
 msgstr ""
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:119
+#, php-format
 msgid "Uploading of task %s cancelled."
 msgstr ""
 
@@ -2619,11 +2736,13 @@ msgstr ""
 
 #: ../app/Components/Controls/Choosers/SeriesChooserComponent.php:29
 #: ../app/Components/Controls/Choosers/SeriesChooserComponent.php:36
+#, php-format
 msgid "Series %d"
 msgstr ""
 
 #: ../app/Components/Controls/Choosers/YearChooserComponent.php:37
 #: ../app/Components/Controls/Choosers/YearChooserComponent.php:44
+#, php-format
 msgid "Year %d"
 msgstr ""
 
@@ -2644,6 +2763,7 @@ msgid "Comma separated submitIDs"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:47
+#, php-format
 msgid "Updated %d submits"
 msgstr ""
 
@@ -2652,26 +2772,32 @@ msgid "Error during updating"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:41
+#, php-format
 msgid "Uploaded submit #%d is broken"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:46
+#, php-format
 msgid "Corrected submit #%d is broken"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:50
+#, php-format
 msgid "Uploaded unregister corrected submit #%d"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:53
+#, php-format
 msgid "Test done, found %d errors"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/Inbox/InboxFormComponent.php:44
+#, php-format
 msgid "Submit #%d deleted"
 msgstr ""
 
 #: ../app/Components/Controls/Inbox/Inbox/InboxFormComponent.php:53
+#, php-format
 msgid "Submit for contestant #%d and task %d created"
 msgstr ""
 
@@ -4995,6 +5121,16 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:21
 msgid "Hostel Kolbenka"
 msgstr ""
+
+#: ../data/events/fyziklani/fyziklani11.neon.neon2php:121
+#, fuzzy
+msgid "Název týmu # i18n"
+msgstr "Team name"
+
+#: ../data/events/fyziklani/fyziklani11.neon.neon2php:126
+#, fuzzy
+msgid "Kategorie # i18n"
+msgstr "Category"
 
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:147
 msgid "Učitel má zájem o program"
