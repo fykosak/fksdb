@@ -18,7 +18,6 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:47
-#, php-format
 msgid "Grade series %d"
 msgstr "Vložit body do %d. série"
 
@@ -32,7 +31,7 @@ msgstr "Body invalidovány."
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:111
 msgid "Error during invalidation."
-msgstr "Cyhba při invalidaci"
+msgstr "Chyba při invalidaci"
 
 #: ../app/Modules/OrgModule/PointsPresenter.php:132
 msgid "Points recounted."
@@ -76,12 +75,10 @@ msgid "Find person"
 msgstr "Hledání osob"
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:60
-#, php-format
 msgid "Detail of person %s"
 msgstr "Podrobnosti osoby %s"
 
 #: ../app/Modules/OrgModule/PersonPresenter.php:69
-#, php-format
 msgid "Edit person \"%s\""
 msgstr "Upravit osobu \"%s\""
 
@@ -175,9 +172,8 @@ msgid "Envelopes for person generator"
 msgstr ""
 
 #: ../app/Modules/OrgModule/EnvelopePresenter.php:54
-#, fuzzy
 msgid "SQL query"
-msgstr "Upravit dotaz"
+msgstr "SQL dotaz"
 
 #: ../app/Modules/OrgModule/EnvelopePresenter.php:55
 msgid "Person_id attribute"
@@ -197,7 +193,6 @@ msgid "Print"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SpamPresenter.php:34
-#, fuzzy, php-format
 msgid "Detail of e-mail #%s"
 msgstr "Podrobnosti emailu #%s"
 
@@ -241,12 +236,10 @@ msgid "Tasks successfully imported."
 msgstr "Úlohy byly úspěšně importovány."
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:128
-#, php-format
 msgid "Error during import. %s"
 msgstr "Chyba během importu. %s"
 
 #: ../app/Modules/OrgModule/TasksPresenter.php:131
-#, php-format
 msgid "Error during import."
 msgstr "Chyba při importu"
 
@@ -255,7 +248,6 @@ msgid "Legacy XML format is deprecated"
 msgstr "Legacy XML formát je zastaralý"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:39
-#, php-format
 msgid "Edit query %s"
 msgstr "Upravit dotaz %s"
 
@@ -268,12 +260,10 @@ msgid "Exports"
 msgstr "Exporty"
 
 #: ../app/Modules/OrgModule/StoredQueryPresenter.php:57
-#, php-format
 msgid "Detail of the query \"%s\""
 msgstr "Podrobnosti dotazu  \"%s\""
 
 #: ../app/Modules/OrgModule/BasePresenter.php:39
-#, php-format
 msgid "%d. year, %s. series"
 msgstr "%d. ročník, %s. série"
 
@@ -290,7 +280,6 @@ msgid "Select test"
 msgstr "Vybrat test"
 
 #: ../app/Modules/OrgModule/TeacherPresenter.php:37
-#, php-format
 msgid "Edit teacher %s"
 msgstr "Upravit učitele %s"
 
@@ -331,7 +320,6 @@ msgid "Save"
 msgstr "Uložit"
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:33
-#, php-format
 msgid "Edit the contestant %s"
 msgstr "Upravit soutěžícího %s"
 
@@ -347,13 +335,11 @@ msgid "Contestants"
 msgstr "Soutěžící"
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:50
-#, php-format
 msgid "Contestant %s created."
 msgstr "Soutěžící %s vytvořen"
 
 #: ../app/Modules/OrgModule/ContestantPresenter.php:55
 #: ../app/Modules/PublicModule/RegisterPresenter.php:234
-#, php-format
 msgid "Contestant %s modified."
 msgstr "Soutěžící %s upraven."
 
@@ -366,7 +352,6 @@ msgid "Contestant already exists."
 msgstr "Soutěžící již existuje"
 
 #: ../app/Modules/OrgModule/ExportPresenter.php:83
-#, php-format
 msgid "%s"
 msgstr ""
 
@@ -414,7 +399,6 @@ msgid "Create producer"
 msgstr "Vytvořit... výrobce :)"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:38
-#, php-format
 msgid "Edit of organiser %s"
 msgstr "Upravit orga %s"
 
@@ -423,7 +407,6 @@ msgid "Editing of organiser outside chosen seminar."
 msgstr "Úprava organizátora mimo vybraný seminář"
 
 #: ../app/Modules/OrgModule/OrgPresenter.php:63
-#, php-format
 msgid "Org %s"
 msgstr ""
 
@@ -445,17 +428,14 @@ msgid "Create school"
 msgstr "Vytvořit školu"
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:46
-#, php-format
 msgid "Edit school %s"
 msgstr "Upravit školu %s"
 
 #: ../app/Modules/OrgModule/SchoolPresenter.php:56
-#, php-format
 msgid "Detail of school %s"
 msgstr "Detail školy %s"
 
 #: ../app/Modules/OrgModule/DeduplicatePresenter.php:80
-#, php-format
 msgid "Merging persons %s (%d) and %s (%d)"
 msgstr "Slučování osob %s (%d) a %s (%d)"
 
@@ -505,7 +485,6 @@ msgid "Add event"
 msgstr "Založit akci"
 
 #: ../app/Modules/OrgModule/EventPresenter.php:46
-#, php-format
 msgid "Edit event %s"
 msgstr "Upravit akci %s"
 
@@ -514,12 +493,10 @@ msgid "Dashboard"
 msgstr "Pultík"
 
 #: ../app/Modules/PublicModule/BasePresenter.php:60
-#, php-format
 msgid "%d. year"
 msgstr "%d. ročník"
 
 #: ../app/Modules/PublicModule/ApplicationPresenter.php:94
-#, php-format
 msgid "Application for %s: %s"
 msgstr "Přihlášky pro %s: %s"
 
@@ -551,7 +528,6 @@ msgstr "Soutěžícímu chybí ročník studia, ne všechny úlohy jsou tedy dos
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:148
 #: ../app/Models/ORM/Services/ServiceSubmit.php:44
-#, php-format
 msgid "Deadline %s"
 msgstr ""
 
@@ -577,12 +553,10 @@ msgid "Submit"
 msgstr "Odevzdané"
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:248
-#, php-format
 msgid "Task %s cannot be submitted anymore."
 msgstr "Úlohu %s již nelze odevzdat."
 
 #: ../app/Modules/PublicModule/SubmitPresenter.php:291
-#, php-format
 msgid "Task %s submitted."
 msgstr "Úloha %s nahrána."
 
@@ -603,7 +577,6 @@ msgid "Type e-mail"
 msgstr "Zadejte e-mailovou adresu"
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:115
-#, php-format
 msgid "%s – contestant application (year %s)"
 msgstr "%s – přihlášení do soutěže (%s. ročník)"
 
@@ -616,12 +589,10 @@ msgid "An existing account found. To continue, please sign in."
 msgstr "Nalezen existující účet. Pro pokračování se prosím přihlaste."
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:162
-#, php-format
 msgid "%s is already contestant in %s."
 msgstr "Upravit učitele %s"
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:229
-#, php-format
 msgid "Contestant %s registered."
 msgstr "Soutěžící %s registrovaný"
 
@@ -662,7 +633,6 @@ msgid "Model of event"
 msgstr "Model akce"
 
 #: ../app/Modules/EventModule/DashboardPresenter.php:18
-#, php-format
 msgid "Event %s"
 msgstr "Akce \"%s\""
 
@@ -672,7 +642,6 @@ msgid "List of applications"
 msgstr "Seznam přihlášek"
 
 #: ../app/Modules/EventModule/AbstractApplicationPresenter.php:53
-#, php-format
 msgid "Application detail \"%s\""
 msgstr "Detail přihlášky \"%s\""
 
@@ -754,7 +723,6 @@ msgid "Change of scoring"
 msgstr "Změna bodování"
 
 #: ../app/Modules/EventModule/Fyziklani/SubmitPresenter.php:64
-#, php-format
 msgid "Detail of the submit #%d"
 msgstr "Podrobnosti odevydání #%d"
 
@@ -771,7 +739,6 @@ msgid "Sealing of the scoring"
 msgstr "Uzavření bodování"
 
 #: ../app/Modules/EventModule/Fyziklani/ClosePresenter.php:61
-#, php-format
 msgid "Sealing of the scoring for the team \"%s\""
 msgstr "Uzavření bodování pro tým \"%s\""
 
@@ -804,7 +771,6 @@ msgid "Create organiser of event"
 msgstr "Přidat organizátora akce"
 
 #: ../app/Modules/EventModule/EventOrgPresenter.php:55
-#, php-format
 msgid "Edit Organiser of event \"%s\""
 msgstr "Upravit organizátora akce \"%s\""
 
@@ -822,12 +788,10 @@ msgid "New payment"
 msgstr "Nová platba"
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:55
-#, php-format
 msgid "Edit payment #%s"
 msgstr "Upravit platbu #%s"
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:70
-#, php-format
 msgid "Payment detail #%s"
 msgstr "Detail platby #%s"
 
@@ -836,7 +800,6 @@ msgid "List of payments"
 msgstr "Seznam plateb"
 
 #: ../app/Modules/EventModule/PaymentPresenter.php:90
-#, php-format
 msgid "Payment #%s can not be edited"
 msgstr "Platba #%s nemůže být editována"
 
@@ -869,12 +832,10 @@ msgid "List of all teams"
 msgstr "Seznam týmů"
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:47
-#, php-format
 msgid "Schedule item \"%s\""
 msgstr "Položku programu \"%s\""
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:61
-#, php-format
 msgid "Edit schedule item \"%s\""
 msgstr "Upravit bod programu \"%s\""
 
@@ -924,7 +885,6 @@ msgid "Password"
 msgstr "Heslo"
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:162
-#, php-format
 msgid "The password must have at least %d characters."
 msgstr "Heslo musí mít alespoň %d znaků."
 
@@ -1028,7 +988,6 @@ msgid "Continue"
 msgstr "Pokračovat"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:265
-#, php-format
 msgid "Further instructions for the recovery have been sent to %s."
 msgstr "Další instrukce pro obnovu byly zaslány na %s"
 
@@ -1037,12 +996,10 @@ msgid "Menu"
 msgstr ""
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:50
-#, php-format
 msgid "Contestant %s"
 msgstr "Soutěžící %s"
 
 #: ../app/Modules/CoreModule/DispatchPresenter.php:70
-#, php-format
 msgid "Organiser %s"
 msgstr "%s organizátor"
 
@@ -1095,7 +1052,6 @@ msgid "Expected header X-Hub-Signature."
 msgstr "Očekávána hlavička X-Hub-Signature."
 
 #: ../app/Models/Authentication/Exceptions/RecoveryNotImplementedException.php:7
-#, fuzzy
 msgid "Account cannot be recovered."
 msgstr "Nepřipravený účet."
 
@@ -1104,17 +1060,14 @@ msgid "Unknown account."
 msgstr "Neznámý účet"
 
 #: ../app/Models/Authentication/Exceptions/NoLoginException.php:10
-#, fuzzy
 msgid "Account not ready."
 msgstr "Nepřipravený účet."
 
 #: ../app/Models/Authentication/Exceptions/InvalidCredentialsException.php:10
-#, fuzzy
 msgid "Invalid credentials."
 msgstr "Neplatné přihlašovací údaje."
 
 #: ../app/Models/Authentication/Exceptions/RecoveryExistsException.php:8
-#, fuzzy
 msgid "Account recovery in progress."
 msgstr "Obnova účtu již probíhá."
 
@@ -1139,7 +1092,6 @@ msgid "Organization and participation at same year"
 msgstr "Organizování a účasti ve stejném roce."
 
 #: ../app/Models/DataTesting/Tests/ModelPerson/EventCoveringTest.php:73
-#, php-format
 msgid ""
 "Organization and participation at same year %d and contestId %d %s<->%s."
 msgstr "Organizování a účasti ve stejném roce %d and soutěži s ID %d %s<->%s."
@@ -1165,22 +1117,18 @@ msgid "No item selected."
 msgstr "Nebyla vybraná žádná položka"
 
 #: ../app/Models/ORM/Services/Schedule/ServiceSchedulePayment.php:41
-#, php-format
 msgid "Item \"%s\" has already another payment."
 msgstr "Položka \"%s\" má již vygenerovanou platbu."
 
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:11
-#, php-format
 msgid "Person %s is already applied to the event."
 msgstr "Osoba \"%s\" je již na akci přihlášena."
 
 #: ../app/Models/ORM/Services/Exceptions/InvalidPostalCode.php:8
-#, php-format
 msgid "Invalid postal code %d."
 msgstr "Neplatné PSČ %d."
 
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:11
-#, php-format
 msgid "Person %s is already organiser"
 msgstr "Osoba %s již organizuje"
 
@@ -1200,7 +1148,6 @@ msgid "Detail"
 msgstr "Detail"
 
 #: ../app/Models/ORM/Columns/Tables/Org/SinceColumnFactory.php:20
-#, php-format
 msgid "First year is not in interval [%d, %d]."
 msgstr "Počáteční rok není v intervalu [%d, %d]."
 
@@ -1246,13 +1193,11 @@ msgid "Still organizes"
 msgstr "Stále organizuje"
 
 #: ../app/Models/ORM/Columns/Tables/Org/UntilColumnFactory.php:36
-#, php-format
 msgid "Final year is not in interval [%d, %d]."
 msgstr "Konečný rok není v intervalu [%d, %d]."
 
 #: ../app/Models/ORM/Columns/Tables/Org/TexSignatureColumnFactory.php:17
 #: ../app/Models/ORM/Columns/Tables/Org/DomainAliasColumnFactory.php:37
-#, php-format
 msgid "%s contains forbidden characters."
 msgstr "%s obsahuje zakázané znaky"
 
@@ -1304,7 +1249,6 @@ msgstr "Zvolte studijní ročník"
 
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:34
 #: ../app/Models/ORM/Columns/Tables/PersonHistory/StudyYearColumnFactory.php:41
-#, php-format
 msgid "grade %d (expected graduation in %d)"
 msgstr "%d. stupeň (očekávaný rok maturity v %d)"
 
@@ -1387,7 +1331,6 @@ msgid "Unlimited capacity"
 msgstr "Neomezená kapacita"
 
 #: ../app/Models/ORM/Models/Schedule/ModelPersonSchedule.php:66
-#, php-format
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytování pro %s od %s do %s"
 
@@ -1412,7 +1355,6 @@ msgid "Open"
 msgstr "Open"
 
 #: ../app/Models/ORM/Models/ModelQuiz.php:17
-#, php-format
 msgid "%s. question"
 msgstr "%s. otázka"
 
@@ -1433,32 +1375,26 @@ msgid "Rank"
 msgstr "Pořadí"
 
 #: ../app/Models/Fyziklani/Ranking/NotClosedTeamException.php:12
-#, php-format
 msgid "Team %s (%d) has not closed submitting"
 msgstr "Tým %s (%d) nemá uzavřené bodování"
 
 #: ../app/Models/Fyziklani/Closing/AlreadyClosedException.php:12
-#, php-format
 msgid "Team %s has already closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 
 #: ../app/Models/Fyziklani/Closing/NotCheckedSubmitsException.php:12
-#, php-format
 msgid "Team %s has non checked submits"
 msgstr "Tým %s má nezkontrolovaná odevzdání"
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:44
-#, php-format
 msgid "Task %s \"%s\" added"
 msgstr "Úloha %s \"%s\" přidána."
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:50
-#, php-format
 msgid "Task %s \"%s\" updated"
 msgstr "Úloha %s \"%s\" aktualizována"
 
 #: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:53
-#, php-format
 msgid "Task %s \"%s\" not updated"
 msgstr "Úloha %s \"%s\" nebyla aktualizována"
 
@@ -1467,7 +1403,6 @@ msgid "There was an error"
 msgstr "Vyskytla se chyba"
 
 #: ../app/Models/Fyziklani/Submit/ClosedSubmittingException.php:12
-#, php-format
 msgid "Team %s has closed submitting."
 msgstr "Tým %s má už uzavřené bodování"
 
@@ -1484,22 +1419,18 @@ msgid "Task given and validated."
 msgstr "Úloha zadána a ověřena."
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:109
-#, php-format
 msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Bodování bylo upravené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:134
-#, php-format
 msgid "Submit %d has been revoked."
 msgstr "Odevzdání %d bylo smazáno."
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:160
-#, php-format
 msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr " Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:181
-#, php-format
 msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Bodování bylo ověřené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
@@ -1508,12 +1439,10 @@ msgid "Code is too long"
 msgstr "Kód je příliš dlouhý"
 
 #: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:69
-#, php-format
 msgid "Team %s does not exists."
 msgstr "Tým %s neexistuje"
 
 #: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:83
-#, php-format
 msgid "Task %s does not exists."
 msgstr "Úloha %s neexistuje"
 
@@ -1522,12 +1451,10 @@ msgid "Wrong task number."
 msgstr "Špatné číslo úlohy."
 
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:54
-#, php-format
 msgid "Nonexistent team ID %d skipped"
 msgstr "Přeskočeno neexistující ID týmu %d."
 
 #: ../app/Models/Fyziklani/Rooms/RoomsFromCSV.php:70
-#, php-format
 msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr "Tým %s (%d, %s) neodpovídá žádnému registrovanému týmu"
 
@@ -1549,7 +1476,6 @@ msgstr "Nepodařilo se odeslat e-mail."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:101
 #: ../app/Models/Events/Model/ApplicationHandler.php:162
-#, php-format
 msgid "Application \"%s\" created."
 msgstr "Přihláška \"%s\" vytvořena."
 
@@ -1560,29 +1486,24 @@ msgstr "Přihláška smazána"
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:105
 #: ../app/Models/Events/Model/ApplicationHandler.php:166
-#, php-format
 msgid "State of application \"%s\" changed."
 msgstr "Stav přihlášky \"%s\" změněn"
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:111
 #: ../app/Models/Events/Model/ApplicationHandler.php:174
-#, php-format
 msgid "Some fields of group \"%s\" don't match an existing record."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:115
 #: ../app/Models/Events/Model/ApplicationHandler.php:179
-#, php-format
 msgid "Data in group \"%s\" collide with an existing application."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu."
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:169
-#, php-format
 msgid "Application \"%s\" saved."
 msgstr "Přihláška \"%s\" uložena"
 
 #: ../app/Models/Events/Model/ApplicationHandler.php:213
-#, php-format
 msgid ""
 "There is not a transition from state \"%s\" of machine \"%s\" to state \"%s"
 "\"."
@@ -1622,12 +1543,10 @@ msgstr "Neplatné $rulesVersion"
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
 #: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
-#, php-format
 msgid "Team inserted to category %s."
 msgstr "Tým zařazen do kategorie %s."
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:28
-#, php-format
 msgid "Team registered for the category %s."
 msgstr "Tým zařazen do kategorie %s."
 
@@ -1640,22 +1559,18 @@ msgid "This option is only available to secondary school students."
 msgstr "Tato možnost je dostupná pouze pro studenty středních škol"
 
 #: ../app/Models/Events/Spec/Dsef/GroupOptions.php:102
-#, php-format
 msgid "(%d vacancies)"
 msgstr "(%d volných míst)"
 
 #: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:62
-#, php-format
 msgid "A school cannot have more than %d teams in the contest."
 msgstr "Škola nemůže mít v soutěži více než %d týmů."
 
 #: ../app/Models/Events/Spec/Fyziklani/TeamsPerSchool.php:121
-#, php-format
 msgid "Registered teams from the same school %s."
 msgstr "Registrované týmy ze stejné školy %s."
 
 #: ../app/Models/Events/Spec/Fyziklani/SchoolCheck.php:54
-#, php-format
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu"
 
@@ -1664,7 +1579,6 @@ msgid "Cannot determine category."
 msgstr "Nelze vyhodnotit kategorii"
 
 #: ../app/Models/Events/Spec/Fyziklani/SchoolsInTeam.php:54
-#, php-format
 msgid "Only %d different schools can be represented in the team."
 msgstr "Pouze %d různé školy mohou být součástí daného týmu."
 
@@ -1678,7 +1592,6 @@ msgid "You have to agree with the privacy policy before submitting."
 msgstr "Před vložením musíte souhlasit s podmínkami ochrany osobních údajů"
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:12
-#, php-format
 msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr "Nelze provést akci '%s' v automatu '%s'."
 
@@ -1687,7 +1600,6 @@ msgid "Event not found."
 msgstr "Akce nenalezena"
 
 #: ../app/Models/Events/Exceptions/ConfigurationNotFoundException.php:11
-#, php-format
 msgid "Configuration for event %s (%d-%s) not found"
 msgstr "Nastavení akce %s (%d-%s) nenalezeno"
 
@@ -1733,12 +1645,10 @@ msgid "Model not found"
 msgstr "Model nenalezen"
 
 #: ../app/Models/Exceptions/ContestNotFoundException.php:11
-#, php-format
 msgid "Contest %d not found"
 msgstr "Soutěž %d nenalezena"
 
 #: ../app/Models/Exceptions/BadTypeException.php:11
-#, php-format
 msgid "Expected type %s, got %s."
 msgstr "Očekávaný typ %s, ale je %s"
 
@@ -1752,7 +1662,6 @@ msgid "Unsupported format"
 msgstr "Nepodporovaný formát"
 
 #: ../app/Models/Payment/SymbolGenerator/Generators/DefaultGenerator.php:53
-#, php-format
 msgid "Payment #%s has already generated symbols."
 msgstr "Platba #%s má již vygenerované symboly."
 
@@ -1761,7 +1670,6 @@ msgid "variable_symbol overflow"
 msgstr "variabilní symbol přetekl"
 
 #: ../app/Models/Payment/PriceCalculator/UnsupportedCurrencyException.php:14
-#, php-format
 msgid "Currency %s in not supported"
 msgstr "Měna %s není podporována"
 
@@ -1778,17 +1686,14 @@ msgid "Data don't match already stored data."
 msgstr "Data neodpovídají předchozím uloženým datům"
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:195
-#, php-format
 msgid "%s(%s) new values: %s"
 msgstr "%s(%s) nových hodnot: %s"
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:200
-#, php-format
 msgid "%s(%s) merged and deleted."
 msgstr "%s(%s) sjednoceno a smazáno"
 
 #: ../app/Models/Persons/Deduplication/TableMerger.php:204
-#, php-format
 msgid "%s(%s) extended by merge."
 msgstr "%s(%s) rozšířeno sjednocením"
 
@@ -1823,12 +1728,10 @@ msgid "Prechod sa nedá vykonať"
 msgstr "Přechod není možné vykonat"
 
 #: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:32
-#, php-format
 msgid "Transition from %s to %s is unavailable for %s"
 msgstr "Přechod z %s do %s není dostupný pro %s"
 
 #: ../app/Models/Tasks/StudyYearsFromXML.php:78
-#, php-format
 msgid "Unknown year \"%s\"."
 msgstr "Neznámý rok \"%s\"."
 
@@ -1841,12 +1744,10 @@ msgid "Missing deadline of the series."
 msgstr "Chybějící deadline série."
 
 #: ../app/Models/Tasks/TasksFromXML.php:41
-#, php-format
 msgid "Imported (%s) and set (%s) series does not match."
 msgstr "Importovaná (%s) a nastavená (%s) série se neshodují."
 
 #: ../app/Models/Tasks/ContributionsFromXML.php:82
-#, php-format
 msgid "Unknown TeX ident '%s'."
 msgstr "Neznámý TeX identifikátor '%s'."
 
@@ -1964,7 +1865,6 @@ msgid "Method of handing"
 msgstr "Metoda řešení"
 
 #: ../app/Components/Grids/SubmitsGrid.php:88
-#, php-format
 msgid "Do you really want to take the solution of task %s back?"
 msgstr "Opravdu vzít zpět řešení úlohy %s ?"
 
@@ -1977,12 +1877,10 @@ msgid "Download corrected"
 msgstr "Stáhnout opravený"
 
 #: ../app/Components/Grids/SubmitsGrid.php:124
-#, php-format
 msgid "Submitting of task %s cancelled."
 msgstr "Odevzdání úlohy %s zrušeno."
 
 #: ../app/Components/Grids/SubmitsGrid.php:131
-#, php-format
 msgid "There was an error during the deletion of task %s."
 msgstr "Během mazání úlohy %s došlo k chybě."
 
@@ -2196,17 +2094,14 @@ msgid "%label must be an integer."
 msgstr "%label musí být celé číslo."
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:36
-#, php-format
 msgid "%s is required."
 msgstr "Pole \"%s\" je vyžadováno"
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:42
-#, php-format
 msgid "%s is required"
 msgstr "Pole \"%s\" je vyžadováno"
 
 #: ../app/Components/Forms/Factories/Events/PersonFactory.php:155
-#, php-format
 msgid "%s: %s is a required field."
 msgstr "%s: %s je požadované pole"
 
@@ -2233,7 +2128,6 @@ msgid "Abbreviated name"
 msgstr "Zkrácený název"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:30
-#, php-format
 msgid ""
 "The length of the abbreviated name is restricted to a maximum %d characters."
 msgstr "Délka zkráceného názvu je omezena na %d znaků."
@@ -2256,7 +2150,6 @@ msgid "IČ (Czech schools only)"
 msgstr "IČ"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:39
-#, php-format
 msgid "The length of IČ is restricted to %d characters."
 msgstr "Délka IČ je omezena na %d znaků."
 
@@ -2266,7 +2159,6 @@ msgid "IZO (Czech schools only)"
 msgstr "IZO"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:42
-#, php-format
 msgid "The length of IZO is restricted to %d characters."
 msgstr "Délka IZO je omezena na %d znaků."
 
@@ -2284,7 +2176,6 @@ msgid "Note"
 msgstr "Poznámka"
 
 #: ../app/Components/Forms/Factories/SchoolFactory.php:56
-#, php-format
 msgid "If you cannot find the school, ask on e-mail %s."
 msgstr "Pokud nemůžete školu najít, kontaktujte nás na %s."
 
@@ -2329,19 +2220,16 @@ msgid "Covid-19 Vaccination"
 msgstr "Očkování na Covid-19"
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:62
-#, php-format
 msgid ""
 "The item \"%s\" has already a payment generated, so it cannot be deleted."
 msgstr "Položka \"%s\" má již vygenerovanou platbu, takže ji nelze smazat."
 
 #: ../app/Components/Forms/Controls/Schedule/Handler.php:78
-#, php-format
 msgid ""
 "The person %s could not be registered for \"%s\" because of full capacity."
 msgstr "Osobu %s nepodarilo ptihlásiť na \"%s\", z dôvodu plnej kapacity."
 
 #: ../app/Components/Forms/Controls/Autocomplete/AutocompleteSelectBox.php:141
-#, php-format
 msgid "Field %s requires JavaScript enabled."
 msgstr "Pole %s vyžaduje mít povolený JavaScript."
 
@@ -2412,7 +2300,6 @@ msgid "Total persons in FKSDB"
 msgstr "Celkový počet osob ve FKSDB"
 
 #: ../app/Components/Charts/TotalPersonsChart.php:50
-#, fuzzy
 msgid ""
 "Graph shows the progress in the number of people in FKSDB and the number of "
 "assigned person_ids."
@@ -2492,7 +2379,6 @@ msgid "Address has been deleted"
 msgstr "Adresa byla smazána."
 
 #: ../app/Components/EntityForms/ScheduleGroupFormComponent.php:50
-#, php-format
 msgid "Group \"%s\" has been saved."
 msgstr "Skupina \"%s\" uložena."
 
@@ -2546,10 +2432,9 @@ msgid "Parameter name is too long."
 msgstr "Jméno parametru je příliš dlouhé."
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:181
-#, fuzzy
 msgid ""
-"The name of the parameter can only contain lowercase \r\n"
-"                letters of the english alphabet, numbers, and an underscore."
+"The name of the parameter can only contain lowercase"
+"letters of the english alphabet, numbers, and an underscore."
 msgstr ""
 "Jméno parametru může obsahovat pouze malá písmena anglické abecedy, čísla a "
 "podrtžítko"
@@ -2572,7 +2457,6 @@ msgid "Teacher has been created"
 msgstr "Učitel byl vytvořen."
 
 #: ../app/Components/EntityForms/ScheduleItemFormContainer.php:52
-#, php-format
 msgid "Item \"%s\" has been saved."
 msgstr "Položka \"%s\" uložena."
 
@@ -2581,7 +2465,6 @@ msgid "Schedule group Id"
 msgstr "Id skupiny programu."
 
 #: ../app/Components/EntityForms/EventFormComponent.php:80
-#, php-format
 msgid "Event \"%s\" has been saved."
 msgstr "Akce \"%s\" byla uložena."
 
@@ -2610,12 +2493,10 @@ msgid "Number of points"
 msgstr "Počet bodů"
 
 #: ../app/Components/Controls/DataTesting/PersonTestComponent.php:51
-#, php-format
 msgid "From %s"
 msgstr "Od %s"
 
 #: ../app/Components/Controls/DataTesting/PersonTestComponent.php:54
-#, php-format
 msgid "To %s"
 msgstr "Do %s"
 
@@ -2628,7 +2509,6 @@ msgid "Tests"
 msgstr "Testy"
 
 #: ../app/Components/Controls/Fyziklani/CloseTeamComponent.php:34
-#, php-format
 msgid "Team \"%s\" has successfully closed submitting, with total %d points."
 msgstr "Tým %s má úspěšně uzavřené bodování s celkovým bodovým skóre %d."
 
@@ -2686,17 +2566,14 @@ msgid "Keep original state."
 msgstr "Ponechat původní stav"
 
 #: ../app/Components/Controls/Events/ImportComponent.php:108
-#, php-format
 msgid "Import succesfull (%.2f s)."
 msgstr "Import úspěšný (%.2f s)."
 
 #: ../app/Components/Controls/Events/ImportComponent.php:113
-#, php-format
 msgid "Import ran with errors (%.2f s)."
 msgstr "Import proběhl s chybami (%.2f s)."
 
 #: ../app/Components/Controls/Events/MassTransitionsComponent.php:56
-#, php-format
 msgid "Total %d applications, state changed %d, unavailable %d. "
 msgstr "Celkem %d přihlášek, stav změněn %d, nedostupné %d."
 
@@ -2728,12 +2605,10 @@ msgid "Upload successful"
 msgstr "Nahrání úspěšné"
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:119
-#, php-format
 msgid "Uploading of task %s cancelled."
 msgstr "Odevzdání úlohy %s zrušeno."
 
 #: ../app/Components/Controls/AjaxSubmit/AjaxSubmitComponent.php:124
-#, fuzzy
 msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
@@ -2752,13 +2627,11 @@ msgstr "Akce"
 
 #: ../app/Components/Controls/Choosers/SeriesChooserComponent.php:29
 #: ../app/Components/Controls/Choosers/SeriesChooserComponent.php:36
-#, php-format
 msgid "Series %d"
 msgstr "Série %d"
 
 #: ../app/Components/Controls/Choosers/YearChooserComponent.php:37
 #: ../app/Components/Controls/Choosers/YearChooserComponent.php:44
-#, php-format
 msgid "Year %d"
 msgstr "Rok %d"
 
@@ -2779,7 +2652,6 @@ msgid "Comma separated submitIDs"
 msgstr "Čárkami oddělený seznam submitID"
 
 #: ../app/Components/Controls/Inbox/Corrected/CorrectedComponent.php:47
-#, php-format
 msgid "Updated %d submits"
 msgstr "Aktualizováno %d submitů"
 
@@ -2788,32 +2660,26 @@ msgid "Error during updating"
 msgstr "Chyba při aktualizaci"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:41
-#, php-format
 msgid "Uploaded submit #%d is broken"
 msgstr "Nahraný submit #%d je rozbitý"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:46
-#, php-format
 msgid "Corrected submit #%d is broken"
 msgstr "Opravený submit #%d je rozbitý"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:50
-#, fuzzy, php-format
 msgid "Uploaded unregister corrected submit #%d"
 msgstr "Submit #%d je opravený a uploadovaný, ale opravení není registrováno"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:53
-#, php-format
 msgid "Test done, found %d errors"
 msgstr "Test proběhl s(e) %d error(y)"
 
 #: ../app/Components/Controls/Inbox/Inbox/InboxFormComponent.php:44
-#, php-format
 msgid "Submit #%d deleted"
 msgstr "Submit #%d smazán."
 
 #: ../app/Components/Controls/Inbox/Inbox/InboxFormComponent.php:53
-#, php-format
 msgid "Submit for contestant #%d and task %d created"
 msgstr "Submit pro contestant #%d and task %d created"
 
@@ -2888,9 +2754,8 @@ msgid "Entities"
 msgstr ""
 
 #: ../app/Modules/OrgModule/templates/Dashboard/default.latte.latte2php:8
-#, fuzzy
 msgid "Others"
-msgstr "Křestní jméno"
+msgstr "Ostatní"
 
 #: ../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:2
 msgid "New submit system"
@@ -3270,9 +3135,8 @@ msgid "Timeline"
 msgstr "Časový průběh"
 
 #: ../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:45
-#, fuzzy
 msgid "Create envelope"
-msgstr "Akce vytvořena"
+msgstr "Vytvořit obálku"
 
 #: ../app/Components/Controls/Stalking/Components/layout.flag.latte.latte2php:9
 msgid "Value"
@@ -4614,29 +4478,24 @@ msgid "What t-shirt size do you wear?"
 msgstr "Jakou velikost trička nosíš?"
 
 #: ../data/events/fol/fol.default.neon.neon2php:13
-#, fuzzy
 msgid "1st member"
-msgstr "Smazat člena"
+msgstr "První člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:17
-#, fuzzy
 msgid "2nd member"
-msgstr "Přidat člena"
+msgstr "Druhý člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:20
-#, fuzzy
 msgid "3rd member"
-msgstr "Přidat člena"
+msgstr "Třetí člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:23
-#, fuzzy
 msgid "4th member"
-msgstr "Smazat člena"
+msgstr "Čtvrtý člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:26
-#, fuzzy
 msgid "5th member"
-msgstr "Smazat člena"
+msgstr "Pátý člen"
 
 #: ../data/events/fol/fol1.neon.neon2php:18
 #: ../data/events/fol/fol1.neon.neon2php:29
@@ -4656,9 +4515,8 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:63
-#, fuzzy
 msgid "Register team."
-msgstr "Přihlásit tým"
+msgstr "Registrovat tým"
 
 #: ../data/events/fol/fol1.neon.neon2php:68
 msgid "Confirm as Participated"
