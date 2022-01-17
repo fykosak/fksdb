@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\Transition\TransitionsGenerator;
 
-use FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Transitions\TransitionsGenerator\PaymentTransitions;
 
 class Fyziklani16Payment extends PaymentTransitions
@@ -15,6 +15,6 @@ class Fyziklani16Payment extends PaymentTransitions
      */
     protected function getDatesCondition(): callable
     {
-        return new DateBetween('2022-01-16', '2022-02-10');
+        throw new GoneException();
     }
 }

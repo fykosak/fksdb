@@ -7,6 +7,7 @@ namespace FKSDB\Models\Transitions;
 use FKSDB\Models\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
+use Tracy\Debugger;
 
 class TransitionsExtension extends CompilerExtension
 {
@@ -55,6 +56,8 @@ class TransitionsExtension extends CompilerExtension
         $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
             ->addTag($machineName)
             ->setType(Transition::class)
+            ->addSetup('setEvaluator', ['@events.expressionEvaluator'])
+            ->addSetup('setCondition', [$transitionConfig['condition'] ?? null])
             ->addSetup('setSourceState', [$source])
             ->addSetup('setTargetState', [$target])
             ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);

@@ -92,10 +92,7 @@ class Transition
         $this->label = $label;
     }
 
-    /**
-     * @param callable|bool $callback
-     */
-    public function setCondition($callback): void
+    public function setCondition(?callable $callback): void
     {
         $this->condition = $callback;
     }
