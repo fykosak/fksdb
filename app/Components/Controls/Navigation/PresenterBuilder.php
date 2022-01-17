@@ -55,5 +55,4 @@ class PresenterBuilder
         }
         return $this->presenterCache[$presenterName];
     }
-
 }

@@ -58,7 +58,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
                 $items[] = new NavItem(
                     $this->getItemTitle($item),
                     ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                    $item['linkParams'] ?? [],
+                    $item['linkParams'],
                     [],
                     $this->isItemActive($item)
                 );
@@ -76,7 +76,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
             try {
                 $this->getPresenter()->link(
                     ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                    $item['linkParams']
+                    array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
                 );
             } catch (\Throwable $exception) {
                 /* empty */
@@ -117,7 +117,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
         if (isset($item['linkPresenter'])) {
             return $this->getPresenter()->link(
                 ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                $item['linkParams']
+                array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
             );
         }
         return '';
@@ -138,7 +138,7 @@ final class NavigationChooserComponent extends NavigationItemComponent
         if (isset($item['linkPresenter'])) {
             return $this->getPresenter()->authorized(
                 ':' . $item['linkPresenter'] . ':' . $item['linkAction'],
-                $item['linkParams']
+                array_merge($this->getPresenter()->getParameters(), $item['linkParams'])
             );
         }
         return true;

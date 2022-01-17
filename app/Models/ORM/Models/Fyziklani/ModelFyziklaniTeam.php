@@ -41,7 +41,6 @@ use Nette\Security\Resource;
  */
 class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';
     public const CATEGORY_HIGH_SCHOOL_B = 'B';
@@ -69,7 +68,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    public function getParticipants(): GroupedSelection
+    public function getFyziklaniParticipants(): GroupedSelection
     {
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
@@ -147,9 +146,8 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     public function getPersons(): array
     {
         $persons = [];
-        /** @var ModelFyziklaniParticipant $pRow */
-        foreach ($this->getParticipants() as $pRow) {
-            $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
+        foreach ($this->getFyziklaniParticipants() as $pRow) {
+            $persons[] = ModelFyziklaniParticipant::createFromActiveRow($pRow)->getEventParticipant()->getPerson();
         }
         $teacher = $this->getTeacher();
         if ($teacher) {
