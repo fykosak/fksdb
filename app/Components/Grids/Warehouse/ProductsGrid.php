@@ -33,7 +33,8 @@ class ProductsGrid extends EntityGrid
      * @throws BadTypeException
      * @throws DuplicateButtonException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(Presenter $presenter): void
+    {
         parent::configure($presenter);
         $this->addLinkButton(':Warehouse:Product:edit', 'edit', _('Edit'), false, ['id' => 'product_id']);
     }
