@@ -11,27 +11,21 @@ use Nette\InvalidStateException;
 
 class UnavailableTransitionException extends InvalidStateException
 {
-
     /**
-     * UnavailableTransitionException constructor.
-     * @param EventTransition|Transition $transition
      * @param ActiveRow|ModelHolder|null $holder
      */
-    public function __construct($transition, $holder)
+    public function __construct(Transition $transition, $holder)
     {
-        $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
-        } elseif ($transition instanceof Transition) {
-            $source = $transition->getSourceState();
         } else {
-            throw new InvalidStateException();
+            $source = $transition->sourceState;
         }
         parent::__construct(
             sprintf(
                 _('Transition from %s to %s is unavailable for %s'),
                 $source,
-                $target,
+                $transition->targetState,
                 $holder instanceof ModelHolder ? $holder->getModel() : $holder
             )
         );

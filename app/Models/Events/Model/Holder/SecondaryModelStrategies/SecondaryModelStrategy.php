@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
+use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -40,15 +45,25 @@ abstract class SecondaryModelStrategy
         array $holders,
         ?ActiveRow $primaryModel = null
     ): void {
+        $secondary = [];
         if ($primaryModel) {
-            $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
-            $secondary = $service->getTable()->where($joinOn, $joinValue);
-            if ($joinTo) {
-                $event = reset($holders)->getEvent();
-                $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
+            if ($primaryModel instanceof ModelFyziklaniTeam) {
+                /** @var ServiceMFyziklaniParticipant $service */
+                foreach ($primaryModel->getFyziklaniParticipants() as $row) {
+                    $fyziklaniParticipant = ModelFyziklaniParticipant::createFromActiveRow($row);
+                    $secondary[] = $service->composeModel(
+                        $fyziklaniParticipant->getEventParticipant(),
+                        $fyziklaniParticipant
+                    );
+                }
+            } else {
+                $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
+                $secondary = $service->getTable()->where($joinOn, $joinValue);
+                if ($joinTo) {
+                    $event = reset($holders)->event;
+                    $secondary->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
+                }
             }
-        } else {
-            $secondary = [];
         }
         $this->setSecondaryModels($holders, $secondary);
     }
@@ -70,7 +85,7 @@ abstract class SecondaryModelStrategy
             if ($joinTo) {
                 $existing = $service->getTable()->where($joinData)->where(
                     BaseHolder::EVENT_COLUMN,
-                    $baseHolder->getEvent()->getPrimary()
+                    $baseHolder->event->getPrimary()
                 );
                 $conflicts = [];
                 foreach ($existing as $secondaryModel) {

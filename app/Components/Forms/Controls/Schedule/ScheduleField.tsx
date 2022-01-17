@@ -15,17 +15,14 @@ interface OwnProps {
         options: Params;
     };
     input: HTMLInputElement;
-    mode: string;
 }
 
 export interface Params {
-    display: {
-        groupTime: boolean;
-        groupLabel: boolean;
-        capacity: boolean;
-        description: boolean;
-        price: boolean;
-    };
+    groupTime: boolean;
+    groupLabel: boolean;
+    capacity: boolean;
+    description: boolean;
+    price: boolean;
 }
 
 class ScheduleField extends React.Component<OwnProps> {
@@ -51,23 +48,13 @@ class ScheduleField extends React.Component<OwnProps> {
 }
 
 export const eventSchedule: mapRegisterCallback = (element, reactId, rawData) => {
-    const [module, component, mode] = reactId.split('.');
-    if (module !== 'event') {
-        return false;
-    }
-    if (component !== 'schedule') {
-        return false;
-    }
-
-    const scheduleDef = JSON.parse(rawData);
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
     if (!(element instanceof HTMLInputElement)) {
         return false;
     }
-    element.style.display = 'none';
 
-    ReactDOM.render(<ScheduleField scheduleDef={scheduleDef} input={element} mode={mode}/>, container);
+    ReactDOM.render(<ScheduleField scheduleDef={JSON.parse(rawData)} input={element}/>, container);
 
     return true;
 };

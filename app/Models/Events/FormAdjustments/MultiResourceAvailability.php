@@ -60,8 +60,8 @@ class MultiResourceAvailability extends AbstractAdjustment
     {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
-            'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => [$holder->getPrimaryHolder()],
+            'service' => $holder->primaryHolder->getService(),
+            'holders' => [$holder->primaryHolder],
         ];
         /** @var BaseHolder[][]|Field[][]|AbstractService[]|AbstractServiceMulti[] $services */
         $services = [];
@@ -71,7 +71,7 @@ class MultiResourceAvailability extends AbstractAdjustment
             $field = null;
             /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->getName();
+                $name = $baseHolder->name;
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
                     if (!$foundControls) {
@@ -101,11 +101,11 @@ class MultiResourceAvailability extends AbstractAdjustment
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
-            $event = $firstHolder->getEvent();
+            $event = $firstHolder->event;
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
 
-            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
+            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }

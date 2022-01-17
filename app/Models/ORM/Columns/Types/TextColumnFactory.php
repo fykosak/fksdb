@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -9,13 +11,16 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
-class TextColumnFactory extends ColumnFactory {
+class TextColumnFactory extends ColumnFactory
+{
 
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new TextArea(_($this->getTitle()));
         $description = $this->getDescription();
         if ($description) {

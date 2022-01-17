@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -9,13 +11,15 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;
 
-class LogicColumnFactory extends ColumnFactory {
-
-    protected function createHtmlValue(AbstractModel $model): Html {
+class LogicColumnFactory extends ColumnFactory
+{
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new BinaryPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new Checkbox(_($this->getTitle()));
 
         // if (!$this->metaData['nullable']) {

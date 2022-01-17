@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use Fykosak\NetteORM\AbstractModel;
@@ -33,8 +35,8 @@ class ModelFyziklaniGameSetup extends AbstractModel
         if ($this->result_hard_display) {
             return true;
         }
-        $before = (time() < strtotime($this->result_hide));
-        $after = (time() > strtotime($this->result_display));
+        $before = (time() < $this->result_hide->getTimestamp());
+        $after = (time() > $this->result_display->getTimestamp());
         return ($before && $after);
     }
 }

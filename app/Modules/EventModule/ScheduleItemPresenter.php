@@ -44,7 +44,9 @@ class ScheduleItemPresenter extends BasePresenter
     public function titleDetail(): PageTitle
     {
         return new PageTitle(
-            null, \sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fas fa-clipboard'
+            null,
+            \sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()),
+            'fas fa-clipboard'
         );
     }
 

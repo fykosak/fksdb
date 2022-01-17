@@ -2,7 +2,7 @@
 {block content}
     {varType bool $hasParameters}
     {varType bool $hasStoredQuery}
-    {varType bool $error}
+    {varType \Throwable|null $error}
     {varType array $formats}
     {varType FKSDB\Models\StoredQuery\StoredQuery $storedQuery}
     {varType bool $showParametrizeForm}
@@ -12,7 +12,7 @@
     {if $hasStoredQuery}
         {if $error}
             <div class="alert alert-danger">
-                {$error}
+                {$error->getMessage()}
             </div>
         {else}
             {if $showParametrizeForm}

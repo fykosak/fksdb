@@ -166,7 +166,7 @@ extensions:
     acl: FKSDB\Models\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Models\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    payment: FKSDB\Models\Payment\PaymentExtension
+    #payment: FKSDB\Models\Payment\PaymentExtension
     transitions: FKSDB\Models\Transitions\TransitionsExtension
     orm: FKSDB\Models\ORM\ORMExtension
 
@@ -178,4 +178,5 @@ includes:
     - navigation.neon
     - contests.neon
     - stalking.neon
-    - payment.neon
+    #- payment.neon
+    - payments/common.neon

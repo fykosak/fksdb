@@ -36,7 +36,7 @@
     "setasign/fpdi": "1.5.4",
     "league/oauth2-google": "3.0.3",
     "fykosak/nette-orm": "^v0.4.0",
-    "fykosak/nette-fks-utils": "dev-master#42c5458",
+    "fykosak/nette-fks-utils": "dev-master#8651feb",
     "fykosak/nette-frontend-component": "dev-master#21fe118"
   },
   "require-dev": {
@@ -81,6 +81,12 @@
       "@clearTestCache",
       "@clearTestDatabase",
       "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 8"
+    ],
+    "testPSRSafe": [
+      "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --parallel=8 app/Components/Badges/ app/Components/Charts/ app/Components/Controls/BaseComponent.php app/Components/Controls/Choosers/ app/Components/Controls/DataTesting/ app/Components/Controls/Events/ app/Components/Controls/FormComponent/ app/Components/Controls/PreferredLangFormComponent.php app/Components/Controls/Schedule/ app/Components/Controls/Transitions/ app/Components/EntityForms/ app/Components/Grids/ app/Components/PDFGenerators/ app/Models/Astrid/ app/Models/Authorization/ app/Models/Entity/ app/Models/Exceptions/ app/Models/FrontEnd/ app/Models/Localization/ app/Models/ORM/ app/Models/Payment/ app/Models/PhoneNumber/ app/Models/SQL/ app/Models/Transitions/ app/Models/UI/ app/Models/WebService/ app/Modules/ tests/*/"
+    ],
+    "testPSRAll": [
+      "php -e vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --parallel=8 --report=summary app/ tests/"
     ]
   }
 }

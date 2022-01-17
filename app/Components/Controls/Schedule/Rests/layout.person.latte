@@ -8,8 +8,7 @@
             {foreach $rests as $rest}
                 <tr>
                     <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice(Fykosak\Utils\Price\Currency::from(Fykosak\Utils\Price\Currency::CZK))} /
-                        {$rest->getScheduleItem()->getPrice(Fykosak\Utils\Price\Currency::from(Fykosak\Utils\Price\Currency::EUR))}</td>
+                    <td>{$rest->getScheduleItem()->getPrice()->__toString()}</td>
                 </tr>
             {/foreach}
             </tbody>

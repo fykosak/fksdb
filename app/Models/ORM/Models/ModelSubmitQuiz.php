@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
@@ -15,13 +17,16 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read \DateTimeInterface submitted_on
  * @property-read string answer
  */
-class ModelSubmitQuiz extends AbstractModel {
+class ModelSubmitQuiz extends AbstractModel
+{
 
-    public function getTask(): ModelTask {
+    public function getTask(): ModelTask
+    {
         return ModelTask::createFromActiveRow($this->task);
     }
 
-    public function getContestant(): ModelContestant {
+    public function getContestant(): ModelContestant
+    {
         return ModelContestant::createFromActiveRow($this->contestant_base);
     }
 }

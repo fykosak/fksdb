@@ -14,14 +14,14 @@ use Nette\Utils\Html;
 class PriceColumnFactory extends ColumnFactory
 {
     /**
-     * @param AbstractModel|ModelPayment $model
+     * @param ModelPayment $model
      * @throws \Exception
      */
     protected function createHtmlValue(AbstractModel $model): Html
     {
-        if ($model->price) {
-            return (new PricePrinter())($model->getPrice());
+        if (\is_null($model->price)) {
+            return NotSetBadge::getHtml();
         }
-        return NotSetBadge::getHtml();
+        return (new PricePrinter())($model->getPrice());
     }
 }

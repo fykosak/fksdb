@@ -67,7 +67,7 @@ class ApplicationComponent extends BaseComponent
      */
     public function isEventAdmin(): bool
     {
-        $event = $this->holder->getPrimaryHolder()->getEvent();
+        $event = $this->holder->primaryHolder->event;
         return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
@@ -83,7 +83,7 @@ class ApplicationComponent extends BaseComponent
         }
 
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
+        $this->template->event = $this->holder->primaryHolder->event;
         $this->template->primaryMachine = $this->handler->getMachine()->getPrimaryMachine();
         $this->template->render($this->templateFile);
     }
@@ -127,7 +127,7 @@ class ApplicationComponent extends BaseComponent
         foreach (
             $primaryMachine->getAvailableTransitions(
                 $this->holder,
-                $this->holder->getPrimaryHolder()->getModelState(),
+                $this->holder->primaryHolder->getModelState(),
                 true,
                 true
             ) as $transition
@@ -143,7 +143,7 @@ class ApplicationComponent extends BaseComponent
             if ($transition->isCreating()) {
                 $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()->value]);
         }
 
         /*
@@ -182,16 +182,16 @@ class ApplicationComponent extends BaseComponent
 
     private function canEdit(): bool
     {
-        return $this->holder->getPrimaryHolder()->getModelState()
-            != AbstractMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->primaryHolder->getModelState()
+            != AbstractMachine::STATE_INIT && $this->holder->primaryHolder->isModifiable();
     }
 
     private function finalRedirect(): void
     {
         if ($this->redirectCallback) {
-            $model = $this->holder->getPrimaryHolder()->getModel2();
+            $model = $this->holder->primaryHolder->getModel2();
             $id = $model ? $model->getPrimary(false) : null;
-            ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->primaryHolder->event->getPrimary());
         } else {
             $this->redirect('this');
         }

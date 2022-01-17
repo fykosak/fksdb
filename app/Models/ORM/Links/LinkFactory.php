@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Links;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -8,11 +10,13 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
-abstract class LinkFactory {
+abstract class LinkFactory
+{
 
     protected string $modelClassName;
 
-    public function __construct(?string $modelClassName = null) {
+    public function __construct(?string $modelClassName = null)
+    {
         if ($modelClassName) {
             $this->modelClassName = $modelClassName;
         }
@@ -22,14 +26,16 @@ abstract class LinkFactory {
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
-    public function create(Presenter $presenter, AbstractModel $model): string {
+    public function create(Presenter $presenter, AbstractModel $model): string
+    {
         return $presenter->link(...$this->createLinkParameters($model));
     }
 
     /**
      * @throws CannotAccessModelException
      */
-    protected function getModel(AbstractModel $modelSingle): ?AbstractModel {
+    protected function getModel(AbstractModel $modelSingle): ?AbstractModel
+    {
         if (!isset($this->modelClassName)) {
             return $modelSingle;
         }
@@ -40,7 +46,8 @@ abstract class LinkFactory {
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function createLinkParameters(AbstractModel $model): array {
+    public function createLinkParameters(AbstractModel $model): array
+    {
         $model = $this->getModel($model);
         if (is_null($model)) {
             throw new InvalidLinkException();

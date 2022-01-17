@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
@@ -36,9 +38,11 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
  */
-class ModelPersonInfo extends AbstractModel {
+class ModelPersonInfo extends AbstractModel
+{
 
-    public function getPerson(): ModelPerson {
+    public function getPerson(): ModelPerson
+    {
         return ModelPerson::createFromActiveRow($this->person);
     }
 }

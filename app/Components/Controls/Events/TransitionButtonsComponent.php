@@ -28,7 +28,7 @@ class TransitionButtonsComponent extends BaseComponent
     {
         $this->template->transitions = $this->handler->getMachine()->getPrimaryMachine()->getAvailableTransitions(
             $this->holder,
-            $this->holder->getPrimaryHolder()->getModelState(),
+            $this->holder->primaryHolder->getModelState(),
             true,
             true
         );

@@ -42,7 +42,7 @@ class PrivacyPolicy implements Processing, FormAdjustment
      */
     public function adjust(Form $form, Holder $holder): void
     {
-        if ($holder->getPrimaryHolder()->getModelState() != AbstractMachine::STATE_INIT) {
+        if ($holder->primaryHolder->getModelState() != AbstractMachine::STATE_INIT) {
             return;
         }
 

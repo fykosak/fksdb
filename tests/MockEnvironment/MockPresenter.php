@@ -8,7 +8,7 @@ use FKSDB\Modules\Core\BasePresenter;
 
 class MockPresenter extends BasePresenter
 {
-    public function link(string $destination, $args=[]): string
+    public function link(string $destination, $args = []): string
     {
         return '';
     }

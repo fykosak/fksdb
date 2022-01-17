@@ -13,6 +13,7 @@ use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\AbstractModel;
+use Tracy\Debugger;
 
 /**
  * @property-read int person_id
@@ -87,7 +88,7 @@ class ModelPayment extends AbstractModel implements Resource
      */
     public function getPrice(): Price
     {
-        return new  Price($this->getCurrency(), $this->price);
+        return new Price($this->getCurrency(), $this->price);
     }
 
     /**
@@ -96,6 +97,26 @@ class ModelPayment extends AbstractModel implements Resource
     public function getCurrency(): Currency
     {
         return Currency::from($this->currency);
+    }
+
+    public function __toArray(): array
+    {
+        return [
+            'personId' => $this->person_id,
+            'paymentId' => $this->payment_id,
+            'paymentUId' => $this->getPaymentId(),
+            'state' => $this->state,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'constantSymbol' => $this->constant_symbol,
+            'variableSymbol' => $this->variable_symbol,
+            'specificSymbol' => $this->specific_symbol,
+            'bankAccount' => $this->bank_account,
+            'bankName' => $this->bank_name,
+            'recipient' => $this->recipient,
+            'iban' => $this->iban,
+            'swift' => $this->swift,
+        ];
     }
 
     public function hasGeneratedSymbols(): bool

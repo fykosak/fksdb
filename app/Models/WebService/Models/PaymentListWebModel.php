@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FKSDB\Models\WebService\Models;
+
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Services\ServicePayment;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
+
+class PaymentListWebModel extends WebModel
+{
+    private ServicePayment $servicePayment;
+
+    public function injectService(ServicePayment $servicePayment): void
+    {
+        $this->servicePayment = $servicePayment;
+    }
+
+    /**
+     * @throws GoneException
+     */
+    public function getResponse(\stdClass $args): \SoapVar
+    {
+        throw new GoneException();
+    }
+
+    public function getJsonResponse(array $params): array
+    {
+        $data = [];
+        /** @var ModelPayment $payment */
+        foreach ($this->servicePayment->getTable()->where('event_id', $params['event_id']) as $payment) {
+            $data[] = $payment->__toArray();
+        }
+        return $data;
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'event_id' => Expect::scalar()->castTo('int')->required(),
+        ]);
+    }
+}

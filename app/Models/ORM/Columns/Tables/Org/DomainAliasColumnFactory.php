@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -13,13 +15,15 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class DomainAliasColumnFactory extends ColumnFactory {
+class DomainAliasColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelOrg $model
+     * @param ModelOrg $model
      * @throws ContestNotFoundException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         switch ($model->contest_id) {
             case ModelContest::ID_FYKOS:
                 return (new EmailPrinter())($model->domain_alias . '@fykos.cz');
@@ -30,11 +34,16 @@ class DomainAliasColumnFactory extends ColumnFactory {
         }
     }
 
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED);
-        $control->addRule(Form::PATTERN, sprintf(_('%s contains forbidden characters.'), $this->getTitle()), '[a-z][a-z0-9._\-]*');
+        $control->addRule(
+            Form::PATTERN,
+            sprintf(_('%s contains forbidden characters.'), $this->getTitle()),
+            '[a-z][a-z0-9._\-]*'
+        );
         return $control;
     }
 }

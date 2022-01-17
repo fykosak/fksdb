@@ -61,7 +61,7 @@ abstract class SchoolCheck extends AbstractAdjustment
 
         $schools = $this->servicePersonHistory->getTable()
             ->where('person_id', $personIds)
-            ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getContestYear()->ac_year)
+            ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)
             ->fetchPairs('person_id', 'school_id');
 
         $result = [];

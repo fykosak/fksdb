@@ -1,0 +1,35 @@
+.state-line {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .circle {
+    border-radius: 4rem;
+    height: 8rem;
+    width: 8rem;
+    padding: 1rem;
+  }
+
+  .line {
+    height: 5px;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 0%;
+  }
+
+  .circle, .line {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    &.done {
+      background-color: $success;
+    }
+
+    &.ongoing {
+      background-color: $secondary;
+    }
+  }
+}

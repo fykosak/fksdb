@@ -16,7 +16,7 @@ class ApplicationEditLink extends LinkFactory
     }
 
     /**
-     * @param ModelEventParticipant|AbstractModel $model
+     * @param ModelEventParticipant $model
      */
     protected function getDestination(AbstractModel $model): string
     {
@@ -24,7 +24,7 @@ class ApplicationEditLink extends LinkFactory
     }
 
     /**
-     * @param AbstractModel|ModelEventParticipant $model
+     * @param ModelEventParticipant $model
      */
     protected function prepareParams(AbstractModel $model): array
     {

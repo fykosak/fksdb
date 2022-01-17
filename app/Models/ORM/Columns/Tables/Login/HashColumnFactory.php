@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Login;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -8,12 +10,14 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Utils\Html;
 
-class HashColumnFactory extends ColumnFactory {
+class HashColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelLogin $model
+     * @param ModelLogin $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return (new HashPrinter())($model->hash);
     }
 }

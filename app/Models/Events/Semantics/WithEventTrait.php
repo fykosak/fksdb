@@ -13,7 +13,7 @@ trait WithEventTrait {
      * @throws \InvalidArgumentException
      */
     protected function getEvent(object $obj): ModelEvent {
-        return $this->getHolder($obj)->getPrimaryHolder()->getEvent();
+        return $this->getHolder($obj)->primaryHolder->event;
     }
 
     /**
@@ -24,10 +24,10 @@ trait WithEventTrait {
             return $obj;
         }
         if ($obj instanceof Field) {
-            return $obj->getBaseHolder()->getHolder();
+            return $obj->getBaseHolder()->holder;
         }
         if ($obj instanceof BaseHolder) {
-            return $obj->getHolder();
+            return $obj->holder;
         }
         throw new \InvalidArgumentException();
     }
