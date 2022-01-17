@@ -11,6 +11,7 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\Payment\Transition\PaymentHolder;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\Transition;
