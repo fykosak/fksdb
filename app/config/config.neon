@@ -178,4 +178,5 @@ includes:
     - navigation.neon
     - contests.neon
     - stalking.neon
-    - payment.neon
+    #- payment.neon
+    - payments/common.neon
