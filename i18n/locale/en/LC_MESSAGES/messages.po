@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-11 17:37+0100\n"
+"POT-Creation-Date: 2022-01-17 16:55+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:15
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:60
-#: ../app/Components/EntityForms/PaymentFormComponent.php:82
+#: ../app/Components/EntityForms/PaymentFormComponent.php:83
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:20
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:82
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:4
@@ -313,9 +313,9 @@ msgstr ""
 
 #: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
 #: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/config/payment.neon.neon2php:92
-#: ../app/config/payment.neon.neon2php:115
-#: ../app/config/payment.neon.neon2php:138
+#: ../app/config/payment.neon.neon2php:89
+#: ../app/config/payment.neon.neon2php:112
+#: ../app/config/payment.neon.neon2php:135
 msgid "Create"
 msgstr ""
 
@@ -495,7 +495,7 @@ msgid "Manual conflict resolution is necessary."
 msgstr ""
 
 #: ../app/Modules/OrgModule/EventPresenter.php:33
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:51
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:53
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:90
 msgid "Events"
 msgstr ""
@@ -647,7 +647,7 @@ msgstr ""
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:301
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:7
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:9
 msgid "Register"
 msgstr ""
 
@@ -818,31 +818,30 @@ msgstr ""
 msgid "Error during deleting"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:43
-#: ../app/config/payment.neon.neon2php:147
+#: ../app/Modules/EventModule/PaymentPresenter.php:44
 msgid "New payment"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:56
+#: ../app/Modules/EventModule/PaymentPresenter.php:57
 #, php-format
 msgid "Edit payment #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:71
+#: ../app/Modules/EventModule/PaymentPresenter.php:72
 #, php-format
 msgid "Payment detail #%s"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:78
+#: ../app/Modules/EventModule/PaymentPresenter.php:79
 msgid "List of payments"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:91
+#: ../app/Modules/EventModule/PaymentPresenter.php:92
 #, php-format
 msgid "Payment #%s can not be edited"
 msgstr ""
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:106
+#: ../app/Modules/EventModule/PaymentPresenter.php:107
 msgid "Payment is not allowed in this time!"
 msgstr ""
 
@@ -960,7 +959,7 @@ msgid "My payments"
 msgstr ""
 
 #: ../app/Modules/CoreModule/MyApplicationsPresenter.php:28
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:27
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:29
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:2
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:63
 msgid "My applications"
@@ -1207,7 +1206,7 @@ msgid "Passive organiser"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:23
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:32
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:34
 msgid "Organiser"
 msgstr ""
 
@@ -1390,23 +1389,23 @@ msgstr ""
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:220
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:218
 msgid "High-school students A"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:222
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:220
 msgid "High-school students B"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:224
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:222
 msgid "High-school students C"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:226
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:224
 msgid "Abroad high-school students"
 msgstr ""
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:228
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:226
 msgid "Open"
 msgstr "Open"
 
@@ -1719,7 +1718,7 @@ msgstr ""
 msgid "Contest org"
 msgstr ""
 
-#: ../app/Models/ValuePrinters/HashPrinter.php:12
+#: ../app/Models/ValuePrinters/HashPrinter.php:16
 msgid "Is set"
 msgstr ""
 
@@ -1813,11 +1812,11 @@ msgstr ""
 msgid "Access denied"
 msgstr ""
 
-#: ../app/Models/Transitions/Machine/Machine.php:131
+#: ../app/Models/Transitions/Machine/Machine.php:132
 msgid "Prechod sa nedá vykonať"
 msgstr "Transition cannot be done"
 
-#: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:32
+#: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:26
 #, php-format
 msgid "Transition from %s to %s is unavailable for %s"
 msgstr ""
@@ -2436,7 +2435,7 @@ msgstr ""
 msgid "Save payment"
 msgstr ""
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:91
+#: ../app/Components/EntityForms/PaymentFormComponent.php:92
 msgid "Please select currency"
 msgstr ""
 
@@ -2509,7 +2508,7 @@ msgid "Metadata"
 msgstr ""
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:102
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:91
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:84
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:33
 msgid "Execute"
 msgstr ""
@@ -2549,19 +2548,19 @@ msgstr ""
 msgid "Default value"
 msgstr ""
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:37
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 msgid "Product has been updated."
 msgstr ""
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:37
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 msgid "Product has been created."
 msgstr ""
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:62
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:81
 msgid "Producer"
 msgstr ""
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:74
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:82
 msgid "URL"
 msgstr ""
 
@@ -2738,11 +2737,7 @@ msgstr ""
 msgid "There was an error during the task deletion."
 msgstr ""
 
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:130
-msgid "Permission denied"
-msgstr ""
-
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:202
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:172
 msgid "Parameter %label is numeric."
 msgstr ""
 
@@ -3021,23 +3016,19 @@ msgid "Select items"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:21
-#: ../app/config/payment.neon.neon2php:95
-#: ../app/config/payment.neon.neon2php:118
-#: ../app/config/payment.neon.neon2php:141
-msgid "Confirm payment"
+#: ../app/config/payment.neon.neon2php:138
+msgid "Generate payment"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:25
-#: ../app/config/payment.neon.neon2php:155
 msgid "Payment received"
-msgstr "Platba přijata"
+msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:30
 msgid "Payment info"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:39
-#, fuzzy
 msgid "Person information"
 msgstr ""
 
@@ -3125,6 +3116,10 @@ msgid "This page is no longer available and will not be available again."
 msgstr ""
 
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:5
+msgid "Fast links"
+msgstr ""
+
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:7
 msgid "Contestant"
 msgstr ""
 
@@ -3377,15 +3372,20 @@ msgstr ""
 msgid "SWIFT"
 msgstr ""
 
-#: ../app/config/payment.neon.neon2php:103
-#: ../app/config/payment.neon.neon2php:126
-#: ../app/config/payment.neon.neon2php:149
+#: ../app/config/payment.neon.neon2php:92
+#: ../app/config/payment.neon.neon2php:115
+msgid "Confirm payment"
+msgstr ""
+
+#: ../app/config/payment.neon.neon2php:100
+#: ../app/config/payment.neon.neon2php:123
+#: ../app/config/payment.neon.neon2php:146
 msgid "Cancel payment"
 msgstr ""
 
-#: ../app/config/payment.neon.neon2php:107
-#: ../app/config/payment.neon.neon2php:130
-#: ../app/config/payment.neon.neon2php:153
+#: ../app/config/payment.neon.neon2php:104
+#: ../app/config/payment.neon.neon2php:127
+#: ../app/config/payment.neon.neon2php:150
 msgid "Paid"
 msgstr ""
 

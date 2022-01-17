@@ -135,13 +135,13 @@ transitions:
                 label: _('Create')
                 #condition: FKSDB\Transitions\Statements\Conditions\DateBetween('2022-01-17', '2022-02-10')
             new->waiting:
-                label: _('Confirm payment')
+                label: _('Generate payment')
                 behaviorType: success
                 beforeExecute:
                     - @fyziklani16payment.symbolGenerator
                     - @fyziklaniPayment.priceCalculator
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/create',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender': 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': New payment,])
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/create',['blind_carbon_copy': vercah@fykos.cz,'sender': 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': New payment,])
             new|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
@@ -149,4 +149,4 @@ transitions:
                 behaviorType: success
                 label: _('Paid')
                 afterExecute:
-                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': Payment received,])
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2022/payment/receive',['blind_carbon_copy': vercah@fykos.cz,'sender' : 'FYKOSí Fyziklání <fyziklani@fykos.cz>','subject': Payment received,])
