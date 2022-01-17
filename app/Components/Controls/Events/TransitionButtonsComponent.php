@@ -15,7 +15,6 @@ class TransitionButtonsComponent extends BaseComponent
 {
 
     private ApplicationHandler $handler;
-
     private Holder $holder;
 
     public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)

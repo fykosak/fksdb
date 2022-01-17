@@ -51,9 +51,9 @@ abstract class BasePresenter extends AuthenticatedPresenter
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool
+    public function isAllowed($resource, ?string $privilege): bool
     {
-        return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -119,16 +119,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
         return in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
     }
 
-    /**
-     * @param Resource|string|null $resource
-     * Standard ACL from acl.neon
-     * @throws EventNotFoundException
-     */
-    protected function isContestsOrgAuthorized($resource, ?string $privilege): bool
-    {
-        return $this->eventAuthorizator->isContestOrgAllowed($resource, $privilege, $this->getEvent());
-    }
-
     /* ********************** GUI ************************ */
 
     /**
@@ -147,10 +137,10 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function beforeRender(): void
     {
-        $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
+        $this->getPageStyleContainer()->styleIds[] = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $this->getPageStyleContainer()->setNavBarClassName('bg-fyziklani navbar-dark');
+                $this->getPageStyleContainer()->setNavBarClassName('bg-fof navbar-dark');
                 $this->getPageStyleContainer()->setNavBrandPath('/images/logo/white.svg');
                 break;
             case 9:

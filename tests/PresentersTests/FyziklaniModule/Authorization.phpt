@@ -6,36 +6,28 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\DbNames;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class Authorization extends FyziklaniTestCase
 {
-    use MockApplicationTrait;
-
-    private int $perPerson;
-    private int $perOrg;
-    private int $perOrgOther;
-    private int $perContestant;
-    private int $submitId;
-
-    /**
-     * AuthorizationTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
+    private ModelPerson $perPerson;
+    private ModelPerson $perOrg;
+    private ModelPerson $perOrgOther;
+    private ModelPerson $perContestant;
+    private ModelFyziklaniSubmit $submit;
 
     protected function setUp(): void
     {
@@ -48,60 +40,54 @@ class Authorization extends FyziklaniTestCase
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
+        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+            ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
+        );
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->insert(
-            DbNames::TAB_ORG,
+        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->insert(
-            DbNames::TAB_CONTESTANT_BASE,
+        $this->getContainer()->getByType(ServiceContestant::class)->createNewModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
         );
 
-        $this->eventId = $this->createEvent([]);
-        $taskId = $this->insert('fyziklani_task', [
-            'event_id' => $this->eventId,
+        $this->event = $this->createEvent([]);
+        $task = $this->getContainer()->getByType(ServiceFyziklaniTask::class)->createNewModel([
+            'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
 
-        $teamId = $this->insert('e_fyziklani_team', [
-            'event_id' => $this->eventId,
+        $team = $this->getContainer()->getByType(ServiceFyziklaniTeam::class)->createNewModel([
+            'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submitId = $this->insert('fyziklani_submit', [
-            'fyziklani_task_id' => $taskId,
-            'e_fyziklani_team_id' => $teamId,
+        $this->submit = $this->getContainer()->getByType(ServiceFyziklaniSubmit::class)->createNewModel([
+            'fyziklani_task_id' => $task->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
             'points' => 5,
         ]);
 
         $this->mockApplication();
     }
 
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE]);
-        parent::tearDown();
-    }
-
     public function getTestData(): array
     {
         return [
-            [null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perPerson', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perOrg', 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
-            ['perOrgOther', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
-            ['perContestant', 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => null, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perPerson, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perOrg, 'Fyziklani:Submit', ['create', 'list'], true], # TODO 'edit',
+            [fn() => $this->perOrgOther, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
+            [fn() => $this->perContestant, 'Fyziklani:Submit', ['create', 'edit', 'list'], false],
         ];
     }
 
@@ -111,9 +97,9 @@ class Authorization extends FyziklaniTestCase
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
-            'eventId' => (string)$this->eventId,
+            'eventId' => (string)$this->event->event_id,
             'action' => $action,
-            'id' => (string)$this->submitId,
+            'id' => (string)$this->submit->fyziklani_submit_id,
         ];
 
         return new Request($presenterName, 'GET', $params);
@@ -122,7 +108,7 @@ class Authorization extends FyziklaniTestCase
     /**
      * @dataProvider getTestData
      */
-    public function testAccess(?string $personCol, string $presenterName, array $actions, bool $results): void
+    public function testAccess(callable $person, string $presenterName, array $actions, bool $results): void
     {
         if (!is_array($actions)) {
             $actions = [$actions];
@@ -131,9 +117,9 @@ class Authorization extends FyziklaniTestCase
             $results = array_fill(0, count($actions), $results);
         }
         $presenter = $this->createPresenter($presenterName);
-        if ($personCol) {
+        if ($person()) {
             /* Use indirect access because data provider is called before test set up. */
-            $this->authenticate($this->{$personCol}, $presenter);
+            $this->authenticatePerson($person(), $presenter);
         }
 
         foreach ($actions as $i => $action) {

@@ -1,19 +1,16 @@
-import {
-    fetchApi,
-    FetchApiState,
-} from 'FKSDB/Models/FrontEnd/Fetch/reducer';
+import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import { combineReducers } from 'redux';
 import {
-    FormReducer,
+    FormStateMap,
     reducer as formReducer,
 } from 'redux-form';
 
-export const app = combineReducers({
-    fetchApi,
+export const app = combineReducers<Store>({
+    fetch: fetchReducer,
     form: formReducer,
 });
 
 export interface Store {
-    fetchApi: FetchApiState;
-    form: FormReducer;
+    fetch: FetchStateMap;
+    form: FormStateMap;
 }

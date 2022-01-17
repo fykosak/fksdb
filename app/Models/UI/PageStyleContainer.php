@@ -7,18 +7,13 @@ namespace FKSDB\Models\UI;
 class PageStyleContainer
 {
 
-    public ?string $styleId;
+    public array $styleIds = [];
 
     private string $navBarClassName;
 
     private string $navBrandPath;
 
     public array $mainContainerClassNames = ['container', 'bg-white-container'];
-
-    public function __construct()
-    {
-        $this->styleId = null;
-    }
 
     public function setWidePage(): void
     {

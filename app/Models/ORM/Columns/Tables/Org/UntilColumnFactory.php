@@ -18,7 +18,7 @@ class UntilColumnFactory extends ColumnFactory {
      */
     protected function createHtmlValue(AbstractModel $model): Html {
         if (\is_null($model->until)) {
-            return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes'));
+            return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Still organizes'));
         } else {
             return (new StringPrinter())($model->until);
         }

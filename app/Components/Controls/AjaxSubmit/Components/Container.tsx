@@ -14,7 +14,7 @@ interface StateProps {
     submit: ModelSubmit;
 }
 
-class UploadContainer extends React.Component<StateProps, {}> {
+class UploadContainer extends React.Component<StateProps> {
 
     public render() {
 
@@ -23,7 +23,6 @@ class UploadContainer extends React.Component<StateProps, {}> {
             <h4>{submit.name}</h4>
             <small className="text-muted">{submit.deadline}</small>
         </>);
-        const {} = this.props;
         return <Card headline={headline} level={'info'}>
             <MessageBox/>
             {this.getInnerContainer()}
@@ -54,7 +53,7 @@ const mapStateToProps = (state: Store): StateProps => {
         submit: {
             ...state.uploadData.submit,
         },
-        submitting: state.fetchApi.submitting,
+        submitting: state.fetch.submitting,
     };
 };
 

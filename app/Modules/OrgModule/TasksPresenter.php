@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Inbox\HandoutFormComponent;
 use FKSDB\Models\Astrid\Downloader;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\SeriesCalculator;
 use FKSDB\Models\Submits\UploadException;
 use FKSDB\Models\Tasks\PipelineFactory;
 use FKSDB\Models\Tasks\SeriesData;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
+use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\Http\FileUpload;
@@ -29,13 +34,16 @@ class TasksPresenter extends BasePresenter
 
     private PipelineFactory $pipelineFactory;
     private Downloader $downloader;
+    private SeriesTable $seriesTable;
 
     final public function injectQuarterly(
         PipelineFactory $pipelineFactory,
-        Downloader $downloader
+        Downloader $downloader,
+        SeriesTable $seriesTable
     ): void {
         $this->pipelineFactory = $pipelineFactory;
         $this->downloader = $downloader;
+        $this->seriesTable = $seriesTable;
     }
 
     public function authorizedImport(): void
@@ -43,13 +51,46 @@ class TasksPresenter extends BasePresenter
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
+    public function authorizedDispatch(): void
+    {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'dispatch', $this->getSelectedContest()));
+    }
+
     public function titleImport(): PageTitle
     {
         return new PageTitle(null, _('Task import'), 'fas fa-download');
     }
 
+    public function titleDispatch(): PageTitle
+    {
+        return new PageTitle(null, _('Handout'), 'fa fa-folder-open');
+    }
+
     /**
      * @throws BadTypeException
+     */
+    public function actionDispatch(): void
+    {
+        /** @var HandoutFormComponent $control */
+        $control = $this->getComponent('handoutForm');
+        $control->setDefaults();
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws BadRequestException
+     */
+    protected function startup(): void
+    {
+        parent::startup();
+        $this->seriesTable->setContestYear($this->getSelectedContestYear());
+        $this->seriesTable->setSeries($this->getSelectedSeries());
+    }
+
+
+    /**
+     * @throws BadTypeException
+     * TODO to separate Component
      */
     protected function createComponentSeriesForm(): FormControl
     {
@@ -80,11 +121,14 @@ class TasksPresenter extends BasePresenter
 
         $form->addSubmit('submit', _('Import'));
 
-        $form->onSuccess[] = function (Form $seriesForm) {
-            $this->validSubmitSeriesForm($seriesForm);
-        };
+        $form->onSuccess[] = fn(Form $seriesForm) => $this->validSubmitSeriesForm($seriesForm);
 
         return $control;
+    }
+
+    protected function createComponentHandoutForm(): HandoutFormComponent
+    {
+        return new HandoutFormComponent($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -114,7 +158,7 @@ class TasksPresenter extends BasePresenter
         try {
             $xml = simplexml_load_file($file);
 
-            if ($this->isLegacyXml($xml)) {
+            if ($xml->getName() === 'problems') {
                 throw new DeprecatedException();
             } else {
                 $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
@@ -122,24 +166,19 @@ class TasksPresenter extends BasePresenter
                 $pipeline->setInput($data);
                 $pipeline->run();
                 FlashMessageDump::dump($pipeline->getLogger(), $this);
-                $this->flashMessage(_('Tasks successfully imported.'), self::FLASH_SUCCESS);
+                $this->flashMessage(_('Tasks successfully imported.'), Message::LVL_SUCCESS);
             }
         } catch (PipelineException $exception) {
-            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), self::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), Message::LVL_ERROR);
             Debugger::log($exception);
         } catch (ModelException $exception) {
-            $this->flashMessage(sprintf(_('Error during import.')), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during import.'), Message::LVL_ERROR);
             Debugger::log($exception);
         } catch (DeprecatedException $exception) {
-            $this->flashMessage(_('Legacy XML format is deprecated'), self::FLASH_ERROR);
+            $this->flashMessage(_('Legacy XML format is deprecated'), Message::LVL_ERROR);
         } finally {
             unlink($file);
         }
         $this->redirect('this');
-    }
-
-    private function isLegacyXml(\SimpleXMLElement $xml): bool
-    {
-        return $xml->getName() === 'problems';
     }
 }

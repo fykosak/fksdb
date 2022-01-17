@@ -4,6 +4,8 @@
     {form recoverForm class => 'form-signin'}
         <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
         {input id class => 'last form-control', autofocus => true, placeholder => _('E-mail')}
-        {input send class => 'btn btn-lg btn-primary btn-block'}
+        <div class="d-grid gap-2">
+            {input send class => 'btn btn-lg btn-outline-primary '}
+        </div>
     {/form recoverForm}
 {/block}

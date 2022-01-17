@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\News;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Fykosak\Utils\UI\PageTitle;
 
 /**
@@ -32,9 +31,6 @@ class DashboardPresenter extends BasePresenter
         return new PageTitle(null, _('Dashboard'), 'fas fa-chalkboard');
     }
 
-    /**
-     * @throws UnsupportedLanguageException
-     */
     final public function renderDefault(): void
     {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {

@@ -79,7 +79,7 @@ class ModelPayment extends AbstractModel implements Resource
 
     public function canEdit(): bool
     {
-        return \in_array($this->state, [Machine\Machine::STATE_INIT, self::STATE_NEW]);
+        return \in_array($this->state, [Machine\AbstractMachine::STATE_INIT, self::STATE_NEW]);
     }
 
     /**

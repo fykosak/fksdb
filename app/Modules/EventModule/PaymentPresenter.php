@@ -14,6 +14,7 @@ use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Transition\PaymentMachine;
 use FKSDB\Models\Transitions\Machine;
+use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -85,10 +86,10 @@ class PaymentPresenter extends BasePresenter
      */
     public function actionEdit(): void
     {
-        if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
+        if (!$this->isAllowed($this->getEntity(), 'edit')) {
             $this->flashMessage(
                 \sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()),
-                \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR
+                Message::LVL_ERROR
             );
             $this->redirect(':Core:MyPayments:');
         }
@@ -117,7 +118,7 @@ class PaymentPresenter extends BasePresenter
      */
     private function isOrg(): bool
     {
-        return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
+        return $this->isAllowed($this->getModelResource(), 'org');
     }
 
     /**
@@ -188,7 +189,7 @@ class PaymentPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function getORMService(): ServicePayment

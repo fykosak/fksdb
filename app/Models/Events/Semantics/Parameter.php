@@ -22,7 +22,7 @@ class Parameter {
     }
 
     public function __toString(): string {
-        return "param({$this->parameter})";
+        return "param($this->parameter)";
     }
 
 }

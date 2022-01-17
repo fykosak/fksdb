@@ -38,7 +38,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedList(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
+        $this->setAuthorized($this->isAllowed('fyziklani.task', 'list'));
     }
 
     /**
@@ -46,7 +46,7 @@ class TaskPresenter extends BasePresenter
      */
     public function authorizedImport(): void
     {
-        $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
+        $this->setAuthorized($this->isAllowed('fyziklani.task', 'import'));
     }
 
     /**
@@ -68,9 +68,8 @@ class TaskPresenter extends BasePresenter
             ]
         );
         $form->addSubmit('import', _('Import'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->taskImportFormSucceeded($form);
-        };
+        $form->onSuccess[] = fn(Form $form) => $this->taskImportFormSucceeded($form);
+
         return $control;
     }
 

@@ -70,7 +70,7 @@ class PersonsGrid extends BaseGrid
 
         $this->addButton('mergeAB', _('Merge A<-B'))
             ->setText(_('Merge A<-B'))
-            ->setClass('btn btn-sm btn-primary')
+            ->setClass('btn btn-sm btn-outline-primary')
             ->setLink(fn(ModelPerson $row): string => $this->getPresenter()->link('Deduplicate:merge', [
                 'trunkId' => $row->person_id,
                 'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
@@ -91,7 +91,7 @@ class PersonsGrid extends BaseGrid
             ]));
         $this->addButton('dontMerge', _('It\'s not a duplicity'))
             ->setText(_('It\'s not a duplicity'))
-            ->setClass('btn btn-sm btn-primary')
+            ->setClass('btn btn-sm btn-outline-primary')
             ->setLink(fn(ModelPerson $row): string => $this->getPresenter()->link('Deduplicate:dontMerge', [
                 'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 'mergedId' => $row->person_id,

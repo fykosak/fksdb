@@ -70,7 +70,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'team'));
     }
 
     protected function getModelResource(): string
@@ -83,7 +83,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizeHard(): void
     {
-        $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
     }
     /* *********** ACTIONS **************** */
 
@@ -111,7 +111,7 @@ class ClosePresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isEventOrContestOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     /**

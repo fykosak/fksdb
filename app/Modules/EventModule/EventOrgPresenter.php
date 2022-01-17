@@ -64,7 +64,7 @@ class EventOrgPresenter extends BasePresenter
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
-            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during deleting'), Message::LVL_ERROR);
             $this->redirect('list');
         }
     }
@@ -75,7 +75,7 @@ class EventOrgPresenter extends BasePresenter
      */
     protected function traitIsAuthorized($resource, ?string $privilege): bool
     {
-        return $this->isContestsOrgAuthorized($resource, $privilege);
+        return $this->isAllowed($resource, $privilege);
     }
 
     protected function getORMService(): ServiceEventOrg

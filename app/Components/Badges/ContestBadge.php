@@ -23,9 +23,9 @@ class ContestBadge extends Badge
         $component = Html::el('span');
         switch ($contestId) {
             case ModelContest::ID_FYKOS:
-                return $component->addAttributes(['class' => 'badge badge-fykos'])->addText(_('FYKOS'));
+                return $component->addAttributes(['class' => 'badge bg-fykos'])->addText(_('FYKOS'));
             case ModelContest::ID_VYFUK:
-                return $component->addAttributes(['class' => 'badge badge-vyfuk'])->addText(_('Výfuk'));
+                return $component->addAttributes(['class' => 'badge bg-vyfuk'])->addText(_('Výfuk'));
         }
         throw new ContestNotFoundException($contestId);
     }

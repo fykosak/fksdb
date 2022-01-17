@@ -1,5 +1,8 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from 'FKSDB/Models/FrontEnd/Fetch/actions';
-import { Response2 } from 'FKSDB/Models/FrontEnd/Fetch/interfaces';
+import {
+    ACTION_FETCH_SUCCESS,
+    ActionFetchSuccess,
+} from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
+import { DataResponse } from 'vendor/fykosak/nette-frontend-component/src/Responses/response';
 import { ACTION_DROP_ITEM, ActionDropItem } from 'FKSDB/Models/FrontEnd/shared/dragndrop';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import {
@@ -18,7 +21,7 @@ export interface State {
     updatedTeams: number[];
 }
 
-function routeTeam(state: State, action: ActionDropItem<DragNDropData>): State {
+const routeTeam = (state: State, action: ActionDropItem<DragNDropData>): State => {
     const {teamId, place: {x, y, roomId}} = action.data;
     const newTeams = state.availableTeams.map((team) => {
         if (team.teamId !== teamId) {
@@ -64,7 +67,7 @@ const removePlace = (state: State, action: ActionRemoveTeamPlace): State => {
     };
 };
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<ResponseData>>): State => {
     return {
         ...state,
         updatedTeams: action.data.data.updatedTeams,

@@ -9,6 +9,7 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
@@ -57,9 +58,10 @@ class Holder
     public function setPrimaryHolder(string $name): void
     {
         $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
-            return $baseHolder !== $this->primaryHolder;
-        });
+        $this->secondaryBaseHolders = array_filter(
+            $this->baseHolders,
+            fn(BaseHolder $baseHolder): bool => $baseHolder !== $this->primaryHolder
+        );
     }
 
     public function getPrimaryHolder(): BaseHolder
@@ -145,8 +147,8 @@ class Holder
         /*
          * When deleting, first delete children, then parent.
          */
-        if ($this->primaryHolder->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED) {
-            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
+        if ($this->primaryHolder->getModelState() == AbstractMachine::STATE_TERMINATED) {
+            foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $baseHolder->saveModel();
             }
             $this->primaryHolder->saveModel();
@@ -167,7 +169,7 @@ class Holder
                 );
             }
 
-            foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
+            foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $baseHolder->saveModel();
             }
         }

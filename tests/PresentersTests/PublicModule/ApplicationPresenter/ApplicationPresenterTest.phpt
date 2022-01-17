@@ -8,7 +8,9 @@ $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -21,9 +23,9 @@ class ApplicationPresenterTest extends EventTestCase
 
     private IPresenter $fixture;
 
-    protected function getEventId(): int
+    protected function getEvent(): ModelEvent
     {
-        return 0;
+        throw new BadRequestException();
     }
 
     protected function setUp(): void
@@ -47,17 +49,17 @@ class ApplicationPresenterTest extends EventTestCase
 
     public function test404Application(): void
     {
-        $eventId = $this->createEvent([
+        $event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 19,
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
         ]);
-        Assert::exception(function () use ($eventId): void {
+        Assert::exception(function () use ($event): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'en',
                 'id' => 666,
-                'eventId' => $eventId,
+                'eventId' => $event->event_id,
                 'contestId' => 1,
                 'year' => 1,
             ]);
@@ -68,7 +70,7 @@ class ApplicationPresenterTest extends EventTestCase
 
     public function testClosed(): void
     {
-        $eventId = $this->createEvent([
+        $event = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
@@ -79,7 +81,7 @@ class ApplicationPresenterTest extends EventTestCase
             'lang' => 'en',
             'contestId' => 1,
             'year' => 1,
-            'eventId' => $eventId,
+            'eventId' => $event->event_id,
         ]);
 
         $response = $this->fixture->run($request);

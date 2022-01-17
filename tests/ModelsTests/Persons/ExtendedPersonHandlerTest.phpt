@@ -9,12 +9,10 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -24,21 +22,14 @@ use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase
 {
-    use MockApplicationTrait;
-
     private ExtendedPersonHandler $fixture;
     private ReferencedPersonFactory $referencedPersonFactory;
     private ModelContestYear $contestYear;
 
-    /**
-     * ExtendedPersonHandlerTest constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->setContainer($container);
-        $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
+        $this->referencedPersonFactory = $this->getContainer()->getByType(ReferencedPersonFactory::class);
     }
 
     protected function setUp(): void
@@ -48,17 +39,10 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
 
         $service = $this->getContainer()->getByType(ServiceContestant::class);
-        $this->contestYear = $this->container->getByType(ServiceContest::class)
+        $this->contestYear = $this->getContainer()->getByType(ServiceContest::class)
             ->findByPrimary(ModelContest::ID_FYKOS)
             ->getContestYear(1);
         $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');
-    }
-
-    protected function tearDown(): void
-    {
-        $this->truncateTables([DbNames::TAB_CONTESTANT_BASE, DbNames::TAB_AUTH_TOKEN, DbNames::TAB_LOGIN]);
-
-        parent::tearDown();
     }
 
     public function testNewPerson(): void
@@ -119,7 +103,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
                         ],
                         'person_history' => [
                             'school_id__meta' => "JS",
-                            'school_id' => "1",
+                            'school_id' => (string)$this->genericSchool->school_id,
                             'study_year' => "2",
                             'class' => "2.F",
                         ],
@@ -149,8 +133,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $person = $this->fixture->getPerson();
         Assert::same('Jana', $person->other_name);
         Assert::same('Triková', $person->family_name);
-
-        $contestants = $person->getContestants(ModelContest::ID_FYKOS);
+        $contestants = $person->getContestants($this->contestYear->getContest());
         Assert::same(1, count($contestants));
 
         $info = $person->getInfo();

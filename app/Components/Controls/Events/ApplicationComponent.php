@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\DI\Container;
@@ -29,7 +31,7 @@ class ApplicationComponent extends BaseComponent
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
     private string $templateFile;
-    private ContestAuthorizator $contestAuthorizator;
+    private EventAuthorizator $eventAuthorizator;
 
     public function __construct(Container $container, ApplicationHandler $handler, Holder $holder)
     {
@@ -38,9 +40,9 @@ class ApplicationComponent extends BaseComponent
         $this->holder = $holder;
     }
 
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator): void
+    public function injectContestAuthorizator(EventAuthorizator $eventAuthorizator): void
     {
-        $this->contestAuthorizator = $contestAuthorizator;
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     /**
@@ -66,7 +68,7 @@ class ApplicationComponent extends BaseComponent
     public function isEventAdmin(): bool
     {
         $event = $this->holder->getPrimaryHolder()->getEvent();
-        return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
+        return $this->eventAuthorizator->isAllowed($event, 'application', $event);
     }
 
     final public function render(): void
@@ -139,13 +141,9 @@ class ApplicationComponent extends BaseComponent
             };
 
             if ($transition->isCreating()) {
-                if ($transitionSubmit !== false) {
-                    $transitionSubmit = $submit;
-                } elseif ($transitionSubmit) {
-                    $transitionSubmit = false; // if there is more than one submit set no one
-                }
+                $transitionSubmit = $submit;
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-outline-' . $transition->getBehaviorType()]);
         }
 
         /*
@@ -153,10 +151,8 @@ class ApplicationComponent extends BaseComponent
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(null);
-        $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
-        $submit->onClick[] = function (): void {
-            $this->finalRedirect();
-        };
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-outline-warning']);
+        $submit->onClick[] = fn() => $this->finalRedirect();
 
         /*
          * Custom adjustments
@@ -187,7 +183,7 @@ class ApplicationComponent extends BaseComponent
     private function canEdit(): bool
     {
         return $this->holder->getPrimaryHolder()->getModelState()
-            != Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+            != AbstractMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     private function finalRedirect(): void

@@ -25,13 +25,10 @@ use FKSDB\Models\ORM\Services\ServicePostContact;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Database\Table\ActiveRow;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use Nette\Utils\ArrayHash;
 
 class ReferencedPersonHandler implements ReferencedHandler
 {
-
     use SmartObject;
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
@@ -99,11 +96,10 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function createFromValues(ArrayHash $values): ModelPerson
+    public function createFromValues(array $values): ModelPerson
     {
-        $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
-        $person = $this->servicePerson->findByEmail($email);
-        $person = $this->storePerson($person, (array)$values);
+        $person = $this->findBySecondaryKey($values['person_info']['email'] ?? null);
+        $person = $this->storePerson($person, $values);
         $this->store($person, $values);
         return $person;
     }
@@ -116,7 +112,7 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function update(ActiveRow $model, ArrayHash $values): void
+    public function update(AbstractModel $model, array $values): void
     {
         /** @var ModelPerson $model */
         $this->store($model, $values);
@@ -135,7 +131,7 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(ModelPerson &$person, ArrayHash $data): void
+    private function store(ModelPerson &$person, array $data): void
     {
         /*
          * Process data
@@ -160,15 +156,15 @@ class ReferencedPersonHandler implements ReferencedHandler
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
                 self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
             ];
-            $originalModels = \array_keys(iterator_to_array($data));
+            $originalModels = \array_keys($data);
 
             $this->prepareFlagModels($person, $data, $models);
 
             $this->preparePostContactModels($models);
             $this->resolvePostContacts($data);
 
-            $data = FormUtils::emptyStrToNull($data);
-            $data = FormUtils::removeEmptyHashes($data);
+            $data = FormUtils::emptyStrToNull($data, true);
+            $data = FormUtils::removeEmptyValues($data);
             $conflicts = $this->getConflicts($models, $data);
             if ($this->resolution === self::RESOLUTION_EXCEPTION) {
                 if (count($conflicts)) {
@@ -261,7 +257,7 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     private bool $outerTransaction = false;
 
-    private function getConflicts(array $models, ArrayHash $values): array
+    private function getConflicts(array $models, array $values): array
     {
         $conflicts = [];
         foreach ($values as $key => $value) {
@@ -304,7 +300,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {
-                if ($data[$key] instanceof ArrayHash) {
+                if (is_iterable($data[$key])) {
                     $result[$key] = $this->removeConflicts($data[$key], $value);
                 } else {
                     unset($data[$key]);
@@ -336,7 +332,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         }
     }
 
-    private function resolvePostContacts(ArrayHash $data): void
+    private function resolvePostContacts(array &$data): void
     {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             if (!isset($data[$type])) {
@@ -362,7 +358,7 @@ class ReferencedPersonHandler implements ReferencedHandler
     /**
      * @throws ModelException
      */
-    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models): void
+    private function prepareFlagModels(ModelPerson $person, array &$data, array &$models): void
     {
         if (!isset($data['person_has_flag'])) {
             return;
@@ -404,20 +400,12 @@ class ReferencedPersonHandler implements ReferencedHandler
         //else: TODO ? throw an exception?
     }
 
-    public function isSecondaryKey(string $field): bool
-    {
-        return $field == 'person_info.email';
-    }
-
     /**
      * @param mixed $key
      * @return ModelPerson|null|ActiveRow
      */
-    public function findBySecondaryKey(string $field, string $key): ?ModelPerson
+    public function findBySecondaryKey(string $key): ?ModelPerson
     {
-        if (!$this->isSecondaryKey($field)) {
-            throw new InvalidArgumentException("'$field' is not a secondary key.");
-        }
         return $this->servicePerson->findByEmail($key);
     }
 }

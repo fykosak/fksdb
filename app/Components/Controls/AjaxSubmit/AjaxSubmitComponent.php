@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Components\React\AjaxComponent;
+use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
@@ -17,7 +19,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Tracy\Debugger;
 
 class AjaxSubmitComponent extends AjaxComponent
@@ -56,23 +58,11 @@ class AjaxSubmitComponent extends AjaxComponent
     /**
      * @throws InvalidLinkException
      */
-    protected function getActions(): array
+    protected function configure(): void
     {
-        /* if ($this->getSubmit()) {
-             return [
-                 'revoke' => $this->link('revoke!'),
-                 'download' => $this->link('download!'),
-             ];
-         } else {
-             return [
-                 'upload' => $this->link('upload!'),
-             ];
-         }*/
-        return [
-            'revoke' => $this->link('revoke!'),
-            'download' => $this->link('download!'),
-            'upload' => $this->link('upload!'),
-        ];
+        $this->addAction('revoke', 'revoke!');
+        $this->addAction('download', 'download!');
+        $this->addAction('upload', 'upload!');
     }
 
     /**
@@ -100,7 +90,7 @@ class AjaxSubmitComponent extends AjaxComponent
 
             if (!$fileContainer->isOk()) {
                 $this->getLogger()->log(new Message(_('File is not Ok'), Message::LVL_ERROR));
-                $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
+                $this->sendAjaxResponse(IResponse::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
@@ -116,7 +106,12 @@ class AjaxSubmitComponent extends AjaxComponent
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()), Message::LVL_ERROR));
+            $this->getLogger()->log(
+                new Message(
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()),
+                    Message::LVL_ERROR
+                )
+            );
         } catch (ForbiddenRequestException | NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         } catch (StorageException | ModelException$exception) {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-class TotalPersonsChart extends ReactComponent implements Chart
+class TotalPersonsChart extends FrontEndComponent implements Chart
 {
 
     private ServicePerson $servicePerson;

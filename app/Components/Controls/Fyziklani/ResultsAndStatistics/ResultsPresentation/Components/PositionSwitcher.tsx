@@ -22,7 +22,7 @@ interface DispatchProps {
     onSetNewPosition(position: number, category: string): void;
 }
 
-class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
+class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
     private abortRun = false;
 
     public componentDidMount() {
@@ -64,7 +64,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps, {}> {
         if (this.abortRun) {
             return;
         }
-        this.run();
+        await this.run();
     }
 
     private getCategory(): string {

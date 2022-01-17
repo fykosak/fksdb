@@ -33,7 +33,7 @@ class ValidationPresenter extends BasePresenter
     public function authorizedDefault(): void
     {
         $this->setAuthorized(
-            $this->contestAuthorizator->isAllowedForAnyContest('person', 'validation')
+            $this->contestAuthorizator->isAllowed('person', 'validation')
         );
     }
 

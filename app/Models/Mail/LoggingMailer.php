@@ -32,7 +32,7 @@ class LoggingMailer implements Mailer {
 
     public function setLogPath(string $logPath): void {
         $this->logPath = $logPath;
-        mkdir($this->logPath, 0770, true);
+        @mkdir($this->logPath, 0770, true);
     }
 
     public function getLogging(): bool {

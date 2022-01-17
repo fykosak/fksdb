@@ -31,14 +31,14 @@ interface OwnProps {
     accessKey: 'participants' | 'teams';
 }
 
-export default class CommonChart extends React.Component<OwnProps, {}> {
+export default class CommonChart extends React.Component<OwnProps> {
 
     public render() {
         const {data, accessKey} = this.props;
 
         let minTime = 0;
         let max = 0;
-        const lineChartData: LineChartData = [];
+        const lineChartData: LineChartData<number> = [];
 
         const colorScale = scaleOrdinal(schemeCategory10);
         for (const eventId in data[accessKey]) {

@@ -16,7 +16,7 @@ interface DispatchProps {
     onSetRows(rows: number): void;
 }
 
-class RowsField extends React.Component<StateProps & DispatchProps, {}> {
+class RowsField extends React.Component<StateProps & DispatchProps> {
 
     public render() {
         const {rows, onSetRows} = this.props;

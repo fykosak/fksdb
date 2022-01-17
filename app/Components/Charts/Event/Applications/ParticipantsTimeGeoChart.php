@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
-class ParticipantsTimeGeoChart extends ReactComponent implements Chart
+class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
 {
 
     protected ModelEvent $event;

@@ -15,6 +15,7 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelData
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -26,7 +27,8 @@ use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
-class ApplicationHandler {
+class ApplicationHandler
+{
 
     public const ERROR_ROLLBACK = 'rollback';
     public const ERROR_SKIP = 'skip';
@@ -41,47 +43,57 @@ class ApplicationHandler {
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Container $container) {
+    public function __construct(ModelEvent $event, Logger $logger, Container $container)
+    {
         $this->event = $event;
         $this->logger = $logger;
         $container->callInjects($this);
     }
 
-    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void {
+    public function injectPrimary(Connection $connection, EventDispatchFactory $eventDispatchFactory): void
+    {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->connection = $connection;
     }
 
-    public function getErrorMode(): string {
+    public function getErrorMode(): string
+    {
         return $this->errorMode;
     }
 
-    public function setErrorMode(string $errorMode): void {
+    public function setErrorMode(string $errorMode): void
+    {
         $this->errorMode = $errorMode;
     }
 
-    public function getMachine(): Machine {
+    public function getMachine(): Machine
+    {
         $this->initializeMachine();
         return $this->machine;
     }
 
-    public function getLogger(): Logger {
+    public function getLogger(): Logger
+    {
         return $this->logger;
     }
 
-    final public function store(Holder $holder, ArrayHash $data): void {
+    final public function store(Holder $holder, ArrayHash $data): void
+    {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
-    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void {
+    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void
+    {
         $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
-    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void {
+    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void
+    {
         $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
-    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void {
+    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void
+    {
         $this->initializeMachine();
 
         try {
@@ -98,31 +110,63 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
+                $this->logger->log(
+                    new Message(
+                        sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        Message::LVL_SUCCESS
+                    )
+                );
             } elseif ($transition->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
-            } elseif (isset($transition)) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_INFO));
+            } else {
+                $this->logger->log(
+                    new Message(
+                        sprintf(
+                            _('State of application "%s" changed.'),
+                            (string)$holder->getPrimaryHolder()->getModel2()
+                        ),
+                        Message::LVL_INFO
+                    )
+                );
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
 
-            $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
+            $message = sprintf(
+                _('Some fields of group "%s" don\'t match an existing record.'),
+                $container->getOption('label')
+            );
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
+            $message = sprintf(
+                _('Data in group "%s" collide with an existing application.'),
+                $exception->getBaseHolder()->getLabel()
+            );
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException | UnavailableTransitionException $exception) {
+        } catch (
+        DuplicateApplicationException
+        | MachineExecutionException
+        | SubmitProcessingException
+        | FullCapacityException
+        | ExistingPaymentException
+        | UnavailableTransitionException $exception
+        ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
         }
     }
 
-    private function innerStoreAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void {
+    private function innerStoreAndExecute(
+        Holder $holder,
+        ?ArrayHash $data,
+        ?Form $form,
+        ?string $explicitTransitionName,
+        ?string $execute
+    ): void {
         $this->initializeMachine();
 
         try {
@@ -133,7 +177,9 @@ class ApplicationHandler {
             $transitions = [];
             // saved transition of baseModel/baseMachine/baseHolder/baseShit/base*
             if ($explicitTransitionName) {
-                $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
+                $transitions[$explicitMachineName] = $this->machine->getBaseMachine(
+                    $explicitMachineName
+                )->getTransition($explicitTransitionName);
             }
 
             $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
@@ -159,24 +205,53 @@ class ApplicationHandler {
 
             $this->commit();
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
-            } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
+                $this->logger->log(
+                    new Message(
+                        sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        Message::LVL_SUCCESS
+                    )
+                );
+            } elseif (
+                isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()
+            ) {
                 $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_INFO));
+                $this->logger->log(
+                    new Message(
+                        sprintf(
+                            _('State of application "%s" changed.'),
+                            (string)$holder->getPrimaryHolder()->getModel2()
+                        ),
+                        Message::LVL_INFO
+                    )
+                );
             }
-            if (($data||$form) && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()), Message::LVL_SUCCESS));
+            if (
+                ($data || $form)
+                && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())
+            ) {
+                $this->logger->log(
+                    new Message(
+                        sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel2()),
+                        Message::LVL_SUCCESS
+                    )
+                );
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
-            $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
+            $message = sprintf(
+                _('Some fields of group "%s" don\'t match an existing record.'),
+                $container->getOption('label')
+            );
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
+            $message = sprintf(
+                _('Data in group "%s" collide with an existing application.'),
+                $exception->getBaseHolder()->getLabel()
+            );
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
@@ -188,7 +263,13 @@ class ApplicationHandler {
         }
     }
 
-    private function processData(?ArrayHash $data, ?Form $form, array $transitions, Holder $holder, ?string $execute): array {
+    private function processData(
+        ?ArrayHash $data,
+        ?Form $form,
+        array $transitions,
+        Holder $holder,
+        ?string $execute
+    ): array {
         if ($form) {
             $values = FormUtils::emptyStrToNull($form->getValues());
         } else {
@@ -201,7 +282,10 @@ class ApplicationHandler {
             $newStates[$primaryName] = $values[$primaryName][BaseHolder::STATE_COLUMN];
         }
         // Find out transitions
-        $newStates = array_merge($newStates, $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form));
+        $newStates = array_merge(
+            $newStates,
+            $holder->processFormValues($values, $this->machine, $transitions, $this->logger, $form)
+        );
 
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
@@ -209,9 +293,19 @@ class ApplicationHandler {
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($state == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT && $newState == \FKSDB\Models\Transitions\Machine\Machine::STATE_TERMINATED)) {
+                } elseif (
+                    !($state == AbstractMachine::STATE_INIT
+                        && $newState == AbstractMachine::STATE_TERMINATED)
+                ) {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
-                    throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
+                    throw new MachineExecutionException(
+                        sprintf(
+                            $msg,
+                            $this->machine->getBaseMachine($name)->getStateName($state),
+                            $holder->getBaseHolder($name)->getLabel(),
+                            $this->machine->getBaseMachine($name)->getStateName($newState)
+                        )
+                    );
                 }
             }
         }
@@ -225,13 +319,15 @@ class ApplicationHandler {
         return $transitions;
     }
 
-    private function initializeMachine(): void {
+    private function initializeMachine(): void
+    {
         if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
     }
 
-    private function formRollback(?Form $form): void {
+    private function formRollback(?Form $form): void
+    {
         if ($form) {
             /** @var ReferencedId $referencedId */
             foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
@@ -241,19 +337,22 @@ class ApplicationHandler {
         $this->rollback();
     }
 
-    public function beginTransaction(): void {
+    public function beginTransaction(): void
+    {
         if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
 
-    private function rollback(): void {
+    private function rollback(): void
+    {
         if ($this->errorMode == self::ERROR_ROLLBACK) {
             $this->connection->rollBack();
         }
     }
 
-    public function commit(bool $final = false): void {
+    public function commit(bool $final = false): void
+    {
         if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
@@ -263,7 +362,8 @@ class ApplicationHandler {
      * @return never|void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(\Throwable $e): void {
+    private function reRaise(\Throwable $e): void
+    {
         throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }
