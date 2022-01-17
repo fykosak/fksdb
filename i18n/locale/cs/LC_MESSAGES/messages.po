@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-11 17:36+0100\n"
+"POT-Creation-Date: 2022-01-17 16:55+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -95,7 +95,7 @@ msgstr ""
 #: ../app/Models/ORM/Services/Exceptions/DuplicateApplicationException.php:16
 #: ../app/Models/ORM/Services/Exceptions/DuplicateOrgException.php:15
 #: ../app/Components/Forms/Containers/SearchContainer/PersonSearchContainer.php:60
-#: ../app/Components/EntityForms/PaymentFormComponent.php:82
+#: ../app/Components/EntityForms/PaymentFormComponent.php:83
 #: ../app/Components/EntityForms/ReferencedPersonTrait.php:20
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:82
 #: ../app/Components/Controls/Inbox/layout.latte.latte2php:4
@@ -313,9 +313,9 @@ msgstr "Pole osoba je vyžadováno"
 
 #: ../app/Modules/OrgModule/ExtendedPersonPresenter.php:99
 #: ../app/Components/EntityForms/EntityFormComponent.php:62
-#: ../app/config/payment.neon.neon2php:92
-#: ../app/config/payment.neon.neon2php:115
-#: ../app/config/payment.neon.neon2php:138
+#: ../app/config/payment.neon.neon2php:89
+#: ../app/config/payment.neon.neon2php:112
+#: ../app/config/payment.neon.neon2php:135
 msgid "Create"
 msgstr "Vytvořit"
 
@@ -495,7 +495,7 @@ msgid "Manual conflict resolution is necessary."
 msgstr "Je potřeba manuální vyřešení konfliktů"
 
 #: ../app/Modules/OrgModule/EventPresenter.php:33
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:51
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:53
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:90
 msgid "Events"
 msgstr "Akce"
@@ -647,7 +647,7 @@ msgstr "Najít"
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:301
 #: ../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:7
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:9
 msgid "Register"
 msgstr "Registrovat se"
 
@@ -818,31 +818,30 @@ msgstr "Osoba smazána"
 msgid "Error during deleting"
 msgstr "Chyba při mazání"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:43
-#: ../app/config/payment.neon.neon2php:147
+#: ../app/Modules/EventModule/PaymentPresenter.php:44
 msgid "New payment"
 msgstr "Nová platba"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:56
+#: ../app/Modules/EventModule/PaymentPresenter.php:57
 #, php-format
 msgid "Edit payment #%s"
 msgstr "Upravit platbu #%s"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:71
+#: ../app/Modules/EventModule/PaymentPresenter.php:72
 #, php-format
 msgid "Payment detail #%s"
 msgstr "Detail platby #%s"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:78
+#: ../app/Modules/EventModule/PaymentPresenter.php:79
 msgid "List of payments"
 msgstr "Seznam plateb"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:91
+#: ../app/Modules/EventModule/PaymentPresenter.php:92
 #, php-format
 msgid "Payment #%s can not be edited"
 msgstr "Platba #%s nemůže být editována"
 
-#: ../app/Modules/EventModule/PaymentPresenter.php:106
+#: ../app/Modules/EventModule/PaymentPresenter.php:107
 msgid "Payment is not allowed in this time!"
 msgstr "Platba není v tuto chvíli povolena!"
 
@@ -960,7 +959,7 @@ msgid "My payments"
 msgstr "Moje platby"
 
 #: ../app/Modules/CoreModule/MyApplicationsPresenter.php:28
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:27
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:29
 #: ../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:2
 #: ../app/Modules/Core/templates/@layout.latte.latte2php:63
 msgid "My applications"
@@ -1211,7 +1210,7 @@ msgid "Passive organiser"
 msgstr "Pasivní org"
 
 #: ../app/Models/ORM/Columns/Tables/Org/OrderColumnFactory.php:23
-#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:32
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:34
 msgid "Organiser"
 msgstr "Organizátor"
 
@@ -1398,23 +1397,23 @@ msgstr "Neomezená kapacita"
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytování pro %s od %s do %s"
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:220
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:218
 msgid "High-school students A"
 msgstr "Středoškoláci A"
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:222
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:220
 msgid "High-school students B"
 msgstr "Středoškoláci B"
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:224
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:222
 msgid "High-school students C"
 msgstr "Středoškoláci B"
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:226
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:224
 msgid "Abroad high-school students"
 msgstr "Středoškoláci zahraniční"
 
-#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:228
+#: ../app/Models/ORM/Models/Fyziklani/ModelFyziklaniTeam.php:226
 msgid "Open"
 msgstr "Open"
 
@@ -1726,7 +1725,7 @@ msgstr "Účastník"
 msgid "Contest org"
 msgstr "Organizátor soutěže"
 
-#: ../app/Models/ValuePrinters/HashPrinter.php:12
+#: ../app/Models/ValuePrinters/HashPrinter.php:16
 msgid "Is set"
 msgstr "Je nastaven"
 
@@ -1820,11 +1819,11 @@ msgstr "Odevzdání neexistuje."
 msgid "Access denied"
 msgstr "Přístup zamítnut"
 
-#: ../app/Models/Transitions/Machine/Machine.php:131
+#: ../app/Models/Transitions/Machine/Machine.php:132
 msgid "Prechod sa nedá vykonať"
 msgstr "Přechod není možné vykonat"
 
-#: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:32
+#: ../app/Models/Transitions/Transition/UnavailableTransitionException.php:26
 #, php-format
 msgid "Transition from %s to %s is unavailable for %s"
 msgstr "Přechod z %s do %s není dostupný pro %s"
@@ -2447,7 +2446,7 @@ msgstr "Pokračuj na souhrn"
 msgid "Save payment"
 msgstr "Uložit platbu"
 
-#: ../app/Components/EntityForms/PaymentFormComponent.php:91
+#: ../app/Components/EntityForms/PaymentFormComponent.php:92
 msgid "Please select currency"
 msgstr "Vyberte měnu"
 
@@ -2520,7 +2519,7 @@ msgid "Metadata"
 msgstr "Metadata"
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:102
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:91
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:84
 #: ../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:33
 msgid "Execute"
 msgstr "Spustit"
@@ -2563,22 +2562,22 @@ msgstr "Typ dat"
 msgid "Default value"
 msgstr "Výchozí hodnota"
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:37
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 #, fuzzy
 msgid "Product has been updated."
 msgstr "Org byl aktualizován."
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:37
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:46
 #, fuzzy
 msgid "Product has been created."
 msgstr "Osoba vytvořena"
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:62
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:81
 #, fuzzy
 msgid "Producer"
 msgstr "Výrobci"
 
-#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:74
+#: ../app/Components/EntityForms/Warehouse/ProductFormComponent.php:82
 msgid "URL"
 msgstr ""
 
@@ -2756,11 +2755,7 @@ msgstr "Odevzdání úlohy %s zrušeno."
 msgid "There was an error during the task deletion."
 msgstr "Během mazání úlohy došlo k chybě."
 
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:130
-msgid "Permission denied"
-msgstr "Přístup zamítnut"
-
-#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:202
+#: ../app/Components/Controls/StoredQuery/ResultsComponent.php:172
 msgid "Parameter %label is numeric."
 msgstr "Parametr %label je numerický"
 
@@ -3039,14 +3034,11 @@ msgid "Select items"
 msgstr "Vybrat položky"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:21
-#: ../app/config/payment.neon.neon2php:95
-#: ../app/config/payment.neon.neon2php:118
-#: ../app/config/payment.neon.neon2php:141
-msgid "Confirm payment"
-msgstr "Potvrzení výběru položek"
+#: ../app/config/payment.neon.neon2php:138
+msgid "Generate payment"
+msgstr "Vygenerovat platbu"
 
 #: ../app/Modules/EventModule/templates/Payment/detail.latte.latte2php:25
-#: ../app/config/payment.neon.neon2php:155
 msgid "Payment received"
 msgstr "Platba přijata"
 
@@ -3142,6 +3134,10 @@ msgid "This page is no longer available and will not be available again."
 msgstr "Tato stránka již není dostupná a už nikdy nebude"
 
 #: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:5
+msgid "Fast links"
+msgstr ""
+
+#: ../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:7
 msgid "Contestant"
 msgstr "Soutěžící"
 
@@ -3395,15 +3391,20 @@ msgstr "IBAN"
 msgid "SWIFT"
 msgstr "SWIFT"
 
-#: ../app/config/payment.neon.neon2php:103
-#: ../app/config/payment.neon.neon2php:126
-#: ../app/config/payment.neon.neon2php:149
+#: ../app/config/payment.neon.neon2php:92
+#: ../app/config/payment.neon.neon2php:115
+msgid "Confirm payment"
+msgstr "Potvrdit platbu"
+
+#: ../app/config/payment.neon.neon2php:100
+#: ../app/config/payment.neon.neon2php:123
+#: ../app/config/payment.neon.neon2php:146
 msgid "Cancel payment"
 msgstr "Zrušit platbu"
 
-#: ../app/config/payment.neon.neon2php:107
-#: ../app/config/payment.neon.neon2php:130
-#: ../app/config/payment.neon.neon2php:153
+#: ../app/config/payment.neon.neon2php:104
+#: ../app/config/payment.neon.neon2php:127
+#: ../app/config/payment.neon.neon2php:150
 msgid "Paid"
 msgstr "Zaplaceno"
 
@@ -4567,29 +4568,24 @@ msgid "What t-shirt size do you wear?"
 msgstr "Jakou velikost trička nosíš?"
 
 #: ../data/events/fol/fol.default.neon.neon2php:13
-#, fuzzy
 msgid "1st member"
-msgstr "Smazat člena"
+msgstr "První člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:17
-#, fuzzy
 msgid "2nd member"
-msgstr "Přidat člena"
+msgstr "Druhý člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:20
-#, fuzzy
 msgid "3rd member"
-msgstr "Přidat člena"
+msgstr "Třetí člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:23
-#, fuzzy
 msgid "4th member"
-msgstr "Smazat člena"
+msgstr "Čtvrtý člen"
 
 #: ../data/events/fol/fol.default.neon.neon2php:26
-#, fuzzy
 msgid "5th member"
-msgstr "Smazat člena"
+msgstr "Pátý člen"
 
 #: ../data/events/fol/fol1.neon.neon2php:18
 #: ../data/events/fol/fol1.neon.neon2php:29
@@ -5398,6 +5394,9 @@ msgstr "Načítání"
 #: ../app/Components/Controls/AjaxSubmit/Components/Container.tsx.tsx2php:41
 msgid "Pro vyplnění kvízu použijte starý systém nahrávání."
 msgstr ""
+
+#~ msgid "Permission denied"
+#~ msgstr "Přístup zamítnut"
 
 #~ msgid "Sum"
 #~ msgstr "Součet"
