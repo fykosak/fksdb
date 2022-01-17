@@ -135,10 +135,10 @@ transitions:
         transitions:
             __init->new:
                 label: _('Create')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-17', '2022-02-10')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-18', '2022-02-10')
             new->waiting:
                 label: _('Generate payment')
-                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-17', '2022-02-10')
+                condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-18', '2022-02-10')
                 behaviorType: success
                 beforeExecute:
                     - @fyziklani16payment.symbolGenerator
