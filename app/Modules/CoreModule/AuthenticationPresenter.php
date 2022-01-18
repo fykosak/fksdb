@@ -6,6 +6,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Authentication\AccountManager;
+use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\Authentication\GoogleAuthenticator;
@@ -255,7 +256,13 @@ final class AuthenticationPresenter extends BasePresenter
             $values = $form->getValues();
 
             $connection->beginTransaction();
-            $login = $this->passwordAuthenticator->findLogin($values['id']);
+            try {
+                $login = $this->passwordAuthenticator->findLogin($values['id']);
+            } catch (NoLoginException $exception) {
+                $person = $this->passwordAuthenticator->findPersonByEmail($values['id']);
+                $login = $this->accountManager->createLogin($person);
+            }
+
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?? $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
             $this->flashMessage(

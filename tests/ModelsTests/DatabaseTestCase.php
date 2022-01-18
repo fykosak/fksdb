@@ -144,11 +144,9 @@ abstract class DatabaseTestCase extends TestCase
             ];
             $loginData = array_merge($data, $loginData);
 
-            $this->getContainer()->getByType(ServiceLogin::class)->createNewModel($loginData);
+            $pseudoLogin = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel($loginData);
 
-            if (isset($loginData['hash'])) {
-                // TODO
-                $pseudoLogin = (object)$loginData;
+            if (isset($pseudoLogin->hash)) {
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
                 $this->explorer->query('UPDATE login SET `hash` = ? WHERE person_id = ?', $hash, $person->person_id);
             }
