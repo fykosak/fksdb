@@ -33,7 +33,8 @@ abstract class WebModel
     /**
      * @throws GoneException
      */
-    public function getResponse(\stdClass $args): \SoapVar{
+    public function getResponse(\stdClass $args): \SoapVar
+    {
         throw new GoneException();
     }
 
