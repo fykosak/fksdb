@@ -19,7 +19,6 @@ use Nette\Security\SimpleIdentity;
 
 class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler
 {
-
     private ServicePerson $servicePerson;
 
     public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson)
@@ -52,10 +51,9 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     }
 
     /**
-     * @throws InactiveLoginException
      * @throws NoLoginException
      */
-    public function findByEmail(string $id): ?ModelLogin
+    private function findByEmail(string $id): ?ModelLogin
     {
         $person = $this->servicePerson->findByEmail($id);
         if (!$person) {
@@ -63,7 +61,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
         }
         $login = $person->getLogin();
         if ($login) {
-            $this->checkLogin($login);
             return $login;
         }
         throw new NoLoginException();
@@ -76,23 +73,19 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      */
     public function findLogin(string $id): ?ModelLogin
     {
-        $login = $this->findByEmail($id);
-        if ($login) {
-            return $login;
-        }
-        return $this->findByLogin($id);
+        $login = $this->findByEmail($id) ?? $this->findByLogin($id);
+        $this->checkLogin($login);
+        return $login;
     }
 
     /**
-     * @throws InactiveLoginException
      * @throws UnknownLoginException
      */
-    private function findByLogin(string $id): ?ModelLogin
+    private function findByLogin(string $id): ModelLogin
     {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
         if ($login) {
-            $this->checkLogin($login);
             return $login;
         }
         throw new UnknownLoginException();
