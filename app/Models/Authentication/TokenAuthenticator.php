@@ -102,5 +102,4 @@ class TokenAuthenticator extends AbstractAuthenticator
         $section->type = $token->type;
         $section->data = $token->data;
     }
-
 }
