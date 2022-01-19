@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use Nette\Schema\Elements\Structure;
@@ -17,14 +16,6 @@ class PaymentListWebModel extends WebModel
     public function injectService(ServicePayment $servicePayment): void
     {
         $this->servicePayment = $servicePayment;
-    }
-
-    /**
-     * @throws GoneException
-     */
-    public function getResponse(\stdClass $args): \SoapVar
-    {
-        throw new GoneException();
     }
 
     public function getJsonResponse(array $params): array

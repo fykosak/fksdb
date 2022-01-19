@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\ORM\Models\ModelLogin;
@@ -16,15 +18,20 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
 
     protected ServiceLogin $serviceLogin;
 
-    public function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin)
+    {
         $this->serviceLogin = $serviceLogin;
     }
 
     /**
      * @throws \Exception
      */
-    protected function logAuthentication(ModelLogin $login): void {
-        Debugger::log(sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()), 'auth-log');
+    protected function logAuthentication(ModelLogin $login): void
+    {
+        Debugger::log(
+            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()),
+            'auth-log'
+        );
         $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

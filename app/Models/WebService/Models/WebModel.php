@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
-use Nette\Schema\Schema;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
@@ -30,7 +30,13 @@ abstract class WebModel
         $this->authenticatedLogin = $authenticatedLogin;
     }
 
-    abstract public function getResponse(\stdClass $args): \SoapVar;
+    /**
+     * @throws GoneException
+     */
+    public function getResponse(\stdClass $args): \SoapVar
+    {
+        throw new GoneException();
+    }
 
     protected function log(string $msg): void
     {
@@ -43,9 +49,12 @@ abstract class WebModel
         Debugger::log($message);
     }
 
+    /**
+     * @throws GoneException
+     */
     public function getJsonResponse(array $params): array
     {
-        return [];
+        throw new GoneException();
     }
 
     /**
