@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
@@ -13,13 +15,19 @@ use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Security\AuthenticationException;
 
-class GoogleAuthenticator extends AbstractAuthenticator {
+class GoogleAuthenticator extends AbstractAuthenticator
+{
 
     private ServiceOrg $serviceOrg;
     private AccountManager $accountManager;
     private ServicePerson $servicePerson;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, ServicePerson $servicePerson) {
+    public function __construct(
+        ServiceOrg $serviceOrg,
+        AccountManager $accountManager,
+        ServiceLogin $serviceLogin,
+        ServicePerson $servicePerson
+    ) {
         parent::__construct($serviceLogin);
         $this->serviceOrg = $serviceOrg;
         $this->accountManager = $accountManager;
@@ -32,7 +40,8 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      * @throws InactiveLoginException
      * @throws \Exception
      */
-    public function authenticate(array $user): ModelLogin {
+    public function authenticate(array $user): ModelLogin
+    {
         $person = $this->findPerson($user);
 
         if (!$person) {
@@ -53,14 +62,16 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     /**
      * @throws AuthenticationException
      */
-    private function findPerson(array $user): ?ModelPerson {
+    private function findPerson(array $user): ?ModelPerson
+    {
         if (!$user['email']) {
             throw new AuthenticationException(_('Email not found in the google account.'));
         }
         return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
     }
 
-    private function findOrg(array $user): ?ModelPerson {
+    private function findOrg(array $user): ?ModelPerson
+    {
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
             case 'fykos.cz':
@@ -73,7 +84,9 @@ class GoogleAuthenticator extends AbstractAuthenticator {
                 return null;
         }
         /** @var ModelOrg|null $org */
-        $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
+        $org = $this->serviceOrg->getTable()
+            ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
+            ->fetch();
         return $org ? $org->getPerson() : null;
     }
 }

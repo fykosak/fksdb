@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\Stats\StatsModelFactory;
 
@@ -81,12 +80,5 @@ class StatsWebModel extends WebModel
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
-    }
-    /**
-     * @throws GoneException
-     */
-    public function getJsonResponse(array $params): array
-    {
-        throw new GoneException();
     }
 }

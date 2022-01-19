@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
@@ -98,13 +96,5 @@ class ExportWebModel extends WebModel
             'execute',
             $this->serviceContest->findByPrimary($implicitParameters[StoredQueryFactory::PARAM_CONTEST])
         );
-    }
-
-    /**
-     * @throws GoneException
-     */
-    public function getJsonResponse(array $params): array
-    {
-        throw new GoneException();
     }
 }
