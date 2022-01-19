@@ -107,7 +107,7 @@ class PaymentPresenter extends BasePresenter
         if (\count($this->getMachine()->getAvailableTransitions($this->getMachine()->createHolder(null))) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
-                $this->redirect(':Core:Dashboard:default');
+                $this->redirect(':Public:Dashboard:default');
             }
         }
     }
