@@ -7,15 +7,18 @@ use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use Fykosak\NetteORM\AbstractService;
 use Nette\Database\Table\ActiveRow;
 
-class CarefulRewrite extends SecondaryModelStrategy {
+class CarefulRewrite extends SecondaryModelStrategy
+{
 
     private array $safeKeys;
 
-    public function __construct(array $safeKeys = []) {
+    public function __construct(array $safeKeys = [])
+    {
         $this->safeKeys = $safeKeys;
     }
 
-    protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void {
+    protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void
+    {
         if (count($secondaries) > 1) {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
@@ -34,7 +37,8 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param AbstractService|AbstractServiceMulti $service
      */
-    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array {
+    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array
+    {
         $foundArray = $foundModel->toArray();
         $result = [];
         foreach ($holder->data as $key => $value) {
@@ -55,7 +59,8 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param AbstractService|AbstractServiceMulti $service
      */
-    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void {
+    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void
+    {
         $data = [];
         foreach ($holder->data as $key => $value) {
             if ($key === $service->getTable()->getPrimary() || array_key_exists($key, $joinData)) {

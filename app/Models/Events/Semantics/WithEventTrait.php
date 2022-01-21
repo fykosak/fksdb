@@ -7,19 +7,22 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\ModelEvent;
 
-trait WithEventTrait {
+trait WithEventTrait
+{
 
     /**
      * @throws \InvalidArgumentException
      */
-    protected function getEvent(object $obj): ModelEvent {
+    protected function getEvent(object $obj): ModelEvent
+    {
         return $this->getHolder($obj)->primaryHolder->event;
     }
 
     /**
      * @throws \InvalidArgumentException
      */
-    protected function getHolder(object $obj): Holder {
+    protected function getHolder(object $obj): Holder
+    {
         if ($obj instanceof Holder) {
             return $obj;
         }

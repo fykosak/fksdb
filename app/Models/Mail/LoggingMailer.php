@@ -8,7 +8,8 @@ use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
 
-class LoggingMailer implements Mailer {
+class LoggingMailer implements Mailer
+{
     use SmartObject;
 
     private Mailer $mailer;
@@ -21,48 +22,58 @@ class LoggingMailer implements Mailer {
 
     private Container $container;
 
-    public function __construct(Mailer $mailer, Container $container) {
+    public function __construct(Mailer $mailer, Container $container)
+    {
         $this->mailer = $mailer;
         $this->container = $container;
     }
 
-    public function getLogPath(): string {
+    public function getLogPath(): string
+    {
         return $this->logPath;
     }
 
-    public function setLogPath(string $logPath): void {
+    public function setLogPath(string $logPath): void
+    {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
 
-    public function getLogging(): bool {
+    public function getLogging(): bool
+    {
         return $this->logging;
     }
 
-    public function setLogging(bool $logging): void {
+    public function setLogging(bool $logging): void
+    {
         $this->logging = $logging;
     }
 
     /**
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function send(Message $mail): void {
+    public function send(Message $mail): void
+    {
         try {
-            if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
+            if (
+                !$this->container->getParameters()['email']['disabled'] ?? false
+            ) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->logMessage($mail, $exception);
             throw $exception;
         }
     }
 
-    public function getSentMessages(): int {
+    public function getSentMessages(): int
+    {
         return $this->sentMessages;
     }
 
-    private function logMessage(Message $mail, ?\Exception $exception = null): void {
+    private function logMessage(Message $mail, ?\Throwable $exception = null): void
+    {
         if (!$this->logging) {
             return;
         }

@@ -4,6 +4,7 @@ namespace FKSDB\Models\Exports;
 
 use Nette\Application\Response;
 
-interface ExportFormat {
+interface ExportFormat
+{
     public function getResponse(): Response;
 }

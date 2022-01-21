@@ -36,7 +36,7 @@ class ServiceFyziklaniTeamPosition extends AbstractService
                     $model->delete();
                     $updatedTeams[] = $teamData->teamId;
                 }
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
             }
         }
         return $updatedTeams;

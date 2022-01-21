@@ -86,7 +86,8 @@ class Helpers
             } else {
                 throw new NotImplementedException();
                 /*  $rc = ClassType::from($entity);
-                  return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
+                  return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(),
+                 $arguments, function (string $type, bool $single) use ($container) {
                       return $this->getByType($type);
                   }));*/
                 // TODO!!!
