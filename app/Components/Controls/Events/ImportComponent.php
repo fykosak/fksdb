@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
@@ -14,7 +16,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Models\Utils\CSVParser;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 use Nette\Http\FileUpload;
@@ -22,9 +24,7 @@ use Tracy\Debugger;
 
 class ImportComponent extends BaseComponent
 {
-
     private SingleEventSource $source;
-
     private ApplicationHandler $handler;
 
     public function __construct(SingleEventSource $source, ApplicationHandler $handler, Container $container)
@@ -82,7 +82,7 @@ class ImportComponent extends BaseComponent
      */
     private function handleFormImport(Form $form): void
     {
-        /** @var FileUpload[] $values */
+        /** @var FileUpload[]|string[] $values */
         $values = $form->getValues();
         try {
             // process form values

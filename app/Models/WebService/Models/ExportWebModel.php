@@ -13,7 +13,6 @@ use Nette\Application\BadRequestException;
 
 class ExportWebModel extends WebModel
 {
-
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
     private ServiceContest $serviceContest;

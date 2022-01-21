@@ -29,7 +29,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
             $values['team']['category'] = $this->getCategory($participants);
         }
         // TODO hack if all study year fields are disabled
-        $model = $holder->getPrimaryHolder()->getModel2();
+        $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {

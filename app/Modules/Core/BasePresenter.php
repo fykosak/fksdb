@@ -55,7 +55,6 @@ abstract class BasePresenter extends Presenter implements
     private ?PageTitle $pageTitle;
     private bool $authorized = true;
     private array $authorizedCache = [];
-    private PageStyleContainer $pageStyleContainer;
     private Container $diContainer;
 
     public static function publicFormatActionMethod(string $action): string
@@ -134,7 +133,7 @@ abstract class BasePresenter extends Presenter implements
         if ($backLink) {
             $this->redirectUrl($backLink);
         } elseif ($need) {
-            $this->redirect(':Core:Authentication:login'); // will cause dispatch
+            $this->redirect(':Core:Authentication:login');
         }
     }
 
@@ -179,7 +178,6 @@ abstract class BasePresenter extends Presenter implements
              * Now create a mock presenter and evaluate accessibility.
              */
             $baseParams = $this->getParameters();
-            /** @var BasePresenter $testedPresenter */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 
             try {
@@ -307,8 +305,11 @@ abstract class BasePresenter extends Presenter implements
 
     final protected function getPageStyleContainer(): PageStyleContainer
     {
-        $this->pageStyleContainer = $this->pageStyleContainer ?? new PageStyleContainer();
-        return $this->pageStyleContainer;
+        static $pageStyleContainer;
+        if (!isset($pageStyleContainer)) {
+            $pageStyleContainer = new PageStyleContainer();
+        }
+        return $pageStyleContainer;
     }
 
     public function getLang(): string

@@ -1,7 +1,7 @@
 {varType FKSDB\Models\Events\Model\Holder\Holder $holder}
 {varType FKSDB\Models\Events\Machine\Machine $machine}
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $application}
-{var $state = $holder->getPrimaryHolder()->getModelState()}
+{var $state = $holder->primaryHolder->getModelState()}
 <p>
     Application state of the team <em>{$application}</em> has changed. Current state &ndash;
     <em>{$machine->getPrimaryMachine()->getStateName($state)}</em>.

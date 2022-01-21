@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
@@ -20,30 +22,36 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read ActiveRow task
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModel implements Resource {
+class ModelSubmit extends AbstractModel implements Resource
+{
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';
     public const SOURCE_QUIZ = 'quiz';
 
-    public function isEmpty(): bool {
+    public function isEmpty(): bool
+    {
         return !($this->submitted_on || $this->note);
     }
 
-    public function getTask(): ModelTask {
+    public function getTask(): ModelTask
+    {
         return ModelTask::createFromActiveRow($this->task);
     }
 
-    public function getContestant(): ModelContestant {
+    public function getContestant(): ModelContestant
+    {
         // TODO why?
         return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
-    public function getResourceId(): string {
+    public function getResourceId(): string
+    {
         return 'submit';
     }
 
-    public function getFingerprint(): string {
+    public function getFingerprint(): string
+    {
         return md5(implode(':', [
             $this->submit_id,
             $this->submitted_on,
@@ -53,7 +61,8 @@ class ModelSubmit extends AbstractModel implements Resource {
         ]));
     }
 
-    public function canRevoke(): bool {
+    public function canRevoke(): bool
+    {
         if ($this->source != self::SOURCE_UPLOAD) {
             return false;
         }
@@ -63,7 +72,8 @@ class ModelSubmit extends AbstractModel implements Resource {
         return ($now <= $deadline) && ($now >= $start);
     }
 
-    public function isQuiz(): bool {
+    public function isQuiz(): bool
+    {
         if ($this->source === self::SOURCE_QUIZ) {
             return true;
         } else {

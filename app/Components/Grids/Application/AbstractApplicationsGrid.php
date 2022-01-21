@@ -115,7 +115,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid
      */
     protected function addHolderColumns(): void
     {
-        $holderFields = $this->holder->getPrimaryHolder()->getFields();
+        $holderFields = $this->holder->primaryHolder->getFields();
         $fields = [];
         foreach ($holderFields as $name => $def) {
             if (in_array($name, $this->getHoldersColumns())) {

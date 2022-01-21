@@ -80,7 +80,8 @@ class ResultsWebModel extends WebModel
             $resultsModel = $this->resultsModelFactory->createSchoolCumulativeResultsModel($contestYear);
 
             if (!is_array($args->{'school-cumulatives'}->{'school-cumulative'})) {
-                $args->{'school-cumulatives'}->{'school-cumulative'} = [$args->{'school-cumulatives'}->{'school-cumulative'}];
+                $args->{'school-cumulatives'}->{'school-cumulative'}
+                    = [$args->{'school-cumulatives'}->{'school-cumulative'}];
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
@@ -137,8 +138,8 @@ class ResultsWebModel extends WebModel
     }
 
     /**
-     * @throws \SoapFault
      * @throws BadTypeException
+     * @throws \SoapFault
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, \DOMDocument $doc): \DOMElement
     {
@@ -163,7 +164,7 @@ class ResultsWebModel extends WebModel
     }
 
     /**
-     * @param AbstractResultsModel|BrojureResultsModel $resultsModel
+     * @param BrojureResultsModel $resultsModel
      * @throws \SoapFault
      * @throws BadTypeException
      */

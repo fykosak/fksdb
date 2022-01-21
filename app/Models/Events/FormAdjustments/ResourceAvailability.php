@@ -52,8 +52,8 @@ class ResourceAvailability extends AbstractAdjustment
     {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
-            'service' => $holder->getPrimaryHolder()->getService(),
-            'holders' => [$holder->getPrimaryHolder()],
+            'service' => $holder->primaryHolder->getService(),
+            'holders' => [$holder->primaryHolder],
         ];
 
         $services = [];
@@ -64,7 +64,7 @@ class ResourceAvailability extends AbstractAdjustment
             $field = null;
             /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
-                $name = $baseHolder->getName();
+                $name = $baseHolder->name;
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
                     if (!$foundControls) {
@@ -95,10 +95,10 @@ class ResourceAvailability extends AbstractAdjustment
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
-            $event = $firstHolder->getEvent();
+            $event = $firstHolder->event;
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
-            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
+            $table->where($firstHolder->eventIdColumn, $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }

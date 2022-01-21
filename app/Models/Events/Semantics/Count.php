@@ -16,9 +16,9 @@ class Count {
     }
 
     public function __invoke(...$args): int {
-        $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
+        $baseHolder = $this->getHolder($args[0])->primaryHolder;
         $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->getEventIdColumn(), $this->getEvent($args[0])->getPrimary());
+        $table->where($baseHolder->eventIdColumn, $this->getEvent($args[0])->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }

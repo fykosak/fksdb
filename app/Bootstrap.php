@@ -6,7 +6,6 @@ namespace FKSDB;
 
 use Nette\Configurator;
 use Nette\Utils\Finder;
-use Tracy\Debugger;
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';

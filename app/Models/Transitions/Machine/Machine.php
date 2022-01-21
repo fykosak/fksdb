@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Transitions\Machine;
 
 use Fykosak\NetteORM\AbstractModel;
@@ -80,7 +82,7 @@ abstract class Machine extends AbstractMachine
 
     /**
      * @throws UnavailableTransitionsException
-     * @throws \Exception
+     * @throws \Throwable
      */
     final public function executeTransitionById(string $id, ModelHolder $holder): void
     {
@@ -94,7 +96,7 @@ abstract class Machine extends AbstractMachine
     /**
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
-     * @throws \Exception
+     * @throws \Throwable
      */
     final public function saveAndExecuteImplicitTransition(ModelHolder $holder, array $data): void
     {
@@ -104,6 +106,7 @@ abstract class Machine extends AbstractMachine
 
     /**
      * @throws ForbiddenRequestException
+     * @throws \Throwable
      */
     final public function saveAndExecuteTransition(Transition $transition, ModelHolder $holder, array $data): void
     {
@@ -121,7 +124,7 @@ abstract class Machine extends AbstractMachine
 
     /**
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws \Throwable
      */
     private function execute(Transition $transition, ModelHolder $holder): void
     {
@@ -133,12 +136,12 @@ abstract class Machine extends AbstractMachine
         }
         try {
             $transition->callBeforeExecute($holder);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->explorer->getConnection()->rollBack();
             throw $exception;
         }
         $this->explorer->getConnection()->commit();
-        $holder->updateState($transition->getTargetState());
+        $holder->updateState($transition->targetState);
         $transition->callAfterExecute($holder);
     }
 

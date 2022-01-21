@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
+use FKSDB\Models\ORM\Models\ModelLogin;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
@@ -17,7 +18,6 @@ use Nette\Utils\Html;
 
 class EventRole extends ColumnFactory
 {
-
     private User $user;
 
     public function __construct(User $user, MetaDataFactory $metaDataFactory)
@@ -34,6 +34,7 @@ class EventRole extends ColumnFactory
         try {
             $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
         } catch (CannotAccessModelException$exception) {
+            /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
             $person = $login->getPerson();
         }

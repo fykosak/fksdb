@@ -10,6 +10,7 @@ use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\Http\IResponse;
 use Nette\OutOfRangeException;
+use Tracy\Debugger;
 
 class DefaultGenerator extends AbstractSymbolGenerator
 {
@@ -41,7 +42,8 @@ class DefaultGenerator extends AbstractSymbolGenerator
      * @throws UnsupportedCurrencyException
      * @throws \Exception
      */
-    protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array {
+    protected function createPaymentInfo(ModelPayment $modelPayment, int $variableNumber): array
+    {
         if (array_key_exists($modelPayment->getCurrency()->value, $this->info)) {
             $info = $this->info[$modelPayment->getCurrency()->value];
             $info['variable_symbol'] = $variableNumber;
@@ -57,7 +59,6 @@ class DefaultGenerator extends AbstractSymbolGenerator
      */
     protected function create(ModelPayment $modelPayment, ...$args): array
     {
-
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(
                 \sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId())

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Components\Badges\NotSetBadge;
@@ -18,23 +20,26 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
-class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
+class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
+{
 
     protected PhoneNumberFactory $phoneNumberFactory;
 
     private bool $isWriteOnly = true;
 
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory)
+    {
         $this->phoneNumberFactory = $phoneNumberFactory;
         parent::__construct($metaDataFactory);
     }
 
-    public function setWriteOnly(bool $isWriteOnly): void {
+    public function setWriteOnly(bool $isWriteOnly): void
+    {
         $this->isWriteOnly = $isWriteOnly;
     }
 
-    protected function createFormControl(...$args): BaseControl {
-        $control = null;
+    protected function createFormControl(...$args): BaseControl
+    {
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());
         } else {
@@ -53,20 +58,30 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory {
         return $control;
     }
 
-    final public function runTest(Logger $logger, AbstractModel $model): void {
+    final public function runTest(Logger $logger, AbstractModel $model): void
+    {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), Message::LVL_ERROR));
+            $logger->log(
+                new TestLog(
+                    $this->getTitle(),
+                    \sprintf('%s number (%s) is not valid', $this->getTitle(), $value),
+                    Message::LVL_ERROR
+                )
+            );
         } else {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS));
+            $logger->log(
+                new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), Message::LVL_SUCCESS)
+            );
         }
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();

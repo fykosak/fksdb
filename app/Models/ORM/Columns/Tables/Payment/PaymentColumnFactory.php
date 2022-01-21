@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
+use FKSDB\Models\ORM\Models\ModelPayment;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -13,11 +16,12 @@ use Fykosak\NetteORM\AbstractModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
-class PaymentColumnFactory extends ColumnFactory {
-
+class PaymentColumnFactory extends ColumnFactory
+{
     private ORMFactory $reflectionFactory;
 
-    public function __construct(ORMFactory $reflectionFactory, MetaDataFactory $metaDataFactory) {
+    public function __construct(ORMFactory $reflectionFactory, MetaDataFactory $metaDataFactory)
+    {
         parent::__construct($metaDataFactory);
         $this->reflectionFactory = $reflectionFactory;
     }
@@ -25,15 +29,18 @@ class PaymentColumnFactory extends ColumnFactory {
     /**
      * @throws AbstractColumnException
      */
-    protected function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl
+    {
         throw new AbstractColumnException();
     }
 
     /**
+     * @param ModelPayment $model
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);
         $text = $html->getText();
@@ -41,7 +48,8 @@ class PaymentColumnFactory extends ColumnFactory {
         return $html;
     }
 
-    protected function renderNullModel(): Html {
+    protected function renderNullModel(): Html
+    {
         return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText(_('Payment not found'));
     }
 }

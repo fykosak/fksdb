@@ -255,6 +255,7 @@ class SubmitPresenter extends BasePresenter
                 if (count($questions)) {
                     // Verification if user has event submitted any answer
                     $anySubmit = false;
+                    /** @var ModelQuiz $question */
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];

@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -44,6 +45,7 @@ class SpamPresenter extends BasePresenter
     public function authorizedDetail(): void
     {
         $authorized = true;
+        /** @var ModelContest $contest */
         foreach ($this->serviceContest->getTable() as $contest) {
             $authorized = $authorized
                 && $this->contestAuthorizator->isAllowed(

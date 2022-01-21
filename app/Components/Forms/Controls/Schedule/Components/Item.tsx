@@ -42,12 +42,12 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps> {
                 />
                     <span className="ms-3">
                         {label[translator.getCurrentLocale()]} {
-                        params.display.description && <DescriptionLabel description={description}/>
+                        params.description && <DescriptionLabel description={description}/>
                     }</span>
             </span>
             <span className="text-muted">
-                {params.display.price && <PriceLabel price={price}/>}
-                {params.display.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
+                {params.price && <PriceLabel price={price}/>}
+                {params.capacity && <CapacityLabel capacity={totalCapacity} usedCapacity={usedCapacity}/>}
             </span>
         </div>;
     }

@@ -1,0 +1,51 @@
+parameters:
+    fyziklani13payment:
+        symbolGenerator:
+            variableSymbolStart: 7292000
+            variableSymbolEnd: 7292999
+            info:
+                czk:
+                    bank_account: 38330021/0100
+                    iban: CZ91 0100 0000 0000 3833 0021
+                eur:
+                    iban: CZ93 0100 0000 4373 0978 0297
+                    swift: KOMBCZPPXXX
+
+
+services:
+    fyziklani13payment.symbolGenerator:
+        factory: FKSDB\Models\Payment\SymbolGenerator\Generators\DefaultGenerator
+        setup:
+             - setUp(%fyziklani13payment.symbolGenerator.variableSymbolStart%, %fyziklani13payment.symbolGenerator.variableSymbolEnd%, %fyziklani13payment.symbolGenerator.info%)
+    fyziklani13payment.machine:
+        factory: FKSDB\Models\Payment\Transition\PaymentMachine
+        setup:
+            - setEventId(137)
+            - setScheduleGroupTypes([accommodation])
+
+transitions:
+    fyziklani13payment:
+        machine: fyziklani13payment.machine
+        transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
+        transitions:
+            __init->new:
+                label: _('Create')
+                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
+            new->waiting:
+                label: _('Confirm payment')
+                behaviorType: success
+                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
+                beforeExecute:
+                    - @fyziklani13payment.symbolGenerator
+                    - @fyziklaniPayment.priceCalculator
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',])
+            new|waiting->canceled:
+                #condition: FKSDB\Models\Transitions\Transition\Statements\Conditions\DateBetween('2022-01-16', '2022-02-10')
+                label: _('Cancel payment')
+                behaviorType: danger
+            waiting->received:
+                behaviorType: success
+                label: _('Paid')
+                afterExecute:
+                    - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/receive',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])

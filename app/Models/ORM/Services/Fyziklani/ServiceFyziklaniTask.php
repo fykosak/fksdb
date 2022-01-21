@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 
-class ServiceFyziklaniTask extends AbstractService {
+class ServiceFyziklaniTask extends AbstractService
+{
 
-    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
+    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask
+    {
         $result = $event->getFyziklaniTasks()->where([
             'label' => $label,
         ])->fetch();
@@ -18,7 +22,8 @@ class ServiceFyziklaniTask extends AbstractService {
     /**
      * @return ModelFyziklaniTask[]
      */
-    public function serialiseTasks(ModelEvent $event, bool $hideName = false): array {
+    public function serialiseTasks(ModelEvent $event, bool $hideName = false): array
+    {
         $tasks = [];
 
         foreach ($event->getFyziklaniTasks()->order('label') as $row) {

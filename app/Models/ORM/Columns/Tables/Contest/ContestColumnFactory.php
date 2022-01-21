@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Columns\Tables\Contest;
 
 use FKSDB\Components\Badges\ContestBadge;
@@ -9,13 +11,15 @@ use Fykosak\NetteORM\AbstractModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
-class ContestColumnFactory extends ColumnFactory {
+class ContestColumnFactory extends ColumnFactory
+{
 
     /**
-     * @param AbstractModel|ModelContest $model
+     * @param ModelContest $model
      * @throws ContestNotFoundException
      */
-    protected function createHtmlValue(AbstractModel $model): Html {
+    protected function createHtmlValue(AbstractModel $model): Html
+    {
         return ContestBadge::getHtml($model);
     }
 }

@@ -383,7 +383,10 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Payment\PriceColumnFactory
                     title: _('Price')
-                 #currency:
+                 currency:
+                     type: class
+                     class: FKSDB\Models\ORM\Columns\Tables\Payment\CurrencyColumnFactory
+                     title: _('Currency')
                  state:
                      type: state
                      title: _(State)

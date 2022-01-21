@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\ORM\Tables;
 
 use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
@@ -8,11 +10,17 @@ use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
-class MultiTableSelection extends Selection {
+class MultiTableSelection extends Selection
+{
 
     private AbstractServiceMulti $service;
 
-    public function __construct(AbstractServiceMulti $service, string $table, Explorer $explorer, Conventions $conventions) {
+    public function __construct(
+        AbstractServiceMulti $service,
+        string $table,
+        Explorer $explorer,
+        Conventions $conventions
+    ) {
         parent::__construct($explorer, $conventions, $table);
         $this->service = $service;
     }
@@ -20,7 +28,8 @@ class MultiTableSelection extends Selection {
     /**
      * This override ensures returned objects are of correct class.
      */
-    protected function createRow(array $row): AbstractModelMulti {
+    protected function createRow(array $row): AbstractModelMulti
+    {
         $mainModel = $this->service->mainService->createFromArray($row);
         $joinedModel = $this->service->joinedService->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);

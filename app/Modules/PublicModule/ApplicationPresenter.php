@@ -112,7 +112,7 @@ class ApplicationPresenter extends BasePresenter
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
-            $service = $this->getHolder()->getPrimaryHolder()->getService();
+            $service = $this->getHolder()->primaryHolder->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
         }
@@ -174,10 +174,10 @@ class ApplicationPresenter extends BasePresenter
         if (
             !$this->getMachine()
                 ->getPrimaryMachine()
-                ->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())
+                ->getAvailableTransitions($this->holder, $this->getHolder()->primaryHolder->getModelState())
         ) {
             if (
-                $this->getHolder()->getPrimaryHolder()->getModelState(
+                $this->getHolder()->primaryHolder->getModelState(
                 ) == AbstractMachine::STATE_INIT
             ) {
                 $this->setView('closed');
@@ -288,7 +288,7 @@ class ApplicationPresenter extends BasePresenter
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if (
-                $this->getHolder()->getPrimaryHolder()->getModelState(
+                $this->getHolder()->primaryHolder->getModelState(
                 ) == AbstractMachine::STATE_INIT
             ) {
                 return;
