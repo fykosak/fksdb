@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting;
 
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 
-class DataTestingFactory {
+class DataTestingFactory
+{
     /** @var PersonTest[][] */
     private array $tests = [];
     private ORMFactory $tableReflectionFactory;
@@ -14,7 +17,8 @@ class DataTestingFactory {
     /**
      * @throws BadTypeException
      */
-    public function __construct( ORMFactory $tableReflectionFactory) {
+    public function __construct(ORMFactory $tableReflectionFactory)
+    {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }
@@ -22,7 +26,8 @@ class DataTestingFactory {
     /**
      * @throws BadTypeException
      */
-    private function registersTests(): void {
+    private function registersTests(): void
+    {
         $tests = [
             new Tests\ModelPerson\GenderFromBornNumberTest(),
             new Tests\ModelPerson\ParticipantsDurationTest(),
@@ -37,7 +42,8 @@ class DataTestingFactory {
     /**
      * @return PersonTest[]
      */
-    public function getTests(string $section): array {
+    public function getTests(string $section): array
+    {
         return $this->tests[$section] ?? [];
     }
 }

@@ -16,7 +16,6 @@ class FyziklaniTaskImportProcessor
 {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ModelEvent $event;
 
     public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event)

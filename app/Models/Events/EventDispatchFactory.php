@@ -10,23 +10,26 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
 
-class EventDispatchFactory {
-
+class EventDispatchFactory
+{
     private array $definitions = [];
 
     private Container $container;
 
     private string $templateDir;
 
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
-    public function setTemplateDir(string $templateDir): void {
+    public function setTemplateDir(string $templateDir): void
+    {
         $this->templateDir = $templateDir;
     }
 
-    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void {
+    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void
+    {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,
@@ -39,7 +42,8 @@ class EventDispatchFactory {
      * @throws ConfigurationNotFoundException
      * @throws MissingServiceException
      */
-    public function getEventMachine(ModelEvent $event): Machine {
+    public function getEventMachine(ModelEvent $event): Machine
+    {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
     }
@@ -47,7 +51,8 @@ class EventDispatchFactory {
     /**
      * @throws ConfigurationNotFoundException
      */
-    public function getFormLayout(ModelEvent $event): string {
+    public function getFormLayout(ModelEvent $event): string
+    {
         $definition = $this->findDefinition($event);
         return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
     }
@@ -55,7 +60,8 @@ class EventDispatchFactory {
     /**
      * @throws ConfigurationNotFoundException
      */
-    private function findDefinition(ModelEvent $event): array {
+    private function findDefinition(ModelEvent $event): array
+    {
         $key = $this->createKey($event);
         foreach ($this->definitions as $definition) {
             if (in_array($key, $definition['keys'])) {
@@ -74,7 +80,8 @@ class EventDispatchFactory {
      * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */
-    public function getDummyHolder(ModelEvent $event): Holder {
+    public function getDummyHolder(ModelEvent $event): Holder
+    {
         $definition = $this->findDefinition($event);
         /** @var Holder $holder */
         $holder = $this->container->{$definition['holderMethod']}();
@@ -82,7 +89,8 @@ class EventDispatchFactory {
         return $holder;
     }
 
-    private function createKey(ModelEvent $event): string {
+    private function createKey(ModelEvent $event): string
+    {
         return $event->event_type_id . '-' . $event->event_year;
     }
 }

@@ -183,7 +183,8 @@ class MailSender
         }
         $application = Strings::truncate((string)$application, 20);
         return $event->name . ': ' . $application;
-        //state in subject: . ' ' . mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
+        //state in subject: . ' ' .
+        // mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
     private function getUntil(ModelEvent $event): \DateTimeInterface
@@ -193,11 +194,8 @@ class MailSender
 
     private function hasBcc(): bool
     {
-        return !is_array($this->addressees) && substr(
-                $this->addressees,
-                0,
-                strlen(self::BCC_PREFIX)
-            ) == self::BCC_PREFIX;
+        return !is_array($this->addressees)
+            && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
     /**

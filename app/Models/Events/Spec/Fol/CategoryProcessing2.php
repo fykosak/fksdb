@@ -13,8 +13,13 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing2 extends AbstractCategoryProcessing
 {
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form = null): void
-    {
+    protected function innerProcess(
+        array $states,
+        ArrayHash $values,
+        Holder $holder,
+        Logger $logger,
+        ?Form $form = null
+    ): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -25,7 +30,12 @@ class CategoryProcessing2 extends AbstractCategoryProcessing
         $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Message::LVL_INFO));
+            $logger->log(
+                new Message(
+                    sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
+                    Message::LVL_INFO
+                )
+            );
         }
     }
 

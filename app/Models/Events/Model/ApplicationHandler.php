@@ -148,7 +148,7 @@ class ApplicationHandler
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->reRaise($exception);
         } catch (
-        DuplicateApplicationException
+            DuplicateApplicationException
         | MachineExecutionException
         | SubmitProcessingException
         | FullCapacityException

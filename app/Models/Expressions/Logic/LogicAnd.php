@@ -4,9 +4,11 @@ namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\VariadicExpression;
 
-class LogicAnd extends VariadicExpression {
+class LogicAnd extends VariadicExpression
+{
 
-    protected function evaluate(...$args): bool {
+    protected function evaluate(...$args): bool
+    {
         foreach ($this->arguments as $argument) {
             if (!$this->evaluateArgument($argument, ...$args)) {
                 return false;
@@ -15,7 +17,8 @@ class LogicAnd extends VariadicExpression {
         return true;
     }
 
-    protected function getInfix(): string {
+    protected function getInfix(): string
+    {
         return '&&';
     }
 }

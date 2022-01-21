@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService;
 
 use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Schema\Processor;
@@ -74,9 +75,9 @@ class WebServiceModel
     }
 
     /**
-     * @param \stdClass[] $args
-     * @throws \SoapFault
+     * @throws GoneException
      * @throws \ReflectionException
+     * @throws \SoapFault
      */
     public function __call(string $name, array $args): \SoapVar
     {
@@ -124,7 +125,10 @@ class WebServiceModel
             if (!$reflection->isSubclassOf(WebModel::class)) {
                 return null;
             }
-            return $reflection->newInstance($this->container);
+            /** @var WebModel $model */
+            $model = $reflection->newInstance($this->container);
+            $model->setLogin($this->authenticatedLogin);
+            return $model;
         }
         return null;
     }

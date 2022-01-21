@@ -10,8 +10,8 @@ use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use FKSDB\Models\Persons\SelfResolver;
 
-class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver {
-
+class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolver
+{
     use SmartObject;
 
     private Field $field;
@@ -27,25 +27,30 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
      * PersonContainerResolver constructor.
      * @param callable|bool $condition
      */
-    public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
+    public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator)
+    {
         $this->field = $field;
         $this->condition = $condition;
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
     }
 
-    public function getResolutionMode(?ModelPerson $person): string {
+    public function getResolutionMode(?ModelPerson $person): string
+    {
         if (!$person) {
             return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
         }
-        return ($this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
+        return ($this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE
+            : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(?ModelPerson $person): bool {
+    public function isModifiable(?ModelPerson $person): bool
+    {
         return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
-    public function isVisible(?ModelPerson $person): bool {
+    public function isVisible(?ModelPerson $person): bool
+    {
         return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 }
