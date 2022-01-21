@@ -4,13 +4,11 @@
 
 <p>
     {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    protože se uvolnilo místo na {$event->event_type->name} v
-    {$holder->getParameter('letterWhere')} v termínu od {$event->begin|date:'j. n.'} do {$event->end|date:'j. n. Y'}, jsi
+    protože se uvolnilo místo na {$event->event_type->name} v obci {$holder->getParameter('letterWhere')} v termínu od {$event->begin|date:'j. n.'} do {$event->end|date:'j. n. Y'}, jsi
     nyní mezi pozvanými. Gratulujeme.
 </p>
 <p>
-    Připomínáme, že stále čekáme na tvou odpověď. Pokud bys měl{if $person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
-    <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+    Připomínáme, že stále čekáme na Tvou odpověď. Pokud bys měl{if $person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
 </p>
 <p>
     Za organizátory<br>
