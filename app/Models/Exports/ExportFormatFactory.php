@@ -12,8 +12,8 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
-class ExportFormatFactory {
-
+class ExportFormatFactory
+{
     use SmartObject;
 
     /** @deprecated */
@@ -23,16 +23,17 @@ class ExportFormatFactory {
     public const CSV_QUOTE_HEAD = 'csvqh';
 
     private Container $container;
-
     private StoredQueryFactory $storedQueryFactory;
-
     private ServiceEvent $serviceEvent;
-
     private ServiceContest $serviceContest;
-
     public array $defaultFormats;
 
-    public function __construct(Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
+    public function __construct(
+        Container $container,
+        StoredQueryFactory $storedQueryFactory,
+        ServiceEvent $serviceEvent,
+        ServiceContest $serviceContest
+    ) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->serviceEvent = $serviceEvent;
@@ -47,7 +48,8 @@ class ExportFormatFactory {
     /**
      * @throws GoneException
      */
-    public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat {
+    public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat
+    {
         switch (strtolower($name)) {
             case self::AESOP:
                 throw new GoneException();
@@ -62,7 +64,11 @@ class ExportFormatFactory {
         }
     }
 
-    private function createCSV(StoredQuery $storedQuery, bool $header, bool $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+    private function createCSV(
+        StoredQuery $storedQuery,
+        bool $header,
+        bool $quote = CSVFormat::DEFAULT_QUOTE
+    ): CSVFormat {
         return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
 }

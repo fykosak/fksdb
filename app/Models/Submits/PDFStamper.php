@@ -67,7 +67,7 @@ class PDFStamper implements StorageProcessing {
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             throw new ProcessingException('Cannot add stamp to the PDF.', null, $exception);
         }
     }

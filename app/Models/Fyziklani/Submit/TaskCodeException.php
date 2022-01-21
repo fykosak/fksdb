@@ -4,6 +4,6 @@ namespace FKSDB\Models\Fyziklani\Submit;
 
 use Nette\InvalidStateException;
 
-class TaskCodeException extends InvalidStateException {
-
+class TaskCodeException extends InvalidStateException
+{
 }

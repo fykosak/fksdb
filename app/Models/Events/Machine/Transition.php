@@ -234,11 +234,10 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
          * Star matches any state but meta-states (initial and terminal)
          */
         if (
-            strpos(AbstractMachine::STATE_ANY, $stateMask) !== false || (strpos(
-                    AbstractMachine::STATE_ANY,
-                    $this->source
-                ) !== false &&
-                ($mask != AbstractMachine::STATE_INIT && $mask != AbstractMachine::STATE_TERMINATED))
+            strpos(AbstractMachine::STATE_ANY, $stateMask) !== false
+            || (strpos(AbstractMachine::STATE_ANY, $this->source) !== false
+                && ($mask != AbstractMachine::STATE_INIT
+                    && $mask != AbstractMachine::STATE_TERMINATED))
         ) {
             return true;
         }

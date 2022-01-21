@@ -9,13 +9,13 @@ use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Utils\Html;
 
-class RankingStrategy {
-
+class RankingStrategy
+{
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ModelEvent $event;
 
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam)
+    {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;
     }
@@ -24,7 +24,8 @@ class RankingStrategy {
      * @throws NotClosedTeamException
      * @internal
      */
-    public function close(?string $category = null): Html {
+    public function close(?string $category = null): Html
+    {
         $connection = $this->serviceFyziklaniTeam->explorer->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
@@ -38,11 +39,13 @@ class RankingStrategy {
     /**
      * @throws NotClosedTeamException
      */
-    public function __invoke(?string $category = null): Html {
+    public function __invoke(?string $category = null): Html
+    {
         return $this->close($category);
     }
 
-    private function saveResults(array $data, bool $total): Html {
+    private function saveResults(array $data, bool $total): Html
+    {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
             /** @var ModelFyziklaniTeam $team */
@@ -52,8 +55,14 @@ class RankingStrategy {
             } else {
                 $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
             }
-            $log->addHtml(Html::el('li')
-                ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Rank') . ': ' . ($index + 1)));
+            $log->addHtml(
+                Html::el('li')
+                    ->addText(
+                        _('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _(
+                            'Rank'
+                        ) . ': ' . ($index + 1)
+                    )
+            );
         }
         return $log;
     }
@@ -62,7 +71,8 @@ class RankingStrategy {
      * @return array[]
      * @throws NotClosedTeamException
      */
-    private function getTeamsStats(GroupedSelection $teams): array {
+    private function getTeamsStats(GroupedSelection $teams): array
+    {
         $teamsData = [];
         foreach ($teams as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
@@ -80,7 +90,8 @@ class RankingStrategy {
         return $teamsData;
     }
 
-    private static function getSortFunction(): callable {
+    private static function getSortFunction(): callable
+    {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
                 return 1;
@@ -97,7 +108,8 @@ class RankingStrategy {
         };
     }
 
-    private function getAllTeams(?string $category = null): GroupedSelection {
+    private function getAllTeams(?string $category = null): GroupedSelection
+    {
         $query = $this->event->getParticipatingTeams();
         if ($category) {
             $query->where('category', $category);
@@ -108,7 +120,8 @@ class RankingStrategy {
     /**
      * @return array[]|int[]
      */
-    protected function getAllSubmits(ModelFyziklaniTeam $team): array {
+    protected function getAllSubmits(ModelFyziklaniTeam $team): array
+    {
         $arraySubmits = [];
         $sum = 0;
         $count = 0;

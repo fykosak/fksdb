@@ -4,14 +4,16 @@ namespace FKSDB\Models\Expressions;
 
 use Nette\SmartObject;
 
-abstract class EvaluatedExpression {
+abstract class EvaluatedExpression
+{
     use SmartObject;
 
     /**
      * @param mixed $evaluated
      * @return mixed
      */
-    final protected function evaluateArgument($evaluated, ...$args) {
+    final protected function evaluateArgument($evaluated, ...$args)
+    {
         if (is_callable($evaluated)) {
             return $evaluated(...$args);
         } else {

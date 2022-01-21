@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
@@ -8,13 +10,15 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Fykosak\Utils\Logging\Message;
 
-class GenderFromBornNumberTest extends PersonTest {
-
-    public function __construct() {
+class GenderFromBornNumberTest extends PersonTest
+{
+    public function __construct()
+    {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function run(Logger $logger, ModelPerson $person): void {
+    public function run(Logger $logger, ModelPerson $person): void
+    {
         $info = $person->getInfo();
 
         if (!$info) {

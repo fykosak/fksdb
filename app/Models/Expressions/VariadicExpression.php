@@ -2,18 +2,21 @@
 
 namespace FKSDB\Models\Expressions;
 
-abstract class VariadicExpression extends EvaluatedExpression {
+abstract class VariadicExpression extends EvaluatedExpression
+{
 
     protected array $arguments;
 
-    public function __construct(...$args) {
+    public function __construct(...$args)
+    {
         $this->arguments = $args;
     }
 
     /**
      * @return mixed
      */
-    final public function __invoke(...$args) {
+    final public function __invoke(...$args)
+    {
         return $this->evaluate(...$args);
     }
 
@@ -24,7 +27,8 @@ abstract class VariadicExpression extends EvaluatedExpression {
 
     abstract protected function getInfix(): string;
 
-    public function __toString(): string {
+    public function __toString(): string
+    {
         $terms = [];
         foreach ($this->arguments as $arg) {
             $terms[] = (string)$arg;

@@ -45,5 +45,4 @@ class SecondaryModelConflictException extends \RuntimeException
     {
         return $this->conflicts;
     }
-
 }

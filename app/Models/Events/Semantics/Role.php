@@ -15,7 +15,6 @@ use Nette\SmartObject;
  */
 class Role extends EvaluatedExpression
 {
-
     use SmartObject;
     use WithEventTrait;
 
@@ -63,5 +62,4 @@ class Role extends EvaluatedExpression
     {
         return "role($this->role)";
     }
-
 }
