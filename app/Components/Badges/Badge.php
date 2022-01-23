@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Badges;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Utils\Html;
 
 abstract class Badge extends BaseComponent

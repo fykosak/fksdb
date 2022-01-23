@@ -145,7 +145,7 @@ class ExportPresenter extends BasePresenter
     protected function createComponentResultsComponent(): ResultsComponent
     {
         $control = new ResultsComponent($this->getContext());
-        $control->setStoredQuery($this->getStoredQuery());
+        $control->storedQuery = $this->getStoredQuery();
         return $control;
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Transitions;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
@@ -32,6 +32,9 @@ class TransitionButtonsComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function handleTransition(string $name): void
     {
         try {

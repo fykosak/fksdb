@@ -97,7 +97,7 @@ class StoredQueryPresenter extends BasePresenter
     {
         /** @var StoredQueryTagCloudComponent $cloud */
         $cloud = $this->getComponent('tagCloud');
-        return new StoredQueriesGrid($this->getContext(), $cloud->activeTagIds);
+        return new StoredQueriesGrid($this->getContext(), $cloud->getActiveTagIds());
     }
 
     protected function createComponentTagCloud(): StoredQueryTagCloudComponent
