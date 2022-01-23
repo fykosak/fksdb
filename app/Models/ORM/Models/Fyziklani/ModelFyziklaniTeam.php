@@ -8,11 +8,13 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
@@ -73,10 +75,10 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
-    public function getPosition(): ?ModelFyziklaniTeamPosition
+    public function getTeamSeat(): ?TeamSeatModel
     {
-        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
-        return $row ? ModelFyziklaniTeamPosition::createFromActiveRow($row) : null;
+        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'e_fyziklani_team_id')->fetch();
+        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
     }
 
     /* ******************** SUBMITS ******************************* */

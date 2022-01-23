@@ -58,7 +58,8 @@ class DbNames
     public const TAB_FYZIKLANI_GAME_SETUP = 'fyziklani_game_setup';
 
     public const TAB_FYZIKLANI_ROOM = 'fyziklani_room';
-    public const TAB_FYZIKLANI_TEAM_POSITION = 'fyziklani_team_position';
+    public const TAB_FYZIKLANI_SEAT = 'fyziklani_seat';
+    public const TAB_FYZIKLANI_TEAM_SEAT = 'fyziklani_team_seat';
 
     public const TAB_SCHEDULE_GROUP = 'schedule_group';
     public const TAB_SCHEDULE_ITEM = 'schedule_item';

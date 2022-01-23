@@ -5,25 +5,19 @@ declare(strict_types=1);
 namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
+use FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService;
+use Nette\DI\Container;
 
 abstract class SeatingPageComponent extends AbstractPageComponent
 {
-
-    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
-
-    final public function injectServicePrimary(
-        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-    ): void {
-        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-    }
 
     /**
      * @param mixed $row
      */
     public function render($row): void
     {
-        $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms());
+        $this->template->room = $this->roomModel;
     }
 
     private function getRooms(): array

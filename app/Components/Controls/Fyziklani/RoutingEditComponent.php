@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\Models\ORM\Services\Fyziklani\FyziklaniRoomService;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Nette\Application\UI\InvalidLinkException;
@@ -17,7 +17,7 @@ class RoutingEditComponent extends AjaxComponent
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    private ServiceFyziklaniRoom $serviceFyziklaniRoom;
+    private FyziklaniRoomService $serviceFyziklaniRoom;
 
     public function __construct(Container $container, string $frontendId)
     {
@@ -26,7 +26,7 @@ class RoutingEditComponent extends AjaxComponent
 
     final public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniRoom $serviceFyziklaniRoom
+        FyziklaniRoomService $serviceFyziklaniRoom
     ): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;

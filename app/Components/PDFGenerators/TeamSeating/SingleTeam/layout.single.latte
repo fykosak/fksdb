@@ -1,8 +1,9 @@
 {layout '../@layout.latte'}
 {block places}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
     {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
-    {foreach $places as $place}
+    {foreach $room->getSeats() as $row}
+        {var $seat FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
         {if $place->getTeam() && $place->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
             {include place 'place'=>$place ,'className'=>'occupied'}
             <circle
