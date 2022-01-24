@@ -1,23 +1,30 @@
 {layout '../@layout.latte'}
-{block seats}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
-    {varType FKSDB\Models\ORM\Models\ModelEvent $event}
-    {foreach $room->getSeats() as $row}
-        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
-        {var $teamSeat = $seat->getTeamSeat($event)}
-        {if $teamSeat && $teamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
-            {include seat 'seat'=>$seat ,'className'=>'occupied'}
-            <circle
-                    style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
-                    r="100"
-                    cx="{$seat->x_coordinate}"
-                    cy="{-$seat->y_coordinate}"/>
-        {else}
-            {include seat 'seat'=>$seat ,'className'=>'free'}
-        {/if}
-    {/foreach}
+{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
+{varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[][] $rests}
+{block seat}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
+    {var $teamSeat = $seat->getTeamSeat($team->getEvent())}
+    {if $teamSeat && $teamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
+        {include parent 'seat'=>$seat ,'className'=>'occupied'}
+        <circle
+                style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
+                r="100"
+                cx="{$seat->layout_x}"
+                cy="{-$seat->layout_y}"/>
+    {else}
+        {include parent 'seat'=>$seat ,'className'=>'free'}
+    {/if}
+
+
 {/block}
-{* TODO!! if count($toPay[$team->getPrimary()])}
-    <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
-{/if*}
+{block content}
+    {include parent}
+    {if count($rests)}
+        <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
+    {/if}
+    {*foreach $rests as $personRest}
+        {foreach $personRest as $rest}
+<span>{}</span>
+        {/foreach}
+    {/foreach*}
+{/block}

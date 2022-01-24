@@ -137,7 +137,10 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $toPay[] = $person->getScheduleRests($this->getEvent(), $types);
+            $rest = $person->getScheduleRests($this->getEvent(), $types);
+            if (count($rest)) {
+                $toPay[] = $rest;
+            }
         }
         return $toPay;
     }
@@ -158,7 +161,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
         return $persons;
     }
 
-    public function __toArray(bool $includePosition = false, bool $includePassword = false): array
+    public function __toArray(bool $includePassword = false): array
     {
         $data = [
             'created' => $this->created->format('c'),
@@ -171,12 +174,6 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
         ];
         if ($includePassword) {
             $data['password'] = $this->password;
-        }
-        $position = $this->getPosition();
-        if ($includePosition && $position) {
-            $data['x'] = $position->col;
-            $data['y'] = $position->row;
-            $data['roomId'] = $position->getRoom()->room_id;
         }
         return $data;
     }

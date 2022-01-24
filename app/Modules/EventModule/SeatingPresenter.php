@@ -106,7 +106,7 @@ class SeatingPresenter extends BasePresenter
     {
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit(5),
+            $this->getEvent()->getTeams()->limit(10),
             $this->getContext()
         );
     }

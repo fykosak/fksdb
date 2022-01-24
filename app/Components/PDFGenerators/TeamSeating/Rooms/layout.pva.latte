@@ -1,83 +1,10 @@
-{define seat}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
-    {default $className = 'free'}
-    <circle
-            class="{$className . ' team-position'}"
-            r="15"
-            cx="{$seat->layout_x}"
-            cy="{-$seat->layout_y}"/>
-{/define}
 {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $row}
 <div>
     <h2 style="font-size: 200%">({$row->e_fyziklani_team_id}) {$row->name}</h2>
     <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
         <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
-            {block SVGstyles}
-                <style>
-                    g.mode-single .team-id {
-                        display: none;
-                    }
-
-                    g.mode-single .seat-id, g.mode-dev .seat-id {
-                        display: none;
-                    }
-
-                    text {
-                        text-shadow: 0.5px 0.5px 0 white;
-                        text-anchor: middle;
-                    }
-
-                    .outer-walls polyline, .inner-walls polyline {
-                        fill: none;
-                        stroke: #555;
-                    }
-
-                    .outer-walls polyline {
-                        stroke-width: 7px;
-                    }
-
-                    .inner-walls polyline {
-                        stroke-width: 4px;
-                    }
-
-                    .outer-walls polygon, .inner-walls polygon {
-                        fill: #555;
-                        stroke: none;
-                    }
-
-                    .corridors polyline {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 2px;
-                        stroke-dasharray: 10 10;
-                    }
-
-                    .grid polyline {
-                        fill: none;
-                        stroke: red;
-                        stroke-width: 3px;
-                        stroke-dasharray: 10 10;
-                    }
-
-                    polygon.stage {
-                        fill: #ccc;
-                        stroke: none;
-                    }
-
-                    circle.team-position.free {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 3px;
-                        stroke-dasharray: 4 4;
-                    }
-
-                    circle.team-position.occupied {
-                        fill: black;
-                        stroke: none;
-                    }
-                </style>
-            {/block}
+            {include SVGstyles}
             <g>
                 <g class="labels">
                     <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>

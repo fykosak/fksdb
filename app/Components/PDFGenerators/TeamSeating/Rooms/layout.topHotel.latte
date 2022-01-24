@@ -1,5 +1,5 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $row}
-<div>
+{block content}
     <h2 style="font-size: 200%">({$row->e_fyziklani_team_id}) {$row->name}</h2>
     <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
         <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
@@ -20,4 +20,4 @@
     </div>
     <div style="clear: both"></div>
     <img src="{$basePath}/images/fyziklani/2020-black.png" style=" float:right;max-width: 25%"/>
-</div>
+{/block}

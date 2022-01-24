@@ -8,12 +8,11 @@ use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 class PageComponent extends SeatingPageComponent
 {
     private RoomModel $roomModel;
-    private ModelEvent $event;
+    protected ModelEvent $event;
 
     public function __construct(ModelEvent $event, RoomModel $roomModel, Container $container)
     {

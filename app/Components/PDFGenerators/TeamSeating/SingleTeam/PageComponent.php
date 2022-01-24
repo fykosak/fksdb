@@ -18,8 +18,11 @@ class PageComponent extends SeatingPageComponent
      */
     final public function render($row, array $params = []): void
     {
-        if (!$row instanceof ModelFyziklaniTeam) {
+        if (!$row instanceof ActiveRow) {
             throw new BadTypeException(ActiveRow::class, $row);
+        }
+        if (!$row instanceof ModelFyziklaniTeam) {
+            $row = ModelFyziklaniTeam::createFromActiveRow($row);
         }
         $teamSeat = $row->getTeamSeat();
         if (!$teamSeat) {
@@ -27,6 +30,7 @@ class PageComponent extends SeatingPageComponent
             return;
         }
         $this->template->team = $row;
+
         $this->template->rests = $row->getScheduleRest();
         $this->innerRender($teamSeat->getSeat()->getRoom());
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');

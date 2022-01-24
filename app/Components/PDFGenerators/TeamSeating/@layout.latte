@@ -4,7 +4,7 @@
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {default $className = 'free'}
     <circle
-            class="{$className . ' team-position'}"
+            class="{$className . ' team-seat'}"
             r="15"
             cx="{$seat->layout_x}"
             cy="{-$seat->layout_y}"/>
@@ -68,14 +68,14 @@
             stroke: none;
         }
 
-        circle.team-position.free {
+        circle.team-seat.free {
             fill: none;
             stroke: #ccc;
             stroke-width: 3px;
             stroke-dasharray: 4 4;
         }
 
-        circle.team-position.occupied {
+        circle.team-seat.occupied {
             fill: black;
             stroke: none;
         }
