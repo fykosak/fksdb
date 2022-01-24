@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\DataTesting;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\DataTesting\DataTestingFactory;
@@ -71,7 +73,7 @@ class PersonTestComponent extends BaseComponent
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->title);
+            $field = $testsContainer->addCheckbox((string)$key, $test->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
