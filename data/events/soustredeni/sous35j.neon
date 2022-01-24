@@ -8,7 +8,7 @@ events:
             notifyBcc:
                 default: vercah@fykos.cz
             notifyFrom:
-                default: <FYKOSí Soustředění> soustredeni@fykos.cz
+                default: FYKOSí Soustředění <soustredeni@fykos.cz>
             letterWhere:
                 default: Hejnice
             letterSignature:

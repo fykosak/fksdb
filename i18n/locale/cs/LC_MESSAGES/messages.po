@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-21 16:41+0100\n"
+"POT-Creation-Date: 2022-01-24 17:33+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -193,6 +193,7 @@ msgid "Print"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SpamPresenter.php:35
+#, php-format
 msgid "Detail of e-mail #%s"
 msgstr "Podrobnosti e-mailu #%s"
 
@@ -1129,7 +1130,7 @@ msgstr "Neplatný autentizační token"
 msgid "Create an account"
 msgstr "Vytvořit účet"
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:20
+#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:24
 msgid "Participate events"
 msgstr "Účasti na akcích FYKOSu"
 
@@ -1143,15 +1144,15 @@ msgid ""
 "Organization and participation at same year %d and contestId %d %s<->%s."
 msgstr "Organizování a účasti ve stejném roce %d and soutěži s ID %d %s<->%s."
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:14
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:17
 msgid "Gender from born number"
 msgstr "Pohlaví určeno z rodného čísla"
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:26
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
 msgid "Gender is not set"
 msgstr "Pohlaví není nastaveno"
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:34
 msgid "Born number is not set"
 msgstr "Rodné číslo není nastaveno"
 
@@ -1419,11 +1420,11 @@ msgstr "Open"
 msgid "%s. question"
 msgstr "%s. otázka"
 
-#: ../app/Models/Fyziklani/NotSetGameParametersException.php:10
+#: ../app/Models/Fyziklani/NotSetGameParametersException.php:13
 msgid "Game parameters not set."
 msgstr "Herní parametry nejsou nastaveny."
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:61
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:168
 #: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
@@ -1431,7 +1432,7 @@ msgstr "Herní parametry nejsou nastaveny."
 msgid "Team"
 msgstr "Tým"
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:62
 msgid "Rank"
 msgstr "Pořadí"
 
@@ -1450,22 +1451,22 @@ msgstr "Tým %s má už uzavřené bodování"
 msgid "Team %s has non checked submits"
 msgstr "Tým %s má nezkontrolovaná odevzdání"
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:48
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:47
 #, php-format
 msgid "Task %s \"%s\" added"
 msgstr "Úloha %s \"%s\" přidána."
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:56
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:55
 #, php-format
 msgid "Task %s \"%s\" updated"
 msgstr "Úloha %s \"%s\" aktualizována"
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:61
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:60
 #, php-format
 msgid "Task %s \"%s\" not updated"
 msgstr "Úloha %s \"%s\" nebyla aktualizována"
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:67
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:66
 msgid "There was an error"
 msgstr "Vyskytla se chyba"
 
@@ -1482,40 +1483,40 @@ msgstr "Neshoda v bodech"
 msgid "Submit is already revoked"
 msgstr "Odevzdání již bylo smazáno."
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:69
+#: ../app/Models/Fyziklani/Submit/Handler.php:72
 msgid "Task given and validated."
 msgstr "Úloha zadána a ověřena."
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:109
+#: ../app/Models/Fyziklani/Submit/Handler.php:117
 #, php-format
 msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Bodování bylo upravené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:134
+#: ../app/Models/Fyziklani/Submit/Handler.php:148
 #, php-format
 msgid "Submit %d has been revoked."
 msgstr "Odevzdání %d bylo smazáno."
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:160
+#: ../app/Models/Fyziklani/Submit/Handler.php:181
 #, php-format
 msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr " Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:181
+#: ../app/Models/Fyziklani/Submit/Handler.php:209
 #, php-format
 msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Bodování bylo ověřené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:54
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:62
 msgid "Code is too long"
 msgstr "Kód je příliš dlouhý"
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:69
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:78
 #, php-format
 msgid "Team %s does not exists."
 msgstr "Tým %s neexistuje"
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:83
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:93
 #, php-format
 msgid "Task %s does not exists."
 msgstr "Úloha %s neexistuje"
@@ -1534,15 +1535,15 @@ msgstr "Přeskočeno neexistující ID týmu %d."
 msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr "Tým %s (%d, %s) neodpovídá žádnému registrovanému týmu"
 
-#: ../app/Models/Exports/ExportFormatFactory.php:41
+#: ../app/Models/Exports/ExportFormatFactory.php:42
 msgid "Save CSV"
 msgstr "Uložit CSV"
 
-#: ../app/Models/Exports/ExportFormatFactory.php:42
+#: ../app/Models/Exports/ExportFormatFactory.php:43
 msgid "Save CSV (without head)"
 msgstr "Uložit CSV (bez hlavičky)"
 
-#: ../app/Models/Exports/ExportFormatFactory.php:43
+#: ../app/Models/Exports/ExportFormatFactory.php:44
 msgid "Save CSV with quotes"
 msgstr "Uložit CSV s uvozovkami"
 
@@ -1595,11 +1596,11 @@ msgstr "Neexistuje přestup ze stavu \"%s\" do stavu \"%s\""
 msgid "Error while saving the application."
 msgstr "Error při ukládání přihlášky"
 
-#: ../app/Models/Events/Model/ImportHandler.php:71
+#: ../app/Models/Events/Model/ImportHandler.php:76
 msgid "Import failed."
 msgstr "Import selhal"
 
-#: ../app/Models/Events/Model/ImportHandler.php:111
+#: ../app/Models/Events/Model/ImportHandler.php:118
 msgid "CSV does not contain correct heading."
 msgstr "CSV neobsahuje správné nadpisy"
 
@@ -1615,7 +1616,7 @@ msgstr "ukončený"
 msgid "Birthday is required field."
 msgstr "Pole narození je povinné"
 
-#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:28
+#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:30
 msgid "Set new game password."
 msgstr "Nastavit nové herní heslo"
 
@@ -1624,12 +1625,12 @@ msgid "Not valid $rulesVersion."
 msgstr "Neplatné $rulesVersion"
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:39
 #, php-format
 msgid "Team inserted to category %s."
 msgstr "Tým zařazen do kategorie %s."
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:28
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:35
 #, php-format
 msgid "Team registered for the category %s."
 msgstr "Tým zařazen do kategorie %s."
@@ -1662,7 +1663,7 @@ msgstr "Registrované týmy ze stejné školy %s."
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr "Některá pole skupiny \"%s\" neodpovídají existujícímu záznamu"
 
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:70
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:78
 msgid "Cannot determine category."
 msgstr "Nelze vyhodnotit kategorii"
 
@@ -1671,7 +1672,7 @@ msgstr "Nelze vyhodnotit kategorii"
 msgid "Only %d different schools can be represented in the team."
 msgstr "Pouze %d různé školy mohou být součástí daného týmu."
 
-#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:12
+#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:15
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:270
 msgid "Field %label is required."
 msgstr "Pole %label je vyžadováno"
@@ -1685,7 +1686,7 @@ msgstr "Před vložením musíte souhlasit s podmínkami ochrany osobních údaj
 msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr "Nelze provést akci '%s' v automatu '%s'."
 
-#: ../app/Models/Events/Exceptions/EventNotFoundException.php:10
+#: ../app/Models/Events/Exceptions/EventNotFoundException.php:13
 msgid "Event not found."
 msgstr "Akce nenalezena"
 
@@ -2541,9 +2542,10 @@ msgid "Parameter name is too long."
 msgstr "Jméno parametru je příliš dlouhé."
 
 #: ../app/Components/EntityForms/StoredQueryFormComponent.php:178
+#, fuzzy
 msgid ""
-"The name of the parameter can only contain lowercase"
-"letters of the english alphabet, numbers, and an underscore."
+"The name of the parameter can only contain lowercase \r\n"
+"                letters of the english alphabet, numbers, and an underscore."
 msgstr ""
 "Jméno parametru může obsahovat pouze malá písmena anglické abecedy, čísla a "
 "podrtžítko"
@@ -2803,6 +2805,7 @@ msgid "Corrected submit #%d is broken"
 msgstr "Opravený submit #%d je rozbitý"
 
 #: ../app/Components/Controls/Inbox/SubmitCheck/SubmitCheckComponent.php:50
+#, php-format
 msgid "Uploaded unregister corrected submit #%d"
 msgstr "Submit #%d je opravený a uploadovaný, ale opravení není registrováno"
 
@@ -5103,7 +5106,6 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:141
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:152
 msgid "Učitel/doprovod"
 msgstr ""
@@ -5174,6 +5176,10 @@ msgstr ""
 
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:150
 msgid "Jazyk, ve kterém chcete soutěžit"
+msgstr ""
+
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
+msgid "Učitel/doprovod (nepovinné)"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:7

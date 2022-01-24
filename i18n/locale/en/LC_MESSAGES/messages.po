@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-21 16:41+0100\n"
+"POT-Creation-Date: 2022-01-24 17:41+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -194,9 +194,9 @@ msgid "Print"
 msgstr ""
 
 #: ../app/Modules/OrgModule/SpamPresenter.php:35
-#, fuzzy, php-format
+#, php-format
 msgid "Detail of e-mail #%s"
-msgstr "Detail of query %s"
+msgstr ""
 
 #: ../app/Modules/OrgModule/SpamPresenter.php:42
 msgid "List of emails"
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid "Create an account"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:20
+#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:24
 msgid "Participate events"
 msgstr ""
 
@@ -1145,15 +1145,15 @@ msgid ""
 "Organization and participation at same year %d and contestId %d %s<->%s."
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:14
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:17
 msgid "Gender from born number"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:26
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
 msgid "Gender is not set"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:34
 msgid "Born number is not set"
 msgstr ""
 
@@ -1266,9 +1266,8 @@ msgid "Agreement"
 msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/AgreedColumnFactory.php:24
-#, fuzzy
 msgid "https://fykos.cz/doc/souhlas.pdf"
-msgstr "https://fykos.cz/doc/souhlas.pdf"
+msgstr ""
 
 #: ../app/Models/ORM/Columns/Tables/PersonInfo/EmailColumnFactory.php:23
 #: ../app/Models/ORM/Columns/Types/EmailColumnFactory.php:22
@@ -1418,11 +1417,11 @@ msgstr "Open"
 msgid "%s. question"
 msgstr ""
 
-#: ../app/Models/Fyziklani/NotSetGameParametersException.php:10
+#: ../app/Models/Fyziklani/NotSetGameParametersException.php:13
 msgid "Game parameters not set."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:61
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:168
 #: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
@@ -1430,7 +1429,7 @@ msgstr ""
 msgid "Team"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:62
 msgid "Rank"
 msgstr ""
 
@@ -1449,22 +1448,22 @@ msgstr ""
 msgid "Team %s has non checked submits"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:48
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:47
 #, php-format
 msgid "Task %s \"%s\" added"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:56
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:55
 #, php-format
 msgid "Task %s \"%s\" updated"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:61
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:60
 #, php-format
 msgid "Task %s \"%s\" not updated"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:67
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:66
 msgid "There was an error"
 msgstr ""
 
@@ -1481,30 +1480,40 @@ msgstr ""
 msgid "Submit is already revoked"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:69
+#: ../app/Models/Fyziklani/Submit/Handler.php:72
 msgid "Task given and validated."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:134
+#: ../app/Models/Fyziklani/Submit/Handler.php:117
+#, fuzzy, php-format
+msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
+msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
+
+#: ../app/Models/Fyziklani/Submit/Handler.php:148
 #, php-format
 msgid "Submit %d has been revoked."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:160
+#: ../app/Models/Fyziklani/Submit/Handler.php:181
 #, php-format
 msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:54
+#: ../app/Models/Fyziklani/Submit/Handler.php:209
+#, fuzzy, php-format
+msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
+msgstr "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
+
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:62
 msgid "Code is too long"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:69
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:78
 #, php-format
 msgid "Team %s does not exists."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:83
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:93
 #, php-format
 msgid "Task %s does not exists."
 msgstr ""
@@ -1523,15 +1532,15 @@ msgstr ""
 msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:41
+#: ../app/Models/Exports/ExportFormatFactory.php:42
 msgid "Save CSV"
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:42
+#: ../app/Models/Exports/ExportFormatFactory.php:43
 msgid "Save CSV (without head)"
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:43
+#: ../app/Models/Exports/ExportFormatFactory.php:44
 msgid "Save CSV with quotes"
 msgstr ""
 
@@ -1584,11 +1593,11 @@ msgstr ""
 msgid "Error while saving the application."
 msgstr ""
 
-#: ../app/Models/Events/Model/ImportHandler.php:71
+#: ../app/Models/Events/Model/ImportHandler.php:76
 msgid "Import failed."
 msgstr ""
 
-#: ../app/Models/Events/Model/ImportHandler.php:111
+#: ../app/Models/Events/Model/ImportHandler.php:118
 msgid "CSV does not contain correct heading."
 msgstr ""
 
@@ -1604,7 +1613,7 @@ msgstr ""
 msgid "Birthday is required field."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:28
+#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:30
 msgid "Set new game password."
 msgstr ""
 
@@ -1613,12 +1622,12 @@ msgid "Not valid $rulesVersion."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:39
 #, php-format
 msgid "Team inserted to category %s."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:28
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:35
 #, php-format
 msgid "Team registered for the category %s."
 msgstr ""
@@ -1651,7 +1660,7 @@ msgstr ""
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:70
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:78
 msgid "Cannot determine category."
 msgstr ""
 
@@ -1660,7 +1669,7 @@ msgstr ""
 msgid "Only %d different schools can be represented in the team."
 msgstr ""
 
-#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:12
+#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:15
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:270
 msgid "Field %label is required."
 msgstr ""
@@ -1670,10 +1679,11 @@ msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
 #: ../app/Models/Events/Exceptions/TransitionConditionFailedException.php:17
+#, php-format
 msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr "Cannot execute action '%s' in the machine '%s'."
 
-#: ../app/Models/Events/Exceptions/EventNotFoundException.php:10
+#: ../app/Models/Events/Exceptions/EventNotFoundException.php:13
 msgid "Event not found."
 msgstr ""
 
@@ -2174,6 +2184,10 @@ msgstr ""
 
 #: ../app/Components/Forms/Factories/FlagFactory.php:34
 msgid "I wish to receive information about MFF and the events they organize."
+msgstr ""
+
+#: ../app/Components/Forms/Factories/Events/DBReflectionFactory.php:62
+msgid "%label must be an integer."
 msgstr ""
 
 #: ../app/Components/Forms/Factories/Events/AbstractFactory.php:36
@@ -3223,6 +3237,10 @@ msgstr ""
 msgid "Person history"
 msgstr ""
 
+#: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:41
+msgid "Emails"
+msgstr ""
+
 #: ../app/Components/Controls/Stalking/layout.container.latte.latte2php:48
 msgid "Task contribution"
 msgstr ""
@@ -3449,14 +3467,12 @@ msgid "For one-day events it is identical to the beginning."
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:141
-#, fuzzy
 msgid "Registration begin"
-msgstr "Register"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:144
-#, fuzzy
 msgid "Registration end"
-msgstr "Register"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:147
 msgid "Summary of the event."
@@ -3478,7 +3494,7 @@ msgstr ""
 #: ../app/config/orm.neon.neon2php:156
 #, fuzzy
 msgid "Contest year"
-msgstr "Event ID"
+msgstr "Contact e-mail"
 
 #: ../app/config/orm.neon.neon2php:161 ../app/config/orm.neon.neon2php:165
 #, fuzzy
@@ -3556,9 +3572,8 @@ msgid "Number of baguettes for lunch"
 msgstr ""
 
 #: ../app/config/orm.neon.neon2php:282
-#, fuzzy
 msgid "login Id"
-msgstr "Login"
+msgstr ""
 
 #: ../app/config/orm.neon.neon2php:291
 msgid "Last logged"
@@ -3733,7 +3748,7 @@ msgstr "Still organises"
 
 #: ../data/events/council/councilDefault.neon.neon2php:22
 msgid "Program akce"
-msgstr ""
+msgstr "Event program"
 
 #: ../data/events/council/councilDefault.neon.neon2php:48
 #: ../data/events/tsaf/tsaf8.neon.neon2php:91
@@ -3923,9 +3938,8 @@ msgstr "Participant"
 #: ../data/events/tabor/tabor1-6.neon.neon2php:103
 #: ../data/events/tabor/tabor8.neon.neon2php:54
 #: ../data/events/tabor/tabor8.neon.neon2php:59
-#, fuzzy
 msgid "Pozvat účastníka"
-msgstr "Register contestant"
+msgstr "Invite participant"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:85
 #: ../data/events/tsaf/tsaf9.neon.neon2php:83
@@ -3938,16 +3952,14 @@ msgstr "Register reserve player"
 #: ../data/events/tsaf/tsaf8.neon.neon2php:96
 #: ../data/events/tsaf/tsaf9.neon.neon2php:94
 #: ../data/events/tsaf/tsaf7.neon.neon2php:97
-#, fuzzy
 msgid "Potvrdit účastníka"
-msgstr "Register contestant"
+msgstr "Confirm participant"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:101
 #: ../data/events/tsaf/tsaf9.neon.neon2php:99
 #: ../data/events/tsaf/tsaf7.neon.neon2php:102
-#, fuzzy
 msgid "Potvrdit účast"
-msgstr "Approve participation"
+msgstr "Confirm participation"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:114
 #: ../data/events/tsaf/tsaf9.neon.neon2php:112
@@ -3990,9 +4002,8 @@ msgstr "Which t-shirt?"
 #: ../data/events/tsaf/tsaf8.neon.neon2php:145
 #: ../data/events/tsaf/tsaf9.neon.neon2php:139
 #: ../data/events/tsaf/tsaf7.neon.neon2php:146
-#, fuzzy
 msgid "Jakou mikinu nosíš?"
-msgstr "Which t-shirt?"
+msgstr "Which sweatshirt?"
 
 #: ../data/events/tsaf/tsaf8.neon.neon2php:149
 #: ../data/events/tsaf/tsaf9.neon.neon2php:143
@@ -4039,9 +4050,8 @@ msgstr ""
 #: ../data/events/tabor/tabor1-6.neon.neon2php:113
 #: ../data/events/tabor/tabor8.neon.neon2php:64
 #: ../data/events/tabor/tabor8.neon.neon2php:69
-#, fuzzy
 msgid "Pozvat náhradníka"
-msgstr "Reserve player plays"
+msgstr "Invite spare"
 
 #: ../data/events/tabor/tabor10.neon.neon2php:74
 #: ../data/events/tabor/tabor7.neon.neon2php:74
@@ -4072,7 +4082,6 @@ msgstr "Payed"
 #: ../data/events/tabor/tabor9.neon.neon2php:95
 #: ../data/events/tabor/tabor1-6.neon.neon2php:139
 #: ../data/events/tabor/tabor8.neon.neon2php:95
-#, fuzzy
 msgid "Schválit jako účastníka"
 msgstr "Approve participation"
 
@@ -4081,9 +4090,8 @@ msgstr "Approve participation"
 #: ../data/events/tabor/tabor9.neon.neon2php:98
 #: ../data/events/tabor/tabor1-6.neon.neon2php:142
 #: ../data/events/tabor/tabor8.neon.neon2php:98
-#, fuzzy
 msgid "Pozvat jako účastníka"
-msgstr "Confirm as a substitute"
+msgstr "Confirm as a participant"
 
 #: ../data/events/tabor/tabor10.neon.neon2php:102
 #: ../data/events/tabor/tabor7.neon.neon2php:102
@@ -4125,9 +4133,8 @@ msgstr ""
 #: ../data/events/tabor/tabor7.neon.neon2php:134
 #: ../data/events/tabor/tabor9.neon.neon2php:135
 #: ../data/events/tabor/tabor8.neon.neon2php:134
-#, fuzzy
 msgid "Jakou barvu trika nosíš?"
-msgstr "Which t-shirt?"
+msgstr "Which t-shirt color?"
 
 #: ../data/events/tabor/tabor10.neon.neon2php:139
 #: ../data/events/tabor/tabor9.neon.neon2php:139
@@ -4657,9 +4664,8 @@ msgid ""
 msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:63
-#, fuzzy
 msgid "Register team."
-msgstr "Register"
+msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:68
 msgid "Confirm as Participated"
@@ -4682,7 +4688,6 @@ msgid "Team name"
 msgstr ""
 
 #: ../data/events/fol/fol1.neon.neon2php:93
-#, fuzzy
 msgid "Contact address"
 msgstr "Contact address"
 
@@ -4747,9 +4752,8 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:93
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:113
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:97
-#, fuzzy
 msgid "Register team"
-msgstr "Register"
+msgstr ""
 
 #: ../data/events/fol/fol8.neon.neon2php:71
 #: ../data/events/fol/fol11.neon.neon2php:76
@@ -5112,7 +5116,6 @@ msgstr "Contact phone"
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:141
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:152
 msgid "Učitel/doprovod"
 msgstr "Teacher/escort"
@@ -5184,9 +5187,12 @@ msgid "Místnost"
 msgstr "Place"
 
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:150
-#, fuzzy
 msgid "Jazyk, ve kterém chcete soutěžit"
-msgstr "The language you want to compete in."
+msgstr "The language you want to compete in"
+
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
+msgid "Učitel/doprovod (nepovinné)"
+msgstr "Teacher/escort (optional)"
 
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:7
 msgid ""
@@ -5370,9 +5376,8 @@ msgid "Time histogram"
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:66
-#, fuzzy
 msgid "First team"
-msgstr "Register"
+msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/GlobalCorrelation.tsx.tsx2php:67
 msgid "Second team"
@@ -5401,9 +5406,8 @@ msgid "Correlation "
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:68
-#, fuzzy
 msgid "Time first team"
-msgstr "Register"
+msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:69
 msgid "Time second team"
@@ -5414,9 +5418,8 @@ msgid "Difference"
 msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:77
-#, fuzzy
 msgid "first team"
-msgstr "Register"
+msgstr ""
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Table.tsx.tsx2php:78
 msgid "second team"
@@ -5525,10 +5528,6 @@ msgstr ""
 
 #~ msgid "Místo narození"
 #~ msgstr "Birthplace"
-
-#~ msgid "Body byly upraveny. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-#~ msgstr ""
-#~ "Points have been edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #~ msgid "Uložit AESOP"
 #~ msgstr "Save AESOP"
@@ -5688,14 +5687,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Vrátit zpět do DB jako Náhradník"
 #~ msgstr "Confirm as a substitute"
-
-#~ msgid "Body byly uloženy. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-#~ msgstr ""
-#~ "Points have been stored. %d points, team: \"%s\" (%d), task: %s \"%s\""
-
-#~ msgid "Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\""
-#~ msgstr ""
-#~ "Points have been checked. %d points, team: \"%s\" (%d), task: %s \"%s\""
 
 #~ msgid "Neaktivní účet."
 #~ msgstr "Inactive account."

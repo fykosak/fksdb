@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-21 16:41+0100\n"
+"POT-Creation-Date: 2022-01-24 17:33+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -1153,7 +1153,7 @@ msgstr ""
 msgid "Create an account"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:20
+#: ../app/Models/DataTesting/Tests/ModelPerson/ParticipantsDurationTest.php:24
 msgid "Participate events"
 msgstr ""
 
@@ -1167,15 +1167,15 @@ msgid ""
 "Organization and participation at same year %d and contestId %d %s<->%s."
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:14
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:17
 msgid "Gender from born number"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:26
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
 msgid "Gender is not set"
 msgstr ""
 
-#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:30
+#: ../app/Models/DataTesting/Tests/ModelPerson/GenderFromBornNumberTest.php:34
 msgid "Born number is not set"
 msgstr ""
 
@@ -1442,12 +1442,12 @@ msgstr ""
 msgid "%s. question"
 msgstr ""
 
-#: ../app/Models/Fyziklani/NotSetGameParametersException.php:10
+#: ../app/Models/Fyziklani/NotSetGameParametersException.php:13
 #, fuzzy
 msgid "Game parameters not set."
 msgstr "Nová platba"
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:61
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:168
 #: ../app/config/orm.neon.neon2php:203
 #: ../data/events/fol/fol.default.neon.neon2php:8
@@ -1455,7 +1455,7 @@ msgstr "Nová platba"
 msgid "Team"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:56
+#: ../app/Models/Fyziklani/Ranking/RankingStrategy.php:62
 msgid "Rank"
 msgstr ""
 
@@ -1474,22 +1474,22 @@ msgstr ""
 msgid "Team %s has non checked submits"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:48
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:47
 #, php-format
 msgid "Task %s \"%s\" added"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:56
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:55
 #, php-format
 msgid "Task %s \"%s\" updated"
 msgstr ""
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:61
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:60
 #, fuzzy, php-format
 msgid "Task %s \"%s\" not updated"
 msgstr "Ubytnovanie neexistuje"
 
-#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:67
+#: ../app/Models/Fyziklani/FyziklaniTaskImportProcessor.php:66
 msgid "There was an error"
 msgstr ""
 
@@ -1506,40 +1506,40 @@ msgstr ""
 msgid "Submit is already revoked"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:69
+#: ../app/Models/Fyziklani/Submit/Handler.php:72
 msgid "Task given and validated."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:109
+#: ../app/Models/Fyziklani/Submit/Handler.php:117
 #, php-format
 msgid "Points edited. %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:134
+#: ../app/Models/Fyziklani/Submit/Handler.php:148
 #, php-format
 msgid "Submit %d has been revoked."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:160
+#: ../app/Models/Fyziklani/Submit/Handler.php:181
 #, php-format
 msgid "Scoring has been opened. %d points, team \"%s\" (%d), task %s \"%s\"."
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/Handler.php:181
+#: ../app/Models/Fyziklani/Submit/Handler.php:209
 #, php-format
 msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:54
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:62
 msgid "Code is too long"
 msgstr ""
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:69
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:78
 #, fuzzy, php-format
 msgid "Team %s does not exists."
 msgstr "Ubytnovanie neexistuje"
 
-#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:83
+#: ../app/Models/Fyziklani/Submit/TaskCodePreprocessor.php:93
 #, fuzzy, php-format
 msgid "Task %s does not exists."
 msgstr "Ubytnovanie neexistuje"
@@ -1558,15 +1558,15 @@ msgstr ""
 msgid "Team %s (%d, %s) does not have an assigned room."
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:41
+#: ../app/Models/Exports/ExportFormatFactory.php:42
 msgid "Save CSV"
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:42
+#: ../app/Models/Exports/ExportFormatFactory.php:43
 msgid "Save CSV (without head)"
 msgstr ""
 
-#: ../app/Models/Exports/ExportFormatFactory.php:43
+#: ../app/Models/Exports/ExportFormatFactory.php:44
 msgid "Save CSV with quotes"
 msgstr ""
 
@@ -1620,11 +1620,11 @@ msgstr ""
 msgid "Error while saving the application."
 msgstr ""
 
-#: ../app/Models/Events/Model/ImportHandler.php:71
+#: ../app/Models/Events/Model/ImportHandler.php:76
 msgid "Import failed."
 msgstr ""
 
-#: ../app/Models/Events/Model/ImportHandler.php:111
+#: ../app/Models/Events/Model/ImportHandler.php:118
 msgid "CSV does not contain correct heading."
 msgstr ""
 
@@ -1640,7 +1640,7 @@ msgstr ""
 msgid "Birthday is required field."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:28
+#: ../app/Models/Events/Spec/Fol/PasswordProcessing.php:30
 msgid "Set new game password."
 msgstr ""
 
@@ -1649,12 +1649,12 @@ msgid "Not valid $rulesVersion."
 msgstr ""
 
 #: ../app/Models/Events/Spec/Fol/CategoryProcessing.php:45
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:36
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:39
 #, php-format
 msgid "Team inserted to category %s."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:28
+#: ../app/Models/Events/Spec/Fol/CategoryProcessing2.php:35
 #, fuzzy, php-format
 msgid "Team registered for the category %s."
 msgstr "Registrácia"
@@ -1687,7 +1687,7 @@ msgstr ""
 msgid "Some fields of the group \"%s\" do not match an existing record."
 msgstr ""
 
-#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:70
+#: ../app/Models/Events/Spec/Fyziklani/CategoryProcessing.php:78
 msgid "Cannot determine category."
 msgstr ""
 
@@ -1696,7 +1696,7 @@ msgstr ""
 msgid "Only %d different schools can be represented in the team."
 msgstr ""
 
-#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:12
+#: ../app/Models/Events/FormAdjustments/DependentRequirements.php:15
 #: ../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:270
 msgid "Field %label is required."
 msgstr ""
@@ -1710,7 +1710,7 @@ msgstr ""
 msgid "Cannot carry out action '%s' in the automat '%s'."
 msgstr ""
 
-#: ../app/Models/Events/Exceptions/EventNotFoundException.php:10
+#: ../app/Models/Events/Exceptions/EventNotFoundException.php:13
 msgid "Event not found."
 msgstr ""
 
@@ -5163,7 +5163,6 @@ msgstr ""
 #: ../data/events/fyziklani/fyziklani12.neon.neon2php:135
 #: ../data/events/fyziklani/fyziklani14.neon.neon2php:162
 #: ../data/events/fyziklani/fyziklani11.neon.neon2php:141
-#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:152
 msgid "Učitel/doprovod"
 msgstr ""
@@ -5236,6 +5235,10 @@ msgstr "Miesto"
 
 #: ../data/events/fyziklani/fyziklani16.neon.neon2php:150
 msgid "Jazyk, ve kterém chcete soutěžit"
+msgstr ""
+
+#: ../data/events/fyziklani/fyziklani16.neon.neon2php:171
+msgid "Učitel/doprovod (nepovinné)"
 msgstr ""
 
 #: ../data/events/fyziklani/fyziklani13.neon.neon2php:7
