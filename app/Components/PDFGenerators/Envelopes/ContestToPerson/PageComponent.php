@@ -24,7 +24,7 @@ class PageComponent extends AbstractPageComponent
     /**
      * @param ModelPerson $row
      */
-    public function render($row): void
+    public function render($row, array $params = []): void
     {
         $postContact = $row->getDeliveryPostContact();
         if (!$postContact) {

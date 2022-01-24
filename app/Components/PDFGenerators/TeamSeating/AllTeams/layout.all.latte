@@ -1,16 +1,18 @@
 {layout '../@layout.latte'}
-{block places}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
-    {foreach $places as $place}
-        {var $team = $place->getTeam()}
+{block seats}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
+    {varType FKSDB\Models\ORM\Models\ModelEvent $event}
+    {foreach $room->getSeats() as $row}
+        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+        {var $team = $seat->getTeamSeat($event)}
         {if $team}
-            {var $cor = 'translate('.$place->x_coordinate.','.-($place->y_coordinate+18).')' }
+            {var $cor = 'translate('.$seat->layout_x.','.-($seat->layout_y+18).')' }
             <g transform="{$cor}">
                 <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
             </g>
-            {include place 'place'=>$place ,'className'=>'occupied'}
+            {include seat 'seat'=>$seat ,'className'=>'occupied'}
         {else}
-            {include place 'place'=>$place ,'className'=>'free'}
+            {include seat 'seat'=>$seat ,'className'=>'free'}
         {/if}
     {/foreach}
 {/block}

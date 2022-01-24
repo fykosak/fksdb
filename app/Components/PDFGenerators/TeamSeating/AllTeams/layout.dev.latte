@@ -1,21 +1,23 @@
 {layout '../@layout.latte'}
-{block places}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
-    {foreach $places as $place}
-        {var $team = $place->getTeam()}
-        {if $team}
-            {var $cor = 'translate(' . $place->x_coordinate . ',' . -($place->y_coordinate+15) . ')'}
+{block seats}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
+    {varType FKSDB\Models\ORM\Models\ModelEvent $event}
+    {foreach $room->getSeats() as $row}
+        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+        {var $teamSeat = $seat->getTeamSeat($event)}
+        {if $teamSeat}
+            {var $cor = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y+15) . ')'}
             <g transform="{$cor}">
-                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+                <text text-anchor="middle">{$teamSeat->getTeam()->e_fyziklani_team_id}</text>
             </g>
-            {include place 'place'=>$place ,'className'=>('category-' . $team->category . ' occupied game-lang-' . $team->game_lang)}
+            {include seat 'seat'=>$seat ,'className'=>('category-' . $teamSeat->getTeam()->category . ' occupied game-lang-' . $teamSeat->getTeam()->game_lang)}
         {else}
-            {include place 'place'=>$place ,'className'=>'free'}
+            {include seat 'seat'=>$seat ,'className'=>'free'}
         {/if}
 
-        {var $cor2 = 'translate(' . $place->x_coordinate . ',' . -($place->y_coordinate-25) . ')'}
+        {var $cor2 = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y-25) . ')'}
         <g transform="{$cor2}">
-            <text text-anchor="middle">{$place->getPrimary()}</text>
+            <text text-anchor="middle">{$seat->getPrimary()}</text>
         </g>
     {/foreach}
 {/block}

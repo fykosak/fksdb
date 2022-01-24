@@ -1,8 +1,8 @@
 {block content}
     <h2>{_'All teams'}</h2>
-    {control seatingPreviewAll}
+    {control seatingPreview ['all']}
     <h2>{_'All team includes catogory and position Id'}</h2>
-    {control seatingPreviewDev}
+    {control seatingPreview ['dev']}
     <div>
         <div class="row">
             <div style="width: 15px;height: 15px;background-color: #ff0000;border-radius: 15px"></div>
@@ -28,6 +28,6 @@
     </div>
 
     <h2>{_'Empty'}</h2>
-    {control seatingPreviewEmpty}
+    {control seatingPreview ['empty']}
 
 {/block content}

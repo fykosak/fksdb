@@ -27,9 +27,10 @@ final class ProviderComponent extends BaseComponent
         return $this->pageComponent;
     }
 
-    public function render(): void
+    public function render(array $params = []): void
     {
         $this->template->items = $this->items;
+        $this->template->params = $params;
         $this->template->render($this->pageComponent->getPagesTemplatePath());
     }
 }

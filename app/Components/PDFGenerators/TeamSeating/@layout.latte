@@ -1,101 +1,83 @@
-{define place}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $place}
+{varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
+{layout './Rooms/layout.' . $room->layout . '.latte'}
+{define seat}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {default $className = 'free'}
     <circle
             class="{$className . ' team-position'}"
             r="15"
-            cx="{$place->x_coordinate}"
-            cy="{-$place->y_coordinate}"/>
+            cx="{$seat->layout_x}"
+            cy="{-$seat->layout_y}"/>
 {/define}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $row}
-<div>
-    <h2 style="font-size: 200%">({$row->e_fyziklani_team_id}) {$row->name}</h2>
-    <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
-        <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
-            {block SVGstyles}
-                <style>
-                    g.mode-single .team-id {
-                        display: none;
-                    }
 
-                    g.mode-single .place-id, g.mode-dev .place-id {
-                        display: none;
-                    }
+{block seats}
+    {foreach $room->getSeats() as $row}
+        {include seat 'seat'=>FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+    {/foreach}
+{/block}
 
-                    text {
-                        text-shadow: 0.5px 0.5px 0 white;
-                        text-anchor: middle;
-                    }
+{define SVGstyles}
+    <style>
+        g.mode-single .team-id {
+            display: none;
+        }
 
-                    .outer-walls polyline, .inner-walls polyline {
-                        fill: none;
-                        stroke: #555;
-                    }
+        g.mode-single .seat-id, g.mode-dev .seat-id {
+            display: none;
+        }
 
-                    .outer-walls polyline {
-                        stroke-width: 7px;
-                    }
+        text {
+            text-shadow: 0.5px 0.5px 0 white;
+            text-anchor: middle;
+        }
 
-                    .inner-walls polyline {
-                        stroke-width: 4px;
-                    }
+        .outer-walls polyline, .inner-walls polyline {
+            fill: none;
+            stroke: #555;
+        }
 
-                    .outer-walls polygon, .inner-walls polygon {
-                        fill: #555;
-                        stroke: none;
-                    }
+        .outer-walls polyline {
+            stroke-width: 7px;
+        }
 
-                    .corridors polyline {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 2px;
-                        stroke-dasharray: 10 10;
-                    }
+        .inner-walls polyline {
+            stroke-width: 4px;
+        }
 
-                    .grid polyline {
-                        fill: none;
-                        stroke: red;
-                        stroke-width: 3px;
-                        stroke-dasharray: 10 10;
-                    }
+        .outer-walls polygon, .inner-walls polygon {
+            fill: #555;
+            stroke: none;
+        }
 
-                    polygon.stage {
-                        fill: #ccc;
-                        stroke: none;
-                    }
+        .corridors polyline {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2px;
+            stroke-dasharray: 10 10;
+        }
 
-                    circle.team-position.free {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 3px;
-                        stroke-dasharray: 4 4;
-                    }
+        .grid polyline {
+            fill: none;
+            stroke: red;
+            stroke-width: 3px;
+            stroke-dasharray: 10 10;
+        }
 
-                    circle.team-position.occupied {
-                        fill: black;
-                        stroke: none;
-                    }
-                </style>
-            {/block}
-            <g>
-                <g class="labels">
-                    <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
-                    <text font-size="3rem" transform="translate(520,-1230) rotate(-45)">{_'B sector'}</text>
-                    <text font-size="3rem" transform="translate(320,-800) rotate(-90)">{_'C sector'}</text>
-                    <text font-size="3rem" transform="translate(680,-400)">{_'D sector'}</text>
-                    <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
-                </g>
-                <g class="places">
-                    {block places}
-                        {foreach $places as $place}
-                            {include place $place}
-                        {/foreach}
-                    {/block}
-                </g>
-            </g>
-        </svg>
-    </div>
-    <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/2020-black.png" style=" float:right;max-width: 25%"/>
-</div>
+        polygon.stage {
+            fill: #ccc;
+            stroke: none;
+        }
+
+        circle.team-position.free {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 3px;
+            stroke-dasharray: 4 4;
+        }
+
+        circle.team-position.occupied {
+            fill: black;
+            stroke: none;
+        }
+    </style>
+{/define}

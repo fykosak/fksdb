@@ -1175,9 +1175,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit`
 CREATE TABLE IF NOT EXISTS `fyziklani_room`
 (
     `fyziklani_room_id` INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`    VARCHAR(64) CHARACTER SET 'utf8',
-    `layout`  VARCHAR(256) NULL DEFAULT NULl
-        COLLATE 'utf8_czech_ci' NOT NULL
+    `name`              VARCHAR(64) CHARACTER SET 'utf8',
+    `layout`            VARCHAR(256) NULL DEFAULT NULl
 )
     ENGINE = InnoDB;
 -- -----------------------------------------------------
@@ -1186,9 +1185,15 @@ CREATE TABLE IF NOT EXISTS `fyziklani_room`
 CREATE TABLE IF NOT EXISTS `fyziklani_seat`
 (
     `fyziklani_seat_id` INT        NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `sector ` VARCHAR(2) NULL DEFAULT NULL,
-    `fyziklani_room_id` INT        NOT NULL
-        COLLATE 'utf8_czech_ci' NOT NULL
+    `fyziklani_room_id` INT        NOT NULL,
+    `sector`            VARCHAR(2) NULL DEFAULT NULL,
+    `layout_x`          DOUBLE     NOT NULL,
+    `layout_y`          DOUBLE     NOT NULL,
+    CONSTRAINT `fk_fyziklani_seat_room_1`
+        FOREIGN KEY (`fyziklani_room_id`)
+            REFERENCES `fyziklani_room` (`fyziklani_room_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
     ENGINE = InnoDB;
 
@@ -1197,18 +1202,18 @@ CREATE TABLE IF NOT EXISTS `fyziklani_seat`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 (
-    `fyziklani_room_seat_id`             INT NOT NULL,
-    `e_fyziklani_team_id` INT NULL DEFAULT NULL,
+    `fyziklani_seat_id` INT NOT NULL,
+    `e_fyziklani_team_id`    INT NULL DEFAULT NULL,
     UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
-    INDEX `fk_brawl_team_position_2_idx` (`fyziklani_room_seat_id` ASC),
-    CONSTRAINT `fk_brawl_team_position_1`
+    INDEX `fk_fyziklani_team_seat_2_idx` (`fyziklani_seat_id` ASC),
+    CONSTRAINT `fyziklani_team_seat_1`
         FOREIGN KEY (`e_fyziklani_team_id`)
             REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_brawl_team_position_2`
-        FOREIGN KEY (`fyziklani_room_seat_id`)
-            REFERENCES `fyziklani_seat` (`fyziklani_room_id`)
+    CONSTRAINT `fyziklani_team_seat_2`
+        FOREIGN KEY (`fyziklani_seat_id`)
+            REFERENCES `fyziklani_seat` (`fyziklani_seat_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )

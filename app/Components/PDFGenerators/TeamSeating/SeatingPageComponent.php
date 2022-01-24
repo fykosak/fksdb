@@ -6,23 +6,13 @@ namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
-use FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService;
-use Nette\DI\Container;
 
 abstract class SeatingPageComponent extends AbstractPageComponent
 {
 
-    /**
-     * @param mixed $row
-     */
-    public function render($row): void
+    final protected function innerRender(RoomModel $room): void
     {
-        $this->template->room = $this->roomModel;
-    }
-
-    private function getRooms(): array
-    {
-        return [10, 11, 12, 13, 14];
+        $this->template->room = $room;
     }
 
     public function getPagesTemplatePath(): string

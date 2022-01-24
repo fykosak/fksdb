@@ -703,11 +703,14 @@ orm:
                      title: Detail
 #fyziklani
         fyziklani_room:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
-            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom
-        fyziklani_team_position:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
-            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel
+        fyziklani_seat:
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\SeatService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel
+        fyziklani_seat_team:
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
 
         fyziklani_submit:
              service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit

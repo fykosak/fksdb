@@ -20,7 +20,7 @@ abstract class AbstractPageComponent extends BaseComponent
     /**
      * @param mixed $row
      */
-    abstract public function render($row): void;
+    abstract public function render($row, array $params = []): void;
 
     abstract public function getPagesTemplatePath(): string;
 
