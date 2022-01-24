@@ -58,7 +58,7 @@ class PreferredLangFormComponent extends FormComponent
     protected function configureForm(Form $form): void
     {
         $items = [];
-        foreach ($this->getTranslator()->getSupportedLanguages() as $lang) {
+        foreach ($this->translator->getSupportedLanguages() as $lang) {
             $items[$lang] = LanguageChooserComponent::$languageNames[$lang];
         }
         $form->addRadioList('preferred_lang')->setItems($items);

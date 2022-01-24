@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\PDFGenerators\Providers;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 
 abstract class AbstractPageComponent extends BaseComponent
 {
