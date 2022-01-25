@@ -168,7 +168,7 @@ events:
                         visible: true
                         modifiable: %events.fyziklani16.appCond%
                     teacher_id:
-                        label: _('Učitel/doprovod')
+                        label: _('Učitel/doprovod (nepovinné)')
                         required: false
                         visible: true
                         modifiable: %events.fyziklani16.appCond%

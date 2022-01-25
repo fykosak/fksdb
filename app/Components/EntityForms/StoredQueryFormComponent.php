@@ -232,7 +232,7 @@ class StoredQueryFormComponent extends EntityFormComponent
     protected function createComponentQueryResultsComponent(): ResultsComponent
     {
         $grid = new ResultsComponent($this->getContext());
-        $grid->setShowParametrizeForm(false);
+        $grid->showParametrizeForm = false;
         return $grid;
     }
 
@@ -254,7 +254,7 @@ class StoredQueryFormComponent extends EntityFormComponent
         );
         /** @var ResultsComponent $control */
         $control = $this->getComponent('queryResultsComponent');
-        $control->setStoredQuery($query);
+        $control->storedQuery = $query;
     }
 
     protected function getTemplatePath(): string

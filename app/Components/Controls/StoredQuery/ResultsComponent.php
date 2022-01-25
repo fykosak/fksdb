@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Exports\ExportFormatFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -26,43 +25,15 @@ class ResultsComponent extends BaseComponent
     /**
      * @persistent
      */
-    public ?array $parameters = [];
-    private ?StoredQuery $storedQuery = null;
+    public ?array $parameters;
+    public ?StoredQuery $storedQuery = null;
     private ExportFormatFactory $exportFormatFactory;
-    private bool $showParametrizeForm = true;
+    public bool $showParametrizeForm = true;
 
     final public function injectPrimary(
         ExportFormatFactory $exportFormatFactory
     ): void {
         $this->exportFormatFactory = $exportFormatFactory;
-    }
-
-    public function setShowParametrizeForm(bool $showParametersForm): void
-    {
-        $this->showParametrizeForm = $showParametersForm;
-    }
-
-    public function setStoredQuery(StoredQuery $storedQuery): void
-    {
-        $this->storedQuery = $storedQuery;
-    }
-
-    private function hasStoredQuery(): bool
-    {
-        return isset($this->storedQuery);
-    }
-
-    public function setParameters(array $parameters): void
-    {
-        $this->parameters = $parameters;
-    }
-
-    public function updateParameters(array $parameters): void
-    {
-        if (!$this->parameters) {
-            $this->parameters = [];
-        }
-        $this->parameters = array_merge($this->parameters, $parameters);
     }
 
     protected function createComponentGrid(): ResultsGrid
@@ -96,13 +67,12 @@ class ResultsComponent extends BaseComponent
     {
         static $error;
         if (!isset($error)) {
-            $error = null;
             try {
                 if (isset($this->storedQuery)) {
                     $this->storedQuery->getColumnNames(); // this may throw \PDOException in the main query
                 }
             } catch (\PDOException $exception) {
-                $error = $exception->getMessage();
+                $error = $exception;
             }
         }
         return $error;
@@ -113,7 +83,7 @@ class ResultsComponent extends BaseComponent
      */
     final public function render(): void
     {
-        if ($this->parameters) {
+        if (isset($this->parameters)) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
             foreach ($this->parameters as $key => $value) {
@@ -126,18 +96,18 @@ class ResultsComponent extends BaseComponent
         $this->template->error = $this->getSqlError();
         $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
         $this->template->showParametrizeForm = $this->showParametrizeForm;
-        $this->template->hasStoredQuery = $this->hasStoredQuery();
+        $this->template->hasStoredQuery = isset($this->storedQuery);
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->defaultFormats : [];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
     }
 
     /**
-     * @throws NotFoundException|GoneException
+     * @throws NotFoundException
      */
     public function handleFormat(string $format): void
     {
-        if ($this->parameters) {
+        if (isset($this->parameters)) {
             $this->storedQuery->setParameters($this->parameters);
         }
         try {
@@ -169,7 +139,7 @@ class ResultsComponent extends BaseComponent
                     $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
-                        $valueElement->addRule(\Nette\Application\UI\Form::INTEGER, _('Parameter %label is numeric.'));
+                        $valueElement->addRule(Form::INTEGER, _('Parameter %label is numeric.'));
                     }
 
                     $valueElement->setDefaultValue($parameter->getDefaultValue());
