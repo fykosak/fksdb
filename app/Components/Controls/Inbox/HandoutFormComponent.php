@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -22,13 +24,9 @@ class HandoutFormComponent extends BaseComponent
 {
 
     public const TASK_PREFIX = 'task';
-
     private ServicePerson $servicePerson;
-
     private SeriesTable $seriesTable;
-
     private ServiceTaskContribution $serviceTaskContribution;
-
     private PersonFactory $personFactory;
 
     public function __construct(Container $container, SeriesTable $seriesTable)

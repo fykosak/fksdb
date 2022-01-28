@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\Events\Model\Holder\Holder;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Exports;
 
 use FKSDB\Models\Exceptions\GoneException;
@@ -16,8 +18,6 @@ class ExportFormatFactory
 {
     use SmartObject;
 
-    /** @deprecated */
-    public const AESOP = 'aesop';
     public const CSV_HEADLESS = 'csv';
     public const CSV_HEAD = 'csvh';
     public const CSV_QUOTE_HEAD = 'csvqh';
@@ -45,14 +45,9 @@ class ExportFormatFactory
         ];
     }
 
-    /**
-     * @throws GoneException
-     */
     public function createFormat(string $name, StoredQuery $storedQuery): ExportFormat
     {
         switch (strtolower($name)) {
-            case self::AESOP:
-                throw new GoneException();
             case self::CSV_HEADLESS:
                 return $this->createCSV($storedQuery, false);
             case self::CSV_HEAD:

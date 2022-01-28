@@ -6,7 +6,7 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;

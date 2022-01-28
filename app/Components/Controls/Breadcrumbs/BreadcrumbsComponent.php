@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Utils\Utils;
@@ -29,7 +31,8 @@ use Tracy\Debugger;
  *
  * @note Page titles of visited pages are cached in the session.
  */
-class BreadcrumbsComponent extends BaseComponent {
+class BreadcrumbsComponent extends BaseComponent
+{
 
     public const SECTION_REQUESTS = self::class . '.main';
     public const SECTION_BACKIDS = self::class . '.backids';
@@ -53,7 +56,8 @@ class BreadcrumbsComponent extends BaseComponent {
     /**
      * Breadcrumbs constructor.
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container)
+    {
         parent::__construct($container);
         $expiration = $container->getParameters()['navigation']['expiration'];
         $this->getRequestsSection()->setExpiration($expiration);
@@ -62,7 +66,12 @@ class BreadcrumbsComponent extends BaseComponent {
         $this->getReverseBackLinkMapSection()->setExpiration($expiration);
     }
 
-    final public function injectPrimary(Session $session, Router $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
+    final public function injectPrimary(
+        Session $session,
+        Router $router,
+        HttpRequest $httpRequest,
+        IPresenterFactory $presenterFactory
+    ): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -77,7 +86,8 @@ class BreadcrumbsComponent extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function setBackLink(AppRequest $request): void {
+    public function setBackLink(AppRequest $request): void
+    {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
@@ -89,13 +99,16 @@ class BreadcrumbsComponent extends BaseComponent {
         $this->storeRequest($originalBackLink);
     }
 
-    public function reset(): void {
-        foreach ([
-                     self::SECTION_BACKIDS,
-                     self::SECTION_REQUESTS,
-                     self::SECTION_REVERSE,
-                     self::SECTION_PATH_REVERSE,
-                 ] as $sectionName) {
+    public function reset(): void
+    {
+        foreach (
+            [
+                self::SECTION_BACKIDS,
+                self::SECTION_REQUESTS,
+                self::SECTION_REVERSE,
+                self::SECTION_PATH_REVERSE,
+            ] as $sectionName
+        ) {
             $this->session->getSection($sectionName)->remove();
         }
     }
@@ -104,7 +117,8 @@ class BreadcrumbsComponent extends BaseComponent {
      * Rendering
      * ********************** */
 
-    final public function render(): void {
+    final public function render(): void
+    {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -123,7 +137,8 @@ class BreadcrumbsComponent extends BaseComponent {
      * Path traversal
      * ********************** */
 
-    public function getBackLinkUrl(): ?string {
+    public function getBackLinkUrl(): ?string
+    {
         // backLink is actually the second, as first is the current request
         $path = $this->getTraversePath($this->getPresenter()->getRequest(), 2);
 
@@ -147,7 +162,8 @@ class BreadcrumbsComponent extends BaseComponent {
     /**
      * @return NaviRequest[]
      */
-    private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
+    private function getTraversePath(AppRequest $request, ?int $maxLen = null): array
+    {
         $requests = $this->getRequestsSection();
         $backLinkMap = $this->getBackLinkMapSection();
 
@@ -187,7 +203,8 @@ class BreadcrumbsComponent extends BaseComponent {
      * @param AppRequest|string|NaviRequest $request
      * @throws \ReflectionException
      */
-    private function getPathKey($request): string {
+    private function getPathKey($request): string
+    {
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
@@ -240,9 +257,9 @@ class BreadcrumbsComponent extends BaseComponent {
 
     /**
      * @throws \ReflectionException
-     * @throws BadTypeException
      */
-    private function storeRequest(?string $backLink): void {
+    private function storeRequest(?string $backLink): void
+    {
         if ($this->storedRequest) {
             return;
         }
@@ -266,19 +283,22 @@ class BreadcrumbsComponent extends BaseComponent {
     /**
      * @throws \ReflectionException
      */
-    protected function createNaviRequest(BasePresenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
+    protected function createNaviRequest(BasePresenter $presenter, AppRequest $request, ?string $backLink): NaviRequest
+    {
         $pathKey = $this->getPathKey($request);
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }
 
-    protected function getRequestKey(AppRequest $request): string {
+    protected function getRequestKey(AppRequest $request): string
+    {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
         return $presenterName . ':' . $paramKey;
     }
 
-    private function getBackLinkId(string $requestKey): string {
+    private function getBackLinkId(string $requestKey): string
+    {
         $reverseBackLinkMap = $this->getReverseBackLinkMapSection();
 
         if (isset($reverseBackLinkMap[$requestKey])) {
@@ -299,7 +319,8 @@ class BreadcrumbsComponent extends BaseComponent {
     /**
      * Filter only parameters relevant to identify the request.
      */
-    protected function filterParameters(iterable $parameters): array {
+    protected function filterParameters(iterable $parameters): array
+    {
         $result = [];
         foreach ($parameters as $key => $value) {
             if ($key == Presenter::FLASH_KEY) {
@@ -314,20 +335,23 @@ class BreadcrumbsComponent extends BaseComponent {
      * Cache stored in session  *
      * ********************** */
 
-    protected function getRequestsSection(): SessionSection {
+    protected function getRequestsSection(): SessionSection
+    {
         return $this->session->getSection(self::SECTION_REQUESTS);
     }
 
-    protected function getPathKeyCacheSection(): SessionSection {
+    protected function getPathKeyCacheSection(): SessionSection
+    {
         return $this->session->getSection(self::SECTION_PATH_REVERSE);
     }
 
-    protected function getBackLinkMapSection(): SessionSection {
+    protected function getBackLinkMapSection(): SessionSection
+    {
         return $this->session->getSection(self::SECTION_BACKIDS);
     }
 
-    protected function getReverseBackLinkMapSection(): SessionSection {
+    protected function getReverseBackLinkMapSection(): SessionSection
+    {
         return $this->session->getSection(self::SECTION_REVERSE);
     }
-
 }
