@@ -7,14 +7,15 @@
             class="{$className . ' team-seat'}"
             r="15"
             cx="{$seat->layout_x}"
-            cy="{-$seat->layout_y}"/>
+            cy="{-$seat->layout_y}"
+    />
 {/define}
 
-{block seats}
+{define seats}
     {foreach $room->getSeats() as $row}
         {include seat 'seat'=>FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
     {/foreach}
-{/block}
+{/define}
 
 {define SVGstyles}
     <style>

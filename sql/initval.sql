@@ -120,7 +120,8 @@ VALUES ('applied', 'obecně přihlášen'),
        ('spare3', 'Náhradník se třemi upomínkami');
 
 INSERT INTO `fyziklani_room` (fyziklani_room_id, name, layout)
-VALUES (1, 'Top Hotel', 'topHotel');
+VALUES (1, 'Top Hotel', 'topHotel'),
+       (2, 'PVA Letňany', 'pva');
 
 INSERT INTO `fyziklani_seat` (`fyziklani_seat_id`, `fyziklani_room_id`, `sector`, `layout_x`, `layout_y`)
 VALUES (1, 1, 'A', 800, 860),
