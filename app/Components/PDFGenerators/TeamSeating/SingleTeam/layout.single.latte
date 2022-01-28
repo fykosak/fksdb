@@ -22,9 +22,17 @@
     {if count($rests)}
         <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
     {/if}
-    {*foreach $rests as $personRest}
+    {foreach $rests as $personRest}
         {foreach $personRest as $rest}
-<span>{}</span>
+            {if $team->game_lang === 'cs'}
+            <p>
+                &#9634; {$rest->getPerson()->getFullName()} &#8211; {$rest->getScheduleItem()->price_czk} Kč  &#8211; {$rest->getScheduleItem()->name_cs}
+            </p>
+            {else}
+            <p>
+                &#9634; {$rest->getPerson()->getFullName()} &#8211; {$rest->getScheduleItem()->price_eur} &#128; &#8211; {$rest->getScheduleItem()->name_en}
+            </p>
+            {/if}
         {/foreach}
-    {/foreach*}
+    {/foreach}
 {/block}
