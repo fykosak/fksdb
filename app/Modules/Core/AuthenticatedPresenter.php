@@ -99,7 +99,7 @@ abstract class AuthenticatedPresenter extends BasePresenter
         if ($methods[self::AUTH_GITHUB]) {
             $this->tryGithub();
         }
-        // if token did nod succeed redirect to login credentials page
+        // if token did not succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
             $this->optionalLoginRedirect();
         } elseif (!$this->isAuthorized()) {
