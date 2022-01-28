@@ -1,18 +1,15 @@
 {layout '../@layout.latte'}
-{block seats}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
-    {varType FKSDB\Models\ORM\Models\ModelEvent $event}
-    {foreach $room->getSeats() as $row}
-        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
-        {var $team = $seat->getTeamSeat($event)}
-        {if $team}
-            {var $cor = 'translate('.$seat->layout_x.','.-($seat->layout_y+18).')' }
-            <g transform="{$cor}">
-                <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
-            </g>
-            {include seat 'seat'=>$seat ,'className'=>'occupied'}
-        {else}
-            {include seat 'seat'=>$seat ,'className'=>'free'}
-        {/if}
-    {/foreach}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{block seat}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
+    {var $team = $seat->getTeamSeat($event)}
+    {if $team}
+        {var $cor = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y+18) . ')'}
+        <g transform="{$cor}">
+            <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+        </g>
+        {include parent 'seat'=>$seat ,'className'=>'occupied'}
+    {else}
+        {include parent 'seat'=>$seat ,'className'=>'free'}
+    {/if}
 {/block}
