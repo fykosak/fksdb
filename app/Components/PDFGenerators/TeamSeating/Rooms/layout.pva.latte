@@ -1,8 +1,7 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $row}
-<div>
-    <h2 style="font-size: 200%">({$row->e_fyziklani_team_id}) {$row->name}</h2>
-    <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
+{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
+{block content}
+    <h2 style="font-size: 200%">({$team->e_fyziklani_team_id}) {$team->name}</h2>
+    <div style="background-image: url('{$basePath}/images/fyziklani/rooms/bg.pva.png');">
         <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
             {include SVGstyles}
             <g>
@@ -14,15 +13,11 @@
                     <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
                 </g>
                 <g class="seats">
-                    {block seats}
-                        {foreach $room->getSeats() as $seat}
-                            {include seat FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($seat)}
-                        {/foreach}
-                    {/block}
+                    {include seats}
                 </g>
             </g>
         </svg>
     </div>
     <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/2020-black.png" style="float:right;max-width: 25%"/>
-</div>
+    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style=" float:right;max-width: 25%"/>
+{/block}

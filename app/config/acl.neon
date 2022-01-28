@@ -68,13 +68,14 @@ acl:
     - addResource(fyziklani.submit)     # create, edit, list, detail, revoke,
     - addResource(fyziklani.gameSetup)  # deafult
     - addResource(fyziklani.diplomas)   # calculate, results
+    - addResource(fyziklani.seating)     # default
     #event module
     - addResource(event.application) # import
     - addResource(event.dashboard)   # default
     - addResource(event.schedule)    # default
     - addResource(event.model)       # default
     - addResource(event.payment)     # create, edit, list, detail, delete
-    - addResource(event.seating)     # edit, download, preview, print
+
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
     - addResource(event.scheduleGroup) # create, edit, list, detail, delete
