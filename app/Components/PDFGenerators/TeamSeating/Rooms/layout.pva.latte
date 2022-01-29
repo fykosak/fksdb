@@ -1,17 +1,21 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
 {block content}
     <h2 style="font-size: 200%">({$team->e_fyziklani_team_id}) {$team->name}</h2>
-    <div style="background-image: url('{$basePath}/images/fyziklani/rooms/bg.pva.png');">
-        <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
+    {*style="background-image: url('{$basePath}/images/fyziklani/rooms/bg.pva.png');"*}
+    <div>
+        <svg viewBox="-1100 -280 2100 780" style="margin: -2% 0 0 0">
             {include SVGstyles}
             <g>
-                <g class="labels">
+                <g>
+                    <polyline points="910,-280 910,500 -1000,500 -1000,-280"/>
+                </g>
+                {*<g class="labels">
                     <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
                     <text font-size="3rem" transform="translate(520,-1230) rotate(-45)">{_'B sector'}</text>
                     <text font-size="3rem" transform="translate(320,-800) rotate(-90)">{_'C sector'}</text>
                     <text font-size="3rem" transform="translate(680,-400)">{_'D sector'}</text>
                     <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
-                </g>
+                </g>*}
                 <g class="seats">
                     {include seats}
                 </g>
@@ -19,5 +23,5 @@
         </svg>
     </div>
     <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style=" float:right;max-width: 25%"/>
+    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
 {/block}

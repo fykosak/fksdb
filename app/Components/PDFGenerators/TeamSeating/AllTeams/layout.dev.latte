@@ -4,7 +4,7 @@
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {var $teamSeat = $seat->getTeamSeat($event)}
     {if $teamSeat}
-        {var $cor = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y+15) . ')'}
+        {var $cor = 'translate(' . $seat->layout_x . ',' . ($seat->layout_y+15) . ')'}
         <g transform="{$cor}">
             <text text-anchor="middle">{$teamSeat->getTeam()->e_fyziklani_team_id}</text>
         </g>
@@ -13,7 +13,7 @@
         {include parent 'seat'=>$seat ,'className'=>'free'}
     {/if}
 
-    {var $cor2 = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y-25) . ')'}
+    {var $cor2 = 'translate(' . $seat->layout_x . ',' . ($seat->layout_y-25) . ')'}
     <g transform="{$cor2}">
         <text text-anchor="middle">{$seat->getPrimary()}</text>
     </g>
