@@ -6,7 +6,7 @@
     {if $teamSeat}
         {var $cor = 'translate(' . $seat->layout_x . ',' . ($seat->layout_y+15) . ')'}
         <g transform="{$cor}">
-            <text text-anchor="middle">{$teamSeat->getTeam()->e_fyziklani_team_id}</text>
+            <text>{$teamSeat->getTeam()->e_fyziklani_team_id}</text>
         </g>
         {include parent 'seat'=>$seat ,'className'=>('category-' . $teamSeat->getTeam()->category . ' occupied game-lang-' . $teamSeat->getTeam()->game_lang)}
     {else}
@@ -15,34 +15,6 @@
 
     {var $cor2 = 'translate(' . $seat->layout_x . ',' . ($seat->layout_y-25) . ')'}
     <g transform="{$cor2}">
-        <text text-anchor="middle">{$seat->getPrimary()}</text>
+        <text>{$seat->getPrimary()}</text>
     </g>
-{/block}
-{block SVGstyles}
-    {include parent}
-    <style>
-        circle.team-seat.category-A {
-            fill: #ff5555 !important;;
-        }
-
-        circle.team-seat.category-B {
-            fill: #55ff55 !important;;
-        }
-
-        circle.team-seat.category-C {
-            fill: #5555ff !important;;
-        }
-
-        circle.team-seat.game-lang-cs {
-            stroke: black !important;
-            stroke-dasharray: 10 10 !important;
-            stroke-width: 3px !important;
-        }
-
-        circle.team-seat.game-lang-en {
-            stroke: black !important;
-            stroke-dasharray: 3 3 !important;
-            stroke-width: 3px !important;
-        }
-    </style>
 {/block}

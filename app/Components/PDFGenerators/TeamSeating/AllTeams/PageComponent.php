@@ -34,6 +34,6 @@ class PageComponent extends SeatingPageComponent
 
     public function getPagesTemplatePath(): string
     {
-        return $this->formatPathByFormat(self::FORMAT_B5_PORTRAIT);
+        return $this->formatPathByFormat(self::FORMAT_B5_LANDSCAPE);
     }
 }

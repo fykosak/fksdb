@@ -1,0 +1,69 @@
+.seating-layout {
+  text {
+    text-anchor: middle;
+  }
+
+  .wall.wall-outer {
+    &, * {
+      stroke-dasharray: 5 5;
+      stroke: black;
+      fill: none;
+    }
+  }
+
+  .stage {
+    &, * {
+      fill: none;
+      stroke: black;
+    }
+
+    text {
+      alignment-baseline: center;
+    }
+  }
+
+  .team-seat {
+    text {
+      text-anchor: middle;
+      alignment-baseline: baseline;
+    }
+
+    &.free {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 3px;
+      stroke-dasharray: 4 4;
+    }
+
+    &.occupied {
+      fill: black;
+      stroke: none;
+    }
+
+    &.category-A {
+      fill: #d62728 !important;;
+    }
+
+    &.category-B {
+      fill: #1f77b4 !important;;
+    }
+
+    &.category-C {
+      fill: #2ca02c !important;;
+    }
+
+    &.game-lang-cs {
+      stroke: black !important;
+      stroke-dasharray: 10 10 !important;
+      stroke-width: 3px !important;
+    }
+
+    &.game-lang-en {
+      stroke: black !important;
+      stroke-dasharray: 3 3 !important;
+      stroke-width: 3px !important;
+    }
+  }
+
+
+}

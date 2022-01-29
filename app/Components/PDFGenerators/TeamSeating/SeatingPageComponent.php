@@ -15,7 +15,7 @@ abstract class SeatingPageComponent extends AbstractPageComponent
         parent::__construct($container);
     }
 
-    final protected function innerRender(RoomModel $room): void
+    final protected function innerRender(?RoomModel $room): void
     {
         $this->template->room = $room;
     }
