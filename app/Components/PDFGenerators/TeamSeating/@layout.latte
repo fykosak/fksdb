@@ -1,5 +1,5 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
-{layout './Rooms/layout.' . $room->layout . '.latte'}
+{varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room}
+{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team}
 {define seat}
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {default $className = 'free'}
@@ -16,69 +16,17 @@
         {include seat 'seat'=>FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
     {/foreach}
 {/define}
+{if $room}
+    {import './Rooms/layout.' . $room->layout . '.latte'}
+{else}
+    {import './Rooms/layout.na.latte'}
+{/if}
+{block content}
+    <div style="padding: .5rem">
+        <h2 style="font-size: 200%">{if $team}({$team->e_fyziklani_team_id}) {$team->name}{else}(0000) Team{/if}</h2>
+        {include structure}
+        <div style="clear: both"></div>
+        <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
+    </div>
+{/block}
 
-{define SVGstyles}
-    <style>
-        g.mode-single .team-id {
-            display: none;
-        }
-
-        g.mode-single .seat-id, g.mode-dev .seat-id {
-            display: none;
-        }
-
-        text {
-            text-shadow: 0.5px 0.5px 0 white;
-            text-anchor: middle;
-        }
-
-        .outer-walls polyline, .inner-walls polyline {
-            fill: none;
-            stroke: #555;
-        }
-
-        .outer-walls polyline {
-            stroke-width: 7px;
-        }
-
-        .inner-walls polyline {
-            stroke-width: 4px;
-        }
-
-        .outer-walls polygon, .inner-walls polygon {
-            fill: #555;
-            stroke: none;
-        }
-
-        .corridors polyline {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 2px;
-            stroke-dasharray: 10 10;
-        }
-
-        .grid polyline {
-            fill: none;
-            stroke: red;
-            stroke-width: 3px;
-            stroke-dasharray: 10 10;
-        }
-
-        polygon.stage {
-            fill: #ccc;
-            stroke: none;
-        }
-
-        circle.team-seat.free {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 3px;
-            stroke-dasharray: 4 4;
-        }
-
-        circle.team-seat.occupied {
-            fill: black;
-            stroke: none;
-        }
-    </style>
-{/define}

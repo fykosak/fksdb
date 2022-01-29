@@ -1,7 +1,7 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
 {varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[][] $rests}
-{block seat}
+{define seat}
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {var $teamSeat = $seat->getTeamSeat($team->getEvent())}
     {if $teamSeat && $teamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
@@ -14,10 +14,8 @@
     {else}
         {include parent 'seat'=>$seat ,'className'=>'free'}
     {/if}
-
-
-{/block}
-{block content}
+{/define}
+{define content}
     {include parent}
     {if count($rests)}
         <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
@@ -33,4 +31,4 @@
         {/foreach}
     {/foreach}
     </div>
-{/block}
+{/define}

@@ -6,7 +6,7 @@
     {if $team}
         {var $cor = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y+18) . ')'}
         <g transform="{$cor}">
-            <text text-anchor="middle">{$team->e_fyziklani_team_id}</text>
+            <text>{$team->e_fyziklani_team_id}</text>
         </g>
         {include parent 'seat'=>$seat ,'className'=>'occupied'}
     {else}

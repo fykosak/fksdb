@@ -1,13 +1,19 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
-{block content}
-    <h2 style="font-size: 200%">({$team->e_fyziklani_team_id}) {$team->name}</h2>
-    {*style="background-image: url('{$basePath}/images/fyziklani/rooms/bg.pva.png');"*}
-    <div>
-        <svg viewBox="-1100 -280 2100 780" style="margin: -2% 0 0 0">
-            {include SVGstyles}
+{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team}
+{define structure}
+    <div class="seating-layout seating-layout-pva">
+        <svg viewBox="-1010 -285 1930 790">
             <g>
-                <g>
-                    <polyline points="910,-280 910,500 -1000,500 -1000,-280"/>
+                <g class="wall wall-outer">
+                    <polyline points="910,-280 910,500 -1000,500 -1000,-280 910,-280"/>
+                </g>
+                <g class="stage" transform="translate(0,380)">
+                    <text transform="translate(0,40)">
+                        {switch $team && $team->game_lang}
+                            {case 'cs'}Podium
+                            {default}Stage
+                        {/switch}
+                    </text>
+                    <rect x="-60" y="0" height="80" width="120"/>
                 </g>
                 {*<g class="labels">
                     <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
@@ -22,6 +28,4 @@
             </g>
         </svg>
     </div>
-    <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
-{/block}
+{/define}

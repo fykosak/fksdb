@@ -24,20 +24,15 @@ class PageComponent extends SeatingPageComponent
         if (!$row instanceof ModelFyziklaniTeam) {
             $row = ModelFyziklaniTeam::createFromActiveRow($row);
         }
-        $teamSeat = $row->getTeamSeat();
-        if (!$teamSeat) {
-            $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../Rooms/layout.na.latte');
-            return;
-        }
-        $this->template->team = $row;
-
         $this->template->rests = $row->getScheduleRest();
-        $this->innerRender($teamSeat->getSeat()->getRoom());
+        $this->template->team = $row;
+        $teamSeat = $row->getTeamSeat();
+        $this->innerRender($teamSeat ? $teamSeat->getSeat()->getRoom() : null);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 
     public function getPagesTemplatePath(): string
     {
-        return $this->formatPathByFormat(self::FORMAT_B5_PORTRAIT);
+        return $this->formatPathByFormat(self::FORMAT_B5_LANDSCAPE);
     }
 }

@@ -329,7 +329,7 @@ class ModelPerson extends AbstractModel implements Resource
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
-            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL ');
+            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         foreach ($schedule as $pSchRow) {
             $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
             $payment = $pSchedule->getPayment();
