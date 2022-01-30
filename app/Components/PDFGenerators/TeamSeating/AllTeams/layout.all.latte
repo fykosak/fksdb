@@ -4,8 +4,7 @@
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {var $team = $seat->getTeamSeat($event)}
     {if $team}
-        {var $cor = 'translate(' . $seat->layout_x . ',' . -($seat->layout_y+18) . ')'}
-        <g transform="{$cor}">
+        <g transform="translate(0,18)">
             <text>{$team->e_fyziklani_team_id}</text>
         </g>
         {include parent 'seat'=>$seat ,'className'=>'occupied'}

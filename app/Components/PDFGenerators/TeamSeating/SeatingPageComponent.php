@@ -20,8 +20,8 @@ abstract class SeatingPageComponent extends AbstractPageComponent
         $this->template->room = $room;
     }
 
-    public function getPagesTemplatePath(): string
+    public function getPageFormat(): string
     {
-        return $this->formatPathByFormat(self::FORMAT_A5_PORTRAIT);
+        return self::FORMAT_B5_LANDSCAPE;
     }
 }

@@ -12,7 +12,7 @@ class DashboardPresenter extends BasePresenter
 
     public function titleDefault(): PageTitle
     {
-        return new PageTitle(null, _('Fyziklani game app'), 'fas fa-laptop-code');
+        return new PageTitle(null, _('Fyziklani game'), 'fas fa-laptop-code');
     }
 
     /**

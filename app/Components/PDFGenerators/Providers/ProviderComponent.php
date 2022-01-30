@@ -27,10 +27,22 @@ final class ProviderComponent extends BaseComponent
         return $this->pageComponent;
     }
 
-    public function render(array $params = []): void
+    private function innerRender(array $params = []): void
     {
         $this->template->items = $this->items;
         $this->template->params = $params;
-        $this->template->render($this->pageComponent->getPagesTemplatePath());
+        $this->template->format = $this->pageComponent->getPageFormat();
+    }
+
+    public function renderPrint(array $params = []): void
+    {
+        $this->innerRender($params);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'pages.print.latte');
+    }
+
+    public function renderPreview(array $params = []): void
+    {
+        $this->innerRender($params);
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'pages.preview.latte');
     }
 }

@@ -65,5 +65,11 @@
     }
   }
 
+  .sectors .sector text {
+    font-size: 1.8rem;
 
+    tspan {
+      alignment-baseline: middle;
+    }
+  }
 }

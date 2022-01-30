@@ -9,14 +9,21 @@
         <circle
                 style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
                 r="100"
-                cx="{$seat->layout_x}"
-                cy="{$seat->layout_y}"/>
+                cx="0"
+                cy="0"/>
     {else}
         {include parent 'seat'=>$seat ,'className'=>'free'}
     {/if}
 {/define}
+{define headline}
+    ({$team->e_fyziklani_team_id}) {$team->name}
+    {var $teamSeat = $team->getTeamSeat()}
+    {if $teamSeat}
+        <small class="text-muted">{_'Sector'} {$teamSeat->getSeat()->sector}</small>
+    {/if}
+{/define}
 {define content}
-    {include parent}
+    {include parent sector:$team && $team->getTeamSeat()?$team->getTeamSeat()->getSeat()->sector:null}
     {if count($rests)}
         <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
     {/if}

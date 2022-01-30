@@ -1,19 +1,22 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team}
 {define seat}
     {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {default $className = 'free'}
     <circle
             class="{$className . ' team-seat'}"
             r="15"
-            cx="{$seat->layout_x}"
-            cy="{$seat->layout_y}"
+            cx="0"
+            cy="0"
     />
 {/define}
 
 {define seats}
     {foreach $room->getSeats() as $row}
-        {include seat 'seat'=>FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+        {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
+        <g transform="{$cor}">
+            {include seat 'seat'=>$seat}
+        </g>
     {/foreach}
 {/define}
 {if $room}
@@ -21,12 +24,16 @@
 {else}
     {import './Rooms/layout.na.latte'}
 {/if}
+{define headline}
+    (0000) Team
+{/define}
 {block content}
-    <div style="padding: .5rem">
-        <h2 style="font-size: 200%">{if $team}({$team->e_fyziklani_team_id}) {$team->name}{else}(0000) Team{/if}</h2>
-        {include structure}
-        <div style="clear: both"></div>
-        <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
-    </div>
+    <h2 style="font-size: 200%">
+        {include headline}
+    </h2>
+    {default $sector = null}
+    {include structure sector:$sector}
+    <div style="clear: both"></div>
+    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
 {/block}
 

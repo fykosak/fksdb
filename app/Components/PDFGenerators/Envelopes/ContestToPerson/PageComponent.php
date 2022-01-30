@@ -38,8 +38,8 @@ class PageComponent extends AbstractPageComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');
     }
 
-    public function getPagesTemplatePath(): string
+    public function getPageFormat(): string
     {
-        return $this->formatPathByFormat($this->format);
+        return $this->format;
     }
 }

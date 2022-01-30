@@ -30,9 +30,4 @@ class PageComponent extends SeatingPageComponent
         $this->innerRender($teamSeat ? $teamSeat->getSeat()->getRoom() : null);
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
-
-    public function getPagesTemplatePath(): string
-    {
-        return $this->formatPathByFormat(self::FORMAT_B5_LANDSCAPE);
-    }
 }

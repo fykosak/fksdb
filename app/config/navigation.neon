@@ -73,7 +73,7 @@ navigation:
             Fyziklani.Task.list: []
             Fyziklani.Task.import: []
             Fyziklani.GameSetup.default: []
-            Fyziklani.Seating.default: []
+            Fyziklani.Seating.list: []
         Fyziklani.Results.default:
             Fyziklani.Dashboard.default: []
             Fyziklani.Diplomas.results: []

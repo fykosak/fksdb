@@ -1,11 +1,21 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team}
 {define structure}
+    {default string|null $sector = null}
     <div class="seating-layout seating-layout-pva">
-        <svg viewBox="-1010 -285 1930 790">
+        <svg viewBox="-1110 -285 2030 790" style="overflow: visible">
             <g>
                 <g class="wall wall-outer">
-                    <polyline points="910,-280 910,500 -1000,500 -1000,-280 910,-280"/>
+                    <polyline points="-1025,-40 -1000,-40 -1000,-280 910,-280 910,500 -1000,500 -1000,40 -1025,40"/>
                 </g>
+                <text font-size="2rem" transform="translate(-1050,-60)">
+                    <tspan alignment-baseline="middle">{_'WC'}</tspan>
+                </text>
+                <text font-size="2rem" transform="translate(-1050,60)">
+                    <tspan alignment-baseline="middle">{_'WC'}</tspan>
+                </text>
+                <text font-size="1.75rem" transform="translate(-950,0)">
+                    <tspan alignment-baseline="middle">{_'Entrance'}</tspan>
+                </text>
                 <g class="stage" transform="translate(0,380)">
                     <text transform="translate(0,40)">
                         {switch $team && $team->game_lang}
@@ -15,14 +25,42 @@
                     </text>
                     <rect x="-60" y="0" height="80" width="120"/>
                 </g>
-                {*<g class="labels">
-                    <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
-                    <text font-size="3rem" transform="translate(520,-1230) rotate(-45)">{_'B sector'}</text>
-                    <text font-size="3rem" transform="translate(320,-800) rotate(-90)">{_'C sector'}</text>
-                    <text font-size="3rem" transform="translate(680,-400)">{_'D sector'}</text>
-                    <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
-                </g>*}
-                <g class="seats">
+                <g class="sectors">
+                    {if is_null($sector) || $sector === 'A'}
+                        <g class="sector" transform="translate(60,-60) rotate(45)">
+                            <rect x="-50" width="100" y="-8" height="16"></rect>
+                            <text transform="translate(0,-30)">
+                                <tspan>{_'Opravovatelé A'}</tspan>
+                            </text>
+                        </g>
+                    {/if}
+                    {if is_null($sector) || $sector === 'D'}
+                        <g class="sector" transform="translate(60,60) rotate(-45)">
+                            <rect x="-50" width="100" y="-8" height="16"></rect>
+                            <text transform="translate(0,30)">
+                                <tspan>{_'Opravovatelé D'}</tspan>
+                            </text>
+                        </g>
+                    {/if}
+                    {if is_null($sector) || $sector === 'C'}
+                        <g class="sector" transform="translate(-60,60) rotate(45)">
+                            <rect x="-50" width="100" y="-8" height="16"></rect>
+                            <text transform="translate(0,30)">
+                                <tspan>{_'Opravovatelé C'}</tspan>
+                            </text>
+                        </g>
+                    {/if}
+                    {if is_null($sector) || $sector === 'B'}
+                        <g class="sector" transform="translate(-60,-60) rotate(-45)">
+                            <rect x="-50" width="100" y="-8" height="16"></rect>
+                            <text transform="translate(0,-30)">
+                                <tspan>{_'Opravovatelé B'}</tspan>
+                            </text>
+                        </g>
+                    {/if}
+                </g>
+                <g class=" seats
+                        ">
                     {include seats}
                 </g>
             </g>

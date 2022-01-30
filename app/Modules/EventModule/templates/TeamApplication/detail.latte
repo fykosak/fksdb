@@ -84,8 +84,7 @@
     <hr/>
     {if $event->event_type_id === 1}
         <h2>{_'Seating'}</h2>
-        {FKSDB\Components\Badges\NotSetBadge::getHtml()}
-        {*control seating*}
+        {control seating:preview}
     {/if}
 
 {/block}
