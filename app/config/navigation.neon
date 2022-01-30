@@ -74,9 +74,6 @@ navigation:
             Fyziklani.Task.import: []
             Fyziklani.GameSetup.default: []
             Fyziklani.Seating.default: []
-        Fyziklani.Seating.default:
-            Fyziklani.Seating.preview: []
-            Fyziklani.Seating.list: []
         Fyziklani.Results.default:
             Fyziklani.Dashboard.default: []
             Fyziklani.Diplomas.results: []

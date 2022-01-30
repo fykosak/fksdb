@@ -1,9 +1,14 @@
 {block content}
     <h2>{_'All teams'}</h2>
-    {control seatingPreview ['all']}
+    <iframe srcdoc="{control seatingPreview ['all']}"
+            style="overflow-y: scroll;width: 100%; min-height: 20rem"
+    ></iframe>
     <hr/>
     <h2>{_'All team includes catogory and position Id'}</h2>
-    {control seatingPreview ['dev']}
+    <iframe srcdoc="{control seatingPreview ['dev']}"
+            style="overflow-y: scroll;width: 100%; min-height: 20rem"
+    ></iframe>
+
     <div>
         <div class="row">
             <div style="width: 15px;height: 15px;background-color: #ff0000;border-radius: 15px"></div>
@@ -29,6 +34,7 @@
     </div>
     <hr/>
     <h2>{_'Empty'}</h2>
-    {control seatingPreview ['empty']}
-
-{/block content}
+    <iframe srcdoc="{control seatingPreview ['empty']}"
+            style="overflow-y: scroll;width: 100%; min-height: 20rem"
+    ></iframe>
+{/block}

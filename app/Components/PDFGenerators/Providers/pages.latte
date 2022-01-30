@@ -3,50 +3,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {block head}
-        <style>
-            @media all {
-                body {
-                    width: 100%;
-                    height: 100%;
-                    margin: 0;
-                    padding: 0;
-                    /*background-color: #FAFAFA;*/
-                    font: 12pt sans-serif;
-                }
-
-                * {
-                    box-sizing: border-box;
-                    -moz-box-sizing: border-box;
-                }
-
-                .page {
-                    position: relative;
-                    page-break-before: always;
-                    page-break-after: always;
-                    margin: 0 auto;
-                    /* background: red;*/
-                    padding: 0;
-                }
-
-                @page {
-                    margin: 0;
-                }
-            }
-
-            @media screen {
-                .page {
-                    border: 1px dotted #ccc;
-                }
-            }
-
-        </style>
-    {/block}
+    <link href="/assets/main.css" rel="stylesheet"/>
     <title></title>
 </head>
-<body>
+<body class="to-print">
 {foreach $items as $item}
-    <div class="page" style="position: relative">
+    <div class="page page-{$format}" style="position: relative">
         {control page $item, $params}
     </div>
 {/foreach}

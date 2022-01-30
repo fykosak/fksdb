@@ -1,1 +1,14 @@
-{control seatingList}
+{block content}
+    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel[] $rooms}
+    <ul>
+        {foreach $rooms as $room}
+            <li>
+                <a href="{plink preview id: $room->fyziklani_room_id}">
+                    {$room->name}
+                </a>
+            </li>
+        {/foreach}
+    </ul>
+    <hr>
+    <a href="{plink print}">{_'Print'}</a>
+{/block}

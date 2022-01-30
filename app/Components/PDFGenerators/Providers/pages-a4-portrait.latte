@@ -1,17 +1,3 @@
 {layout './pages.latte'}
-{block head}
-    {include parent}
-    <style>
-        @media all {
-            .page {
-                width: 210mm;
-                height: 297mm;
-            }
-
-            @page {
-                size: A4 portrait;
-            }
-        }
-    </style>
-{/block}
+{var $format = 'a5-portrait'}
 

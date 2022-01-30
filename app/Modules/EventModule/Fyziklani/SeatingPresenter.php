@@ -10,7 +10,6 @@ use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -33,14 +32,14 @@ class SeatingPresenter extends BasePresenter
         $this->roomService = $roomService;
     }
 
-    public function titleDefault(): PageTitle
+    public function titlePrint(): PageTitle
     {
-        return new PageTitle(null, _('Rooming'), 'fa map-marked-alt');
+        return new PageTitle(null, _('Print'), 'fa fa-map-marked-alt');
     }
 
     public function titleList(): PageTitle
     {
-        return new PageTitle(null, _('List of all teams'), 'fa fa-print');
+        return new PageTitle(null, _('List of rooms'), 'fa fa-print');
     }
 
     public function titlePreview(): PageTitle
@@ -53,7 +52,15 @@ class SeatingPresenter extends BasePresenter
      */
     public function authorizedPreview(): void
     {
-        $this->setAuthorized($this->isAllowed('fyziklani.seating', 'default'));
+        $this->authorizedList();
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizedPrint(): void
+    {
+        $this->authorizedList();
     }
 
     /**
@@ -67,25 +74,9 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault(): void
-    {
-        $this->setAuthorized($this->isAllowed('fyziklani.seating', 'default'));
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
     final public function renderList(): void
     {
-        $this->template->event = $this->getEvent();
-        $teams = $this->getEvent()->getTeams();
-        $this->template->teams = $teams;
-        $toPayAll = [];
-        foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
-            $toPayAll[$team->getPrimary()] = $team->getScheduleRest();
-        }
-        $this->template->toPay = $toPayAll;
+        $this->template->rooms = $this->roomService->getTable();
     }
 
     /**
