@@ -10,7 +10,7 @@
                 style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
                 r="100"
                 cx="{$seat->layout_x}"
-                cy="{-$seat->layout_y}"/>
+                cy="{$seat->layout_y}"/>
     {else}
         {include parent 'seat'=>$seat ,'className'=>'free'}
     {/if}
@@ -21,14 +21,16 @@
         <b>{$team->game_lang === 'en'?'Payment necessary':'Nutná platba'}</b>
     {/if}
     <div style="columns: 2">
-    {foreach $rests as $personRest}
-        {foreach $personRest as $rest}
-            {if $team->game_lang === 'cs'}
-                &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->price_czk} Kč &#8211; {substr($rest->getScheduleItem()->name_cs, 0, 5)}<br>
-            {else}
-                &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->price_eur} &#128; &#8211; {substr($rest->getScheduleItem()->name_en, 0, 5)}<br>
-            {/if}
+        {foreach $rests as $personRest}
+            {foreach $personRest as $rest}
+                {if $team->game_lang === 'cs'}
+                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#8211; {substr($rest->getScheduleItem()->name_cs, 0, 5)}
+                    <br>
+                {else}
+                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#128; &#8211; {substr($rest->getScheduleItem()->name_en, 0, 5)}
+                    <br>
+                {/if}
+            {/foreach}
         {/foreach}
-    {/foreach}
     </div>
 {/define}

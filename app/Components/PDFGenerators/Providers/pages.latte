@@ -1,18 +1,7 @@
-{varType iterable $items}
-{varType array $params}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link href="/assets/main.css" rel="stylesheet"/>
-    <title></title>
-</head>
-<body class="to-print">
-{foreach $items as $item}
-    <div class="page page-{$format}" style="position: relative">
-        {control page $item, $params}
-    </div>
-{/foreach}
-</body>
-</html>
-
-
+<div class="to-print">
+    {foreach $items as $item}
+        <div class="page page-{$format}" style="position: relative">
+            {control page $item, $params}
+        </div>
+    {/foreach}
+</div>
