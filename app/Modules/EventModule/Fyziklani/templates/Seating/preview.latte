@@ -1,10 +1,13 @@
 {block content}
     <h2>{_'All teams'}</h2>
-    {control seatingPreview ['all']}
+    <div class="print-area">
+        {control seatingPreview ['all']}
+    </div>
     <hr/>
     <h2>{_'All team includes catogory and position Id'}</h2>
-    {control seatingPreview ['dev']}
-
+    <div class="print-area">
+        {control seatingPreview ['dev']}
+    </div>
     <div>
         <div class="row">
             <div style="width: 15px;height: 15px;background-color: #ff0000;border-radius: 15px"></div>
@@ -30,5 +33,7 @@
     </div>
     <hr/>
     <h2>{_'Empty'}</h2>
-    {control seatingPreview ['empty']}
+    <div class="print-area">
+        {control seatingPreview ['empty']}
+    </div>
 {/block}
