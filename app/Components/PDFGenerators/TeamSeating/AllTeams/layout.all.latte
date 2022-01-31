@@ -1,7 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
-{block seat}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
+{define seat  FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {var $team = $seat->getTeamSeat($event)}
     {if $team}
         <g transform="translate(0,18)">
@@ -11,4 +10,4 @@
     {else}
         {include parent 'seat'=>$seat ,'className'=>'free'}
     {/if}
-{/block}
+{/define}

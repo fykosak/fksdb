@@ -1,5 +1,4 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
-{define structure}
+{define structure FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team=null, string|null $sector = null, FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel $room}
     <h2 style="font-size: 200%">({$team->e_fyziklani_team_id}) {$team->name}</h2>
     <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
         <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
@@ -12,7 +11,7 @@
                     <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
                 </g>
                 <g class="seats">
-                    {include seats}
+                    {include seats room:$}
                 </g>
             </g>
         </svg>

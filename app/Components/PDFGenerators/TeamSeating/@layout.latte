@@ -1,7 +1,5 @@
 {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room}
-{define seat}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
-    {default $className = 'free'}
+{define seat FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat, sting $className = 'free'}
     <circle
             class="{$className . ' team-seat'}"
             r="15"
@@ -19,21 +17,22 @@
         </g>
     {/foreach}
 {/define}
+
+<h2 style="font-size: 200%">
+    {block headline}
+        (0000) Team
+    {/block}
+</h2>
+{default $sector = null}
 {if $room}
     {import './Rooms/layout.' . $room->layout . '.latte'}
 {else}
     {import './Rooms/layout.na.latte'}
 {/if}
-{define headline}
-    (0000) Team
-{/define}
-{block content}
-    <h2 style="font-size: 200%">
-        {include headline}
-    </h2>
-    {default $sector = null}
-    {include structure sector:$sector}
-    <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" style="float:right;max-width: 25%"/>
+{include structure sector:$sector}
+<div style="clear: both"></div>
+{block logo}
+    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" alt="" style="float:right;max-width: 25%"/>
 {/block}
+{block upperContent}{/block}
 

@@ -1,7 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
-{block seat}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
+{define seat seat FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
     {var $teamSeat = $seat->getTeamSeat($event)}
     {if $teamSeat}
         {include parent 'seat'=>$seat ,'className'=>('category-' . $teamSeat->getTeam()->category . ' occupied game-lang-' . $teamSeat->getTeam()->game_lang)}
@@ -15,4 +14,4 @@
     <g transform="translate(0,-25)">
         <text>{$seat->getPrimary()}</text>
     </g>
-{/block}
+{/define}

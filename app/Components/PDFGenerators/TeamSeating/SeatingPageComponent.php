@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\PDFGenerators\TeamSeating;
 
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
+use FKSDB\Components\PDFGenerators\TeamSeating\Rooms\RoomStructureComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use Nette\DI\Container;
 

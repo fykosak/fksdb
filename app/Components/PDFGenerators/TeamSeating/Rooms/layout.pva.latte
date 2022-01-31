@@ -1,6 +1,4 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team}
-{define structure}
-    {default string|null $sector = null}
+{define structure FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team = null, string|null $sector = null}
     <div class="seating-layout seating-layout-pva">
         <svg viewBox="-1110 -285 2030 790" style="overflow: visible">
             <g>
@@ -20,7 +18,8 @@
                     <text transform="translate(0,40)">
                         {switch $team && $team->game_lang}
                             {case 'cs'}Podium
-                            {default}Stage
+                            {case 'en'}Stage
+                            {default}{_'Stage'}
                         {/switch}
                     </text>
                     <rect x="-60" y="0" height="80" width="120"/>
@@ -59,8 +58,7 @@
                         </g>
                     {/if}
                 </g>
-                <g class=" seats
-                        ">
+                <g class=" seats">
                     {include seats}
                 </g>
             </g>
