@@ -62,7 +62,7 @@
 {else}
     {import './Rooms/layout.na.latte'}
 {/if}
-{include structure sector:$sector}
+{include structure sector:$sector, lang:$team? $team->game_lang:null}
 <div style="clear: both"></div>
 {block logo}
     <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" alt="" style="float:right;max-width: 25%"/>

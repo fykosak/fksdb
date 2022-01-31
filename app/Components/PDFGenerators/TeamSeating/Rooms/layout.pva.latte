@@ -1,4 +1,4 @@
-{define structure FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team = null, string|null $sector = null}
+{define structure string|null $lang=null, string|null $sector = null}
     <div class="seating-layout seating-layout-pva">
         <svg viewBox="-1110 -285 2030 790" style="overflow: visible">
             <g>
@@ -12,11 +12,17 @@
                     <tspan alignment-baseline="middle">{_'WC'}</tspan>
                 </text>
                 <text font-size="1.75rem" transform="translate(-950,0)">
-                    <tspan alignment-baseline="middle">{_'Entrance'}</tspan>
+                    <tspan alignment-baseline="middle">
+                        {switch $lang}
+                            {case 'cs'}Vchod
+                            {case 'en'}Entrance
+                            {default}{_'Entrance'}
+                        {/switch}
+                    </tspan>
                 </text>
                 <g class="stage" transform="translate(0,380)">
                     <text transform="translate(0,40)">
-                        {switch $team && $team->game_lang}
+                        {switch $lang}
                             {case 'cs'}Podium
                             {case 'en'}Stage
                             {default}{_'Stage'}
@@ -29,7 +35,13 @@
                         <g class="sector" transform="translate(60,-60) rotate(45)">
                             <rect x="-50" width="100" y="-8" height="16"></rect>
                             <text transform="translate(0,-30)">
-                                <tspan>{_'Opravovatelé A'}</tspan>
+                                <tspan>
+                                    {switch $lang}
+                                        {case 'cs'}Opravovatelé A
+                                        {case 'en'}Correctors A
+                                        {default}{_'Correctors A'}
+                                    {/switch}
+                                </tspan>
                             </text>
                         </g>
                     {/if}
@@ -37,7 +49,13 @@
                         <g class="sector" transform="translate(60,60) rotate(-45)">
                             <rect x="-50" width="100" y="-8" height="16"></rect>
                             <text transform="translate(0,30)">
-                                <tspan>{_'Opravovatelé D'}</tspan>
+                                <tspan>
+                                    {switch $lang}
+                                        {case 'cs'}Opravovatelé D
+                                        {case 'en'}Correctors D
+                                        {default}{_'Correctors D'}
+                                    {/switch}
+                                </tspan>
                             </text>
                         </g>
                     {/if}
@@ -45,7 +63,13 @@
                         <g class="sector" transform="translate(-60,60) rotate(45)">
                             <rect x="-50" width="100" y="-8" height="16"></rect>
                             <text transform="translate(0,30)">
-                                <tspan>{_'Opravovatelé C'}</tspan>
+                                <tspan>
+                                    {switch $lang}
+                                        {case 'cs'}Opravovatelé C
+                                        {case 'en'}Correctors C
+                                        {default}{_'Correctors C'}
+                                    {/switch}
+                                </tspan>
                             </text>
                         </g>
                     {/if}
@@ -53,7 +77,13 @@
                         <g class="sector" transform="translate(-60,-60) rotate(-45)">
                             <rect x="-50" width="100" y="-8" height="16"></rect>
                             <text transform="translate(0,-30)">
-                                <tspan>{_'Opravovatelé B'}</tspan>
+                                <tspan>
+                                    {switch $lang}
+                                        {case 'cs'}Opravovatelé B
+                                        {case 'en'}Correctors B
+                                        {default}{_'Correctors B'}
+                                    {/switch}
+                                </tspan>
                             </text>
                         </g>
                     {/if}
