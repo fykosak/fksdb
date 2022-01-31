@@ -4,68 +4,61 @@
 {varType bool[] $seatsParams}
 {varType string|null $sector}
 
-{define seats}
-    {foreach $room->getSeats() as $row}
-        {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
-        {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
-        <g transform="{$cor}">
-            {var FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $selectedTeam = null}
-            {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
-            {if $team}
-                {if $occuiedTeamSeat && $occuiedTeamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
-                    {do $selectedTeam = $team}
-                {/if}
-            {else}
-                {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->getTeam():null}
-            {/if}
-
-            {var $className = $selectedTeam?' occupied':' free'}
-            {if $seatsParams['showTeamCategory'] && $selectedTeam}
-                {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
-            {/if}
-            <circle
-                    class="{$className . ' team-seat'}"
-                    r="15"
-                    cx="0"
-                    cy="0"
-            />
-            {if $seatsParams['showTeamId'] && $selectedTeam}
-                <g transform="translate(0,18)">
-                    <text>{$selectedTeam->e_fyziklani_team_id}</text>
-                </g>
-            {/if}
-            {if $seatsParams['showSeatId']}
-                <g transform="translate(0,-25)">
-                    <text>{$seat->getPrimary()}</text>
-                </g>
-            {/if}
-            {if $seatsParams['showBigNav'] && $selectedTeam}
-                <circle
-                        style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
-                        r="100"
-                        cx="0"
-                        cy="0"
-                />
-            {/if}
-        </g>
-    {/foreach}
-{/define}
-
 <h2 style="font-size: 200%">
     {block headline}
         (0000) Team
     {/block}
 </h2>
+{embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
+    {block seats}
+        {foreach $room->getSeats() as $row}
+            {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+            {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
+            <g transform="{$cor}">
+                {var FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $selectedTeam = null}
+                {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
+                {if $team}
+                    {if $occuiedTeamSeat && $occuiedTeamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
+                        {do $selectedTeam = $team}
+                    {/if}
+                {else}
+                    {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->getTeam():null}
+                {/if}
 
-{if $room}
-    {import './Rooms/layout.' . $room->layout . '.latte'}
-{else}
-    {import './Rooms/layout.na.latte'}
-{/if}
-{include structure sector:$sector, lang:$team? $team->game_lang:null}
+                {var $className = $selectedTeam?' occupied':' free'}
+                {if $seatsParams['showTeamCategory'] && $selectedTeam}
+                    {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
+                {/if}
+                <circle
+                        class="{$className . ' team-seat'}"
+                        r="15"
+                        cx="0"
+                        cy="0"
+                />
+                {if $seatsParams['showTeamId'] && $selectedTeam}
+                    <g transform="translate(0,18)">
+                        <text>{$selectedTeam->e_fyziklani_team_id}</text>
+                    </g>
+                {/if}
+                {if $seatsParams['showSeatId']}
+                    <g transform="translate(0,-25)">
+                        <text>{$seat->getPrimary()}</text>
+                    </g>
+                {/if}
+                {if $seatsParams['showBigNav'] && $selectedTeam}
+                    <circle
+                            style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
+                            r="100"
+                            cx="0"
+                            cy="0"
+                    />
+                {/if}
+            </g>
+        {/foreach}
+    {/block}
+{/embed}
 <div style="clear: both"></div>
 {block logo}
     <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" alt="" style="float:right;max-width: 25%"/>
 {/block}
 {block upperContent}{/block}
-
