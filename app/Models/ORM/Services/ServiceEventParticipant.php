@@ -43,7 +43,7 @@ class ServiceEventParticipant extends OldAbstractServiceSingle
     {
         $person = $model->getPerson();
         if ($person) {
-            $person->removeScheduleForEvent($model->event_id);
+            $person->removeScheduleForEvent($model->getEvent());
         }
         parent::dispose($model);
     }

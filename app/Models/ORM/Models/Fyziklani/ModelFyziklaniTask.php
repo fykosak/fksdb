@@ -18,6 +18,7 @@ class ModelFyziklaniTask extends AbstractModel
     {
         return [
             'label' => $this->label,
+            'points' => 5,
             'taskId' => $this->fyziklani_task_id,
             'name' => $hideName ? null : $this->name,
         ];

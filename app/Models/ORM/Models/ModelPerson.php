@@ -294,11 +294,11 @@ class ModelPerson extends AbstractModel implements Resource
      * Definitely ugly but, there is only this way... Mišo
      * TODO refactoring
      */
-    public function removeScheduleForEvent(int $eventId): void
+    public function removeScheduleForEvent(ModelEvent $event): void
     {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where(
             'schedule_item.schedule_group.event_id=?',
-            $eventId
+            $event->event_id
         );
         foreach ($query as $row) {
             $row->delete();
@@ -329,7 +329,7 @@ class ModelPerson extends AbstractModel implements Resource
         $toPay = [];
         $schedule = $this->getScheduleForEvent($event)
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
-            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL ');
+            ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         foreach ($schedule as $pSchRow) {
             $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
             $payment = $pSchedule->getPayment();

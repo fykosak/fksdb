@@ -58,6 +58,8 @@ class FyziklaniModule extends EventModuleTestCase
             ['Fyziklani:Submit', 'list'],
             ['Fyziklani:Task', 'import'],
             ['Fyziklani:Task', 'list'],
+            ['Fyziklani:Seating', 'list'],
+            ['Fyziklani:Seating', 'print'],
         ];
     }
 }

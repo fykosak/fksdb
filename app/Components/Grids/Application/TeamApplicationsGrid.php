@@ -36,14 +36,6 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
             'e_fyziklani_team.name',
             'e_fyziklani_team.status',
         ]);
-        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
-            $model = ModelFyziklaniTeam::createFromActiveRow($row);
-            $position = $model->getPosition();
-            if (is_null($position)) {
-                return NotSetBadge::getHtml();
-            }
-            return $position->getRoom()->name;
-        });
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
         $this->addCSVDownloadButton();
         parent::configure($presenter);

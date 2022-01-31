@@ -159,7 +159,7 @@ class PaymentPresenter extends BasePresenter
     {
         try {
             $this->getMachine();
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return false;
         }
         return true;

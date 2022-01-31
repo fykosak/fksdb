@@ -1,0 +1,8 @@
+{varType iterable $items}
+{varType string $format}
+{varType array $params}
+{foreach $items as $item}
+    <div class="page page-{$format}" style="position: relative">
+        {control page $item, $params}
+    </div>
+{/foreach}

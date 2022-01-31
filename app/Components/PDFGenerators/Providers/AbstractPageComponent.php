@@ -20,14 +20,9 @@ abstract class AbstractPageComponent extends BaseComponent
     /**
      * @param mixed $row
      */
-    abstract public function render($row): void;
+    abstract public function render($row, array $params = []): void;
 
-    abstract public function getPagesTemplatePath(): string;
-
-    final protected function formatPathByFormat(string $format): string
-    {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'pages-' . $format . '.latte';
-    }
+    abstract public function getPageFormat(): string;
 
     public static function getAvailableFormats(): array
     {
