@@ -22,7 +22,7 @@ class ServiceFyziklaniTeam extends OldAbstractServiceSingle
         $teams = [];
         foreach ($event->getPossiblyAttendingTeams() as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
-            $teams[] = $team->__toArray(true);
+            $teams[] = $team->__toArray();
         }
         return $teams;
     }

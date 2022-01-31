@@ -49,10 +49,10 @@ orm:
             columnFactories:
                 ct_id:
                     type: primaryKey
-                    title: _(Contestant Id)
+                    title: _('Contestant Id')
                 year:
                     type: string
-                    title: _(Year)
+                    title: _('Year')
             linkFactories:
                 edit:
                     destination: ':Org:Contestant:edit'
@@ -69,32 +69,32 @@ orm:
             columnFactories:
                 email_message_id:
                     type: primaryKey
-                    title: _(Message Id)
+                    title: _('Message Id')
                 recipient:
                     sender:
                     type: email
-                    title: _(Recipient)
+                    title: _('Recipient')
                 sender:
                     type: email
-                    title: _(Sender)
+                    title: _('Sender')
                 reply_to:
                     type: email
-                    title: _(Reply to)
+                    title: _('Reply to')
                 subject:
                     type: string
-                    title: _(Subject)
+                    title: _('Subject')
                 carbon_copy:
                     type: email
-                    title: _(Cc)
+                    title: _('Cc')
                 blind_carbon_copy:
                     type: email
-                    title: _(Bcc)
+                    title: _('Bcc')
                 text:
                     type: string
-                    title: _(Text)
+                    title: _('Text')
                 state:
                     type: state
-                    title: _(State)
+                    title: _('State')
                     states:
                         saved: [badge :'badge bg-color-1', label: Saved]
                         waiting: [badge :'badge bg-color-2', label: Waiting]
@@ -109,7 +109,7 @@ orm:
             columnFactories:
                 event:
                     type: string
-                    title: _(Event)
+                    title: _('Event')
                     accessKey: name
                 role:
                     type: class
@@ -120,40 +120,40 @@ orm:
                     title: _('Event Id')
                 parameters:
                     type: text
-                    title: _(Parameters)
+                    title: _('Parameters')
                     description: _('In Neon syntax, the scheme is specific for each event.')
                 name:
                     type: string
-                    title: _(Name)
-                    description: _("For the camps, it is place.")
+                    title: _('Name')
+                    description: _("For the camps, it is its place.")
                     required: true
                 begin:
                     type: dateTime
-                    title: _(Event begin)
+                    title: _('Event begin')
                     required: true
                 end:
                     type: dateTime
-                    title: _(Event end)
+                    title: _('Event end')
                     required: false
                     description: _('For one-day events it is identical to the beginning.')
                 registration_begin:
                     type: dateTime
-                    title:  _(Registration begin)
+                    title:  _('Registration begin')
                 registration_end:
                     type: dateTime
-                    title: _(Registration end)
+                    title: _('Registration end')
                 report:
                     type: text
-                    description: _(Summary of the event.)
-                    title: _(Report)
+                    description: _('Summary of the event.')
+                    title: _('Report')
                 event_year:
                     type: int
-                    title: _(Event year)
+                    title: _('Event year')
                     required: true
                     description: _('The year of an event must be unique for a given event type.')
                 year:
                     type: int
-                    title: _(Contest year)
+                    title: _('Contest year')
                     omitInputField: true
                 event_type:
                     type: class
@@ -162,7 +162,7 @@ orm:
                 event_type_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Event\EventTypeColumnFactory
-                    title: _('Event type')
+                    title: _('Event type id')
                 event_link:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Event\EventLink
@@ -176,10 +176,10 @@ orm:
                 event_org_id:
                     accessKey: e_org_id
                     type: primaryKey
-                    title:  _(Event org Id)
+                    title:  _('Event org Id')
                 note:
                     type: string
-                    title: _(Note)
+                    title: _('Note')
              linkFactories:
                  edit:
                     destination: ':Event:EventOrg:edit'
@@ -203,30 +203,30 @@ orm:
                     title: _('Team')
                 status:
                     type: state
-                    title: _(State)
+                    title: _('State')
                     states: %event_participant.states%
                 created:
                     type: dateTime
-                    title: _(Created event)
+                    title: _('Created event')
                 swimmer:
                     type: logic
-                    title: _(Swimmer)
+                    title: _('Swimmer')
                 price:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\PriceColumnFactory
                     title: _('Price')
                 diet:
                     type: text
-                    title: _(Diet)
+                    title: _('Diet')
                 health_restrictions:
                     type: text
-                    title:  _(Health restrictions)
+                    title:  _('Health restrictions')
                 used_drugs:
                     type: text
-                    title: _(Used drugs)
+                    title: _('Used drugs')
                 note:
                     type: text
-                    title: _(Note)
+                    title: _('Note')
                 tshirt_color:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TShirtColorColumnFactory
@@ -237,27 +237,27 @@ orm:
                     title: _('T-shirt size')
                 arrival_ticket:
                     type: logic
-                    title: _(Arrival ticket)
+                    title: _('Arrival ticket')
                 arrival_time:
                     type: time
-                    title:  _(Arrival time)
+                    title:  _('Arrival time')
                     format: %H:%I
                 arrival_destination:
                     type: string
                     title: _('Arrival destination')
                 departure_time:
                     type: time
-                    title: _(Departure time)
+                    title: _('Departure time')
                     format: %H:%I
                 departure_destination:
                     type: string
                     title: _('Departure destination')
                 departure_ticket:
                     type: logic
-                    title: _(Departure ticket)
+                    title: _('Departure ticket')
                 event_participant_id:
                     type: primaryKey
-                    title:  _(Event participant Id)
+                    title:  _('Event participant Id')
                 lunch_count:
                     type: int
                     title: _('Number of baguettes for lunch')
@@ -279,7 +279,7 @@ orm:
             columnFactories:
                 login_id:
                     type: primaryKey
-                    title: _(login Id)
+                    title: _('login Id')
                 hash:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Login\HashColumnFactory
@@ -288,10 +288,10 @@ orm:
                     omitInputField: true
                 last_login:
                     type: dateTime
-                    title: _(Last logged)
+                    title: _('Last logged')
                 login:
                     type: string
-                    title: _(Login)
+                    title: _('Login')
                     permission: RESTRICT
         org:
              service: FKSDB\Models\ORM\Services\ServiceOrg
@@ -299,7 +299,7 @@ orm:
              columnFactories:
                 org_id:
                     type: primaryKey
-                    title: _(Org Id)
+                    title: _('Org Id')
                 since:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Org\SinceColumnFactory
@@ -325,7 +325,7 @@ orm:
                     title: _('Domain alias')
                 contribution:
                     type: string
-                    title: _(Contribution)
+                    title: _('Contribution')
                     description: _('For the hall of fame')
                 role:
                     type: string
@@ -357,28 +357,28 @@ orm:
                     title: _('Payment UId')
                  bank_account:
                     type: string
-                    title: _(Bank account)
+                    title: _('Bank account')
                  bank_name:
                     type: string
-                    title: _(Bank name)
+                    title: _('Bank name')
                  constant_symbol:
                     type: string
-                    title: Constant symbol
+                    title: _('Constant symbol')
                  iban:
                     type: string
                     title: _(IBAN)
                  specific_symbol:
                     type: string
-                    title: _(Specific symbol)
+                    title: _('Specific symbol')
                  swift:
                     type: string
                     title: _(SWIFT)
                  variable_symbol:
                     type: string
-                    title: Variable symbol
+                    title: _('Variable symbol')
                  recipient:
                     type: string
-                    title: _(Recipient)
+                    title: _('Recipient')
                  price:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Payment\PriceColumnFactory
@@ -389,7 +389,7 @@ orm:
                      title: _('Currency')
                  state:
                      type: state
-                     title: _(State)
+                     title: _('State')
                      states:
                          waiting: [badge: 'badge bg-warning', label: 'Waiting for paying']
                          canceled: [badge: 'badge bg-secondary', label: 'Payment canceled']
@@ -416,7 +416,7 @@ orm:
                     title: _('Person')
                 person_id:
                     type: primaryKey
-                    title: _(Person Id)
+                    title: _('Person Id')
                     permission: BASIC
                 gender:
                     type: class
@@ -425,24 +425,24 @@ orm:
                     title: _('Gender')
                 created:
                     type: dateTime
-                    title: _(Created)
+                    title: _('Created')
                 born_family_name:
                     type: string
-                    title: _(Born family name)
+                    title: _('Born family name')
                     description: _('Only if different from surname.')
                     permission: FULL
                 display_name:
                     type: string
-                    title: _(Display name)
+                    title: _('Display name')
                     description: _('Only if different from "Name Surname".')
                     permission: BASIC
                 family_name:
                     type: string
-                    title: _(Family name)
+                    title: _('Family name')
                     permission: BASIC
                 other_name:
                     type: string
-                    title: _(Other name)
+                    title: _('Other name')
                     permission: BASIC
         person_has_flag:
             service: FKSDB\Models\ORM\Services\ServicePersonHasFlag
@@ -454,7 +454,7 @@ orm:
                 school_id:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonHistory\SchoolIdColumnFactory
-                    title: _(School)
+                    title: _('School')
                 ac_year:
                     type: string
                     title: _('Academic year')
@@ -545,9 +545,9 @@ orm:
                         read: FULL
                         write: FULL
                 career:
-                    title: _(Current role)
+                    title: _('Current role')
                     type: text
-                    description: _(Shown in the organizers' list)
+                    description: _("Shown in the organizers' list")
                 im:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\ImColumnFactory
@@ -607,7 +607,7 @@ orm:
               columnFactories:
                   school:
                       type: string
-                      title: _(School)
+                      title: _('School')
                       accessKey: name_abbrev
               linkFactories:
                   edit:
@@ -639,29 +639,29 @@ orm:
                     title: _('Task')
                  series:
                     type: string
-                    title: _(Series)
+                    title: _('Series')
                  label:
                      type: string
-                     title: _(Label)
+                     title: _('Label')
                  name_cs:
                      type: string
-                     title: _(Name cs)
+                     title: _('Name cs')
                  task_id:
                      type: primaryKey
-                     title: _(Task Id)
+                     title: _('Task Id')
                  points:
                      type: string
-                     title: _(Points)
+                     title: _('Points')
                  year:
                      type: string
-                     title: _(Year)
+                     title: _('Year')
         task_contribution:
              service: FKSDB\Models\ORM\Services\ServiceTaskContribution
              model: FKSDB\Models\ORM\Models\ModelTaskContribution
              columnFactories:
                  type:
                     type: string
-                    title: _(Type)
+                    title: _('Type')
         task_study_year:
             service: FKSDB\Models\ORM\Services\ServiceTaskStudyYear
             model: FKSDB\Models\ORM\Models\ModelTaskStudyYear
@@ -685,11 +685,11 @@ orm:
                     title: _('Teaches until')
                  number_brochures:
                     type: int
-                    title: _(Number of brochures)
+                    title: _('Number of brochures')
                     description: _('Number of brochures/propagation items, that he wants to send.')
                  note:
                     type: text
-                    title: _(Note)
+                    title: _('Note')
              linkFactories:
                  edit:
                      destination: :Org:Teacher:edit
@@ -703,11 +703,14 @@ orm:
                      title: Detail
 #fyziklani
         fyziklani_room:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
-            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom
-        fyziklani_team_position:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
-            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel
+        fyziklani_seat:
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\SeatService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel
+        fyziklani_seat_team:
+            service: FKSDB\Models\ORM\Services\Fyziklani\Seating\TeamSeatService
+            model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
 
         fyziklani_submit:
              service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
@@ -715,20 +718,20 @@ orm:
              columnFactories:
                 fyziklani_submit_id:
                     type: primaryKey
-                    title: _(Submit Id)
+                    title: _('Submit Id')
                 state:
                     type: state
-                    title: _(State)
+                    title: _('State')
                     states:
                         not_checked: [badge: 'badge bg-danger', label: 'not checked']
                         checked: [badge: 'badge bg-success', label: 'checked']
                 created:
                     type: dateTime
-                    title: _(Created)
+                    title: _('Created')
                     format: 'H:m:s d-M-Y'
                 modified:
                     type: dateTime
-                    title: _(Modified)
+                    title: _('Modified')
                     format: 'H:m:s d-M-Y'
                 points:
                     type: class
@@ -740,39 +743,39 @@ orm:
              columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
-                    title: _(Task Id)
+                    title: _('Task Id')
                 name:
                     type: string
-                    title: _(Name)
+                    title: _('Name')
                 label:
                     type: string
-                    title: _(Label)
+                    title: _('Label')
         fyziklani_game_setup:
              service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
              model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
              columnFactories:
                 tasks_on_board:
                     type: string
-                    title: Tasks on board
+                    title: _('Tasks on board')
                 game_start:
                     type: dateTime
-                    title: _(Game start)
+                    title: _('Game start')
                 game_end:
                     type: dateTime
-                    title: _(Game end)
+                    title: _('Game end')
                 result_display:
                     type: dateTime
-                    title: _(Results display)
+                    title: _('Results display')
                 result_hide:
                     type: dateTime
-                    title: _(Results hide)
+                    title: _('Results hide')
                 refresh_delay:
                     type: int
-                    title: _(Refresh delay)
+                    title: _('Refresh delay')
                     suffix: ms
                 result_hard_display:
                     type: logic
-                    title: _(Hard display)
+                    title: _('Hard display')
                 available_points:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
@@ -783,44 +786,44 @@ orm:
              columnFactories:
                 e_fyziklani_team_id:
                   type: primaryKey
-                  title: _(Team Id)
+                  title: _('Team Id')
                 status:
                   type: state
-                  title: _(State)
+                  title: _('State')
                   states: %event_participant.states%
                 phone:
                     type: phone
-                    title: _(Phone)
+                    title: _('Phone')
                     writeOnly: false
                 note:
                     type: text
-                    title: _(Note)
+                    title: _('Note')
                     omitInputField: true
                 category:
                     type: string
-                    title: _(Category)
+                    title: _('Category')
                     omitInputField: true
                 created:
                     type: dateTime
-                    title: _(Created)
+                    title: _('Created')
                 rank_category:
                     type: string
-                    title: _(Rank in category)
+                    title: _('Rank in category')
                     omitInputField: true
                 rank_total:
                     type: string
-                    title: _(Total rank)
+                    title: _('Total rank')
                     omitInputField: true
                 points:
                     type: string
-                    title: _(Points)
+                    title: _('Points')
                     omitInputField: true
                 game_lang:
                     type: string
                     title: _('Game language')
                 force_a:
                     type: logic
-                    title: _(Force A)
+                    title: _('Force A')
                 password:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
@@ -855,10 +858,10 @@ orm:
              columnFactories:
                  schedule_group_id:
                     type: primaryKey
-                    title: _(Schedule group Id)
+                    title: _('Schedule group Id')
                  schedule_group_type:
                      type: state
-                     title: _(Type)
+                     title: _('Type')
                      states:
                          accommodation: [badge: 'badge bg-color-1', label: 'Accommodation']
                          accommodation_gender: [badge: 'badge bg-color-2', label: 'Accommodation gender']
@@ -872,67 +875,67 @@ orm:
                          vaccination_covid: [badge: 'badge bg-color-10', label: 'Covid-19 Vaccination']
                  start:
                     type: dateTime
-                    title: _(Schedule start)
+                    title: _('Schedule start')
                  end:
                     type: dateTime
-                    title: _(Schedule end)
+                    title: _('Schedule end')
                  name_cs:
                     type: string
-                    title: _(Name cs)
+                    title: _('Name cs')
                  name_en:
                     type: string
-                    title: _(Name en)
+                    title: _('Name en')
                  name:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleGroup\NameColumnFactory
-                    title: _(Group name)
+                    title: _('Group name')
         schedule_item:
              service: FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem
              model: FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem
              columnFactories:
                 schedule_item_id:
                     type: primaryKey
-                    title: _(Schedule item Id)
+                    title: _('Schedule item Id')
                 require_id_number:
                     type: logic
-                    title: _(Require Id number)
+                    title: _('Require Id number')
                 price_czk:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceCZKColumnFactory
-                    title: _(Price CZK)
+                    title: _('Price CZK')
                 price_eur:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\PriceEURColumnFactory
-                    title: _(Price EUR)
+                    title: _('Price EUR')
                 name_en:
                     type: string
-                    title: _(Name en)
+                    title: _('Name en')
                 name_cs:
                     type: string
-                    title: _(Name cs)
+                    title: _('Name cs')
                 name:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\NameColumnFactory
-                    title: _(Item name)
+                    title: _('Item name')
                     omitInputField: true
                 description_en:
                     type: string
-                    title: _(Description en)
+                    title: _('Description en')
                 description_cs:
                     type: string
-                    title: _(Description cs)
+                    title: _('Description cs')
                 capacity:
                     type: int
-                    title: _(Total capacity)
+                    title: _('Total capacity')
                     nullValueFormat: infinite
                 free_capacity:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\FreeCapacityColumnFactory
-                    title: _(Free capacity)
+                    title: _('Free capacity')
                 used_capacity:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem\UsedCapacityColumnFactory
-                    title: _(Used capacity)
+                    title: _('Used capacity')
         schedule_payment:
             service: FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment
             model: FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment
@@ -959,13 +962,13 @@ orm:
                     title: _('Query name')
                 query_id:
                     type: primaryKey
-                    title: _(Query Id)
+                    title: _('Query Id')
                 description:
                     type: text
-                    title: _(Description)
+                    title: _('Description')
                 php_post_proc:
                     type: string
-                    title: _(PHP post processing)
+                    title: _('PHP post processing')
                     description: _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.')
 
         stored_query_parameter:
@@ -984,25 +987,25 @@ orm:
              columnFactories:
                  product_id:
                      type: primaryKey
-                     title: _(Product Id)
+                     title: _('Product Id')
                  name_cs:
                      type: string
-                     title: _(Name cs)
+                     title: _('Name cs')
                  name_en:
                      type: string
-                     title: _(Name en)
+                     title: _('Name en')
                  description_cs:
                      type: string
-                     title: _(Description cs)
+                     title: _('Description cs')
                  description_en:
                      type: string
-                     title: _(Description en)
+                     title: _('Description en')
                  note:
                      type: text
-                     title: _(Note)
+                     title: _('Note')
                  category:
                      type: state
-                     title: _(Category)
+                     title: _('Category')
                      states:
                          game: {badge: 'badge bg-color-1', label: 'Game'}
                          game-extension: {badge: 'badge bg-color-1', label: 'Game extension'}
@@ -1019,10 +1022,10 @@ orm:
              columnFactories:
                  producer_id:
                      type: primaryKey
-                     title: _(Product Id)
+                     title: _('Product Id')
                  name:
                      type: string
-                     title: _(Producer)
+                     title: _('Producer')
         warehouse_item:
             service: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
             model: FKSDB\Models\ORM\Models\Warehouse\ModelItem

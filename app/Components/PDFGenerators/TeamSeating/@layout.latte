@@ -1,101 +1,67 @@
-{define place}
-    {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition $place}
-    {default $className = 'free'}
-    <circle
-            class="{$className . ' team-position'}"
-            r="15"
-            cx="{$place->x_coordinate}"
-            cy="{-$place->y_coordinate}"/>
-{/define}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition[] $places}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $row}
-<div>
-    <h2 style="font-size: 200%">({$row->e_fyziklani_team_id}) {$row->name}</h2>
-    <div style="background-image: url('{$basePath}/images/fyziklani/top-hotel-scheme.png');background-size: cover;">
-        <svg viewBox="0 -1650 1600 1600" style="margin: -2% 0 0 0">
-            {block SVGstyles}
-                <style>
-                    g.mode-single .team-id {
-                        display: none;
-                    }
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
+{default FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team = null}
+{default bool $showTeamId = false}
+{default bool $showBigNav = false}
+{default bool $showSeatId = false}
+{default bool $showTeamCategory = false}
+{default string|null $sector = null}
 
-                    g.mode-single .place-id, g.mode-dev .place-id {
-                        display: none;
-                    }
+<h2 style="font-size: 200%">
+    {block headline}
+        (0000) Team
+    {/block}
+</h2>
+{embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
+    {block seats}
+        {foreach $room->getSeats() as $row}
+            {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
+            {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
+            <g transform="{$cor}">
+                {var FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $selectedTeam = null}
+                {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
+                {if $team}
+                    {if $occuiedTeamSeat && $occuiedTeamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
+                        {do $selectedTeam = $team}
+                    {/if}
+                {else}
+                    {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->getTeam():null}
+                {/if}
 
-                    text {
-                        text-shadow: 0.5px 0.5px 0 white;
-                        text-anchor: middle;
-                    }
-
-                    .outer-walls polyline, .inner-walls polyline {
-                        fill: none;
-                        stroke: #555;
-                    }
-
-                    .outer-walls polyline {
-                        stroke-width: 7px;
-                    }
-
-                    .inner-walls polyline {
-                        stroke-width: 4px;
-                    }
-
-                    .outer-walls polygon, .inner-walls polygon {
-                        fill: #555;
-                        stroke: none;
-                    }
-
-                    .corridors polyline {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 2px;
-                        stroke-dasharray: 10 10;
-                    }
-
-                    .grid polyline {
-                        fill: none;
-                        stroke: red;
-                        stroke-width: 3px;
-                        stroke-dasharray: 10 10;
-                    }
-
-                    polygon.stage {
-                        fill: #ccc;
-                        stroke: none;
-                    }
-
-                    circle.team-position.free {
-                        fill: none;
-                        stroke: #ccc;
-                        stroke-width: 3px;
-                        stroke-dasharray: 4 4;
-                    }
-
-                    circle.team-position.occupied {
-                        fill: black;
-                        stroke: none;
-                    }
-                </style>
-            {/block}
-            <g>
-                <g class="labels">
-                    <text font-size="3rem" transform="translate(1140,-600) rotate(-45)">{_'A sector'}</text>
-                    <text font-size="3rem" transform="translate(520,-1230) rotate(-45)">{_'B sector'}</text>
-                    <text font-size="3rem" transform="translate(320,-800) rotate(-90)">{_'C sector'}</text>
-                    <text font-size="3rem" transform="translate(680,-400)">{_'D sector'}</text>
-                    <text font-size="3rem" transform="translate(200,-1275) rotate(0)">{_'E sector'}</text>
-                </g>
-                <g class="places">
-                    {block places}
-                        {foreach $places as $place}
-                            {include place $place}
-                        {/foreach}
-                    {/block}
-                </g>
+                {var $className = $selectedTeam?' occupied':' free'}
+                {if $showTeamCategory && $selectedTeam}
+                    {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
+                {/if}
+                <circle
+                        class="{$className . ' team-seat'}"
+                        r="15"
+                        cx="0"
+                        cy="0"
+                />
+                {if $showTeamId && $selectedTeam}
+                    <g transform="translate(0,18)">
+                        <text>{$selectedTeam->e_fyziklani_team_id}</text>
+                    </g>
+                {/if}
+                {if $showSeatId}
+                    <g transform="translate(0,-25)">
+                        <text>{$seat->getPrimary()}</text>
+                    </g>
+                {/if}
+                {if $showBigNav && $selectedTeam}
+                    <circle
+                            style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
+                            r="100"
+                            cx="0"
+                            cy="0"
+                    />
+                {/if}
             </g>
-        </svg>
-    </div>
-    <div style="clear: both"></div>
-    <img src="{$basePath}/images/fyziklani/2020-black.png" style=" float:right;max-width: 25%"/>
-</div>
+        {/foreach}
+    {/block}
+{/embed}
+<div style="clear: both"></div>
+{block logo}
+    <img src="{$basePath}/images/fyziklani/fyziklani_2022_logo_black.png" alt="" style="float:right;max-width: 25%"/>
+{/block}
+{block upperContent}{/block}

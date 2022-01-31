@@ -52,13 +52,6 @@ class CloseTeamsGrid extends BaseGrid
             'e_fyziklani_team.category',
             'e_fyziklani_team.opened_submitting',
         ]);
-        $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
-            $position = ModelFyziklaniTeam::createFromActiveRow($row)->getPosition();
-            if (is_null($position)) {
-                return NotSetBadge::getHtml();
-            }
-            return $position->getRoom()->name;
-        });
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',

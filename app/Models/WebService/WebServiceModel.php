@@ -9,7 +9,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{
+use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
     PaymentListWebModel,
     WebModel,
     OrganizersWebModel,
@@ -18,7 +18,7 @@ use FKSDB\Models\WebService\Models\{
     ExportWebModel,
     SignaturesWebModel,
     ResultsWebModel,
-    StatsWebModel,
+    StatsWebModel
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;
@@ -37,6 +37,7 @@ class WebServiceModel
     private Container $container;
 
     private const WEB_MODELS = [
+        'GetFyziklaniResults' => FyziklaniResultsWebModel::class,
         'GetOrganizers' => OrganizersWebModel::class,
         'GetEventList' => EventListWebModel::class,
         'GetEvent' => EventWebModel::class,
@@ -127,7 +128,7 @@ class WebServiceModel
             }
             /** @var WebModel $model */
             $model = $reflection->newInstance($this->container);
-            $model->setLogin($this->authenticatedLogin);
+            $model->setLogin($this->authenticatedLogin ?? null);
             return $model;
         }
         return null;

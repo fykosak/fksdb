@@ -13,18 +13,25 @@ class PageComponent extends SeatingPageComponent
 {
 
     /**
-     * @param mixed $row
+     * @param ModelFyziklaniTeam $row
      * @throws BadTypeException
      */
-    final public function render($row): void
+    final public function render($row, array $params = []): void
     {
-        parent::render($row);
         if (!$row instanceof ActiveRow) {
             throw new BadTypeException(ActiveRow::class, $row);
         }
-        $team = ModelFyziklaniTeam::createFromActiveRow($row);
-        $this->template->row = $team;
-        $this->template->rests = $team->getScheduleRest();
+        if (!$row instanceof ModelFyziklaniTeam) {
+            $row = ModelFyziklaniTeam::createFromActiveRow($row);
+        }
+        $this->template->rests = $row->getScheduleRest();
+        $this->template->team = $row;
+        $teamSeat = $row->getTeamSeat();
+        $this->template->room = $teamSeat ? $teamSeat->getSeat()->getRoom() : null;
+        $this->template->event = $row->getEvent();
+        $this->template->sector = $teamSeat ? $teamSeat->getSeat()->sector : null;
+        $this->template->showBigNav = true;
+
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 }
