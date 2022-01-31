@@ -186,7 +186,7 @@ orm:
                     params:
                         eventId: event_id
                         id: e_org_id
-                    title: _('Edit')
+                    title: Edit
                  detail:
                      destination: ':Event:EventOrg:detail'
                      params:
