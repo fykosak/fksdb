@@ -1,20 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $team}
 {varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[][] $rests}
-{var $sector = $team && $team->getTeamSeat()?$team->getTeamSeat()->getSeat()->sector:null}
-{define seat FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat}
-    {var $teamSeat = $seat->getTeamSeat($team->getEvent())}
-    {if $teamSeat && $teamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}
-        {include parent seat:$seat, className: 'occupied'}
-        <circle
-                style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
-                r="100"
-                cx="0"
-                cy="0"/>
-    {else}
-        {include parent seat:$seat, className: 'free'}
-    {/if}
-{/define}
 {block headline}
     ({$team->e_fyziklani_team_id}) {$team->name}
     {var $teamSeat = $team->getTeamSeat()}

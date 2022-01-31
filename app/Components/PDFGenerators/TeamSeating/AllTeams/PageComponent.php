@@ -27,8 +27,16 @@ class PageComponent extends SeatingPageComponent
     final public function render($row, array $params = []): void
     {
         [$mode] = $params;
-        $this->innerRender($this->roomModel);
-        $this->template->event = $this->event;
-        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.' . $mode . '.latte');
+        switch ($mode) {
+            case 'dev':
+                $this->innerRender($this->roomModel, $this->event, null, true, false, true, true);
+                break;
+            case 'all':
+                $this->innerRender($this->roomModel, $this->event, null, true);
+                break;
+            default:
+                $this->innerRender($this->roomModel, $this->event);
+        }
+        $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
     }
 }
