@@ -1,8 +1,11 @@
-{varType FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room}
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
 {default FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team = null}
-{varType bool[] $seatsParams}
-{varType string|null $sector}
+{default bool $showTeamId = false}
+{default bool $showBigNav = false}
+{default bool $showSeatId = false}
+{default bool $showTeamCategory = false}
+{default string|null $sector = null}
 
 <h2 style="font-size: 200%">
     {block headline}
@@ -26,7 +29,7 @@
                 {/if}
 
                 {var $className = $selectedTeam?' occupied':' free'}
-                {if $seatsParams['showTeamCategory'] && $selectedTeam}
+                {if $showTeamCategory && $selectedTeam}
                     {do $className .= ' category-' . $selectedTeam->category . ' game-lang-' . $selectedTeam->game_lang}
                 {/if}
                 <circle
@@ -35,17 +38,17 @@
                         cx="0"
                         cy="0"
                 />
-                {if $seatsParams['showTeamId'] && $selectedTeam}
+                {if $showTeamId && $selectedTeam}
                     <g transform="translate(0,18)">
                         <text>{$selectedTeam->e_fyziklani_team_id}</text>
                     </g>
                 {/if}
-                {if $seatsParams['showSeatId']}
+                {if $showSeatId}
                     <g transform="translate(0,-25)">
                         <text>{$seat->getPrimary()}</text>
                     </g>
                 {/if}
-                {if $seatsParams['showBigNav'] && $selectedTeam}
+                {if $showBigNav && $selectedTeam}
                     <circle
                             style="fill:none;stroke-width: 5px;stroke: black; stroke-dasharray: 15 15"
                             r="100"

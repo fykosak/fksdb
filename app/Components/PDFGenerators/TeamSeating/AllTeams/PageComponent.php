@@ -11,14 +11,14 @@ use Nette\DI\Container;
 
 class PageComponent extends SeatingPageComponent
 {
-    private RoomModel $roomModel;
+    private RoomModel $room;
     protected ModelEvent $event;
 
-    public function __construct(ModelEvent $event, RoomModel $roomModel, Container $container)
+    public function __construct(ModelEvent $event, RoomModel $room, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
-        $this->roomModel = $roomModel;
+        $this->room = $room;
     }
 
     /**
@@ -27,15 +27,17 @@ class PageComponent extends SeatingPageComponent
     final public function render($row, array $params = []): void
     {
         [$mode] = $params;
+        $this->template->room = $this->room;
+        $this->template->event = $this->event;
         switch ($mode) {
             case 'dev':
-                $this->innerRender($this->roomModel, $this->event, null, true, false, true, true);
+                $this->template->showTeamId = true;
+                $this->template->showSeatId = true;
+                $this->template->showTeamCategory = true;
                 break;
             case 'all':
-                $this->innerRender($this->roomModel, $this->event, null, true);
+                $this->template->showTeamId = true;
                 break;
-            default:
-                $this->innerRender($this->roomModel, $this->event);
         }
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . '../@layout.latte');
     }
