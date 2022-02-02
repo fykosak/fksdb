@@ -27,13 +27,11 @@ class PageComponent extends SeatingPageComponent
         $this->template->rests = $row->getScheduleRest();
         $this->template->team = $row;
         $teamSeat = $row->getTeamSeat();
-        $this->innerRender(
-            $teamSeat ? $teamSeat->getSeat()->getRoom() : null,
-            $row->getEvent(),
-            $teamSeat ? $teamSeat->getSeat()->sector : null,
-            false,
-            true
-        );
+        $this->template->room = $teamSeat ? $teamSeat->getSeat()->getRoom() : null;
+        $this->template->event = $row->getEvent();
+        $this->template->sector = $teamSeat ? $teamSeat->getSeat()->sector : null;
+        $this->template->showBigNav = true;
+
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
     }
 }
