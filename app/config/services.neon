@@ -44,8 +44,6 @@ services:
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
-    #fyziklani
-    - FKSDB\Models\Fyziklani\Submit\HandlerFactory
     #github
     - FKSDB\Models\Github\EventFactory
      #localization
