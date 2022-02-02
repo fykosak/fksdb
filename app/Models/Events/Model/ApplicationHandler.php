@@ -298,8 +298,8 @@ class ApplicationHandler
 
         if ($execute == self::STATE_TRANSITION) {
             foreach ($newStates as $name => $newState) {
-                $state = $holder->getBaseHolder($name)->getModelState();
-                $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
+                $state = $holder->getBaseHolder((string)$name)->getModelState();
+                $transition = $this->machine->getBaseMachine((string)$name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (
@@ -310,9 +310,9 @@ class ApplicationHandler
                     throw new MachineExecutionException(
                         sprintf(
                             $msg,
-                            $this->machine->getBaseMachine($name)->getStateName($state),
-                            $holder->getBaseHolder($name)->label,
-                            $this->machine->getBaseMachine($name)->getStateName($newState)
+                            $this->machine->getBaseMachine((string)$name)->getStateName($state),
+                            $holder->getBaseHolder((string)$name)->label,
+                            $this->machine->getBaseMachine((string)$name)->getStateName($newState)
                         )
                     );
                 }

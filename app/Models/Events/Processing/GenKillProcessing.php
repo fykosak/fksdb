@@ -52,13 +52,13 @@ class GenKillProcessing implements Processing
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
                 $result[$name] = AbstractMachine::STATE_TERMINATED;
-            } elseif ($holder->getBaseHolder($name)->getModelState() == AbstractMachine::STATE_INIT) {
+            } elseif ($holder->getBaseHolder((string)$name)->getModelState() == AbstractMachine::STATE_INIT) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
                     $transitions = $baseMachine->getAvailableTransitions(
                         $holder,
-                        $holder->getBaseHolder($name)->getModelState()
+                        $holder->getBaseHolder((string)$name)->getModelState()
                     );
                     if (count($transitions) == 0) {
                         throw new SubmitProcessingException(_("$name: Není definován přechod z počátečního stavu."));

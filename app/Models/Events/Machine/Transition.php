@@ -112,7 +112,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $oldState = $holder->getBaseHolder($baseMachineName)->getModelState();
+            $oldState = $holder->getBaseHolder((string)$baseMachineName)->getModelState();
             $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
             if ($inducedTransition) {
                 $result[$baseMachineName] = $inducedTransition;
