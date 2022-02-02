@@ -9,8 +9,8 @@ import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyz
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { Store as StatisticsStore } from '../Reducers';
+import './timeline.scss';
 
 interface StateProps {
     submits: Submits;
@@ -79,7 +79,6 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         }).map((submit, index: number) => {
 
             const submitted = new Date(submit.created);
-            const color = getColorByPoints(submit.points);
 
             return (
                 <g style={{opacity: 1}} key={index}>
@@ -88,9 +87,6 @@ class Timeline extends React.Component<StateProps & OwnProps> {
                         cy={50}
                         r={5}
                         data-points={submit.points}
-                        fill={color}
-                        stroke={'white'}
-                        strokeWidth={1}
                     ><title>
                         {submit.currentTeam.name + '-' + submit.created.toString()}
                     </title>
@@ -100,7 +96,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         });
         return (
             <div className="col-lg-12">
-                <svg viewBox={'0 0 600 100'} className="chart time-line">
+                <svg viewBox={'0 0 600 100'} className="chart chart-fyziklani-task-timeline">
                     <g transform={'translate(0,70)'} className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}

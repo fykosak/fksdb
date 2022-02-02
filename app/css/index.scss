@@ -17,6 +17,8 @@ $input-border-radius-lg: 0;
 @import "payment";
 @import "seating";
 @import "print";
+@import "charts/legend";
+@import "charts/fyziklani";
 
 @include color-variant(#1f77b4, color-1);
 @include color-variant(#ff7f0e, color-2);

@@ -56,6 +56,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {
                     dots.push(<circle
+                        className={point.active ? 'active' : 'inactive'}
                         key={index + '-' + key}
                         opacity={point.active ? '1' : '0'}
                         r="7.5"
@@ -73,7 +74,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
         });
 
         return (
-            <svg viewBox={this.getViewBox()} className="chart line-chart">
+            <svg viewBox={this.getViewBox()} className="chart chart-line-chart line-chart">
                 <g>
                     {areas}
                     {lines}

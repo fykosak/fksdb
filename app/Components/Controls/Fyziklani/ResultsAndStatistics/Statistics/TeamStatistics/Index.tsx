@@ -43,16 +43,12 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
         const selectedTeam = teams.filter((team) => {
             return team.teamId === teamId;
         })[0];
-//
-        const headline = (
-            <h2 className={'fyziklani-headline'}>
-                {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
-            </h2>);
-        return (<div>
-
+        return (<>
             {teamSelect}
             {teamId && (<>
-                {headline}
+                <h2>
+                    {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
+                </h2>
                 <ChartContainer
                     chart={PointsPie}
                     chartProps={{teamId}}
@@ -74,7 +70,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
                     headline={translator.getText('Timeline')}
                 />
             </>)}
-        </div>);
+        </>);
     }
 }
 

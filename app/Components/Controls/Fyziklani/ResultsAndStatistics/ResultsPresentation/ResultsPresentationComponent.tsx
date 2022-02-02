@@ -5,7 +5,7 @@ import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteA
 import * as React from 'react';
 import App from './Components/InnerComponent';
 import PositionSwitcher from './Components/PositionSwitcher';
-import Settings from './Components/Settings/Form';
+import Setting from './Components/Setting';
 import { app } from './Reducers';
 import './style.scss';
 
@@ -17,8 +17,9 @@ interface OwnProps {
 export default class ResultsPresentationComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
-            <Settings/>
-            <div className={'fixed-top h-100 w-100'} data-toggle="modal"
+            <Setting/>
+            <div className={'fixed-top h-100 w-100'}
+                 data-toggle="modal"
                  data-target="#fyziklaniResultsOptionModal">
                 <ResultsShower className={'inner-headline h-100 w-100'}>
                     <App/>

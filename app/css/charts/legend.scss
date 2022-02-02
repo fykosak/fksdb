@@ -1,0 +1,80 @@
+.legend {
+  &.line-chart-legend {
+    .legend-item {
+      margin-bottom: 1rem;
+
+      .legend-item-icon {
+        display: flex;
+        align-items: center;
+
+        .icon {
+          display: inline-block;
+          height: 1rem;
+          width: 1rem;
+          border-radius: .5rem;
+          margin-right: .5rem;
+        }
+
+        &:hover strong {
+          text-decoration: underline;
+        }
+
+        .line {
+          border-width: 1rem;
+          border-radius: 1rem;
+          width: 100%;
+          height: 2px;
+        }
+      }
+
+      .legend-item-name {
+        font-weight: bold;
+      }
+    }
+  }
+
+  &.fyziklani-legend {
+
+    .legend-item .icon {
+      display: inline-block;
+      height: 1rem;
+      width: 1rem;
+      border-radius: .5rem;
+      margin-right: .5rem;
+
+      &[data-points="5"] {
+        background-color: #2d7dd2;
+      }
+
+      &[data-points="3"] {
+        background-color: #98cc04;
+      }
+
+      &[data-points="2"] {
+        background-color: #eeb902;
+      }
+
+      &[data-points="1"] {
+        background-color: #f45d01;
+      }
+    }
+
+    .progress .progress-bar {
+      &[data-points="5"] {
+        background-color: #2d7dd2;
+      }
+
+      &[data-points="3"] {
+        background-color: #98cc04;
+      }
+
+      &[data-points="2"] {
+        background-color: #eeb902;
+      }
+
+      &[data-points="1"] {
+        background-color: #f45d01;
+      }
+    }
+  }
+}

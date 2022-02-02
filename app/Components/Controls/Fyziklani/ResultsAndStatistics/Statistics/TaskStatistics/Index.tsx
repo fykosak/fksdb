@@ -4,10 +4,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Store as StatisticsStore } from '../Reducers';
 import Options from './Options';
-import TimeHistogram from './TimeHistogramBarsChart';
+import TimeHistogram from './BarHistogram';
 import TimeHistogramLines from './TimeHistogramLinesChart';
 import Timeline from './Timeline';
-import Progress from './TimeProgress';
+import Progress from './Progress';
 
 interface StateProps {
     taskId: number;

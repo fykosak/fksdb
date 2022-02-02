@@ -13,9 +13,9 @@ import ChartComponent from 'FKSDB/Components/Charts/Core/ChartComponent';
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { submitsByTask } from '../Middleware/submitsByTask';
 import { Store as StatisticsStore } from '../Reducers';
+import './bar-histrogram.scss';
 
 interface StateProps {
     submits: Submits;
@@ -30,7 +30,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
+class BarHistogram extends ChartComponent<StateProps & OwnProps, Record<string, never>> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -89,7 +89,7 @@ class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, Recor
                         key={index}
                         points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
                         data-points={points}
-                        fill={getColorByPoints(points)}/>);
+                    />);
                 });
 
                 bars.push(<g key={key}>
@@ -98,7 +98,7 @@ class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, Recor
             }
         }
         return (
-            <svg viewBox={this.getViewBox()} className="chart time-histogram">
+            <svg viewBox={this.getViewBox()} className="chart chart-fyziklani-task-bar-histogram">
                 <g>
                     {bars}
                     <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
@@ -127,4 +127,4 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
     };
 };
 
-export default connect(mapStateToProps, null)(TimeHistogramBarsChart);
+export default connect(mapStateToProps, null)(BarHistogram);

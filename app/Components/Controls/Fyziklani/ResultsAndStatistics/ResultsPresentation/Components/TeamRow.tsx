@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Item } from '../../Helpers/calculateData';
-import { getColorByPoints } from '../../Statistics/Middleware/colors';
 
 interface OwnProps {
     item: Item;
@@ -31,7 +30,6 @@ export default class TeamRow extends React.Component<OwnProps> {
                             className="progress-bar"
                             data-points={points}
                             style={{
-                                backgroundColor: getColorByPoints(points),
                                 width,
                             }}
                         />;

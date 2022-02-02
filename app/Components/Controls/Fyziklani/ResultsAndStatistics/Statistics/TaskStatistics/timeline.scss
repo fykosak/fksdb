@@ -1,0 +1,24 @@
+@import "../../../fyziklani-colors";
+
+.chart.chart-fyziklani-task-timeline {
+  circle {
+    stroke: white;
+    stroke-width: 1;
+
+    &[data-points="5"] {
+      fill: $fyziklaniPoints5;
+    }
+
+    &[data-points="3"] {
+      fill: $fyziklaniPoints3;
+    }
+
+    &[data-points="2"] {
+      fill: $fyziklaniPoints2;
+    }
+
+    &[data-points="1"] {
+      fill: $fyziklaniPoints1;
+    }
+  }
+}

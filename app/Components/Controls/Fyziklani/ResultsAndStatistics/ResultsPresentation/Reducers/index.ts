@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import {
     presentation,
     State as PresentationState,
-} from './/presentation';
+} from './presentation';
 
 export const app = combineReducers({
     ...coreApp,

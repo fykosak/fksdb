@@ -5,7 +5,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setPosition } from '../actions';
+import { setParams } from '../actions';
 import { FyziklaniResultsPresentationStore } from '../Reducers';
 
 interface StateProps {
@@ -82,7 +82,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetNewPosition: (position: number, category: string) => dispatch(setPosition(position, category)),
+        onSetNewPosition: (position: number, category: string) => dispatch(setParams({position, category})),
     };
 };
 const mapStateToPros = (state: FyziklaniResultsPresentationStore): StateProps => {

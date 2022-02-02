@@ -5,8 +5,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { setNewState } from '../actions';
-import { getColorByPoints } from '../Middleware/colors';
 import { Store as StatisticsStore } from '../Reducers';
+import './progress.scss';
 
 interface StateProps {
     tasks: ModelFyziklaniTask[];
@@ -33,7 +33,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps> {
+class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
         const tasksSubmits: Stats = {};
@@ -85,7 +85,6 @@ class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps
                                         key={i}
                                         data-points={value}
                                         style={{
-                                            backgroundColor: getColorByPoints(value),
                                             width: (submit[value] / max) * 100 + '%',
                                         }}>
                                         {submit[value]}
@@ -98,7 +97,7 @@ class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps
 
             }
         }
-        return (<div>{rows}</div>);
+        return (<div className="chart chart-fyziklani-task-progress">{rows}</div>);
     }
 }
 
@@ -114,4 +113,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TimeProgress);
+export default connect(mapStateToProps, mapDispatchToProps)(Progress);

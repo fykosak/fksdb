@@ -1,11 +1,8 @@
-import { FilterAction } from '../Actions/filterAction';
-import { ACTION_SET_NEXT_TABLE_FILTER } from '../Actions/setnextFilter';
 import {
-    ACTION_ADD_FILTER,
     ACTION_REMOVE_FILTER,
-    ACTION_SET_AUTO_SWITCH,
     ACTION_SET_FILTER,
-} from '../Actions/tableFilter';
+    FilterAction,
+} from '../actions';
 import { Filter } from '../filter';
 
 export interface State {
@@ -13,35 +10,6 @@ export interface State {
     autoSwitch: boolean;
     index: number;
 }
-
-const setNextFilter = (state: State): State => {
-    let {index} = state;
-    const {filters} = state;
-    index++;
-    if (index >= filters.length) {
-        index = 0;
-    }
-    return {
-        ...state,
-        index,
-    };
-};
-
-const addFilter = (state: State, action: FilterAction): State => {
-    const {filter} = action;
-    const {filters} = state;
-    const isIn = filters.some((actualFilters) => {
-        return actualFilters.same(filter);
-    });
-    const newFilters = [...filters];
-    if (!isIn) {
-        newFilters.push(filter);
-    }
-    return {
-        ...state,
-        filters: [...newFilters],
-    };
-};
 
 const removeFilter = (state: State, action: FilterAction): State => {
     const {filter} = action;
@@ -80,13 +48,6 @@ const setFilter = (state: State, action: FilterAction): State => {
     };
 };
 
-const setAutoSwitch = (state: State, action): State => {
-    return {
-        ...state,
-        autoSwitch: action.state,
-    };
-};
-
 const initialState: State = {
     autoSwitch: false,
     filters: [],
@@ -96,14 +57,8 @@ const initialState: State = {
 export const fyziklaniTableFilter = (state: State = initialState, action): State => {
 
     switch (action.type) {
-        case ACTION_ADD_FILTER:
-            return addFilter(state, action);
         case ACTION_REMOVE_FILTER:
             return removeFilter(state, action);
-        case ACTION_SET_NEXT_TABLE_FILTER:
-            return setNextFilter(state);
-        case ACTION_SET_AUTO_SWITCH:
-            return setAutoSwitch(state, action);
         case ACTION_SET_FILTER:
             return setFilter(state, action);
         default:

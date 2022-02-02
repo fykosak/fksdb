@@ -46,7 +46,7 @@ class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProp
                  id={'team' + team.teamId}>
                 <div className={'card ' + (isDragged ? 'text-white bg-primary' : '')}>
                     <div className="card-body card-block">
-                        <h6 className="card-title fyziklani-headline-red">
+                        <h6 className="card-title">
                             {team.name}
                             {hasPlace && (
                                 <button className="close" onClick={(event) => {

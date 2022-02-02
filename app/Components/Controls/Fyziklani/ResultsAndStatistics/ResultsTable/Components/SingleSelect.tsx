@@ -4,16 +4,14 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import HardVisibleSwitch from '../../../../Helpers/HardVisible/Component';
-import { FyziklaniResultsTableStore } from '../../../../ResultsTable/reducers';
-import { setFilter } from '../../../Actions/tableFilter';
-import { createFilters, Filter } from '../../../filter';
-import FilterComponent from '../FilterComponent';
+import { FyziklaniResultsTableStore } from '../../ResultsTable/reducers';
+import { setFilter } from '../actions';
+import { createFilters, Filter } from '../filter';
+import FilterComponent from './FilterComponent';
 
 interface StateProps {
     filters: Filter[];
     categories: string[];
-    isOrg: boolean;
 }
 
 interface DispatchProps {
@@ -23,11 +21,10 @@ interface DispatchProps {
 class SingleSelect extends React.Component<StateProps & DispatchProps> {
 
     public render() {
-        const {categories, filters, onSetFilter, isOrg} = this.props;
+        const {categories, filters, onSetFilter} = this.props;
         const availableFilters = createFilters(categories, false);
 
         return <>
-            {isOrg && <HardVisibleSwitch/>}
             {availableFilters.map((filter, key) => {
                 const active = filters.some((activeFilters) => {
                     return filter.same(activeFilters);
@@ -48,7 +45,6 @@ const mapStateToPros = (state: FyziklaniResultsTableStore): StateProps => {
     return {
         categories: state.data.categories,
         filters: state.tableFilter.filters,
-        isOrg: state.options.isOrg,
     };
 };
 

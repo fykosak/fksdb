@@ -6,17 +6,17 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { getColorByPoints } from '../Middleware/colors';
+import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
 
 interface StateProps {
-    onActivePoints: (points: number) => void;
+    onSetNewState(data: State): void;
 }
 
 class Legend extends React.Component<StateProps> {
 
     public render() {
         const availablePoints = [1, 2, 3, 5];
-        const {onActivePoints} = this.props;
+        const {onSetNewState} = this.props;
         const legend = availablePoints.map((points: number) => {
             let pointsLabel;
             switch (points) {
@@ -33,10 +33,10 @@ class Legend extends React.Component<StateProps> {
             return (<div key={points}
                          className="col-12 legend-item"
                          onMouseEnter={() => {
-                             onActivePoints(points);
+                             onSetNewState({activePoints: +points})
                          }}
                          onMouseLeave={() => {
-                             onActivePoints(null);
+                             onSetNewState({activePoints: null})
                          }}>
                 <i className="icon" data-points={points}/>
                 <strong>{points + ' ' + pointsLabel}</strong>
@@ -44,7 +44,7 @@ class Legend extends React.Component<StateProps> {
         });
 
         return (
-            <div className={'align-content-center col-lg-4 d-flex flex-wrap'}>
+            <div className={'legend fyziklani-legend align-content-center col-lg-4 d-flex flex-wrap'}>
                 {legend}
             </div>
         );
@@ -53,7 +53,7 @@ class Legend extends React.Component<StateProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): StateProps => {
     return {
-        onActivePoints: (points) => dispatch(setNewState({activePoints: +points})),
+        onSetNewState: data => dispatch(setNewState(data)),
     };
 };
 

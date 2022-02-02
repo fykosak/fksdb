@@ -36,7 +36,7 @@ class Index extends React.Component<StateProps> {
         return (
             <div className="mb-3">
                 <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
-                <table className="table-striped table-hover table table-sm bg-white">
+                <table className="table-striped table-hover table table-sm bg-white fyziklani-results-table">
                     <thead>
                     <tr>
                         <th/>

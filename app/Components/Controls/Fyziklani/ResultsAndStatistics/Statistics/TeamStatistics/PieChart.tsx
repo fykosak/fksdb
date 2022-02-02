@@ -4,8 +4,8 @@ import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyz
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { Store as StatisticsStore } from '../Reducers';
+import './pie.scss';
 
 interface StateProps {
     teams: ModelFyziklaniTeam[];
@@ -65,14 +65,10 @@ class PieChart extends React.Component<StateProps & OwnProps> {
         // TODO types
         const paths = pie.map((item: PieArcDatum<PointGroupItem>, index: number) => {
             return (<path
-                    stroke="white"
-                    strokeWidth="5px"
+                    className={'arc ' + ((activePoints && (activePoints !== item.data.points)) ? 'inactive' : 'active')}
                     d={arcEl(item)}
                     key={index}
                     data-points={item.data.points}
-                    data-active={activePoints && (activePoints !== item.data.points)}
-                    fill={getColorByPoints(item.data.points)}
-                    opacity={(activePoints && (activePoints !== item.data.points)) ? '0.5' : '1'}
                 />
             );
         });
@@ -80,27 +76,21 @@ class PieChart extends React.Component<StateProps & OwnProps> {
         const labels = pie.map((item: PieArcDatum<PointGroupItem>, index: number) => {
             return (
                 <g key={index}>
-                    <text textAnchor="middle" transform={'translate(' + arcEl.centroid(item).toString() + ')'}>
-                        {Math.floor(item.data.count * 100 / totalSubmits)}%
+                    <text transform={'translate(' + arcEl.centroid(item).toString() + ')'}>
+                        <tspan>{Math.floor(item.data.count * 100 / totalSubmits)}%</tspan>
                     </text>
                 </g>
             );
         });
-
-        const pieChart = (<svg viewBox="0 0 400 400">
+        return <svg viewBox="0 0 400 400" className="chart chart-fyziklani-team-pie">
             <g transform="translate(200,200)">
                 {paths}
                 {labels}
             </g>
-        </svg>);
-
-        return (
-            <div className="col-lg-8">
-                {pieChart}
-            </div>
-        );
+        </svg>;
     }
 }
+
 const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieArcDatum<Datum>> => {
     return pie<Datum>().value((item: Datum) => {
         return +item.count;
