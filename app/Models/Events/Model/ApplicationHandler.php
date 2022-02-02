@@ -373,6 +373,6 @@ class ApplicationHandler
      */
     private function reRaise(\Throwable $e): void
     {
-        throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
+        throw new ApplicationHandlerException(_('Error while saving the application.'), 0, $e);
     }
 }

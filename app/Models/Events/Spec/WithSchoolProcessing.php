@@ -15,7 +15,7 @@ abstract class WithSchoolProcessing extends AbstractProcessing
         $schoolControl = reset($schoolControls);
         if ($schoolControl) {
             $schoolControl->loadHttpData();
-            return $schoolControl->getValue();
+            return (int)$schoolControl->getValue();
         }
         return null;
     }
