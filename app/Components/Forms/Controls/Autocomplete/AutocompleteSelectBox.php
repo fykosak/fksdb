@@ -103,14 +103,14 @@ class AutocompleteSelectBox extends TextBase
             if ($this->isMultiSelect()) {
                 $defaultTextValue = [];
                 foreach ($defaultValue as $id) {
-                    $defaultTextValue[] = $this->getDataProvider()->getItemLabel($id);
+                    $defaultTextValue[] = $this->getDataProvider()->getItemLabel((int)$id);
                 }
                 $defaultTextValue = json_encode($defaultTextValue);
                 $control->addAttributes([
                     'value' => implode(self::INTERNAL_DELIMITER, $defaultValue),
                 ]);
             } else {
-                $defaultTextValue = $this->getDataProvider()->getItemLabel($defaultValue);
+                $defaultTextValue = $this->getDataProvider()->getItemLabel((int)$defaultValue);
                 $control->addAttributes([
                     'value' => $defaultValue,
                 ]);
