@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
@@ -14,11 +16,8 @@ use Nette\Forms\Control;
 
 class AddressFactory
 {
-
     private ServiceAddress $serviceAddress;
-
     private ServiceRegion $serviceRegion;
-
     private Container $container;
 
     public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion)

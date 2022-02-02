@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -9,8 +11,8 @@ use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
-class DuplicateFinder {
-
+class DuplicateFinder
+{
     public const IDX_PERSON = 'person';
     public const IDX_SCORE = 'score';
     public const DIFFERENT_PATTERN = 'not-same';
@@ -19,16 +21,22 @@ class DuplicateFinder {
 
     private array $parameters;
 
-    public function __construct(ServicePerson $servicePerson, Container $container) {
+    public function __construct(ServicePerson $servicePerson, Container $container)
+    {
         $this->servicePerson = $servicePerson;
         $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
-    public function getPairs(): array {
+    public function getPairs(): array
+    {
         $buckets = [];
         /* Create buckets for quadratic search. */
         /** @var ModelPerson $person */
-        foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
+        foreach (
+            $this->servicePerson->getTable()->select(
+                "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
+            ) as $person
+        ) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -53,7 +61,7 @@ class DuplicateFinder {
                             self::IDX_PERSON => $personB,
                             self::IDX_SCORE => $score,
                         ];
-                        continue; // we search only pairs, so each equivalence class is decomposed into pairs
+                        // we search only pairs, so each equivalence class is decomposed into pairs
                     }
                 }
             }
@@ -61,7 +69,8 @@ class DuplicateFinder {
         return $pairs;
     }
 
-    private function getBucketKey(ModelPerson $row): string {
+    private function getBucketKey(ModelPerson $row): string
+    {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);
@@ -72,7 +81,8 @@ class DuplicateFinder {
      * @param ModelPerson|ModelPersonInfo $b
      * @todo Implement more than binary score.
      */
-    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
+    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float
+    {
         /*
          * Check explicit difference
          */
@@ -97,13 +107,15 @@ class DuplicateFinder {
         $familyScore = $this->stringScore($a->family_name, $b->family_name);
         $otherScore = $this->stringScore($a->other_name, $b->other_name);
 
-        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore + $this->parameters['emailWeight'] * $emailScore;
+        return $this->parameters['familyWeight'] * $familyScore + $this->parameters['otherWeight'] * $otherScore +
+            $this->parameters['emailWeight'] * $emailScore;
     }
 
     /**
      * @param ActiveRow|ModelPersonInfo $person
      */
-    private function getDifferentPersons(ActiveRow $person): array {
+    private function getDifferentPersons(ActiveRow $person): array
+    {
         if (!isset($person->duplicates)) {
             return [];
         }
@@ -116,16 +128,17 @@ class DuplicateFinder {
         return $differentPersonIds;
     }
 
-    private function stringScore(string $a, string $b): float {
+    private function stringScore(string $a, string $b): float
+    {
         return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
-    private function relativeDistance(string $a, string $b): float {
+    private function relativeDistance(string $a, string $b): float
+    {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
             return 0.0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }
-
 }

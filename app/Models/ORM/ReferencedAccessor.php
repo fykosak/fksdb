@@ -12,7 +12,7 @@ final class ReferencedAccessor
 
     /**
      * @template T
-     * @param string $modelClassName
+     * @param class-string<T>|string $modelClassName
      * @return ?T
      */
     public static function accessModel(ActiveRow $model, string $modelClassName): ?ActiveRow

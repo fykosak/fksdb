@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 
 class AddressComponent extends BaseStalkingComponent
 {
-
     final public function render(ModelPerson $person, int $userPermissions): void
     {
         $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);

@@ -12,7 +12,6 @@ use Fykosak\Utils\UI\PageTitle;
 
 class GameSetupPresenter extends BasePresenter
 {
-    private ModelFyziklaniGameSetup $gameSetup;
 
     public function titleDefault(): PageTitle
     {
@@ -36,14 +35,14 @@ class GameSetupPresenter extends BasePresenter
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup
     {
-        if (!isset($this->gameSetup)) {
+        static $gameSetup;
+        if (!isset($gameSetup)) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
                 throw new NotFoundException(_('Game is not set up!'));
             }
-            $this->gameSetup = $gameSetup;
         }
-        return $this->gameSetup;
+        return $gameSetup;
     }
 
     /**

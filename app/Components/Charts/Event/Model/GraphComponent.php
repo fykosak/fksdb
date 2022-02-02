@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Charts\Event\Model;
 
 use FKSDB\Components\Charts\Core\Chart;

@@ -11,7 +11,7 @@ use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewComponent;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Security\Authorizator;
-use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
+use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 

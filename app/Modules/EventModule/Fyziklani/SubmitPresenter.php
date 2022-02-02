@@ -10,7 +10,7 @@ use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -27,13 +27,6 @@ use Nette\Security\Resource;
 class SubmitPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
-
-    protected HandlerFactory $handlerFactory;
-
-    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void
-    {
-        $this->handlerFactory = $handlerFactory;
-    }
 
     /* ***** Title methods *****/
     public function titleCreate(): PageTitle
@@ -102,7 +95,7 @@ class SubmitPresenter extends BasePresenter
     public function handleCheck(): void
     {
         $logger = new MemoryLogger();
-        $handler = $this->handlerFactory->create($this->getEvent());
+        $handler = new Handler($this->getEvent(), $this->getContext());
         $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
         FlashMessageDump::dump($logger, $this);
         $this->redirect('this');

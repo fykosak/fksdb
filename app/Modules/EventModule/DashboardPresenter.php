@@ -83,7 +83,7 @@ class DashboardPresenter extends BasePresenter
                 );
             case 13:
                 // Náboj Junior
-                return \sprintf('#'); // FIXME
+                return '#'; // FIXME
             case 14:
                 //DSEF 2
                 return \sprintf('https://fykos.cz/rocnik%02d/dsef2/', $this->getEvent()->year);

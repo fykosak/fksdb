@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;

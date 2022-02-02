@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -14,7 +16,8 @@ use FKSDB\Models\Pipeline\Pipeline;
  * This is not real factory, it's only used as an internode for defining
  * pipelines inside Neon and inject them into presenters at once.
  */
-class PipelineFactory {
+class PipelineFactory
+{
 
     /**
      * @see TasksFromXML
@@ -40,7 +43,16 @@ class PipelineFactory {
     private ServiceStudyYear $serviceStudyYear;
     private ServiceOrg $serviceOrg;
 
-    public function __construct(array $columnMappings, array $contributionMappings, array $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    public function __construct(
+        array $columnMappings,
+        array $contributionMappings,
+        array $defaultStudyYears,
+        ServiceTask $serviceTask,
+        ServiceTaskContribution $serviceTaskContribution,
+        ServiceTaskStudyYear $serviceTaskStudyYear,
+        ServiceStudyYear $serviceStudyYear,
+        ServiceOrg $serviceOrg
+    ) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
@@ -51,7 +63,8 @@ class PipelineFactory {
         $this->serviceOrg = $serviceOrg;
     }
 
-    public function create(): Pipeline {
+    public function create(): Pipeline
+    {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());
 
@@ -59,7 +72,9 @@ class PipelineFactory {
         $pipeline->addStage(new TasksFromXML($this->serviceTask));
         $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
         $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution));
-        $pipeline->addStage(new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear));
+        $pipeline->addStage(
+            new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear)
+        );
 
         return $pipeline;
     }

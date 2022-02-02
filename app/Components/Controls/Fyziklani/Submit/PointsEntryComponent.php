@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
@@ -20,7 +20,6 @@ class PointsEntryComponent extends AjaxComponent
 {
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-    private HandlerFactory $handlerFactory;
     private ModelEvent $event;
 
     public function __construct(Container $container, ModelEvent $event)
@@ -37,13 +36,11 @@ class PointsEntryComponent extends AjaxComponent
     }
 
     final public function injectPrimary(
-        HandlerFactory $handlerFactory,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceFyziklaniTeam $serviceFyziklaniTeam
     ): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -70,7 +67,7 @@ class PointsEntryComponent extends AjaxComponent
     {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
-            $handler = $this->handlerFactory->create($this->event);
+            $handler = new Handler($this->event, $this->getContext());
             $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
         } catch (TaskCodeException | ClosedSubmittingException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));

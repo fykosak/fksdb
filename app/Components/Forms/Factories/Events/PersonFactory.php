@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -142,7 +144,8 @@ class PersonFactory extends AbstractFactory
                     $metadata = ['required' => $metadata];
                 }
                 if (
-                    $metadata['required'] && !ReferencedPersonFactory::isFilled(
+                    $metadata['required']
+                    && !ReferencedPersonFactory::isFilled(
                         $person,
                         $subName,
                         $fieldName,

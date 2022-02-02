@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -12,32 +14,40 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\DI\Container;
 use Nette\Security\User;
 use Tracy\Debugger;
 
 class Handler
 {
-
     public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
-
     public const LOG_FORMAT = 'Submit %d was %s by %s';
-
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-
     private User $user;
-
+    private ModelEvent $event;
     private TaskCodePreprocessor $taskCodePreprocessor;
 
     public function __construct(
         ModelEvent $event,
+        Container $container
+    ) {
+        $this->event = $event;
+        $container->callInjects($this);
+    }
+
+    public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         User $user
-    ) {
+    ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->user = $user;
-        $this->taskCodePreprocessor = new TaskCodePreprocessor($event, $serviceFyziklaniTeam, $serviceFyziklaniTask);
+        $this->taskCodePreprocessor = new TaskCodePreprocessor(
+            $this->event,
+            $serviceFyziklaniTeam,
+            $serviceFyziklaniTask
+        );
     }
 
     /**
@@ -120,7 +130,8 @@ class Handler
                     $submit->getFyziklaniTeam()->e_fyziklani_team_id,
                     $submit->getFyziklaniTask()->label,
                     $submit->getFyziklaniTask()->name
-                ), Message::LVL_SUCCESS
+                ),
+                Message::LVL_SUCCESS
             )
         );
     }
@@ -184,7 +195,8 @@ class Handler
                     $submit->getFyziklaniTeam()->e_fyziklani_team_id,
                     $submit->getFyziklaniTask()->label,
                     $submit->getFyziklaniTask()->name
-                ), Message::LVL_SUCCESS
+                ),
+                Message::LVL_SUCCESS
             )
         );
     }
@@ -212,7 +224,8 @@ class Handler
                     $team->e_fyziklani_team_id,
                     $task->label,
                     $task->name
-                ), Message::LVL_SUCCESS
+                ),
+                Message::LVL_SUCCESS
             )
         );
     }

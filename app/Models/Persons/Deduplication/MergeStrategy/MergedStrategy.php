@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication\MergeStrategy;
 
-class MergedStrategy implements MergeStrategy {
+class MergedStrategy implements MergeStrategy
+{
 
     /**
-     * @param mixed $trunk
-     * @param mixed $merged
-     * @return mixed
+     * @template T
+     * @param T $trunk
+     * @param T $merged
+     * @return T
      */
-    public function mergeValues($trunk, $merged) {
+    public function mergeValues($trunk, $merged)
+    {
         return $merged;
     }
-
 }

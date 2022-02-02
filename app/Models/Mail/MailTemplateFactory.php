@@ -67,7 +67,6 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function createWithParameters(string $templateFile, ?string $lang, array $data = []): Template
     {

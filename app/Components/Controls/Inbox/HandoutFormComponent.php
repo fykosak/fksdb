@@ -22,7 +22,6 @@ use Nette\DI\Container;
 
 class HandoutFormComponent extends BaseComponent
 {
-
     public const TASK_PREFIX = 'task';
     private ServicePerson $servicePerson;
     private SeriesTable $seriesTable;

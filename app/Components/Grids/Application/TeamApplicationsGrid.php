@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;

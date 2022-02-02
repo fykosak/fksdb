@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Models\Events\Model\Holder\DataValidator;
@@ -7,9 +9,11 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
-abstract class AbstractFactory implements FieldFactory {
+abstract class AbstractFactory implements FieldFactory
+{
 
-    public function setFieldDefaultValue(BaseControl $control, Field $field): void {
+    public function setFieldDefaultValue(BaseControl $control, Field $field): void
+    {
         if (!$field->isModifiable()) {
             $control->setDisabled();
         }
@@ -17,7 +21,8 @@ abstract class AbstractFactory implements FieldFactory {
         $this->appendRequiredRule($control, $field);
     }
 
-    final protected function appendRequiredRule(BaseControl $control, Field $field): void {
+    final protected function appendRequiredRule(BaseControl $control, Field $field): void
+    {
         $container = $control->getParent();
         if ($field->isRequired()) {
             $conditioned = $control;
@@ -37,13 +42,15 @@ abstract class AbstractFactory implements FieldFactory {
         }
     }
 
-    public function validate(Field $field, DataValidator $validator): void {
+    public function validate(Field $field, DataValidator $validator): void
+    {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
             $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }
     }
 
-    protected function setDefaultValue(BaseControl $control, Field $field): void {
+    protected function setDefaultValue(BaseControl $control, Field $field): void
+    {
         $control->setDefaultValue($field->getValue());
     }
 }

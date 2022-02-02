@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -190,18 +192,18 @@ class ReferencedId extends HiddenField
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
                     $model = $this->handler->createFromValues((array)$values);
-                    $this->setValue($model, self::MODE_FORCE);
+                    $this->setValue($model, (bool)self::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {
                     $model = $this->service->findByPrimary($referencedId);
                     $this->handler->update($model, (array)$values);
-                    // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
+// reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                     $model = $this->service->findByPrimary($model->getPrimary());
-                    $this->setValue($model, self::MODE_FORCE);
+                    $this->setValue($model, (bool)self::MODE_FORCE);
                     return $referencedId;
                 } else {
-                    $this->setValue(null, self::MODE_FORCE);
+                    $this->setValue(null, (bool)self::MODE_FORCE);
                 }
             } catch (ModelDataConflictException $exception) {
                 $exception->setReferencedId($this);

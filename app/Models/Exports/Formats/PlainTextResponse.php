@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Exports\Formats;
 
 use Nette\Application\Response;
@@ -39,8 +41,7 @@ class PlainTextResponse implements Response
             $httpResponse->setHeader('Content-Disposition', 'attachment');
         }
 
-        $httpResponse->setHeader('Content-Length', strlen($this->content));
+        $httpResponse->setHeader('Content-Length', (string)strlen($this->content));
         echo $this->content;
     }
-
 }

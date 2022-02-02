@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\Results\ModelCategory;
@@ -8,8 +10,8 @@ use Nette\InvalidStateException;
 /**
  * Cumulative results (sums and percentage) for chosen series.
  */
-class CumulativeResultsModel extends AbstractResultsModel {
-
+class CumulativeResultsModel extends AbstractResultsModel
+{
     /** @var int[] */
     protected array $series;
 
@@ -22,7 +24,8 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * Definition of header.
      */
-    public function getDataColumns(ModelCategory $category): array {
+    public function getDataColumns(ModelCategory $category): array
+    {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -64,14 +67,16 @@ class CumulativeResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    public function getSeries(): array {
+    public function getSeries(): array
+    {
         return $this->series;
     }
 
     /**
      * @param array $series
      */
-    public function setSeries($series): void {
+    public function setSeries($series): void
+    {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -80,31 +85,38 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return $this->evaluationStrategy->getCategories();
     }
 
-    protected function composeQuery(ModelCategory $category): string {
+    protected function composeQuery(ModelCategory $category): string
+    {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
 
         $select = [];
-        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . '`';
+        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" .
+            self::DATA_NAME . '`';
         $select[] = 'sch.name_abbrev AS `' . self::DATA_SCHOOL . '`';
 
         $sum = $this->evaluationStrategy->getSumColumn();
         $i = 0;
         foreach ($this->getSeries() as $series) {
-            $select[] = 'round(SUM(IF(t.series = ' . $series . ', ' . $sum . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
+            $select[] = 'round(SUM(IF(t.series = ' . $series . ', ' . $sum . ", null))) AS '" . self::DATA_PREFIX . $i .
+                "'";
             $i += 1;
         }
 
         $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
         $studentPilnySumLimitInversed = $studentPilnySumLimit != 0 ? 1.0 / $studentPilnySumLimit : 0;
 
-        $select[] = "round(100 * SUM($sum) / SUM(" . $this->evaluationStrategy->getTaskPointsColumn($category) . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
-        $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" . self::ALIAS_TOTAL_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) / SUM("
+            . $this->evaluationStrategy->getTaskPointsColumn($category)
+            . ")) AS '" . self::ALIAS_PERCENTAGE . "'";
+        $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" .
+            self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
         $select[] = 'ct.ct_id';
 
@@ -131,7 +143,9 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
-        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
+        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM .
+            " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' .
+            self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
         from ($query) data, (select @rownum := 0, @rank := 0, @prevSum := -1) init";
     }
 
@@ -140,7 +154,8 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
      *
      * @return int sum of Student Pilny points
      */
-    private function getSumLimitForStudentPilny(): int {
+    private function getSumLimitForStudentPilny(): int
+    {
         return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
     }
 
@@ -148,7 +163,8 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
      * Returns total points for given category and series
      * @return int sum of points
      */
-    private function getSumLimit(ModelCategory $category): int {
+    private function getSumLimit(ModelCategory $category): int
+    {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks

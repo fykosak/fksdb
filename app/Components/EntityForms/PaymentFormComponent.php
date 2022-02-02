@@ -107,6 +107,7 @@ class PaymentFormComponent extends EntityFormComponent
      * @throws UnavailableTransitionsException
      * @throws ModelException
      * @throws StorageException
+     * @throws \Throwable
      */
     protected function handleFormSuccess(Form $form): void
     {

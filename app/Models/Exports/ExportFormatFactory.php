@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Exports;
 
-use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exports\Formats\CSVFormat;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceEvent;

@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use FKSDB\Components\EntityForms\Warehouse\ProductFormComponent;
 use FKSDB\Components\Grids\Warehouse\ProductsGrid;
+use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use Fykosak\Utils\UI\PageTitle;
@@ -43,6 +44,10 @@ class ProductPresenter extends BasePresenter
         return new ProductFormComponent($this->getContext(), null);
     }
 
+    /**
+     * @return Control
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): Control
     {
         return new ProductFormComponent($this->getContext(), $this->getEntity());

@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\Handler;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
@@ -31,17 +31,11 @@ class AllSubmitsGrid extends SubmitsGrid
 {
 
     private ModelEvent $event;
-    private HandlerFactory $handlerFactory;
 
     public function __construct(ModelEvent $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
-    }
-
-    final public function injectPrimary(HandlerFactory $handlerFactory): void
-    {
-        $this->handlerFactory = $handlerFactory;
     }
 
     protected function getData(): IDataSource
@@ -129,7 +123,7 @@ class AllSubmitsGrid extends SubmitsGrid
         }
         try {
             $logger = new MemoryLogger();
-            $handler = $this->handlerFactory->create($this->event);
+            $handler = new Handler($this->event, $this->getContext());
             $handler->revokeSubmit($logger, $submit);
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');

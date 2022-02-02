@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        script: [ 'testPSRAll' , 'testPSRSafe' ]
+        script: [ 'testPSR12' ]
     steps:
       - uses: actions/checkout@v2
         name: Checkout

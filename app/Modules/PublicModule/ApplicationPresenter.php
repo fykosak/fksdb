@@ -177,8 +177,7 @@ class ApplicationPresenter extends BasePresenter
                 ->getAvailableTransitions($this->holder, $this->getHolder()->primaryHolder->getModelState())
         ) {
             if (
-                $this->getHolder()->primaryHolder->getModelState(
-                ) == AbstractMachine::STATE_INIT
+                $this->getHolder()->primaryHolder->getModelState() == AbstractMachine::STATE_INIT
             ) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
@@ -288,8 +287,7 @@ class ApplicationPresenter extends BasePresenter
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if (
-                $this->getHolder()->primaryHolder->getModelState(
-                ) == AbstractMachine::STATE_INIT
+                $this->getHolder()->primaryHolder->getModelState() == AbstractMachine::STATE_INIT
             ) {
                 return;
             }

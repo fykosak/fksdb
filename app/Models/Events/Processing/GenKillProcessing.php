@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Processing;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
@@ -50,9 +52,7 @@ class GenKillProcessing implements Processing
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
                 $result[$name] = AbstractMachine::STATE_TERMINATED;
-            } elseif (
-                $holder->getBaseHolder($name)->getModelState() == AbstractMachine::STATE_INIT
-            ) {
+            } elseif ($holder->getBaseHolder($name)->getModelState() == AbstractMachine::STATE_INIT) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {

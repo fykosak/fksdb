@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\StoredQuery;
 
 use Nette\InvalidStateException;
 
-class StoredQueryParameter {
+class StoredQueryParameter
+{
     /** @var mixed */
     private $defaultValue;
 
@@ -18,7 +21,8 @@ class StoredQueryParameter {
      * StoredQueryParameter constructor.
      * @param mixed $defaultValue
      */
-    public function __construct(string $name, $defaultValue, int $PDOType, string $description = null) {
+    public function __construct(string $name, $defaultValue, int $PDOType, string $description = null)
+    {
         $this->name = $name;
         $this->defaultValue = self::getTypedValue($defaultValue, $PDOType);
         $this->PDOType = $PDOType;
@@ -28,19 +32,23 @@ class StoredQueryParameter {
     /**
      * @return mixed
      */
-    public function getDefaultValue() {
+    public function getDefaultValue()
+    {
         return $this->defaultValue;
     }
 
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
-    public function getPDOType(): int {
+    public function getPDOType(): int
+    {
         return $this->PDOType;
     }
 
-    public function getDescription(): ?string {
+    public function getDescription(): ?string
+    {
         return $this->description;
     }
 
@@ -48,7 +56,8 @@ class StoredQueryParameter {
      * @param mixed $value
      * @return bool|int|string
      */
-    public function getTypedValue($value, int $type) {
+    public function getTypedValue($value, int $type)
+    {
         switch ($type) {
             case \PDO::PARAM_BOOL:
                 return (bool)$value;

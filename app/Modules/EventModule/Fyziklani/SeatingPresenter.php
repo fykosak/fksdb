@@ -71,9 +71,6 @@ class SeatingPresenter extends BasePresenter
         $this->setAuthorized($this->isAllowed('fyziklani.seating', 'default'));
     }
 
-    /**
-     * @throws EventNotFoundException
-     */
     final public function renderList(): void
     {
         $this->template->rooms = $this->roomService->getTable();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions;
 
 use Nette\SmartObject;
@@ -25,5 +27,4 @@ abstract class EvaluatedExpression
      * @return mixed
      */
     abstract public function __invoke(...$args);
-
 }

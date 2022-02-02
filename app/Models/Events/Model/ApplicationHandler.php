@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -149,11 +151,11 @@ class ApplicationHandler
             $this->reRaise($exception);
         } catch (
             DuplicateApplicationException
-        | MachineExecutionException
-        | SubmitProcessingException
-        | FullCapacityException
-        | ExistingPaymentException
-        | UnavailableTransitionException $exception
+            | MachineExecutionException
+            | SubmitProcessingException
+            | FullCapacityException
+            | ExistingPaymentException
+            | UnavailableTransitionException $exception
         ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->reRaise($exception);
@@ -212,7 +214,8 @@ class ApplicationHandler
                     )
                 );
             } elseif (
-                isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()
+                isset($transitions[$explicitMachineName])
+                && $transitions[$explicitMachineName]->isTerminating()
             ) {
                 $this->logger->log(new Message(_('Application deleted.'), Message::LVL_SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
@@ -256,7 +259,13 @@ class ApplicationHandler
             $this->logger->log(new Message($message, Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException $exception) {
+        } catch (
+            DuplicateApplicationException
+            | MachineExecutionException
+            | SubmitProcessingException
+            | FullCapacityException
+            | ExistingPaymentException $exception
+        ) {
             $this->logger->log(new Message($exception->getMessage(), Message::LVL_ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
