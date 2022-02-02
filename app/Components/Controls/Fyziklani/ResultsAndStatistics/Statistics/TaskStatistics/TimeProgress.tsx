@@ -4,7 +4,7 @@ import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setTaskId } from '../actions';
+import { setNewState } from '../actions';
 import { getColorByPoints } from '../Middleware/colors';
 import { Store as StatisticsStore } from '../Reducers';
 
@@ -110,7 +110,7 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 };
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
+        onChangeTask: (taskId) => dispatch(setNewState({taskId: +taskId})),
     };
 };
 

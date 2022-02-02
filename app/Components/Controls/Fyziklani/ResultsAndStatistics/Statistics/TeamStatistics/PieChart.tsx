@@ -1,11 +1,10 @@
-import { arc, PieArcDatum } from 'd3-shape';
+import { arc, pie, PieArcDatum } from 'd3-shape';
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';
-import { getPieData } from '../Middleware/pie';
 import { Store as StatisticsStore } from '../Reducers';
 
 interface StateProps {
@@ -70,6 +69,8 @@ class PieChart extends React.Component<StateProps & OwnProps> {
                     strokeWidth="5px"
                     d={arcEl(item)}
                     key={index}
+                    data-points={item.data.points}
+                    data-active={activePoints && (activePoints !== item.data.points)}
                     fill={getColorByPoints(item.data.points)}
                     opacity={(activePoints && (activePoints !== item.data.points)) ? '0.5' : '1'}
                 />
@@ -99,6 +100,11 @@ class PieChart extends React.Component<StateProps & OwnProps> {
             </div>
         );
     }
+}
+const getPieData = <Datum extends { count: number }>(data: Datum[]): Array<PieArcDatum<Datum>> => {
+    return pie<Datum>().value((item: Datum) => {
+        return +item.count;
+    })(data);
 }
 
 const mapStateToProps = (state: StatisticsStore): StateProps => {

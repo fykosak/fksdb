@@ -2,8 +2,12 @@ import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStat
 import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
 import * as React from 'react';
 import { app } from './Reducers';
-import App from './StatisticsComponentsRouter';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
+import TeamStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TeamStatistics/Index';
+import TasksStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index';
+import CorrelationStats
+    from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index';
+import Timer from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Timer';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
@@ -13,8 +17,24 @@ interface OwnProps {
 
 export default class StatisticsComponent extends React.Component<OwnProps> {
     public render() {
+        const {mode} = this.props;
+        let content = null;
+        switch (mode) {
+            case 'team':
+            default:
+                content = (<TeamStats/>);
+                break;
+            case 'task':
+                content = (<TasksStats/>);
+                break;
+            case 'correlation':
+                content = (<CorrelationStats/>);
+        }
         return <MainComponent app={app} data={this.props.data} actions={this.props.actions}>
-            <App mode={this.props.mode}/>
+            <div className="container">
+                {content}
+                <Timer mode={'small'}/>
+            </div>
         </MainComponent>;
     }
 }

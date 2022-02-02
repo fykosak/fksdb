@@ -79,6 +79,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
                         points={fromCoordinates + ',' + yCoordinates + ' ' + toCoordinates + ',' + yCoordinates}
                         strokeWidth="2"
                         strokeLinecap="round"
+                        data-points={submit ? submit.points : null}
                         stroke={color}
                     />
                     <text

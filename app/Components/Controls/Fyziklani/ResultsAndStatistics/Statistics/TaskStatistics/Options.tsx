@@ -7,13 +7,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import {
-    setAggregationTime,
-    setFromDate,
-    setTaskId,
-    setToDate,
-} from '../actions';
+import { setNewState } from '../actions';
 import { Store as StatisticsStore } from '../Reducers';
+import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
 
 interface StateProps {
     aggregationTime: number;
@@ -26,30 +22,21 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onChangeAggregationTime(time: number): void;
-
-    onChangeTask(id: number): void;
-
-    onSetFromDate(date: Date): void;
-
-    onSetToDate(date: Date): void;
+    onSetNewState(data: State): void;
 }
 
 class Options extends React.Component<StateProps & DispatchProps> {
 
     public componentDidMount() {
-        const {onSetFromDate, onSetToDate, gameEnd, gameStart} = this.props;
-        onSetFromDate(gameStart);
-        onSetToDate(gameEnd);
+        const {onSetNewState, gameEnd, gameStart} = this.props;
+        onSetNewState({fromDate: gameStart});
+        onSetNewState({toDate: gameEnd});
     }
 
     public render() {
         const {
             aggregationTime,
-            onSetFromDate,
-            onSetToDate,
-            onChangeAggregationTime,
-            onChangeTask,
+            onSetNewState,
             tasks,
             taskId,
             gameStart,
@@ -70,7 +57,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
                         <div className={'form-group'}>
                             <label>Task</label>
                             <select value={taskId} className="form-control" onChange={(event) => {
-                                onChangeTask(+event.target.value);
+                                onSetNewState({taskId: +event.target.value})
                             }}>
                                 <option value={null}>--{translator.getText('select task')}--</option>
                                 {tasks.map((task) => {
@@ -87,7 +74,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    step={60 * 1000}
                                    className="form-range"
                                    onChange={(e) => {
-                                       onChangeAggregationTime(+e.target.value);
+                                       onSetNewState({aggregationTime: +e.target.value});
                                    }}/>
                             <span className="form-text">{aggregationTime / (60 * 1000)} min</span>
                         </div>
@@ -104,7 +91,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    max={toDate.getTime()}
                                    step={60 * 1000}
                                    onChange={(e) => {
-                                       onSetFromDate(new Date(+e.target.value));
+                                       onSetNewState({fromDate: new Date(+e.target.value)});
                                    }}/>
                             <span className={'form-text'}><TimeDisplay date={fromDate.toISOString()}/></span>
                         </div>
@@ -119,7 +106,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    max={gameEnd.getTime()}
                                    step={60 * 1000}
                                    onChange={(e) => {
-                                       onSetToDate(new Date(+e.target.value));
+                                       onSetNewState({toDate: new Date(+e.target.value)})
                                    }}/>
                             <span className={'form-text'}><TimeDisplay date={toDate.toISOString()}/></span>
                         </div>
@@ -144,10 +131,7 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeAggregationTime: (time: number) => dispatch(setAggregationTime(time)),
-        onChangeTask: (teamId) => dispatch(setTaskId(+teamId)),
-        onSetFromDate: (date: Date) => dispatch(setFromDate(date)),
-        onSetToDate: (date: Date) => dispatch(setToDate(date)),
+        onSetNewState: (data) => dispatch(setNewState(data)),
     };
 };
 

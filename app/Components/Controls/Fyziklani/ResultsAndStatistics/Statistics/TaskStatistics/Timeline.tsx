@@ -87,6 +87,7 @@ class Timeline extends React.Component<StateProps & OwnProps> {
                         cx={this.xScale(submitted)}
                         cy={50}
                         r={5}
+                        data-points={submit.points}
                         fill={color}
                         stroke={'white'}
                         strokeWidth={1}

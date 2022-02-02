@@ -88,6 +88,7 @@ class TimeHistogramBarsChart extends ChartComponent<StateProps & OwnProps, Recor
                     polygons.push(<polygon
                         key={index}
                         points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
+                        data-points={points}
                         fill={getColorByPoints(points)}/>);
                 });
 

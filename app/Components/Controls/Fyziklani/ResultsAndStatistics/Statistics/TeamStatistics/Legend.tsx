@@ -5,7 +5,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setActivePoints } from '../actions';
+import { setNewState } from '../actions';
 import { getColorByPoints } from '../Middleware/colors';
 
 interface StateProps {
@@ -38,7 +38,7 @@ class Legend extends React.Component<StateProps> {
                          onMouseLeave={() => {
                              onActivePoints(null);
                          }}>
-                <i className="icon" style={{backgroundColor: getColorByPoints(points)}}/>
+                <i className="icon" data-points={points}/>
                 <strong>{points + ' ' + pointsLabel}</strong>
             </div>);
         });
@@ -53,7 +53,7 @@ class Legend extends React.Component<StateProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): StateProps => {
     return {
-        onActivePoints: (points) => dispatch(setActivePoints(+points)),
+        onActivePoints: (points) => dispatch(setNewState({activePoints: +points})),
     };
 };
 

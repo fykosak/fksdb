@@ -6,10 +6,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import {
-    setFirstTeamId,
-    setSecondTeamId,
-} from '../actions';
+import { setNewState } from '../actions';
 import { Store as StatisticsStore } from '../Reducers';
 import GlobalCorrelation from './GlobalCorrelation';
 
@@ -91,8 +88,8 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
-        onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
+        onChangeSecondTeam: (teamId) => dispatch(setNewState({secondTeamId: +teamId})),
     };
 };
 

@@ -8,16 +8,24 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use Fykosak\NetteORM\AbstractService;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Fykosak\Utils\UI\PageTitle;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\MissingServiceException;
+use Nette\Security\Resource;
 
 class TaskPresenter extends BasePresenter
 {
+    use EventEntityPresenterTrait;
+
+    protected ServiceFyziklaniTask $serviceFyziklaniTask;
 
     public const IMPORT_STATE_UPDATE_N_INSERT = 1;
     public const IMPORT_STATE_REMOVE_N_INSERT = 2;
@@ -96,5 +104,35 @@ class TaskPresenter extends BasePresenter
     protected function createComponentGrid(): TaskGrid
     {
         return new TaskGrid($this->getEvent(), $this->getContext());
+    }
+
+    /**
+     * @param Resource|string|null $resource
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool
+    {
+        return $this->isAllowed($resource, $privilege);
+    }
+
+    protected function getORMService(): AbstractService
+    {
+        return $this->serviceFyziklaniTask;
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function createComponentCreateForm(): Control
+    {
+        throw new GoneException();
+    }
+
+    /**
+     * @throws GoneException
+     */
+    protected function createComponentEditForm(): Control
+    {
+        throw new GoneException();
     }
 }

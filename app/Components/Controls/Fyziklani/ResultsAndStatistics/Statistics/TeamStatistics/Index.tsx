@@ -7,7 +7,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setFirstTeamId } from '../actions';
+import { setNewState } from '../actions';
 import { Store as StatisticsStore } from '../Reducers';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
@@ -87,7 +87,7 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
     };
 };
 

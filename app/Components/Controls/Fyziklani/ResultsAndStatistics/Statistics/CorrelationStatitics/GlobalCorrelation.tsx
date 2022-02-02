@@ -6,7 +6,7 @@ import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setFirstTeamId, setSecondTeamId } from '../actions';
+import { setNewState } from '../actions';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
 import { Store as StatisticsStore } from '../Reducers';
@@ -87,8 +87,8 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
-        onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
+        onChangeSecondTeam: (teamId) => dispatch(setNewState({secondTeamId: +teamId})),
     };
 };
 

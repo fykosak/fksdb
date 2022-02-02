@@ -26,10 +26,15 @@ export default class TeamRow extends React.Component<OwnProps> {
                         const width = ((item.groups[points]) ?
                             (Math.round(item.groups[points] / item.count * 100)) :
                             0) + '%';
-                        return <div key={points} className="progress-bar" style={{
-                            backgroundColor: getColorByPoints(points),
-                            width,
-                        }}/>;
+                        return <div
+                            key={points}
+                            className="progress-bar"
+                            data-points={points}
+                            style={{
+                                backgroundColor: getColorByPoints(points),
+                                width,
+                            }}
+                        />;
                     })}
                 </div>
             </div>

@@ -11,12 +11,12 @@ import Progress from './TimeProgress';
 
 interface StateProps {
     taskId: number;
+    availablePoints: number[];
 }
 
 class TaskStats extends React.Component<StateProps> {
     public render() {
-        const {taskId} = this.props;
-        const availablePoints = [5, 3, 2, 1];
+        const {taskId, availablePoints} = this.props;
         return (
             <>
                 <h2>{translator.getText('Global statistics')}</h2>
@@ -55,6 +55,7 @@ class TaskStats extends React.Component<StateProps> {
 
 const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
+        availablePoints: state.data.availablePoints,
         taskId: state.statistics.taskId,
     };
 };
