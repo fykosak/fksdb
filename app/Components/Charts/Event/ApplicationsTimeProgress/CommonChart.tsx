@@ -84,11 +84,11 @@ export default class CommonChart extends React.Component<OwnProps> {
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
         const legend = () => {
-            return <div className={'list-group'}>
+            return <div className="list-group">
                 {lineChartData.map((datum, key) => {
                     return <div
                         key={key}
-                        className={'list-group-item'}
+                        className="list-group-item"
                         style={{color: datum.color}}>{datum.name}</div>;
                 })}
             </div>;

@@ -52,9 +52,9 @@ class Options extends React.Component<StateProps & DispatchProps> {
             <>
                 <h3>{translator.getText('Options')}</h3>
 
-                <div className={'row'}>
-                    <div className={'col-6'}>
-                        <div className={'form-group'}>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-group">
                             <label>Task</label>
                             <select value={taskId} className="form-control" onChange={(event) => {
                                 onSetNewState({taskId: +event.target.value})
@@ -66,8 +66,8 @@ class Options extends React.Component<StateProps & DispatchProps> {
                             </select>
                         </div>
                     </div>
-                    <div className={'col-6'}>
-                        <div className={'form-group'}>
+                    <div className="col-6">
+                        <div className="form-group">
                             <label>{translator.getText('Aggregation time')}</label>
                             <input type="range" max={30 * 60 * 1000} min={60 * 1000}
                                    value={aggregationTime}
@@ -80,9 +80,9 @@ class Options extends React.Component<StateProps & DispatchProps> {
                         </div>
                     </div>
                 </div>
-                <div className={'row'}>
-                    <div className={'col-6'}>
-                        <div className={'form-group'}>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-group">
                             <label>{translator.getText('From')}</label>
                             <input type="range"
                                    className="form-range"
@@ -93,11 +93,11 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    onChange={(e) => {
                                        onSetNewState({fromDate: new Date(+e.target.value)});
                                    }}/>
-                            <span className={'form-text'}><TimeDisplay date={fromDate.toISOString()}/></span>
+                            <span className="form-text"><TimeDisplay date={fromDate.toISOString()}/></span>
                         </div>
                     </div>
-                    <div className={'col-6'}>
-                        <div className={'form-group'}>
+                    <div className="col-6">
+                        <div className="form-group">
                             <label>{translator.getText('To')}</label>
                             <input type="range"
                                    className="form-range"
@@ -108,7 +108,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
                                    onChange={(e) => {
                                        onSetNewState({toDate: new Date(+e.target.value)})
                                    }}/>
-                            <span className={'form-text'}><TimeDisplay date={toDate.toISOString()}/></span>
+                            <span className="form-text"><TimeDisplay date={toDate.toISOString()}/></span>
                         </div>
                     </div>
                 </div>

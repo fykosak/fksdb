@@ -96,8 +96,8 @@ class Timeline extends React.Component<StateProps & OwnProps> {
         });
         return (
             <div className="col-lg-12">
-                <svg viewBox={'0 0 600 100'} className="chart chart-fyziklani-task-timeline">
-                    <g transform={'translate(0,70)'} className="x axis"
+                <svg viewBox="0 0 600 100" className="chart chart-fyziklani-task-timeline">
+                    <g transform="translate(0,70)" className="x axis"
                        ref={(xAxis) => this.xAxis = xAxis}/>
                     {dots}
                 </svg>

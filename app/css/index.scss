@@ -31,6 +31,19 @@ $input-border-radius-lg: 0;
 @include color-variant(#bcbd22, color-9);
 @include color-variant(#17becf, color-10);
 @include color-variant(#000000, color-11);
+:root {
+  --color-variant-color-1: #1f77b4;
+  --color-variant-color-2: #ff7f0e;
+  --color-variant-color-3: #2ca02c;
+  --color-variant-color-4: #d62728;
+  --color-variant-color-5: #9467bd;
+  --color-variant-color-6: #8c564b;
+  --color-variant-color-7: #e377c2;
+  --color-variant-color-8: #cccccc;
+  --color-variant-color-9: #bcbd22;
+  --color-variant-color-10: #17becf;
+  --color-variant-color-11: #000000;
+}
 
 @include color-variant($fykosMainColor, "fykos");
 @include color-variant($vyfukMainColor, "vyfuk");

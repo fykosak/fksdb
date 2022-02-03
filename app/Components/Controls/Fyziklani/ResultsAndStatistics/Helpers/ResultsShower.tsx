@@ -22,15 +22,15 @@ class ResultsShower extends React.Component<StateProps & OwnProps> {
             <>
                 {(visible || hardVisible) ?
                     (<>
-                        <Timer mode={'small'}/>
+                        <Timer mode="small"/>
                         {this.props.children}
                     </>) :
                     (<div className={this.props.className}>
-                        <div className={'logo row'}>
-                            <img className={'col-3 offset-1'} alt="" src="/images/fof/logo-2020.svg"/>
+                        <div className="logo row">
+                            <img className="col-3 offset-1" alt="" src="/images/fof/logo-2020.svg"/>
                         </div>
                         <Images/>
-                        <Timer mode={'big'}/>
+                        <Timer mode="big"/>
                     </div>)}
             </>
         );

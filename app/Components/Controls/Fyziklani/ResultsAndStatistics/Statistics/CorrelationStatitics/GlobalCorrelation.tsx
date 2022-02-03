@@ -51,7 +51,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
                     <td>{countFiltered}</td>
                     <td>{countTotal}</td>
                     <td>
-                        <span className={'btn btn-outline-primary btn-sm'} onClick={() => {
+                        <span className="btn btn-outline-primary btn-sm" onClick={() => {
                             this.props.onChangeFirstTeam(firstTeam.teamId);
                             this.props.onChangeSecondTeam(secondTeam.teamId);
                         }}>Detail</span>
@@ -60,7 +60,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
 
             });
         });
-        return <table className={'table table-striped table-sm'}>
+        return <table className="table table-striped table-sm">
             <thead>
             <tr>
                 <th>{translator.getText('First team')}</th>

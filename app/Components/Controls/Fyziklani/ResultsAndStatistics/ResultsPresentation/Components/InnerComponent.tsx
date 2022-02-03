@@ -53,14 +53,14 @@ class InnerComponent extends React.Component<StateProps> {
             let table = null;
             if (colItems.length) {
                 table = <>
-                    <div className={'row head-row'}>
-                        <div className={'col-1'}>Pos.</div>
-                        <div className={'col-1'}>Cat./Kat.</div>
-                        <div className={'col-4'}>Team/Tým</div>
-                        <div className={'col-1'}>∑</div>
-                        <div className={'col-1'}>N</div>
-                        <div className={'col-1'}>x̄</div>
-                        <div className={'col-3'}/>
+                    <div className="row head-row">
+                        <div className="col-1">Pos.</div>
+                        <div className="col-1">Cat./Kat.</div>
+                        <div className="col-4">Team/Tým</div>
+                        <div className="col-1">∑</div>
+                        <div className="col-1">N</div>
+                        <div className="col-1">x̄</div>
+                        <div className="col-3"/>
                     </div>
                     {colItems}
                 </>;
@@ -68,21 +68,21 @@ class InnerComponent extends React.Component<StateProps> {
 
             switch (cols) {
                 case 2:
-                    resultsItems.push(<div className={'col-5'} key={col}>{table}</div>);
+                    resultsItems.push(<div className="col-5" key={col}>{table}</div>);
                     break;
                 case 3:
-                    resultsItems.push(<div className={'col-3'} key={col}>{table}</div>);
+                    resultsItems.push(<div className="col-3" key={col}>{table}</div>);
                     break;
                 default:
                 case 1:
-                    resultsItems.push(<div className={'col-10'} key={col}>{table}</div>);
+                    resultsItems.push(<div className="col-10" key={col}>{table}</div>);
             }
 
         }
         return (
-            <div className="mt-3">
+            <div className="mt-3 fyziklani-presentation-results">
                 <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
-                <div className={'row justify-content-around results-presentation'}>{resultsItems}</div>
+                <div className="row justify-content-around">{resultsItems}</div>
             </div>
         );
     }

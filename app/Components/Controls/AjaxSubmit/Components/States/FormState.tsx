@@ -59,9 +59,13 @@ class FormState extends React.Component<OwnProps & StateProps & DispatchProps> {
                     <span className="display-1 d-block"><i className="fa fa-download"/></span>
                     <span className="d-block">
                         <span>Drag file here</span>.</span>
-                    <input type={'file'} onChange={(event) => {
-                        this.onFileInputChanged(event);
-                    }} accept="application/pdf"/>
+                    <input
+                        type="file"
+                        onChange={(event) => {
+                            this.onFileInputChanged(event);
+                        }}
+                        accept="application/pdf"
+                    />
                 </div>
             </div>
         </div>;

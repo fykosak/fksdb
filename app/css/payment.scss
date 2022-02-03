@@ -25,11 +25,11 @@
     text-align: center;
 
     &.done {
-      background-color: $success;
+      background-color: var(--bs-success);
     }
 
     &.ongoing {
-      background-color: $secondary;
+      background-color: var(--bs-secondary);
     }
   }
 }
