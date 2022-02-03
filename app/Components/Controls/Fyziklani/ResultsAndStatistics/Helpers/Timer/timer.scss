@@ -1,0 +1,54 @@
+.fyziklani-presentation-timer {
+  color: white;
+  justify-content: space-between;
+  padding: .25em;
+  font-weight: bold;
+
+  .time-value, .time-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  & > span {
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+
+  &.timer-small {
+    & > span {
+      flex-grow: initial;
+    }
+
+    font-size: 200%;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    background: white;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+
+    .time-label {
+      width: 100%;
+      font-size: .75rem;
+    }
+  }
+
+  &.timer-big {
+    align-items: center;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 100%;
+
+    .time-value {
+      font-size: 8rem;
+    }
+
+    .time-label {
+      font-size: 2rem;
+    }
+  }
+}

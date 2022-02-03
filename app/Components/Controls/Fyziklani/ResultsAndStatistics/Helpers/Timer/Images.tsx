@@ -26,12 +26,11 @@ class Images extends React.Component<StateProps> {
         const {toStart, toEnd} = getCurrentDelta(rawToStart, rawToEnd, inserted);
 
         if (toStart === 0 || toEnd === 0) {
-            return (<div/>);
+            return null;
         }
-        const label = this.getLabel(toStart, toEnd);
         return (
-            <div className="image-wp">
-                {label}
+            <div className="fyziklani-presentation-images">
+                {this.getLabel(toStart, toEnd)}
             </div>
         );
     }

@@ -2,6 +2,7 @@ import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/R
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from './middleware';
+import './timer.scss';
 
 interface OwnProps {
     mode: 'big' | 'small';
@@ -40,7 +41,7 @@ class Timer extends React.Component<StateProps & OwnProps> {
         const m = date.getUTCMinutes();
         const s = date.getUTCSeconds();
         return (
-            <div className={'row clock clock-' + mode}>
+            <div className={'row fyziklani-presentation-timer timer-' + mode}>
                 <span className={'col'}>
                     <span className={'time-value'}>{(h < 10 ? '0' + h : '' + h)}</span>
                     <span className={'time-label'}>Hours/Hodin</span>
