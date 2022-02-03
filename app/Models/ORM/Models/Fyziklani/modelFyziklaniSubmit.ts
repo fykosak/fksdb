@@ -4,3 +4,7 @@ export interface ModelFyziklaniSubmit {
     teamId: number;
     created: string;
 }
+
+export interface Submits {
+    [id: number]: ModelFyziklaniSubmit;
+}

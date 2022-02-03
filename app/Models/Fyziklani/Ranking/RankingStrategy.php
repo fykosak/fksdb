@@ -24,7 +24,6 @@ class RankingStrategy
 
     /**
      * @throws NotClosedTeamException
-     * @internal
      */
     public function close(?string $category = null): Html
     {
@@ -36,14 +35,6 @@ class RankingStrategy
         $log = $this->saveResults($teamsData, is_null($category));
         $connection->commit();
         return $log;
-    }
-
-    /**
-     * @throws NotClosedTeamException
-     */
-    public function __invoke(?string $category = null): Html
-    {
-        return $this->close($category);
     }
 
     private function saveResults(array $data, bool $total): Html

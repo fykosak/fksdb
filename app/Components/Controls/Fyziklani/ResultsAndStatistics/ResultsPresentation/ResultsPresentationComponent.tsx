@@ -20,8 +20,8 @@ export default class ResultsPresentationComponent extends React.Component<OwnPro
             <Setting/>
             <div
                 className="fixed-top h-100 w-100"
-                data-toggle="modal"
-                data-target="#fyziklaniResultsOptionModal"
+                data-bs-toggle="modal"
+                data-bs-target="#fyziklaniResultsOptionModal"
             >
                 <ResultsShower className="inner-headline h-100 w-100">
                     <App/>

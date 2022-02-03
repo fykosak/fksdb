@@ -22,7 +22,12 @@ class HardVisibleSwitch extends React.Component<StateProps & DispatchProps> {
         const {onHardDisplayChange, hardVisible} = this.props;
 
         return <div className="form-group">
-            <label>{translator.getText('Not public results')}</label>
+            <p>
+                {translator.getText('Not public results')}
+            </p>
+            <p className="form-text text-danger">
+                {translator.getText('This function don\'t turn on if results are public!')}
+            </p>
             <button
                 className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-outline-warning'}
                 onClick={(event) => {
@@ -31,8 +36,7 @@ class HardVisibleSwitch extends React.Component<StateProps & DispatchProps> {
                 }}>
                 {hardVisible ? translator.getText('Turn off') : translator.getText('Turn on')}
             </button>
-            <span
-                className="form-text text-danger">{translator.getText('This function don\'t turn on if results are public!')}</span>
+
         </div>;
     }
 }

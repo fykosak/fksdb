@@ -19,7 +19,6 @@ use Nette\Utils\DateTime;
 
 class ResultsAndStatisticsComponent extends AjaxComponent
 {
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
@@ -68,7 +67,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent
         if (!$presenter instanceof BasePresenter) {
             throw new BadTypeException(BasePresenter::class, $presenter);
         }
-        $isOrg = $this->eventAuthorizator->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
@@ -81,13 +79,13 @@ class ResultsAndStatisticsComponent extends AjaxComponent
                 'visible' => $this->isResultsVisible(),
             ],
             'lastUpdated' => (new DateTime())->format('c'),
-            'isOrg' => $isOrg,
+            'isOrg' => true,
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
         ];
 
-        if ($isOrg || $this->isResultsVisible()) {
+        if ($this->isResultsVisible()) {
             $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($this->getEvent(), $this->lastUpdated);
         }
         // probably need refresh before competition started

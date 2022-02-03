@@ -1,4 +1,4 @@
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { PreprocessedSubmit } from './correlation';
 
 export interface SubmitsForTeams {

@@ -2,6 +2,7 @@ import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/R
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from './middleware';
+import './images.scss';
 
 interface StateProps {
     toStart: number;

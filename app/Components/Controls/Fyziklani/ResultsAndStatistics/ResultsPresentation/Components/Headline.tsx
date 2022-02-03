@@ -19,8 +19,9 @@ export default class Headline extends React.Component<OwnProps> {
                     <span>{category ?
                         (translator.getLocalizedText('Category', 'en') + ' ' + category) :
                         translator.getLocalizedText('Global results', 'en')} </span>
-                    <small className="text-muted"><Ordinal order={startPosition}/>-<Ordinal
-                        order={endPosition}/></small>
+                    <small className="text-muted">
+                        <Ordinal order={startPosition}/>-<Ordinal order={endPosition}/>
+                    </small>
                 </span>
                 <span className="ms-3">
                     <span>{category ?

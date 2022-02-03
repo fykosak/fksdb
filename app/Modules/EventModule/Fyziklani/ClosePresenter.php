@@ -73,17 +73,20 @@ class ClosePresenter extends BasePresenter
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'team'));
     }
 
-    protected function getModelResource(): string
-    {
-        return 'fyziklani.close';
-    }
-
     /**
      * @throws EventNotFoundException
      */
     public function authorizeHard(): void
     {
         $this->setAuthorized($this->isAllowed($this->getModelResource(), 'hard'));
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    public function authorizeList(): void
+    {
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
     }
     /* *********** ACTIONS **************** */
 
@@ -163,5 +166,10 @@ class ClosePresenter extends BasePresenter
     protected function createComponentEditForm(): Control
     {
         throw new NotImplementedException();
+    }
+
+    protected function getModelResource(): string
+    {
+        return 'fyziklani.close';
     }
 }
