@@ -41,17 +41,17 @@ class Timer extends React.Component<StateProps & OwnProps> {
         const s = date.getUTCSeconds();
         return (
             <div className={'row clock clock-' + mode}>
-                <span className={'col'}>
-                    <span className={'time-value'}>{(h < 10 ? '0' + h : '' + h)}</span>
-                    <span className={'time-label'}>Hours/Hodin</span>
+                <span className="col">
+                    <span className="time-value">{(h < 10 ? '0' + h : '' + h)}</span>
+                    <span className="time-label">Hours/Hodin</span>
                 </span>
-                <span className={'col'}>
-                    <span className={'time-value'}>{(m < 10 ? '0' + m : '' + m)}</span>
-                    <span className={'time-label'}>Minutes/Minut</span>
+                <span className="col">
+                    <span className="time-value">{(m < 10 ? '0' + m : '' + m)}</span>
+                    <span className="time-label">Minutes/Minut</span>
                 </span>
-                <span className={'col'}>
-                    <span className={'time-value'}>{(s < 10 ? '0' + s : '' + s)}</span>
-                    <span className={'time-label'}>Seconds/Sekund</span>
+                <span className="col">
+                    <span className="time-value">{(s < 10 ? '0' + s : '' + s)}</span>
+                    <span className="time-label">Seconds/Sekund</span>
                 </span>
             </div>
         );

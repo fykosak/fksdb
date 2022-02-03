@@ -33,21 +33,25 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps> {
         });
 
         const teamSelect = (
-            <div className={'row'}>
-                <div className={'col-6'}>
-                    <select className="form-control" onChange={(event) => {
-                        onChangeFirstTeam(+event.target.value);
-                    }}
-                            value={this.props.firstTeamId}
+            <div className="row">
+                <div className="col-6">
+                    <select
+                        className="form-control"
+                        onChange={(event) => {
+                            onChangeFirstTeam(+event.target.value);
+                        }}
+                        value={this.props.firstTeamId}
                     >
                         <option value={null}>--{translator.getText('select team')}--</option>
                         {teamsOptions}
                     </select>
                 </div>
-                <div className={'col-6'}>
-                    <select className="form-control" onChange={(event) => {
-                        onChangeSecondTeam(+event.target.value);
-                    }} value={this.props.secondTeamId}
+                <div className="col-6">
+                    <select
+                        className="form-control"
+                        onChange={(event) => {
+                            onChangeSecondTeam(+event.target.value);
+                        }} value={this.props.secondTeamId}
                     >
                         <option value={null}>--{translator.getText('select team')}--</option>
                         {teamsOptions}

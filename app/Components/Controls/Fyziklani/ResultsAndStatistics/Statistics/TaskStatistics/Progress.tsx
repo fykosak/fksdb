@@ -72,7 +72,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
                 rows.push(
                     <div className="row" key={index}>
                         <div className="col-lg-2">
-                            <a href={'#'} onClick={() => {
+                            <a href="#" onClick={() => {
                                 onChangeTask(submit.taskId);
                             }}>
                                 {submit.label + '-'}</a>

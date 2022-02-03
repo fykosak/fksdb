@@ -8,7 +8,6 @@ import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware
 import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { submitsByTask } from '../Middleware/submitsByTask';
 import { Store as StatisticsStore } from '../Reducers';
 
@@ -92,7 +91,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps> {
         availablePoints.forEach((points) => {
             if (!activePoints || activePoints === points) {
                 lineChartData.push({
-                    color: getColorByPoints(points),
+                    color: 'var(--color-fof-points-' + points + ')',
                     curveFactory: curveMonotoneX,
                     display: {
                         area: true,

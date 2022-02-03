@@ -37,22 +37,30 @@ class Setting extends React.Component<StateProps & DispatchProps> {
                         {isOrg && <HardVisibleSwitch/>}
                         <hr/>
                         <div className="form-group">
-                            <div className={'form-group'}>
+                            <div className="form-group">
                                 <label>Delay</label>
-                                <input name={'delay'} className={'form-control'} value={delay} type={'number'}
-                                       max={60 * 1000}
-                                       min={1000}
-                                       step={1000}
-                                       onChange={(e) => {
-                                           onSetParams({delay: +e.target.value});
-                                       }}/>
+                                <input
+                                    name="delay"
+                                    className="form-control"
+                                    value={delay}
+                                    type="number"
+                                    max={60 * 1000}
+                                    min={1000}
+                                    step={1000}
+                                    onChange={(e) => {
+                                        onSetParams({delay: +e.target.value});
+                                    }}/>
                             </div>
                         </div>
                         <hr/>
-                        <div className={'form-group'}>
+                        <div className="form-group">
                             <label>{translator.getText('Cols')}</label>
                             <input name="cols"
-                                   className="form-control" value={cols} type="number" max="3" min="1"
+                                   className="form-control"
+                                   value={cols}
+                                   type="number"
+                                   max="3"
+                                   min="1"
                                    step={0}
                                    onChange={(e) => {
                                        onSetParams({cols: +e.target.value});
@@ -60,9 +68,13 @@ class Setting extends React.Component<StateProps & DispatchProps> {
                             />
                         </div>
                         <hr/>
-                        <div className={'form-group'}>
+                        <div className="form-group">
                             <label>{translator.getText('Rows')}</label>
-                            <input name={'rows'} className={'form-control'} value={rows} type={'number'} max={100}
+                            <input name="rows"
+                                   className="form-control"
+                                   value={rows}
+                                   type="number"
+                                   max={100}
                                    min={1}
                                    step={1}
                                    onChange={(e) => {

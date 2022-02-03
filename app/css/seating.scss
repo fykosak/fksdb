@@ -41,15 +41,15 @@
     }
 
     &.category-A {
-      fill: #d62728 !important;;
+      fill: var(--color-variant-color-10) !important;;
     }
 
     &.category-B {
-      fill: #1f77b4 !important;;
+      fill: var(--color-variant-color-5) !important;;
     }
 
     &.category-C {
-      fill: #2ca02c !important;;
+      fill: var(--color-variant-color-9) !important;;
     }
 
     &.game-lang-cs {

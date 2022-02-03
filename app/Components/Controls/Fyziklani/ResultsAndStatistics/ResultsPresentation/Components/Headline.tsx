@@ -14,18 +14,19 @@ export default class Headline extends React.Component<OwnProps> {
         const {category, startPosition, endPosition} = this.props;
 
         return (
-            <h1 className={'text-center row justify-content-center'}>
-                <span className={'me-3'}>
+            <h1 className="text-center row justify-content-center">
+                <span className="me-3">
                     <span>{category ?
                         (translator.getLocalizedText('Category', 'en') + ' ' + category) :
                         translator.getLocalizedText('Global results', 'en')} </span>
-                    <small className={'text-muted'}><Ordinal order={startPosition}/>-<Ordinal order={endPosition}/></small>
+                    <small className="text-muted"><Ordinal order={startPosition}/>-<Ordinal
+                        order={endPosition}/></small>
                 </span>
-                <span className={'ms-3'}>
+                <span className="ms-3">
                     <span>{category ?
                         (translator.getLocalizedText('Category', 'cs') + ' ' + category) :
                         translator.getLocalizedText('Global results', 'cs')} </span>
-                    <small className={'text-muted'}>{startPosition}.-{endPosition}.</small>
+                    <small className="text-muted">{startPosition}.-{endPosition}.</small>
                     </span>
             </h1>
         );

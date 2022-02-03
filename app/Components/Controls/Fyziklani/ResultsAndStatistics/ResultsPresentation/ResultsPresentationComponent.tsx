@@ -18,10 +18,12 @@ export default class ResultsPresentationComponent extends React.Component<OwnPro
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
             <Setting/>
-            <div className={'fixed-top h-100 w-100'}
-                 data-toggle="modal"
-                 data-target="#fyziklaniResultsOptionModal">
-                <ResultsShower className={'inner-headline h-100 w-100'}>
+            <div
+                className="fixed-top h-100 w-100"
+                data-toggle="modal"
+                data-target="#fyziklaniResultsOptionModal"
+            >
+                <ResultsShower className="inner-headline h-100 w-100">
                     <App/>
                     <PositionSwitcher/>
                 </ResultsShower>

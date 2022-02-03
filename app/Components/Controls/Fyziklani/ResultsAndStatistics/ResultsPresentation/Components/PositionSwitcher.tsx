@@ -5,8 +5,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setParams } from '../actions';
+import { Params, setParams } from '../actions';
 import { FyziklaniResultsPresentationStore } from '../Reducers';
+import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers/presentation';
 
 interface StateProps {
     categories: string[];
@@ -19,7 +20,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onSetNewPosition(position: number, category: string): void;
+    onSetParams(data: Params): void;
 }
 
 class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
@@ -39,7 +40,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
 
     private async run(): Promise<void> | never {
 
-        const {cols, rows, position, delay, onSetNewPosition, category, teams} = this.props;
+        const {cols, rows, position, delay, onSetParams, category, teams} = this.props;
         let activeTeams;
         if (category) {
             activeTeams = teams.filter((team) => {
@@ -57,7 +58,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
         }
         await new Promise<void>((resolve) => {
             setTimeout(() => {
-                onSetNewPosition(newPosition, newCategory);
+                onSetParams({position: newPosition, category: newCategory});
                 resolve();
             }, delay);
         });
@@ -82,7 +83,7 @@ class PositionSwitcher extends React.Component<StateProps & DispatchProps> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onSetNewPosition: (position: number, category: string) => dispatch(setParams({position, category})),
+        onSetParams: (data) => dispatch(setParams(data)),
     };
 };
 const mapStateToPros = (state: FyziklaniResultsPresentationStore): StateProps => {

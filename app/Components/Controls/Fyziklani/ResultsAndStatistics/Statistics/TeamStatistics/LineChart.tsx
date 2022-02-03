@@ -8,7 +8,6 @@ import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../Middleware/colors';
 import { Store as StatisticsStore } from '../Reducers';
 
 interface StateProps {
@@ -72,7 +71,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
                         maxPoints += +points;
                         teamSubmits.push({
                             active: (!(activePoints && (activePoints !== submit.points))),
-                            color: getColorByPoints(submit.points),
+                            color: 'var(--color-fof-points-' + submit.points + ')',
                             label: currentTask.label,
                             xValue: new Date(submit.created),
                             yValue: maxPoints,

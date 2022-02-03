@@ -1,24 +1,22 @@
-@import "../../../fyziklani-colors";
-
 .chart.chart-fyziklani-team-pie {
   path.arc {
     stroke: white;
     stroke-width: 5px;
 
     &[data-points="5"] {
-      fill: $fyziklaniPoints5;
+      fill: var(--color-fof-points-5);
     }
 
     &[data-points="3"] {
-      fill: $fyziklaniPoints3;
+      fill: var(--color-fof-points-3);
     }
 
     &[data-points="2"] {
-      fill: $fyziklaniPoints2;
+      fill: var(--color-fof-points-2);
     }
 
     &[data-points="1"] {
-      fill: $fyziklaniPoints1;
+      fill: var(--color-fof-points-1);
     }
 
     &.active {

@@ -1,4 +1,3 @@
-@import "../../fyziklani-colors";
 @import "./../../../../../css/colors";
 
 table.fyziklani-results-table {
@@ -7,19 +6,19 @@ table.fyziklani-results-table {
 
     tr td {
       &[data-points="5"] {
-        background-color: $fyziklaniPoints5;
+        background-color: var(--color-fof-points-5);
       }
 
       &[data-points="3"] {
-        background-color: $fyziklaniPoints3;
+        background-color: var(--color-fof-points-3);
       }
 
       &[data-points="2"] {
-        background-color: $fyziklaniPoints2;
+        background-color: var(--color-fof-points-2);
       }
 
       &[data-points="1"] {
-        background-color: $fyziklaniPoints1;
+        background-color: var(--color-fof-points-1);
       }
 
       text-align: center;

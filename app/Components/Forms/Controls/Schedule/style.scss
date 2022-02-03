@@ -1,14 +1,14 @@
 @import "../../../../css/colors";
 
 .schedule-field-container {
-  color: $FOFMainColor;
+  color: var(--color-fof-main);
 
   .schedule-row {
     padding: .5rem;
-    border-bottom: $FOFMainColor 1px dashed;
+    border-bottom: var(--color-fof-main) 1px dashed;
 
     &:first-of-type {
-      border-top: $FOFMainColor 1px dashed;
+      border-top: var(--color-fof-main) 1px dashed;
     }
 
     .schedule-container {
@@ -19,12 +19,12 @@
 
       .chooser-container {
 
-        border: solid 1px $FOFMainColor;
+        border: solid 1px var(--color-fof-main);
         border-radius: 1rem;
 
         &.active {
           color: white;
-          background-color: $FOFMainColor;
+          background-color: var(--color-fof-main);
         }
       }
 

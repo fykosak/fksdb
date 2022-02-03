@@ -5,11 +5,11 @@ import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteA
 import * as React from 'react';
 import { Action, Reducer } from 'redux';
 
-interface OwnProps <Store>{
+interface OwnProps<Store> {
     actions: NetteActions;
     data: ResponseData;
     children: React.ReactNode;
-    app: Reducer<Store,Action<string>>;
+    app: Reducer<Store, Action<string>>;
 }
 
 export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
@@ -21,7 +21,7 @@ export default class MainComponent<Store> extends React.Component<OwnProps<Store
         };
         return (
             <ActionsStoreCreator initialData={initialData} app={this.props.app}>
-                <div className={'fyziklani-results'}>
+                <div className="fyziklani-results">
                     <Downloader data={this.props.data}/>
                     <LoadingSwitch>
                         {this.props.children}

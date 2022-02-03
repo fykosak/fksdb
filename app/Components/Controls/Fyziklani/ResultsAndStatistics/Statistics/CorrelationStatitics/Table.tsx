@@ -61,7 +61,7 @@ class Table extends React.Component<StateProps> {
         });
         const avgNStdDev = getAverageNStandardDeviation(deltas);
         return <div>
-            <table className={'table table-striped table-hover table-sm'}>
+            <table className="table table-striped table-hover table-sm">
                 <thead>
                 <tr>
                     <th>{translator.getText('Task')}</th>

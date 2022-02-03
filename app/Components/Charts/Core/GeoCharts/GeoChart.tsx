@@ -57,7 +57,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             countryNodes.push(<path
                 key={key}
                 fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}
-                stroke={'#000'}
+                stroke="#000"
                 strokeWidth={0.5}
                 onMouseOver={() => {
                     this.setState({active: country.id});
@@ -69,7 +69,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
             ><title>{country.properties.name}: {count}</title>
             </path>);
         });
-        return <svg viewBox={'-500 -300 1000 600'} className="chart geo-chart">
+        return <svg viewBox="-500 -300 1000 600" className="chart geo-chart">
             <g>
                 {countryNodes}
             </g>
