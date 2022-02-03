@@ -10,7 +10,7 @@ use Fykosak\Utils\UI\PageTitle;
 
 class PresentationPresenter extends BasePresenter
 {
-    public function titlePresentation(): PageTitle
+    public function titleDefault(): PageTitle
     {
         return new PageTitle(null, _('Results presentation'), 'fas fa-chalkboard');
     }
@@ -18,7 +18,7 @@ class PresentationPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedPresentation(): void
+    public function authorizedDefault(): void
     {
         $this->setAuthorized($this->isAllowed('fyziklani.presentation', 'default'));
     }
