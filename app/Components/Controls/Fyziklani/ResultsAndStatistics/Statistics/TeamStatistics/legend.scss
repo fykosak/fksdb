@@ -1,6 +1,5 @@
-.legend.fyziklani-legend {
-  .legend-item .icon {
-
+.chart-legend.chart-legend-fyziklani {
+  .chart-legend-item .icon.icon-circle {
     &[data-points="5"] {
       background-color: var(--color-fof-points-5);
     }

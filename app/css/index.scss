@@ -9,16 +9,15 @@ $input-border-radius-lg: 0;
 @import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
 @import "../Components/Charts/style";
+@import "../Components/Charts/legend";
 @import "colors";
-@import "fyziklani";
 @import "points";
 @import "contests";
 @import "callout";
 @import "payment";
-@import "seating";
-@import "print";
+@import "../Components/PDFGenerators/TeamSeating/seating";
+@import "../Components/PDFGenerators/Providers/print";
 @import "charts/legend";
-@import "charts/fyziklani";
 
 @include color-variant(#1f77b4, color-1);
 @include color-variant(#ff7f0e, color-2);
@@ -32,6 +31,16 @@ $input-border-radius-lg: 0;
 @include color-variant(#17becf, color-10);
 @include color-variant(#000000, color-11);
 :root {
+  --color-fof-main: #{$FOFMainColor};
+  --color-fol-main: #{$FOLMainColor};
+  --color-fykos-main: #{$fykosMainColor};
+  --color-vyfuk-main: #{$vyfukMainColor};
+
+  --color-fof-points-5: #{$fyziklaniPoints5};
+  --color-fof-points-3: #{$fyziklaniPoints3};
+  --color-fof-points-2: #{$fyziklaniPoints2};
+  --color-fof-points-1: #{$fyziklaniPoints1};
+
   --color-variant-color-1: #1f77b4;
   --color-variant-color-2: #ff7f0e;
   --color-variant-color-3: #2ca02c;

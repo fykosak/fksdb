@@ -7,6 +7,7 @@ import {
 } from 'redux';
 import { setNewState } from '../actions';
 import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
+import './legend.scss';
 
 interface StateProps {
     onSetNewState(data: State): void;
@@ -31,20 +32,20 @@ class Legend extends React.Component<StateProps> {
                     pointsLabel = translator.getText('bodů');
             }
             return (<div key={points}
-                         className="col-12 legend-item"
+                         className="col-12 chart-legend-item"
                          onMouseEnter={() => {
                              onSetNewState({activePoints: +points})
                          }}
                          onMouseLeave={() => {
                              onSetNewState({activePoints: null})
                          }}>
-                <i className="icon" data-points={points}/>
+                <i className="icon icon-circle" data-points={points}/>
                 <strong>{points + ' ' + pointsLabel}</strong>
             </div>);
         });
 
         return (
-            <div className="legend fyziklani-legend align-content-center col-lg-4 d-flex flex-wrap">
+            <div className="chart-legend chart-legend-fyziklani align-content-center col-lg-4 d-flex flex-wrap">
                 {legend}
             </div>
         );

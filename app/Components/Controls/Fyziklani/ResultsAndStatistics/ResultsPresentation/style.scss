@@ -1,6 +1,11 @@
 @import "../../../../../css/colors";
 
 .fyziklani-presentation-results {
+  h1 {
+    color: var(--color-fof-main);
+    font-weight: bold;
+  }
+
   color: black;
 
   .head-row {

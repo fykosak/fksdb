@@ -82,7 +82,6 @@ navigation:
             Fyziklani.Statistics.correlation: []
             Fyziklani.Statistics.table: []
 
-
         Event.Dashboard.default:
             Event.TeamApplication.list: []
             Event.Application.list: []

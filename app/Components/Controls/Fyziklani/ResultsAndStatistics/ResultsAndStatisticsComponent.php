@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
-use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
@@ -22,7 +21,6 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-    private EventAuthorizator $eventAuthorizator;
     private ModelEvent $event;
     private ?string $lastUpdated = null;
 
@@ -40,13 +38,11 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     final public function injectPrimary(
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        EventAuthorizator $eventAuthorizator
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
     ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     public function handleRefresh(string $lastUpdated): void
@@ -85,9 +81,8 @@ class ResultsAndStatisticsComponent extends AjaxComponent
             'submits' => [],
         ];
 
-        if ($this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($this->getEvent(), $this->lastUpdated);
-        }
+        $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($this->getEvent(), $this->lastUpdated);
+
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
         $result['teams'] = $this->serviceFyziklaniTeam->serialiseTeams($this->getEvent());

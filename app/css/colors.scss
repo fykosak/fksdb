@@ -12,17 +12,6 @@ $fyziklaniPoints5: #2d7dd2;
 $fyziklaniPoints3: #98cc04;
 $fyziklaniPoints2: #eeb902;
 $fyziklaniPoints1: #f45d01;
-:root {
-  --color-fof-main: #{$FOFMainColor};
-  --color-fol-main: #{$FOLMainColor};
-  --color-fykos-main: #{$fykosMainColor};
-  --color-vyfuk-main: #{$vyfukMainColor};
-
-  --color-fof-points-5: #{$fyziklaniPoints5};
-  --color-fof-points-3: #{$fyziklaniPoints3};
-  --color-fof-points-2: #{$fyziklaniPoints2};
-  --color-fof-points-1: #{$fyziklaniPoints1};
-}
 
 @mixin color-variant($color,$index) {
   .border-#{$index} {

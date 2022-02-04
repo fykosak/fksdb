@@ -11,6 +11,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
+import './downloader.scss';
 
 interface StateProps {
     error: Response | string | number | Error;
@@ -48,7 +49,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps> 
     public render() {
         const {lastUpdated, isRefreshing, isSubmitting, onFetch, error} = this.props;
         return (
-            <div className="last-update-info bg-white">
+            <div className="downloader-update-info bg-white">
                 <i
                     // @ts-ignore
                     title={error ? (error.status + ' ' + error.statusText) : lastUpdated}
