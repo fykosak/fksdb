@@ -14,7 +14,6 @@ use Fykosak\NetteORM\AbstractService;
  */
 class ServicePersonInfo extends AbstractService
 {
-
     public function createNewModel(array $data): ModelPersonInfo
     {
         if (isset($data['agreed']) && $data['agreed'] == '1') {

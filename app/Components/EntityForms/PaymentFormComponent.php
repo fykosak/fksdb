@@ -102,7 +102,6 @@ class PaymentFormComponent extends EntityFormComponent
     }
 
     /**
-     * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      * @throws ModelException

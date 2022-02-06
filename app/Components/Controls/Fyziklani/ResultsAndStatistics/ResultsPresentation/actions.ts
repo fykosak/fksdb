@@ -6,6 +6,7 @@ export interface Params {
     position?: number;
     rows?: number;
     category?: string;
+    hardVisible?: boolean;
 }
 
 export interface ActionSetParams extends Action<string> {

@@ -25,10 +25,7 @@ class ModelContainer extends ContainerWithOptions
         return parent::setValues($data, $erase);
     }
 
-    /**
-     * @param bool $value
-     */
-    public function setDisabled($value = true): void
+    public function setDisabled(bool $value = true): void
     {
         /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {

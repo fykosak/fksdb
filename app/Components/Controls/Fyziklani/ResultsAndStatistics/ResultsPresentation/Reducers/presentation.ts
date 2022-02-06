@@ -1,7 +1,5 @@
-import {
-    ACTION_SET_PARAMS,
-    ActionSetParams,
-} from '../actions';
+import { ACTION_SET_PARAMS } from '../actions';
+import { ACTION_FETCH_SUCCESS } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/actions';
 
 export interface State {
     position: number;
@@ -9,6 +7,8 @@ export interface State {
     rows: number;
     delay: number;
     category?: string;
+    hardVisible: boolean;
+    isOrg: boolean;
 }
 
 const initialState: State = {
@@ -17,13 +17,20 @@ const initialState: State = {
     delay: 10 * 1000,
     position: 0,
     rows: 20,
+    hardVisible: false,
+    isOrg: false,
 };
 
-export const presentation = (state: State = initialState, action: ActionSetParams): State => {
+export const presentation = (state: State = initialState, action): State => {
 
     switch (action.type) {
         case ACTION_SET_PARAMS:
-            return {...state, ...action.data}
+            return {...state, ...action.data};
+        case ACTION_FETCH_SUCCESS:
+            return {
+                ...state,
+                isOrg: action.data.data.isOrg,
+            };
         default:
             return state;
     }

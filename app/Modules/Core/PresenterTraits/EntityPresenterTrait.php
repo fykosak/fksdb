@@ -7,6 +7,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
@@ -23,6 +24,7 @@ trait EntityPresenterTrait
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedList(): void
     {
@@ -36,6 +38,9 @@ trait EntityPresenterTrait
      */
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
+    /**
+     * @throws GoneException
+     */
     protected function getModelResource(): string
     {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
@@ -46,6 +51,7 @@ trait EntityPresenterTrait
     /* ****************** TITLES ***************************** */
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedCreate(): void
     {
@@ -56,6 +62,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
+     * @throws GoneException
      */
     public function authorizedEdit(): void
     {
@@ -64,6 +71,7 @@ trait EntityPresenterTrait
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function getEntity(bool $throw = true): ?AbstractModel
     {
@@ -77,6 +85,7 @@ trait EntityPresenterTrait
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     private function loadModel(bool $throw = true): ?AbstractModel
     {
@@ -94,6 +103,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function authorizedDelete(): void
     {
@@ -104,6 +114,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function authorizedDetail(): void
     {
@@ -139,6 +150,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function traitHandleDelete(): void
     {

@@ -1,12 +1,17 @@
 @import "../../../../../css/colors";
 
-.fyziklani-presentation-results {
+.fyziklani-presentation {
+  background-color: var(--color-fof-main);
+
+  .subheader {
+    font-weight: bold;
+    color: black;
+  }
+
   h1 {
     color: var(--color-fof-main);
     font-weight: bold;
   }
-
-  color: black;
 
   .head-row {
     padding: 0 .5rem;

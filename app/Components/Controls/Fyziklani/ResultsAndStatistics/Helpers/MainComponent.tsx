@@ -21,12 +21,12 @@ export default class MainComponent<Store> extends React.Component<OwnProps<Store
         };
         return (
             <ActionsStoreCreator initialData={initialData} app={this.props.app}>
-                <div className="fyziklani-results">
+                <>
                     <Downloader data={this.props.data}/>
                     <LoadingSwitch>
                         {this.props.children}
                     </LoadingSwitch>
-                </div>
+                </>
             </ActionsStoreCreator>
         );
     }

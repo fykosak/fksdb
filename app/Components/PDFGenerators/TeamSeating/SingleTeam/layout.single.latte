@@ -19,7 +19,7 @@
                     &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#8211; {substr($rest->getScheduleItem()->name_cs, 0, 5)}
                     <br>
                 {else}
-                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#128; &#8211; {substr($rest->getScheduleItem()->name_en, 0, 5)}
+                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#8211; {substr($rest->getScheduleItem()->name_en, 0, 5)}
                     <br>
                 {/if}
             {/foreach}

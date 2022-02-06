@@ -80,7 +80,7 @@ class InnerComponent extends React.Component<StateProps> {
 
         }
         return (
-            <div className="mt-3 fyziklani-presentation-results">
+            <div className="p-3 h-100 bg-white">
                 <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
                 <div className="row justify-content-around">{resultsItems}</div>
             </div>

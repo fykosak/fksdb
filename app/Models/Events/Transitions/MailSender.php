@@ -78,7 +78,6 @@ class MailSender
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder): void
     {
@@ -87,7 +86,6 @@ class MailSender
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder): void
     {
