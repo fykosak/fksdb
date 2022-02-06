@@ -9,7 +9,6 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\AbstractService;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -17,8 +16,6 @@ use Nette\Security\Resource;
 class TaskPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
-
-    protected ServiceFyziklaniTask $serviceFyziklaniTask;
 
     public function titleList(): PageTitle
     {
@@ -50,9 +47,13 @@ class TaskPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
+    /**
+     * @return AbstractService
+     * @throws GoneException
+     */
     protected function getORMService(): AbstractService
     {
-        return $this->serviceFyziklaniTask;
+        throw new GoneException();
     }
 
     /**

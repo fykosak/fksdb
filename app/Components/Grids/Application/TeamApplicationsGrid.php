@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
@@ -58,7 +58,7 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
 
     protected function getModelClassName(): string
     {
-        return ModelFyziklaniTeam::class;
+        return TeamModel::class;
     }
 
     protected function getTableName(): string

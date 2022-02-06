@@ -72,8 +72,7 @@ services:
     #stats
     - FKSDB\Models\Stats\StatsModelFactory
     #tasks
-
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%, ...)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel

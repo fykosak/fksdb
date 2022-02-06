@@ -6,19 +6,19 @@ namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use NiftyGrid\DuplicateColumnException;
 
 abstract class SubmitsGrid extends BaseGrid
 {
 
-    protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+    protected SubmitService $submitService;
 
-    final public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void
+    final public function injectServiceFyziklaniSubmit(SubmitService $submitService): void
     {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->submitService = $submitService;
     }
 
     /**
@@ -27,7 +27,7 @@ abstract class SubmitsGrid extends BaseGrid
     protected function addColumnTask(): void
     {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row): string {
-            $model = ModelFyziklaniSubmit::createFromActiveRow($row); // TODO is needed?
+            $model = SubmitModel::createFromActiveRow($row); // TODO is needed?
             return $model->getFyziklaniTask()->label;
         })->setSortable(false);
     }
@@ -38,9 +38,9 @@ abstract class SubmitsGrid extends BaseGrid
      */
     protected function addColumnTeam(): void
     {
-        $this->addJoinedColumn('e_fyziklani_team.name_n_id', function ($row): ModelFyziklaniTeam {
-            if (!$row instanceof ModelFyziklaniSubmit) {
-                $row = ModelFyziklaniSubmit::createFromActiveRow($row);
+        $this->addJoinedColumn('e_fyziklani_team.name_n_id', function ($row): TeamModel {
+            if (!$row instanceof SubmitModel) {
+                $row = SubmitModel::createFromActiveRow($row);
             }
             return $row->getFyziklaniTeam();
         });
@@ -48,6 +48,6 @@ abstract class SubmitsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelFyziklaniSubmit::class;
+        return SubmitModel::class;
     }
 }

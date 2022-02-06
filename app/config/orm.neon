@@ -713,8 +713,8 @@ orm:
             model: FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel
 
         fyziklani_submit:
-             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
-             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit
+             service: FKSDB\Models\ORM\Services\Fyziklani\SubmitService
+             model: FKSDB\Models\ORM\Models\Fyziklani\SubmitModel
              columnFactories:
                 fyziklani_submit_id:
                     type: primaryKey
@@ -738,8 +738,8 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit\PointsColumnFactory
                     title: _('Points')
         fyziklani_task:
-             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
-             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask
+             service: FKSDB\Models\ORM\Services\Fyziklani\TaskService
+             model: FKSDB\Models\ORM\Models\Fyziklani\TaskModel
              columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
@@ -751,8 +751,8 @@ orm:
                     type: string
                     title: _('Label')
         fyziklani_game_setup:
-             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
-             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
+             service: FKSDB\Models\ORM\Services\Fyziklani\GameSetupService
+             model: FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel
              columnFactories:
                 tasks_on_board:
                     type: string
@@ -781,16 +781,16 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup\AvailablePointsColumnFactory
                     title: _('Available points')
         e_fyziklani_team:
-             service: FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
-             model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
-             columnFactories:
+            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel
+            columnFactories:
                 e_fyziklani_team_id:
-                  type: primaryKey
-                  title: _('Team Id')
+                    type: primaryKey
+                    title: _('Team Id')
                 status:
-                  type: state
-                  title: _('State')
-                  states: %event_participant.states%
+                    type: state
+                    title: _('State')
+                    states: %event_participant.states%
                 phone:
                     type: phone
                     title: _('Phone')
@@ -840,14 +840,16 @@ orm:
                     type: class
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                     title: _('Submit opened?')
-             linkFactories:
+            linkFactories:
                 detail:
                     destination: ':Event:TeamApplication:detail'
                     params:
-                       eventId: event_id
-                       id: e_fyziklani_team_id
+                        eventId: event_id
+                        id: e_fyziklani_team_id
                     title: Detail
-
+        e_fyziklani_participant:
+            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
+            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
 #schedule
         person_schedule:
             service: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
@@ -1029,9 +1031,7 @@ orm:
         warehouse_item:
             service: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
             model: FKSDB\Models\ORM\Models\Warehouse\ModelItem
-        e_fyziklani_participant:
-            service: FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
-            model: FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant
+
 
         e_dsef_participant:
             service: FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant

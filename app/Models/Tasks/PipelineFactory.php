@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceStudyYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
@@ -18,19 +17,6 @@ use FKSDB\Models\Pipeline\Pipeline;
  */
 class PipelineFactory
 {
-
-    /**
-     * @see TasksFromXML
-     * @var array
-     */
-    private array $columnMappings;
-
-    /**
-     * @see ContributionsFromXML
-     * @var array
-     */
-    private array $contributionMappings;
-
     /**
      * @see StudyYearsFromXML
      * @var array
@@ -41,26 +27,19 @@ class PipelineFactory
     private ServiceTaskContribution $serviceTaskContribution;
     private ServiceTaskStudyYear $serviceTaskStudyYear;
     private ServiceStudyYear $serviceStudyYear;
-    private ServiceOrg $serviceOrg;
 
     public function __construct(
-        array $columnMappings,
-        array $contributionMappings,
         array $defaultStudyYears,
         ServiceTask $serviceTask,
         ServiceTaskContribution $serviceTaskContribution,
         ServiceTaskStudyYear $serviceTaskStudyYear,
-        ServiceStudyYear $serviceStudyYear,
-        ServiceOrg $serviceOrg
+        ServiceStudyYear $serviceStudyYear
     ) {
-        $this->columnMappings = $columnMappings;
-        $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTask = $serviceTask;
         $this->serviceTaskContribution = $serviceTaskContribution;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
-        $this->serviceOrg = $serviceOrg;
     }
 
     public function create(): Pipeline

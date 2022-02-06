@@ -7,13 +7,13 @@ namespace FKSDB\Models\Fyziklani\Submit;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\DI\Container;
 use Nette\Security\User;
 use Tracy\Debugger;
@@ -22,7 +22,7 @@ class Handler
 {
     public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
     public const LOG_FORMAT = 'Submit %d was %s by %s';
-    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+    private SubmitService $submitService;
     private User $user;
     private ModelEvent $event;
     private TaskCodePreprocessor $taskCodePreprocessor;
@@ -36,17 +36,17 @@ class Handler
     }
 
     public function injectPrimary(
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        TeamService $teamService,
+        TaskService $taskService,
+        SubmitService $submitService,
         User $user
     ): void {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->submitService = $submitService;
         $this->user = $user;
         $this->taskCodePreprocessor = new TaskCodePreprocessor(
             $this->event,
-            $serviceFyziklaniTeam,
-            $serviceFyziklaniTask
+            $teamService,
+            $taskService
         );
     }
 
@@ -71,7 +71,7 @@ class Handler
         $task = $this->taskCodePreprocessor->getTask($code);
         $team = $this->taskCodePreprocessor->getTeam($code);
 
-        $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
+        $submit = $this->submitService->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->createSubmit($logger, $task, $team, $points);
         } elseif (!$submit->isChecked()) { // check bodovania
@@ -106,18 +106,18 @@ class Handler
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function changePoints(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void
+    public function changePoints(Logger $logger, SubmitModel $submit, int $points): void
     {
         if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
+        $this->submitService->updateModel($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'state' => ModelFyziklaniSubmit::STATE_CHECKED,
+            'state' => SubmitModel::STATE_CHECKED,
             'modified' => null,
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
@@ -141,12 +141,12 @@ class Handler
      * @throws ClosedSubmittingException
      * @throws ModelException
      */
-    public function revokeSubmit(Logger $logger, ModelFyziklaniSubmit $submit): void
+    public function revokeSubmit(Logger $logger, SubmitModel $submit): void
     {
         if ($submit->canRevoke(true)) {
-            $this->serviceFyziklaniSubmit->updateModel($submit, [
+            $this->submitService->updateModel($submit, [
                 'points' => null,
-                'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+                'state' => SubmitModel::STATE_NOT_CHECKED,
                 /* ugly, exclude previous value of `modified` from query
                  * so that `modified` is set automatically by DB
                  * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
@@ -168,7 +168,7 @@ class Handler
      * @throws PointsMismatchException
      * @throws ModelException
      */
-    public function checkSubmit(Logger $logger, ModelFyziklaniSubmit $submit, int $points): void
+    public function checkSubmit(Logger $logger, SubmitModel $submit, int $points): void
     {
         if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
@@ -176,8 +176,8 @@ class Handler
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->serviceFyziklaniSubmit->updateModel($submit, [
-            'state' => ModelFyziklaniSubmit::STATE_CHECKED,
+        $this->submitService->updateModel($submit, [
+            'state' => SubmitModel::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
@@ -201,13 +201,13 @@ class Handler
         );
     }
 
-    public function createSubmit(Logger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void
+    public function createSubmit(Logger $logger, TaskModel $task, TeamModel $team, int $points): void
     {
-        $submit = $this->serviceFyziklaniSubmit->createNewModel([
+        $submit = $this->submitService->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
-            'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
+            'state' => SubmitModel::STATE_NOT_CHECKED,
             /* ugly, force current timestamp in database
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
@@ -230,7 +230,7 @@ class Handler
         );
     }
 
-    private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void
+    private function logEvent(SubmitModel $submit, string $action, string $appendLog = null): void
     {
         Debugger::log(
             \sprintf(

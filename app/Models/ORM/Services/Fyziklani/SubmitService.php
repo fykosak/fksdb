@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 use Fykosak\NetteORM\TypedTableSelection;
 
 /**
- * @method ModelFyziklaniSubmit createNewModel(array $data)
+ * @method SubmitModel createNewModel(array $data)
  */
-class ServiceFyziklaniSubmit extends AbstractService
+class SubmitService extends AbstractService
 {
 
-    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit
+    public function findByTaskAndTeam(TaskModel $task, TeamModel $team): ?SubmitModel
     {
         $row = $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
-        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
+        return $row ? SubmitModel::createFromActiveRow($row) : null;
     }
 
     public function findAll(ModelEvent $event): TypedTableSelection
@@ -37,7 +37,7 @@ class ServiceFyziklaniSubmit extends AbstractService
             $query->where('modified >= ?', $lastUpdated);
         }
         foreach ($query as $row) {
-            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
+            $submit = SubmitModel::createFromActiveRow($row);
             $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;

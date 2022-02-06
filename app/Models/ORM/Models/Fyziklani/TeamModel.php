@@ -7,7 +7,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -40,7 +39,7 @@ use Nette\Security\Resource;
  * @property-read int teacher_id
  * @property-read ActiveRow person
  */
-class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
+class TeamModel extends AbstractModel implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'fyziklani.team';
     public const CATEGORY_HIGH_SCHOOL_A = 'A';
@@ -94,7 +93,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
 
     public function getNonCheckedSubmits(): GroupedSelection
     {
-        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', ModelFyziklaniSubmit::STATE_CHECKED);
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitModel::STATE_CHECKED);
     }
 
     public function hasAllSubmitsChecked(): bool
@@ -151,7 +150,7 @@ class ModelFyziklaniTeam extends AbstractModel implements Resource, NodeCreator
     {
         $persons = [];
         foreach ($this->getFyziklaniParticipants() as $pRow) {
-            $persons[] = ModelFyziklaniParticipant::createFromActiveRow($pRow)->getEventParticipant()->getPerson();
+            $persons[] = ParticipantModel::createFromActiveRow($pRow)->getEventParticipant()->getPerson();
         }
         $teacher = $this->getTeacher();
         if ($teacher) {

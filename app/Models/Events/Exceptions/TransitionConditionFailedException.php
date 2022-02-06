@@ -8,9 +8,6 @@ use FKSDB\Models\Events\Machine\Transition;
 
 class TransitionConditionFailedException extends MachineExecutionException
 {
-
-    private Transition $transition;
-
     public function __construct(Transition $blockingTransition, int $code = 0, ?\Throwable $previous = null)
     {
         $message = sprintf(
@@ -19,6 +16,5 @@ class TransitionConditionFailedException extends MachineExecutionException
             $blockingTransition->getBaseMachine()->getName()
         );
         parent::__construct($message, $code, $previous);
-        $this->transition = $blockingTransition;
     }
 }

@@ -10,13 +10,13 @@ use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * @property ModelFyziklaniSubmit $model
+ * @property SubmitModel $model
  */
 class FyziklaniSubmitFormComponent extends EntityFormComponent
 {

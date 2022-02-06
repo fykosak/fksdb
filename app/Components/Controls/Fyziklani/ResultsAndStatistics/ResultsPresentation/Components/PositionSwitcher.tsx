@@ -7,7 +7,6 @@ import {
 } from 'redux';
 import { Params, setParams } from '../actions';
 import { FyziklaniResultsPresentationStore } from '../Reducers';
-import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers/presentation';
 
 interface StateProps {
     categories: string[];

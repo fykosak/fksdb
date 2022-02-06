@@ -88,7 +88,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     protected function getEvent(): ModelEvent
     {
         static $event;
-        if (!isset($event)) {
+        if (!isset($event) || $event->event_id !== $this->eventId) {
             $event = $this->serviceEvent->findByPrimary($this->eventId);
             if (!$event) {
                 throw new EventNotFoundException();

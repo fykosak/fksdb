@@ -14,22 +14,22 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @method ModelFyziklaniTeam getEntity()
+ * @method TeamModel getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
 
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    private TeamService $teamService;
 
-    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void
+    final public function injectServiceFyziklaniTeam(TeamService $teamService): void
     {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->teamService = $teamService;
     }
 
     /**
@@ -95,8 +95,8 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function getORMService(): ServiceFyziklaniTeam
+    protected function getORMService(): TeamService
     {
-        return $this->serviceFyziklaniTeam;
+        return $this->teamService;
     }
 }

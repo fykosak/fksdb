@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
+use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
 $container = require '../../Bootstrap.php';
@@ -27,7 +27,7 @@ class FyziklaniModule extends EventModuleTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(ServiceFyziklaniGameSetup::class)->createNewModel([
+        $this->getContainer()->getByType(GameSetupService::class)->createNewModel([
             'event_id' => $this->event->event_id,
             'game_start' => new \DateTime(),
             'result_display' => new \DateTime(),
@@ -55,7 +55,6 @@ class FyziklaniModule extends EventModuleTestCase
             ['Fyziklani:Presentation', 'default'],
             ['Fyziklani:Submit', 'create'],
             ['Fyziklani:Submit', 'list'],
-            ['Fyziklani:Task', 'import'],
             ['Fyziklani:Task', 'list'],
             ['Fyziklani:Seating', 'list'],
             ['Fyziklani:Seating', 'print'],

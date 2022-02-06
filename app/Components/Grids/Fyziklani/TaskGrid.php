@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
@@ -55,6 +55,6 @@ class TaskGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelFyziklaniTask::class;
+        return TaskModel::class;
     }
 }

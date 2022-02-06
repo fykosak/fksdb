@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\EventRole;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 
 class FyziklaniTeacherRole extends EventRole
 {
-    /** @var ModelFyziklaniTeam[] */
+    /** @var TeamModel[] */
     public array $teams;
 
     public function __construct(ModelEvent $event, array $teams)

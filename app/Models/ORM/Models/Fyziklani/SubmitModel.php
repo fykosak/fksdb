@@ -24,7 +24,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  */
-class ModelFyziklaniSubmit extends AbstractModel implements Resource
+class SubmitModel extends AbstractModel implements Resource
 {
 
     public const STATE_NOT_CHECKED = 'not_checked';
@@ -32,9 +32,9 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource
 
     public const RESOURCE_ID = 'fyziklani.submit';
 
-    public function getFyziklaniTask(): ModelFyziklaniTask
+    public function getFyziklaniTask(): TaskModel
     {
-        return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
+        return TaskModel::createFromActiveRow($this->fyziklani_task);
     }
 
     public function getEvent(): ModelEvent
@@ -42,9 +42,9 @@ class ModelFyziklaniSubmit extends AbstractModel implements Resource
         return $this->getFyziklaniTeam()->getEvent();
     }
 
-    public function getFyziklaniTeam(): ModelFyziklaniTeam
+    public function getFyziklaniTeam(): TeamModel
     {
-        return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
+        return TeamModel::createFromActiveRow($this->e_fyziklani_team);
     }
 
     public function isChecked(): bool

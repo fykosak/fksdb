@@ -14,8 +14,8 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -25,7 +25,7 @@ use Nette\Security\Resource;
 
 /**
  * @property FormControl closeCategoryAForm
- * @method ModelFyziklaniTeam getEntity()
+ * @method TeamModel getEntity()
  */
 class ClosePresenter extends BasePresenter
 {
@@ -139,9 +139,9 @@ class ClosePresenter extends BasePresenter
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    protected function getORMService(): ServiceFyziklaniTeam
+    protected function getORMService(): TeamService
     {
-        return $this->serviceFyziklaniTeam;
+        return $this->teamService;
     }
 
     /**

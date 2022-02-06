@@ -18,10 +18,7 @@ use Nette\Security\Resource;
 
 trait EntityPresenterTrait
 {
-
-    /**
-     * @persistent
-     */
+    /** @persistent */
     public ?int $id = null;
 
     /**
@@ -71,23 +68,11 @@ trait EntityPresenterTrait
     public function getEntity(bool $throw = true): ?AbstractModel
     {
         static $model;
-        $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev . change URL during app is running
-        if (!isset($model) || $id !== $model->getPrimary()) {
+        if (!isset($model) || $this->id !== $model->getPrimary()) {
             $model = $this->loadModel($throw);
         }
         return $model;
-    }
-
-    /**
-     * @param null $default
-     * @return mixed
-     */
-    abstract public function getParameter(string $name, $default = null);
-
-    protected function getPrimaryParameterName(): string
-    {
-        return 'id';
     }
 
     /**
@@ -95,8 +80,7 @@ trait EntityPresenterTrait
      */
     private function loadModel(bool $throw = true): ?AbstractModel
     {
-        $id = $this->getParameter($this->getPrimaryParameterName());
-        $candidate = $this->getORMService()->findByPrimary($id);
+        $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;
         } elseif ($throw) {

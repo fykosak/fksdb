@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int event_id
  * @property-read ActiveRow event
  */
-class ModelFyziklaniTask extends AbstractModel
+class TaskModel extends AbstractModel
 {
 
     public function getEvent(): ModelEvent
