@@ -624,6 +624,7 @@ msgstr "Nalezen existující účet. Pro pokračování se prosím přihlaste."
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:165
 #, php-format
+#, fuzzy
 msgid "%s is already contestant in %s."
 msgstr "Upravit učitele %s"
 

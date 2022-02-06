@@ -31,11 +31,9 @@ use Nette\Security\Resource;
 class ModelEvent extends AbstractModel implements Resource, NodeCreator
 {
 
-    public const TEAM_EVENTS = [1, 9, 13];
-
+    private const TEAM_EVENTS = [1, 9, 13];
     public const RESOURCE_ID = 'event';
-
-    public const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
+    private const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
 
     public function getEventType(): ModelEventType
     {

@@ -116,24 +116,26 @@ class PaymentFormComponent extends EntityFormComponent
             'currency' => $values['currency'],
             'person_id' => $values['person_id'],
         ];
-
-        if (isset($this->model)) {
-            $this->servicePayment->updateModel($this->model, $data);
-            $model = $this->model;
-        } else {
-            $holder = $this->machine->createHolder(null);
-            $this->machine->saveAndExecuteImplicitTransition(
-                $holder,
-                array_merge($data, [
-                    'event_id' => $this->machine->event->event_id,
-                ])
-            );
-            $model = $holder->getModel();
-        }
-
         $connection = $this->servicePayment->explorer->getConnection();
         $connection->beginTransaction();
-
+        try {
+            if (isset($this->model)) {
+                $this->servicePayment->updateModel($this->model, $data);
+                $model = $this->model;
+            } else {
+                $holder = $this->machine->createHolder(null);
+                $this->machine->saveAndExecuteImplicitTransition(
+                    $holder,
+                    array_merge($data, [
+                        'event_id' => $this->machine->event->event_id,
+                    ])
+                );
+                $model = $holder->getModel();
+            }
+        } catch (\Throwable $exception) {
+            $connection->rollBack();
+            return;
+        }
         try {
             $this->serviceSchedulePayment->storeItems((array)$values['payment_accommodation'], $model); // TODO
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);

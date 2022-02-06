@@ -16,17 +16,17 @@ export default class Headline extends React.Component<OwnProps> {
         return (
             <h1 className="text-center row justify-content-center">
                 <span className="me-3">
-                    <span>{category ?
+                    {category ?
                         (translator.getLocalizedText('Category', 'en') + ' ' + category) :
-                        translator.getLocalizedText('Global results', 'en')} </span>
+                        translator.getLocalizedText('Global results', 'en')}
                     <small className="text-muted">
                         <Ordinal order={startPosition}/>-<Ordinal order={endPosition}/>
                     </small>
                 </span>
                 <span className="ms-3">
-                    <span>{category ?
+                    {category ?
                         (translator.getLocalizedText('Category', 'cs') + ' ' + category) :
-                        translator.getLocalizedText('Global results', 'cs')} </span>
+                        translator.getLocalizedText('Global results', 'cs')}
                     <small className="text-muted">{startPosition}.-{endPosition}.</small>
                     </span>
             </h1>

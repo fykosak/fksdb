@@ -22,15 +22,10 @@ use Nette\Security\Resource;
 
 abstract class BasePresenter extends AuthenticatedPresenter
 {
-
-    /**
-     * @persistent
-     */
+    /** @persistent */
     public ?int $eventId = null;
     protected ServiceEvent $serviceEvent;
     protected EventDispatchFactory $eventDispatchFactory;
-    private ModelEvent $event;
-    private Holder $holder;
 
     final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void
     {
@@ -80,10 +75,11 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function getHolder(): Holder
     {
-        if (!isset($this->holder)) {
-            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
+        static $holder;
+        if (!isset($holder)) {
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
-        return $this->holder;
+        return $holder;
     }
 
     /**
@@ -91,14 +87,14 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     protected function getEvent(): ModelEvent
     {
-        if (!isset($this->event)) {
-            $model = $this->serviceEvent->findByPrimary($this->eventId);
-            if (!$model) {
+        static $event;
+        if (!isset($event)) {
+            $event = $this->serviceEvent->findByPrimary($this->eventId);
+            if (!$event) {
                 throw new EventNotFoundException();
             }
-            $this->event = $model;
         }
-        return $this->event;
+        return $event;
     }
 
     /**
@@ -108,18 +104,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
     {
         return $this->getEvent()->getContest();
     }
-
-    /* **************** ACL *********************** */
-
-    /**
-     * @throws EventNotFoundException
-     */
-    protected function isTeamEvent(): bool
-    {
-        return in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
-    }
-
-    /* ********************** GUI ************************ */
 
     /**
      * @throws EventNotFoundException

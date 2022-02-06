@@ -70,7 +70,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizedTeam(): void
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'team'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
 
     /**
@@ -86,7 +86,7 @@ class ClosePresenter extends BasePresenter
      */
     public function authorizeList(): void
     {
-        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'list'));
+        $this->setAuthorized($this->isAllowed($this->getModelResource(), 'default'));
     }
     /* *********** ACTIONS **************** */
 

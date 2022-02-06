@@ -7,11 +7,11 @@
 {default bool $showTeamCategory = false}
 {default string|null $sector = null}
 
-<h2 style="font-size: 200%">
+<h1 style="font-size: 200%">
     {block headline}
         (0000) Team
     {/block}
-</h2>
+</h1>
 {embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
     {block seats}
         {foreach $room->getSeats() as $row}

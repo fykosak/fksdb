@@ -17,7 +17,6 @@ $input-border-radius-lg: 0;
 @import "payment";
 @import "../Components/PDFGenerators/TeamSeating/seating";
 @import "../Components/PDFGenerators/Providers/print";
-@import "charts/legend";
 
 @include color-variant(#1f77b4, color-1);
 @include color-variant(#ff7f0e, color-2);

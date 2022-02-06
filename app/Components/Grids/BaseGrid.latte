@@ -37,22 +37,22 @@
     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
         {$flash->message}
     </div>
-
-    <table class="table table-sm table-hover table-striped">
-        <thead>
-        <tr>
-            {foreach $columns as $column}
-                <th>
-                    {if $control->hasEnabledSorting() && $column->isSortable()}
-                        {var $order = ($control->order == $column->name . ' ASC') ? " DESC" : " ASC"}
-                        <a n:href="this, 'order' => $column->name . $order"
-                                title="Obrátit řazení">
+    {if count($rows)}
+        <table class="table table-sm table-hover table-striped">
+            <thead>
+            <tr>
+                {foreach $columns as $column}
+                    <th>
+                        {if $control->hasEnabledSorting() && $column->isSortable()}
+                            {var $order = ($control->order == $column->name . ' ASC') ? " DESC" : " ASC"}
+                            <a n:href="this, 'order' => $column->name . $order"
+                                    title="Obrátit řazení">
+                                {$column->label}
+                            </a>
+                        {else}
                             {$column->label}
-                        </a>
-                    {else}
-                        {$column->label}
-                    {/if}
-                    <span class="grid-order" n:if="$column->isSortable() && $control->hasEnabledSorting()">
+                        {/if}
+                        <span class="grid-order" n:if="$column->isSortable() && $control->hasEnabledSorting()">
                         <a n:href="this, 'order' => $column->name . ' ASC'"
                             n:class="grid-order-up ,($control->order && ($control->order == $column->name . ' ASC')) ? grid-order-active-up"
                                 title="{_'Řadit vzestupně'}"></a>
@@ -60,15 +60,15 @@
                             n:class="grid-order-down ,($control->order && ($control->order == $column->name . ' DESC')) ? grid-order-active-down"
                                 title="{_'Řadit sestupně'}"></a>
                     </span>
-                </th>
-            {/foreach}
+                    </th>
+                {/foreach}
             {if $control->hasButtons()}
-                <th>{_'Akce'}</th>
-            {/if}
-        </tr>
-        </thead>
-        <tbody>
-        {if count($rows)}
+                    <th>{_'Akce'}</th>
+                {/if}
+            </tr>
+            </thead>
+            <tbody>
+
             {foreach $rows as $row}
                 <tr>
                     {foreach $columns as $column}
@@ -81,14 +81,11 @@
                     </td>
                 </tr>
             {/foreach}
-        {else}
-            <tr>
-                <td style="background-color:#FFF; font-size:16px;"
-                    colspan="{$colsCount}">{_'No records'}</td>
-            </tr>
-        {/if}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    {else}
+        {\FKSDB\Components\Badges\NoRecordsBadge::getHtml()}
+    {/if}
     {if $paginate}
         {control paginator}
     {/if}

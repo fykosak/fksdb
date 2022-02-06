@@ -87,30 +87,25 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     /* ********************* TITLE ***************** */
     public function titleContest(): PageTitle
     {
-        return new PageTitle(null, _('Select contest'));
+        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select contest'));
     }
 
     public function titleYear(): PageTitle
     {
-        return new PageTitle(null, _('Select year'), '', $this->getSelectedContest()->name);
-    }
-
-    public function getSelectedContest(): ?ModelContest
-    {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Select year'));
     }
 
     public function titleEmail(): PageTitle
     {
-        return new PageTitle(null, _('Type e-mail'), 'fas fa-envelope', $this->getSelectedContest()->name);
+        return new PageTitle(null, _('Register'), 'fa fa-edit', _('Type e-mail'));
     }
-
-    /* ********************* ACTIONS ***************** */
 
     public function titleContestant(): PageTitle
     {
         return new PageTitle(
             null,
+            _('Register'),
+            'fa fa-edit',
             sprintf(
                 _('%s – contestant application (year %s)'),
                 $this->getSelectedContest()->name,
@@ -118,6 +113,14 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             )
         );
     }
+
+    public function getSelectedContest(): ?ModelContest
+    {
+        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+    }
+
+    /* ********************* ACTIONS ***************** */
+
 
     public function getSelectedYear(): ?int
     {
@@ -160,7 +163,6 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             $contest = $this->getSelectedContest();
             $contestant = $contestants[$contest->contest_id] ?? null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
-                // TODO FIXME persistent flash
                 $this->flashMessage(
                     sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name),
                     Message::LVL_INFO
