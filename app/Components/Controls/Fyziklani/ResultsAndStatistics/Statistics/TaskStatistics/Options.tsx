@@ -8,7 +8,7 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/Reducers/stats';
 
 interface StateProps {
@@ -117,7 +117,7 @@ class Options extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         aggregationTime: state.statistics.aggregationTime,
         fromDate: state.statistics.fromDate,

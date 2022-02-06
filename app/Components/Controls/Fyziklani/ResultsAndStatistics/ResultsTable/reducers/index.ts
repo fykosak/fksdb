@@ -1,4 +1,4 @@
-import { coreApp, FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
+import { coreApp, FyziklaniCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { combineReducers } from 'redux';
 import {
     fyziklaniTableFilter,
@@ -10,6 +10,6 @@ export const app = combineReducers({
     tableFilter: fyziklaniTableFilter,
 });
 
-export interface FyziklaniResultsTableStore extends FyziklaniResultsCoreStore {
+export interface FyziklaniStatisticsTableStore extends FyziklaniCoreStore {
     tableFilter: TableFilterState;
 }

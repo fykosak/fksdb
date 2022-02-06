@@ -4,7 +4,7 @@ import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { FyziklaniResultsTableStore } from '../../ResultsTable/reducers';
+import { FyziklaniStatisticsTableStore } from '../../ResultsTable/reducers';
 import { Filter } from '../filter';
 import Row from './Row';
 
@@ -34,9 +34,9 @@ class Index extends React.Component<StateProps> {
         });
 
         return (
-            <div className="mb-3">
+            <div className="mb-3 fyziklani-statistics-table">
                 <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
-                <table className="table-striped table-hover table table-sm bg-white fyziklani-results-table">
+                <table className="table-striped table-hover table table-sm bg-white">
                     <thead>
                     <tr>
                         <th/>
@@ -66,10 +66,9 @@ class Index extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsTableStore): StateProps => {
-    const {index, filters} = state.tableFilter;
+const mapStateToProps = (state: FyziklaniStatisticsTableStore): StateProps => {
     return {
-        filter: (filters.hasOwnProperty(index)) ? filters[index] : null,
+        filter: state.tableFilter.filter,
         submits: state.data.submits,
         tasks: state.data.tasks,
         teams: state.data.teams,

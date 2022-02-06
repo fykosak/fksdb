@@ -8,7 +8,7 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
 import PointsPie from './PieChart';
@@ -74,7 +74,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,

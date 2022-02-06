@@ -9,7 +9,7 @@ import {
 import { fetchReducer, FetchStateMap } from 'vendor/fykosak/nette-frontend-component/src/fetch/redux/reducer';
 import { fyziklaniData, State as DataState } from './data';
 
-export interface FyziklaniResultsCoreStore {
+export interface FyziklaniCoreStore {
     data: DataState;
     timer: TimerState;
     downloader: DownloaderState;

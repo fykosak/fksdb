@@ -7,7 +7,7 @@ import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import './timeline.scss';
 
 interface StateProps {
@@ -100,7 +100,7 @@ class Timeline extends ChartComponent<StateProps & OwnProps, Record<string, neve
     }
 }
 
-const mapStateToProps = (state: Store): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),
