@@ -33,6 +33,19 @@ final class TaskCodePreprocessor
             return false;
         }
         $subCode = str_split(self::getNumLabel($code));
+
+        // Hotfix for Fyziklani2022
+        // Decrement task number by 1 and handle special case for 11 => 18
+        $subCode[7]--;
+        if ($subCode[7] == 0) {
+            $subCode[6]--;
+            if ($subCode[6] == 0) {
+                $subCode[6] = 1;
+            }
+            $subCode[7] = 8;
+        }
+        // End of hotfix for Fyziklani2022
+
         $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6])
             + 7 * ($subCode[1] + $subCode[4] + $subCode[7])
             + ($subCode[2] + $subCode[5] + $subCode[8]);
