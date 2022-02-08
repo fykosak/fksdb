@@ -19,7 +19,6 @@ class AllPersonsGrid extends BaseGrid
 {
 
     private ServicePersonSchedule $servicePersonSchedule;
-
     private ModelEvent $event;
 
     public function __construct(Container $container, ModelEvent $event)

@@ -49,10 +49,22 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
      */
     public function getPrice(): MultiCurrencyPrice
     {
-        return new MultiCurrencyPrice([
-            new Price(Currency::from(Currency::EUR), +$this->price_eur),
-            new Price(Currency::from(Currency::CZK), +$this->price_czk),
-        ]);
+        $items = [];
+        if (!is_null($this->price_eur)) {
+            $items[] = new Price(Currency::from(Currency::EUR), +$this->price_eur);
+        }
+        if (!is_null($this->price_czk)) {
+            $items[] = new Price(Currency::from(Currency::CZK), +$this->price_czk);
+        }
+        return new MultiCurrencyPrice($items);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function isPayable(): bool
+    {
+        return (bool)count($this->getPrice()->getPrices());
     }
 
     public function getInterested(): GroupedSelection
@@ -77,17 +89,12 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
         return $this->getInterested()->count();
     }
 
-    private function calculateAvailableCapacity(): int
-    {
-        return ($this->getCapacity() - $this->getUsedCapacity());
-    }
-
     public function hasFreeCapacity(): bool
     {
         if ($this->isUnlimitedCapacity()) {
             return true;
         }
-        return $this->calculateAvailableCapacity() > 0;
+        return ($this->getCapacity() - $this->getUsedCapacity()) > 0;
     }
 
     /**
@@ -98,7 +105,7 @@ class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
         if ($this->isUnlimitedCapacity()) {
             throw new \LogicException(_('Unlimited capacity'));
         }
-        return $this->calculateAvailableCapacity();
+        return ($this->getCapacity() - $this->getUsedCapacity());
     }
 
     public function getLabel(): string
