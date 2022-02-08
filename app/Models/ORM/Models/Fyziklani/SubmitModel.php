@@ -21,7 +21,6 @@ use Nette\Security\Resource;
  * @property-read int task_id
  * @property-read ActiveRow e_fyziklani_team
  * @property-read ActiveRow fyziklani_task
- * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  */
 class SubmitModel extends AbstractModel implements Resource
@@ -58,7 +57,7 @@ class SubmitModel extends AbstractModel implements Resource
             'points' => $this->points,
             'teamId' => $this->e_fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
-            'created' => $this->created->format('c'),
+            'created' => $this->modified->format('c'),
         ];
     }
 
@@ -69,11 +68,11 @@ class SubmitModel extends AbstractModel implements Resource
     public function canRevoke(bool $throws = true): bool
     {
         if (is_null($this->points)) {
-            if (!$throws) {
+            if ($throws) {
                 throw new AlreadyRevokedSubmitException();
             }
             return false;
-        } elseif ($this->getFyziklaniTeam()->hasOpenSubmitting()) {
+        } elseif (!$this->getFyziklaniTeam()->hasOpenSubmitting()) {
             if ($throws) {
                 throw new ClosedSubmittingException($this->getFyziklaniTeam());
             }
