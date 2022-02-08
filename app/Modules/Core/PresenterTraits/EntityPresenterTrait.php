@@ -7,6 +7,7 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\AbstractModel;
@@ -18,14 +19,12 @@ use Nette\Security\Resource;
 
 trait EntityPresenterTrait
 {
-
-    /**
-     * @persistent
-     */
+    /** @persistent */
     public ?int $id = null;
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedList(): void
     {
@@ -39,6 +38,9 @@ trait EntityPresenterTrait
      */
     abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
+    /**
+     * @throws GoneException
+     */
     protected function getModelResource(): string
     {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
@@ -49,6 +51,7 @@ trait EntityPresenterTrait
     /* ****************** TITLES ***************************** */
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedCreate(): void
     {
@@ -59,6 +62,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
+     * @throws GoneException
      */
     public function authorizedEdit(): void
     {
@@ -67,36 +71,25 @@ trait EntityPresenterTrait
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function getEntity(bool $throw = true): ?AbstractModel
     {
         static $model;
-        $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev . change URL during app is running
-        if (!isset($model) || $id !== $model->getPrimary()) {
+        if (!isset($model) || $this->id !== $model->getPrimary()) {
             $model = $this->loadModel($throw);
         }
         return $model;
     }
 
     /**
-     * @param null $default
-     * @return mixed
-     */
-    abstract public function getParameter(string $name, $default = null);
-
-    protected function getPrimaryParameterName(): string
-    {
-        return 'id';
-    }
-
-    /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     private function loadModel(bool $throw = true): ?AbstractModel
     {
-        $id = $this->getParameter($this->getPrimaryParameterName());
-        $candidate = $this->getORMService()->findByPrimary($id);
+        $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {
             return $candidate;
         } elseif ($throw) {
@@ -110,6 +103,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function authorizedDelete(): void
     {
@@ -120,6 +114,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function authorizedDetail(): void
     {
@@ -155,6 +150,7 @@ trait EntityPresenterTrait
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function traitHandleDelete(): void
     {

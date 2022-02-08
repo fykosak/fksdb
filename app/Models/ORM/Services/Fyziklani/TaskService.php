@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 
-class ServiceFyziklaniTask extends AbstractService
+class TaskService extends AbstractService
 {
 
-    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask
+    public function findByLabel(string $label, ModelEvent $event): ?TaskModel
     {
         $result = $event->getFyziklaniTasks()->where([
             'label' => $label,
         ])->fetch();
-        return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
+        return $result ? TaskModel::createFromActiveRow($result) : null;
     }
 
     /**
-     * @return ModelFyziklaniTask[]
+     * @return TaskModel[]
      */
     public function serialiseTasks(ModelEvent $event, bool $hideName = false): array
     {
         $tasks = [];
 
         foreach ($event->getFyziklaniTasks()->order('label') as $row) {
-            $model = ModelFyziklaniTask::createFromActiveRow($row);
+            $model = TaskModel::createFromActiveRow($row);
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

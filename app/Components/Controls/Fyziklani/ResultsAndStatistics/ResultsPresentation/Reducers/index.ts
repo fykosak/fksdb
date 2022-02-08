@@ -1,4 +1,4 @@
-import { coreApp, FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
+import { coreApp, FyziklaniCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { combineReducers } from 'redux';
 import {
     presentation,
@@ -10,6 +10,6 @@ export const app = combineReducers({
     presentation,
 });
 
-export interface FyziklaniResultsPresentationStore extends FyziklaniResultsCoreStore {
+export interface FyziklaniPresentationStore extends FyziklaniCoreStore {
     presentation: PresentationState;
 }

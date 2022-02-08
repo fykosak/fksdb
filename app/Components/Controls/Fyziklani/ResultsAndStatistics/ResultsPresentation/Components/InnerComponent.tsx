@@ -4,7 +4,7 @@ import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { calculate, Item } from '../../Helpers/calculateData';
-import { FyziklaniResultsPresentationStore } from '../Reducers';
+import { FyziklaniPresentationStore } from '../Reducers';
 import Headline from './Headline';
 import TeamRow from './TeamRow';
 
@@ -80,7 +80,7 @@ class InnerComponent extends React.Component<StateProps> {
 
         }
         return (
-            <div className="mt-3 fyziklani-presentation-results">
+            <div className="p-3 h-100 bg-white">
                 <Headline startPosition={statePosition + 1} endPosition={position} category={category}/>
                 <div className="row justify-content-around">{resultsItems}</div>
             </div>
@@ -88,7 +88,7 @@ class InnerComponent extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsPresentationStore): StateProps => {
+const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
     return {
         availablePoints: state.data.availablePoints,
         category: state.presentation.category,

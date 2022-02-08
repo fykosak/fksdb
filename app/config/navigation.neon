@@ -71,12 +71,11 @@ navigation:
             Fyziklani.Diplomas.default: []
             Fyziklani.Diplomas.results: []
             Fyziklani.Task.list: []
-            Fyziklani.Task.import: []
             Fyziklani.GameSetup.default: []
             Fyziklani.Seating.list: []
             Fyziklani.Presentation.default: []
 
-        Fyziklani.Results.default:
+        Fyziklani.Statistics.table:
             Fyziklani.Statistics.task: []
             Fyziklani.Statistics.team: []
             Fyziklani.Statistics.correlation: []

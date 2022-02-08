@@ -1,24 +1,24 @@
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
 {default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
-{default FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $team = null}
+{default FKSDB\Models\ORM\Models\Fyziklani\TeamModel|null $team = null}
 {default bool $showTeamId = false}
 {default bool $showBigNav = false}
 {default bool $showSeatId = false}
 {default bool $showTeamCategory = false}
 {default string|null $sector = null}
 
-<h2 style="font-size: 200%">
+<h1 style="font-size: 200%">
     {block headline}
         (0000) Team
     {/block}
-</h2>
+</h1>
 {embed $room?('./Rooms/layout.' . $room->layout . '.latte'):'./Rooms/layout.na.latte' sector:$sector, lang:$team? $team->game_lang:null}
     {block seats}
         {foreach $room->getSeats() as $row}
             {var FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel $seat = FKSDB\Models\ORM\Models\Fyziklani\Seating\SeatModel::createFromActiveRow($row)}
             {var $cor = 'translate(' . $seat->layout_x . ',' . $seat->layout_y . ')'}
             <g transform="{$cor}">
-                {var FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam|null $selectedTeam = null}
+                {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel|null $selectedTeam = null}
                 {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
                 {if $team}
                     {if $occuiedTeamSeat && $occuiedTeamSeat->getTeam()->e_fyziklani_team_id === $team->e_fyziklani_team_id}

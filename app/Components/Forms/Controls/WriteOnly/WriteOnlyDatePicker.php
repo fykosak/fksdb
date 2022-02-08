@@ -15,11 +15,7 @@ class WriteOnlyDatePicker extends DateInput implements WriteOnly
 {
     use WriteOnlyTrait;
 
-    /**
-     * WriteOnlyDatePicker constructor.
-     * @param null $label
-     */
-    public function __construct($label = null)
+    public function __construct(?string $label = null)
     {
         parent::__construct($label);
         $this->writeOnlyAppendMonitors();
@@ -28,8 +24,7 @@ class WriteOnlyDatePicker extends DateInput implements WriteOnly
     public function getControl(): Html
     {
         $control = parent::getControl();
-        $control = $this->writeOnlyAdjustControl($control);
-        return $control;
+        return $this->writeOnlyAdjustControl($control);
     }
 
     /**

@@ -28,7 +28,7 @@ class ServicePerson extends AbstractService
     /**
      * @param ModelPerson|null $model
      */
-    public function storeModel(array $data, ?AbstractModel $model = null): AbstractModel
+    public function storeModel(array $data, ?AbstractModel $model = null): ModelPerson
     {
         if (is_null($model) && is_null($data['gender'])) {
             $data['gender'] = ModelPerson::inferGender($data);

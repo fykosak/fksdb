@@ -6,8 +6,7 @@ import {
     Dispatch,
 } from 'redux';
 import { Params, setParams } from '../actions';
-import { FyziklaniResultsPresentationStore } from '../Reducers';
-import { State } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers/presentation';
+import { FyziklaniPresentationStore } from '../Reducers';
 
 interface StateProps {
     categories: string[];
@@ -86,7 +85,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
         onSetParams: (data) => dispatch(setParams(data)),
     };
 };
-const mapStateToPros = (state: FyziklaniResultsPresentationStore): StateProps => {
+const mapStateToPros = (state: FyziklaniPresentationStore): StateProps => {
     return {
         categories: state.data.categories,
         category: state.presentation.category,

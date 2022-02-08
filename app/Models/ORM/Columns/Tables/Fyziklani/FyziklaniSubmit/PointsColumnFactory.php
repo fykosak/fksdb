@@ -6,14 +6,14 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Nette\Utils\Html;
 
 class PointsColumnFactory extends ColumnFactory
 {
 
     /**
-     * @param ModelFyziklaniSubmit $model
+     * @param SubmitModel $model
      */
     protected function createHtmlValue(AbstractModel $model): Html
     {

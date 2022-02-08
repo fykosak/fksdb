@@ -7,7 +7,7 @@ import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -124,7 +124,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         gameEnd: new Date(state.timer.gameEnd),

@@ -19,10 +19,10 @@ use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Nette\Application\UI\Form;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 
 class SettingsPresenter extends BasePresenter
 {
@@ -124,7 +124,7 @@ class SettingsPresenter extends BasePresenter
 
         $form->setCurrentGroup();
         $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = fn(Form $form) => $this->handleSettingsFormSuccess($form);
+        $form->onSuccess[] = fn(\Nette\Application\UI\Form $form) => $this->handleSettingsFormSuccess($form);
         return $control;
     }
 
@@ -176,7 +176,7 @@ class SettingsPresenter extends BasePresenter
     /**
      * @throws ModelException
      */
-    private function handleSettingsFormSuccess(Form $form): void
+    private function handleSettingsFormSuccess(\Nette\Application\UI\Form $form): void
     {
         $values = $form->getValues();
         $tokenAuthentication =

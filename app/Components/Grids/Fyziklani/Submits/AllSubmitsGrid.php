@@ -10,9 +10,9 @@ use FKSDB\Models\Fyziklani\Submit\Handler;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\Message;
@@ -40,7 +40,7 @@ class AllSubmitsGrid extends SubmitsGrid
 
     protected function getData(): IDataSource
     {
-        $submits = $this->serviceFyziklaniSubmit->findAll(
+        $submits = $this->submitService->findAll(
             $this->event
         )/*->where('fyziklani_submit.points IS NOT NULL')*/
         ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
@@ -71,10 +71,10 @@ class AllSubmitsGrid extends SubmitsGrid
 
         $this->addButton('delete')
             ->setClass('btn btn-sm btn-outline-danger')
-            ->setLink(fn(ModelFyziklaniSubmit $row): string => $this->link('delete!', $row->fyziklani_submit_id))
+            ->setLink(fn(SubmitModel $row): string => $this->link('delete!', $row->fyziklani_submit_id))
             ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
             ->setText(_('Delete'))
-            ->setShow(fn(ModelFyziklaniSubmit $row): bool => $row->canRevoke());
+            ->setShow(fn(SubmitModel $row): bool => $row->canRevoke());
     }
 
     private function getFilterCallBack(): callable
@@ -115,8 +115,8 @@ class AllSubmitsGrid extends SubmitsGrid
 
     public function handleDelete(int $id): void
     {
-        /** @var ModelFyziklaniSubmit $submit */
-        $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
+        /** @var SubmitModel $submit */
+        $submit = $this->submitService->findByPrimary($id);
         if (!$submit) {
             $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);
             $this->redirect('this');
@@ -147,14 +147,14 @@ class AllSubmitsGrid extends SubmitsGrid
 
         $rows = $this->event->getPossiblyAttendingTeams();
         $teams = [];
-        /** @var ModelFyziklaniTeam|ActiveRow $team */
+        /** @var TeamModel|ActiveRow $team */
         foreach ($rows as $team) {
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->event->getFyziklaniTasks();
         $tasks = [];
-        /** @var ModelFyziklaniTask|ActiveRow $task */
+        /** @var TaskModel|ActiveRow $task */
         foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }

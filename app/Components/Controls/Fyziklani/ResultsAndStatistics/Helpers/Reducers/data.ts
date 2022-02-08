@@ -9,9 +9,9 @@ import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyzik
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 
 export interface State {
-    submits?: Submits;
-    tasks?: ModelFyziklaniTask[];
-    teams?: ModelFyziklaniTeam[];
+    submits: Submits;
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
     // rooms?: Room[];
     categories?: string[];
     availablePoints?: number[];
@@ -34,7 +34,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<DataResponse<Resp
     };
 };
 
-export const fyziklaniData = (state: State = {}, action): State => {
+export const fyziklaniData = (state: State = {tasks: [], teams: [], submits: {}}, action): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);

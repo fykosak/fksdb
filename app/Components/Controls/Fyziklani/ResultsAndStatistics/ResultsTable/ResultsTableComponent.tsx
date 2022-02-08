@@ -5,7 +5,8 @@ import * as React from 'react';
 import App from './Components/Index';
 import { app } from './reducers';
 import SingleSelect
-    from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Components/SingleSelect';
+    from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Components/FilterSelect';
+import './results-table.scss';
 
 interface OwnProps {
     actions: NetteActions;
@@ -16,7 +17,7 @@ export default class ResultsTableComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
             <SingleSelect/>
-                <App/>
+            <App/>
         </MainComponent>;
     }
 }

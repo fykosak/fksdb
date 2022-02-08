@@ -17,7 +17,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
-class ModelFyziklaniGameSetup extends AbstractModel
+class GameSetupModel extends AbstractModel
 {
     /**
      * @return int[]

@@ -1,8 +1,8 @@
-import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from './middleware';
 import './timer.scss';
+import { FyziklaniPresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers';
 
 interface OwnProps {
     mode: 'big' | 'small';
@@ -59,7 +59,7 @@ class Timer extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
+const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,

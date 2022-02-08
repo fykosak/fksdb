@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
@@ -147,7 +147,7 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('teams');
         foreach ($event->getTeams() as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $team = TeamModel::createFromActiveRow($row);
             $teacher = $team->getTeacher();
             $teamNode = $team->createXMLNode($doc);
 
@@ -162,7 +162,7 @@ class EventWebModel extends WebModel
             }
 
             foreach ($team->getFyziklaniParticipants() as $participantRow) {
-                $participant = ModelFyziklaniParticipant::createFromActiveRow($participantRow)->getEventParticipant();
+                $participant = ParticipantModel::createFromActiveRow($participantRow)->getEventParticipant();
                 $pNode = $this->createParticipantNode($participant, $doc);
                 $teamNode->appendChild($pNode);
             }
@@ -176,7 +176,7 @@ class EventWebModel extends WebModel
     {
         $teamsData = [];
         foreach ($event->getTeams() as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $team = TeamModel::createFromActiveRow($row);
             $teacher = $team->getTeacher();
             $teamData = [
                 'teamId' => $team->e_fyziklani_team_id,
@@ -199,7 +199,7 @@ class EventWebModel extends WebModel
             ];
 
             foreach ($team->getFyziklaniParticipants() as $participantRow) {
-                $participant = ModelFyziklaniParticipant::createFromActiveRow($participantRow)->getEventParticipant();
+                $participant = ParticipantModel::createFromActiveRow($participantRow)->getEventParticipant();
                 $teamData['participants'][] = $this->createParticipantArray($participant);
             }
             $teamsData[$team->e_fyziklani_team_id] = $teamData;

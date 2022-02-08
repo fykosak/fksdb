@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
@@ -47,7 +47,7 @@ class RelatedPersonAuthorizator
 
         foreach ($holder->getBaseHolders() as $baseHolder) {
             $model = $baseHolder->getModel2();
-            if ($model instanceof ModelFyziklaniTeam) {
+            if ($model instanceof TeamModel) {
                 if ($model->teacher_id == $person->person_id) {
                     return true;
                 }

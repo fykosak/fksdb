@@ -6,8 +6,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\DI\Container;
@@ -15,10 +15,10 @@ use Nette\DI\Container;
 class CloseTeamComponent extends BaseComponent
 {
 
-    private ModelFyziklaniTeam $team;
+    private TeamModel $team;
     private Connection $connection;
 
-    public function __construct(Container $container, ModelFyziklaniTeam $team)
+    public function __construct(Container $container, TeamModel $team)
     {
         parent::__construct($container);
         $this->team = $team;
@@ -60,7 +60,7 @@ class CloseTeamComponent extends BaseComponent
     {
         $submits = $this->team->getNonRevokedSubmits()->count('*');
         $tasksOnBoard = $this->team->getEvent()->getFyziklaniGameSetup()->tasks_on_board;
-        /** @var ModelFyziklaniTask|null $nextTask */
+        /** @var TaskModel|null $nextTask */
         $nextTask = $this->team->getEvent()
             ->getFyziklaniTasks()
             ->order('label')

@@ -6,7 +6,7 @@ namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeacherRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use Nette\Security\Permission;
 use Nette\Security\Role;
@@ -17,7 +17,7 @@ class OwnApplicationAssertion implements Assertion
     {
         $queriedRole = $acl->getQueriedRole();
         $application = $acl->getQueriedResource();
-        if ($application instanceof ModelFyziklaniTeam) {
+        if ($application instanceof TeamModel) {
             return $this->isTeamMember($queriedRole, $application);
         } elseif ($application instanceof ModelEventParticipant) {
             if ($queriedRole instanceof ParticipantRole) {
@@ -27,7 +27,7 @@ class OwnApplicationAssertion implements Assertion
         return false;
     }
 
-    private function isTeamMember(Role $role, ModelFyziklaniTeam $application): bool
+    private function isTeamMember(Role $role, TeamModel $application): bool
     {
         if ($role instanceof FyziklaniTeacherRole) {
             foreach ($role->teams as $team) {

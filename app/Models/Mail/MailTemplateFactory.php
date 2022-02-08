@@ -6,7 +6,6 @@ namespace FKSDB\Models\Mail;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Application\Application;
 use Nette\Application\UI\Template;
 use Nette\Http\IRequest;
@@ -49,7 +48,6 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function createLoginInvitation(?string $lang, array $data): Template
     {
@@ -58,7 +56,6 @@ class MailTemplateFactory
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function createPasswordRecovery(string $lang, array $data): Template
     {

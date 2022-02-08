@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -16,20 +16,20 @@ class FyziklaniResultsWebModel extends WebModel
 {
 
     private ServiceEvent $serviceEvent;
-    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-    private ServiceFyziklaniTask $serviceFyziklaniTask;
+    private SubmitService $submitService;
+    private TeamService $teamService;
+    private TaskService $taskService;
 
     public function injectServices(
         ServiceEvent $serviceEvent,
-        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniTask $serviceFyziklaniTask
+        SubmitService $submitService,
+        TeamService $teamService,
+        TaskService $taskService
     ): void {
         $this->serviceEvent = $serviceEvent;
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->submitService = $submitService;
+        $this->teamService = $teamService;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -46,8 +46,8 @@ class FyziklaniResultsWebModel extends WebModel
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
-            'teams' => $this->serviceFyziklaniTeam->serialiseTeams($event),
-            'tasks' => $this->serviceFyziklaniTask->serialiseTasks($event),
+            'teams' => $this->teamService->serialiseTeams($event),
+            'tasks' => $this->taskService->serialiseTasks($event),
             'times' => [
                 'toStart' => $gameSetup->game_start->getTimestamp() - time(),
                 'toEnd' => $gameSetup->game_end->getTimestamp() - time(),
@@ -58,7 +58,7 @@ class FyziklaniResultsWebModel extends WebModel
         ];
 
         if ($gameSetup->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->serialiseSubmits($event, null);
+            $result['submits'] = $this->submitService->serialiseSubmits($event, null);
         }
         return $result;
     }

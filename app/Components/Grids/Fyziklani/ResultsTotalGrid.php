@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -50,6 +50,6 @@ class ResultsTotalGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelFyziklaniTeam::class;
+        return TeamModel::class;
     }
 }

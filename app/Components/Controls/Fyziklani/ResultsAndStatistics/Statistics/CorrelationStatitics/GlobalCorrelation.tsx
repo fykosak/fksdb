@@ -9,7 +9,7 @@ import { Action, Dispatch } from 'redux';
 import { setNewState } from '../actions';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -75,7 +75,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

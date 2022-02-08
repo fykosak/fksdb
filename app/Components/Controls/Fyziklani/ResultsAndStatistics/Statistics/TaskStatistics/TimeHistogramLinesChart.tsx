@@ -9,7 +9,7 @@ import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit'
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { submitsByTask } from '../Middleware/submitsByTask';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -116,7 +116,7 @@ class TimeHistogramLinesChart extends React.Component<StateProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,

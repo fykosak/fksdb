@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { setNewState } from '../actions';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import './progress.scss';
 
 interface StateProps {
@@ -100,7 +100,7 @@ class Progress extends React.Component<StateProps & DispatchProps & OwnProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         submits: state.data.submits,
         tasks: state.data.tasks,

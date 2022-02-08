@@ -1,2 +1,8 @@
 {layout '../../../Core/templates/@layout.latte'}
-
+{varType Fykosak\Utils\UI\PageTitle $pageTitle}
+{block titleBody}
+    <div class="fyziklani-header">
+        <span class="subheader">{$pageTitle->subTitle}</span>
+        <h1 class="page-header">{$pageTitle->toHtml(false)}</h1>
+    </div>
+{/block}

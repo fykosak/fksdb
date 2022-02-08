@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 
 /**
- * @method ModelFyziklaniTeam|null findByPrimary($key)
+ * @method TeamModel|null findByPrimary($key)
  */
-class ServiceFyziklaniTeam extends OldAbstractServiceSingle
+class TeamService extends OldAbstractServiceSingle
 {
 
     /**
-     * @return ModelFyziklaniTeam[]
+     * @return TeamModel[]
      */
     public static function serialiseTeams(ModelEvent $event): array
     {
         $teams = [];
         foreach ($event->getPossiblyAttendingTeams() as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $team = TeamModel::createFromActiveRow($row);
             $teams[] = $team->__toArray();
         }
         return $teams;

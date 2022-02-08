@@ -7,7 +7,6 @@ import TeamStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/
 import TasksStats from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Index';
 import CorrelationStats
     from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/CorrelationStatitics/Index';
-import Timer from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Timer/Timer';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
@@ -33,7 +32,6 @@ export default class StatisticsComponent extends React.Component<OwnProps> {
         return <MainComponent app={app} data={this.props.data} actions={this.props.actions}>
             <div className="container">
                 {content}
-                <Timer mode="small"/>
             </div>
         </MainComponent>;
     }

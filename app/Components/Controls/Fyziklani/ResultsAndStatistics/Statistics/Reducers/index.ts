@@ -1,4 +1,4 @@
-import { coreApp, FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
+import { coreApp, FyziklaniCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { combineReducers } from 'redux';
 import {
     State as StatisticsState,
@@ -10,6 +10,6 @@ export const app = combineReducers({
     statistics: stats,
 });
 
-export interface Store extends FyziklaniResultsCoreStore {
+export interface FyziklaniStatisticStore extends FyziklaniCoreStore {
     statistics: StatisticsState;
 }

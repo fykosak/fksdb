@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { getTimeLabel } from '../Middleware/correlation';
 import { getAverageNStandardDeviation } from '../Middleware/stdDev';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -83,7 +83,7 @@ class Table extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

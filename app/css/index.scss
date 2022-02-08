@@ -2,9 +2,9 @@ $border-radius: 0;
 $btn-border-radius-sm: 0;
 $btn-border-radius-lg: 0;
 $input-border-radius-lg: 0;
-@import "/node_modules/bootstrap/scss/bootstrap";
-@import '/node_modules/flag-icon-css/sass/flag-icon';
-@import '/node_modules/codemirror/lib/codemirror.css';
+@import "node_modules/bootstrap/scss/bootstrap";
+@import 'node_modules/flag-icon-css/sass/flag-icon';
+@import 'node_modules/codemirror/lib/codemirror.css';
 
 @import "inbox";
 @import "../Modules/CoreModule/templates/Authentication/login";
@@ -17,7 +17,6 @@ $input-border-radius-lg: 0;
 @import "payment";
 @import "../Components/PDFGenerators/TeamSeating/seating";
 @import "../Components/PDFGenerators/Providers/print";
-@import "charts/legend";
 
 @include color-variant(#1f77b4, color-1);
 @include color-variant(#ff7f0e, color-2);
@@ -62,6 +61,19 @@ $input-border-radius-lg: 0;
 
 @include color-variant($FOLMainColor, "fol");
 @include color-variant($FOFMainColor, "fof");
+
+
+.fyziklani-header {
+  .subheader {
+    color: var(--color-fof-main);
+    font-weight: bold;
+  }
+
+  h1 {
+    font-weight: 600;
+    margin-bottom: 2.1rem;
+  }
+}
 
 .bg-white-container {
   background-color: rgba(255, 255, 255, .85);

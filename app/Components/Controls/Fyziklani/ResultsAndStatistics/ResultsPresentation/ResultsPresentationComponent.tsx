@@ -1,6 +1,6 @@
 import { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
 import MainComponent from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
-import ResultsShower from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/ResultsShower';
+import ResultsShower from './Components/ResultsShower';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
 import App from './Components/InnerComponent';
@@ -17,13 +17,9 @@ interface OwnProps {
 export default class ResultsPresentationComponent extends React.Component<OwnProps> {
     public render() {
         return <MainComponent actions={this.props.actions} data={this.props.data} app={app}>
-            <Setting/>
-            <div
-                className="fixed-top h-100 w-100"
-                data-bs-toggle="modal"
-                data-bs-target="#fyziklaniResultsOptionModal"
-            >
-                <ResultsShower className="inner-headline h-100 w-100">
+            <div className="fyziklani-presentation fixed-top h-100 w-100">
+                <Setting/>
+                <ResultsShower>
                     <App/>
                     <PositionSwitcher/>
                 </ResultsShower>

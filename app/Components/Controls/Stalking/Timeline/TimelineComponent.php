@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
@@ -108,7 +108,7 @@ class TimelineComponent extends FrontEndComponent
         }
         $eventTeachers = [];
         foreach ($this->person->getEventTeachers() as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $team = TeamModel::createFromActiveRow($row);
             $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();
         }

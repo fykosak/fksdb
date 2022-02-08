@@ -11,36 +11,29 @@ use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
 class PointsEntryComponent extends AjaxComponent
 {
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-    private ServiceFyziklaniTask $serviceFyziklaniTask;
+    private TeamService $teamService;
+    private TaskService $taskService;
     private ModelEvent $event;
 
     public function __construct(Container $container, ModelEvent $event)
     {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-        // TODO !!!!
-        /*$this->monitor(
-            JavaScriptCollector::class,
-            fn(JavaScriptCollector $collector) => $collector->registerJSFile(
-                'https://dmla.github.io/jsqrcode/src/qr_packed.js'
-            )
-        );*/
     }
 
     final public function injectPrimary(
-        ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam
+        TaskService $taskService,
+        TeamService $teamService
     ): void {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->taskService = $taskService;
+        $this->teamService = $teamService;
     }
 
     /**
@@ -50,8 +43,8 @@ class PointsEntryComponent extends AjaxComponent
     {
         return [
             'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->serviceFyziklaniTask->serialiseTasks($this->event),
-            'teams' => $this->serviceFyziklaniTeam->serialiseTeams($this->event),
+            'tasks' => $this->taskService->serialiseTasks($this->event),
+            'teams' => $this->teamService->serialiseTeams($this->event),
         ];
     }
 

@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
@@ -76,14 +76,14 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         $results = [];
         foreach (
             [
-                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A,
-                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B,
-                ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C,
-                ModelFyziklaniTeam::CATEGORY_ABROAD,
-                ModelFyziklaniTeam::CATEGORY_OPEN,
+                TeamModel::CATEGORY_HIGH_SCHOOL_A,
+                TeamModel::CATEGORY_HIGH_SCHOOL_B,
+                TeamModel::CATEGORY_HIGH_SCHOOL_C,
+                TeamModel::CATEGORY_ABROAD,
+                TeamModel::CATEGORY_OPEN,
             ] as $category
         ) {
-            $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
+            $results[$category] = TeamModel::mapCategoryToName($category);
         }
         return $results;
     }

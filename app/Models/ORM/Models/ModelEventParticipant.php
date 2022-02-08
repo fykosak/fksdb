@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
@@ -82,12 +82,12 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         return new MultiCurrencyPrice([new Price(Currency::from(Currency::CZK), $this->price)]);
     }
 
-    public function getFyziklaniTeam(): ?ModelFyziklaniTeam
+    public function getFyziklaniTeam(): ?TeamModel
     {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
             ->select('e_fyziklani_team.*')
             ->fetch();
-        return $row ? ModelFyziklaniTeam::createFromActiveRow($row) : null;
+        return $row ? TeamModel::createFromActiveRow($row) : null;
     }
 
     public function getResourceId(): string

@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
@@ -39,12 +39,13 @@ class CategoryProcessing extends AbstractCategoryProcessing
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
+        /** @var TeamModel $model */
         $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(
                 new Message(
-                    sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
+                    sprintf(_('Team inserted to category %s.'), TeamModel::mapCategoryToName($result)),
                     Message::LVL_INFO
                 )
             );
@@ -88,9 +89,9 @@ class CategoryProcessing extends AbstractCategoryProcessing
         }
         // evaluate stats
         if ($olds > 0) {
-            return ModelFyziklaniTeam::CATEGORY_OPEN;
+            return TeamModel::CATEGORY_OPEN;
         } elseif ($this->rulesVersion == 1 && $abroad > 0) {
-            return ModelFyziklaniTeam::CATEGORY_ABROAD;
+            return TeamModel::CATEGORY_ABROAD;
         } else { //Czech/Slovak highschoolers (or lower)
             $sum = 0;
             $cnt = 0;
@@ -100,11 +101,11 @@ class CategoryProcessing extends AbstractCategoryProcessing
             }
             $avg = $sum / $cnt;
             if ($avg <= 2 && $year[4] == 0 && $year[3] <= 2) {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_C;
             } elseif ($avg <= 3 && $year[4] <= 2) {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_B;
             } else {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_A;
             }
         }
     }

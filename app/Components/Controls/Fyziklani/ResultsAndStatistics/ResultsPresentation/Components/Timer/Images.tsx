@@ -1,14 +1,13 @@
-import { FyziklaniResultsCoreStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getCurrentDelta } from './middleware';
 import './images.scss';
+import { FyziklaniPresentationStore } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Reducers';
 
 interface StateProps {
     toStart: number;
     toEnd: number;
     inserted: Date;
-    visible: boolean;
 }
 
 class Images extends React.Component<StateProps> {
@@ -56,12 +55,11 @@ class Images extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
+const mapStateToProps = (state: FyziklaniPresentationStore): StateProps => {
     return {
         inserted: state.timer.inserted,
         toEnd: state.timer.toEnd,
         toStart: state.timer.toStart,
-        visible: state.timer.visible,
     };
 };
 

@@ -9,6 +9,7 @@ import LineChart from 'FKSDB/Components/Charts/Core/LineChart/LineChart';
 import { LineChartData } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import { ModelEvent } from 'FKSDB/Models/ORM/Models/modelEvent';
 import * as React from 'react';
+import LineChartLegend from 'FKSDB/Components/Charts/Core/LineChart/LineChartLegend';
 
 export interface Data {
     events: {
@@ -84,7 +85,7 @@ export default class CommonChart extends React.Component<OwnProps> {
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
         const legend = () => {
-            return <div className="list-group">
+            return <div className="legend">
                 {lineChartData.map((datum, key) => {
                     return <div
                         key={key}
@@ -106,7 +107,8 @@ export default class CommonChart extends React.Component<OwnProps> {
                 yScale,
 
             }}
-            legendComponent={legend}
+            legendProps={{data: lineChartData}}
+            legendComponent={LineChartLegend}
             headline={translator.getText('Time progress')}
         />;
     }

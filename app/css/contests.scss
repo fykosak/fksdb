@@ -1,6 +1,6 @@
 @import "colors";
 @import "mixins/navigation-item";
-@import "/node_modules/bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 .navigation-item {
   @include navigation-item(var(--color-fykos-main), white, false, false);

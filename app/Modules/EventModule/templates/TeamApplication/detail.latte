@@ -2,7 +2,7 @@
 {varType FKSDB\Models\ORM\Models\ModelPerson $person}
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
 {varType bool $rankVisible}
-{varType FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam $model}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel $model}
 {varType string $field}
 {varType mixed $teacher}
 {varType int $counter}
@@ -63,7 +63,7 @@
 
     {var $counter = 0;}
     {foreach $model->getFyziklaniParticipants() as $row}
-        {var FKSDB\Models\ORM\Models\ModelEventParticipant $participant = FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant::createFromActiveRow($row)->getEventParticipant()}
+        {var FKSDB\Models\ORM\Models\ModelEventParticipant $participant = \FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel::createFromActiveRow($row)->getEventParticipant()}
         {php $counter++}
         {var $history = $participant->getPersonHistory()}
 

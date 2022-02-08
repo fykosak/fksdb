@@ -58,5 +58,6 @@ export const getAreaPath = <XValue extends Date | number>(
         .y0(y0)
         .y1((element) => {
             return yScale(element.yValue);
-        }).curve(curve)(data);
+        })
+        .curve(curve)(data);
 }

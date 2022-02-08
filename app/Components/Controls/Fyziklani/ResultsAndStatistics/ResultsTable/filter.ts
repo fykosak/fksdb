@@ -14,18 +14,12 @@ export class Filter {
 
     public match(team: ModelFyziklaniTeam): boolean {
         const {category} = team;
-        if (this.category && this.category !== category) {
-            return false;
-        }
-        // return !(this.roomId && this.roomId !== roomId);
-        return true;
+        return !(this.category && this.category !== category);
+
     }
 
-    public same(filter: Filter): boolean {
-        if (!filter) {
-            return false;
-        }
-        return (filter.roomId === this.roomId) && (filter.category === this.category) && (filter.name === this.name);
+    public same(filter: Filter | null): boolean {
+        return (filter) && (filter.roomId === this.roomId) && (filter.category === this.category) && (filter.name === this.name);
     }
 
     public getHeadline(): string {
@@ -33,14 +27,8 @@ export class Filter {
     }
 }
 
-export const createFilters = (categories: string[] = [], includeAll = true): Filter[] => {
-
-    const categoriesFilters = categories.map((category: string) => {
+export const createFilters = (categories: string[] = []): Filter[] => {
+    return categories.map((category: string) => {
         return new Filter({roomId: null, category, name: translator.getText('Category') + ' ' + category});
     });
-    const filters = [];
-    if (includeAll) {
-        filters.push(new Filter({roomId: null, category: null, name: translator.getText('All')}));
-    }
-    return filters.concat(categoriesFilters);
 };

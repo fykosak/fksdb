@@ -7,7 +7,7 @@ import {
     Dispatch,
 } from 'redux';
 import { setNewState } from '../actions';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import GlobalCorrelation from './GlobalCorrelation';
 
 interface StateProps {
@@ -82,7 +82,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

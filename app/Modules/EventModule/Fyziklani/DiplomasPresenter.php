@@ -68,7 +68,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function handleCalculate(string $category = null): void
     {
-        $closeStrategy = new RankingStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
+        $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
         $log = $closeStrategy->close($category);
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
@@ -84,7 +84,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function isReadyAllToCalculate(?string $category = null): bool
     {
-        return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**

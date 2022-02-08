@@ -6,11 +6,11 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
@@ -27,7 +27,7 @@ class Authorization extends FyziklaniTestCase
     private ModelPerson $perOrg;
     private ModelPerson $perOrgOther;
     private ModelPerson $perContestant;
-    private ModelFyziklaniSubmit $submit;
+    private SubmitModel $submit;
 
     protected function setUp(): void
     {
@@ -59,19 +59,19 @@ class Authorization extends FyziklaniTestCase
         );
 
         $this->event = $this->createEvent([]);
-        $task = $this->getContainer()->getByType(ServiceFyziklaniTask::class)->createNewModel([
+        $task = $this->getContainer()->getByType(TaskService::class)->createNewModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
 
-        $team = $this->getContainer()->getByType(ServiceFyziklaniTeam::class)->createNewModel([
+        $team = $this->getContainer()->getByType(TeamService::class)->createNewModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submit = $this->getContainer()->getByType(ServiceFyziklaniSubmit::class)->createNewModel([
+        $this->submit = $this->getContainer()->getByType(SubmitService::class)->createNewModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
             'points' => 5,

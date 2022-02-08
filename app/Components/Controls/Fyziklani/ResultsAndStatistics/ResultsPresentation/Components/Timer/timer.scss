@@ -1,5 +1,6 @@
 .fyziklani-presentation-timer {
   color: white;
+  background-color: var(--color-fof-main);
   justify-content: space-between;
   padding: .25em;
   font-weight: bold;
@@ -14,14 +15,15 @@
   & > span {
     display: flex;
     flex-wrap: wrap;
-    color: var(--color-fof-main);
+    color: white;
+    //color: var(--color-fof-main);;
   }
 
   &.timer-small {
     font-size: 200%;
     display: flex;
     justify-content: center;
-    background: white;
+    //background: white;
     bottom: 0;
     left: 0;
     z-index: 10000;
@@ -37,9 +39,8 @@
   }
 
   &.timer-big {
+    margin-top: 10rem;
     align-items: center;
-    top: 0;
-    height: 100%;
 
     .time-value {
       font-size: 8rem;
