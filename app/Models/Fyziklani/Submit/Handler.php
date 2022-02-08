@@ -178,18 +178,13 @@ class Handler
         }
         $this->submitService->updateModel($submit, [
             'state' => SubmitModel::STATE_CHECKED,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null,
         ]);
         $this->logEvent($submit, 'checked');
 
         $logger->log(
             new Message(
                 \sprintf(
-                    _('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
+                    _('Scoring has been checked. %d points, team "%s" (%d), task %s "%s".'),
                     $points,
                     $submit->getFyziklaniTeam()->name,
                     $submit->getFyziklaniTeam()->e_fyziklani_team_id,
