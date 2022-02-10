@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-10 11:47+0100\n"
+"POT-Creation-Date: 2022-02-10 16:45+0100\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -1784,9 +1784,8 @@ msgid "Submit cannot be revoked."
 msgstr "Časový vývoj prihlášiek"
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:135
-#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
 #, fuzzy
-msgid "Submit does not exists."
+msgid "Submit does not exist."
 msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:146
@@ -1900,6 +1899,11 @@ msgstr ""
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:102
 msgid "Wrong task code"
 msgstr ""
+
+#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
+#, fuzzy
+msgid "Submit does not exists."
+msgstr "Ubytnovanie neexistuje"
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:162
 msgid "--Select team--"
