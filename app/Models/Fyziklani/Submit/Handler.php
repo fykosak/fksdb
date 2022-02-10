@@ -201,7 +201,7 @@ class Handler
         $logger->log(
             new Message(
                 \sprintf(
-                    _('Points saved %d points, team: "%s" (%d), task: %s "%s"'),
+                    _('Points saved; %d points, team: "%s" (%d), task: %s "%s"'),
                     $points,
                     $team->name,
                     $team->e_fyziklani_team_id,
