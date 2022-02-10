@@ -101,7 +101,7 @@ class ExtendedPersonHandler
                     $presenter->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
                 }
             }
-            // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
+// reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
             $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -67,5 +69,4 @@ class EvaluationFykos2001 implements EvaluationStrategy
     {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }
-
 }

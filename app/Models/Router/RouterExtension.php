@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Router;
 
 use Nette\DI\CompilerExtension;
 use Nette\DI\Definitions\ServiceDefinition;
 
-class RouterExtension extends CompilerExtension {
+class RouterExtension extends CompilerExtension
+{
 
-    public function loadConfiguration(): void {
+    public function loadConfiguration(): void
+    {
         parent::loadConfiguration();
 
         $container = $this->getContainerBuilder();

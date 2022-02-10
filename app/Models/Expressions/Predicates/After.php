@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions\Predicates;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
@@ -31,6 +33,6 @@ class After extends EvaluatedExpression
 
     public function __toString(): string
     {
-        return "now >= {$this->datetime}";
+        return "now >= $this->datetime";
     }
 }

@@ -6,14 +6,14 @@ namespace FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam;
 
 use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Database\Table\ActiveRow;
 
 class PageComponent extends SeatingPageComponent
 {
 
     /**
-     * @param ModelFyziklaniTeam $row
+     * @param TeamModel $row
      * @throws BadTypeException
      */
     final public function render($row, array $params = []): void
@@ -21,8 +21,8 @@ class PageComponent extends SeatingPageComponent
         if (!$row instanceof ActiveRow) {
             throw new BadTypeException(ActiveRow::class, $row);
         }
-        if (!$row instanceof ModelFyziklaniTeam) {
-            $row = ModelFyziklaniTeam::createFromActiveRow($row);
+        if (!$row instanceof TeamModel) {
+            $row = TeamModel::createFromActiveRow($row);
         }
         $this->template->rests = $row->getScheduleRest();
         $this->template->team = $row;

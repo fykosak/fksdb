@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Github\Events;
 
-class PingEvent extends Event {
+class PingEvent extends Event
+{
 
-	public string $zen;
+    public string $zen;
 
-	public string $hook_id;
+    public string $hook_id;
 }

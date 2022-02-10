@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
@@ -7,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -23,13 +25,14 @@ class CategoryProcessing extends AbstractCategoryProcessing
             return;
         }
         if ($values['team']['force_a']) {
-            $values['team']['category'] = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
+            $values['team']['category'] = TeamModel::CATEGORY_HIGH_SCHOOL_A;
         } else {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
         }
         // TODO hack if all study year fields are disabled
         $model = $holder->primaryHolder->getModel2();
+        /** @var TeamModel $model */
         $original = $model ? $model->category : null;
 
         if ($original != $values['team']['category']) {
@@ -37,7 +40,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
                 new Message(
                     sprintf(
                         _('Team inserted to category %s.'),
-                        ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])
+                        TeamModel::mapCategoryToName($values['team']['category'])
                     ),
                     Message::LVL_INFO
                 )
@@ -69,11 +72,11 @@ class CategoryProcessing extends AbstractCategoryProcessing
         //     $result = 'F';
         // } else
         if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
-            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C;
+            $result = TeamModel::CATEGORY_HIGH_SCHOOL_C;
         } elseif ($categoryHandle <= 3 && $count4 <= 2) {
-            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B;
+            $result = TeamModel::CATEGORY_HIGH_SCHOOL_B;
         } elseif ($categoryHandle <= 4) {
-            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
+            $result = TeamModel::CATEGORY_HIGH_SCHOOL_A;
         } else {
             throw new SubmitProcessingException(_('Cannot determine category.'));
             //$result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled

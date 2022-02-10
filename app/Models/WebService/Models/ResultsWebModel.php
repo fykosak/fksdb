@@ -37,9 +37,8 @@ class ResultsWebModel extends WebModel
     public function getResponse(\stdClass $args): \SoapVar
     {
         if (
-            !isset($args->contest) || !isset(
-                $this->container->getParameters()['inverseContestMapping'][$args->contest]
-            )
+            !isset($args->contest)
+            || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])
         ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }

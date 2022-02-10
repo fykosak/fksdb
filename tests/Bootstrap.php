@@ -10,6 +10,7 @@ use Nette\Utils\Finder;
 use Tester\Environment;
 use Tracy\Debugger;
 
+// phpcs:disable
 // absolute filesystem path to this web root
 define('TESTS_DIR', dirname(__FILE__));
 
@@ -27,7 +28,7 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
-
+// phpcs:enable
 class Bootstrap
 {
     public static function boot(): Configurator
@@ -69,7 +70,7 @@ class Bootstrap
         return $configurator;
     }
 }
-
+// phpcs:disable
 // Configure application
 $configurator = Bootstrap::boot();
 
@@ -82,7 +83,7 @@ Replicator::register();
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 define('LOCK_UPLOAD', __DIR__ . '/tmp/upload.lock');
 return $container;
-
+// phpcs:enable
 /* Allow PSR-4 loading in tests
  * "FKSDB\\Tests\\Events\\": "tests/Events/",
  * "FKSDB\\Tests\\MockEnvironment\\": "tests/MockEnvironment/",

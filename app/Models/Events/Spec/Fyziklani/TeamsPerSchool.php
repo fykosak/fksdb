@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
@@ -96,7 +98,8 @@ class TeamsPerSchool extends SchoolCheck
             $result = $this->explorer->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select(
-                    "GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams"
+                    "GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name 
+                    ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams"
                 )
                 ->where($baseHolder->eventIdColumn, $event->getPrimary())
                 ->where('person.person_history:ac_year', $event->getContestYear()->ac_year)
@@ -109,8 +112,8 @@ class TeamsPerSchool extends SchoolCheck
 
             $result->group(
                 'person.person_history:school_id',
-                'COUNT(DISTINCT e_fyziklani_participant:e_fyziklani_team.e_fyziklani_team_id) >= ' . $this->getTeamsPerSchool(
-                )
+                'COUNT(DISTINCT e_fyziklani_participant:e_fyziklani_team.e_fyziklani_team_id) >= '
+                . $this->getTeamsPerSchool()
             );
 
             $this->cache = $result->fetchPairs('school_id', 'teams');

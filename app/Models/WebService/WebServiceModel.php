@@ -9,7 +9,8 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use Nette\Schema\Processor;
-use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
+use FKSDB\Models\WebService\Models\{
+    FyziklaniResultsWebModel,
     PaymentListWebModel,
     WebModel,
     OrganizersWebModel,
@@ -18,7 +19,7 @@ use FKSDB\Models\WebService\Models\{FyziklaniResultsWebModel,
     ExportWebModel,
     SignaturesWebModel,
     ResultsWebModel,
-    StatsWebModel
+    StatsWebModel,
 };
 use Nette\Application\BadRequestException;
 use Nette\Application\Responses\JsonResponse;

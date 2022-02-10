@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions;
 
 abstract class VariadicExpression extends EvaluatedExpression
@@ -39,5 +41,4 @@ abstract class VariadicExpression extends EvaluatedExpression
         }
         return $result;
     }
-
 }

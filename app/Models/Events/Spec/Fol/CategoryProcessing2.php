@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -28,11 +30,12 @@ class CategoryProcessing2 extends AbstractCategoryProcessing
 
         $result = $values['team']['category'] = $this->getCategory($participants);
         $model = $holder->primaryHolder->getModel2();
+        /** @var TeamModel $model */
         $original = $model ? $model->category : null;
         if ($original != $result) {
             $logger->log(
                 new Message(
-                    sprintf(_('Team registered for the category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)),
+                    sprintf(_('Team registered for the category %s.'), TeamModel::mapCategoryToName($result)),
                     Message::LVL_INFO
                 )
             );
@@ -67,7 +70,7 @@ class CategoryProcessing2 extends AbstractCategoryProcessing
         }
         // evaluate stats
         if ($olds > 0) {
-            return ModelFyziklaniTeam::CATEGORY_OPEN;
+            return TeamModel::CATEGORY_OPEN;
         } else {
             $sum = 0;
             $cnt = 0;
@@ -77,11 +80,11 @@ class CategoryProcessing2 extends AbstractCategoryProcessing
             }
             $avg = $sum / $cnt;
             if ($avg <= 2 && $years[4] == 0 && $years[3] <= 2) {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_C;
             } elseif ($avg <= 3 && $years[4] <= 2) {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_B;
             } else {
-                return ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
+                return TeamModel::CATEGORY_HIGH_SCHOOL_A;
             }
         }
     }

@@ -68,7 +68,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      */
     protected function isEnabled(): bool
     {
-        return !$this->isTeamEvent();
+        return !$this->getEvent()->isTeamEvent();
     }
 
     /**

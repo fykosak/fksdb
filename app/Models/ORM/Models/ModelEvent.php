@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
@@ -31,11 +31,9 @@ use Nette\Security\Resource;
 class ModelEvent extends AbstractModel implements Resource, NodeCreator
 {
 
-    public const TEAM_EVENTS = [1, 9, 13];
-
+    private const TEAM_EVENTS = [1, 9, 13];
     public const RESOURCE_ID = 'event';
-
-    public const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
+    private const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
 
     public function getEventType(): ModelEventType
     {
@@ -72,13 +70,13 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
     /**
      * @throws NotSetGameParametersException
      */
-    public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup
+    public function getFyziklaniGameSetup(): GameSetupModel
     {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();
         }
-        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
+        return GameSetupModel::createFromActiveRow($gameSetupRow);
     }
 
     public function getScheduleGroups(): GroupedSelection

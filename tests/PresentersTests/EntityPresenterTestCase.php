@@ -80,7 +80,8 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
             $action,
             $params,
             array_merge([
-                '_do' => ($action === 'create') ? 'createForm-formControl-form-submit'
+                '_do' => ($action === 'create')
+                    ? 'createForm-formControl-form-submit'
                     : 'editForm-formControl-form-submit',
                 'send' => 'Save',
             ], $formData)

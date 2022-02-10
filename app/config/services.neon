@@ -44,8 +44,6 @@ services:
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
-    #fyziklani
-    - FKSDB\Models\Fyziklani\Submit\HandlerFactory
     #github
     - FKSDB\Models\Github\EventFactory
      #localization
@@ -74,8 +72,7 @@ services:
     #stats
     - FKSDB\Models\Stats\StatsModelFactory
     #tasks
-
-    - FKSDB\Models\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
+    - FKSDB\Models\Tasks\PipelineFactory(%tasks.defaultStudyYears%, ...)
 
     #webservice
     webServiceModel: FKSDB\Models\WebService\WebServiceModel

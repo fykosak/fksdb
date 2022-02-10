@@ -11,7 +11,7 @@ use FKSDB\Models\Authorization\EventRole\{
     ParticipantRole,
 };
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
@@ -349,7 +349,7 @@ class ModelPerson extends AbstractModel implements Resource
         if ($teachers->count('*')) {
             $teams = [];
             foreach ($teachers as $row) {
-                $teams[] = ModelFyziklaniTeam::createFromActiveRow($row);
+                $teams[] = TeamModel::createFromActiveRow($row);
             }
             $roles[] = new FyziklaniTeacherRole($event, $teams);
         }

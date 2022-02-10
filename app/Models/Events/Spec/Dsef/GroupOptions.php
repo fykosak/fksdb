@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Dsef;
 
 use FKSDB\Models\Events\Model\Holder\Field;

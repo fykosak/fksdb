@@ -62,13 +62,14 @@ acl:
 
     #fyziklani
     - addResource(fyziklani.dashboard)  # default
-    - addResource(fyziklani.task)       # list, import
-    - addResource(fyziklani.close)      # list, team, hard
-    - addResource(fyziklani.results)    # final, correlation, presentation,
+    - addResource(fyziklani.task)       # list
+    - addResource(fyziklani.close)      # default, hard
+    - addResource(fyziklani.presentation)# default
     - addResource(fyziklani.submit)     # create, edit, list, detail, revoke,
     - addResource(fyziklani.gameSetup)  # deafult
     - addResource(fyziklani.diplomas)   # calculate, results
-    - addResource(fyziklani.seating)     # default
+    - addResource(fyziklani.seating)    # default
+    - addResource(fyziklani.statistics) # default
     #event module
     - addResource(event.application) # import
     - addResource(event.dashboard)   # default
@@ -156,15 +157,18 @@ acl:
     - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
 ## FYZIKLANI MODULE
     #base for org
+
     - allow([org,event.org], fyziklani.dashboard, ::constant(Nette\Security\Permission::ALL))
-    - allow([org,event.org], fyziklani.task, list) # može pozerať úlohy
-    - allow([org,event.org], fyziklani.close, [list,team]) # not hard!
+    - allow([org,event.org], fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # može pozerať úlohy
+    - allow([org,event.org], fyziklani.close, default) # not hard!
     - allow([org,event.org], fyziklani.submit, ::constant(Nette\Security\Permission::ALL)) # može zadavať/upravovať bodovanie
     - allow([org,event.org], fyziklani.diplomas, results) # môže pozerať definitívne výsledky
     # specific ACL
-    - allow(taskManager, fyziklani.task, ::constant(Nette\Security\Permission::ALL)) # importovať úlohy
-    - allow(org, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
+    - allow(org, fyziklani.presentation, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
     - allow(org, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
+    - allow(org, fyziklani.statistics, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, fyziklani.seating, ::constant(Nette\Security\Permission::ALL))
+    - allow(org, fyziklani.diplomas, ::constant(Nette\Security\Permission::ALL)) # môže pozerať definitívne výsledky
 
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))

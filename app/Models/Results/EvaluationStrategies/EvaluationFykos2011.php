@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -50,7 +52,9 @@ class EvaluationFykos2011 implements EvaluationStrategy
 
     public function getSumColumn(): string
     {
-        return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
+        return "IF(t.label IN ('1', '2'), 
+        IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), 
+        s.raw_points)";
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
@@ -12,11 +14,8 @@ use Nette\DI\Container;
 
 class SubmitCheckComponent extends BaseComponent
 {
-
     private SeriesTable $seriesTable;
-
     private CorrectedStorage $correctedStorage;
-
     private UploadedStorage $uploadedStorage;
 
     public function __construct(Container $context, SeriesTable $seriesTable)

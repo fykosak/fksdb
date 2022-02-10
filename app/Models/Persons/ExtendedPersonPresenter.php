@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use Fykosak\NetteORM\AbstractModel;
 
-interface ExtendedPersonPresenter {
+interface ExtendedPersonPresenter
+{
 
     public function getModel(): ?AbstractModel;
 

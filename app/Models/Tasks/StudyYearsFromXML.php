@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\Message;
@@ -23,8 +25,11 @@ class StudyYearsFromXML extends Stage
     private ServiceTaskStudyYear $serviceTaskStudyYear;
     private ServiceStudyYear $serviceStudyYear;
 
-    public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear)
-    {
+    public function __construct(
+        array $defaultStudyYears,
+        ServiceTaskStudyYear $serviceTaskStudyYear,
+        ServiceStudyYear $serviceStudyYear
+    ) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
@@ -85,7 +90,9 @@ class StudyYearsFromXML extends Stage
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(new Message(_('Filling in default study years despite incorrect specification.'), Message::LVL_INFO));
+                $this->log(
+                    new Message(_('Filling in default study years despite incorrect specification.'), Message::LVL_INFO)
+                );
             }
             $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
         }

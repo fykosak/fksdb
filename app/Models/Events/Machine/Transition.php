@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Machine;
 
 use FKSDB\Models\Events\Exceptions\TransitionConditionFailedException;
@@ -110,7 +112,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $oldState = $holder->getBaseHolder($baseMachineName)->getModelState();
+            $oldState = $holder->getBaseHolder((string)$baseMachineName)->getModelState();
             $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
             if ($inducedTransition) {
                 $result[$baseMachineName] = $inducedTransition;
@@ -242,7 +244,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
             return true;
         }
 
-        return preg_match("/(^|\\|)$stateMask(\\||\$)/", $this->source);
+        return (bool)preg_match("/(^|\\|)$stateMask(\\||\$)/", $this->source);
     }
 
     /**

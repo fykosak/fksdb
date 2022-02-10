@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -49,7 +51,11 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
 
     public function getSumColumn(): string
     {
-        return "IF (t.series < 7, IF (t.label IN ('1'), IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), s.raw_points), s.raw_points)";
+        return "IF (t.series < 7, 
+        IF (t.label IN ('1'), 
+        IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), 
+        s.raw_points), 
+        s.raw_points)";
     }
 
     public function getTaskPoints(ModelTask $task, ModelCategory $category): ?int
@@ -77,7 +83,8 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
             case ModelCategory::CAT_ES_7:
                 return 'IF (s.raw_points IS NOT NULL, t.points, NULL)';
             default:
-                return "IF (s.raw_points IS NOT NULL, IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
+                return "IF (s.raw_points IS NOT NULL,
+                 IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
         }
     }
 }

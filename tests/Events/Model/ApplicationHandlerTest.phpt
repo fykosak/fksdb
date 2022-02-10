@@ -12,9 +12,9 @@ use FKSDB\Models\Events\Model\ApplicationHandlerException;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Nette\Application\BadRequestException;
@@ -26,7 +26,7 @@ class ApplicationHandlerTest extends EventTestCase
 {
 
     private ApplicationHandler $fixture;
-    private ServiceFyziklaniTeam $serviceTeam;
+    private TeamService $serviceTeam;
     private Holder $holder;
 
     /**
@@ -36,7 +36,7 @@ class ApplicationHandlerTest extends EventTestCase
     public function __construct(Container $container)
     {
         parent::__construct($container);
-        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceTeam = $this->getContainer()->getByType(TeamService::class);
     }
 
     protected function getEvent(): ModelEvent
@@ -198,7 +198,7 @@ class ApplicationHandlerTest extends EventTestCase
         $data = ArrayHash::from($data);
         Assert::exception(function () use ($data, $teamName) {
             $this->fixture->storeAndExecuteValues($this->holder, $data);
-            /** @var ModelFyziklaniTeam $team */
+            /** @var TeamModel $team */
             $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();
             Assert::notEqual(false, $team);
 

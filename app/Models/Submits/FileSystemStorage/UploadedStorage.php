@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Submits\FileSystemStorage;
 
 use FKSDB\Models\ORM\Models\ModelSubmit;
@@ -80,9 +82,9 @@ class UploadedStorage implements SubmitStorage
 
                 $filename = $todo['file'];
 
-                $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname(
-                        $submit
-                    ) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
+                $dest = $this->root
+                    . DIRECTORY_SEPARATOR . $this->createDirname($submit)
+                    . DIRECTORY_SEPARATOR . $this->createFilename($submit);
                 mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {

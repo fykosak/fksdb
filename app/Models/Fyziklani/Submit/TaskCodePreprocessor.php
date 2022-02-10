@@ -1,27 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 
 final class TaskCodePreprocessor
 {
 
-    private ServiceFyziklaniTask $serviceFyziklaniTask;
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    private TaskService $taskService;
+    private TeamService $teamService;
     private ModelEvent $event;
 
     public function __construct(
         ModelEvent $event,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam,
-        ServiceFyziklaniTask $serviceFyziklaniTask
+        TeamService $teamService,
+        TaskService $taskService
     ) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->teamService = $teamService;
+        $this->taskService = $taskService;
         $this->event = $event;
     }
 
@@ -31,6 +33,19 @@ final class TaskCodePreprocessor
             return false;
         }
         $subCode = str_split(self::getNumLabel($code));
+
+        // Hotfix for Fyziklani2022
+        // Decrement task number by 1 and handle special case for 11 => 18
+        $subCode[7]--;
+        if ($subCode[7] == 0) {
+            $subCode[6]--;
+            if ($subCode[6] == 0) {
+                $subCode[6] = 1;
+            }
+            $subCode[7] = 8;
+        }
+        // End of hotfix for Fyziklani2022
+
         $sum = 3 * ($subCode[0] + $subCode[3] + $subCode[6])
             + 7 * ($subCode[1] + $subCode[4] + $subCode[7])
             + ($subCode[2] + $subCode[5] + $subCode[8]);
@@ -68,12 +83,12 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public function getTeam(string $code): ModelFyziklaniTeam
+    public function getTeam(string $code): TeamModel
     {
         $fullCode = self::createFullCode($code);
 
         $teamId = self::extractTeamId($fullCode);
-        $team = $this->serviceFyziklaniTeam->findByPrimary($teamId);
+        $team = $this->teamService->findByPrimary($teamId);
         if (!$team || ($team->event_id !== $this->event->event_id)) {
             throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
@@ -83,12 +98,12 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public function getTask(string $code): ModelFyziklaniTask
+    public function getTask(string $code): TaskModel
     {
         $fullCode = self::createFullCode($code);
         /* correct label */
         $taskLabel = self::extractTaskLabel($fullCode);
-        $task = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event);
+        $task = $this->taskService->findByLabel($taskLabel, $this->event);
         if (!$task) {
             throw new TaskCodeException(\sprintf(_('Task %s does not exists.'), $taskLabel));
         }

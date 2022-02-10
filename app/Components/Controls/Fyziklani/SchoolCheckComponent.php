@@ -6,8 +6,8 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use Nette\DI\Container;
@@ -23,7 +23,7 @@ class SchoolCheckComponent extends BaseComponent
         $this->event = $event;
     }
 
-    final public function render(ModelFyziklaniTeam $currentTeam): void
+    final public function render(TeamModel $currentTeam): void
     {
         $schools = [];
         foreach ($this->getSchoolsFromTeam($currentTeam) as $schoolId => $school) {
@@ -37,7 +37,7 @@ class SchoolCheckComponent extends BaseComponent
                 )
                 ->where(':e_fyziklani_participant.event_participant.person:person_history.school_id', $schoolId);
             foreach ($query as $team) {
-                $schools[$schoolId][] = ModelFyziklaniTeam::createFromActiveRow($team);
+                $schools[$schoolId][] = TeamModel::createFromActiveRow($team);
             }
         }
         $this->template->schools = $schools;
@@ -47,11 +47,11 @@ class SchoolCheckComponent extends BaseComponent
     /**
      * @return ModelSchool[]
      */
-    private function getSchoolsFromTeam(ModelFyziklaniTeam $team): array
+    private function getSchoolsFromTeam(TeamModel $team): array
     {
         $schools = [];
         foreach ($team->getFyziklaniParticipants() as $row) {
-            $participant = ModelFyziklaniParticipant::createFromActiveRow($row)->getEventParticipant();
+            $participant = ParticipantModel::createFromActiveRow($row)->getEventParticipant();
             $history = $participant->getPersonHistory();
             $schools[$history->school_id] = $history->getSchool();
         }

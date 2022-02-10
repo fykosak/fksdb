@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Pipeline;
 
 use Fykosak\Utils\Logging\Logger;
@@ -13,7 +15,8 @@ use Nette\InvalidStateException;
  *
  * @todo Implement generic ILogger.
  */
-class Pipeline {
+class Pipeline
+{
 
     /** @var Stage[] */
     private array $stages = [];
@@ -25,21 +28,24 @@ class Pipeline {
 
     private ?Logger $logger = null;
 
-    public function setLogger(Logger $logger): void {
+    public function setLogger(Logger $logger): void
+    {
         $this->logger = $logger;
     }
 
     /**
      * @return MemoryLogger
      */
-    public function getLogger(): Logger {
+    public function getLogger(): Logger
+    {
         return $this->logger;
     }
 
     /**
      * Stages can be added only in the build phase (not after setting the data).
      */
-    public function addStage(Stage $stage): void {
+    public function addStage(Stage $stage): void
+    {
         if ($this->fixedStages) {
             throw new InvalidStateException('Cannot modify pipeline after loading data.');
         }
@@ -52,7 +58,8 @@ class Pipeline {
      *
      * @param mixed $input
      */
-    public function setInput($input): void {
+    public function setInput($input): void
+    {
         $this->fixedStages = true;
         $this->input = $input;
     }
@@ -62,7 +69,8 @@ class Pipeline {
      *
      * @return mixed    output of the last stage
      */
-    public function run() {
+    public function run()
+    {
         $data = $this->input;
         foreach ($this->stages as $stage) {
             $stage->setInput($data);
@@ -73,7 +81,8 @@ class Pipeline {
         return $data;
     }
 
-    public function log(Message $message): void {
+    public function log(Message $message): void
+    {
         if ($this->logger) {
             $this->logger->log($message);
         }

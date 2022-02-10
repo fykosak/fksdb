@@ -7,28 +7,19 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 
 /**
- * @property ModelFyziklaniSubmit $model
+ * @property SubmitModel $model
  */
 class FyziklaniSubmitFormComponent extends EntityFormComponent
 {
-
-
-    private HandlerFactory $handlerFactory;
-
-    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void
-    {
-        $this->handlerFactory = $handlerFactory;
-    }
-
     /**
      * @throws NotSetGameParametersException
      */
@@ -55,7 +46,7 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
-            $handler = $this->handlerFactory->create($this->model->getEvent());
+            $handler = new Handler($this->model->getEvent(), $this->getContext());
             $handler->changePoints($logger, $this->model, $values['points']);
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');

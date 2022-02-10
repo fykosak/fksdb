@@ -78,7 +78,6 @@ class MailSender
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder): void
     {
@@ -87,7 +86,6 @@ class MailSender
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder): void
     {
@@ -117,7 +115,7 @@ class MailSender
 
     /**
      * @throws BadTypeException
-     * @throws ModelException|UnsupportedLanguageException
+     * @throws ModelException
      */
     private function createMessage(
         ModelLogin $login,
@@ -237,7 +235,7 @@ class MailSender
 
         $persons = [];
         foreach ($names as $name) {
-            $person = $holder->getBaseHolder($name)->getPerson();
+            $person = $holder->getBaseHolder((string)$name)->getPerson();
             if ($person) {
                 $persons[] = $person->person_id;
             }

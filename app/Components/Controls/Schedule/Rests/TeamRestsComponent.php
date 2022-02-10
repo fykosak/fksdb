@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 
 class TeamRestsComponent extends BaseComponent
 {
-    final public function render(ModelFyziklaniTeam $team): void
+    final public function render(TeamModel $team): void
     {
         $this->template->event = $team->getEvent();
         $this->template->persons = $team->getPersons();

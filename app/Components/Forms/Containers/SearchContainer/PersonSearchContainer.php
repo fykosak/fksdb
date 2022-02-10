@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;

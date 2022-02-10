@@ -1,15 +1,14 @@
 import Downloader, { ResponseData } from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import LoadingSwitch from 'FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/LoadingSwitch';
 import ActionsStoreCreator from 'vendor/fykosak/nette-frontend-component/src/Components/ActionsStoreCreator';
 import { NetteActions } from 'vendor/fykosak/nette-frontend-component/src/NetteActions/netteActions';
 import * as React from 'react';
 import { Action, Reducer } from 'redux';
 
-interface OwnProps <Store>{
+interface OwnProps<Store> {
     actions: NetteActions;
     data: ResponseData;
     children: React.ReactNode;
-    app: Reducer<Store,Action<string>>;
+    app: Reducer<Store, Action<string>>;
 }
 
 export default class MainComponent<Store> extends React.Component<OwnProps<Store>> {
@@ -21,12 +20,10 @@ export default class MainComponent<Store> extends React.Component<OwnProps<Store
         };
         return (
             <ActionsStoreCreator initialData={initialData} app={this.props.app}>
-                <div className={'fyziklani-results'}>
+                <>
                     <Downloader data={this.props.data}/>
-                    <LoadingSwitch>
-                        {this.props.children}
-                    </LoadingSwitch>
-                </div>
+                    {this.props.children}
+                </>
             </ActionsStoreCreator>
         );
     }

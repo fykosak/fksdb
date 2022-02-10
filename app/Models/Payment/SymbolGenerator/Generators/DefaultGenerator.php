@@ -10,7 +10,6 @@ use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 use Nette\Http\IResponse;
 use Nette\OutOfRangeException;
-use Tracy\Debugger;
 
 class DefaultGenerator extends AbstractSymbolGenerator
 {

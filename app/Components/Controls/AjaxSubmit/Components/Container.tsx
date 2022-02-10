@@ -23,7 +23,7 @@ class UploadContainer extends React.Component<StateProps> {
             <h4>{submit.name}</h4>
             <small className="text-muted">{submit.deadline}</small>
         </>);
-        return <Card headline={headline} level={'info'}>
+        return <Card headline={headline} level="info">
             <MessageBox/>
             {this.getInnerContainer()}
         </Card>;

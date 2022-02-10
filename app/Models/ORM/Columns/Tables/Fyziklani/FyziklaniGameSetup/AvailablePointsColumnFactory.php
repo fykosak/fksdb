@@ -6,13 +6,13 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniGameSetup;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\AbstractModel;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use Nette\Utils\Html;
 
 class AvailablePointsColumnFactory extends ColumnFactory
 {
     /**
-     * @param ModelFyziklaniGameSetup $model
+     * @param gameSetupModel $model
      */
     protected function createHtmlValue(AbstractModel $model): Html
     {

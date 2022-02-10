@@ -55,17 +55,17 @@ class Handler
         /** @var ModelPersonSchedule $modelPersonSchedule */
         foreach ($oldRows as $oldRow) {
             $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow);
-            if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
+            if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
-                $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
+                $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
                 unset($newScheduleData[$index]);
             } else {
                 try {
                     $modelPersonSchedule->delete();
                 } catch (\PDOException $exception) {
-                    if (\preg_match('/payment/', $exception->getMessage())) {
+                    if (preg_match('/payment/', $exception->getMessage())) {
                         throw new ExistingPaymentException(
-                            \sprintf(
+                            sprintf(
                                 _('The item "%s" has already a payment generated, so it cannot be deleted.'),
                                 $modelPersonSchedule->getLabel()
                             )
@@ -86,7 +86,7 @@ class Handler
                 );
             } else {
                 throw new FullCapacityException(
-                    \sprintf(
+                    sprintf(
                         _('The person %s could not be registered for "%s" because of full capacity.'),
                         $person->getFullName(),
                         $modelScheduleItem->getLabel()
@@ -100,7 +100,7 @@ class Handler
     {
         $newData = [];
         foreach ($data as $type => $datum) {
-            $newData[$type] = \array_values((array)\json_decode($datum));
+            $newData[$type] = array_values((array)json_decode($datum));
         }
         return $newData;
     }

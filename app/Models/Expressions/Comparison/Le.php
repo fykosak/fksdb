@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions\Comparison;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
@@ -32,5 +34,4 @@ class Le extends EvaluatedExpression
     {
         return "$this->aValue < $this->bValue";
     }
-
 }

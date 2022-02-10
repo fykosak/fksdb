@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
@@ -8,8 +10,8 @@ use FKSDB\Models\ORM\Models\ModelTask;
 /**
  * "POD" to hold series pipeline processing data.
  */
-class SeriesData {
-
+class SeriesData
+{
     private ModelContestYear $contestYear;
     private int $series;
     private \SimpleXMLElement $data;
@@ -19,32 +21,38 @@ class SeriesData {
      */
     private array $tasks = [];
 
-    public function __construct(ModelContestYear $contestYear, int $series, \SimpleXMLElement $data) {
+    public function __construct(ModelContestYear $contestYear, int $series, \SimpleXMLElement $data)
+    {
         $this->contestYear = $contestYear;
         $this->series = $series;
         $this->data = $data;
     }
 
-    public function getContestYear(): ModelContestYear {
+    public function getContestYear(): ModelContestYear
+    {
         return $this->contestYear;
     }
 
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
-    public function getData(): \SimpleXMLElement {
+    public function getData(): \SimpleXMLElement
+    {
         return $this->data;
     }
 
     /**
      * @return ModelTask[]
      */
-    public function getTasks(): array {
+    public function getTasks(): array
+    {
         return $this->tasks;
     }
 
-    public function addTask(int $taskNr, ModelTask $task): void {
+    public function addTask(int $taskNr, ModelTask $task): void
+    {
         $this->tasks[$taskNr] = $task;
     }
 }

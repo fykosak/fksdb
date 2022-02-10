@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -16,9 +16,9 @@ use NiftyGrid\DuplicateColumnException;
 class TeamSubmitsGrid extends SubmitsGrid
 {
 
-    private ModelFyziklaniTeam $team;
+    private TeamModel $team;
 
-    public function __construct(ModelFyziklaniTeam $team, Container $container)
+    public function __construct(TeamModel $team, Container $container)
     {
         $this->team = $team;
         parent::__construct($container);

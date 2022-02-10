@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -11,7 +13,6 @@ use Nette\Application\UI\Form;
 
 class CorrectedComponent extends SeriesTableComponent
 {
-
     private CorrectedStorage $correctedStorage;
 
     final public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void
