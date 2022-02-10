@@ -113,12 +113,8 @@ class Handler
         }
         $this->submitService->updateModel($submit, [
             'points' => $points,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
             'state' => SubmitModel::STATE_CHECKED,
-            'modified' => null,
+            'modified' => new \DateTimeImmutable(),
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
         $logger->log(
@@ -147,11 +143,7 @@ class Handler
             $this->submitService->updateModel($submit, [
                 'points' => null,
                 'state' => SubmitModel::STATE_NOT_CHECKED,
-                /* ugly, exclude previous value of `modified` from query
-                 * so that `modified` is set automatically by DB
-                 * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-                 */
-                'modified' => null,
+                'modified' => new \DateTimeImmutable(),
             ]);
             $this->logEvent($submit, 'revoked');
             $logger->log(
@@ -178,18 +170,13 @@ class Handler
         }
         $this->submitService->updateModel($submit, [
             'state' => SubmitModel::STATE_CHECKED,
-            /* ugly, exclude previous value of `modified` from query
-             * so that `modified` is set automatically by DB
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            'modified' => null,
         ]);
         $this->logEvent($submit, 'checked');
 
         $logger->log(
             new Message(
                 \sprintf(
-                    _('Scoring has been opened. %d points, team "%s" (%d), task %s "%s".'),
+                    _('Scoring has been checked. %d points, team "%s" (%d), task %s "%s".'),
                     $points,
                     $submit->getFyziklaniTeam()->name,
                     $submit->getFyziklaniTeam()->e_fyziklani_team_id,
@@ -208,10 +195,6 @@ class Handler
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
             'state' => SubmitModel::STATE_NOT_CHECKED,
-            /* ugly, force current timestamp in database
-             * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
-             */
-            //'created' => null, TODO!!!
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 

@@ -84,17 +84,6 @@ export default class CommonChart extends React.Component<OwnProps> {
         const yScale = scaleLinear<number, number>().domain([0, max]);
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        const legend = () => {
-            return <div className="legend">
-                {lineChartData.map((datum, key) => {
-                    return <div
-                        key={key}
-                        className="list-group-item"
-                        style={{color: datum.color}}>{datum.name}</div>;
-                })}
-            </div>;
-        };
-
         return <ChartContainer
             chart={LineChart}
             chartProps={{

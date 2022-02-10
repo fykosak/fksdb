@@ -1505,6 +1505,7 @@ msgstr " Bodovanie bolo overené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\"
 
 #: ../app/Models/Fyziklani/Submit/Handler.php:209
 #, php-format
+#, fuzzy
 msgid "Points saved %d points, team: \"%s\" (%d), task: %s \"%s\""
 msgstr "Bodování bylo ověřené. %d bodů, tým: \"%s\" (%d), úloha: %s \"%s\" "
 

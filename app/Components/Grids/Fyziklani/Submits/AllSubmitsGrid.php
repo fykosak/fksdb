@@ -74,7 +74,7 @@ class AllSubmitsGrid extends SubmitsGrid
             ->setLink(fn(SubmitModel $row): string => $this->link('delete!', $row->fyziklani_submit_id))
             ->setConfirmationDialog(fn(): string => _('Really take back the task submit?'))
             ->setText(_('Delete'))
-            ->setShow(fn(SubmitModel $row): bool => $row->canRevoke());
+            ->setShow(fn(SubmitModel $row): bool => $row->canRevoke(false));
     }
 
     private function getFilterCallBack(): callable
