@@ -132,7 +132,7 @@ class SubmitHandlerFactory
     {
         $submit = $this->serviceSubmit->findByPrimary($id);
         if ($throw && !$submit) {
-            throw new NotFoundException(_('Submit does not exists.'));
+            throw new NotFoundException(_('Submit does not exist.'));
         }
         return $submit;
     }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-10 11:47+0100\n"
+"POT-Creation-Date: 2022-02-10 16:45+0100\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -1757,9 +1757,9 @@ msgid "Submit cannot be revoked."
 msgstr ""
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:135
-#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
-msgid "Submit does not exists."
-msgstr ""
+#, fuzzy
+msgid "Submit does not exist."
+msgstr "Payment doesn't exist"
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:146
 msgid "Access denied"
@@ -1871,6 +1871,10 @@ msgstr ""
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:102
 msgid "Wrong task code"
+msgstr ""
+
+#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
+msgid "Submit does not exists."
 msgstr ""
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:162
@@ -6086,10 +6090,6 @@ msgstr ""
 
 #~ msgid "Je třeba ručně vyřešit konflikty."
 #~ msgstr "Manual conflict resolutino is unnecessary."
-
-#, fuzzy
-#~ msgid "Submit dos not exists."
-#~ msgstr "Payment doesn't exist"
 
 #~ msgid "Nastala chyba"
 #~ msgstr "Some error emerged"

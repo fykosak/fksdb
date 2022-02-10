@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-10 11:47+0100\n"
+"POT-Creation-Date: 2022-02-10 16:45+0100\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -625,7 +625,8 @@ msgstr "%s – přihlášení do soutěže (%s. ročník)"
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:142
 msgid "User must be a person in order to register as a contestant."
-msgstr "Uživatel musí být osobou v databázi, aby se mohl registrovat jako účastník."
+msgstr ""
+"Uživatel musí být osobou v databázi, aby se mohl registrovat jako účastník."
 
 #: ../app/Modules/PublicModule/RegisterPresenter.php:152
 msgid "An existing account found. To continue, please sign in."
@@ -1760,9 +1761,9 @@ msgid "Submit cannot be revoked."
 msgstr "Odevzdání nelze vzít zpět"
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:135
-#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
-msgid "Submit does not exists."
-msgstr "Odevzdání neexistuje."
+#, fuzzy
+msgid "Submit does not exist."
+msgstr "Submit neexistuje."
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:146
 msgid "Access denied"
@@ -1843,7 +1844,7 @@ msgstr "Počet položek"
 
 #: ../app/Components/Grids/Fyziklani/CloseTeamsGrid.php:54
 msgid "Close submitting"
-msgstr "Úspěšné odevzdání"
+msgstr "Uzavřít bodování"
 
 #: ../app/Components/Grids/Fyziklani/TaskGrid.php:51
 #: ../app/config/orm.neon.neon2php:651 ../app/config/orm.neon.neon2php:746
@@ -1875,6 +1876,10 @@ msgstr "Smazat"
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:102
 msgid "Wrong task code"
 msgstr "Špatný kód úlohy"
+
+#: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:121
+msgid "Submit does not exists."
+msgstr "Odevzdání neexistuje."
 
 #: ../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:162
 msgid "--Select team--"
