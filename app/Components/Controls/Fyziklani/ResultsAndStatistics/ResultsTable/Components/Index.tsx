@@ -9,7 +9,7 @@ import { Filter } from '../filter';
 import Row from './Row';
 
 interface StateProps {
-    filter: Filter;
+    filter: Filter | null;
     submits: Submits;
     teams: ModelFyziklaniTeam[];
     tasks: ModelFyziklaniTask[];
@@ -28,41 +28,33 @@ class Index extends React.Component<StateProps> {
                 submitsForTeams[teamId][taskId] = submit;
             }
         }
-
-        const headCools = tasks.map((task: ModelFyziklaniTask, taskIndex) => {
-            return (<th key={taskIndex} data-task-label={task.label}>{task.label}</th>);
-        });
-
-        return (
-            <div className="mb-3 fyziklani-statistics-table">
-                <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
-                <table className="table-striped table-hover table table-sm bg-white">
-                    <thead>
-                    <tr>
-                        <th/>
-                        <th/>
-                        <th>∑</th>
-                        <th>∑</th>
-                        <th>x̄</th>
-                        {headCools}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {teams.map((team: ModelFyziklaniTeam, teamIndex) => {
-                        return (
-                            <Row
-                                tasks={tasks}
-                                submits={submitsForTeams[team.teamId] || {}}
-                                team={team}
-                                key={teamIndex}
-                                visible={(filter ? filter.match(team) : true)}
-                            />
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
+        return <div className="mb-3 fyziklani-statistics-table">
+            <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
+            <table className="table-striped table-hover table table-sm bg-white">
+                <thead>
+                <tr>
+                    <th/>
+                    <th/>
+                    <th>∑</th>
+                    <th>∑</th>
+                    <th>x̄</th>
+                    {tasks.map((task: ModelFyziklaniTask, taskIndex) =>
+                        <th key={taskIndex} data-task-label={task.label}>{task.label}</th>)}
+                </tr>
+                </thead>
+                <tbody>
+                {teams.map((team: ModelFyziklaniTeam, teamIndex) =>
+                    <Row
+                        tasks={tasks}
+                        submits={submitsForTeams[team.teamId] || {}}
+                        team={team}
+                        key={teamIndex}
+                        visible={(filter ? filter.match(team) : true)}
+                    />,
+                )}
+                </tbody>
+            </table>
+        </div>;
     }
 }
 

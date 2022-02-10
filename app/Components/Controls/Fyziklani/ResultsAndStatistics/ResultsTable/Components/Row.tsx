@@ -20,7 +20,6 @@ export default class Row extends React.Component<OwnProps> {
         const cools = tasks.map((task, taskIndex) => {
             // find submit
             const {taskId} = task;
-
             const submit = submits[taskId] || null;
             const points = submit ? submit.points : null;
 

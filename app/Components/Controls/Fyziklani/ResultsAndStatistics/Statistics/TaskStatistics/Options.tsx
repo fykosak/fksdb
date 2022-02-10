@@ -27,12 +27,6 @@ interface DispatchProps {
 
 class Options extends React.Component<StateProps & DispatchProps> {
 
-    public componentDidMount() {
-        const {onSetNewState, gameEnd, gameStart} = this.props;
-        onSetNewState({fromDate: gameStart});
-        onSetNewState({toDate: gameEnd});
-    }
-
     public render() {
         const {
             aggregationTime,
@@ -120,12 +114,12 @@ class Options extends React.Component<StateProps & DispatchProps> {
 const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         aggregationTime: state.statistics.aggregationTime,
-        fromDate: state.statistics.fromDate,
-        gameEnd: new Date(state.timer.gameEnd),
-        gameStart: new Date(state.timer.gameStart),
+        fromDate: state.timer.gameStart,
+        gameEnd: state.timer.gameEnd,
+        gameStart: state.timer.gameStart,
         taskId: state.statistics.taskId,
         tasks: state.data.tasks,
-        toDate: state.statistics.toDate,
+        toDate: state.timer.gameEnd,
     };
 };
 

@@ -53,7 +53,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             if (datum.display.area) {
                 const areaPath = getAreaPath<XValue>(xScale, yScale, datum.points, yScale(0),
                     datum.curveFactory ? datum.curveFactory : curveMonotoneX);
-                areas.push(<path d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
+                areas.push(<path key={index} d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
             }
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {

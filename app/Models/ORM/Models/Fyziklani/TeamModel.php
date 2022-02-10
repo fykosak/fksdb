@@ -162,13 +162,17 @@ class TeamModel extends AbstractModel implements Resource, NodeCreator
     public function __toArray(bool $includePassword = false): array
     {
         $data = [
-            'created' => $this->created->format('c'),
-            'category' => $this->category,
+            'teamId' => $this->e_fyziklani_team_id,
             'name' => $this->name,
             'status' => $this->status,
-            'teamId' => $this->e_fyziklani_team_id,
-            'gameLang' => $this->game_lang,
+            'category' => $this->category,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
             'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
         ];
         if ($includePassword) {
             $data['password'] = $this->password;

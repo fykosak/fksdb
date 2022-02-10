@@ -112,10 +112,10 @@ class Timeline extends React.Component<StateProps & OwnProps> {
 
 const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
-        fromDate: state.statistics.fromDate,
+        fromDate: state.timer.gameStart,
         submits: state.data.submits,
         teams: state.data.teams,
-        toDate: state.statistics.toDate,
+        toDate: state.timer.gameEnd,
     };
 };
 

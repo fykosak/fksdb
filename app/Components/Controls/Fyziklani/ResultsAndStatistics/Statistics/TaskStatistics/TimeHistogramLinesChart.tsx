@@ -120,11 +120,11 @@ const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         activePoints: state.statistics.activePoints,
         aggregationTime: state.statistics.aggregationTime,
-        fromDate: state.statistics.fromDate,
-        gameEnd: new Date(state.timer.gameEnd),
-        gameStart: new Date(state.timer.gameStart),
+        fromDate: state.timer.gameStart,
+        gameEnd: state.timer.gameEnd,
+        gameStart: state.timer.gameStart,
         submits: state.data.submits,
-        toDate: state.statistics.toDate,
+        toDate: state.timer.gameEnd,
     };
 };
 

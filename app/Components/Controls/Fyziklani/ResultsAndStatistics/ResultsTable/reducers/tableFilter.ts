@@ -2,7 +2,7 @@ import { ACTION_SET_FILTER } from '../actions';
 import { Filter } from '../filter';
 
 export interface State {
-    filter: Filter;
+    filter: Filter | null;
 }
 
 const initialState: State = {

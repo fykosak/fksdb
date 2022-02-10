@@ -74,10 +74,10 @@ class Handler
         $submit = $this->submitService->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->createSubmit($logger, $task, $team, $points);
-        } elseif (!$submit->isChecked()) { // check bodovania
-            $this->checkSubmit($logger, $submit, $points);
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
+        } elseif (!$submit->isChecked()) { // check bodovania
+            $this->checkSubmit($logger, $submit, $points);
         } else {
             throw new TaskCodeException(_('Task given and validated.'));
         }

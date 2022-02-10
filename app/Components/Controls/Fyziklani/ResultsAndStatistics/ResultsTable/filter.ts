@@ -15,7 +15,6 @@ export class Filter {
     public match(team: ModelFyziklaniTeam): boolean {
         const {category} = team;
         return !(this.category && this.category !== category);
-
     }
 
     public same(filter: Filter | null): boolean {

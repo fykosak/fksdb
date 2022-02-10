@@ -5,7 +5,7 @@ import {
     State as PresentationState,
 } from './presentation';
 
-export const app = combineReducers({
+export const app = combineReducers<FyziklaniPresentationStore>({
     ...coreApp,
     presentation,
 });
