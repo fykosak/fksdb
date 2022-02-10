@@ -48,8 +48,6 @@ parameters:
                         required: true
                     id_number:
                         required: false
-                    born:
-                        required: true
                 person_history:
                     school_id:
                         required: true

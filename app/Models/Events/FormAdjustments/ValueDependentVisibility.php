@@ -39,7 +39,8 @@ class ValueDependentVisibility extends PairwiseAdjustment
                 $sTarget = count($cTarget);
                 $sPrerequisite = count($cPrerequisite);
                 throw new InvalidArgumentException(
-                    "Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'."
+                    "Cannot apply 1:1, 1:n, n:1 neither matching rule to 
+                    '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'."
                 );
             }
         }

@@ -1,14 +1,15 @@
+{varType FKSDB\Models\ORM\Models\ModelEmailMessage $model}
 {block content}
     {foreach [
-'email_message.email_message_id',
-'email_message.recipient',
-'email_message.sender',
-'email_message.reply_to',
-'email_message.subject',
-'email_message.carbon_copy',
-'email_message.blind_carbon_copy',
-'email_message.state',
-] as $row}
+    'email_message.email_message_id',
+    'email_message.recipient',
+    'email_message.sender',
+    'email_message.reply_to',
+    'email_message.subject',
+    'email_message.carbon_copy',
+    'email_message.blind_carbon_copy',
+    'email_message.state',
+    ] as $row}
         {control valuePrinter:row $row,$model}
     {/foreach}
     <div class="row mt-1">

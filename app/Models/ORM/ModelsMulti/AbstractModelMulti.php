@@ -76,10 +76,9 @@ abstract class AbstractModelMulti extends ActiveRow
     }
 
     /**
-     * @param bool $throw
      * @return mixed
      */
-    public function getPrimary($throw = true)
+    public function getPrimary(bool $throw = true)
     {
         return $this->joinedModel->getPrimary($throw);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -29,14 +31,14 @@ class UniqueCheck extends AbstractAdjustment
         }
 
         foreach ($controls as $name => $control) {
-            $name = $holder->hasBaseHolder($name)
+            $name = $holder->hasBaseHolder((string)$name)
                 ? $name
                 : substr(
                     $this->field,
                     0,
                     strpos($this->field, self::DELIMITER)
                 );
-            $baseHolder = $holder->getBaseHolder($name);
+            $baseHolder = $holder->getBaseHolder((string)$name);
             $control->addRule(function (Control $control) use ($baseHolder): bool {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);

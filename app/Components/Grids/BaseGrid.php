@@ -185,7 +185,6 @@ abstract class BaseGrid extends Grid
 
     /**
      * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
     public function addGlobalButton(string $name, ?string $label = null): GlobalButton
     {

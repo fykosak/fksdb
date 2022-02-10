@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Expressions\Logic;
 
 use FKSDB\Models\Expressions\EvaluatedExpression;
@@ -28,5 +30,4 @@ class Not extends EvaluatedExpression
     {
         return "!($this->expression)";
     }
-
 }

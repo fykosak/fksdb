@@ -64,7 +64,7 @@ export default class InnerParticipantAcquaintanceChart extends React.Component<O
                 key={index}
                 className={'arc ' + className}
                 d={arcGenerator(datum)}
-                cursor={'pointer'}
+                cursor="pointer"
                 fill={this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'}
                 onClick={() => {
                     this.setState({activeId: this.state.activeId === index ? null : index});

@@ -7,8 +7,8 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setFirstTeamId } from '../actions';
-import { Store as StatisticsStore } from '../Reducers';
+import { setNewState } from '../actions';
+import { FyziklaniStatisticStore } from '../Reducers';
 import Legend from './Legend';
 import PointsInTime from './LineChart';
 import PointsPie from './PieChart';
@@ -43,16 +43,12 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
         const selectedTeam = teams.filter((team) => {
             return team.teamId === teamId;
         })[0];
-//
-        const headline = (
-            <h2 className={'fyziklani-headline'}>
-                {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
-            </h2>);
-        return (<div>
-
+        return (<>
             {teamSelect}
             {teamId && (<>
-                {headline}
+                <h2>
+                    {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
+                </h2>
                 <ChartContainer
                     chart={PointsPie}
                     chartProps={{teamId}}
@@ -74,11 +70,11 @@ class TeamStats extends React.Component<StateProps & DispatchProps> {
                     headline={translator.getText('Timeline')}
                 />
             </>)}
-        </div>);
+        </>);
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         teamId: state.statistics.firstTeamId,
         teams: state.data.teams,
@@ -87,7 +83,7 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
     };
 };
 

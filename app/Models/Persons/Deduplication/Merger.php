@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons\Deduplication;
 
 use Fykosak\Utils\Logging\DevNullLogger;
@@ -117,7 +119,13 @@ class Merger
 
     private function createTableMerger(string $table): TableMerger
     {
-        $tableMerger = new TableMerger($table, $this, $this->explorer, $this->configuration['defaultStrategy'], $this->getLogger());
+        $tableMerger = new TableMerger(
+            $table,
+            $this,
+            $this->explorer,
+            $this->configuration['defaultStrategy'],
+            $this->getLogger()
+        );
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
         }

@@ -7,7 +7,12 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\{ModelContest, ModelLogin, ModelTask, ModelTaskContribution};
+use FKSDB\Models\ORM\Models\{
+    ModelContest,
+    ModelLogin,
+    ModelTask,
+    ModelTaskContribution,
+};
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;

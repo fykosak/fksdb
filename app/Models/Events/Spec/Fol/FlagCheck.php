@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
@@ -103,7 +105,7 @@ class FlagCheck extends AbstractAdjustment
     private function getSchoolId(Control $schoolControl, Control $personControl): ?int
     {
         if ($schoolControl->getValue()) {
-            return $schoolControl->getValue();
+            return (int)$schoolControl->getValue();
         }
 
         $personId = $personControl->getValue();

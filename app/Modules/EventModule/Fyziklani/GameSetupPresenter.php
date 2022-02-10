@@ -7,12 +7,11 @@ namespace FKSDB\Modules\EventModule\Fyziklani;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class GameSetupPresenter extends BasePresenter
 {
-    private ModelFyziklaniGameSetup $gameSetup;
 
     public function titleDefault(): PageTitle
     {
@@ -34,16 +33,13 @@ class GameSetupPresenter extends BasePresenter
      * @throws NotSetGameParametersException
      * @throws EventNotFoundException
      */
-    protected function getGameSetup(): ModelFyziklaniGameSetup
+    protected function getGameSetup(): GameSetupModel
     {
-        if (!isset($this->gameSetup)) {
+        static $gameSetup;
+        if (!isset($gameSetup) || $this->getEvent()->event_id !== $gameSetup->event_id) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-            if (!$gameSetup) {
-                throw new NotFoundException(_('Game is not set up!'));
-            }
-            $this->gameSetup = $gameSetup;
         }
-        return $this->gameSetup;
+        return $gameSetup;
     }
 
     /**

@@ -1,6 +1,5 @@
 import { translator } from '@translator/translator';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniSubmit } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniSubmit, Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
@@ -8,7 +7,7 @@ import { connect } from 'react-redux';
 import { getTimeLabel } from '../Middleware/correlation';
 import { getAverageNStandardDeviation } from '../Middleware/stdDev';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -61,7 +60,7 @@ class Table extends React.Component<StateProps> {
         });
         const avgNStdDev = getAverageNStandardDeviation(deltas);
         return <div>
-            <table className={'table table-striped table-hover table-sm'}>
+            <table className="table table-striped table-hover table-sm">
                 <thead>
                 <tr>
                     <th>{translator.getText('Task')}</th>
@@ -84,7 +83,7 @@ class Table extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,

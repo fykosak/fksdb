@@ -141,16 +141,25 @@ abstract class ColumnFactory
     /**
      * @throws CannotAccessModelException
      */
-    final public function render(AbstractModel $model, int $userPermissionsLevel): Html
+    final public function render(AbstractModel $originalModel, int $userPermissionsLevel): Html
     {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
-        $model = $this->resolveModel($model);
+        $preRender = $this->prerenderOriginalModel($originalModel);
+        if (!is_null($preRender)) {
+            return $preRender;
+        }
+        $model = $this->resolveModel($originalModel);
         if (is_null($model)) {
             return $this->renderNullModel();
         }
         return $this->createHtmlValue($model);
+    }
+
+    protected function prerenderOriginalModel(AbstractModel $originalModel): ?Html
+    {
+        return null;
     }
 
     /**

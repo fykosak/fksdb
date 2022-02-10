@@ -6,7 +6,7 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -143,7 +143,7 @@ class ClosePresenter extends FyziklaniTestCase
     /**
      * Not a real test method.
      */
-    private function innerTestCloseTeam(ModelFyziklaniTeam $team, int $pointsSum): void
+    private function innerTestCloseTeam(TeamModel $team, int $pointsSum): void
     {
         $request = $this->createCloseTeamRequest([
             '_do' => 'closeTeamControl-close',

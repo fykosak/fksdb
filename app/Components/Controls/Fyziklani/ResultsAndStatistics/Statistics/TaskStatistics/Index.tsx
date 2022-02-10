@@ -2,21 +2,21 @@ import { translator } from '@translator/translator';
 import ChartContainer from 'FKSDB/Components/Charts/Core/ChartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 import Options from './Options';
-import TimeHistogram from './TimeHistogramBarsChart';
+import TimeHistogram from './BarHistogram';
 import TimeHistogramLines from './TimeHistogramLinesChart';
 import Timeline from './Timeline';
-import Progress from './TimeProgress';
+import Progress from './Progress';
 
 interface StateProps {
     taskId: number;
+    availablePoints: number[];
 }
 
 class TaskStats extends React.Component<StateProps> {
     public render() {
-        const {taskId} = this.props;
-        const availablePoints = [5, 3, 2, 1];
+        const {taskId, availablePoints} = this.props;
         return (
             <>
                 <h2>{translator.getText('Global statistics')}</h2>
@@ -53,8 +53,9 @@ class TaskStats extends React.Component<StateProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
+        availablePoints: state.data.availablePoints,
         taskId: state.statistics.taskId,
     };
 };

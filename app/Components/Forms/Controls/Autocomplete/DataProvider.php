@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-interface DataProvider {
-
+interface DataProvider
+{
     public const LABEL = 'label';
     public const VALUE = 'value';
 

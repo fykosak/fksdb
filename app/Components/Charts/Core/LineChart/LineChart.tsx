@@ -9,8 +9,10 @@ import {
     LineChartData,
 } from 'FKSDB/Components/Charts/Core/LineChart/middleware';
 import * as React from 'react';
+import './line-chart.scss';
 
 interface OwnProps<XValue extends Date | number> {
+    className?: string;
     data: LineChartData<XValue>;
     xScale: XValue extends Date ? ScaleTime<number, number> : ScaleLinear<number, number>;
     yScale: ScaleLinear<number, number>;
@@ -51,21 +53,25 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
             if (datum.display.area) {
                 const areaPath = getAreaPath<XValue>(xScale, yScale, datum.points, yScale(0),
                     datum.curveFactory ? datum.curveFactory : curveMonotoneX);
-                areas.push(<path d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
+                areas.push(<path key={index} d={areaPath} className={'area'} stroke={datum.color} fill={datum.color}/>);
             }
             if (datum.display.points) {
                 datum.points.forEach((point, key) => {
                     dots.push(<circle
+                        className={point.active ? 'active' : 'inactive'}
                         key={index + '-' + key}
-                        opacity={point.active ? '1' : '0'}
                         r="7.5"
                         fill={point.color}
                         cy={yScale(point.yValue)}
                         cx={xScale(point.xValue)}
                     >
                         <title>
-                            {point.label ? point.label :
-                                ((point.xValue instanceof Date) ? point.xValue.toLocaleTimeString() : point.xValue)}
+                            {point.label
+                                ? point.label
+                                : ((point.xValue instanceof Date)
+                                    ? point.xValue.toLocaleTimeString()
+                                    : point.xValue)
+                            }
                         </title>
                     </circle>);
                 });
@@ -73,7 +79,7 @@ export default class LineChart<XValue extends Date | number> extends ChartCompon
         });
 
         return (
-            <svg viewBox={this.getViewBox()} className="chart line-chart">
+            <svg viewBox={this.getViewBox()} className={'chart chart-line-chart line-chart ' + this.props.className}>
                 <g>
                     {areas}
                     {lines}

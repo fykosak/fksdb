@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\Models\Events\ModelFyziklaniParticipant;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
 use Fykosak\NetteORM\AbstractService;
@@ -47,10 +47,10 @@ abstract class SecondaryModelStrategy
     ): void {
         $secondary = [];
         if ($primaryModel) {
-            if ($primaryModel instanceof ModelFyziklaniTeam) {
+            if ($primaryModel instanceof TeamModel) {
                 /** @var ServiceMFyziklaniParticipant $service */
                 foreach ($primaryModel->getFyziklaniParticipants() as $row) {
-                    $fyziklaniParticipant = ModelFyziklaniParticipant::createFromActiveRow($row);
+                    $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row);
                     $secondary[] = $service->composeModel(
                         $fyziklaniParticipant->getEventParticipant(),
                         $fyziklaniParticipant

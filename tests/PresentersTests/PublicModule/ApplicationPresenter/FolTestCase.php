@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
@@ -51,10 +51,10 @@ EOT
         );
     }
 
-    protected function assertTeamApplication(ModelEvent $event, string $teamName): ModelFyziklaniTeam
+    protected function assertTeamApplication(ModelEvent $event, string $teamName): TeamModel
     {
         $application = $this->getContainer()
-            ->getByType(ServiceFyziklaniTeam::class)
+            ->getByType(TeamService::class)
             ->getTable()
             ->where(['event_id' => $event->event_id, 'name' => $teamName])
             ->fetch();

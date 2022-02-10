@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Processing\AbstractProcessing;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
@@ -17,6 +20,7 @@ class PasswordProcessing extends AbstractProcessing
         if (!isset($values['team'])) {
             return;
         }
+        /** @var TeamModel $model */
         $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->password : ($holder->primaryHolder->data['password'] ?? null);
 

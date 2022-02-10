@@ -21,7 +21,6 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
-use Tracy\Debugger;
 
 /**
  * @method ModelPayment getEntity

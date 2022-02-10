@@ -7,7 +7,7 @@ export type LineChartData<XValue extends Date | number> = LineChartDatum<XValue>
 export type LineChartDatum<XValue extends Date | number> = {
     name: ReactNode;
     description?: string;
-    color: string;
+    color?: string;
     display: {
         points?: boolean;
         lines?: boolean;
@@ -58,5 +58,6 @@ export const getAreaPath = <XValue extends Date | number>(
         .y0(y0)
         .y1((element) => {
             return yScale(element.yValue);
-        }).curve(curve)(data);
+        })
+        .curve(curve)(data);
 }

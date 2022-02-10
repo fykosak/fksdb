@@ -50,6 +50,9 @@ class PaymentMachine extends Machine
         return ModelPayment::STATE_NEW;
     }
 
+    /**
+     * @param ModelPayment|null $model
+     */
     public function createHolder(?AbstractModel $model): PaymentHolder
     {
         return new PaymentHolder($model, $this->servicePayment);

@@ -45,7 +45,7 @@ class Container extends React.Component<StateProps & OwnProps & DispatchProps & 
                 })}
                 <div className="row">
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <h3 className={'fyziklani-headline-color'}>{translator.getText('Code')}</h3>
+                        <h3>{translator.getText('Code')}</h3>
                         <div className="form-group">
                             <Field name="code" component={TextInput}/>
                         </div>

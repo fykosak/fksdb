@@ -17,7 +17,7 @@ export default class ChartContainer<ChartProps, LegendProps> extends React.Compo
         return (
             <div className={'chart-container ' + (containerClassName ? containerClassName : '')}>
                 {headline && <h3>{headline}</h3>}
-                <div className={'row'}>
+                <div className="row">
                     <div className="col-xl-9 col-lg-8 col-md-12">
                         {React.createElement<ChartProps>(chart, chartProps)}
                     </div>

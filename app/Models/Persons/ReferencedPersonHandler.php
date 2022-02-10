@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Components\EntityForms\PersonFormComponent;
@@ -179,7 +181,8 @@ class ReferencedPersonHandler implements ReferencedHandler
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
                     if (
-                        \in_array($t, $originalModels) && \in_array(
+                        in_array($t, $originalModels)
+                        && in_array(
                             $t,
                             [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT]
                         )

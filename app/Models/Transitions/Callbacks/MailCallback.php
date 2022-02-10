@@ -34,7 +34,6 @@ class MailCallback implements TransitionCallback
 
     /**
      * @throws BadTypeException
-     * @throws UnsupportedLanguageException
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {

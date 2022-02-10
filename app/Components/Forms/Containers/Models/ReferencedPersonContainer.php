@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
@@ -17,6 +19,7 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Persons\ModifiabilityResolver;
+use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\BadRequestException;
@@ -120,13 +123,14 @@ class ReferencedPersonContainer extends ReferencedContainer
                                     $control->getValue()
                                 );
                                 if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                    $this->getReferencedId()->setValue($foundPerson, ReferencedId::MODE_FORCE);
+                                    $this->getReferencedId()->setValue($foundPerson, (bool)ReferencedId::MODE_FORCE);
                                     return false;
                                 }
                                 return true;
                             },
                             _(
-                                'There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'
+                                'There is (formally) different person with email %value. 
+                                Probably it is a duplicate so it substituted original data in the form.'
                             )
                         );
                 }
@@ -204,7 +208,7 @@ class ReferencedPersonContainer extends ReferencedContainer
                     } else {
                         $component->setDefaultValue($value);
                     }
-                    if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                    if ($realValue && $resolution == ReferencedHandler::RESOLUTION_EXCEPTION) {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
@@ -264,7 +268,8 @@ class ReferencedPersonContainer extends ReferencedContainer
                     if ($value) {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
-                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
+                        if ($fieldName == 'agreed') {
+                            // NOTE: this may need refactoring when more customization requirements occurre
                             $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                         } else {
                             $conditioned->addRule(Form::FILLED, _('Field %label is required.'));

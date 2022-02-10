@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
+use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
+use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -59,7 +59,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             $data['end'] = '2016-01-01';
         }
         $event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($data);
-        $this->getContainer()->getByType(ServiceFyziklaniGameSetup::class)->createNewModel([
+        $this->getContainer()->getByType(GameSetupService::class)->createNewModel([
             'event_id' => $event->event_id,
             'game_start' => new \DateTime('2016-01-01T10:00:00'),
             'game_end' => new \DateTime('2016-01-01T10:00:00'),
@@ -73,7 +73,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         return $event;
     }
 
-    protected function createTeam(array $data): ModelFyziklaniTeam
+    protected function createTeam(array $data): TeamModel
     {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
@@ -90,10 +90,10 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['room'])) {
             $data['room'] = '101';
         }
-        return $this->getContainer()->getByType(ServiceFyziklaniTeam::class)->createNewModel($data);
+        return $this->getContainer()->getByType(TeamService::class)->createNewModel($data);
     }
 
-    protected function createTask(array $data): ModelFyziklaniTask
+    protected function createTask(array $data): TaskModel
     {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
@@ -101,11 +101,11 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['name'])) {
             $data['name'] = 'Dummy úloha';
         }
-        return $this->getContainer()->getByType(ServiceFyziklaniTask::class)->createNewModel($data);
+        return $this->getContainer()->getByType(TaskService::class)->createNewModel($data);
     }
 
-    protected function createSubmit(array $data): ModelFyziklaniSubmit
+    protected function createSubmit(array $data): SubmitModel
     {
-        return $this->getContainer()->getByType(ServiceFyziklaniSubmit::class)->createNewModel($data);
+        return $this->getContainer()->getByType(SubmitService::class)->createNewModel($data);
     }
 }

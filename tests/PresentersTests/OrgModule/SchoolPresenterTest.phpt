@@ -7,7 +7,6 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\EntityForms\SchoolFormComponent;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceOrg;

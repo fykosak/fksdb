@@ -17,7 +17,6 @@ import StatisticsComponent
 import PointsEntryComponent from './Components/Controls/Fyziklani/Submit/PointsEntryComponent';
 import TimelineComponent from './Components/Controls/Stalking/Timeline/TimelineComponent';
 import { eventSchedule } from './Components/Forms/Controls/Schedule/ScheduleField';
-import Attendance from './Models/FrontEnd/apps/events/attendance/Index';
 import Renderer from 'vendor/fykosak/nette-frontend-component/src/Loader/Renderer';
 import * as React from 'react';
 
@@ -54,7 +53,6 @@ renderer.hashMapLoader.registerDataComponent('chart.events.teams.geo', TeamsGeoC
 renderer.hashMapLoader.registerDataComponent('chart.events.teams.time-progress', CommonChart, {accessKey: 'teams'});
 renderer.hashMapLoader.registerDataComponent('chart.events.application-ratio.geo', ApplicationRationGeoChart);
 
-renderer.hashMapLoader.registerComponent('attendance.qr-code', Attendance);
 renderer.hashMapLoader.registerDataComponent('event.model.graph', EventModelComponent);
 
 

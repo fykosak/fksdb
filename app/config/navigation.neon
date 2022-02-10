@@ -68,20 +68,19 @@ navigation:
             Fyziklani.Submit.create: []
             Fyziklani.Submit.list: []
             Fyziklani.Close.list: []
-            Fyziklani.Results.list: []
             Fyziklani.Diplomas.default: []
+            Fyziklani.Diplomas.results: []
             Fyziklani.Task.list: []
-            Fyziklani.Task.import: []
             Fyziklani.GameSetup.default: []
             Fyziklani.Seating.list: []
-        Fyziklani.Results.default:
-            Fyziklani.Dashboard.default: []
-            Fyziklani.Diplomas.results: []
-            Fyziklani.Results.presentation: []
-            Fyziklani.Results.table: []
-            Fyziklani.Results.teamStatistics: []
-            Fyziklani.Results.taskStatistics: []
-            Fyziklani.Results.correlationStatistics: []
+            Fyziklani.Presentation.default: []
+
+        Fyziklani.Statistics.table:
+            Fyziklani.Statistics.task: []
+            Fyziklani.Statistics.team: []
+            Fyziklani.Statistics.correlation: []
+            Fyziklani.Statistics.table: []
+
         Event.Dashboard.default:
             Event.TeamApplication.list: []
             Event.Application.list: []

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -9,7 +11,8 @@ use Nette\InvalidStateException;
 /**
  * Detailed results of a single series. Number of tasks is dynamic.
  */
-class DetailResultsModel extends AbstractResultsModel {
+class DetailResultsModel extends AbstractResultsModel
+{
 
     protected int $series;
     /** Cache */
@@ -18,7 +21,8 @@ class DetailResultsModel extends AbstractResultsModel {
     /**
      * Definition of header.
      */
-    public function getDataColumns(ModelCategory $category): array {
+    public function getDataColumns(ModelCategory $category): array
+    {
         if (!isset($this->dataColumns[$category->id])) {
             $dataColumns = [];
             $sum = 0;
@@ -42,14 +46,16 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    public function getSeries(): int {
+    public function getSeries(): int
+    {
         return $this->series;
     }
 
     /**
      * @param int $series
      */
-    public function setSeries($series): void {
+    public function setSeries($series): void
+    {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -58,17 +64,20 @@ class DetailResultsModel extends AbstractResultsModel {
     /**
      * @return ModelCategory[]
      */
-    public function getCategories(): array {
+    public function getCategories(): array
+    {
         return $this->evaluationStrategy->getCategories();
     }
 
-    protected function composeQuery(ModelCategory $category): string {
+    protected function composeQuery(ModelCategory $category): string
+    {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
 
         $select = [];
-        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" . self::DATA_NAME . '`';
+        $select[] = "IF(p.display_name IS NULL, CONCAT(p.other_name, ' ', p.family_name), p.display_name) AS `" .
+            self::DATA_NAME . '`';
         $select[] = 'sch.name_abbrev AS `' . self::DATA_SCHOOL . '`';
 
         $tasks = $this->getTasks($this->series);
@@ -76,7 +85,8 @@ class DetailResultsModel extends AbstractResultsModel {
         /** @var ModelTask $task */
         foreach ($tasks as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
-            $select[] = 'round(MAX(IF(t.task_id = ' . $task->task_id . ', ' . $points . ", null))) AS '" . self::DATA_PREFIX . $i . "'";
+            $select[] = 'round(MAX(IF(t.task_id = ' . $task->task_id . ', ' . $points . ", null))) AS '" .
+                self::DATA_PREFIX . $i . "'";
             $i += 1;
         }
         $sum = $this->evaluationStrategy->getSumColumn();
@@ -105,8 +115,9 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
         $query .= ' order by `' . self::ALIAS_SUM . '` DESC, p.family_name ASC, p.other_name ASC';
 
         $dataAlias = 'data';
-        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM . " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' . self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
+        return "select $dataAlias.*, @rownum := @rownum + 1, @rank := IF($dataAlias." . self::ALIAS_SUM .
+            " = @prevSum or ($dataAlias." . self::ALIAS_SUM . ' is null and @prevSum is null), @rank, @rownum) AS `' .
+            self::DATA_RANK_FROM . "`, @prevSum := $dataAlias." . self::ALIAS_SUM . "
         from ($query) data, (select @rownum := 0, @rank := 0, @prevSum := -1) init";
     }
-
 }

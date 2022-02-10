@@ -1,32 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Fyziklani\Ranking;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\Database\Table\GroupedSelection;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
 class RankingStrategy
 {
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    use SmartObject;
+
+    private TeamService $teamService;
     private ModelEvent $event;
 
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam)
+    public function __construct(ModelEvent $event, TeamService $teamService)
     {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->teamService = $teamService;
         $this->event = $event;
     }
 
     /**
      * @throws NotClosedTeamException
-     * @internal
      */
     public function close(?string $category = null): Html
     {
-        $connection = $this->serviceFyziklaniTeam->explorer->getConnection();
+        $connection = $this->teamService->explorer->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
         $teamsData = $this->getTeamsStats($teams);
@@ -36,24 +40,16 @@ class RankingStrategy
         return $log;
     }
 
-    /**
-     * @throws NotClosedTeamException
-     */
-    public function __invoke(?string $category = null): Html
-    {
-        return $this->close($category);
-    }
-
     private function saveResults(array $data, bool $total): Html
     {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
-            /** @var ModelFyziklaniTeam $team */
+            /** @var TeamModel $team */
             $team = $teamData['team'];
             if ($total) {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_total' => $index + 1]);
+                $this->teamService->updateModel($team, ['rank_total' => $index + 1]);
             } else {
-                $this->serviceFyziklaniTeam->updateModel($team, ['rank_category' => $index + 1]);
+                $this->teamService->updateModel($team, ['rank_category' => $index + 1]);
             }
             $log->addHtml(
                 Html::el('li')
@@ -75,7 +71,7 @@ class RankingStrategy
     {
         $teamsData = [];
         foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $team = TeamModel::createFromActiveRow($row);
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -120,13 +116,13 @@ class RankingStrategy
     /**
      * @return array[]|int[]
      */
-    protected function getAllSubmits(ModelFyziklaniTeam $team): array
+    protected function getAllSubmits(TeamModel $team): array
     {
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
         foreach ($team->getAllSubmits() as $row) {
-            $submit = ModelFyziklaniSubmit::createFromActiveRow($row);
+            $submit = SubmitModel::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

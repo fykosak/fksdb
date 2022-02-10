@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 
-class TasksFromXML extends Stage {
+class TasksFromXML extends Stage
+{
 
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
@@ -22,23 +25,28 @@ class TasksFromXML extends Stage {
 
     private ServiceTask $taskService;
 
-    public function __construct(ServiceTask $taskService) {
+    public function __construct(ServiceTask $taskService)
+    {
         $this->taskService = $taskService;
     }
 
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void {
+    public function setInput($data): void
+    {
         $this->data = $data;
     }
 
-    public function process(): void {
+    public function process(): void
+    {
         $xml = $this->data->getData();
         $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
-            throw new PipelineException(sprintf(_('Imported (%s) and set (%s) series does not match.'), $sImported, $sSet));
+            throw new PipelineException(
+                sprintf(_('Imported (%s) and set (%s) series does not match.'), $sImported, $sSet)
+            );
         }
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {
@@ -46,11 +54,13 @@ class TasksFromXML extends Stage {
         }
     }
 
-    public function getOutput(): SeriesData {
+    public function getOutput(): SeriesData
+    {
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void {
+    private function processTask(\SimpleXMLElement $XMLTask): void
+    {
         $series = $this->data->getSeries();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -69,7 +79,10 @@ class TasksFromXML extends Stage {
                 $csvalue = null;
 
                 if (count($elements) == 1) {
-                    if (count($elements[0]->attributes(self::XML_NAMESPACE)) == 0 || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs') {
+                    if (
+                        count($elements[0]->attributes(self::XML_NAMESPACE)) == 0
+                        || $elements[0]->attributes(self::XML_NAMESPACE)->lang == 'cs'
+                    ) {
                         $csvalue = (string)$elements[0];
                     }
                 }
@@ -93,17 +106,18 @@ class TasksFromXML extends Stage {
         $task = $this->taskService->findBySeries($this->data->getContestYear(), $series, $tasknr);
 
         if ($task == null) {
-            $task = $this->taskService->createNewModel(array_merge($data, [
-                'contest_id' => $this->data->getContestYear()->contest_id,
-                'year' => $this->data->getContestYear()->year,
-                'series' => $series,
-                'tasknr' => $tasknr,
-            ]));
+            $task = $this->taskService->createNewModel(
+                array_merge($data, [
+                    'contest_id' => $this->data->getContestYear()->contest_id,
+                    'year' => $this->data->getContestYear()->year,
+                    'series' => $series,
+                    'tasknr' => $tasknr,
+                ])
+            );
         } else {
             $this->taskService->updateModel($task, $data);
         }
         // forward it to pipeline
         $this->data->addTask($tasknr, $task);
     }
-
 }

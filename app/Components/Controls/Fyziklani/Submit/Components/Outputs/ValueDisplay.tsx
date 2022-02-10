@@ -28,10 +28,10 @@ export default class ValueDisplay extends React.Component<OwnProps> {
 
         return (
             <>
-                <h3 className={'fyziklani-headline-color'}>{translator.getText('Team')}</h3>
+                <h3>{translator.getText('Team')}</h3>
                 {team ? (<span className="text-success">{team.name}</span>) : (
                     <span className="text-danger">{translator.getText('Invalid team')}</span>)}
-                <h3 className={'fyziklani-headline-color'}>{translator.getText('Task')}</h3>
+                <h3>{translator.getText('Task')}</h3>
                 {task ? (<span className="text-success">{task.name}</span>) : (
                     <span className="text-danger">{translator.getText('Invalid task')}</span>)}
             </>

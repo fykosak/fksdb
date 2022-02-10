@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
 
 class ClosedSubmittingException extends BadRequestException
 {
-    public function __construct(ModelFyziklaniTeam $team, ?\Throwable $previous = null)
+    public function __construct(TeamModel $team, ?\Throwable $previous = null)
     {
         parent::__construct(
             sprintf(_('Team %s has closed submitting.'), $team->name),

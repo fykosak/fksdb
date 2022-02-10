@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
 use FKSDB\Models\ORM\Models\ModelTask;
@@ -59,5 +61,4 @@ class EvaluationNullObject implements EvaluationStrategy
     {
         throw new NotImplementedException();
     }
-
 }

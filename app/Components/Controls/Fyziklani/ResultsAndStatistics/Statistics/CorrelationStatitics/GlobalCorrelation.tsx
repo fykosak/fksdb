@@ -1,15 +1,15 @@
 import { translator } from '@translator/translator';
 import { scaleLinear } from 'd3-scale';
-import { Submits } from 'FKSDB/Models/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { Submits } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTask';
 import { ModelFyziklaniTeam } from 'FKSDB/Models/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { setFirstTeamId, setSecondTeamId } from '../actions';
+import { setNewState } from '../actions';
 import { calculateCorrelation, getTimeLabel } from '../Middleware/correlation';
 import { calculateSubmitsForTeams } from '../Middleware/submitsForTeams';
-import { Store as StatisticsStore } from '../Reducers';
+import { FyziklaniStatisticStore } from '../Reducers';
 
 interface StateProps {
     submits: Submits;
@@ -51,7 +51,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
                     <td>{countFiltered}</td>
                     <td>{countTotal}</td>
                     <td>
-                        <span className={'btn btn-outline-primary btn-sm'} onClick={() => {
+                        <span className="btn btn-outline-primary btn-sm" onClick={() => {
                             this.props.onChangeFirstTeam(firstTeam.teamId);
                             this.props.onChangeSecondTeam(secondTeam.teamId);
                         }}>Detail</span>
@@ -60,7 +60,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
 
             });
         });
-        return <table className={'table table-striped table-sm'}>
+        return <table className="table table-striped table-sm">
             <thead>
             <tr>
                 <th>{translator.getText('First team')}</th>
@@ -75,7 +75,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: StatisticsStore): StateProps => {
+const mapStateToProps = (state: FyziklaniStatisticStore): StateProps => {
     return {
         firstTeamId: state.statistics.firstTeamId,
         secondTeamId: state.statistics.secondTeamId,
@@ -87,8 +87,8 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onChangeFirstTeam: (teamId) => dispatch(setFirstTeamId(+teamId)),
-        onChangeSecondTeam: (teamId) => dispatch(setSecondTeamId(+teamId)),
+        onChangeFirstTeam: (teamId) => dispatch(setNewState({firstTeamId: +teamId})),
+        onChangeSecondTeam: (teamId) => dispatch(setNewState({secondTeamId: +teamId})),
     };
 };
 

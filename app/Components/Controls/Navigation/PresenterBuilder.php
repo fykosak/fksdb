@@ -22,7 +22,8 @@ class PresenterBuilder
 
     /**
      * Provides an instance of a presenter prepared for calling action*, render*, etc. methods.
-     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
+     * @param bool $newInstance when false all instances of the same class
+     * will be the same and only initilization methods are called
      * @throws BadRequestException
      */
     public function preparePresenter(

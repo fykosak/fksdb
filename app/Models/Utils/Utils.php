@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Utils;
 
-class Utils {
-
-    public static function toRoman(int $arabic): string {
+class Utils
+{
+    public static function toRoman(int $arabic): string
+    {
         switch ($arabic) {
             case 1:
                 return 'I';
@@ -90,7 +93,8 @@ class Utils {
      *
      * @param mixed $object
      */
-    public static function getFingerprint($object): string {
+    public static function getFingerprint($object): string
+    {
         if (is_iterable($object)) {
             $raw = '';
             foreach ($object as $item) {
@@ -113,7 +117,8 @@ class Utils {
      *
      * @param mixed $object
      */
-    public static function getRepresentation($object): string {
+    public static function getRepresentation($object): string
+    {
         if (is_iterable($object)) {
             $items = [];
             foreach ($object as $key => $item) {
@@ -134,7 +139,8 @@ class Utils {
     /**
      * Tranform an address in order only the owner could recongize it.
      */
-    public static function cryptEmail(string $email): string {
+    public static function cryptEmail(string $email): string
+    {
         [$user, $host] = preg_split('/@/', $email);
         if (strlen($user) < 3) {
             return "@$host";
@@ -150,7 +156,8 @@ class Utils {
      *
      * @see http://www.w3.org/TR/REC-xml/#NT-NameChar
      */
-    public static function xmlName(string $string, string $prefix = '_'): string {
+    public static function xmlName(string $string, string $prefix = '_'): string
+    {
         if (preg_match('/^[0-9\.-]/', $string)) {
             $string = $prefix . $string;
         }

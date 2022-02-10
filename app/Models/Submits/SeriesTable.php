@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\{ModelContestant, ModelContestYear, ModelSubmit};
-use FKSDB\Models\ORM\Services\{ServiceContestant, ServiceSubmit, ServiceTask};
+use FKSDB\Models\ORM\Models\{
+    ModelContestant,
+    ModelContestYear,
+    ModelSubmit,
+};
+use FKSDB\Models\ORM\Services\{
+    ServiceContestant,
+    ServiceSubmit,
+    ServiceTask,
+};
 use Fykosak\NetteORM\TypedTableSelection;
 
 /**

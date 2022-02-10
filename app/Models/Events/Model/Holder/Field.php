@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Models\Events\Model\Holder;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
@@ -125,7 +127,7 @@ class Field
 
     public function isModifiable(): bool
     {
-        return $this->getBaseHolder()->isModifiable() && (bool)$this->evaluator->evaluate($this->modifiable, $this);
+        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
 
     /** @param bool|callable $modifiable */

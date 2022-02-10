@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -32,6 +33,19 @@ class PaymentColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         throw new AbstractColumnException();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function prerenderOriginalModel(AbstractModel $originalModel): ?Html
+    {
+        if ($originalModel instanceof ModelPersonSchedule && !$originalModel->getScheduleItem()->isPayable()) {
+            return Html::el('span')
+                ->addAttributes(['class' => 'badge bg-info'])
+                ->addText(_('Not payable'));
+        }
+        return null;
     }
 
     /**

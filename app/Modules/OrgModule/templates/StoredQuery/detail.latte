@@ -1,3 +1,5 @@
+{varType FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery $model}
+{varType FKSDB\Modules\Core\BasePresenter $presenter}
 {block content}
     <hr/>
     {control valuePrinter:row 'stored_query.description', $model,1024}
@@ -25,7 +27,7 @@
     {/if}
 
     <h3>{_'SQL'}</h3>
-      {control valuePrinter:onlyValue 'stored_query.sql', $model,1024}
+    {control valuePrinter:onlyValue 'stored_query.sql', $model,1024}
     <hr/>
     <div class="btn-group">
         <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
