@@ -305,7 +305,7 @@ class TableMerger
                 [$table, $refColumn] = $this->explorer->getConventions()->getBelongsToReference($this->table, $column);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $this->referencedTables[$column] = null;
             }
         }
