@@ -9,6 +9,7 @@ use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Machine\Machine;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\Utils\Logging\Message;
+use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
@@ -33,7 +34,7 @@ class TransitionButtonsComponent extends BaseComponent
     }
 
     /**
-     * @throws \Throwable
+     * @throws AbortException
      */
     public function handleTransition(string $name): void
     {
@@ -42,7 +43,7 @@ class TransitionButtonsComponent extends BaseComponent
         } catch (ForbiddenRequestException | UnavailableTransitionsException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return;
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             Debugger::log($exception);
             $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }

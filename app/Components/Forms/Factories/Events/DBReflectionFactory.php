@@ -49,7 +49,7 @@ class DBReflectionFactory extends AbstractFactory
             if ($tableName) {
                 $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
             }
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
         }
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];

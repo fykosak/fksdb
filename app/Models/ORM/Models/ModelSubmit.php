@@ -52,13 +52,15 @@ class ModelSubmit extends AbstractModel implements Resource
 
     public function getFingerprint(): string
     {
-        return md5(implode(':', [
-            $this->submit_id,
-            $this->submitted_on,
-            $this->source,
-            $this->note,
-            $this->raw_points,
-        ]));
+        return md5(
+            implode(':', [
+                $this->submit_id,
+                $this->submitted_on,
+                $this->source,
+                $this->note,
+                $this->raw_points,
+            ])
+        );
     }
 
     public function canRevoke(): bool
@@ -74,10 +76,6 @@ class ModelSubmit extends AbstractModel implements Resource
 
     public function isQuiz(): bool
     {
-        if ($this->source === self::SOURCE_QUIZ) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->source === self::SOURCE_QUIZ;
     }
 }

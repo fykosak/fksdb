@@ -16,9 +16,6 @@ use FKSDB\Models\ORM\Services\{
 };
 use Fykosak\NetteORM\TypedTableSelection;
 
-/**
- * @todo Prominent example for necessity of caching.
- */
 class SeriesTable
 {
 
@@ -28,15 +25,15 @@ class SeriesTable
     private ServiceContestant $serviceContestant;
     private ServiceTask $serviceTask;
     private ServiceSubmit $serviceSubmit;
-    private ModelContestYear $contestYear;
 
-    private int $series;
+    public ModelContestYear $contestYear;
+    public int $series;
 
     /**
      *
      * @var null|array of int IDs of allowed tasks or null for unrestricted
      */
-    private ?array $taskFilter = null;
+    public ?array $taskFilter = null;
 
     public function __construct(
         ServiceContestant $serviceContestant,
@@ -46,36 +43,6 @@ class SeriesTable
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
         $this->serviceSubmit = $serviceSubmit;
-    }
-
-    public function setContestYear(ModelContestYear $contestYear): void
-    {
-        $this->contestYear = $contestYear;
-    }
-
-    public function getContestYear(): ModelContestYear
-    {
-        return $this->contestYear;
-    }
-
-    public function getSeries(): int
-    {
-        return $this->series;
-    }
-
-    public function setSeries(int $series): void
-    {
-        $this->series = $series;
-    }
-
-    public function getTaskFilter(): ?array
-    {
-        return $this->taskFilter;
-    }
-
-    public function setTaskFilter(?array $taskFilter): void
-    {
-        $this->taskFilter = $taskFilter;
     }
 
     public function getContestants(): TypedTableSelection
@@ -94,8 +61,8 @@ class SeriesTable
             'series' => $this->series,
         ]);
 
-        if ($this->getTaskFilter() !== null) {
-            $tasks->where('task_id', $this->getTaskFilter());
+        if (!isset($this->taskFilter)) {
+            $tasks->where('task_id', $this->taskFilter);
         }
         return $tasks->order('tasknr');
     }

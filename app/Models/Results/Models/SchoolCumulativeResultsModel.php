@@ -84,9 +84,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @param array $series
+     * @param int[] $series
      */
-    public function setSeries($series): void
+    public function setSeries(array $series): void
     {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
