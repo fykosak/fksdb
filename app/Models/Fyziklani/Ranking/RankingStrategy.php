@@ -97,7 +97,7 @@ class RankingStrategy
                 if ($a['submits']['count'] && $b['submits']['count']) {
                     $qa = $a['submits']['sum'] / $a['submits']['count'];
                     $qb = $b['submits']['sum'] / $b['submits']['count'];
-                    return $qa - $qb;
+                    return (int)($qa - $qb);
                 }
                 return 0;
             }

@@ -67,7 +67,7 @@ class PointsPresenter extends BasePresenter
 
     public function actionEntry(): void
     {
-        $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
+        $this->seriesTable->taskFilter = $this->all ? null : $this->getGradedTasks();
     }
 
     private function getGradedTasks(): array
@@ -104,7 +104,7 @@ class PointsPresenter extends BasePresenter
         try {
             $this->resultsCache->invalidate($this->getSelectedContestYear());
             $this->flashMessage(_('Points invalidated.'), Message::LVL_INFO);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->flashMessage(_('Error during invalidation.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
@@ -140,7 +140,7 @@ class PointsPresenter extends BasePresenter
         try {
             $this->resultsCache->calculateQuizPoints($this->getSelectedContestYear(), $this->getSelectedSeries());
             $this->flashMessage(_('Calculate quiz points.'), Message::LVL_INFO);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $this->flashMessage(_('Error during calculation.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
@@ -149,8 +149,8 @@ class PointsPresenter extends BasePresenter
     protected function startup(): void
     {
         parent::startup();
-        $this->seriesTable->setContestYear($this->getSelectedContestYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
+        $this->seriesTable->contestYear = $this->getSelectedContestYear();
+        $this->seriesTable->series = $this->getSelectedSeries();
     }
 
     protected function createComponentPointsForm(): PointsFormComponent

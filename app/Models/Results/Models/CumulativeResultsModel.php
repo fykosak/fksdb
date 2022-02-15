@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
+use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
@@ -37,6 +38,7 @@ class CumulativeResultsModel extends AbstractResultsModel
 
             foreach ($this->getSeries() as $series) {
                 $points = null;
+                /** @var ModelTask $task */
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
@@ -73,9 +75,9 @@ class CumulativeResultsModel extends AbstractResultsModel
     }
 
     /**
-     * @param array $series
+     * @param int[] $series
      */
-    public function setSeries($series): void
+    public function setSeries(array $series): void
     {
         $this->series = $series;
         // invalidate cache of columns

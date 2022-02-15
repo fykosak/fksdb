@@ -89,7 +89,7 @@ class BrojureResultsModel extends AbstractResultsModel
     /**
      * @param int[] $series
      */
-    public function setSeries($series): void
+    public function setSeries(array $series): void
     {
         $this->series = $series;
         // invalidate cache of columns

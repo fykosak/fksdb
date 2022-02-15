@@ -51,7 +51,7 @@ class MassTransitionsComponent extends BaseComponent
             $total++;
             try {
                 $handler->onlyExecute($holder, $name);
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $errored++;
             }
         }

@@ -15,8 +15,8 @@ class ParticipantsDurationTest extends PersonTest
 {
 
     private const CONTESTS = [
-        ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
-        ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
+        ModelContest::ID_FYKOS => ['thresholds' => [5, 6]],
+        ModelContest::ID_VYFUK => ['thresholds' => [5, 6]],
     ];
 
     public function __construct()

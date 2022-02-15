@@ -83,8 +83,8 @@ class TasksPresenter extends BasePresenter
     protected function startup(): void
     {
         parent::startup();
-        $this->seriesTable->setContestYear($this->getSelectedContestYear());
-        $this->seriesTable->setSeries($this->getSelectedSeries());
+        $this->seriesTable->contestYear = $this->getSelectedContestYear();
+        $this->seriesTable->series = $this->getSelectedSeries();
     }
 
 

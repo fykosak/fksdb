@@ -23,13 +23,13 @@ class BornNumber
         }
         // "be liberal in what you receive"
         try {
-            [$year, $month, $day, $ext, $c] = self::parseBornNumber($rc);
+            [$year, $month, $day, $ext, $controlNumber] = self::parseBornNumber($rc);
         } catch (OutOfRangeException $exception) {
             return false;
         }
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
-        if ($c === '') {
+        if (is_null($controlNumber)) {
             return $year < 54;
         }
 
@@ -38,7 +38,7 @@ class BornNumber
         if ($mod === 10) {
             $mod = 0;
         }
-        if ($mod !== (int)$c) {
+        if ($mod !== $controlNumber) {
             return false;
         }
 
@@ -61,7 +61,7 @@ class BornNumber
             return false;
         }
 
-        $normalized = "$originalYear$originalMonth$originalDay/$ext$c";
+        $normalized = "$originalYear$originalMonth$originalDay/$ext$controlNumber";
         $control->setValue($normalized);
 
         // cislo je OK
@@ -69,7 +69,7 @@ class BornNumber
     }
 
     /**
-     * @return array [year,month,day,extension,control]
+     * @return int[]|null[] [year,month,day,extension,control]
      * @throws OutOfRangeException
      */
     private static function parseBornNumber(string $bornNumber): array
@@ -78,8 +78,8 @@ class BornNumber
             throw new OutOfRangeException('Born number not match');
         }
 
-        [, $year, $month, $day, $ext, $c] = $matches;
-        return [$year, $month, $day, $ext, $c];
+        [, $year, $month, $day, $ext, $control] = $matches;
+        return [+$year, +$month, +$day, +$ext, ($control === '') ? null : $control];
     }
 
     /**
@@ -90,13 +90,9 @@ class BornNumber
         [, $month, , , $control] = self::parseBornNumber($bornNumber);
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
-        if ($control === '') {
+        if (is_null($control)) {
             throw new OutOfRangeException('Born number before 1954');
         }
-        if ($month > 50) {
-            return 'F';
-        } else {
-            return 'M';
-        }
+        return $month > 50 ? 'F' : 'M';
     }
 }

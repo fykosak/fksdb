@@ -79,19 +79,6 @@ abstract class AbstractResultsModel
         return $result;
     }
 
-    /**
-     * Unused?
-     */
-    public function getMetaColumns(): array
-    {
-        return [
-            self::DATA_NAME,
-            self::DATA_SCHOOL,
-            self::DATA_RANK_FROM,
-            self::DATA_RANK_TO,
-        ];
-    }
-
     abstract protected function composeQuery(ModelCategory $category): string;
 
     /**
@@ -142,18 +129,6 @@ abstract class AbstractResultsModel
      * @return ModelCategory[]
      */
     abstract public function getCategories(): array;
-
-    /**
-     * Single series number or array of them.
-     * @param int[]|int $series
-     * TODO int[] OR int
-     */
-    abstract public function setSeries($series): void;
-
-    /**
-     * @return int[]|int (see setSeries)
-     */
-    abstract public function getSeries();
 
     abstract public function getDataColumns(ModelCategory $category): array;
 }

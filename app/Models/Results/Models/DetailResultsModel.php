@@ -51,10 +51,7 @@ class DetailResultsModel extends AbstractResultsModel
         return $this->series;
     }
 
-    /**
-     * @param int $series
-     */
-    public function setSeries($series): void
+    public function setSeries(int $series): void
     {
         $this->series = $series;
         // invalidate cache of columns

@@ -57,7 +57,7 @@ class ResultsWebModel extends WebModel
 
             $series = explode(' ', $args->detail);
             foreach ($series as $seriesSingle) {
-                $resultsModel->setSeries($seriesSingle);
+                $resultsModel->setSeries(+$seriesSingle);
                 $resultsNode->appendChild($this->createDetailNode($resultsModel, $doc));
             }
         }

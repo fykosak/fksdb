@@ -52,7 +52,7 @@ class HandoutFormComponent extends BaseComponent
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->seriesTable->getContestYear()->getContest());
+        $orgProvider->filterOrgs($this->seriesTable->contestYear->getContest());
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
@@ -72,9 +72,7 @@ class HandoutFormComponent extends BaseComponent
     public function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-
         $connection = $this->serviceTaskContribution->explorer->getConnection();
-
         $connection->beginTransaction();
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
