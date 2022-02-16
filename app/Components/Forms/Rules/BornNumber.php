@@ -7,6 +7,7 @@ namespace FKSDB\Components\Forms\Rules;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
+use Tracy\Debugger;
 
 /**
  * @author David Grudl
@@ -27,18 +28,18 @@ class BornNumber
         } catch (OutOfRangeException $exception) {
             return false;
         }
-
+        Debugger::barDump([$year, $month, $day, $ext, $controlNumber]);
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if (is_null($controlNumber)) {
             return $year < 54;
         }
 
         // kontrolní číslice
-        $mod = ($year . $month . $day . $ext) % 11;
+        $mod = (intval($year) . intval($month) . intval($day) . intval($ext)) % 11;
         if ($mod === 10) {
             $mod = 0;
         }
-        if ($mod !== $controlNumber) {
+        if ($mod !== intval($controlNumber)) {
             return false;
         }
 
@@ -57,7 +58,7 @@ class BornNumber
             $month -= 20;
         }
 
-        if (!checkdate($month, $day, $year)) {
+        if (!checkdate(intval($month), intval($day), intval($year))) {
             return false;
         }
 
@@ -78,7 +79,7 @@ class BornNumber
         }
 
         [, $year, $month, $day, $ext, $control] = $matches;
-        return [+$year, +$month, +$day, +$ext, ($control === '') ? null : +$control];
+        return [$year, $month, $day, $ext, ($control === '') ? null : $control];
     }
 
     /**
