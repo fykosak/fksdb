@@ -7,7 +7,6 @@ namespace FKSDB\Components\Forms\Rules;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
-use Tracy\Debugger;
 
 /**
  * @author David Grudl
@@ -28,18 +27,17 @@ class BornNumber
         } catch (OutOfRangeException $exception) {
             return false;
         }
-        Debugger::barDump([$year, $month, $day, $ext, $controlNumber]);
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if (is_null($controlNumber)) {
             return $year < 54;
         }
 
         // kontrolní číslice
-        $mod = (intval($year) . intval($month) . intval($day) . intval($ext)) % 11;
+        $mod = (+$year . +$month . +$day . +$ext) % 11;
         if ($mod === 10) {
             $mod = 0;
         }
-        if ($mod !== intval($controlNumber)) {
+        if ($mod !== +$controlNumber) {
             return false;
         }
 
@@ -58,7 +56,7 @@ class BornNumber
             $month -= 20;
         }
 
-        if (!checkdate(intval($month), intval($day), intval($year))) {
+        if (!checkdate(+$month, +$day, +$year)) {
             return false;
         }
 
@@ -93,6 +91,6 @@ class BornNumber
         if (is_null($control)) {
             throw new OutOfRangeException('Born number before 1954');
         }
-        return $month > 50 ? 'F' : 'M';
+        return +$month > 50 ? 'F' : 'M';
     }
 }
