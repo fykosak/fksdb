@@ -63,7 +63,6 @@ class BornNumber
 
         $normalized = "$originalYear$originalMonth$originalDay/$ext$controlNumber";
         $control->setValue($normalized);
-
         // cislo je OK
         return true;
     }
@@ -79,7 +78,7 @@ class BornNumber
         }
 
         [, $year, $month, $day, $ext, $control] = $matches;
-        return [+$year, +$month, +$day, +$ext, ($control === '') ? null : $control];
+        return [+$year, +$month, +$day, +$ext, ($control === '') ? null : +$control];
     }
 
     /**
