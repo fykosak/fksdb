@@ -33,7 +33,7 @@ class BornNumber
         }
 
         // kontrolní číslice
-        $mod = (+$year . +$month . +$day . +$ext) % 11;
+        $mod = +($year . $month . $day . $ext) % 11;
         if ($mod === 10) {
             $mod = 0;
         }
