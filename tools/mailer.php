@@ -25,7 +25,7 @@ $mailer = $container->getByType(Mailer::class);
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
 $serviceUnsubscribedEmail = $container->getByType(ServiceUnsubscribedEmail::class);
 $argv = $_SERVER['argv'];
-$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $container->getParameters()['spamMailer']['defaultLimit']);
+$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?(int)$argv[1]:(int) $container->getParameters()['spamMailer']['defaultLimit']);
 $counter = 0;
 /** @var ModelEmailMessage $model */
 foreach ($query as $model) {
