@@ -8,7 +8,8 @@ use FKSDB\Components\Forms\Factories\Events\OptionsProvider;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
@@ -74,16 +75,8 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     public function getOptions(Field $field): array
     {
         $results = [];
-        foreach (
-            [
-                TeamModel::CATEGORY_HIGH_SCHOOL_A,
-                TeamModel::CATEGORY_HIGH_SCHOOL_B,
-                TeamModel::CATEGORY_HIGH_SCHOOL_C,
-                TeamModel::CATEGORY_ABROAD,
-                TeamModel::CATEGORY_OPEN,
-            ] as $category
-        ) {
-            $results[$category] = TeamModel::mapCategoryToName($category);
+        foreach (TeamCategory::cases() as $category) {
+            $results[$category->value] = $category->getName();
         }
         return $results;
     }

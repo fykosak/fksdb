@@ -6,6 +6,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
@@ -18,10 +19,9 @@ class ResultsCategoryGrid extends BaseGrid
 {
 
     private ModelEvent $event;
+    private TeamCategory $category;
 
-    private string $category;
-
-    public function __construct(ModelEvent $event, string $category, Container $container)
+    public function __construct(ModelEvent $event, TeamCategory $category, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -31,7 +31,7 @@ class ResultsCategoryGrid extends BaseGrid
     protected function getData(): IDataSource
     {
         $teams = $this->event->getParticipatingTeams()
-            ->where('category', $this->category)
+            ->where('category', $this->category->value)
             ->order('name');
         return new NDataSource($teams);
     }

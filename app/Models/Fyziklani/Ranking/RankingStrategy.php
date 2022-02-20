@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Fyziklani\Ranking;
 
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
@@ -28,7 +29,7 @@ class RankingStrategy
     /**
      * @throws NotClosedTeamException
      */
-    public function close(?string $category = null): Html
+    public function close(?TeamCategory $category = null): Html
     {
         $connection = $this->teamService->explorer->getConnection();
         $connection->beginTransaction();
@@ -44,19 +45,20 @@ class RankingStrategy
     {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
+            $rank = $index + 1;
             /** @var TeamModel $team */
             $team = $teamData['team'];
             if ($total) {
-                $this->teamService->updateModel($team, ['rank_total' => $index + 1]);
+                $this->teamService->updateModel($team, ['rank_total' => $rank]);
             } else {
-                $this->teamService->updateModel($team, ['rank_category' => $index + 1]);
+                $this->teamService->updateModel($team, ['rank_category' => $rank]);
             }
             $log->addHtml(
                 Html::el('li')
                     ->addText(
                         _('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _(
                             'Rank'
-                        ) . ': ' . ($index + 1)
+                        ) . ': ' . ($rank)
                     )
             );
         }
@@ -104,11 +106,11 @@ class RankingStrategy
         };
     }
 
-    private function getAllTeams(?string $category = null): GroupedSelection
+    private function getAllTeams(?TeamCategory $category = null): GroupedSelection
     {
         $query = $this->event->getParticipatingTeams();
         if ($category) {
-            $query->where('category', $category);
+            $query->where('category', $category->value);
         }
         return $query;
     }

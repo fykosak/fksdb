@@ -13,6 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int event_participant_id
  * @property-read int e_fyziklani_team_id
  * @property-read ActiveRow e_fyziklani_team
+ * @deprecated
  */
 class ParticipantModel extends AbstractModel
 {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
@@ -27,11 +28,11 @@ class TeamService extends OldAbstractServiceSingle
         return $teams;
     }
 
-    public function isCategoryReadyForClosing(ModelEvent $event, string $category = null): bool
+    public function isCategoryReadyForClosing(ModelEvent $event, ?TeamCategory $category = null): bool
     {
         $query = $event->getParticipatingTeams();
         if ($category) {
-            $query->where('category', $category);
+            $query->where('category', $category->value);
         }
         $query->where('points', null);
         return $query->count() == 0;

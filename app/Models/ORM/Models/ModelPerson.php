@@ -153,9 +153,19 @@ class ModelPerson extends AbstractModel implements Resource
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
+    public function getFyziklaniParticipants(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_PARTICIPANT, 'person_id');
+    }
+
     public function getEventTeachers(): GroupedSelection
     {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
+    }
+
+    public function getFyziklaniTeachers(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM);
     }
 
     public function isEventParticipant(?int $eventId = null): bool

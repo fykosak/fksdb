@@ -38,6 +38,7 @@ use Nette\Security\Resource;
  * @property-read int rank_total
  * @property-read int teacher_id
  * @property-read ActiveRow person
+ * @deprecated
  */
 class TeamModel extends AbstractModel implements Resource, NodeCreator
 {

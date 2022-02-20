@@ -82,6 +82,9 @@ class ModelEventParticipant extends AbstractModel implements Resource, NodeCreat
         return new MultiCurrencyPrice([new Price(Currency::from(Currency::CZK), $this->price)]);
     }
 
+    /**
+     * @deprecated
+     */
     public function getFyziklaniTeam(): ?TeamModel
     {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')

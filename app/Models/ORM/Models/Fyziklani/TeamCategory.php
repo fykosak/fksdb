@@ -25,6 +25,20 @@ class TeamCategory
         return $category ? new self($category) : null;
     }
 
+    /**
+     * @return self[]
+     */
+    public static function cases(): array
+    {
+        return [
+            new self(self::CATEGORY_A),
+            new self(self::CATEGORY_B),
+            new self(self::CATEGORY_C),
+            new self(self::CATEGORY_F),
+            new self(self::CATEGORY_O),
+        ];
+    }
+
     public function getName(): string
     {
         switch ($this->value) {

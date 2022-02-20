@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
@@ -21,10 +22,10 @@ class FinalResultsComponent extends BaseComponent
         $this->event = $event;
     }
 
-    public function isClosedCategory(string $category): bool
+    public function isClosedCategory(TeamCategory $category): bool
     {
         $count = $this->event->getParticipatingTeams()
-            ->where('category', $category)
+            ->where('category', $category->value)
             ->where('rank_category IS NULL')
             ->count();
         return $count === 0;
@@ -40,17 +41,17 @@ class FinalResultsComponent extends BaseComponent
 
     protected function createComponentResultsCategoryAGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, 'A', $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('A'), $this->getContext());
     }
 
     protected function createComponentResultsCategoryBGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, 'B', $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('B'), $this->getContext());
     }
 
     protected function createComponentResultsCategoryCGrid(): ResultsCategoryGrid
     {
-        return new ResultsCategoryGrid($this->event, 'C', $this->getContext());
+        return new ResultsCategoryGrid($this->event, TeamCategory::tryFrom('C'), $this->getContext());
     }
 
     protected function createComponentResultsTotalGrid(): ResultsTotalGrid
