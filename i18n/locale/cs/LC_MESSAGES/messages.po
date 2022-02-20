@@ -947,7 +947,7 @@ msgstr "Moje přihlášky"
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:59
 #: ../app/config/orm.neon.neon2php:294
 msgid "Login"
-msgstr "Přihlšovací jméno"
+msgstr "Přihlašovací jméno"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:64
 #: ../app/Models/Authentication/AccountManager.php:108
@@ -956,15 +956,15 @@ msgstr "Obnova hesla"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:75
 msgid "You were logged out."
-msgstr "Byli jste odhlášení"
+msgstr "Byli jste odhlášeni."
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:101
 msgid "You've been logged out due to inactivity."
-msgstr "Byli jste odhlášeni kvůli neaktivitě"
+msgstr "Byli jste odhlášeni kvůli neaktivitě."
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:104
 msgid "You must be logged in to continue."
-msgstr "Pro pokračování se prosím přihlašte"
+msgstr "Pro pokračování se prosím přihlašte."
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:147
 msgid "Invalid CSRF token"
