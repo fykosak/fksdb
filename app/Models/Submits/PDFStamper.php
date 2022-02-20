@@ -79,7 +79,7 @@ class PDFStamper implements StorageProcessing
         try {
             $this->stampText($stampText);
         } catch (\Throwable $exception) {
-            throw new ProcessingException('Cannot add stamp to the PDF.', null, $exception);
+            throw new ProcessingException('Cannot add stamp to the PDF.', 0, $exception);
         }
     }
 
