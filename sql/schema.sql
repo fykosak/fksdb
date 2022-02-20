@@ -805,9 +805,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_team`
     `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
     `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
         COMMENT 'Game lang',
-    INDEX `fk_e_fyziklani_team_event1_idx` (`event_id` ASC),
-    INDEX `fk_e_fyziklani_team_e_status1_idx` (`status` ASC),
-    CONSTRAINT `fk_e_fyziklani_team_event1`
+    INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    CONSTRAINT `fk_fyziklani_team__event`
         FOREIGN KEY (`event_id`)
             REFERENCES `event` (`event_id`)
             ON DELETE NO ACTION
@@ -846,14 +845,14 @@ CREATE TABLE IF NOT EXISTS `fyziklani_participant`
     `fyziklani_participant_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `person_id` INT NOT NULL,
     `fyziklani_team_id`  INT NOT NULL,
-    INDEX `fk_e_fyziklani_participant_e_fyziklani_team1_idx` (`fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_team_participant` (`person_id` ASC, `fyziklani_team_id` ASC),
-    CONSTRAINT `fk_participant_fyziklani_person`
+    INDEX `idx_fyziklani_participant__fyziklani_team` (`fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_participant__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    CONSTRAINT `fk_fyziklani_participant__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_participant_team`
+    CONSTRAINT `fk_fyziklani_participant__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
@@ -865,14 +864,14 @@ CREATE TABLE IF NOT EXISTS `fyziklani_teacher`
     `fyziklani_teacher_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `person_id` INT NOT NULL,
     `fyziklani_team_id`  INT NOT NULL,
-    INDEX `fk_e_fyziklani_teacher_fyziklani_team1_idx` (`fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_team_teacher` (`person_id` ASC, `fyziklani_team_id` ASC),
-    CONSTRAINT `fk_participant_teacher_person`
+    INDEX `idx_fyziklani_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    CONSTRAINT `fk_fyziklani_teacher__person`
         FOREIGN KEY (`person_id`)
             REFERENCES `person` (`person_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fk_fyziklani_teacher_team`
+    CONSTRAINT `fk_fyziklani_teacher__team`
         FOREIGN KEY (`fyziklani_team_id`)
             REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
