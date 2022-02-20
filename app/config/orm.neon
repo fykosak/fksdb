@@ -914,10 +914,10 @@ orm:
                     title: _('Submit opened?')
 
         fyziklani_participant:
-            service: Fykosak\Utils\Tests\DummyService
+            service: Fykosak\NetteORM\DummyService
             model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel2
         fyziklani_teacher:
-            service: Fykosak\Utils\Tests\DummyService
+            service: Fykosak\NetteORM\DummyService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeacherModel
 #schedule
         person_schedule:
