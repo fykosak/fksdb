@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
@@ -69,7 +70,7 @@ class DiplomasPresenter extends BasePresenter
     public function handleCalculate(string $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy->close($category);
+        $log = $closeStrategy->close(TeamCategory::tryFrom($category));
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
@@ -84,7 +85,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function isReadyAllToCalculate(?string $category = null): bool
     {
-        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), TeamCategory::tryFrom($category));
     }
 
     /**
