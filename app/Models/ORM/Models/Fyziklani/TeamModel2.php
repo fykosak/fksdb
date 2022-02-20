@@ -1,0 +1,189 @@
+<?php
+
+declare(strict_types=1);
+
+namespace FKSDB\Models\ORM\Models\Fyziklani;
+
+use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
+use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use Fykosak\NetteORM\AbstractModel;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\GroupedSelection;
+use Nette\Security\Resource;
+
+/**
+ * @property-read TeamCategory category
+ * @property-read string name
+ * @property-read int fyziklani_team_id
+ * @property-read int event_id
+ * @property-read int points
+ * @property-read TeamStatus status
+ * @property-read \DateTimeInterface created
+ * @property-read string phone
+ * @property-read bool force_a
+ * @property-read string password
+ * @property-read ActiveRow event
+ * @property-read string game_lang
+ * @property-read int rank_category
+ * @property-read int rank_total
+ */
+class TeamModel2 extends AbstractModel implements Resource
+{
+    public const RESOURCE_ID = 'fyziklani.team';
+
+    public function getContest(): ModelContest
+    {
+        return $this->getEvent()->getContest();
+    }
+
+    public function getTeachers(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_TEACHER);
+    }
+
+    public function getEvent(): ModelEvent
+    {
+        return ModelEvent::createFromActiveRow($this->event);
+    }
+
+    public function getParticipants(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_PARTICIPANT, 'fyziklani_team_id');
+    }
+
+//TODO
+    public function getTeamSeat(): ?TeamSeatModel
+    {
+        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
+        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
+    }
+
+    /* ******************** SUBMITS ******************************* */
+
+    public function getAllSubmits(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
+    }
+
+    public function getNonRevokedSubmits(): GroupedSelection
+    {
+        return $this->getAllSubmits()->where('points IS NOT NULL');
+    }
+
+    public function getNonCheckedSubmits(): GroupedSelection
+    {
+        return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitModel::STATE_CHECKED);
+    }
+
+    public function hasAllSubmitsChecked(): bool
+    {
+        return $this->getNonCheckedSubmits()->count() === 0;
+    }
+
+    public function hasOpenSubmitting(): bool
+    {
+        return !isset($this->points);
+    }
+
+    /**
+     * @throws AlreadyClosedException
+     * @throws NotCheckedSubmitsException
+     */
+    public function canClose(bool $throws = true): bool
+    {
+        if (!$this->hasOpenSubmitting()) {
+            if (!$throws) {
+                return false;
+            }
+            throw new AlreadyClosedException($this);
+        }
+        if (!$this->hasAllSubmitsChecked()) {
+            if (!$throws) {
+                return false;
+            }
+            throw new NotCheckedSubmitsException($this);
+        }
+        return true;
+    }
+
+    /**
+     * @return ModelPersonSchedule[]
+     */
+    public function getScheduleRest(
+        array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]
+    ): array {
+        $toPay = [];
+        foreach ($this->getPersons() as $person) {
+            $rest = $person->getScheduleRests($this->getEvent(), $types);
+            if (count($rest)) {
+                $toPay[] = $rest;
+            }
+        }
+        return $toPay;
+    }
+
+    /**
+     * @return ModelPerson[]
+     */
+    public function getPersons(): array
+    {
+        $persons = [];
+        foreach ($this->getParticipants() as $pRow) {
+            $persons[] = ParticipantModel2::createFromActiveRow($pRow)->getPerson();
+        }
+        foreach ($this->getTeachers() as $pRow) {
+            $persons[] = TeacherModel::createFromActiveRow($pRow)->getPerson();
+        }
+        return $persons;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'status':
+                $value = TeamStatus::tryFrom($value);
+                break;
+            case 'category':
+                $value = TeamCategory::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
+
+    public function __toArray(bool $includePassword = false): array
+    {
+        $data = [
+            'teamId' => $this->fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->status->value,
+            'category' => $this->category->value,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ];
+        if ($includePassword) {
+            $data['password'] = $this->password;
+        }
+        return $data;
+    }
+
+    public function getResourceId(): string
+    {
+        return self::RESOURCE_ID;
+    }
+}
