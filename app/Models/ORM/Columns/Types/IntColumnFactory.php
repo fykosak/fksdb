@@ -46,7 +46,7 @@ class IntColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());
-        $control->addRule(Form::NUMERIC);
+        $control->addRule(Form::NUMERIC, _('Must be a numeric'));
         return $control;
     }
 }

@@ -37,7 +37,7 @@ class UntilColumnFactory extends ColumnFactory
         $control = new TextInput($this->getTitle());
 
         $control->addCondition(Form::FILLED)
-            ->addRule(Form::NUMERIC)
+            ->addRule(Form::NUMERIC, _('Must be a number'))
             ->addRule(Form::RANGE, _('Final year is not in interval [%d, %d].'), [$min, $max]);
         return $control;
     }

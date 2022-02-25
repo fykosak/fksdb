@@ -46,7 +46,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
             $control = new TextInput($this->getTitle());
         }
         $control->setHtmlAttribute('placeholder', _('+XXXXXXXXXXXX'));
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
             ->addRule(function (BaseControl $control): bool {

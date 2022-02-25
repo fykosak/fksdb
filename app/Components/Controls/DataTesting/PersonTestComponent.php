@@ -54,10 +54,10 @@ class PersonTestComponent extends BaseComponent
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
-            ->addRule(Form::INTEGER)
+            ->addRule(Form::INTEGER, _('Must be a int'))
             ->setDefaultValue($this->startId);
         $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
-            ->addRule(Form::INTEGER)
+            ->addRule(Form::INTEGER, _('Must be a int'))
             ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();
         $levelsContainer->setOption('label', _('Level'));

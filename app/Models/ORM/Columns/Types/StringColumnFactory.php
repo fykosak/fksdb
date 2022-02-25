@@ -24,7 +24,7 @@ class StringColumnFactory extends ColumnFactory
     {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {
-            $control->addRule(Form::MAX_LENGTH, null, $this->getMetaData()['size']);
+            $control->addRule(Form::MAX_LENGTH, _('Max length reached'), $this->getMetaData()['size']);
         }
 
         // if (!$this->metaData['nullable']) {
