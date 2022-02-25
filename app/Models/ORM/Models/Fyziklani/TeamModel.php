@@ -43,11 +43,6 @@ use Nette\Security\Resource;
 class TeamModel extends AbstractModel implements Resource, NodeCreator
 {
     public const RESOURCE_ID = 'fyziklani.team';
-    public const CATEGORY_HIGH_SCHOOL_A = 'A';
-    public const CATEGORY_HIGH_SCHOOL_B = 'B';
-    public const CATEGORY_HIGH_SCHOOL_C = 'C';
-    public const CATEGORY_ABROAD = 'F';
-    public const CATEGORY_OPEN = 'O';
 
     public function __toString(): string
     {
@@ -200,34 +195,10 @@ class TeamModel extends AbstractModel implements Resource, NodeCreator
             'gameLang' => $this->game_lang,
         ], $document, $node);
         return $node;
-
-        // `teacher_id`           INT(11)     NULL     DEFAULT NULL
-        // `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
-        // `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
-        // `teacher_schedule`     TEXT        NULL     DEFAULT NULL
-        // `note`                 TEXT        NULL     DEFAULT NULL,
     }
 
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
-    }
-
-    public static function mapCategoryToName(string $category): string
-    {
-        switch ($category) {
-            case self::CATEGORY_HIGH_SCHOOL_A:
-                return _('High-school students A');
-            case self::CATEGORY_HIGH_SCHOOL_B:
-                return _('High-school students B');
-            case self::CATEGORY_HIGH_SCHOOL_C:
-                return _('High-school students C');
-            case self::CATEGORY_ABROAD:
-                return _('Abroad high-school students');
-            case self::CATEGORY_OPEN:
-                return _('Open');
-            default:
-                throw new \InvalidArgumentException();
-        }
     }
 }

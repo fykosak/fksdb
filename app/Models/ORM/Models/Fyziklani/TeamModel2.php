@@ -24,13 +24,13 @@ use Nette\Security\Resource;
  * @property-read int fyziklani_team_id
  * @property-read int event_id
  * @property-read int points
- * @property-read TeamStatus status
+ * @property-read TeamState state
  * @property-read \DateTimeInterface created
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
  * @property-read ActiveRow event
- * @property-read string game_lang
+ * @property-read GameLang game_lang
  * @property-read int rank_category
  * @property-read int rank_total
  */
@@ -151,22 +151,25 @@ class TeamModel2 extends AbstractModel implements Resource
     {
         $value = parent::__get($key);
         switch ($key) {
-            case 'status':
-                $value = TeamStatus::tryFrom($value);
+            case 'state':
+                $value = TeamState::tryFrom($value);
                 break;
             case 'category':
                 $value = TeamCategory::tryFrom($value);
+                break;
+            case 'game_lang':
+                $value = GameLang::tryFrom($value);
                 break;
         }
         return $value;
     }
 
-    public function __toArray(bool $includePassword = false): array
+    public function __toArray(): array
     {
-        $data = [
+        return [
             'teamId' => $this->fyziklani_team_id,
             'name' => $this->name,
-            'status' => $this->status->value,
+            'status' => $this->state->value,
             'category' => $this->category->value,
             'created' => $this->created->format('c'),
             'phone' => $this->phone,
@@ -174,12 +177,8 @@ class TeamModel2 extends AbstractModel implements Resource
             'rankCategory' => $this->rank_category,
             'rankTotal' => $this->rank_total,
             'forceA' => $this->force_a,
-            'gameLang' => $this->game_lang,
+            'gameLang' => $this->game_lang->value,
         ];
-        if ($includePassword) {
-            $data['password'] = $this->password;
-        }
-        return $data;
     }
 
     public function getResourceId(): string
