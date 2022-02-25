@@ -136,10 +136,10 @@ class TeamModel2 extends AbstractModel implements Resource
     {
         $persons = [];
         foreach ($this->getParticipants() as $pRow) {
-            $persons[] = ParticipantModel2::createFromActiveRow($pRow)->getPerson();
+            $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
-            $persons[] = TeacherModel::createFromActiveRow($pRow)->getPerson();
+            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->getPerson();
         }
         return $persons;
     }

@@ -913,12 +913,12 @@ orm:
                     class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
                     title: _('Submit opened?')
 
-        fyziklani_participant:
+        fyziklani_team_member:
             service: Fykosak\NetteORM\DummyService
-            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel2
-        fyziklani_teacher:
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamPMemberModel
+        fyziklani_team_teacher:
             service: Fykosak\NetteORM\DummyService
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeacherModel
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
 #schedule
         person_schedule:
             service: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule

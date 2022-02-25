@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int fyziklani_team_id
  * @property-read ActiveRow fyziklani_team
  */
-class TeacherModel extends AbstractModel
+class TeamMemberModel extends AbstractModel
 {
 
     public function getPerson(): ModelPerson
