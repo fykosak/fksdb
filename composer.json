@@ -37,7 +37,7 @@
     "league/oauth2-google": "3.0.3",
     "fykosak/nette-orm": "^v0.4.0",
     "fykosak/nette-fks-utils": "dev-master#8651feb",
-    "fykosak/nette-frontend-component": "dev-master#21fe118"
+    "fykosak/nette-frontend-component": "dev-master#98d29f8"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "3.6.0"
