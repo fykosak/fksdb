@@ -70,7 +70,7 @@ class ResultsWebModel extends WebModel
             }
 
             foreach ($args->cumulatives->cumulative as $cumulative) {
-                $resultsModel->setSeries(explode(' ', $cumulative));
+                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
                 $resultsNode->appendChild($this->createCumulativeNode($resultsModel, $doc));
             }
         }
@@ -84,7 +84,7 @@ class ResultsWebModel extends WebModel
             }
 
             foreach ($args->{'school-cumulatives'}->{'school-cumulative'} as $cumulative) {
-                $resultsModel->setSeries(explode(' ', $cumulative));
+                $resultsModel->setSeries(array_map(fn($x) => (int)$x, explode(' ', $cumulative)));
                 $resultsNode->appendChild($this->createSchoolCumulativeNode($resultsModel, $doc));
             }
         }
@@ -110,7 +110,7 @@ class ResultsWebModel extends WebModel
             }
 
             foreach ($args->brojures->brojure as $brojure) {
-                $series = explode(' ', $brojure);
+                $series = array_map(fn($x) => (int)$x, explode(' ', $brojure));
                 $listedSeries = $series[count($series) - 1];
                 $resultsModel->setListedSeries((int)$listedSeries);
                 $resultsModel->setSeries($series);
