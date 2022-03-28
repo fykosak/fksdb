@@ -11,6 +11,8 @@ events:
                 default: FYKOSí Soustředění <soustredeni@fykos.cz>
             letterWhere:
                 default: Hejnice
+            deadline:
+                default: 2022-04-04
             letterSignature:
                 default: Veronika Hendrychová
             letterDecisionDeadline:
