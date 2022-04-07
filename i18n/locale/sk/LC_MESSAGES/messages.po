@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-07 16:51+0200\n"
+"POT-Creation-Date: 2022-04-07 17:30+0200\n"
 "PO-Revision-Date: 2016-10-05 01:55+0200\n"
 "Last-Translator: Michal Koutný <xm.koutny@gmail.com>\n"
 "Language-Team: \n"
@@ -962,7 +962,7 @@ msgid "My applications"
 msgstr "Zoznam platieb"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:59
-#: ../app/config/orm.neon.neon2php:294
+#: ../app/config/stalking.neon.neon2php:73 ../app/config/orm.neon.neon2php:294
 msgid "Login"
 msgstr ""
 
@@ -2989,6 +2989,7 @@ msgid "Seating"
 msgstr ""
 
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:5
+#: ../app/config/stalking.neon.neon2php:5
 msgid "Base info"
 msgstr ""
 
@@ -3429,6 +3430,27 @@ msgstr "Nová platba"
 msgid "Paid"
 msgstr ""
 
+#: ../app/config/stalking.neon.neon2php:20
+msgid "Contact info"
+msgstr ""
+
+#: ../app/config/stalking.neon.neon2php:30
+msgid "Contact to parents"
+msgstr ""
+
+#: ../app/config/stalking.neon.neon2php:42
+msgid "Academic degree"
+msgstr ""
+
+#: ../app/config/stalking.neon.neon2php:52
+msgid "Extended info"
+msgstr ""
+
+#: ../app/config/stalking.neon.neon2php:128 ../app/config/orm.neon.neon2php:353
+#, fuzzy
+msgid "Payment"
+msgstr "Nová platba"
+
 #: ../app/config/orm.neon.neon2php:52
 msgid "Contestant Id"
 msgstr ""
@@ -3655,11 +3677,6 @@ msgstr ""
 #: ../app/config/orm.neon.neon2php:329
 msgid "For the hall of fame"
 msgstr ""
-
-#: ../app/config/orm.neon.neon2php:353
-#, fuzzy
-msgid "Payment"
-msgstr "Nová platba"
 
 #: ../app/config/orm.neon.neon2php:357
 #, fuzzy

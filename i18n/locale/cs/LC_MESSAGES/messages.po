@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-07 16:51+0200\n"
+"POT-Creation-Date: 2022-04-07 17:30+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -945,7 +945,7 @@ msgid "My applications"
 msgstr "Moje přihlášky"
 
 #: ../app/Modules/CoreModule/AuthenticationPresenter.php:59
-#: ../app/config/orm.neon.neon2php:294
+#: ../app/config/stalking.neon.neon2php:73 ../app/config/orm.neon.neon2php:294
 msgid "Login"
 msgstr "Přihlašovací jméno"
 
@@ -2955,6 +2955,7 @@ msgid "Seating"
 msgstr "Rozsazení"
 
 #: ../app/Modules/EventModule/templates/Application/detail.latte.latte2php:5
+#: ../app/config/stalking.neon.neon2php:5
 msgid "Base info"
 msgstr "Základní info"
 
@@ -3382,6 +3383,30 @@ msgstr "Zrušit platbu"
 msgid "Paid"
 msgstr "Zaplaceno"
 
+#: ../app/config/stalking.neon.neon2php:20
+#, fuzzy
+msgid "Contact info"
+msgstr "Info o soutěžích"
+
+#: ../app/config/stalking.neon.neon2php:30
+#, fuzzy
+msgid "Contact to parents"
+msgstr "Kontaktní adresy"
+
+#: ../app/config/stalking.neon.neon2php:42
+#, fuzzy
+msgid "Academic degree"
+msgstr "Akademický rok"
+
+#: ../app/config/stalking.neon.neon2php:52
+#, fuzzy
+msgid "Extended info"
+msgstr "Info o víkendu"
+
+#: ../app/config/stalking.neon.neon2php:128 ../app/config/orm.neon.neon2php:353
+msgid "Payment"
+msgstr "Platba"
+
 #: ../app/config/orm.neon.neon2php:52
 msgid "Contestant Id"
 msgstr "Id soutěžícího"
@@ -3597,10 +3622,6 @@ msgstr "Příspěvek"
 #: ../app/config/orm.neon.neon2php:329
 msgid "For the hall of fame"
 msgstr "Pro síň slávy"
-
-#: ../app/config/orm.neon.neon2php:353
-msgid "Payment"
-msgstr "Platba"
 
 #: ../app/config/orm.neon.neon2php:357
 msgid "Payment UId"
@@ -5769,9 +5790,6 @@ msgstr ""
 #~ msgid "Weekend"
 #~ msgstr "Víkend"
 
-#~ msgid "Weekend info"
-#~ msgstr "Info o víkendu"
-
 #~ msgid "We are receive payment #%s"
 #~ msgstr "Obdržali jsme platbu #%s"
 
@@ -6022,9 +6040,6 @@ msgstr ""
 
 #~ msgid "Organizers"
 #~ msgstr "Organizátoři"
-
-#~ msgid "Contests info"
-#~ msgstr "Info o soutěžích"
 
 #~ msgid "Item has already another payment."
 #~ msgstr "Položka má již vygenerovanou platbu."
