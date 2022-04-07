@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-07 17:30+0200\n"
+"POT-Creation-Date: 2022-04-07 17:43+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -851,7 +851,7 @@ msgstr "Položka programu"
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:48
 #, php-format
 msgid "Schedule item \"%s\""
-msgstr "Položku programu \"%s\""
+msgstr "Položka programu \"%s\""
 
 #: ../app/Modules/EventModule/ScheduleItemPresenter.php:63
 #, php-format
@@ -1761,7 +1761,6 @@ msgid "Submit cannot be revoked."
 msgstr "Odevzdání nelze vzít zpět"
 
 #: ../app/Models/Submits/SubmitHandlerFactory.php:135
-#, fuzzy
 msgid "Submit does not exist."
 msgstr "Submit neexistuje."
 
@@ -2417,7 +2416,7 @@ msgstr "Org akce byl aktualizován."
 
 #: ../app/Components/EntityForms/EventOrgFormComponent.php:58
 msgid "Event org has been created"
-msgstr "Akce byla vytvořena"
+msgstr "Organizátor byl přidán"
 
 #: ../app/Components/EntityForms/PersonFormComponent.php:128
 msgid "Data has been updated"
@@ -3281,7 +3280,7 @@ msgstr "Vyhodnotit"
 
 #: ../app/Components/Controls/StoredQuery/layout.results.latte.latte2php:26
 msgid "Detail of the query"
-msgstr "Podrobnosti akce"
+msgstr "Podrobnosti exportu"
 
 #: ../app/Components/Controls/Inbox/SubmitsPreview/layout.latte.latte2php:11
 #: ../app/Components/Controls/Inbox/SubmitsPreview/layout.latte.latte2php:19
@@ -3384,24 +3383,20 @@ msgid "Paid"
 msgstr "Zaplaceno"
 
 #: ../app/config/stalking.neon.neon2php:20
-#, fuzzy
 msgid "Contact info"
 msgstr "Info o soutěžích"
 
 #: ../app/config/stalking.neon.neon2php:30
-#, fuzzy
 msgid "Contact to parents"
 msgstr "Kontaktní adresy"
 
 #: ../app/config/stalking.neon.neon2php:42
-#, fuzzy
 msgid "Academic degree"
-msgstr "Akademický rok"
+msgstr "Akademické tituly"
 
 #: ../app/config/stalking.neon.neon2php:52
-#, fuzzy
 msgid "Extended info"
-msgstr "Info o víkendu"
+msgstr "Další info"
 
 #: ../app/config/stalking.neon.neon2php:128 ../app/config/orm.neon.neon2php:353
 msgid "Payment"
@@ -3573,7 +3568,7 @@ msgstr "Jízdenka při příjezdu"
 
 #: ../app/config/orm.neon.neon2php:260
 msgid "Event participant Id"
-msgstr "ID účastníka kace"
+msgstr "ID účastníka akce"
 
 #: ../app/config/orm.neon.neon2php:263
 msgid "Number of baguettes for lunch"
