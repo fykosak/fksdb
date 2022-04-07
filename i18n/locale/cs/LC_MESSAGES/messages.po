@@ -2,12 +2,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-10 16:45+0100\n"
+"POT-Creation-Date: 2022-04-07 16:51+0200\n"
 "PO-Revision-Date: 2019-09-06 11:06+0200\n"
 "Last-Translator: Štěpán Stenchlák <stenchlak@fykos.cz>\n"
 "Language-Team: \n"
@@ -111,7 +111,7 @@ msgstr ""
 #: ../data/events/tabor/tabor9.neon.neon2php:117
 #: ../data/events/tabor/tabor1-6.neon.neon2php:160
 #: ../data/events/tabor/tabor8.neon.neon2php:116
-#: ../data/events/soustredeni/sous35j.neon.neon2php:187
+#: ../data/events/soustredeni/sous35j.neon.neon2php:189
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:221
 #: ../data/events/soustredeni/sous34p.neon.neon2php:178
 #: ../data/events/soustredeni/sous34j.neon.neon2php:178
@@ -890,7 +890,7 @@ msgstr "Přihlašovací jméno"
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:144
 msgid "This username is already taken."
-msgstr "Toto přihlašovací jméno je již zabrané"
+msgstr "Toto přihlašovací jméno je již zabrané."
 
 #: ../app/Modules/CoreModule/SettingsPresenter.php:148
 msgid "Old password"
@@ -1375,23 +1375,23 @@ msgstr "Neomezená kapacita"
 msgid "Accommodation for %s from %s to %s in %s"
 msgstr "Ubytování pro %s od %s do %s"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:215
+#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:219
 msgid "High-school students A"
 msgstr "Středoškoláci A"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:217
+#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:221
 msgid "High-school students B"
 msgstr "Středoškoláci B"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:219
+#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:223
 msgid "High-school students C"
 msgstr "Středoškoláci B"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:221
+#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:225
 msgid "Abroad high-school students"
 msgstr "Středoškoláci zahraniční"
 
-#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:223
+#: ../app/Models/ORM/Models/Fyziklani/TeamModel.php:227
 msgid "Open"
 msgstr "Open"
 
@@ -1659,7 +1659,7 @@ msgid "Event org"
 msgstr "Organizátor akce"
 
 #: ../app/Models/ValuePrinters/EventRolePrinter.php:67
-#: ../data/events/soustredeni/sous35j.neon.neon2php:216
+#: ../data/events/soustredeni/sous35j.neon.neon2php:218
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:250
 #: ../data/events/soustredeni/sous34p.neon.neon2php:207
 #: ../data/events/soustredeni/sous34j.neon.neon2php:207
@@ -2729,11 +2729,11 @@ msgstr "Rok %d"
 msgid "Language"
 msgstr "Jazyk"
 
-#: ../app/Components/Controls/Transitions/TransitionButtonsComponent.php:47
+#: ../app/Components/Controls/Transitions/TransitionButtonsComponent.php:48
 msgid "Some error emerged"
 msgstr "Objevil se nějaký error :)"
 
-#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:97
+#: ../app/Components/Controls/Inbox/HandoutFormComponent.php:95
 msgid "Handout saved."
 msgstr "Rozdělení úloh opravovatelům uloženo"
 
@@ -2891,7 +2891,7 @@ msgstr "Všechny týmy, obsahuje kategorii id pozice"
 #: ../data/events/fol/fol1.neon.neon2php:88
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:24
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Headline.tsx.tsx2php:32
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:32
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/filter.ts.ts2php:31
 msgid "Category"
 msgstr "Kategorie"
 
@@ -3502,7 +3502,7 @@ msgid "Diet"
 msgstr "Stravovací omezení"
 
 #: ../app/config/orm.neon.neon2php:223
-#: ../data/events/soustredeni/sous35j.neon.neon2php:196
+#: ../data/events/soustredeni/sous35j.neon.neon2php:198
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:230
 #: ../data/events/soustredeni/sous34p.neon.neon2php:187
 #: ../data/events/soustredeni/sous34j.neon.neon2php:187
@@ -4357,8 +4357,8 @@ msgstr ""
 msgid "Mám zájem o společnou jízdenku"
 msgstr ""
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:31
-#: ../data/events/soustredeni/sous35j.neon.neon2php:36
+#: ../data/events/soustredeni/sous35j.neon.neon2php:33
+#: ../data/events/soustredeni/sous35j.neon.neon2php:38
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:75
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:80
 #: ../data/events/soustredeni/sous34p.neon.neon2php:36
@@ -4374,8 +4374,8 @@ msgstr ""
 msgid "Invite participant"
 msgstr "Pozvat účastníka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:41
-#: ../data/events/soustredeni/sous35j.neon.neon2php:46
+#: ../data/events/soustredeni/sous35j.neon.neon2php:43
+#: ../data/events/soustredeni/sous35j.neon.neon2php:48
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:85
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:90
 #: ../data/events/soustredeni/sous34p.neon.neon2php:46
@@ -4387,8 +4387,8 @@ msgstr "Pozvat účastníka"
 msgid "Invite Spare"
 msgstr "Pozvat náhradníka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:51
-#: ../data/events/soustredeni/sous35j.neon.neon2php:96
+#: ../data/events/soustredeni/sous35j.neon.neon2php:53
+#: ../data/events/soustredeni/sous35j.neon.neon2php:98
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:95
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:140
 #: ../data/events/soustredeni/sous34p.neon.neon2php:56
@@ -4400,7 +4400,7 @@ msgstr "Pozvat náhradníka"
 msgid "Confirm participation"
 msgstr "Potvrdit účast"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:54
+#: ../data/events/soustredeni/sous35j.neon.neon2php:56
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:98
 #: ../data/events/soustredeni/sous34p.neon.neon2php:59
 #: ../data/events/soustredeni/sous34j.neon.neon2php:49
@@ -4408,8 +4408,8 @@ msgstr "Potvrdit účast"
 msgid "I want to go"
 msgstr "Chci jet"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:57
-#: ../data/events/soustredeni/sous35j.neon.neon2php:92
+#: ../data/events/soustredeni/sous35j.neon.neon2php:59
+#: ../data/events/soustredeni/sous35j.neon.neon2php:94
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:101
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:136
 #: ../data/events/soustredeni/sous34p.neon.neon2php:62
@@ -4421,8 +4421,8 @@ msgstr "Chci jet"
 msgid "Decline participation"
 msgstr "Odmítnout účast"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:62
-#: ../data/events/soustredeni/sous35j.neon.neon2php:67
+#: ../data/events/soustredeni/sous35j.neon.neon2php:64
+#: ../data/events/soustredeni/sous35j.neon.neon2php:69
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:106
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:111
 #: ../data/events/soustredeni/sous34p.neon.neon2php:67
@@ -4434,8 +4434,8 @@ msgstr "Odmítnout účast"
 msgid "Send first call"
 msgstr "Poslat I. upomínku"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:72
-#: ../data/events/soustredeni/sous35j.neon.neon2php:77
+#: ../data/events/soustredeni/sous35j.neon.neon2php:74
+#: ../data/events/soustredeni/sous35j.neon.neon2php:79
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:116
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:121
 #: ../data/events/soustredeni/sous34p.neon.neon2php:77
@@ -4447,8 +4447,8 @@ msgstr "Poslat I. upomínku"
 msgid "Send second call"
 msgstr "Poslat II. upomínku"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:82
-#: ../data/events/soustredeni/sous35j.neon.neon2php:87
+#: ../data/events/soustredeni/sous35j.neon.neon2php:84
+#: ../data/events/soustredeni/sous35j.neon.neon2php:89
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:126
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:131
 #: ../data/events/soustredeni/sous34p.neon.neon2php:87
@@ -4460,10 +4460,10 @@ msgstr "Poslat II. upomínku"
 msgid "Send last call"
 msgstr "Poslat poslední upomínku"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:101
-#: ../data/events/soustredeni/sous35j.neon.neon2php:106
-#: ../data/events/soustredeni/sous35j.neon.neon2php:111
-#: ../data/events/soustredeni/sous35j.neon.neon2php:116
+#: ../data/events/soustredeni/sous35j.neon.neon2php:103
+#: ../data/events/soustredeni/sous35j.neon.neon2php:108
+#: ../data/events/soustredeni/sous35j.neon.neon2php:113
+#: ../data/events/soustredeni/sous35j.neon.neon2php:118
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:143
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:146
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:149
@@ -4475,7 +4475,7 @@ msgstr "Poslat poslední upomínku"
 msgid "Invite as participant"
 msgstr "Pozvat jako účastníka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:121
+#: ../data/events/soustredeni/sous35j.neon.neon2php:123
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:155
 #: ../data/events/soustredeni/sous34p.neon.neon2php:112
 #: ../data/events/soustredeni/sous34j.neon.neon2php:112
@@ -4485,7 +4485,7 @@ msgstr "Pozvat jako účastníka"
 msgid "Participated"
 msgstr "Zúčastnil se"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:124
+#: ../data/events/soustredeni/sous35j.neon.neon2php:126
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:158
 #: ../data/events/soustredeni/sous34p.neon.neon2php:115
 #: ../data/events/soustredeni/sous34j.neon.neon2php:115
@@ -4495,7 +4495,7 @@ msgstr "Zúčastnil se"
 msgid "Missed"
 msgstr ""
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:128
+#: ../data/events/soustredeni/sous35j.neon.neon2php:130
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:162
 #: ../data/events/soustredeni/sous35p.neon.neon2php:133
 #: ../data/events/fov/fov.neon.neon2php:77
@@ -4503,7 +4503,7 @@ msgstr ""
 msgid "Cancel application"
 msgstr "Zrušit přihlášku"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:131
+#: ../data/events/soustredeni/sous35j.neon.neon2php:133
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:165
 #: ../data/events/soustredeni/sous34p.neon.neon2php:122
 #: ../data/events/soustredeni/sous34j.neon.neon2php:122
@@ -4511,7 +4511,7 @@ msgstr "Zrušit přihlášku"
 msgid "Deal with outside FKSDB"
 msgstr "Vyřešit mimo FKSDB"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:134
+#: ../data/events/soustredeni/sous35j.neon.neon2php:136
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:168
 #: ../data/events/soustredeni/sous34p.neon.neon2php:125
 #: ../data/events/soustredeni/sous34j.neon.neon2php:125
@@ -4519,7 +4519,7 @@ msgstr "Vyřešit mimo FKSDB"
 msgid "Return to DB as Invited"
 msgstr "Vrátit do db jako Pozvaný"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:137
+#: ../data/events/soustredeni/sous35j.neon.neon2php:139
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:171
 #: ../data/events/soustredeni/sous34p.neon.neon2php:128
 #: ../data/events/soustredeni/sous34j.neon.neon2php:128
@@ -4527,7 +4527,7 @@ msgstr "Vrátit do db jako Pozvaný"
 msgid "Return to DB as Invited, first call"
 msgstr "Vrátit do db jako Pozvaný, první upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:140
+#: ../data/events/soustredeni/sous35j.neon.neon2php:142
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:174
 #: ../data/events/soustredeni/sous34p.neon.neon2php:131
 #: ../data/events/soustredeni/sous34j.neon.neon2php:131
@@ -4535,7 +4535,7 @@ msgstr "Vrátit do db jako Pozvaný, první upomínka"
 msgid "Return to DB as Invited, second call"
 msgstr "Vrátit do db jako Pozvaný, druhá upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:143
+#: ../data/events/soustredeni/sous35j.neon.neon2php:145
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:177
 #: ../data/events/soustredeni/sous34p.neon.neon2php:134
 #: ../data/events/soustredeni/sous34j.neon.neon2php:134
@@ -4543,7 +4543,7 @@ msgstr "Vrátit do db jako Pozvaný, druhá upomínka"
 msgid "Return to DB as Invited, last call"
 msgstr "Vrátit do db jako Pozvaný, poslední upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:146
+#: ../data/events/soustredeni/sous35j.neon.neon2php:148
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:180
 #: ../data/events/soustredeni/sous34p.neon.neon2php:137
 #: ../data/events/soustredeni/sous34j.neon.neon2php:137
@@ -4551,7 +4551,7 @@ msgstr "Vrátit do db jako Pozvaný, poslední upomínka"
 msgid "Return to DB as Invited (auto)"
 msgstr "Vrátit do db jako Pozvaný (auto)"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:149
+#: ../data/events/soustredeni/sous35j.neon.neon2php:151
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:183
 #: ../data/events/soustredeni/sous34p.neon.neon2php:140
 #: ../data/events/soustredeni/sous34j.neon.neon2php:140
@@ -4559,7 +4559,7 @@ msgstr "Vrátit do db jako Pozvaný (auto)"
 msgid "Return to DB as Spare"
 msgstr "Vrátit do db jako Náhradník"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:152
+#: ../data/events/soustredeni/sous35j.neon.neon2php:154
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:186
 #: ../data/events/soustredeni/sous34p.neon.neon2php:143
 #: ../data/events/soustredeni/sous34j.neon.neon2php:143
@@ -4567,7 +4567,7 @@ msgstr "Vrátit do db jako Náhradník"
 msgid "Return to DB as Spare, first call"
 msgstr "Vrátit do db jako Náhradník, I. upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:155
+#: ../data/events/soustredeni/sous35j.neon.neon2php:157
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:189
 #: ../data/events/soustredeni/sous34p.neon.neon2php:146
 #: ../data/events/soustredeni/sous34j.neon.neon2php:146
@@ -4575,7 +4575,7 @@ msgstr "Vrátit do db jako Náhradník, I. upomínka"
 msgid "Return to DB as Spare, second call"
 msgstr "Vrátit do db jako Náhradník, II. upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:158
+#: ../data/events/soustredeni/sous35j.neon.neon2php:160
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:192
 #: ../data/events/soustredeni/sous34p.neon.neon2php:149
 #: ../data/events/soustredeni/sous34j.neon.neon2php:149
@@ -4583,7 +4583,7 @@ msgstr "Vrátit do db jako Náhradník, II. upomínka"
 msgid "Return to DB as Spare, last call"
 msgstr "Vrátit do db jako Náhradník, poslední upomínka"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:161
+#: ../data/events/soustredeni/sous35j.neon.neon2php:163
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:195
 #: ../data/events/soustredeni/sous34p.neon.neon2php:152
 #: ../data/events/soustredeni/sous34j.neon.neon2php:152
@@ -4591,7 +4591,7 @@ msgstr "Vrátit do db jako Náhradník, poslední upomínka"
 msgid "Return to DB as Spare (auto)"
 msgstr "Vrátit do db jako Náhradník (auto)"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:164
+#: ../data/events/soustredeni/sous35j.neon.neon2php:166
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:198
 #: ../data/events/soustredeni/sous34p.neon.neon2php:155
 #: ../data/events/soustredeni/sous34j.neon.neon2php:155
@@ -4599,7 +4599,7 @@ msgstr "Vrátit do db jako Náhradník (auto)"
 msgid "Return to DB as Applied"
 msgstr "Vrátit do DB jako odmítnuů"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:167
+#: ../data/events/soustredeni/sous35j.neon.neon2php:169
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:201
 #: ../data/events/soustredeni/sous34p.neon.neon2php:158
 #: ../data/events/soustredeni/sous34j.neon.neon2php:158
@@ -4607,7 +4607,7 @@ msgstr "Vrátit do DB jako odmítnuů"
 msgid "Return to DB as Interested"
 msgstr "Vrátit do db jako Chce jet"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:170
+#: ../data/events/soustredeni/sous35j.neon.neon2php:172
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:204
 #: ../data/events/soustredeni/sous34p.neon.neon2php:161
 #: ../data/events/soustredeni/sous34j.neon.neon2php:161
@@ -4615,7 +4615,7 @@ msgstr "Vrátit do db jako Chce jet"
 msgid "Return to DB as Participated"
 msgstr "Vrátit do db jako Zúčastil se"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:173
+#: ../data/events/soustredeni/sous35j.neon.neon2php:175
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:207
 #: ../data/events/soustredeni/sous34p.neon.neon2php:164
 #: ../data/events/soustredeni/sous34j.neon.neon2php:164
@@ -4623,19 +4623,19 @@ msgstr "Vrátit do db jako Zúčastil se"
 msgid "Return to DB as Rejected"
 msgstr "Vrátit do DB jako Odmítnul"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:176
+#: ../data/events/soustredeni/sous35j.neon.neon2php:178
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:210
 #: ../data/events/soustredeni/sous35p.neon.neon2php:181
 msgid "Return to DB as missed"
 msgstr "Vrátit do db jako Nepřijel"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:179
+#: ../data/events/soustredeni/sous35j.neon.neon2php:181
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:213
 #: ../data/events/soustredeni/sous35p.neon.neon2php:184
 msgid "Return to DB as cancelled"
 msgstr "Vrátit do DB jako Zrušen"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:183
+#: ../data/events/soustredeni/sous35j.neon.neon2php:185
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:217
 #: ../data/events/soustredeni/sous34p.neon.neon2php:174
 #: ../data/events/soustredeni/sous34j.neon.neon2php:174
@@ -4645,7 +4645,7 @@ msgstr "Vrátit do DB jako Zrušen"
 msgid "Delete application"
 msgstr "Smazat přihlášku"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:193
+#: ../data/events/soustredeni/sous35j.neon.neon2php:195
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:227
 #: ../data/events/soustredeni/sous34p.neon.neon2php:184
 #: ../data/events/soustredeni/sous34j.neon.neon2php:184
@@ -4653,7 +4653,7 @@ msgstr "Smazat přihlášku"
 msgid "Food"
 msgstr "Jídlo"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:194
+#: ../data/events/soustredeni/sous35j.neon.neon2php:196
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:228
 #: ../data/events/soustredeni/sous34j.neon.neon2php:185
 #: ../data/events/soustredeni/sous35p.neon.neon2php:199
@@ -4665,7 +4665,7 @@ msgstr ""
 "Máš nějakou speciální dietu – vegetariánství, veganství, ketogenickou apod.? "
 "Pokud ano, chceš, abychom ti ji zajistili my, nebo si přivezeš vlastní jídlo?"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:197
+#: ../data/events/soustredeni/sous35j.neon.neon2php:199
 msgid ""
 "Do you have any health restriction, that could pose a problem for your "
 "participation or due to which you could not participate in certain "
@@ -4681,20 +4681,20 @@ msgstr ""
 "akutních potíží? Jaké? Je ještě něco, co bychom o tvém zdravotním stavu měli "
 "vědět?"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:199
+#: ../data/events/soustredeni/sous35j.neon.neon2php:201
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:233
 #: ../data/events/soustredeni/sous35p.neon.neon2php:204
 msgid "What size of T-shirt do you wear?"
 msgstr "Jakou velikost trička nosíš?"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:201
+#: ../data/events/soustredeni/sous35j.neon.neon2php:203
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:235
 #: ../data/events/soustredeni/sous34j.neon.neon2php:192
 #: ../data/events/soustredeni/sous35p.neon.neon2php:206
 msgid "Choose a size"
 msgstr "Zvol velikost"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:203
+#: ../data/events/soustredeni/sous35j.neon.neon2php:205
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:237
 #: ../data/events/soustredeni/sous34p.neon.neon2php:194
 #: ../data/events/soustredeni/sous34j.neon.neon2php:194
@@ -4702,7 +4702,7 @@ msgstr "Zvol velikost"
 msgid "Price of camp (CZK)"
 msgstr "Cena soustředění (CZK)"
 
-#: ../data/events/soustredeni/sous35j.neon.neon2php:205
+#: ../data/events/soustredeni/sous35j.neon.neon2php:207
 #: ../data/events/soustredeni/soustredeni.neon.neon2php:239
 #: ../data/events/soustredeni/sous34p.neon.neon2php:196
 #: ../data/events/soustredeni/sous34j.neon.neon2php:196
@@ -5449,7 +5449,7 @@ msgid "Global results"
 msgstr "Celkové výsledky"
 
 #: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/Components/Setting.tsx.tsx2php:51
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:53
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:47
 msgid "Options"
 msgstr "Možnosti"
 
@@ -5477,19 +5477,19 @@ msgstr "Řádky"
 msgid "Fetch"
 msgstr "Fetchnout"
 
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:62
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:56
 msgid "select task"
 msgstr "vyber úlohu"
 
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:71
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:65
 msgid "Aggregation time"
 msgstr "Čas pro agregaci do histogramu"
 
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:86
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:80
 msgid "From"
 msgstr "Od"
 
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:101
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/TaskStatistics/Options.tsx.tsx2php:95
 msgid "To"
 msgstr "Do"
 
@@ -5588,7 +5588,7 @@ msgstr "Statistiky týmu "
 msgid "Success of submitting"
 msgstr "Úspěšné odevzdání"
 
-#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Components/Index.tsx.tsx2php:38
+#: ../app/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/Components/Index.tsx.tsx2php:32
 msgid "Results of Fyziklani"
 msgstr "Výsledky Fyziklání"
 
