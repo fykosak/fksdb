@@ -61,7 +61,7 @@ class SeriesTable
             'series' => $this->series,
         ]);
 
-        if (!isset($this->taskFilter)) {
+        if (isset($this->taskFilter)) {
             $tasks->where('task_id', $this->taskFilter);
         }
         return $tasks->order('tasknr');
