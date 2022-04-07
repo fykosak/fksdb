@@ -2,7 +2,7 @@ parameters:
     components:
         base_info:
             layout: single
-            label: _('Base info')
+            label: _(Base info)
             minimalPermission: 1
             table: person
             model: FKSDB\Models\ORM\Models\ModelPerson
@@ -17,7 +17,7 @@ parameters:
 
         contact_info:
             layout: single
-            label: _('Contact info')
+            label: _(Contact info)
             minimalPermission: 1
             table: person_info
             model: FKSDB\Models\ORM\Models\ModelPersonInfo
@@ -27,7 +27,7 @@ parameters:
 
         contact_parents:
             layout: single
-            label: _('Contact to parents')
+            label: _(Contact to parents)
             minimalPermission: 128
             table: person_info
             model: FKSDB\Models\ORM\Models\ModelPersonInfo
@@ -39,7 +39,7 @@ parameters:
 
         academic_degree:
             layout: single
-            label: _('Academic degree')
+            label: _(Academic degree)
             minimalPermission: 128
             table: person_info
             model: FKSDB\Models\ORM\Models\ModelPersonInfo
@@ -49,7 +49,7 @@ parameters:
 
         extended_info:
              layout: single
-             label: _('Extended info')
+             label: _(Extended info)
              minimalPermission: 128
              table: person_info
              model: FKSDB\Models\ORM\Models\ModelPersonInfo
@@ -70,7 +70,7 @@ parameters:
 
         login:
              layout: single
-             label: _('Login')
+             label: _(Login)
              minimalPermission: 128
              table: login
              model: FKSDB\Models\ORM\Models\ModelLogin
@@ -125,7 +125,7 @@ parameters:
                 - org.domain_alias
         payment:
             layout: grid
-            label: _('Payment')
+            label: _(Payment)
             minimalPermission: 128
             table: payment
             model: FKSDB\Models\ORM\Models\ModelPayment
