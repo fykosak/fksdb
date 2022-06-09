@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\AbstractService;
 
+/**
+ * @method TeamModel2 findByPrimary(int $key)
+ */
 class TeamService2 extends AbstractService
 {
 
     public function isReadyForClosing(ModelEvent $event, ?TeamCategory $category = null): bool
     {
-        $query = $event->getParticipatingTeams();
+        $query = $event->getParticipatingFyziklaniTeams();
         if ($category) {
             $query->where('category', $category->value);
         }

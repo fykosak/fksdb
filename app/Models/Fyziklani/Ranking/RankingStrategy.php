@@ -7,6 +7,7 @@ namespace FKSDB\Models\Fyziklani\Ranking;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\Database\Table\GroupedSelection;
@@ -73,7 +74,7 @@ class RankingStrategy
     {
         $teamsData = [];
         foreach ($teams as $row) {
-            $team = TeamModel::createFromActiveRow($row);
+            $team = TeamModel2::createFromActiveRow($row);
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -108,7 +109,7 @@ class RankingStrategy
 
     private function getAllTeams(?TeamCategory $category = null): GroupedSelection
     {
-        $query = $this->event->getParticipatingTeams();
+        $query = $this->event->getParticipatingFyziklaniTeams();
         if ($category) {
             $query->where('category', $category->value);
         }
@@ -118,7 +119,7 @@ class RankingStrategy
     /**
      * @return array[]|int[]
      */
-    protected function getAllSubmits(TeamModel $team): array
+    protected function getAllSubmits(TeamModel2 $team): array
     {
         $arraySubmits = [];
         $sum = 0;

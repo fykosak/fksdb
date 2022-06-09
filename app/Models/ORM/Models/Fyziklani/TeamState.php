@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use Nette\Utils\Html;
 
-class TeamState
+class TeamState implements EnumColumn
 {
     public const APPLIED = 'applied';
     public const PENDING = 'pending';
@@ -34,5 +35,33 @@ class TeamState
     {
         // TODO
         return Html::el('span');
+    }
+
+    public function label(): string
+    {
+        switch ($this->value) {
+            case self::APPLIED:
+                return _('applied');
+            case self::PENDING:
+                return _('pending');
+            case self::APPROVED:
+                return _('approved');
+            case self::SPARE:
+                return _('spare');
+            case self::PARTICIPATED:
+                return _('participated');
+            case self::MISSED:
+                return _('missed');
+            case self::DISQUALIFIED:
+                return _('disqualified');
+            case self::CANCELED:
+                return _('cancelled');
+        }
+    }
+
+    public function cases(): array
+    {
+        //TODO
+        return [];
     }
 }

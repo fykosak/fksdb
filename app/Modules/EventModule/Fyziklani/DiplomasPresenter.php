@@ -50,11 +50,11 @@ class DiplomasPresenter extends BasePresenter
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->getEvent()->getParticipatingTeams()
+                'closed' => $this->getEvent()->getParticipatingFyziklaniTeams()
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->getEvent()->getParticipatingTeams()
+                'opened' => $this->getEvent()->getParticipatingFyziklaniTeams()
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),
@@ -67,10 +67,10 @@ class DiplomasPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(string $category = null): void
+    public function handleCalculate(?TeamCategory $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
-        $log = $closeStrategy->close(TeamCategory::tryFrom($category));
+        $log = $closeStrategy->close($category);
         $this->flashMessage(
             Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(
                 Html::el('ul')->addHtml($log)
@@ -83,9 +83,9 @@ class DiplomasPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function isReadyAllToCalculate(?string $category = null): bool
+    public function isReadyAllToCalculate(?TeamCategory $category = null): bool
     {
-        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), TeamCategory::tryFrom($category));
+        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**

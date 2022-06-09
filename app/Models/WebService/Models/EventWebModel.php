@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
@@ -146,24 +148,24 @@ class EventWebModel extends WebModel
     private function createTeamListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
     {
         $rootNode = $doc->createElement('teams');
-        foreach ($event->getTeams() as $row) {
-            $team = TeamModel::createFromActiveRow($row);
-            $teacher = $team->getTeacher();
+        foreach ($event->getFyziklaniTeams() as $row) {
+            $team = TeamModel2::createFromActiveRow($row);
             $teamNode = $team->createXMLNode($doc);
 
-            if ($teacher) {
+            foreach ($team->getTeachers() as $teacherRow) {
+                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
                 $teacherNode = $doc->createElement('teacher');
                 $teacherNode->setAttribute('personId', (string)$teacher->person_id);
                 XMLHelper::fillArrayToNode([
-                    'name' => $teacher->getFullName(),
-                    'email' => $teacher->getInfo()->email,
+                    'name' => $teacher->getPerson()->getFullName(),
+                    'email' => $teacher->getPerson()->getInfo()->email,
                 ], $doc, $teacherNode);
                 $teamNode->appendChild($teacherNode);
             }
 
-            foreach ($team->getFyziklaniParticipants() as $participantRow) {
-                $participant = ParticipantModel::createFromActiveRow($participantRow)->getEventParticipant();
-                $pNode = $this->createParticipantNode($participant, $doc);
+            foreach ($team->getMembers() as $memberRow) {
+                $member = TeamMemberModel::createFromActiveRow($memberRow);
+                $pNode = $this->createTeamMemberNode($member, $doc);
                 $teamNode->appendChild($pNode);
             }
 
@@ -175,14 +177,13 @@ class EventWebModel extends WebModel
     private function createTeamListArray(ModelEvent $event): array
     {
         $teamsData = [];
-        foreach ($event->getTeams() as $row) {
-            $team = TeamModel::createFromActiveRow($row);
-            $teacher = $team->getTeacher();
+        foreach ($event->getFyziklaniTeams() as $row) {
+            $team = TeamModel2::createFromActiveRow($row);
             $teamData = [
-                'teamId' => $team->e_fyziklani_team_id,
+                'teamId' => $team->fyziklani_team_id,
                 'name' => $team->name,
-                'status' => $team->status,
-                'category' => $team->category,
+                'status' => $team->state->value,
+                'category' => $team->category->value,
                 'created' => $team->created->format('c'),
                 'phone' => $team->phone,
                 'password' => $team->password,
@@ -191,18 +192,22 @@ class EventWebModel extends WebModel
                 'rankTotal' => $team->rank_total,
                 'forceA' => $team->force_a,
                 'gameLang' => $team->game_lang,
-                'teacher' => $teacher ? [
-                    'name' => $teacher->getFullName(),
-                    'email' => $teacher->getInfo()->email,
-                ] : null,
-                'participants' => [],
+                'teachers' => [],
+                'members' => [],
             ];
-
-            foreach ($team->getFyziklaniParticipants() as $participantRow) {
-                $participant = ParticipantModel::createFromActiveRow($participantRow)->getEventParticipant();
-                $teamData['participants'][] = $this->createParticipantArray($participant);
+            foreach ($team->getTeachers() as $teacherRow) {
+                $teacher = ModelTeacher::createFromActiveRow($teacherRow);
+                $teamData['teachers'][] = [
+                    'name' => $teacher->getPerson()->getFullName(),
+                    'email' => $teacher->getPerson()->getInfo()->email,
+                ];
             }
-            $teamsData[$team->e_fyziklani_team_id] = $teamData;
+
+            foreach ($team->getMembers() as $memberRow) {
+                $member = TeamMemberModel::createFromActiveRow($memberRow);
+                $teamData['members'][] = $this->createMemberArray($member);
+            }
+            $teamsData[$team->fyziklani_team_id] = $teamData;
         }
         return $teamsData;
     }
@@ -235,6 +240,25 @@ class EventWebModel extends WebModel
         return $pNode;
     }
 
+    private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
+    {
+        $pNode = $member->createXMLNode($doc);
+        XMLHelper::fillArrayToNode($this->createMemberArray($member), $doc, $pNode);
+        return $pNode;
+    }
+
+    private function createMemberArray(TeamMemberModel $member): array
+    {
+        $history = $member->getPersonHistory();
+        return [
+            'name' => $member->getPerson()->getFullName(),
+            'email' => $member->getPerson()->getInfo()->email,
+            'schoolId' => $history ? $history->school_id : null,
+            'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
+            'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
+        ];
+    }
+
     private function createParticipantArray(ModelEventParticipant $participant): array
     {
         $history = $participant->getPersonHistory();
@@ -257,8 +281,11 @@ class EventWebModel extends WebModel
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }
         $data = $event->__toArray();
-        $data['teams'] = $this->createTeamListArray($event);
-        $data['participants'] = $this->createParticipantListArray($event);
+        if ($event->isTeamEvent()) {
+            $data['teams'] = $this->createTeamListArray($event);
+        } else {
+            $data['participants'] = $this->createParticipantListArray($event);
+        }
         $data['schedule'] = $this->createScheduleListArray($event);
         $data['person_schedule'] = $this->createPersonScheduleArray($event);
         return $data;

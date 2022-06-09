@@ -85,7 +85,7 @@ class SeatingPresenter extends BasePresenter
         $offset = $this->getParameter('offset', 0);
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
+            $this->getEvent()->getFyziklaniTeams()->limit((int)$limit, (int)$offset),
             $this->getContext()
         );
     }

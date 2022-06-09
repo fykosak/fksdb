@@ -24,7 +24,7 @@ class FinalResultsComponent extends BaseComponent
 
     public function isClosedCategory(TeamCategory $category): bool
     {
-        $count = $this->event->getParticipatingTeams()
+        $count = $this->event->getParticipatingFyziklaniTeams()
             ->where('category', $category->value)
             ->where('rank_category IS NULL')
             ->count();
@@ -33,7 +33,7 @@ class FinalResultsComponent extends BaseComponent
 
     public function isClosedTotal(): bool
     {
-        $count = $this->event->getParticipatingTeams()
+        $count = $this->event->getParticipatingFyziklaniTeams()
             ->where('rank_total IS NULL')
             ->count();
         return $count === 0;

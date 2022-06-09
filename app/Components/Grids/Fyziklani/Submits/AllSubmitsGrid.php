@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\Submit\Handler;
 use FKSDB\Models\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
@@ -145,9 +146,9 @@ class AllSubmitsGrid extends SubmitsGrid
         $form = $control->getForm();
         $form->setMethod(Form::GET);
 
-        $rows = $this->event->getPossiblyAttendingTeams();
+        $rows = $this->event->getPossiblyAttendingFyziklaniTeams();
         $teams = [];
-        /** @var TeamModel|ActiveRow $team */
+        /** @var TeamModel2|ActiveRow $team */
         foreach ($rows as $team) {
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }

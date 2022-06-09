@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM;
 
-use FKSDB\Models\ORM\Columns\Types\{
-    DateTime\DateColumnFactory,
+use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     DateTime\DateTimeColumnFactory,
     EmailColumnFactory,
+    EnumColumnFactory,
     IntColumnFactory,
     LogicColumnFactory,
     PrimaryKeyColumnFactory,
@@ -15,7 +15,7 @@ use FKSDB\Models\ORM\Columns\Types\{
     StringColumnFactory,
     PhoneColumnFactory,
     TextColumnFactory,
-    DateTime\TimeColumnFactory,
+    DateTime\TimeColumnFactory
 };
 use FKSDB\Models\ORM\Links\Link;
 use Nette\DI\Definitions\ServiceDefinition;
@@ -119,6 +119,9 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension
                 case 'class':
                     $this->registerClassColumnFactory($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
+                case 'enum':
+                    $this->registerEnumColumnFactory($factory, $tableName, $modelClassName, $fieldName, $field);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -126,6 +129,17 @@ class ORMExtension extends \Fykosak\NetteORM\ORMExtension
             $factory->setFactory($field);
         }
         return $factory;
+    }
+
+    private function registerEnumColumnFactory(
+        ServiceDefinition $factory,
+        string $tableName,
+        string $modelClassName,
+        string $fieldName,
+        array $field
+    ): void {
+        $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, EnumColumnFactory::class, $field);
+        $factory->addSetup('setEnumClassName', [$field['enumClassName']]);
     }
 
     private function registerClassColumnFactory(

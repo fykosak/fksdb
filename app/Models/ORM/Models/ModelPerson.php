@@ -11,7 +11,7 @@ use FKSDB\Models\Authorization\EventRole\{
     ParticipantRole,
 };
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
@@ -155,7 +155,7 @@ class ModelPerson extends AbstractModel implements Resource
 
     public function getFyziklaniParticipants(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_PARTICIPANT, 'person_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
     }
 
     public function getEventTeachers(): GroupedSelection
@@ -355,11 +355,11 @@ class ModelPerson extends AbstractModel implements Resource
         $roles = [];
 
         $eventId = $event->event_id;
-        $teachers = $this->getEventTeachers()->where('event_id', $eventId);
+        $teachers = $this->getFyziklaniTeachers()->where('event_id', $eventId);
         if ($teachers->count('*')) {
             $teams = [];
             foreach ($teachers as $row) {
-                $teams[] = TeamModel::createFromActiveRow($row);
+                $teams[] = TeamTeacherModel::createFromActiveRow($row)->getFyziklaniTeam();
             }
             $roles[] = new FyziklaniTeacherRole($event, $teams);
         }

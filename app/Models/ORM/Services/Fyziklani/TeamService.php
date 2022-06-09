@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\OldAbstractServiceSingle;
 
@@ -21,8 +22,8 @@ class TeamService extends OldAbstractServiceSingle
     public static function serialiseTeams(ModelEvent $event): array
     {
         $teams = [];
-        foreach ($event->getPossiblyAttendingTeams() as $row) {
-            $team = TeamModel::createFromActiveRow($row);
+        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $row) {
+            $team = TeamModel2::createFromActiveRow($row);
             $teams[] = $team->__toArray();
         }
         return $teams;
@@ -30,7 +31,7 @@ class TeamService extends OldAbstractServiceSingle
 
     public function isCategoryReadyForClosing(ModelEvent $event, ?TeamCategory $category = null): bool
     {
-        $query = $event->getParticipatingTeams();
+        $query = $event->getParticipatingFyziklaniTeams();
         if ($category) {
             $query->where('category', $category->value);
         }

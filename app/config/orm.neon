@@ -859,9 +859,9 @@ orm:
                     title: _('Team Id')
                 status:
                     # TODO enum
-                    type: state
+                    type: enum
                     title: _('State')
-                    states: %event_participant.states%
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamState
                 phone:
                     type: phone
                     title: _('Phone')
@@ -872,9 +872,10 @@ orm:
                     omitInputField: true
                 category:
                     # TODO enum
-                    type: string
+                    type: enum
                     title: _('Category')
                     omitInputField: true
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamCategory
                 created:
                     type: dateTime
                     title: _('Created')

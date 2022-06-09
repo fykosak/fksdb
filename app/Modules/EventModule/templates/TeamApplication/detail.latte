@@ -2,7 +2,7 @@
 {varType FKSDB\Models\ORM\Models\ModelPerson $person}
 {varType FKSDB\Models\ORM\Models\ModelEvent $event}
 {varType bool $rankVisible}
-{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel $model}
+{varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType string $field}
 {varType mixed $teacher}
 {varType int $counter}
@@ -51,19 +51,19 @@
 
     <hr/>
 
-    <h2>{_'Teacher'}</h2>
-    {var $teacher = $model->getTeacher()}
-    {if $teacher}
+    <h2>{_'Teachers'}</h2>
+    {foreach $model->getTeachers() as $teacherRow}
+        {var FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $participant = \FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel::createFromActiveRow($teacherRow)}
         {control valuePrinter:row 'person.person_link', $teacher}
         {include personSchedule, person => $teacher,event=> $model->getEvent()}
-    {/if}
+    {/foreach}
     <hr/>
 
     <h2>{_'Participants'}</h2>
 
     {var $counter = 0;}
-    {foreach $model->getFyziklaniParticipants() as $row}
-        {var FKSDB\Models\ORM\Models\ModelEventParticipant $participant = \FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel::createFromActiveRow($row)->getEventParticipant()}
+    {foreach $model->getMembers() as $memberRow}
+        {var FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $participant = \FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel::createFromActiveRow($memberRow)}
         {php $counter++}
         {var $history = $participant->getPersonHistory()}
 

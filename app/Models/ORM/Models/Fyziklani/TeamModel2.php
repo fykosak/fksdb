@@ -13,6 +13,7 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -53,12 +54,11 @@ class TeamModel2 extends AbstractModel implements Resource
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    public function getParticipants(): GroupedSelection
+    public function getMembers(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_PARTICIPANT, 'fyziklani_team_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
     }
 
-//TODO
     public function getTeamSeat(): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
@@ -89,7 +89,7 @@ class TeamModel2 extends AbstractModel implements Resource
 
     public function hasOpenSubmitting(): bool
     {
-        return !isset($this->points);
+        return is_null($this->points);
     }
 
     /**
@@ -135,7 +135,7 @@ class TeamModel2 extends AbstractModel implements Resource
     public function getPersons(): array
     {
         $persons = [];
-        foreach ($this->getParticipants() as $pRow) {
+        foreach ($this->getMembers() as $pRow) {
             $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
@@ -179,6 +179,27 @@ class TeamModel2 extends AbstractModel implements Resource
             'forceA' => $this->force_a,
             'gameLang' => $this->game_lang->value,
         ];
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement
+    {
+        $node = $document->createElement('team');
+        $node->setAttribute('teamId', (string)$this->fyziklani_team_id);
+        XMLHelper::fillArrayToNode([
+            'teamId' => $this->fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->state->value,
+            'category' => $this->category->value,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'password' => $this->password,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ], $document, $node);
+        return $node;
     }
 
     public function getResourceId(): string
