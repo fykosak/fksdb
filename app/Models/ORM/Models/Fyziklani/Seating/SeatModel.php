@@ -27,7 +27,7 @@ class SeatModel extends AbstractModel
     public function getTeamSeat(ModelEvent $event): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)->where(
-            'e_fyziklani_team.event_id',
+            'fyziklani_team.event_id',
             $event->event_id
         )->fetch();
         return $row ? TeamSeatModel::createFromActiveRow($row) : null;

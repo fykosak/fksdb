@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\EventRole\{
-    ContestOrgRole,
+use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     FyziklaniTeacherRole,
-    ParticipantRole,
+    FyziklaniTeamMemberRole,
+    ParticipantRole
 };
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
@@ -158,14 +159,14 @@ class ModelPerson extends AbstractModel implements Resource
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
     }
 
-    public function getEventTeachers(): GroupedSelection
-    {
-        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
-    }
-
     public function getFyziklaniTeachers(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM);
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
+    }
+
+    public function getTeamMembers(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
     }
 
     public function isEventParticipant(?int $eventId = null): bool
@@ -355,7 +356,7 @@ class ModelPerson extends AbstractModel implements Resource
         $roles = [];
 
         $eventId = $event->event_id;
-        $teachers = $this->getFyziklaniTeachers()->where('event_id', $eventId);
+        $teachers = $this->getFyziklaniTeachers()->where('fyziklani_team.event_id', $eventId);
         if ($teachers->count('*')) {
             $teams = [];
             foreach ($teachers as $row) {
@@ -371,6 +372,10 @@ class ModelPerson extends AbstractModel implements Resource
         $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
         if (isset($eventParticipant)) {
             $roles[] = new ParticipantRole($event, ModelEventParticipant::createFromActiveRow($eventParticipant));
+        }
+        $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $eventId)->fetch();
+        if ($teamMember) {
+            $roles[] = new FyziklaniTeamMemberRole($event, TeamMemberModel::createFromActiveRow($teamMember));
         }
         $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
         if (isset($org)) {

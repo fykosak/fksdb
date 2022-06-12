@@ -32,16 +32,15 @@ abstract class ApplicationsPerCountryChart extends GeoChart
         return $this->serviceEventParticipant->explorer->query(
             'SELECT 
 region.country_iso3 as `country` ,
-COUNT(distinct e_fyziklani_team_id) as `t`, 
+COUNT(distinct fyziklani_team_id) as `t`, 
 COUNT(*) as `p`
-FROM event_participant ep
+FROM fyziklani_team_member ep
 LEFT JOIN person_history ph ON ph.person_id=ep.person_id AND ac_year = ?
 LEFT JOIN school USING (school_id)
 LEFT JOIN address USING (address_id)
 LEFT JOIN region USING (region_id)
-LEFT JOIN e_fyziklani_participant USING (event_participant_id)
-LEFT JOIN e_fyziklani_team USING (e_fyziklani_team_id, event_id)
-WHERE ep.event_id = ?
+LEFT JOIN fyziklani_team ft USING (fyziklani_team_id)
+WHERE ft.event_id = ?
 GROUP BY  region.country_iso3',
             $this->event->getContestYear()->ac_year,
             $this->event->event_id

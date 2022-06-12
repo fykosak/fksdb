@@ -6,6 +6,8 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
@@ -50,6 +52,13 @@ class RelatedPersonAuthorizator
             if ($model instanceof TeamModel) {
                 if ($model->teacher_id == $person->person_id) {
                     return true;
+                }
+            } elseif ($model instanceof TeamModel2) {
+                foreach ($model->getTeachers() as $teacherRow) {
+                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
+                    if ($teacher->person_id == $person->person_id) {
+                        return true;
+                    }
                 }
             } elseif (
                 $model instanceof ModelEventParticipant

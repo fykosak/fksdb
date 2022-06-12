@@ -54,7 +54,7 @@ class DbNames
 
     public const TAB_FYZIKLANI_TEAM = 'fyziklani_team';
     public const TAB_FYZIKLANI_TEAM_MEMBER = 'fyziklani_team_member';
-    public const TAB_FYZIKLANI_TEACHER = 'fyziklani_teacher';
+    public const TAB_FYZIKLANI_TEAM_TEACHER = 'fyziklani_team_teacher';
 
     /* For fyziklani */
     public const TAB_FYZIKLANI_TASK = 'fyziklani_task';

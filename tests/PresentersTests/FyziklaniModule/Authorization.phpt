@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
@@ -34,25 +34,29 @@ class Authorization extends FyziklaniTestCase
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
-            'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01'),
+            'email' => 'karkulka@les.cz',
+            'born' => DateTime::from('2000-01-01'),
         ], []);
 
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
-            'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01'),
+            'email' => 'karkulka2@les.cz',
+            'born' => DateTime::from('2000-01-01'),
         ], []);
         $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
-            'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
+            'email' => 'karkulka3@les.cz',
+            'born' => DateTime::from('2000-01-01'),
         ], []);
         $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
-            'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
+            'email' => 'karkulka4@les.cz',
+            'born' => DateTime::from('2000-01-01'),
         ], []);
         $this->getContainer()->getByType(ServiceContestant::class)->createNewModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
@@ -65,7 +69,7 @@ class Authorization extends FyziklaniTestCase
             'name' => 'tmp',
         ]);
 
-        $team = $this->getContainer()->getByType(TeamService::class)->createNewModel([
+        $team = $this->getContainer()->getByType(TeamService2::class)->createNewModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
@@ -73,7 +77,7 @@ class Authorization extends FyziklaniTestCase
         ]);
         $this->submit = $this->getContainer()->getByType(SubmitService::class)->createNewModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
+            'fyziklani_team_id' => $team->fyziklani_team_id,
             'points' => 5,
         ]);
 

@@ -46,7 +46,7 @@ class TeamModel2 extends AbstractModel implements Resource
 
     public function getTeachers(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEACHER);
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
     }
 
     public function getEvent(): ModelEvent

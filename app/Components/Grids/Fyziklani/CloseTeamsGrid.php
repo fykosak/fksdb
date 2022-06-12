@@ -45,14 +45,14 @@ class CloseTeamsGrid extends BaseGrid
         $this->paginate = false;
 
         $this->addColumns([
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.points',
-            'e_fyziklani_team.category',
-            'e_fyziklani_team.opened_submitting',
+            'fyziklani_team.name',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.points',
+            'fyziklani_team.category',
+            'fyziklani_team.opened_submitting',
         ]);
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
-            'id' => 'e_fyziklani_team_id',
+            'id' => 'fyziklani_team_id',
             'eventId' => 'event_id',
         ])->setShow(fn(ActiveRow $row): bool => TeamModel2::createFromActiveRow($row)->canClose(false));
     }

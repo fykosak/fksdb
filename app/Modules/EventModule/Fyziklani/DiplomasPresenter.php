@@ -85,7 +85,7 @@ class DiplomasPresenter extends BasePresenter
      */
     public function isReadyAllToCalculate(?TeamCategory $category = null): bool
     {
-        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->teamService->isReadyForClosing($this->getEvent(), $category);
     }
 
     /**

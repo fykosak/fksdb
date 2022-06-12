@@ -10,6 +10,7 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\Utils\Logging\Logger;
@@ -33,7 +34,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
             return;
         }
         $values['team']['category'] = $category->value;
-        /** @var TeamModel $model */
+        /** @var TeamModel|TeamModel2 $model */
         $model = $holder->primaryHolder->getModel2();
         $original = $model ? $model->category : null;
         if ($original != $category->value) {

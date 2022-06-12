@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use Nette\Utils\Html;
 
@@ -37,6 +38,9 @@ class TeamState implements EnumColumn
         return Html::el('span');
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function label(): string
     {
         switch ($this->value) {
@@ -57,11 +61,23 @@ class TeamState implements EnumColumn
             case self::CANCELED:
                 return _('cancelled');
         }
+        throw new NotImplementedException();
     }
 
-    public function cases(): array
+    /**
+     * @return TeamState[]
+     */
+    public static function cases(): array
     {
-        //TODO
-        return [];
+        return [
+            new self(self::APPLIED),
+            new self(self::PENDING),
+            new self(self::APPROVED),
+            new self(self::SPARE),
+            new self(self::PARTICIPATED),
+            new self(self::MISSED),
+            new self(self::DISQUALIFIED),
+            new self(self::CANCELED),
+        ];
     }
 }

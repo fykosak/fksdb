@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
@@ -48,9 +47,9 @@ class ResultsCategoryGrid extends BaseGrid
         $this->paginate = false;
 
         $this->addColumns([
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.rank_category',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.rank_category',
         ]);
     }
 

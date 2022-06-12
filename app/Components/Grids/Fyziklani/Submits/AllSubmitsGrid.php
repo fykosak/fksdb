@@ -13,7 +13,6 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\Message;
@@ -44,7 +43,7 @@ class AllSubmitsGrid extends SubmitsGrid
         $submits = $this->submitService->findAll(
             $this->event
         )/*->where('fyziklani_submit.points IS NOT NULL')*/
-        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
+        ->select('fyziklani_submit.*,fyziklani_task.label,fyziklani_team.name');
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback($this->getFilterCallBack());
         return $dataSource;
@@ -87,7 +86,7 @@ class AllSubmitsGrid extends SubmitsGrid
                 }
                 switch ($key) {
                     case 'team':
-                        $table->where('fyziklani_submit.e_fyziklani_team_id', $condition);
+                        $table->where('fyziklani_submit.fyziklani_team_id', $condition);
                         break;
                     case 'code':
                         $fullCode = TaskCodePreprocessor::createFullCode($condition);
@@ -95,7 +94,7 @@ class AllSubmitsGrid extends SubmitsGrid
                             $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
                             $table->where(
-                                'e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ',
+                                'fyziklani_team_id.fyziklani_team_id =? AND fyziklani_task.label =? ',
                                 $teamId,
                                 $taskLabel
                             );
@@ -150,7 +149,7 @@ class AllSubmitsGrid extends SubmitsGrid
         $teams = [];
         /** @var TeamModel2|ActiveRow $team */
         foreach ($rows as $team) {
-            $teams[$team->e_fyziklani_team_id] = $team->name;
+            $teams[$team->fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->event->getFyziklaniTasks();

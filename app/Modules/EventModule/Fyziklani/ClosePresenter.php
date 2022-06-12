@@ -11,11 +11,12 @@ use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -25,7 +26,7 @@ use Nette\Security\Resource;
 
 /**
  * @property FormControl closeCategoryAForm
- * @method TeamModel getEntity()
+ * @method TeamModel2 getEntity()
  */
 class ClosePresenter extends BasePresenter
 {
@@ -67,6 +68,7 @@ class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedTeam(): void
     {
@@ -75,6 +77,7 @@ class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizeHard(): void
     {
@@ -83,6 +86,7 @@ class ClosePresenter extends BasePresenter
 
     /**
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizeList(): void
     {
@@ -139,7 +143,7 @@ class ClosePresenter extends BasePresenter
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    protected function getORMService(): TeamService
+    protected function getORMService(): TeamService2
     {
         return $this->teamService;
     }

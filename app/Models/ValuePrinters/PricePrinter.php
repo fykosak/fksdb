@@ -10,7 +10,7 @@ use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
 use Nette\Utils\Html;
 
-class PricePrinter extends AbstractValuePrinter
+class PricePrinter extends ValuePrinter
 {
     /**
      * @param Price|MultiCurrencyPrice $value

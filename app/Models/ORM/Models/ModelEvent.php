@@ -100,11 +100,6 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
-    public function getTeams(): GroupedSelection
-    {
-        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
-    }
-
     public function getFyziklaniTeams(): GroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
@@ -112,13 +107,13 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
 
     public function getParticipatingFyziklaniTeams(): GroupedSelection
     {
-        return $this->getFyziklaniTeams()->where('status', TeamState::PARTICIPATED);
+        return $this->getFyziklaniTeams()->where('state', TeamState::PARTICIPATED);
     }
 
     public function getPossiblyAttendingFyziklaniTeams(): GroupedSelection
     {
         // TODO
-        return $this->getFyziklaniTeams()->where('status', self::POSSIBLY_ATTENDING_STATES);
+        return $this->getFyziklaniTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
     public function getEventOrgs(): GroupedSelection
@@ -144,10 +139,6 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
             'eventYear' => $this->event_year,
             'begin' => $this->begin ? $this->begin->format('c') : null,
             'end' => $this->end ? $this->end->format('c') : null,
-            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
-            // TODO remove
-            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null,
-            // TODO remove
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,

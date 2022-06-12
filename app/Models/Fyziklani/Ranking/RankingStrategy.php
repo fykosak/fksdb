@@ -6,10 +6,9 @@ namespace FKSDB\Models\Fyziklani\Ranking;
 
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Nette\Database\Table\GroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
@@ -18,10 +17,10 @@ class RankingStrategy
 {
     use SmartObject;
 
-    private TeamService $teamService;
+    private TeamService2 $teamService;
     private ModelEvent $event;
 
-    public function __construct(ModelEvent $event, TeamService $teamService)
+    public function __construct(ModelEvent $event, TeamService2 $teamService)
     {
         $this->teamService = $teamService;
         $this->event = $event;
@@ -47,7 +46,7 @@ class RankingStrategy
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
             $rank = $index + 1;
-            /** @var TeamModel $team */
+            /** @var TeamModel2 $team */
             $team = $teamData['team'];
             if ($total) {
                 $this->teamService->updateModel($team, ['rank_total' => $rank]);
@@ -57,7 +56,7 @@ class RankingStrategy
             $log->addHtml(
                 Html::el('li')
                     ->addText(
-                        _('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _(
+                        _('Team') . $team->name . ':(' . $team->fyziklani_team_id . ')' . _(
                             'Rank'
                         ) . ': ' . ($rank)
                     )

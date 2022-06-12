@@ -783,14 +783,27 @@ orm:
         e_fyziklani_team:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel
+            linkFactories:
+                detail:
+                    destination: ':Event:TeamApplication:detail'
+                    params:
+                        eventId: event_id
+                        id: e_fyziklani_team_id
+                    title: Detail
+        e_fyziklani_participant:
+            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
+            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
+        fyziklani_team:
+            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService2
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
             columnFactories:
-                e_fyziklani_team_id:
+                fyziklani_team_id:
                     type: primaryKey
                     title: _('Team Id')
-                status:
-                    type: state
+                state:
+                    type: enum
                     title: _('State')
-                    states: %event_participant.states%
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamState
                 phone:
                     type: phone
                     title: _('Phone')
@@ -800,9 +813,10 @@ orm:
                     title: _('Note')
                     omitInputField: true
                 category:
-                    type: string
+                    type: enum
                     title: _('Category')
                     omitInputField: true
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamCategory
                 created:
                     type: dateTime
                     title: _('Created')
@@ -845,75 +859,8 @@ orm:
                     destination: ':Event:TeamApplication:detail'
                     params:
                         eventId: event_id
-                        id: e_fyziklani_team_id
+                        id: fyziklani_team_id
                     title: Detail
-        e_fyziklani_participant:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
-            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
-        fyziklani_team:
-            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService2
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
-            columnFactories:
-                fyziklani_team_id:
-                    type: primaryKey
-                    title: _('Team Id')
-                status:
-                    # TODO enum
-                    type: enum
-                    title: _('State')
-                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamState
-                phone:
-                    type: phone
-                    title: _('Phone')
-                    writeOnly: false
-                note:
-                    type: text
-                    title: _('Note')
-                    omitInputField: true
-                category:
-                    # TODO enum
-                    type: enum
-                    title: _('Category')
-                    omitInputField: true
-                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamCategory
-                created:
-                    type: dateTime
-                    title: _('Created')
-                rank_category:
-                    type: string
-                    title: _('Rank in category')
-                    omitInputField: true
-                rank_total:
-                    type: string
-                    title: _('Total rank')
-                    omitInputField: true
-                points:
-                    type: string
-                    title: _('Points')
-                    omitInputField: true
-                game_lang:
-                    type: string
-                    title: _('Game language')
-                force_a:
-                    type: logic
-                    title: _('Force A')
-                password:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\PasswordColumnFactory
-                    title: _('Password')
-                name:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameColumnFactory
-                    title: _('Team name')
-                name_n_id:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\NameNIdColumnFactory
-                    title: _('Team')
-                opened_submitting:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam\OpenedSubmittingColumnFactory
-                    title: _('Submit opened?')
-
         fyziklani_team_member:
             service: Fykosak\NetteORM\DummyService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamPMemberModel

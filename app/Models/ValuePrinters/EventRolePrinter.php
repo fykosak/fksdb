@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ValuePrinters;
 
-use FKSDB\Models\Authorization\EventRole\{
-    ContestOrgRole,
+use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     EventRole,
     FyziklaniTeacherRole,
-    ParticipantRole,
+    FyziklaniTeamMemberRole,
+    ParticipantRole
 };
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -37,7 +37,6 @@ class EventRolePrinter
 
     /**
      * @param EventRole[] $roles
-     * @return Html
      */
     private function getHtml(array $roles): Html
     {
@@ -58,14 +57,20 @@ class EventRolePrinter
                         ->addAttributes(['class' => 'badge bg-color-7'])
                         ->addText(_('Event org') . ($role->eventOrg->note ? (' - ' . $role->eventOrg->note) : ''))
                 );
+            } elseif ($role instanceof FyziklaniTeamMemberRole) {
+                $container->addHtml(
+                    Html::el('span')
+                        ->addAttributes(['class' => 'badge bg-color-9'])
+                        ->addText(
+                            _('Team member') . ' - ' . _($role->member->getFyziklaniTeam()->state->label())
+                        )
+                );
             } elseif ($role instanceof ParticipantRole) {
-                $team = $role->eventParticipant->getFyziklaniTeam();
                 $container->addHtml(
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-10'])
                         ->addText(
-                            _('Participant') . ' - ' . _($role->eventParticipant->status) .
-                            ($team ? (' - team: ' . $team->name) : '')
+                            _('Participant') . ' - ' . _($role->eventParticipant->status)
                         )
                 );
             } elseif ($role instanceof ContestOrgRole) {

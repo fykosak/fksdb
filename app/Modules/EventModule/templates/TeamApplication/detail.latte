@@ -23,16 +23,16 @@
     <hr/>
     <h2>{_'Info'}</h2>
     {foreach [
-    'e_fyziklani_team.e_fyziklani_team_id',
-    'e_fyziklani_team.name',
-    'e_fyziklani_team.status',
-    'e_fyziklani_team.phone',
-    'e_fyziklani_team.note',
-    'e_fyziklani_team.password',
-    'e_fyziklani_team.category',
-    'e_fyziklani_team.created',
-    'e_fyziklani_team.game_lang',
-    'e_fyziklani_team.force_a',
+    'fyziklani_team.fyziklani_team_id',
+    'fyziklani_team.name',
+    'fyziklani_team.state',
+    'fyziklani_team.phone',
+    'fyziklani_team.note',
+    'fyziklani_team.password',
+    'fyziklani_team.category',
+    'fyziklani_team.created',
+    'fyziklani_team.game_lang',
+    'fyziklani_team.force_a',
     ] as $field}
         {control valuePrinter:row $field, $model}
     {/foreach}
@@ -40,7 +40,7 @@
 
     <h2>{_'Rank & points'}</h2>
     {if $rankVisible}
-        {foreach ['e_fyziklani_team.rank_category','e_fyziklani_team.rank_total','e_fyziklani_team.points'] as $field}
+        {foreach ['fyziklani_team.rank_category','fyziklani_team.rank_total','fyziklani_team.points'] as $field}
             {control valuePrinter:row $field, $model}
         {/foreach}
     {else}
