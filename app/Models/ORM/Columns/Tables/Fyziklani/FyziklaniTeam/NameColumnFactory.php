@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniTeam;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 class NameColumnFactory extends ColumnFactory
@@ -20,7 +20,7 @@ class NameColumnFactory extends ColumnFactory
      *       return $control;
      *   }
      * */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }

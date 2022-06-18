@@ -8,10 +8,10 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
-use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\TypedTableSelection;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use Nette\Database\Table\ActiveRow;
@@ -93,9 +93,9 @@ class SingleEventSource implements HolderSource
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $group */
+        /** @var Service|ServiceMulti[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            /** @var TypedTableSelection $secondarySelection */
+            /** @var TypedSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
                 /** @var ModelEvent $event */
@@ -181,7 +181,7 @@ class SingleEventSource implements HolderSource
     /**
      * @throws NeonSchemaException
      */
-    public function getHolder(AbstractModel $primaryModel): Holder
+    public function getHolder(Model $primaryModel): Holder
     {
         $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
         $holder->setModel($primaryModel);

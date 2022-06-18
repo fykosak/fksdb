@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -21,6 +22,9 @@ class EnumColumnFactory extends ColumnFactory
         $this->className = $className;
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     protected function createFormControl(...$args): BaseControl
     {
         $items = [];
@@ -35,7 +39,7 @@ class EnumColumnFactory extends ColumnFactory
     /**
      * @throws BadTypeException
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         $enum = $model->{$this->getModelAccessKey()};
         if (!$enum instanceof EnumColumn) {

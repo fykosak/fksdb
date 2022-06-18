@@ -11,6 +11,7 @@ use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     FyziklaniTeamMemberRole,
     ParticipantRole
 };
+use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\SmartObject;
@@ -20,6 +21,9 @@ class EventRolePrinter
 {
     use SmartObject;
 
+    /**
+     * @throws NotImplementedException
+     */
     public function __invoke(ModelPerson $person, ModelEvent $event): Html
     {
         $container = Html::el('span');
@@ -37,6 +41,7 @@ class EventRolePrinter
 
     /**
      * @param EventRole[] $roles
+     * @throws NotImplementedException
      */
     private function getHtml(array $roles): Html
     {

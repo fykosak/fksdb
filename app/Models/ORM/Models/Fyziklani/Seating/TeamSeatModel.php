@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -14,7 +14,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int fyziklani_team_id
  * @property-read ActiveRow fyziklani_team
  */
-class TeamSeatModel extends AbstractModel
+class TeamSeatModel extends Model
 {
 
     public function getSeat(): SeatModel

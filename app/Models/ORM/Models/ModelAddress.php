@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow region
  * @property-read int region_id
  */
-class ModelAddress extends AbstractModel
+class ModelAddress extends Model
 {
 
     public function getRegion(): ?ModelRegion

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read ActiveRow address
  */
-class ModelPostContact extends AbstractModel
+class ModelPostContact extends Model
 {
 
     public const TYPE_DELIVERY = 'D';

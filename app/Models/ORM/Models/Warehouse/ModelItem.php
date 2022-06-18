@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelContest;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
@@ -28,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka
  */
-class ModelItem extends AbstractModel implements Resource
+class ModelItem extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.item';
 

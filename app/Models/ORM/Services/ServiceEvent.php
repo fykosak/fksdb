@@ -7,17 +7,17 @@ namespace FKSDB\Models\ORM\Services;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\TypedTableSelection;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\TypedSelection;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method ModelEvent createNewModel(array $data)
  * @method ModelEvent|null findByPrimary($key)
  */
-class ServiceEvent extends AbstractService
+class ServiceEvent extends Service
 {
 
-    public function getEvents(ModelContestYear $contestYear): TypedTableSelection
+    public function getEvents(ModelContestYear $contestYear): TypedSelection
     {
         // TODO to related
         return $this->getTable()

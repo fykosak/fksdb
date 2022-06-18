@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -29,7 +29,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModel implements Resource, NodeCreator
+class ModelEvent extends Model implements Resource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13];

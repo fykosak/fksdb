@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 interface ExtendedPersonPresenter
 {
 
-    public function getModel(): ?AbstractModel;
+    public function getModel(): ?Model;
 
     /**
      * @note First '%s' is replaced with referenced person's name.

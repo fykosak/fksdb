@@ -18,11 +18,12 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     DateTime\TimeColumnFactory
 };
 use FKSDB\Models\ORM\Links\Link;
+use Fykosak\NetteORM\Extension;
 use Nette\DI\Definitions\ServiceDefinition;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\DI\Definitions\Statement;
 
-class ORMExtension extends \Fykosak\NetteORM\ORMExtension
+class ORMExtension extends Extension
 {
 
     /**

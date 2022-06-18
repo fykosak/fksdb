@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Security\Resource;
 
 /**
  * @property-read int producer_id
  * @property-read string name
  */
-class ModelProducer extends AbstractModel implements Resource
+class ModelProducer extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.producer';
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Links;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 
 class ApplicationEditLink extends LinkFactory
@@ -18,7 +18,7 @@ class ApplicationEditLink extends LinkFactory
     /**
      * @param ModelEventParticipant $model
      */
-    protected function getDestination(AbstractModel $model): string
+    protected function getDestination(Model $model): string
     {
         return ':Public:Application:default';
     }
@@ -26,7 +26,7 @@ class ApplicationEditLink extends LinkFactory
     /**
      * @param ModelEventParticipant $model
      */
-    protected function prepareParams(AbstractModel $model): array
+    protected function prepareParams(Model $model): array
     {
         if ($model->getEvent()->isTeamEvent()) {
             return [

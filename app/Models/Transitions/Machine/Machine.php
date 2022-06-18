@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Machine;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
@@ -145,5 +145,5 @@ abstract class Machine extends AbstractMachine
         $transition->callAfterExecute($holder);
     }
 
-    abstract public function createHolder(?AbstractModel $model): ModelHolder;
+    abstract public function createHolder(?Model $model): ModelHolder;
 }

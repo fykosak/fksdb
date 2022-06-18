@@ -6,13 +6,13 @@ namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use stdClass;
 
 class PersonPresenter extends BasePresenter implements ExtendedPersonPresenter
 {
 
-    public function getModel(): ?AbstractModel
+    public function getModel(): ?Model
     {
         return null;
     }

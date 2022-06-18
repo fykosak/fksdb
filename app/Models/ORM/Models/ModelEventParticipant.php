@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
@@ -42,7 +42,7 @@ use Nette\Security\Resource;
  * @property-read string schedule
  * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModel implements Resource, NodeCreator
+class ModelEventParticipant extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.participant';

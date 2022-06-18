@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -13,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int value
  * @property-read \DateTimeInterface modified
  */
-class ModelPersonHasFlag extends AbstractModel
+class ModelPersonHasFlag extends Model
 {
 
     public function getFlag(): ModelFlag

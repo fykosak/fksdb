@@ -114,7 +114,6 @@ class PersonFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();
         $this->logger->clear();
-        /** @var ModelPerson $person */
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->servicePersonInfo->storeModel(
             array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),

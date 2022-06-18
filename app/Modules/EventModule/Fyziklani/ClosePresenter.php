@@ -43,6 +43,7 @@ class ClosePresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleHard(): PageTitle
     {
@@ -54,6 +55,7 @@ class ClosePresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function titleTeam(): PageTitle
     {
@@ -99,6 +101,7 @@ class ClosePresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function actionTeam(): void
     {
@@ -126,6 +129,7 @@ class ClosePresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentCloseTeamControl(): CloseTeamComponent
     {
@@ -137,6 +141,7 @@ class ClosePresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
     {

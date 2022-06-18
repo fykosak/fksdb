@@ -24,7 +24,7 @@ use FKSDB\Models\Persons\SelfResolver;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -220,7 +220,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         $referencedId->setDefaultValue($person ?? ReferencedId::VALUE_PROMISE);
     }
 
-    public function getModel(): ?AbstractModel
+    public function getModel(): ?Model
     {
         return null; //we always create new contestant
     }

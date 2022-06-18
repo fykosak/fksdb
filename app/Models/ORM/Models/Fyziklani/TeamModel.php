@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -33,7 +31,7 @@ use Nette\Security\Resource;
  * @property-read ActiveRow person
  * @deprecated
  */
-class TeamModel extends AbstractModel implements Resource
+class TeamModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 

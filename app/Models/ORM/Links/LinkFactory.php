@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Links;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -26,7 +26,7 @@ abstract class LinkFactory
      * @throws InvalidLinkException
      * @throws CannotAccessModelException
      */
-    public function create(Presenter $presenter, AbstractModel $model): string
+    public function create(Presenter $presenter, Model $model): string
     {
         return $presenter->link(...$this->createLinkParameters($model));
     }
@@ -34,7 +34,7 @@ abstract class LinkFactory
     /**
      * @throws CannotAccessModelException
      */
-    protected function getModel(AbstractModel $modelSingle): ?AbstractModel
+    protected function getModel(Model $modelSingle): ?Model
     {
         if (!isset($this->modelClassName)) {
             return $modelSingle;
@@ -46,7 +46,7 @@ abstract class LinkFactory
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    public function createLinkParameters(AbstractModel $model): array
+    public function createLinkParameters(Model $model): array
     {
         $model = $this->getModel($model);
         if (is_null($model)) {
@@ -58,7 +58,7 @@ abstract class LinkFactory
         ];
     }
 
-    abstract protected function getDestination(AbstractModel $model): string;
+    abstract protected function getDestination(Model $model): string;
 
-    abstract protected function prepareParams(AbstractModel $model): array;
+    abstract protected function prepareParams(Model $model): array;
 }

@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read ActiveRow contest
@@ -22,7 +22,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string tex_signature
  * @property-read string domain_alias
  */
-class ModelOrg extends AbstractModel implements Resource
+class ModelOrg extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'org';

@@ -7,9 +7,9 @@ namespace FKSDB\Models\ORM\Services;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceEventOrg extends AbstractService
+class ServiceEventOrg extends Service
 {
 
     public function createNewModel(array $data): ModelEventOrg

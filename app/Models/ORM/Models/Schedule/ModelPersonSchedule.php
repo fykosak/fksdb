@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -20,7 +20,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModel
+class ModelPersonSchedule extends Model
 {
 
     public function getPerson(): ModelPerson

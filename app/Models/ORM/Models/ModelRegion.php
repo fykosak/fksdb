@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\PhoneNumber\InvalidPhoneNumberException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int region_id
@@ -16,7 +16,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int phone_nsn
  * @property-read string phone_prefix
  */
-class ModelRegion extends AbstractModel
+class ModelRegion extends Model
 {
 
     public const CZECH_REPUBLIC = 3;

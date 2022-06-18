@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
@@ -23,7 +23,7 @@ use Nette\Security\Resource;
  * @property-read ActiveRow fyziklani_task
  * @property-read \DateTimeInterface modified
  */
-class SubmitModel extends AbstractModel implements Resource
+class SubmitModel extends Model implements Resource
 {
 
     public const STATE_NOT_CHECKED = 'not_checked';

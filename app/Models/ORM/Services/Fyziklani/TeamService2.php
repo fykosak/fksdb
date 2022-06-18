@@ -7,12 +7,12 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method TeamModel2 findByPrimary(int $key)
  */
-class TeamService2 extends AbstractService
+class TeamService2 extends Service
 {
 
     public function isReadyForClosing(ModelEvent $event, ?TeamCategory $category = null): bool

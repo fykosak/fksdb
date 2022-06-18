@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\Transition;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -53,7 +53,7 @@ class PaymentMachine extends Machine
     /**
      * @param ModelPayment|null $model
      */
-    public function createHolder(?AbstractModel $model): PaymentHolder
+    public function createHolder(?Model $model): PaymentHolder
     {
         return new PaymentHolder($model, $this->servicePayment);
     }

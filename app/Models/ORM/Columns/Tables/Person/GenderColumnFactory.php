@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Person;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
@@ -29,7 +29,7 @@ class GenderColumnFactory extends ColumnFactory
     /**
      * @param ModelPerson $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         if ($model->gender == 'F') {
             return Html::el('span')->addAttributes(['class' => 'fa fa-venus']);

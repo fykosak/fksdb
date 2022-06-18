@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method ModelPersonInfo findByPrimary($key)
  */
-class ServicePersonInfo extends AbstractService
+class ServicePersonInfo extends Service
 {
     public function createNewModel(array $data): ModelPersonInfo
     {
@@ -26,7 +26,7 @@ class ServicePersonInfo extends AbstractService
      * @param ModelPersonInfo $model
      * @throws ModelException
      */
-    public function updateModel(AbstractModel $model, array $data): bool
+    public function updateModel(Model $model, array $data): bool
     {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {

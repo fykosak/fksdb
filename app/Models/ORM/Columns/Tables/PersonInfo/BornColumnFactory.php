@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -25,7 +25,7 @@ class BornColumnFactory extends ColumnFactory
     /**
      * @param ModelPersonInfo $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new DatePrinter('d.m.Y'))($model->born);
     }

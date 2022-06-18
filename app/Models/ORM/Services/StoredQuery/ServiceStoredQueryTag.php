@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceStoredQueryTag extends AbstractService
+class ServiceStoredQueryTag extends Service
 {
 }

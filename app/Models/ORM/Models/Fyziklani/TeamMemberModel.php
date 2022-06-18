@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -17,7 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int fyziklani_team_id
  * @property-read ActiveRow fyziklani_team
  */
-class TeamMemberModel extends AbstractModel
+class TeamMemberModel extends Model
 {
 
     public function getPerson(): ModelPerson
