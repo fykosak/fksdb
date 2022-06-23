@@ -18,7 +18,7 @@ class TeamState implements EnumColumn
     public const PARTICIPATED = 'participated';
     public const MISSED = 'missed';
     public const DISQUALIFIED = 'disqualified';
-    public const CANCELED = 'cancelled';
+    public const CANCELED = 'canceled';
 
     public string $value;
 
@@ -34,8 +34,33 @@ class TeamState implements EnumColumn
 
     public function badge(): Html
     {
-        // TODO
-        return Html::el('span');
+        switch ($this->value) {
+            case self::APPLIED:
+                $badge = 'badge bg-color-1';
+                break;
+            case self::PENDING:
+                $badge = 'badge bg-color-2';
+                break;
+            case self::APPROVED:
+                $badge = 'badge bg-color-1';
+                break;
+            case self::SPARE:
+                $badge = 'badge bg-color-9';
+                break;
+            case self::PARTICIPATED:
+                $badge = 'badge bg-color-3';
+                break;
+            case self::MISSED:
+                $badge = 'badge bg-color-4';
+                break;
+            case self::DISQUALIFIED:
+                $badge = 'badge bg-color-5';
+                break;
+            case self::CANCELED:
+                $badge = 'badge bg-color-6';
+                break;
+        }
+        return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
     }
 
     /**
@@ -59,7 +84,7 @@ class TeamState implements EnumColumn
             case self::DISQUALIFIED:
                 return _('disqualified');
             case self::CANCELED:
-                return _('cancelled');
+                return _('canceled');
         }
         throw new NotImplementedException();
     }
