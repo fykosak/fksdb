@@ -16,6 +16,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -333,8 +334,8 @@ class ModelPerson extends Model implements Resource
     public function getScheduleRests(
         ModelEvent $event,
         array $types = [
-            ModelScheduleGroup::TYPE_ACCOMMODATION,
-            ModelScheduleGroup::TYPE_WEEKEND,
+            ScheduleGroupType::ACCOMMODATION,
+            ScheduleGroupType::WEEKEND,
         ]
     ): array {
         $toPay = [];

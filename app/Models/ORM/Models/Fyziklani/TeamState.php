@@ -34,6 +34,7 @@ class TeamState implements EnumColumn
 
     public function badge(): Html
     {
+        $badge = '';
         switch ($this->value) {
             case self::APPLIED:
                 $badge = 'badge bg-color-1';
@@ -42,7 +43,7 @@ class TeamState implements EnumColumn
                 $badge = 'badge bg-color-2';
                 break;
             case self::APPROVED:
-                $badge = 'badge bg-color-1';
+                $badge = 'badge bg-color-7';
                 break;
             case self::SPARE:
                 $badge = 'badge bg-color-9';

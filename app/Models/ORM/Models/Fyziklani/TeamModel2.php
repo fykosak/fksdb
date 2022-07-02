@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
@@ -117,7 +117,7 @@ class TeamModel2 extends Model implements Resource
      * @return ModelPersonSchedule[]
      */
     public function getScheduleRest(
-        array $types = [ModelScheduleGroup::TYPE_ACCOMMODATION, ModelScheduleGroup::TYPE_WEEKEND]
+        array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {

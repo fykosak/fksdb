@@ -31,7 +31,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    final public function injectQuarterly(ServiceEventParticipant $serviceEventParticipant): void
+    final public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void
     {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }

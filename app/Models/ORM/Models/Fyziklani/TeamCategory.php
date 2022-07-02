@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Utils\Html;
 
-class TeamCategory
+class TeamCategory implements EnumColumn
 {
     public const A = 'A';
     public const B = 'B';
@@ -42,7 +43,7 @@ class TeamCategory
         ];
     }
 
-    public function getName(): string
+    public function label(): string
     {
         switch ($this->value) {
             case self::A:
@@ -98,7 +99,7 @@ class TeamCategory
     public function badge(): Html
     {
         // TODO
-        return Html::el('span');
+        return Html::el('span')->addText($this->label());
     }
 
     /**

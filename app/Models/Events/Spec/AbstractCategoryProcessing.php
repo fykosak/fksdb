@@ -40,7 +40,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
         if ($original != $category->value) {
             $logger->log(
                 new Message(
-                    sprintf(_('Team inserted to category %s.'), $category->getName()),
+                    sprintf(_('Team inserted to category %s.'), $category->label()),
                     Message::LVL_INFO
                 )
             );
@@ -113,7 +113,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     {
         $results = [];
         foreach (TeamCategory::casesForEvent($field->getBaseHolder()->holder->primaryHolder->event) as $category) {
-            $results[$category->value] = $category->getName();
+            $results[$category->value] = $category->label();
         }
         return $results;
     }

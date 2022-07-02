@@ -6,7 +6,7 @@ namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\GeoCharts\GeoChart;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
@@ -14,7 +14,7 @@ abstract class ApplicationsPerCountryChart extends GeoChart
 {
 
     protected ModelEvent $event;
-    protected ServiceEventParticipant $serviceEventParticipant;
+    protected TeamMemberService $teamMemberService;
 
     public function __construct(Container $context, ModelEvent $event, string $scale)
     {
@@ -22,14 +22,14 @@ abstract class ApplicationsPerCountryChart extends GeoChart
         $this->event = $event;
     }
 
-    public function injectSecondary(ServiceEventParticipant $serviceEventParticipant): void
+    public function injectSecondary(TeamMemberService $teamMemberService): void
     {
-        $this->serviceEventParticipant = $serviceEventParticipant;
+        $this->teamMemberService = $teamMemberService;
     }
 
     final protected function getTeams(): ResultSet
     {
-        return $this->serviceEventParticipant->explorer->query(
+        return $this->teamMemberService->explorer->query(
             'SELECT 
 region.country_iso3 as `country` ,
 COUNT(distinct fyziklani_team_id) as `t`, 
