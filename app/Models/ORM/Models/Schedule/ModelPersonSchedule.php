@@ -68,20 +68,6 @@ class ModelPersonSchedule extends Model
     }
 
     /**
-     * @return mixed
-     */
-    public function &__get(string $key)
-    {
-        $value = parent::__get($key);
-        switch ($key) {
-            case 'schedule_group_type':
-                $value = ScheduleGroupType::tryFrom($value);
-                break;
-        }
-        return $value;
-    }
-
-    /**
      * @throws NotImplementedException
      */
     public function getLabel(): string
