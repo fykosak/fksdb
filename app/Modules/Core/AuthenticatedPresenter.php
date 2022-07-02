@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Models\Authentication\GithubAuthenticator;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\TokenAuthenticator;
 use FKSDB\Models\Authorization\ContestAuthorizator;
@@ -13,7 +12,6 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Http\IResponse;
 use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
@@ -36,20 +34,17 @@ abstract class AuthenticatedPresenter extends BasePresenter
 
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
-    protected GithubAuthenticator $githubAuthenticator;
     protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
 
     final public function injectAuthenticated(
         TokenAuthenticator $tokenAuthenticator,
         PasswordAuthenticator $passwordAuthenticator,
-        GithubAuthenticator $githubAuthenticator,
         ContestAuthorizator $contestAuthorizator,
         EventAuthorizator $eventAuthorizator
     ): void {
         $this->tokenAuthenticator = $tokenAuthenticator;
         $this->passwordAuthenticator = $passwordAuthenticator;
-        $this->githubAuthenticator = $githubAuthenticator;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
     }
@@ -94,10 +89,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
 
         if ($methods[self::AUTH_HTTP]) {
             $this->tryHttpAuth();
-        }
-
-        if ($methods[self::AUTH_GITHUB]) {
-            $this->tryGithub();
         }
         // if token did not succeed redirect to login credentials page
         if (!$this->getUser()->isLoggedIn() && ($methods[self::AUTH_LOGIN])) {
@@ -188,30 +179,6 @@ abstract class AuthenticatedPresenter extends BasePresenter
     public function requiresLogin(): bool
     {
         return true;
-    }
-
-    /**
-     * @throws ForbiddenRequestException|BadRequestException
-     * @throws \Exception
-     */
-    private function tryGithub(): void
-    {
-        if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
-            return;
-        }
-
-        try {
-            $login = $this->githubAuthenticator->authenticate($this->getHttpRequest());
-
-            Debugger::log("$login signed in using Github authentication.");
-
-            $this->getUser()->login($login);
-
-            $method = $this->formatAuthorizedMethod($this->getAction());
-            $this->tryCall($method, $this->getParameters());
-        } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Authentication failure.'), IResponse::S403_FORBIDDEN, $exception);
-        }
     }
 
     private function optionalLoginRedirect(): void
