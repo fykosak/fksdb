@@ -41,7 +41,7 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceMDsefParticipant
+                service: @orm.event_participant.service
 
                 states:
                     - participated

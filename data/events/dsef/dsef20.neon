@@ -35,7 +35,7 @@ events:
 
         baseMachines:
             PARTICIPANT_DSEF:
-                service: @event.ServiceMDsefParticipant
+                service: @orm.event_participant.service
 
                 states:
                     - applied
@@ -95,15 +95,6 @@ events:
                         modifiable: %events.dsef20.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef20.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    e_dsef_group_id:
-                        label: _('Preferovaná skupina')
-                        required: true
-                        modifiable: %events.dsef20.appCond%
-                        factory: Chooser(Zvolit skupinu, FKSDB\Models\Events\Spec\Dsef\GroupOptions())
-                    accomodation:
-                        label: _('Ubytování')
-                        description: %events.dsef20.accomodation%
-                        modifiable: %events.dsef20.appCond%
                     lunch_count:
                         modifiable: %events.dsef20.appCond%
                         description:  à 30 Kč

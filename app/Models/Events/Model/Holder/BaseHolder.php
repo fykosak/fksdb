@@ -16,7 +16,6 @@ use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -150,7 +149,7 @@ class BaseHolder
     }
 
     /**
-     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|ModelEventParticipant
+     * @return ActiveRow|ModelMFyziklaniParticipant|ModelEventParticipant
      */
     public function getModel2(): ?ActiveRow
     {

@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Security\User;
@@ -63,7 +62,6 @@ class RelatedPersonAuthorizator
             } elseif (
                 $model instanceof ModelEventParticipant
                 || $model instanceof ModelMFyziklaniParticipant
-                || $model instanceof ModelMDsefParticipant
             ) {
                 if ($model->person_id == $person->person_id) {
                     return true;

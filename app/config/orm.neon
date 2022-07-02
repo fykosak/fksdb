@@ -1052,6 +1052,4 @@ orm:
             service: FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail
 
 services:
-    event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
-
     event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
