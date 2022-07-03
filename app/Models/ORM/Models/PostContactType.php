@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
-// TODO to enum
+
 class PostContactType
 {
     public const DELIVERY = 'D';
