@@ -6,6 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
+use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
@@ -35,6 +36,12 @@ class TeamMemberModel extends Model
         return $this->getPerson()->getHistoryByContestYear($this->getFyziklaniTeam()->getEvent()->getContestYear());
     }
 
+    public function getSchool(): ?ModelSchool
+    {
+        $history = $this->getPersonHistory();
+        return $history ? $history->getSchool() : null;
+    }
+
     public function __toArray(): array
     {
         return [
@@ -42,7 +49,6 @@ class TeamMemberModel extends Model
             'personId' => $this->person_id,
         ];
     }
-
 
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
