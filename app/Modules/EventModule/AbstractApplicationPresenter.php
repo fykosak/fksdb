@@ -16,6 +16,7 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\UI\PageTitle;
@@ -49,6 +50,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     final public function titleDetail(): PageTitle
     {
+        $entity = $this->getEntity();
+        if ($entity instanceof TeamModel2) {
+            return new PageTitle(
+                null,
+                sprintf(_('Application detail "%s"'), $entity->name),
+                'fa fa-user'
+            );
+        }
         return new PageTitle(
             null,
             sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()),
