@@ -255,7 +255,11 @@ class EventWebModel extends WebModel
             'email' => $member->getPerson()->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
-            'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
+            'countryIso' => $history ? (
+            ($school = $history->getSchool())
+                ? $school->getAddress()->getRegion()->country_iso
+                : null
+            ) : null,
         ];
     }
 
@@ -270,7 +274,8 @@ class EventWebModel extends WebModel
             'countryIso' => $history ? (
             ($school = $history->getSchool())
                 ? $school->getAddress()->getRegion()->country_iso
-                : null) : null,
+                : null
+            ) : null,
         ];
     }
 

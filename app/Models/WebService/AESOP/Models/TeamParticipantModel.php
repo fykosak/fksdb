@@ -26,19 +26,18 @@ class TeamParticipantModel extends EventModel
     {
         $query = $this->explorer->query(
             "select ap.*,
-       eft.`rank_category`                        as `rank`,
-       eft.`points`,
-       if(eft.`status` = 'participated', '', 'N') as `status`
+       ft.`rank_category`                        as `rank`,
+       ft.`points`,
+       if(ft.`state` = 'participated', '', 'N') as `status`
 from v_aesop_person ap
-         right join event_participant ep on ep.`person_id` = ap.`x-person_id`
-         join `event` e on e.`event_id` = ep.`event_id`
-         join `e_fyziklani_participant` efp on efp.`event_participant_id` = ep.`event_participant_id`
-         join `e_fyziklani_team` eft on efp.`e_fyziklani_team_id` = eft.`e_fyziklani_team_id`
+         right join fyziklani_team_member ftm on ftm.`person_id` = ap.`x-person_id`
+    join fyziklani_team ft on ft.fyziklani_team_id = ftm.fyziklani_team_id
+         join `event` e on e.`event_id` = ft.`event_id`
 where ap.`x-ac_year` = ?
   and e.`event_type_id` = ?
   and e.`year` = ?
-  and eft.`status` in ('participated', 'missed', 'cancelled', 'rejected')
-  and eft.`category` = ?
+  and ft.`state` in ('participated', 'missed', 'cancelled', 'rejected')
+  and ft.`category` = ?
 order by surname, name;",
             $this->contestYear->ac_year,
             $this->mapEventNameToTypeId(),

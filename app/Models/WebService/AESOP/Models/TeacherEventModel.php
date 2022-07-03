@@ -18,12 +18,13 @@ ap.`gender`, ap.`born`,
 -- ap.`school`, ap.`school-name`, ap.`end-year`,
 ap.`email`, ap.`spam-flag`, ap.`spam-date`,
 'U' as `teacher` from v_aesop_person ap
-join `e_fyziklani_team` eft on ap.`x-person_id` = eft.`teacher_id`
-join `event` e on e.`event_id` = eft.`event_id`
+join `fyziklani_team_teacher` ftt on ap.`x-person_id` = ftt.`person_id`
+    join `fyziklani_team` ft on ftt.fyziklani_team_id = ft.fyziklani_team_id
+join `event` e on e.`event_id` = ft.`event_id`
 where
 	e.`event_type_id` = ?
 	and e.`year` = ?
-	and eft.status = 'participated'
+	and ft.state = 'participated'
 order by surname, name",
             $this->mapEventNameToTypeId(),
             $this->contestYear->year

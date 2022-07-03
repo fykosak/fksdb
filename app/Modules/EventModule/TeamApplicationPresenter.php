@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
@@ -12,12 +13,15 @@ use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -101,5 +105,22 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     protected function getORMService(): TeamService2
     {
         return $this->teamService;
+    }
+    /**
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     * @throws CannotAccessModelException
+     * @throws GoneException
+     */
+    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
+    {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
+        return new TransitionButtonsComponent(
+            $this->getContext(),
+            new ApplicationHandler($this->getEvent(), new MemoryLogger(), $this->getContext()),
+            $source->getHolder($this->getEntity())
+        );
     }
 }
