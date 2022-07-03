@@ -6,7 +6,8 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -18,10 +19,9 @@ class ResultsCategoryGrid extends BaseGrid
 {
 
     private ModelEvent $event;
+    private TeamCategory $category;
 
-    private string $category;
-
-    public function __construct(ModelEvent $event, string $category, Container $container)
+    public function __construct(ModelEvent $event, TeamCategory $category, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -30,8 +30,8 @@ class ResultsCategoryGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $teams = $this->event->getParticipatingTeams()
-            ->where('category', $this->category)
+        $teams = $this->event->getParticipatingFyziklaniTeams()
+            ->where('category', $this->category->value)
             ->order('name');
         return new NDataSource($teams);
     }
@@ -47,14 +47,14 @@ class ResultsCategoryGrid extends BaseGrid
         $this->paginate = false;
 
         $this->addColumns([
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.rank_category',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.rank_category',
         ]);
     }
 
     protected function getModelClassName(): string
     {
-        return TeamModel::class;
+        return TeamModel2::class;
     }
 }

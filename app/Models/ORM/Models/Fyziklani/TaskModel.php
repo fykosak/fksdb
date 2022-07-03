@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int event_id
  * @property-read ActiveRow event
  */
-class TaskModel extends AbstractModel
+class TaskModel extends Model
 {
 
     public function getEvent(): ModelEvent

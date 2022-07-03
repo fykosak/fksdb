@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Events;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @deprecated
  */
-class ModelDsefGroup extends AbstractModel
+class ModelDsefGroup extends Model
 {
 
 }

@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 class TextColumnFactory extends ColumnFactory
 {
 
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
@@ -63,10 +63,14 @@ class TimelineComponent extends FrontEndComponent
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
-            $organisers[] = ['since' => $since->format('c'), 'until' => $until->format('c'), 'model' => [
-                'orgId' => $org->org_id,
-                'contestId' => $org->contest_id,
-            ]];
+            $organisers[] = [
+                'since' => $since->format('c'),
+                'until' => $until->format('c'),
+                'model' => [
+                    'orgId' => $org->org_id,
+                    'contestId' => $org->contest_id,
+                ],
+            ];
         }
         $contestants = [];
         foreach ($this->person->getContestants() as $row) {
@@ -83,12 +87,16 @@ class TimelineComponent extends FrontEndComponent
                 'model' => [
                     'contestantId' => $contestant->ct_id,
                     'contestId' => $contestant->contest_id,
-                ]];
+                ],
+            ];
         }
-        return [$dates, [
-            'orgs' => $organisers,
-            'contestants' => $contestants,
-        ]];
+        return [
+            $dates,
+            [
+                'orgs' => $organisers,
+                'contestants' => $contestants,
+            ],
+        ];
     }
 
     private function calculateEvents(): array
@@ -107,16 +115,22 @@ class TimelineComponent extends FrontEndComponent
             $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
         }
         $eventTeachers = [];
-        foreach ($this->person->getEventTeachers() as $row) {
-            $team = TeamModel::createFromActiveRow($row);
-            $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
-            $events[] = $team->getEvent();
+        foreach ($this->person->getFyziklaniTeachers() as $row) {
+            $teacher = TeamTeacherModel::createFromActiveRow($row);
+            $eventTeachers[] = [
+                'event' => $this->eventToArray($teacher->getFyziklaniTeam()->getEvent()),
+                'model' => null,
+            ];
+            $events[] = $teacher->getFyziklaniTeam()->getEvent();
         }
-        return [$events, [
-            'eventOrgs' => $eventOrganisers,
-            'eventParticipants' => $eventParticipants,
-            'eventTeachers' => $eventTeachers,
-        ]];
+        return [
+            $events,
+            [
+                'eventOrgs' => $eventOrganisers,
+                'eventParticipants' => $eventParticipants,
+                'eventTeachers' => $eventTeachers,
+            ],
+        ];
     }
 
     /**

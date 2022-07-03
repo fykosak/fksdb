@@ -6,9 +6,9 @@ namespace FKSDB\Models\Events\FormAdjustments;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -93,7 +93,7 @@ class ResourceAvailability extends AbstractAdjustment
         }
 
         $usage = 0;
-        /** @var AbstractService|AbstractServiceMulti[]|BaseHolder[][] $serviceData */
+        /** @var Service|ServiceMulti[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);

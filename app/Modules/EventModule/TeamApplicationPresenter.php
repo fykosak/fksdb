@@ -12,22 +12,23 @@ use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
- * @method TeamModel getEntity()
+ * @method TeamModel2 getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter
 {
 
-    private TeamService $teamService;
+    private TeamService2 $teamService;
 
-    final public function injectServiceFyziklaniTeam(TeamService $teamService): void
+    final public function injectServiceFyziklaniTeam(TeamService2 $teamService): void
     {
         $this->teamService = $teamService;
     }
@@ -37,6 +38,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -63,6 +65,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentSeating(): ProviderComponent
     {
@@ -95,7 +98,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
         return new TeamRestsComponent($this->getContext());
     }
 
-    protected function getORMService(): TeamService
+    protected function getORMService(): TeamService2
     {
         return $this->teamService;
     }

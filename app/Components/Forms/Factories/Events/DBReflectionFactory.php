@@ -8,8 +8,8 @@ use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
@@ -41,9 +41,9 @@ class DBReflectionFactory extends AbstractFactory
 
             $service->getTable()->getName();
             $tableName = null;
-            if ($service instanceof AbstractService) {
+            if ($service instanceof Service) {
                 $tableName = $service->getTable()->getName();
-            } elseif ($service instanceof AbstractServiceMulti) {
+            } elseif ($service instanceof ServiceMulti) {
                 $tableName = $service->mainService->getTable()->getName();
             }
             if ($tableName) {
@@ -66,7 +66,7 @@ class DBReflectionFactory extends AbstractFactory
                 $element->addCondition(Form::FILLED)
                     ->addRule(Form::INTEGER, _('%label must be an integer.'));
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
@@ -75,7 +75,7 @@ class DBReflectionFactory extends AbstractFactory
             } else {
                 $element = new TextInput($field->getLabel());
                 if ($size) {
-                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                    $element->addRule(Form::MAX_LENGTH, _('Max length reached'), $size);
                 }
             }
         }
@@ -104,10 +104,10 @@ class DBReflectionFactory extends AbstractFactory
         $columnName = $field->getName();
 
         $column = null;
-        if ($service instanceof AbstractService) {
+        if ($service instanceof Service) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
-        } elseif ($service instanceof AbstractServiceMulti) {
+        } elseif ($service instanceof ServiceMulti) {
             $tableName = $service->mainService->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Models\ORM\DbNames;
@@ -19,7 +19,7 @@ use Nette\Security\IIdentity;
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModel implements IIdentity
+class ModelLogin extends Model implements IIdentity
 {
 
     public function getPerson(): ?ModelPerson

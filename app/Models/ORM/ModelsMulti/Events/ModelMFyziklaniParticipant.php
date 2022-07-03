@@ -7,12 +7,12 @@ namespace FKSDB\Models\ORM\ModelsMulti\Events;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 
 /**
  * @property-read ModelEventParticipant $mainModel
  */
-class ModelMFyziklaniParticipant extends AbstractModelMulti
+class ModelMFyziklaniParticipant extends ModelMulti
 {
 
     public function getEvent(): ModelEvent

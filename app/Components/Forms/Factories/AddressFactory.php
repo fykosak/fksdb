@@ -90,7 +90,7 @@ class AddressFactory
         }
 
         $postalCode = $container->addText('postal_code', _('postal code'))
-            ->addRule(Form::MAX_LENGTH, null, 5)
+            ->addRule(Form::MAX_LENGTH, _('Max length reached'), 5)
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
 
         $country = $container->addSelect('country_iso', _('Country'));

@@ -12,7 +12,7 @@ use FKSDB\Models\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Models\ORM\Columns\TestedColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Fykosak\Utils\Logging\Logger;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\DataTesting\TestLog;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\BaseControl;
@@ -46,7 +46,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
             $control = new TextInput($this->getTitle());
         }
         $control->setHtmlAttribute('placeholder', _('+XXXXXXXXXXXX'));
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
             ->addRule(function (BaseControl $control): bool {
@@ -58,7 +58,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         return $control;
     }
 
-    final public function runTest(Logger $logger, AbstractModel $model): void
+    final public function runTest(Logger $logger, Model $model): void
     {
 
         $value = $model->{$this->getModelAccessKey()};
@@ -80,7 +80,7 @@ class PhoneColumnFactory extends ColumnFactory implements TestedColumnFactory
         }
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

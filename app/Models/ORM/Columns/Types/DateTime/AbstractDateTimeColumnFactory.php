@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types\DateTime;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Utils\Html;
 
 abstract class AbstractDateTimeColumnFactory extends ColumnFactory
@@ -19,7 +19,7 @@ abstract class AbstractDateTimeColumnFactory extends ColumnFactory
         $this->format = $format;
     }
 
-    final protected function createHtmlValue(AbstractModel $model): Html
+    final protected function createHtmlValue(Model $model): Html
     {
         return (new DatePrinter($this->format ?? $this->getDefaultFormat()))($model->{$this->getModelAccessKey()});
     }

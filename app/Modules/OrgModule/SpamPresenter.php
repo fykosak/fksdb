@@ -6,6 +6,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
@@ -27,6 +28,7 @@ class SpamPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -64,6 +66,7 @@ class SpamPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {

@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\ReferencedAccessor;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 
 class MailCallback implements TransitionCallback
 {

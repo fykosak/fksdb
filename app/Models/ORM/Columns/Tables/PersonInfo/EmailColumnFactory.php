@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
 use Nette\Forms\Controls\BaseControl;
@@ -27,7 +27,7 @@ class EmailColumnFactory extends ColumnFactory
     /**
      * @param ModelPersonInfo $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new EmailPrinter())($model->email);
     }

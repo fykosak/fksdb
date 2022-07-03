@@ -7,12 +7,12 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -71,9 +71,9 @@ class PersonFormComponent extends EntityFormComponent
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return ModelPostContact::TYPE_PERMANENT;
+                return PostContactType::PERMANENT;
             case self::POST_CONTACT_DELIVERY:
-                return ModelPostContact::TYPE_DELIVERY;
+                return PostContactType::DELIVERY;
             default:
                 throw new InvalidArgumentException();
         }
@@ -114,7 +114,6 @@ class PersonFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();
         $this->logger->clear();
-        /** @var ModelPerson $person */
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
         $this->servicePersonInfo->storeModel(
             array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),

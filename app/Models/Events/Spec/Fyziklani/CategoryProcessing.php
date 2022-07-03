@@ -7,10 +7,7 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 use FKSDB\Models\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
-use Fykosak\Utils\Logging\Logger;
-use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use Nette\Forms\Form;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -19,43 +16,18 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractCategoryProcessing
 {
 
-    protected function innerProcess(array $states, ArrayHash $values, Holder $holder, Logger $logger, ?Form $form): void
+    protected function getCategory(Holder $holder, ArrayHash $values): ?TeamCategory
     {
-        if (!isset($values['team'])) {
-            return;
-        }
         if ($values['team']['force_a']) {
-            $values['team']['category'] = TeamModel::CATEGORY_HIGH_SCHOOL_A;
-        } else {
-            $participants = $this->extractValues($holder);
-            $values['team']['category'] = $this->getCategory($participants);
+            return TeamCategory::tryFrom(TeamCategory::A);
         }
-        // TODO hack if all study year fields are disabled
-        $model = $holder->primaryHolder->getModel2();
-        /** @var TeamModel $model */
-        $original = $model ? $model->category : null;
-
-        if ($original != $values['team']['category']) {
-            $logger->log(
-                new Message(
-                    sprintf(
-                        _('Team inserted to category %s.'),
-                        TeamModel::mapCategoryToName($values['team']['category'])
-                    ),
-                    Message::LVL_INFO
-                )
-            );
-        }
-    }
-
-    protected function getCategory(array $participants): string
-    {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;
 
-        foreach ($participants as $participant) {
-            $studyYear = $participant['study_year'];
+        $members = $this->extractValues($holder);
+        foreach ($members as $member) {
+            $studyYear = $member['study_year'];
             $coefficient = ($studyYear >= 1 && $studyYear <= 4) ? $studyYear : 0;
             $coefficientSum += $coefficient;
 
@@ -66,17 +38,17 @@ class CategoryProcessing extends AbstractCategoryProcessing
             }
         }
 
-        $categoryHandle = $participants ? ($coefficientSum / count($participants)) : 999;
+        $categoryHandle = $members ? ($coefficientSum / count($members)) : 999;
 
         // if ($abroad > 0) {
         //     $result = 'F';
         // } else
         if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
-            $result = TeamModel::CATEGORY_HIGH_SCHOOL_C;
+            $result = TeamCategory::tryFrom(TeamCategory::C);
         } elseif ($categoryHandle <= 3 && $count4 <= 2) {
-            $result = TeamModel::CATEGORY_HIGH_SCHOOL_B;
+            $result = TeamCategory::tryFrom(TeamCategory::B);
         } elseif ($categoryHandle <= 4) {
-            $result = TeamModel::CATEGORY_HIGH_SCHOOL_A;
+            $result = TeamCategory::tryFrom(TeamCategory::A);
         } else {
             throw new SubmitProcessingException(_('Cannot determine category.'));
             //$result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A; // TODO hack if all study year fields are disabled

@@ -10,8 +10,8 @@ use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\UI\PageTitle;
-use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -46,7 +46,7 @@ trait EntityPresenterTrait
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }
 
-    abstract protected function getORMService(): AbstractService;
+    abstract protected function getORMService(): Service;
 
     /* ****************** TITLES ***************************** */
     /**
@@ -73,7 +73,7 @@ trait EntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    public function getEntity(bool $throw = true): ?AbstractModel
+    public function getEntity(bool $throw = true): ?Model
     {
         static $model;
         // protection for tests ev . change URL during app is running
@@ -87,7 +87,7 @@ trait EntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    private function loadModel(bool $throw = true): ?AbstractModel
+    private function loadModel(bool $throw = true): ?Model
     {
         $candidate = $this->getORMService()->findByPrimary($this->id);
         if ($candidate) {

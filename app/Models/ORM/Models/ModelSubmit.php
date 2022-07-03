@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read \DateTimeInterface submitted_on
@@ -22,7 +22,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read ActiveRow task
  * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModel implements Resource
+class ModelSubmit extends Model implements Resource
 {
 
     public const SOURCE_UPLOAD = 'upload';

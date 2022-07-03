@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ModelTeacher;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use Fykosak\Utils\UI\PageTitle;
@@ -29,6 +30,7 @@ class TeacherPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -56,6 +58,7 @@ class TeacherPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -74,6 +77,7 @@ class TeacherPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): TeacherFormComponent
     {

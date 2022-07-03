@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\ModelsMulti;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\SmartObject;
@@ -12,17 +12,17 @@ use Nette\SmartObject;
 /**
  * @deprecated
  */
-abstract class AbstractModelMulti extends ActiveRow
+abstract class ModelMulti extends ActiveRow
 {
     use SmartObject;
 
-    public AbstractModel $mainModel;
-    public AbstractModel $joinedModel;
+    public Model $mainModel;
+    public Model $joinedModel;
 
     /**
-     * @note DO NOT use directly, use AbstractServiceMulti::composeModel
+     * @note DO NOT use directly, use ServiceMulti::composeModel
      */
-    public function __construct(AbstractModel $mainModel, AbstractModel $joinedModel)
+    public function __construct(Model $mainModel, Model $joinedModel)
     {
         parent::__construct($joinedModel->toArray(), $joinedModel->getTable());
         $this->joinedModel = $joinedModel;

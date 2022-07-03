@@ -4,28 +4,25 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model;
 
 /**
  * Service class to high-level manipulation with ORM objects.
  * Use singleton descendant implementations.
  *
- * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
- *       duplicated in all descendant classes.
- *
  * @deprecated
- * @use AbstractServiceSingle
- * @method AbstractModel storeModel(array $data, ?AbstractModel $model = null)
+ * @use ServiceSingle
+ * @method Model storeModel(array $data, ?Model $model = null)
  */
-abstract class OldAbstractServiceSingle extends AbstractService
+abstract class OldServiceSingle extends Service
 {
 
     /**
      * @deprecated
      * @internal Used also in MultiTableSelection.
      */
-    public function createFromArray(array $data): AbstractModel
+    public function createFromArray(array $data): Model
     {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);

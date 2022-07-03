@@ -9,12 +9,12 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
 
-class ServiceSchedulePayment extends AbstractService
+class ServiceSchedulePayment extends Service
 {
 
     /**

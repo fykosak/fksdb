@@ -16,8 +16,8 @@ use FKSDB\Models\Persons\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter as IExtendedPersonPresenter;
-use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Control;
@@ -42,7 +42,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param ModelContestant|null $model
      * @param Form|Control[][] $form
      */
-    protected function setDefaults(?AbstractModel $model, Form $form): void
+    protected function setDefaults(?Model $model, Form $form): void
     {
         if (!$model) {
             return;
@@ -127,7 +127,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): AbstractService;
+    abstract protected function getORMService(): Service;
 
     /**
      * @throws BadRequestException
@@ -139,7 +139,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         return $this->createComponentFormControl(false);
     }
 
-    protected function loadModel(int $id): ?AbstractModel
+    protected function loadModel(int $id): ?Model
     {
         return $this->getORMService()->findByPrimary($id);
     }

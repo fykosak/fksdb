@@ -6,7 +6,7 @@ namespace FKSDB\Models\Transitions\Transition\Statements\Conditions;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\Security\Resource;
@@ -15,7 +15,7 @@ class ImplicitEventRole extends EventRole
 {
 
     /**
-     * @param AbstractModel[] $args
+     * @param Model[] $args
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */

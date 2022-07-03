@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Services\{
     ServiceSubmit,
     ServiceTask,
 };
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 
 class SeriesTable
 {
@@ -45,7 +45,7 @@ class SeriesTable
         $this->serviceSubmit = $serviceSubmit;
     }
 
-    public function getContestants(): TypedTableSelection
+    public function getContestants(): TypedSelection
     {
         return $this->serviceContestant->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
@@ -53,7 +53,7 @@ class SeriesTable
         ])->order('person.family_name, person.other_name, person.person_id');
     }
 
-    public function getTasks(): TypedTableSelection
+    public function getTasks(): TypedSelection
     {
         $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $this->contestYear->contest_id,
@@ -67,7 +67,7 @@ class SeriesTable
         return $tasks->order('tasknr');
     }
 
-    public function getSubmits(): TypedTableSelection
+    public function getSubmits(): TypedSelection
     {
         return $this->serviceSubmit->getTable()
             ->where('ct_id', $this->getContestants())

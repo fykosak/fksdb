@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -54,6 +55,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -62,6 +64,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -95,6 +98,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function authorizedDetail(): void
     {
@@ -109,6 +113,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -132,6 +137,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function createComponentStalkingContainer(): StalkingContainer
     {
@@ -168,6 +174,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentCreateForm(): PersonFormComponent
     {
@@ -176,6 +183,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     private function getUserPermissions(bool $throw = true): int
     {
@@ -204,6 +212,7 @@ class PersonPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): PersonFormComponent
     {

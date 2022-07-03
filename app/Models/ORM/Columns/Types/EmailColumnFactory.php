@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Types;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -23,7 +23,7 @@ class EmailColumnFactory extends ColumnFactory
         return $control;
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }

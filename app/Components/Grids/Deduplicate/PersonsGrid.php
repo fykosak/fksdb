@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Deduplicate;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -18,12 +18,12 @@ use NiftyGrid\DuplicateColumnException;
 class PersonsGrid extends BaseGrid
 {
 
-    private TypedTableSelection $trunkPersons;
+    private TypedSelection $trunkPersons;
 
     /** @var ModelPerson[] trunkId => ModelPerson */
     private array $pairs;
 
-    public function __construct(TypedTableSelection $trunkPersons, array $pairs, Container $container)
+    public function __construct(TypedSelection $trunkPersons, array $pairs, Container $container)
     {
         parent::__construct($container);
         $this->trunkPersons = $trunkPersons;

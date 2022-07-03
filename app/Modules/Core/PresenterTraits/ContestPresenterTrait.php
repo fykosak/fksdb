@@ -9,7 +9,7 @@ use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceContest;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Security\User;
@@ -59,9 +59,9 @@ trait ContestPresenterTrait
     }
 
     /**
-     * @return TypedTableSelection|ModelContest[]
+     * @return TypedSelection|ModelContest[]
      */
-    private function getAvailableContests(): TypedTableSelection
+    private function getAvailableContests(): TypedSelection
     {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();

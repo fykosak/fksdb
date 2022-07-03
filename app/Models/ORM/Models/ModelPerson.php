@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\Authorization\EventRole\{
-    ContestOrgRole,
+use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     FyziklaniTeacherRole,
-    ParticipantRole,
+    FyziklaniTeamMemberRole,
+    ParticipantRole
 };
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
@@ -27,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read string gender
  * @property-read \DateTimeInterface created
  */
-class ModelPerson extends AbstractModel implements Resource
+class ModelPerson extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'person';
@@ -111,12 +112,12 @@ class ModelPerson extends AbstractModel implements Resource
 
     public function getDeliveryAddress(): ?ModelAddress
     {
-        return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
+        return $this->getAddress(PostContactType::DELIVERY);
     }
 
     public function getPermanentAddress(): ?ModelAddress
     {
-        return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
+        return $this->getAddress(PostContactType::PERMANENT);
     }
 
     public function getAddress(string $type): ?ModelAddress
@@ -133,12 +134,12 @@ class ModelPerson extends AbstractModel implements Resource
 
     public function getDeliveryPostContact(): ?ModelPostContact
     {
-        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+        return $this->getPostContact(PostContactType::DELIVERY);
     }
 
     public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact
     {
-        $postContact = $this->getPostContact(ModelPostContact::TYPE_PERMANENT);
+        $postContact = $this->getPostContact(PostContactType::PERMANENT);
         if ($postContact) {
             return $postContact;
         } elseif (!$noFallback) {
@@ -153,9 +154,19 @@ class ModelPerson extends AbstractModel implements Resource
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    public function getEventTeachers(): GroupedSelection
+    public function getFyziklaniParticipants(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
+    }
+
+    public function getFyziklaniTeachers(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER, 'person_id');
+    }
+
+    public function getTeamMembers(): GroupedSelection
+    {
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
     }
 
     public function isEventParticipant(?int $eventId = null): bool
@@ -322,8 +333,8 @@ class ModelPerson extends AbstractModel implements Resource
     public function getScheduleRests(
         ModelEvent $event,
         array $types = [
-            ModelScheduleGroup::TYPE_ACCOMMODATION,
-            ModelScheduleGroup::TYPE_WEEKEND,
+            ScheduleGroupType::ACCOMMODATION,
+            ScheduleGroupType::WEEKEND,
         ]
     ): array {
         $toPay = [];
@@ -345,11 +356,11 @@ class ModelPerson extends AbstractModel implements Resource
         $roles = [];
 
         $eventId = $event->event_id;
-        $teachers = $this->getEventTeachers()->where('event_id', $eventId);
+        $teachers = $this->getFyziklaniTeachers()->where('fyziklani_team.event_id', $eventId);
         if ($teachers->count('*')) {
             $teams = [];
             foreach ($teachers as $row) {
-                $teams[] = TeamModel::createFromActiveRow($row);
+                $teams[] = TeamTeacherModel::createFromActiveRow($row)->getFyziklaniTeam();
             }
             $roles[] = new FyziklaniTeacherRole($event, $teams);
         }
@@ -361,6 +372,10 @@ class ModelPerson extends AbstractModel implements Resource
         $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
         if (isset($eventParticipant)) {
             $roles[] = new ParticipantRole($event, ModelEventParticipant::createFromActiveRow($eventParticipant));
+        }
+        $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $eventId)->fetch();
+        if ($teamMember) {
+            $roles[] = new FyziklaniTeamMemberRole($event, TeamMemberModel::createFromActiveRow($teamMember));
         }
         $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
         if (isset($org)) {

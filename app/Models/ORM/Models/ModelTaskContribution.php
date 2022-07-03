@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int contribution_id
@@ -14,7 +14,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read ActiveRow person
  * @property-read ActiveRow task
  */
-class ModelTaskContribution extends AbstractModel
+class ModelTaskContribution extends Model
 {
 
     public const TYPE_AUTHOR = 'author';

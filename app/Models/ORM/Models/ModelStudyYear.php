@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
-class ModelStudyYear extends AbstractModel
+class ModelStudyYear extends Model
 {
 
 }

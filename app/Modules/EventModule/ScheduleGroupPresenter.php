@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use Fykosak\Utils\UI\PageTitle;
@@ -53,6 +54,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -72,6 +74,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): ScheduleGroupFormComponent
     {
@@ -99,6 +102,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentItemsGrid(): ItemsGrid
     {
