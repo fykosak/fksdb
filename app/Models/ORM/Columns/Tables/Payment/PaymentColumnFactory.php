@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -38,7 +38,7 @@ class PaymentColumnFactory extends ColumnFactory
     /**
      * @throws \Exception
      */
-    protected function prerenderOriginalModel(AbstractModel $originalModel): ?Html
+    protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
         if ($originalModel instanceof ModelPersonSchedule && !$originalModel->getScheduleItem()->isPayable()) {
             return Html::el('span')
@@ -53,7 +53,7 @@ class PaymentColumnFactory extends ColumnFactory
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         $factory = $this->reflectionFactory->loadColumnFactory(...explode('.', 'payment.state'));
         $html = $factory->render($model, FieldLevelPermission::ALLOW_FULL);

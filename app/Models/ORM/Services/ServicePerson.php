@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method ModelPerson|null findByPrimary($key)
  * @method ModelPerson createNewModel(array $data)
  */
-class ServicePerson extends AbstractService
+class ServicePerson extends Service
 {
 
     public function findByEmail(?string $email): ?ModelPerson
@@ -28,7 +28,7 @@ class ServicePerson extends AbstractService
     /**
      * @param ModelPerson|null $model
      */
-    public function storeModel(array $data, ?AbstractModel $model = null): ModelPerson
+    public function storeModel(array $data, ?Model $model = null): ModelPerson
     {
         if (is_null($model) && is_null($data['gender'])) {
             $data['gender'] = ModelPerson::inferGender($data);

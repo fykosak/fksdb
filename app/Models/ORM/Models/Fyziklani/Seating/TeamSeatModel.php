@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_seat_id
  * @property-read ActiveRow fyziklani_seat
- * @property-read int e_fyziklani_team_id
- * @property-read ActiveRow e_fyziklani_team
+ * @property-read int fyziklani_team_id
+ * @property-read ActiveRow fyziklani_team
  */
-class TeamSeatModel extends AbstractModel
+class TeamSeatModel extends Model
 {
 
     public function getSeat(): SeatModel
@@ -22,10 +22,10 @@ class TeamSeatModel extends AbstractModel
         return SeatModel::createFromActiveRow($this->fyziklani_seat);
     }
 
-    public function getTeam(): ?TeamModel
+    public function getTeam(): ?TeamModel2
     {
-        if ($this->e_fyziklani_team_id) {
-            return TeamModel::createFromActiveRow($this->e_fyziklani_team);
+        if ($this->fyziklani_team_id) {
+            return TeamModel2::createFromActiveRow($this->fyziklani_team);
         }
         return null;
     }

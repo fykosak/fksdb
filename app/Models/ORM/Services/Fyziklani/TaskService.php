@@ -6,9 +6,9 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class TaskService extends AbstractService
+class TaskService extends Service
 {
 
     public function findByLabel(string $label, ModelEvent $event): ?TaskModel

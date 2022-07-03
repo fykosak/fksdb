@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
@@ -17,7 +17,7 @@ use Nette\Security\Resource;
  * @property-read int contest_id
  * @property-read int year
  */
-class ModelContestant extends AbstractModel implements Resource
+class ModelContestant extends Model implements Resource
 {
     public const RESOURCE_ID = 'contestant';
 

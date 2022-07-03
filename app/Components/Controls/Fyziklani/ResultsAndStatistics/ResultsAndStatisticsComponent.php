@@ -6,20 +6,19 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 class ResultsAndStatisticsComponent extends AjaxComponent
 {
-    private TeamService $teamService;
+    private TeamService2 $teamService;
     private TaskService $taskService;
     private SubmitService $submitService;
     private ModelEvent $event;
@@ -39,7 +38,7 @@ class ResultsAndStatisticsComponent extends AjaxComponent
     final public function injectPrimary(
         SubmitService $submitService,
         TaskService $taskService,
-        TeamService $teamService
+        TeamService2 $teamService
     ): void {
         $this->submitService = $submitService;
         $this->taskService = $taskService;

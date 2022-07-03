@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\LinkGenerator;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
@@ -27,7 +27,7 @@ class EventLink extends ColumnFactory
      * @param ModelEvent $model
      * @throws InvalidLinkException
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return Html::el('a')->addAttributes([
             'href' => $this->linkGenerator->link('Event:Dashboard:default', ['eventId' => $model->event_id]),

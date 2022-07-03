@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int event_id
@@ -17,7 +17,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
-class GameSetupModel extends AbstractModel
+class GameSetupModel extends Model
 {
     /**
      * @return int[]

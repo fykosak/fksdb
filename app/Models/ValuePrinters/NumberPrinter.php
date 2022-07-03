@@ -7,7 +7,7 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
-class NumberPrinter extends AbstractValuePrinter
+class NumberPrinter extends ValuePrinter
 {
     public const NULL_VALUE_NOT_SET = 'notSet';
     public const NULL_VALUE_INF = 'infinite';

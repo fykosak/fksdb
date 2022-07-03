@@ -10,7 +10,7 @@ use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
-class PersonLink extends AbstractValuePrinter
+class PersonLink extends ValuePrinter
 {
 
     private LinkGenerator $presenterComponent;

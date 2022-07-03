@@ -7,7 +7,7 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Components\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
-abstract class AbstractValuePrinter
+abstract class ValuePrinter
 {
     /**
      * @param mixed $value

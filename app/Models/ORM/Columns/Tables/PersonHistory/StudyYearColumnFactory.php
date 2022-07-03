@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonHistory;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -58,7 +58,7 @@ class StudyYearColumnFactory extends ColumnFactory
         ];
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }

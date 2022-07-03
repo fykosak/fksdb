@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Schedule;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use Nette\Database\Table\ActiveRow;
 
@@ -13,7 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow person_schedule
  * @property-read int person_schedule_id
  */
-class ModelSchedulePayment extends AbstractModel
+class ModelSchedulePayment extends Model
 {
 
     public function getPayment(): ModelPayment

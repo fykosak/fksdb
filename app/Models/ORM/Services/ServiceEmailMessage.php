@@ -6,17 +6,17 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelEmailMessage;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method ModelEmailMessage createNewModel(array $data)
  */
-class ServiceEmailMessage extends AbstractService
+class ServiceEmailMessage extends Service
 {
 
-    public function getMessagesToSend(int $limit): TypedTableSelection
+    public function getMessagesToSend(int $limit): TypedSelection
     {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
     }

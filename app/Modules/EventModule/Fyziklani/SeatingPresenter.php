@@ -13,7 +13,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
 use FKSDB\Models\ORM\Services\Fyziklani\Seating\RoomService;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -85,7 +85,7 @@ class SeatingPresenter extends BasePresenter
         $offset = $this->getParameter('offset', 0);
         return new ProviderComponent(
             new PageComponent($this->getContext()),
-            $this->getEvent()->getTeams()->limit((int)$limit, (int)$offset),
+            $this->getEvent()->getFyziklaniTeams()->limit((int)$limit, (int)$offset),
             $this->getContext()
         );
     }
@@ -93,6 +93,7 @@ class SeatingPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentSeatingPreview(): ProviderComponent
     {
@@ -116,7 +117,7 @@ class SeatingPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): AbstractService
+    protected function getORMService(): Service
     {
         return $this->roomService;
     }

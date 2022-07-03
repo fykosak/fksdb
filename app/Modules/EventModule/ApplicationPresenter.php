@@ -12,6 +12,7 @@ use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
@@ -32,6 +33,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      *
      * use same method of permissions as trait
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function authorizedImport(): void
     {
@@ -49,6 +51,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Grids;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -12,10 +12,10 @@ use NiftyGrid\DataSource\NDataSource;
 abstract class RelatedGrid extends BaseGrid
 {
 
-    protected AbstractModel $model;
+    protected Model $model;
     protected string $tableName;
 
-    public function __construct(Container $container, AbstractModel $model, string $tableName)
+    public function __construct(Container $container, Model $model, string $tableName)
     {
         parent::__construct($container);
         $this->tableName = $tableName;

@@ -7,14 +7,14 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 
 class PersonProvider implements FilteredDataProvider
 {
 
     private const PLACE = 'place';
     private ServicePerson $servicePerson;
-    private TypedTableSelection $searchTable;
+    private TypedSelection $searchTable;
 
     public function __construct(ServicePerson $servicePerson)
     {

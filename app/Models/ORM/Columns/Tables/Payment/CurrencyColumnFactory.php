@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\Models\ModelPayment;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Price\Currency;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -29,7 +29,7 @@ class CurrencyColumnFactory extends ColumnFactory
      * @param ModelPayment $model
      * @throws \Exception
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return Html::el('span')->addHtml($model->getCurrency()->getLabel());
     }

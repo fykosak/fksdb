@@ -8,8 +8,8 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\AbstractService;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use Fykosak\NetteORM\Service;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -65,7 +65,7 @@ class MultiResourceAvailability extends AbstractAdjustment
             'service' => $holder->primaryHolder->getService(),
             'holders' => [$holder->primaryHolder],
         ];
-        /** @var BaseHolder[][]|Field[][]|AbstractService[]|AbstractServiceMulti[] $services */
+        /** @var BaseHolder[][]|Field[][]|Service[]|ServiceMulti[] $services */
         $services = [];
         $controls = [];
         foreach ($groups as $group) {

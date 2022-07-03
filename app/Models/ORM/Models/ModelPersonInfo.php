@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read string email
@@ -38,7 +38,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
  */
-class ModelPersonInfo extends AbstractModel
+class ModelPersonInfo extends Model
 {
 
     public function getPerson(): ModelPerson

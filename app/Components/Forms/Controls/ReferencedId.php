@@ -10,10 +10,10 @@ use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Utils\Promise;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
@@ -34,7 +34,7 @@ class ReferencedId extends HiddenField
     private const JSON_DATA = 'referencedContainer';
     private ReferencedContainer $referencedContainer;
     private SearchContainer $searchContainer;
-    private AbstractService $service;
+    private Service $service;
     private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
@@ -45,7 +45,7 @@ class ReferencedId extends HiddenField
     public function __construct(
         SearchContainer $searchContainer,
         ReferencedContainer $referencedContainer,
-        AbstractService $service,
+        Service $service,
         ReferencedHandler $handler
     ) {
         $this->referencedContainer = $referencedContainer;
@@ -95,7 +95,7 @@ class ReferencedId extends HiddenField
         $this->promise = $promise;
     }
 
-    public function getService(): AbstractService
+    public function getService(): Service
     {
         return $this->service;
     }
@@ -121,7 +121,7 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @param string|int|ActiveRow|AbstractModel|ModelPerson $value
+     * @param string|int|ActiveRow|Model|ModelPerson $value
      * @return static
      */
     public function setValue($value, bool $force = false): self

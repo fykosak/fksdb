@@ -6,19 +6,19 @@ namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\Handler;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
 class PointsEntryComponent extends AjaxComponent
 {
-    private TeamService $teamService;
+    private TeamService2 $teamService;
     private TaskService $taskService;
     private ModelEvent $event;
 
@@ -30,7 +30,7 @@ class PointsEntryComponent extends AjaxComponent
 
     final public function injectPrimary(
         TaskService $taskService,
-        TeamService $teamService
+        TeamService2 $teamService
     ): void {
         $this->taskService = $taskService;
         $this->teamService = $teamService;

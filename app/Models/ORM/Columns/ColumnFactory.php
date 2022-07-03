@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\ReferencedAccessor;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;
@@ -133,7 +133,7 @@ abstract class ColumnFactory
         throw new OmittedControlException();
     }
 
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
@@ -141,7 +141,7 @@ abstract class ColumnFactory
     /**
      * @throws CannotAccessModelException
      */
-    final public function render(AbstractModel $originalModel, int $userPermissionsLevel): Html
+    final public function render(Model $originalModel, int $userPermissionsLevel): Html
     {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
@@ -157,7 +157,7 @@ abstract class ColumnFactory
         return $this->createHtmlValue($model);
     }
 
-    protected function prerenderOriginalModel(AbstractModel $originalModel): ?Html
+    protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
         return null;
     }
@@ -165,7 +165,7 @@ abstract class ColumnFactory
     /**
      * @throws CannotAccessModelException
      */
-    protected function resolveModel(AbstractModel $modelSingle): ?AbstractModel
+    protected function resolveModel(Model $modelSingle): ?Model
     {
         return ReferencedAccessor::accessModel($modelSingle, $this->modelClassName);
     }

@@ -19,7 +19,7 @@ class SinceColumnFactory extends ColumnFactory
             throw new \InvalidArgumentException();
         }
         $control = new TextInput($this->getTitle());
-        $control->addRule(Form::NUMERIC);
+        $control->addRule(Form::NUMERIC, _('Must be a number'));
         $control->addRule(Form::FILLED);
         $control->addRule(Form::RANGE, _('First year is not in interval [%d, %d].'), [$min, $max]);
         return $control;

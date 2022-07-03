@@ -6,7 +6,7 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
-class DatePrinter extends AbstractValuePrinter
+class DatePrinter extends ValuePrinter
 {
     protected string $format;
 

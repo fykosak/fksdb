@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Fyziklani\Seating;
 
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class TeamSeatService extends AbstractService
+class TeamSeatService extends Service
 {
 }
 /*

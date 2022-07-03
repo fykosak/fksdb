@@ -6,7 +6,7 @@ namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\ORM\Models\ModelContestYear;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\Database\Connection;
 
@@ -25,7 +25,7 @@ class ExtendedPersonHandlerFactory
     }
 
     public function create(
-        AbstractService $service,
+        Service $service,
         ModelContestYear $contestYear,
         string $invitationLang
     ): ExtendedPersonHandler {

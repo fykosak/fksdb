@@ -6,7 +6,10 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
+use FKSDB\Models\ORM\Models\Fyziklani\GameLang;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
@@ -20,7 +23,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModel
+class ModelPersonSchedule extends Model
 {
 
     public function getPerson(): ModelPerson
@@ -71,8 +74,8 @@ class ModelPersonSchedule extends AbstractModel
     {
         $item = $this->getScheduleItem();
         $group = $item->getScheduleGroup();
-        switch ($group->schedule_group_type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+        switch ($group->schedule_group_type->value) {
+            case ScheduleGroupType::ACCOMMODATION:
                 return sprintf(
                     _('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
@@ -80,7 +83,7 @@ class ModelPersonSchedule extends AbstractModel
                     $group->end->format(_('__date')),
                     $item->name_cs
                 );
-            case ModelScheduleGroup::TYPE_WEEKEND:
+            case ScheduleGroupType::WEEKEND:
                 return $item->getLabel();
             default:
                 throw new NotImplementedException();
