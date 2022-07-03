@@ -14,7 +14,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use Fykosak\NetteORM\Model;
@@ -113,12 +112,12 @@ class ModelPerson extends Model implements Resource
 
     public function getDeliveryAddress(): ?ModelAddress
     {
-        return $this->getAddress(ModelPostContact::TYPE_DELIVERY);
+        return $this->getAddress(PostContactType::DELIVERY);
     }
 
     public function getPermanentAddress(): ?ModelAddress
     {
-        return $this->getAddress(ModelPostContact::TYPE_PERMANENT);
+        return $this->getAddress(PostContactType::PERMANENT);
     }
 
     public function getAddress(string $type): ?ModelAddress
@@ -135,12 +134,12 @@ class ModelPerson extends Model implements Resource
 
     public function getDeliveryPostContact(): ?ModelPostContact
     {
-        return $this->getPostContact(ModelPostContact::TYPE_DELIVERY);
+        return $this->getPostContact(PostContactType::DELIVERY);
     }
 
     public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact
     {
-        $postContact = $this->getPostContact(ModelPostContact::TYPE_PERMANENT);
+        $postContact = $this->getPostContact(PostContactType::PERMANENT);
         if ($postContact) {
             return $postContact;
         } elseif (!$noFallback) {

@@ -12,10 +12,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelPostContact extends Model
 {
-
-    public const TYPE_DELIVERY = 'D';
-    public const TYPE_PERMANENT = 'P';
-
     public function getAddress(): ?ModelAddress
     {
         return $this->address ? ModelAddress::createFromActiveRow($this->address) : null;

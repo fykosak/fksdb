@@ -22,7 +22,6 @@ services:
     # astrid
     - FKSDB\Models\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, ...)
     #auth
-    - FKSDB\Models\Authentication\GithubAuthenticator
     - FKSDB\Models\Authentication\PasswordAuthenticator
     - FKSDB\Models\Authentication\TokenAuthenticator
     - FKSDB\Models\Authentication\GoogleAuthenticator
@@ -44,8 +43,6 @@ services:
     events.captcha: FKSDB\Models\Events\FormAdjustments\Captcha
     #export
     - FKSDB\Models\Exports\ExportFormatFactory
-    #github
-    - FKSDB\Models\Github\EventFactory
      #localization
     -  \Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #maitenance

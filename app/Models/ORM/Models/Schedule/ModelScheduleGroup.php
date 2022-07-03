@@ -66,6 +66,20 @@ class ModelScheduleGroup extends Model implements Resource, NodeCreator
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'schedule_group_type':
+                $value = ScheduleGroupType::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
+
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('scheduleGroup');
