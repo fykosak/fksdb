@@ -18,7 +18,7 @@ class TeamState implements EnumColumn
     public const PARTICIPATED = 'participated';
     public const MISSED = 'missed';
     public const DISQUALIFIED = 'disqualified';
-    public const CANCELED = 'canceled';
+    public const CANCELLED = 'cancelled';
 
     public string $value;
 
@@ -57,7 +57,7 @@ class TeamState implements EnumColumn
             case self::DISQUALIFIED:
                 $badge = 'badge bg-color-5';
                 break;
-            case self::CANCELED:
+            case self::CANCELLED:
                 $badge = 'badge bg-color-6';
                 break;
         }
@@ -84,7 +84,7 @@ class TeamState implements EnumColumn
                 return _('missed');
             case self::DISQUALIFIED:
                 return _('disqualified');
-            case self::CANCELED:
+            case self::CANCELLED:
                 return _('canceled');
         }
         throw new NotImplementedException();
@@ -103,7 +103,7 @@ class TeamState implements EnumColumn
             new self(self::PARTICIPATED),
             new self(self::MISSED),
             new self(self::DISQUALIFIED),
-            new self(self::CANCELED),
+            new self(self::CANCELLED),
         ];
     }
 }
