@@ -191,7 +191,7 @@ class EventWebModel extends WebModel
                 'rankCategory' => $team->rank_category,
                 'rankTotal' => $team->rank_total,
                 'forceA' => $team->force_a,
-                'gameLang' => $team->game_lang,
+                'gameLang' => $team->game_lang->value,
                 'teachers' => [],
                 'members' => [],
             ];

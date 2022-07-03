@@ -23,4 +23,6 @@
         {control personScheduleGrid $model->getPerson(),$model->getEvent()}
     {/if}
     {include ../AbstractApplication/applicationControl.latte}
+    <h2>{_'Transitions'}</h2>
+    {control applicationTransitions}
 {/block}
