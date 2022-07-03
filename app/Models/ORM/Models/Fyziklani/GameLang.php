@@ -29,7 +29,7 @@ class GameLang implements EnumColumn
 
     public function badge(): Html
     {
-        return Html::el('span')->addAttributes(['class' => 'badge badge-primary'])->addText($this->label());
+        return Html::el('span')->addAttributes(['class' => 'badge bg-primary'])->addText($this->label());
     }
 
     public function label(): string
