@@ -1,0 +1,47 @@
+{varType FKSDB\Models\Events\Model\Holder\BaseHolder $baseHolder}
+{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\Events\Model\Holder\Holder $holder}
+{varType array $linkArgs}
+{var $link = $control->link(...$linkArgs)}
+
+<p>
+    {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
+    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} skvělý výkon v uplynulých sériích FYKOSu, je nám
+    ctí Tě pozvat{if strpos($baseHolder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na
+    {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong>
+    od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
+</p>
+
+<p>
+    A co že to soustředění vlastně je? Jedná se o týdenní akci, kde se můžeš těšit jak na odborný program (přednášky
+    z fyziky a matematiky, fyzikální experimenty), tak i na ten neodborný (hry, výlety), a samozřejmě na ostatní
+    řešitele. Každé soustředění doprovází tematická legenda. Jaká je to letos Ti zatím neprozradíme, ale slibujeme, že
+    se máš na co těšit! Na <a href="https://fykos.cz/akce/soustredeni/start" target="_blank">našich stránkách</a> se
+    můžeš podívat na fotky z minulých let, kde jsme se například ocitli ve světě kouzelníků, Hunger Games nebo v zasazení Silmarillionu.
+</p>
+{include ../inc/price.cs.latte} {* vloží odstavec s cenou a odkazem na pravidla *}
+<p>
+    Své rozhodnutí, zda bys chtěl{if $person->gender == 'F'}a{/if} přijet,{if strpos($baseHolder->getModelState(), 'spare') === 0}
+    kdyby se nám uvolnilo místo,{/if} nám dej vědět pokud možno co nejdříve, nejpozději však do
+    <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí
+odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $person->gender == 'F'}á{else}ý{/if},
+    jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost
+    své účasti nám pak dej vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny
+    s Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře
+    je dole tlačítko na odmítnutí účasti). Alespoň Ti pak nebudou chodit upomínky.
+</p>
+
+<p n:if="strpos($baseHolder->getModelState(), 'spare') === 0">
+    O tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->getParameter('letterResolutionTime')|date:'j. n.'}.
+</p>
+
+<p>
+    Pokud bys měl{if $person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
+    <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>.
+</p>
+
+<p>
+    Za organizátory se na Tebe moc těší<br>
+    {$holder->getParameter('letterSignature')}
+</p>
