@@ -7,7 +7,6 @@ namespace FKSDB\Tests\Events\Schedule;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
@@ -56,8 +55,8 @@ EOT
             'price_eur' => 30,
             'capacity' => $this->getAccommodationCapacity(),
         ]);
-
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->createNewModel([
+//TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'e_dsef_group_id' => 2,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',
