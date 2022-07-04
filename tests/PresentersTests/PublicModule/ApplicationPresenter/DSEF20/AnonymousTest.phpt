@@ -61,7 +61,6 @@ class AnonymousTest extends DsefTestCase
                         ],
                     ],
                 ],
-                'e_dsef_group_id' => "1",
                 'lunch_count' => "3",
                 'message' => "",
             ],
@@ -76,8 +75,7 @@ class AnonymousTest extends DsefTestCase
         $application = $this->assertApplication($this->event, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);
 
-        $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
-        // Assert::equal(1, $eApplication->e_dsef_group_id); TODO
+        $eApplication = $this->assertExtendedApplication($application, 'event_participant');
         Assert::equal(3, $application->lunch_count);
     }
 }
