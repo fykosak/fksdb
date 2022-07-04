@@ -6,6 +6,7 @@ namespace FKSDB\Tests\Events;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -75,4 +76,14 @@ abstract class EventTestCase extends DatabaseTestCase
         Assert::notEqual(null, $application);
         return $application;
     }
+
+//    protected function assertApplicationSchedule(ModelEventParticipant $application, string $table): Row
+//    {
+//        $application = $this->explorer->fetch(
+//            'SELECT * FROM `' . $table . '` WHERE person_id = ?',
+//            $application->person_id
+//        );
+//        Assert::notEqual(null, $application);
+//        return $application;
+//    }
 }

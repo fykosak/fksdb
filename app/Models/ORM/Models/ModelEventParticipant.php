@@ -121,7 +121,7 @@ class ModelEventParticipant extends Model implements Resource, NodeCreator
             // 'departureTicket' => $this->departure_ticket,
             // 'swimmer' => $this->swimmer,
             // 'usedDrugs' => $this->used_drugs,
-            // 'lunchCount' => $this->lunch_count,
+            'lunchCount' => $this->lunch_count,
         ];
     }
 
