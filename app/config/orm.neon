@@ -1039,14 +1039,6 @@ orm:
         warehouse_item:
             service: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
             model: FKSDB\Models\ORM\Models\Warehouse\ModelItem
-
-
-        e_dsef_participant:
-            service: FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
-            model: FKSDB\Models\ORM\Models\Events\ModelDsefParticipant
-        e_dsef_group:
-            service: FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
-            model: FKSDB\Models\ORM\Models\Events\ModelDsefGroup
         unsubscribed_email:
             model: Fykosak\NetteORM\DummyModel
             service: FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail

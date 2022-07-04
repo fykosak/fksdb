@@ -7,9 +7,7 @@ namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPostContact;
 use FKSDB\Models\ORM\Models\PostContactType;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceGrant;
