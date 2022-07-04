@@ -21,7 +21,6 @@ use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
-use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 use Nette\Utils\Strings;

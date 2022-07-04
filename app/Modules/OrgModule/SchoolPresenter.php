@@ -8,6 +8,7 @@ use FKSDB\Components\EntityForms\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ModelSchool;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Fykosak\Utils\UI\PageTitle;
@@ -40,6 +41,7 @@ class SchoolPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -48,6 +50,7 @@ class SchoolPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -60,6 +63,7 @@ class SchoolPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -73,6 +77,7 @@ class SchoolPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): SchoolFormComponent
     {
@@ -86,6 +91,7 @@ class SchoolPresenter extends BasePresenter
 
     /**
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid
     {

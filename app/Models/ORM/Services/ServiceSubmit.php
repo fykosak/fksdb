@@ -8,14 +8,14 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelSubmit;
 use FKSDB\Models\ORM\Models\ModelTask;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
 /**
  * @method ModelSubmit findByPrimary($key)
  * @method ModelSubmit createNewModel(array $data)
  * @method ModelSubmit storeModel(array $data, ?ModelSubmit $model = null)
  */
-class ServiceSubmit extends AbstractService
+class ServiceSubmit extends Service
 {
 
     private array $submitCache = [];

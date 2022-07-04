@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
@@ -16,7 +16,7 @@ use Nette\Security\Resource;
  * @property-read string sql
  * @property-read string name
  */
-class ModelStoredQuery extends AbstractModel implements Resource
+class ModelStoredQuery extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'storedQuery';

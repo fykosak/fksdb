@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\GroupedSelection;
 
 /**
@@ -14,7 +14,7 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read int contest_id
  * @property-read int event_type_id
  */
-class ModelEventType extends AbstractModel
+class ModelEventType extends Model
 {
 
     public const FYZIKLANI = 1;

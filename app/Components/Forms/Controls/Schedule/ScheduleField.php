@@ -8,6 +8,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
@@ -45,23 +46,23 @@ class ScheduleField extends TextInput
     private function getDefaultLabel(string $type): string
     {
         switch ($type) {
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+            case ScheduleGroupType::ACCOMMODATION:
                 return _('Accommodation');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
+            case ScheduleGroupType::ACCOMMODATION_GENDER:
                 return _('Accommodation with persons of the same gender');
-            case ModelScheduleGroup::TYPE_VISA:
+            case ScheduleGroupType::VISA:
                 return _('Visa');
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
+            case ScheduleGroupType::ACCOMMODATION_TEACHER:
                 return _('Teacher accommodation');
-            case ModelScheduleGroup::TYPE_WEEKEND:
+            case ScheduleGroupType::WEEKEND:
                 return _('Weekend after competition');
-            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
+            case ScheduleGroupType::TEACHER_PRESENT:
                 return _('Program during competition');
-            case ModelScheduleGroup::TYPE_DSEF_MORNING:
+            case ScheduleGroupType::DSEF_MORNING:
                 return _('Morning');
-            case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
+            case ScheduleGroupType::DSEF_AFTERNOON:
                 return _('Afternoon');
-            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
+            case ScheduleGroupType::VACCINATION_COVID:
                 return _('Covid-19 Vaccination');
             default:
                 throw new NotImplementedException();
@@ -89,23 +90,23 @@ class ScheduleField extends TextInput
             'groupTime' => false,
         ];
         switch ($this->type) {
-            case ModelScheduleGroup::TYPE_DSEF_AFTERNOON:
-            case ModelScheduleGroup::TYPE_DSEF_MORNING:
+            case ScheduleGroupType::DSEF_AFTERNOON:
+            case ScheduleGroupType::DSEF_MORNING:
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;
-            case ModelScheduleGroup::TYPE_ACCOMMODATION:
+            case ScheduleGroupType::ACCOMMODATION:
                 break;
-            case ModelScheduleGroup::TYPE_VACCINATION_COVID:
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_TEACHER:
-            case ModelScheduleGroup::TYPE_ACCOMMODATION_GENDER:
-            case ModelScheduleGroup::TYPE_VISA:
-            case ModelScheduleGroup::TYPE_TEACHER_PRESENT:
+            case ScheduleGroupType::VACCINATION_COVID:
+            case ScheduleGroupType::ACCOMMODATION_TEACHER:
+            case ScheduleGroupType::ACCOMMODATION_GENDER:
+            case ScheduleGroupType::VISA:
+            case ScheduleGroupType::TEACHER_PRESENT:
                 $params['capacity'] = false;
                 $params['price'] = false;
                 $params['groupLabel'] = false;
                 break;
-            case ModelScheduleGroup::TYPE_WEEKEND:
+            case ScheduleGroupType::WEEKEND:
                 $params['groupTime'] = true;
         }
         return $params;

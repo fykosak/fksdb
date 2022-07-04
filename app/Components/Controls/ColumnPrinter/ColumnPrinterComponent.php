@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 class ColumnPrinterComponent extends BaseComponent
 {
@@ -25,7 +25,7 @@ class ColumnPrinterComponent extends BaseComponent
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */
-    final public function render(string $field, AbstractModel $model, int $userPermission): void
+    final public function render(string $field, Model $model, int $userPermission): void
     {
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         $this->template->title = $factory->getTitle();
@@ -40,7 +40,7 @@ class ColumnPrinterComponent extends BaseComponent
      */
     final public function renderRow(
         string $field,
-        AbstractModel $model,
+        Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
@@ -53,7 +53,7 @@ class ColumnPrinterComponent extends BaseComponent
      */
     final public function renderListItem(
         string $field,
-        AbstractModel $model,
+        Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
@@ -66,7 +66,7 @@ class ColumnPrinterComponent extends BaseComponent
      */
     final public function renderOnlyValue(
         string $field,
-        AbstractModel $model,
+        Model $model,
         int $userPermission = FieldLevelPermission::ALLOW_FULL
     ): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');

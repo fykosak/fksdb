@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Org;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -19,7 +19,7 @@ class UntilColumnFactory extends ColumnFactory
     /**
      * @param ModelOrg $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge bg-success'])->addText(_('Still organizes'));
@@ -37,7 +37,7 @@ class UntilColumnFactory extends ColumnFactory
         $control = new TextInput($this->getTitle());
 
         $control->addCondition(Form::FILLED)
-            ->addRule(Form::NUMERIC)
+            ->addRule(Form::NUMERIC, _('Must be a number'))
             ->addRule(Form::RANGE, _('Final year is not in interval [%d, %d].'), [$min, $max]);
         return $control;
     }

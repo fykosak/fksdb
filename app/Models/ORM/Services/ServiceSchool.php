@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\ModelRegion;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceSchool extends AbstractService
+class ServiceSchool extends Service
 {
 
     public function isCzSkSchool(?int $schoolId): bool

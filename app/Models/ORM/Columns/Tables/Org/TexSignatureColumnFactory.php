@@ -16,7 +16,7 @@ class TexSignatureColumnFactory extends ColumnFactory
     {
         $control = new TextInput($this->getTitle());
 
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->addCondition(Form::FILLED)
             ->addRule(
                 Form::PATTERN,

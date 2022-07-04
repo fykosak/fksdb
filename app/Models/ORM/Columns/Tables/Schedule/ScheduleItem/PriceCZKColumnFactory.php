@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Schedule\ScheduleItem;
 
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Forms\Controls\BaseControl;
@@ -19,7 +19,7 @@ class PriceCZKColumnFactory extends ColumnFactory
      * @param ModelScheduleItem $model
      * @throws UnsupportedCurrencyException|\Exception
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         if (!$model->price_czk) {
             return NotSetBadge::getHtml();

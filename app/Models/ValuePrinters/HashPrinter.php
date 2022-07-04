@@ -6,7 +6,7 @@ namespace FKSDB\Models\ValuePrinters;
 
 use Nette\Utils\Html;
 
-class HashPrinter extends AbstractValuePrinter
+class HashPrinter extends ValuePrinter
 {
     /**
      * @param string $value

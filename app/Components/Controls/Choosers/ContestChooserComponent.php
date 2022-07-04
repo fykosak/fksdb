@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Models\ORM\Models\ModelContest;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -13,10 +13,10 @@ use Nette\DI\Container;
 final class ContestChooserComponent extends ChooserComponent
 {
 
-    private TypedTableSelection $availableContests;
+    private TypedSelection $availableContests;
     private ModelContest $contest;
 
-    public function __construct(Container $container, ModelContest $contest, TypedTableSelection $availableContests)
+    public function __construct(Container $container, ModelContest $contest, TypedSelection $availableContests)
     {
         parent::__construct($container);
         $this->contest = $contest;

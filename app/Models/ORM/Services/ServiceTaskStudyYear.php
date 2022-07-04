@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceTaskStudyYear extends AbstractService
+class ServiceTaskStudyYear extends Service
 {
 
 }

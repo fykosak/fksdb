@@ -6,7 +6,7 @@ namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
@@ -113,7 +113,7 @@ abstract class AbstractResultsModel
         return '(' . implode(') and (', $where) . ')';
     }
 
-    protected function getTasks(int $series): TypedTableSelection
+    protected function getTasks(int $series): TypedSelection
     {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')

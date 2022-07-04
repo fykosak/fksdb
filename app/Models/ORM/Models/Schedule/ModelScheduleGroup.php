@@ -8,14 +8,14 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
  * @property-read int schedule_group_id
- * @property-read string schedule_group_type
+ * @property-read ScheduleGroupType schedule_group_type
  * @property-read int event_id
  * @property-read ActiveRow event
  * @property-read \DateTimeInterface start
@@ -23,22 +23,10 @@ use Nette\Security\Resource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
+class ModelScheduleGroup extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
-
-    public const TYPE_ACCOMMODATION = 'accommodation';
-    public const TYPE_VISA = 'visa';
-    public const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
-    public const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
-    public const TYPE_TEACHER_PRESENT = 'teacher_present';
-    public const TYPE_WEEKEND = 'weekend';
-    public const TYPE_WEEKEND_INFO = 'weekend_info';
-
-    public const TYPE_DSEF_MORNING = 'dsef_morning';
-    public const TYPE_DSEF_AFTERNOON = 'dsef_afternoon';
-    public const TYPE_VACCINATION_COVID = 'vaccination_covid';
 
     public function getItems(): GroupedSelection
     {
@@ -62,7 +50,7 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
     {
         return [
             'scheduleGroupId' => $this->schedule_group_id,
-            'scheduleGroupType' => $this->schedule_group_type,
+            'scheduleGroupType' => $this->schedule_group_type->value,
             'label' => [
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
@@ -78,13 +66,27 @@ class ModelScheduleGroup extends AbstractModel implements Resource, NodeCreator
         return self::RESOURCE_ID;
     }
 
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'schedule_group_type':
+                $value = ScheduleGroupType::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
+
     public function createXMLNode(\DOMDocument $document): \DOMElement
     {
         $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', (string)$this->schedule_group_id);
         XMLHelper::fillArrayToNode([
             'scheduleGroupId' => $this->schedule_group_id,
-            'scheduleGroupType' => $this->schedule_group_type,
+            'scheduleGroupType' => $this->schedule_group_type->value,
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),

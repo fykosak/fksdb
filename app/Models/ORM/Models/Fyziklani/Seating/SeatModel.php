@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -17,7 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read double layout_y
  * @property-read int fyziklani_room_id
  */
-class SeatModel extends AbstractModel
+class SeatModel extends Model
 {
     public function getRoom(): RoomModel
     {
@@ -27,7 +27,7 @@ class SeatModel extends AbstractModel
     public function getTeamSeat(ModelEvent $event): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)->where(
-            'e_fyziklani_team.event_id',
+            'fyziklani_team.event_id',
             $event->event_id
         )->fetch();
         return $row ? TeamSeatModel::createFromActiveRow($row) : null;

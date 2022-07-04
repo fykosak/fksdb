@@ -6,7 +6,7 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use Fykosak\Utils\Logging\Message;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
@@ -18,9 +18,9 @@ use Tracy\Debugger;
 abstract class EntityFormComponent extends FormComponent
 {
 
-    protected ?AbstractModel $model;
+    protected ?Model $model;
 
-    public function __construct(Container $container, ?AbstractModel $model)
+    public function __construct(Container $container, ?Model $model)
     {
         parent::__construct($container);
         $this->model = $model;

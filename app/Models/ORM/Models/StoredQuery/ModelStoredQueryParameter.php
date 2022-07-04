@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\InvalidStateException;
 
 /**
@@ -15,7 +15,7 @@ use Nette\InvalidStateException;
  * @property-read string name
  * @property-read string description
  */
-class ModelStoredQueryParameter extends AbstractModel
+class ModelStoredQueryParameter extends Model
 {
 
     public const TYPE_INT = 'integer';

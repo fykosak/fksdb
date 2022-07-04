@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\ServiceEventType;
@@ -49,7 +49,7 @@ class EventTypeColumnFactory extends ColumnFactory
     /**
      * @param ModelEvent $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         return Html::el('span')->addText($model->getEventType()->name);
     }

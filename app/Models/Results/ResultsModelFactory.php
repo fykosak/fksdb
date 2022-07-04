@@ -20,7 +20,7 @@ use FKSDB\Models\Results\Models\CumulativeResultsModel;
 use FKSDB\Models\Results\Models\DetailResultsModel;
 use FKSDB\Models\Results\Models\SchoolCumulativeResultsModel;
 use FKSDB\Models\WebService\XMLNodeSerializer;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -130,7 +130,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     public function fillNode($dataSource, \DOMNode $node, \DOMDocument $doc, int $formatVersion): void
     {
         if (!$dataSource instanceof AbstractResultsModel) {
-            throw new BadTypeException(AbstractModel::class, $dataSource);
+            throw new BadTypeException(Model::class, $dataSource);
         }
 
         if ($formatVersion !== self::EXPORT_FORMAT_1) {

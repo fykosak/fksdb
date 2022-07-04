@@ -8,7 +8,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\UI\InvalidLinkException;
 
 class LinkPrinterComponent extends BaseComponent
@@ -26,7 +26,7 @@ class LinkPrinterComponent extends BaseComponent
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
      */
-    final public function render(string $linkId, AbstractModel $model): void
+    final public function render(string $linkId, Model $model): void
     {
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $this->template->title = $factory->getText();

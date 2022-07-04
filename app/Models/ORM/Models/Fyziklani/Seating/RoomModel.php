@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\DbNames;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\GroupedSelection;
 
 /**
@@ -13,7 +13,7 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read string name
  * @property-read string layout
  */
-class RoomModel extends AbstractModel
+class RoomModel extends Model
 {
 
     public function getSeats(): GroupedSelection

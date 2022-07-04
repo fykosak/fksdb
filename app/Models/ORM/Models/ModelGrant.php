@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int contest_id
  * @property-read ActiveRow role
  * @property-read ActiveRow contest
  */
-class ModelGrant extends AbstractModel
+class ModelGrant extends Model
 {
 
     public function getRole(): ModelRole

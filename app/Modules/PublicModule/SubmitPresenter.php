@@ -26,7 +26,7 @@ use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Tracy\Debugger;
@@ -105,7 +105,7 @@ class SubmitPresenter extends BasePresenter
         }
     }
 
-    private function getAvailableTasks(): TypedTableSelection
+    private function getAvailableTasks(): TypedSelection
     {
         // TODO related
         $tasks = $this->taskService->getTable();

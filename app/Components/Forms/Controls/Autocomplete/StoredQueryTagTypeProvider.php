@@ -6,14 +6,14 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 
 class StoredQueryTagTypeProvider implements FilteredDataProvider
 {
 
     private const DESCRIPTION = 'description';
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
-    private TypedTableSelection $searchTable;
+    private TypedSelection $searchTable;
 
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType)
     {

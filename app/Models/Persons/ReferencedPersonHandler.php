@@ -9,9 +9,10 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
@@ -114,7 +115,7 @@ class ReferencedPersonHandler implements ReferencedHandler
      * @throws NotImplementedException
      * @throws StorageException
      */
-    public function update(AbstractModel $model, array $values): void
+    public function update(Model $model, array $values): void
     {
         /** @var ModelPerson $model */
         $this->store($model, $values);
@@ -177,7 +178,7 @@ class ReferencedPersonHandler implements ReferencedHandler
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-            /** @var ModelPostContact|ModelPerson|AbstractModel|ModelPersonInfo|ModelPersonHistory $model */
+            /** @var ModelPostContact|ModelPerson|Model|ModelPersonInfo|ModelPersonHistory $model */
             foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
                     if (
@@ -349,10 +350,10 @@ class ReferencedPersonHandler implements ReferencedHandler
             $data[$type] = $data[$type]['address']; // flatten
             switch ($type) {
                 case self::POST_CONTACT_DELIVERY:
-                    $data[$type]['type'] = ModelPostContact::TYPE_DELIVERY;
+                    $data[$type]['type'] = PostContactType::DELIVERY;
                     break;
                 case self::POST_CONTACT_PERMANENT:
-                    $data[$type]['type'] = ModelPostContact::TYPE_PERMANENT;
+                    $data[$type]['type'] = PostContactType::PERMANENT;
                     break;
             }
         }

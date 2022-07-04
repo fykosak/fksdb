@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 abstract class EntityGrid extends BaseGrid
 {
 
-    protected AbstractService $service;
+    protected Service $service;
 
     private array $queryParams;
 

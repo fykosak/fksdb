@@ -8,8 +8,8 @@ use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ModelContestYear;
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
@@ -33,7 +33,7 @@ class ExtendedPersonHandler
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-    protected AbstractService $service;
+    protected Service $service;
     protected ServicePerson $servicePerson;
     private Connection $connection;
     private AccountManager $accountManager;
@@ -42,7 +42,7 @@ class ExtendedPersonHandler
     private ?ModelPerson $person = null;
 
     public function __construct(
-        AbstractService $service,
+        Service $service,
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
@@ -68,7 +68,7 @@ class ExtendedPersonHandler
     }
 
     /**
-     * @return ModelPerson|null|AbstractModel|ActiveRow
+     * @return ModelPerson|null|Model|ActiveRow
      */
     final protected function getReferencedPerson(Form $form): ?ActiveRow
     {

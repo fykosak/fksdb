@@ -14,7 +14,7 @@ class ImColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $control = new  WriteOnlyInput($this->getTitle());
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         return $control;
     }
 }

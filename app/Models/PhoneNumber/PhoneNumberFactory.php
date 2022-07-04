@@ -6,7 +6,7 @@ namespace FKSDB\Models\PhoneNumber;
 
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\ServiceRegion;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
 
 class PhoneNumberFactory
@@ -14,7 +14,7 @@ class PhoneNumberFactory
 
     private ServiceRegion $serviceRegion;
 
-    private TypedTableSelection $table;
+    private TypedSelection $table;
 
     public function __construct(ServiceRegion $serviceRegion)
     {
@@ -22,7 +22,7 @@ class PhoneNumberFactory
         $this->table = $this->serviceRegion->getTable();
     }
 
-    private function getAllRegions(): TypedTableSelection
+    private function getAllRegions(): TypedSelection
     {
         return $this->table;
     }

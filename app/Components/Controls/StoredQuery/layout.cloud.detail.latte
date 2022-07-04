@@ -1,6 +1,6 @@
 {layout ../@layout.latte}
 {block content}
-    {varType Fykosak\NetteORM\TypedTableSelection|FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType[] $tags}
+    {varType Fykosak\NetteORM\TypedSelection|FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType[] $tags}
     <p>
         {foreach $tags as $tagType}
                 <span

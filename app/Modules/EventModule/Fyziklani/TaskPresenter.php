@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -48,10 +48,10 @@ class TaskPresenter extends BasePresenter
     }
 
     /**
-     * @return AbstractService
+     * @return Service
      * @throws GoneException
      */
-    protected function getORMService(): AbstractService
+    protected function getORMService(): Service
     {
         throw new GoneException();
     }

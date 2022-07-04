@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
@@ -25,7 +25,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface sent
  */
-class ModelEmailMessage extends AbstractModel implements Resource
+class ModelEmailMessage extends Model implements Resource
 {
 
     public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu

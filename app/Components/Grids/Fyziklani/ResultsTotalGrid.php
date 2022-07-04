@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -27,7 +27,7 @@ class ResultsTotalGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $teams = $this->event->getParticipatingTeams()
+        $teams = $this->event->getParticipatingFyziklaniTeams()
             ->order('name');
         return new NDataSource($teams);
     }
@@ -42,14 +42,14 @@ class ResultsTotalGrid extends BaseGrid
         $this->paginate = false;
 
         $this->addColumns([
-            'e_fyziklani_team.e_fyziklani_team_id',
-            'e_fyziklani_team.name',
-            'e_fyziklani_team.rank_total',
+            'fyziklani_team.fyziklani_team_id',
+            'fyziklani_team.name',
+            'fyziklani_team.rank_total',
         ]);
     }
 
     protected function getModelClassName(): string
     {
-        return TeamModel::class;
+        return TeamModel2::class;
     }
 }

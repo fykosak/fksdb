@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
 use Nette\Database\Table\ActiveRow;
@@ -15,7 +15,7 @@ use Nette\Utils\Strings;
  * @property-read int $contest_id
  * @property-read string $name
  */
-class ModelContest extends AbstractModel
+class ModelContest extends Model
 {
 
     public const ID_FYKOS = 1;

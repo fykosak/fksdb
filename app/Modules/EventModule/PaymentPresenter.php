@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
@@ -49,6 +50,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -64,6 +66,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -84,6 +87,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function actionEdit(): void
     {
@@ -100,6 +104,7 @@ class PaymentPresenter extends BasePresenter
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     public function actionCreate(): void
     {
@@ -116,6 +121,7 @@ class PaymentPresenter extends BasePresenter
     /**
      * TODO!!!!
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     private function isOrg(): bool
     {
@@ -127,6 +133,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderEdit(): void
     {
@@ -140,6 +147,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -203,6 +211,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
@@ -224,6 +233,7 @@ class PaymentPresenter extends BasePresenter
     /**
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws GoneException
      */
     protected function createComponentCreateForm(): PaymentFormComponent
     {
@@ -241,6 +251,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): PaymentFormComponent
     {

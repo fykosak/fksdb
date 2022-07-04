@@ -783,14 +783,27 @@ orm:
         e_fyziklani_team:
             service: FKSDB\Models\ORM\Services\Fyziklani\TeamService
             model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel
+            linkFactories:
+                detail:
+                    destination: ':Event:TeamApplication:detail'
+                    params:
+                        eventId: event_id
+                        id: e_fyziklani_team_id
+                    title: Detail
+        e_fyziklani_participant:
+            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
+            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
+        fyziklani_team:
+            service: FKSDB\Models\ORM\Services\Fyziklani\TeamService2
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamModel2
             columnFactories:
-                e_fyziklani_team_id:
+                fyziklani_team_id:
                     type: primaryKey
                     title: _('Team Id')
-                status:
-                    type: state
+                state:
+                    type: enum
                     title: _('State')
-                    states: %event_participant.states%
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamState
                 phone:
                     type: phone
                     title: _('Phone')
@@ -800,9 +813,10 @@ orm:
                     title: _('Note')
                     omitInputField: true
                 category:
-                    type: string
+                    type: enum
                     title: _('Category')
                     omitInputField: true
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\TeamCategory
                 created:
                     type: dateTime
                     title: _('Created')
@@ -819,7 +833,8 @@ orm:
                     title: _('Points')
                     omitInputField: true
                 game_lang:
-                    type: string
+                    type: enum
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\GameLang
                     title: _('Game language')
                 force_a:
                     type: logic
@@ -845,11 +860,14 @@ orm:
                     destination: ':Event:TeamApplication:detail'
                     params:
                         eventId: event_id
-                        id: e_fyziklani_team_id
+                        id: fyziklani_team_id
                     title: Detail
-        e_fyziklani_participant:
-            service: FKSDB\Models\ORM\Services\Fyziklani\ParticipantService
-            model: FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel
+        fyziklani_team_member:
+            service: FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
+        fyziklani_team_teacher:
+            service: Fykosak\NetteORM\DummyService
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
 #schedule
         person_schedule:
             service: FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
@@ -862,19 +880,9 @@ orm:
                     type: primaryKey
                     title: _('Schedule group Id')
                  schedule_group_type:
-                     type: state
+                     type: enum
+                     enumClassName: FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType
                      title: _('Type')
-                     states:
-                         accommodation: [badge: 'badge bg-color-1', label: 'Accommodation']
-                         accommodation_gender: [badge: 'badge bg-color-2', label: 'Accommodation gender']
-                         accommodation_teacher: [badge: 'badge bg-color-3', label: 'Accommodation teacher']
-                         teacher_present: [badge: 'badge bg-color-4', label: 'Schedule during competition']
-                         weekend: [badge: 'badge bg-color-5', label: 'Weekend']
-                         weekend_info: [badge: 'badge bg-color-6', label: 'Weekend info']
-                         visa: [badge: 'badge bg-color-7', label: 'Visa']
-                         dsef_morning: [badge: 'badge bg-color-8', label: 'DSEF morning']
-                         dsef_afternoon: [badge: 'badge bg-color-9', label: 'DSEF afternoon']
-                         vaccination_covid: [badge: 'badge bg-color-10', label: 'Covid-19 Vaccination']
                  start:
                     type: dateTime
                     title: _('Schedule start')

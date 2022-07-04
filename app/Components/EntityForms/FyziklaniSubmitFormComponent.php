@@ -35,7 +35,7 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
-                'team_id' => $this->model->e_fyziklani_team_id,
+                'team_id' => $this->model->fyziklani_team_id,
                 'points' => $this->model->points,
             ]);
         }

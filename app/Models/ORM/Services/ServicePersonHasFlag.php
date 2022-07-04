@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\AbstractService;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Service;
+use Fykosak\NetteORM\Model;
 
-class ServicePersonHasFlag extends AbstractService
+class ServicePersonHasFlag extends Service
 {
 
-    public function createNewModel(array $data): AbstractModel
+    public function createNewModel(array $data): Model
     {
         $data['modified'] = new \DateTime();
         return parent::createNewModel($data);
     }
 
-    public function updateModel(AbstractModel $model, array $data): bool
+    public function updateModel(Model $model, array $data): bool
     {
         $data['modified'] = new \DateTime();
         return parent::updateModel($model, $data);

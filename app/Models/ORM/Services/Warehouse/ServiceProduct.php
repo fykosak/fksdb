@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Warehouse;
 
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceProduct extends AbstractService
+class ServiceProduct extends Service
 {
 
 }
