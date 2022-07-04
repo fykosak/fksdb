@@ -1,5 +1,5 @@
 <?php
-// TODO: add schedule_item_id to application and tests
+
 declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
@@ -74,6 +74,7 @@ class AuthTest extends DsefTestCase
                         ],
                     ],
                 ],
+                'e_dsef_group_id' => "1",
                 'lunch_count' => "3",
                 'message' => "",
             ],
@@ -93,7 +94,8 @@ class AuthTest extends DsefTestCase
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
 
-        $eApplication = $this->assertExtendedApplication($application, 'event_participant');
+        $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
+       // Assert::equal(1, $eApplication->e_dsef_group_id); TODO
         Assert::equal(3, $application->lunch_count);
     }
 }

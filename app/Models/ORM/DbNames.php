@@ -47,8 +47,6 @@ class DbNames
     public const TAB_PAYMENT = 'payment';
 
     /* Specified tables for events */
-    public const TAB_E_DSEF_GROUP = 'e_dsef_group';
-    public const TAB_E_DSEF_PARTICIPANT = 'e_dsef_participant';
     public const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     public const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
 

@@ -139,6 +139,7 @@ acl:
 
     # robot role
     - allow(web, export, execute, queryTag(['web-safe']))
+    - allow(web, webService, ::constant(Nette\Security\Permission::ALL)) # new REST-API
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
 
     - allow(org, webService, ::constant(Nette\Security\Permission::ALL))

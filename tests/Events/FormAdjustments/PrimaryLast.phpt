@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -39,7 +38,8 @@ class PrimaryLast extends ResourceAvailabilityTestCase
                 'accomodation' => 1,
             ]
         );
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'event_participant_id' => $this->app->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);

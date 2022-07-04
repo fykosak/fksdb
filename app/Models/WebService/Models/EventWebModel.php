@@ -191,7 +191,7 @@ class EventWebModel extends WebModel
                 'rankCategory' => $team->rank_category,
                 'rankTotal' => $team->rank_total,
                 'forceA' => $team->force_a,
-                'gameLang' => $team->game_lang,
+                'gameLang' => $team->game_lang->value,
                 'teachers' => [],
                 'members' => [],
             ];
@@ -267,12 +267,16 @@ class EventWebModel extends WebModel
             'email' => $participant->getPerson()->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
-            'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
+            'countryIso' => $history ? (
+            ($school = $history->getSchool())
+                ? $school->getAddress()->getRegion()->country_iso
+                : null) : null,
         ];
     }
 
     /**
      * @throws BadRequestException
+     * #Array
      */
     public function getJsonResponse(array $params): array
     {

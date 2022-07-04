@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\PostContactType;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\NetteORM\Model;
@@ -349,10 +350,10 @@ class ReferencedPersonHandler implements ReferencedHandler
             $data[$type] = $data[$type]['address']; // flatten
             switch ($type) {
                 case self::POST_CONTACT_DELIVERY:
-                    $data[$type]['type'] = ModelPostContact::TYPE_DELIVERY;
+                    $data[$type]['type'] = PostContactType::DELIVERY;
                     break;
                 case self::POST_CONTACT_PERMANENT:
-                    $data[$type]['type'] = ModelPostContact::TYPE_PERMANENT;
+                    $data[$type]['type'] = PostContactType::PERMANENT;
                     break;
             }
         }

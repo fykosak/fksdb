@@ -6,7 +6,6 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -35,8 +34,8 @@ abstract class DsefTestCase extends EventTestCase
 EOT
             ,
         ]);
-
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->createNewModel([
+//TODO
+        $this->getContainer()->getByType(null)->createNewModel([
             'e_dsef_group_id' => 1,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',

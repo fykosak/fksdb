@@ -6,7 +6,6 @@ namespace FKSDB\Tests\Events\Schedule;
 
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\Services\ServiceGrant;
@@ -42,7 +41,8 @@ class DeleteTest extends ScheduleTestCase
             'event_id' => $this->event->event_id,
             'status' => 'cancelled',
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel(
+        //TODO
+        $this->getContainer()->getByType(null)->createNewModel(
             [
                 'event_participant_id' => $this->dsefApp->event_participant_id,
                 'e_dsef_group_id' => 2,
