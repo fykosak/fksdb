@@ -19,9 +19,9 @@ events:
             letterSignature:
                 default: Veronika Hendrychová
             letterDecisionDeadline:
-                default: 2022-09-10T00:00:00+01:00
+                default: 2022-09-04T00:00:00+01:00
             letterResolutionTime:
-                default: 2022-09-13T00:00:00+01:00
+                default: 2022-09-07T00:00:00+01:00
 
 
         baseMachines:
