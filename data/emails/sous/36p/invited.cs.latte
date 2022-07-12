@@ -20,11 +20,18 @@
     <strong>{$holder->getParameter('letterDecisionDeadline')|date:'j. n.'}</strong> prostřednictvím FKSDB po přihlášení, nebo pomocí odkazu <a href="{$link}">{$link}</a>. I když si nyní nejsi stoprocentně jist{if $person->gender == 'F'}á{else}ý{/if}, jestli se budeš moci zúčastnit, vyplň přihlášku a zaškrtni ‘ano’, pokud máš o soustředění zájem; pravděpodobnost své účasti nám pak můžeš dát vědět na <a href="mailto:soustredeni@fykos.cz">soustredeni@fykos.cz</a>. Případné změny s Tebou dořešíme podle situace. Pokud naopak víš, že se nezúčastníš, dej nám vědět i to (po otevření formuláře je dole tlačítko na odmítnutí účasti). Alespoň Ti pak nebudou chodit upomínky.
 </p>
 
+<p>
+    Zatím nevíme, jaká bude covidová situace na podzim. Je však možné, že pokud pandemie opět silněji udeří, budeme pro účast vyžadovat nějaká opatření (pravděpodobně typu OTP). Konkrétněji Ti to dáme vědět v září, až budeme rozesílat bližší informace přihlášeným účastníkům.
+</p>
+
 <p n:if="strpos($baseHolder->getModelState(), 'spare') === 0">
     O tvé účasti na soustředění bude rozhodnuto po deadlinu {$holder->getParameter('letterResolutionTime')|date:'j. n.'}.
 </p>
 
-{* TODO: Možná přidat odkaz na formulář s přednáškami*}
+<p>
+    Na závěr bychom Tě chtěli poprosit o vyplnění krátkého <a href="https://forms.gle/zW9oQzAR6y5NiU7j7">formuláře</a>, který se týká přednášek. Pomůže nám to zjistit, o jaké máš zájem a co si na soustředění připravit.
+</p>
+
 
 <p>
     Pokud bys měl{if $person->gender == 'F'}a{/if} jakýkoliv dotaz, neváhej se na nás obrátit na
