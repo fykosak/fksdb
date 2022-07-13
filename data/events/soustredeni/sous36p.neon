@@ -3,12 +3,7 @@ events:
         event_type_id: [5] # jarní i podzimní sous. nejsou různá
         eventYears: [36] # specify for which years this machine is valid, by default all years
         formLayout: soustredeni.form
-#        notifyBcc: vercah@fykos.cz
-#        notifyFrom: soustredeni@fykos.cz
-#        letterDecisionDeadline: 2021-09-10T00:00:00+01:00
-#        letterWhere: Dolní Dvůr
-#        letterSignature: Veronika Hendrychová
-#        letterResolutionTime: 2021-09-13T00:00:00+01:00
+
         paramScheme:
             notifyBcc:
                 default: marek.milicka@fykos.cz
