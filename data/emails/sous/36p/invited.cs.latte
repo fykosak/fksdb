@@ -7,7 +7,7 @@
 
 <p>
     {if $person->gender == 'F'}Milá řešitelko,{else}Milý řešiteli,{/if}<br>
-    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu, je nám ctí Tě pozvat{if strpos($baseHolder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
+    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} skvělý výkon v řešení FYKOSu (případně Výfuku), je nám ctí Tě pozvat{if strpos($baseHolder->getModelState(), 'spare') === 0} <strong>jako náhradníka</strong>{/if} na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
 </p>
 
 <p>

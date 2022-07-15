@@ -7,7 +7,7 @@
 
 <p>
     {if $person->gender == 'F'}Milá řešitelko{else}Milý řešiteli{/if},<br/>
-    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu, zveme Tě jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
+    gratulujeme! Jelikož jsi předvedl{if $person->gender == 'F'}a{/if} dobrý výkon v řešení FYKOSu (případně Výfuku), zveme Tě jako <b>{if $person->gender == 'F'}náhradnici{else}náhradníka{/if}</b> na {$event->event_type->name}, které se bude konat v obci <strong>{$holder->getParameter('letterWhere')}</strong> od <strong>{$event->begin|date:'j. n.'}</strong> do <strong>{$event->end|date:'j. n. Y'}</strong>.
 </p>
 <p>
     A co že to soustředění vlastně je? Jedná se o týdenní akci, kde se můžeš těšit jak na odborný program (přednášky z fyziky a matematiky, fyzikální experimenty), tak i na ten neodborný (hry, výlety), a samozřejmě na ostatní řešitele. Každé soustředění doprovází tematická legenda. Jaká je to letos, Ti zatím neprozradíme, ale slibujeme, že se máš na co těšit! Na <a href="https://fykos.cz/akce/soustredeni/start" target="_blank">našich stránkách</a> se můžeš podívat na fotky z minulých let, kde jsme se například ocitli ve světě kouzelníků, Hunger Games nebo ve světě Pána prstenů.
