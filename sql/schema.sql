@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'ostatní/poznámka',
   `uk_login`               VARCHAR(8)   NULL DEFAULT NULL
   COMMENT 'CAS login, pro orgy',
-  `isic_number`              VARCHAR(32)  NULL DEFAULT NULL
+  `isic_number`              VARCHAR(14)  NULL DEFAULT NULL
   COMMENT 'číslo ISICu',
   `account`                VARCHAR(32)  NULL DEFAULT NULL
   COMMENT 'bankovní účet jako text',

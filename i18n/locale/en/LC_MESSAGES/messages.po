@@ -1259,6 +1259,10 @@ msgstr ""
 msgid "Choose citizenship"
 msgstr ""
 
+#: ../app/Models/ORM/Columns/Tables/PersonInfo/IsicNumberColumnFactory.php:18
+msgid "ISIC must start and end with a capital letter and contain 12 digits"
+msgstr ""
+
 #: ../app/Models/ORM/Columns/Tables/Event/EventTypeColumnFactory.php:44
 msgid "Select event type"
 msgstr ""

@@ -1259,6 +1259,10 @@ msgstr "Vybete zdravotní pojišťovnu"
 msgid "Choose citizenship"
 msgstr "Vybrat státní příslušnost"
 
+#: ../app/Models/ORM/Columns/Tables/PersonInfo/IsicNumberColumnFactory.php:18
+msgid "ISIC must start and end with a capital letter and contain 12 digits"
+msgstr "ISIC musí začínat a končit velkým písmenem a obsahovat 12 číslic"
+
 #: ../app/Models/ORM/Columns/Tables/Event/EventTypeColumnFactory.php:44
 msgid "Select event type"
 msgstr "Vyberte typ akce"
