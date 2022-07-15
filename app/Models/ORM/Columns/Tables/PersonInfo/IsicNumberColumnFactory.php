@@ -16,10 +16,9 @@ class IsicNumberColumnFactory extends ColumnFactory
         $control = new WriteOnlyInput($this->getTitle());
         $control->addFilter(function ($value) {
                     return str_replace(' ', '', $value); // remove whitespaces
-                })
-                ->addRule(Form::LENGTH, _('ISIC must start and end with a capital letter and contain 12 digits'), 14)
-                ->addRule(Form::PATTERN, _('ISIC must start and end with a capital letter and contain 12 digits'),
-                    '^[A-Z]\d{12}[A-Z]$');
+        })
+            ->addRule(Form::LENGTH, _('ISIC must start and end with a capital letter and contain 12 digits'), 14)
+            ->addRule(Form::PATTERN, _('ISIC must start and end with a capital letter and contain 12 digits'), '^[A-Z]\d{12}[A-Z]$');
         return $control;
     }
 }
