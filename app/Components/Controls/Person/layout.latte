@@ -1,11 +1,17 @@
 {layout ../@layout.latte}
 {block content}
     {control form}
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12"><b>Person</b></div>
+            <div class="col-lg-6 col-md-4 col-sm-12"><b>Pizza</b></div>
+            <div class="col-lg-3 col-md-4 col-sm-12"><b>ISIC</b></div>
+        </div>
     <hr/>
     {foreach $persons as $person}
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12"><b>{$person->getFullName()}</b></div>
-            <div class="col-lg-9 col-md-6 col-sm-12"> {control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</div>
+            <div class="col-lg-3 col-md-4 col-sm-12"><b>{$person->getFullName()}</b></div>
+            <div class="col-lg-6 col-md-4 col-sm-12"> {control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</div>
+            <div class="col-lg-3 col-md-4 col-sm-12"> {control valuePrinter:onlyValue 'person_info.isic_number', $person->getInfo()}</div>
         </div>
     {/foreach}
 {/block}
