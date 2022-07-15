@@ -197,10 +197,6 @@ orm:
              service: FKSDB\Models\ORM\Services\ServiceEventParticipant
              model: FKSDB\Models\ORM\Models\ModelEventParticipant
              columnFactories:
-                team:
-                    type: class
-                    class: FKSDB\Models\ORM\Columns\Tables\EventParticipant\TeamColumnFactory
-                    title: _('Team')
                 status:
                     type: state
                     title: _('State')

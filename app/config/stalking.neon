@@ -158,8 +158,17 @@ parameters:
             rows:
                 - event_participant.event_participant_id
                 - event.event
-                - event_participant.team
                 - event_participant.status
+        fyziklani_team_member:
+            layout: grid
+            minimalPermission: 128
+            table: fyziklani_team_member
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
+            links: []
+            rows:
+                - event.name
+                - fyziklani_team.name
+                - fyziklani_team.state
         event_org:
             layout: grid
             minimalPermission: 128

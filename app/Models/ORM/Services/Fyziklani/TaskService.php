@@ -22,7 +22,7 @@ class TaskService extends Service
     /**
      * @return TaskModel[]
      */
-    public function serialiseTasks(ModelEvent $event, bool $hideName = false): array
+    public static function serialiseTasks(ModelEvent $event, bool $hideName = false): array
     {
         $tasks = [];
 

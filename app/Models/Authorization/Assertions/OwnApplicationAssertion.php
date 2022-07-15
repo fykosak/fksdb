@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization\Assertions;
 
-use FKSDB\Models\Authorization\EventRole\FyziklaniTeacherRole;
+use FKSDB\Models\Authorization\EventRole\FyziklaniTeamTeacherRole;
 use FKSDB\Models\Authorization\EventRole\FyziklaniTeamMemberRole;
 use FKSDB\Models\Authorization\EventRole\ParticipantRole;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
@@ -30,7 +30,7 @@ class OwnApplicationAssertion implements Assertion
 
     private function isTeamMember(Role $role, TeamModel2 $application): bool
     {
-        if ($role instanceof FyziklaniTeacherRole) {
+        if ($role instanceof FyziklaniTeamTeacherRole) {
             foreach ($role->teams as $team) {
                 if ($team->fyziklani_team_id === $application->fyziklani_team_id) {
                     return true;

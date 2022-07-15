@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
-    FyziklaniTeacherRole,
+    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
     ParticipantRole
 };
@@ -362,7 +362,7 @@ class ModelPerson extends Model implements Resource
             foreach ($teachers as $row) {
                 $teams[] = TeamTeacherModel::createFromActiveRow($row)->getFyziklaniTeam();
             }
-            $roles[] = new FyziklaniTeacherRole($event, $teams);
+            $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
 
         $eventOrg = $this->getEventOrgs()->where('event_id', $eventId)->fetch();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
@@ -17,19 +18,13 @@ class FyziklaniResultsWebModel extends WebModel
 
     private ServiceEvent $serviceEvent;
     private SubmitService $submitService;
-    private TeamService2 $teamService;
-    private TaskService $taskService;
 
     public function injectServices(
         ServiceEvent $serviceEvent,
-        SubmitService $submitService,
-        TeamService2 $teamService,
-        TaskService $taskService
+        SubmitService $submitService
     ): void {
         $this->serviceEvent = $serviceEvent;
         $this->submitService = $submitService;
-        $this->teamService = $teamService;
-        $this->taskService = $taskService;
     }
 
     /**
@@ -42,12 +37,15 @@ class FyziklaniResultsWebModel extends WebModel
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
-            'categories' => ['A', 'B', 'C'],
+            'categories' => array_map(
+                fn(TeamCategory $category): string => $category->value,
+                TeamCategory::casesForEvent($event)
+            ),
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
-            'teams' => $this->teamService->serialiseTeams($event),
-            'tasks' => $this->taskService->serialiseTasks($event),
+            'teams' => TeamService2::serialiseTeams($event),
+            'tasks' => TaskService::serialiseTasks($event),
             'times' => [
                 'toStart' => $gameSetup->game_start->getTimestamp() - time(),
                 'toEnd' => $gameSetup->game_end->getTimestamp() - time(),

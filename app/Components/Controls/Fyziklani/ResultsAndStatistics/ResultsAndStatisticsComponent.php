@@ -6,6 +6,7 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
@@ -85,9 +86,12 @@ class ResultsAndStatisticsComponent extends AjaxComponent
 
         // probably need refresh before competition started
         //if (!$this->lastUpdated) {
-        $result['teams'] = $this->teamService->serialiseTeams($this->getEvent());
-        $result['tasks'] = $this->taskService->serialiseTasks($this->getEvent());
-        $result['categories'] = ['A', 'B', 'C'];
+        $result['teams'] = TeamService2::serialiseTeams($this->getEvent());
+        $result['tasks'] = TaskService::serialiseTasks($this->getEvent());
+        $result['categories'] = array_map(
+            fn(TeamCategory $category): string => $category->value,
+            TeamCategory::casesForEvent($this->getEvent())
+        );
         //  }
         return $result;
     }

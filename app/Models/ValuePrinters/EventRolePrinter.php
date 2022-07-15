@@ -7,7 +7,7 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     EventRole,
-    FyziklaniTeacherRole,
+    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
     ParticipantRole
 };
@@ -48,7 +48,7 @@ class EventRolePrinter
         $container = Html::el('span');
 
         foreach ($roles as $role) {
-            if ($role instanceof FyziklaniTeacherRole) {
+            if ($role instanceof FyziklaniTeamTeacherRole) {
                 foreach ($role->teams as $team) {
                     $container->addHtml(
                         Html::el('span')

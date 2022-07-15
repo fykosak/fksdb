@@ -10,6 +10,9 @@ use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
 
+/**
+ * @deprecated replaced by \FKSDB\Models\WebService\Models\OrganizersWebModel
+ */
 class SignaturesWebModel extends WebModel
 {
     use SmartObject;

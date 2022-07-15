@@ -67,6 +67,16 @@ class StalkingContainer extends BaseComponent
         return new PersonRelatedGrid('event_participant', $this->person, $this->userPermission, $this->getContext());
     }
 
+    protected function createComponentTeamMembersGrid(): PersonRelatedGrid
+    {
+        return new PersonRelatedGrid(
+            'fyziklani_team_member',
+            $this->person,
+            $this->userPermission,
+            $this->getContext()
+        );
+    }
+
     protected function createComponentEventScheduleGrid(): PersonRelatedGrid
     {
         return new PersonRelatedGrid('schedule_item', $this->person, $this->userPermission, $this->getContext());

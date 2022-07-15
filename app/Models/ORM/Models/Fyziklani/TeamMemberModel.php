@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
+use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonHistory;
 use FKSDB\Models\ORM\Models\ModelSchool;
@@ -20,6 +21,10 @@ use Nette\Database\Table\ActiveRow;
  */
 class TeamMemberModel extends Model
 {
+    public function getEvent(): ModelEvent
+    {
+        return $this->getFyziklaniTeam()->getEvent();
+    }
 
     public function getPerson(): ModelPerson
     {

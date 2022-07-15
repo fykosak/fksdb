@@ -25,7 +25,9 @@ $mailer = $container->getByType(Mailer::class);
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
 $serviceUnsubscribedEmail = $container->getByType(ServiceUnsubscribedEmail::class);
 $argv = $_SERVER['argv'];
-$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?(int)$argv[1]:(int) $container->getParameters()['spamMailer']['defaultLimit']);
+$query = $serviceEmailMessage->getMessagesToSend(
+    $argv[1] ? (int)$argv[1] : (int)$container->getParameters()['spamMailer']['defaultLimit']
+);
 $counter = 0;
 /** @var ModelEmailMessage $model */
 foreach ($query as $model) {
@@ -35,8 +37,9 @@ foreach ($query as $model) {
         break;
     }
     try {
-        $serviceUnsubscribedEmail->checkEmail($model->recipient);
         $message = $model->toMessage();
+        $serviceUnsubscribedEmail->checkEmail($message->getHeader('To')); // TODO hack?
+
         $mailer->send($message);
         $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
     } catch (UnsubscribedEmailException $exception) {

@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\Stats\StatsModelFactory;
+use FKSDB\Models\Stats\TaskStatsModel;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
 
 class StatsWebModel extends WebModel
 {
-
     private ServiceContest $serviceContest;
-    private StatsModelFactory $statsModelFactory;
 
-    public function inject(
-        ServiceContest $serviceContest,
-        StatsModelFactory $statsModelFactory
-    ): void {
+    public function inject(ServiceContest $serviceContest): void
+    {
         $this->serviceContest = $serviceContest;
-        $this->statsModelFactory = $statsModelFactory;
     }
 
     /**
@@ -26,6 +23,7 @@ class StatsWebModel extends WebModel
      */
     public function getResponse(\stdClass $args): \SoapVar
     {
+
         if (
             !isset($args->contest)
             || !isset($this->container->getParameters()['inverseContestMapping'][$args->contest])
@@ -45,8 +43,10 @@ class StatsWebModel extends WebModel
         $doc = new \DOMDocument();
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
-
-        $model = $this->statsModelFactory->createTaskStatsModel($contest->getContestYear((int)$args->year));
+        $model = new TaskStatsModel(
+            $contest->getContestYear((int)$args->year),
+            $this->serviceContest->explorer
+        );
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {
@@ -54,7 +54,7 @@ class StatsWebModel extends WebModel
             }
             foreach ($args->series as $series) {
                 $seriesNo = $series->series;
-                $model->setSeries($seriesNo);
+                $model->series = $seriesNo;
                 $tasks = $series->{'_'};
                 foreach ($model->getData(explode(' ', $tasks)) as $task) {
                     $taskNode = $doc->createElement('task');
@@ -79,5 +79,14 @@ class StatsWebModel extends WebModel
         $doc->formatOutput = true;
 
         return new \SoapVar($doc->saveXML($statsNode), XSD_ANYXML);
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'contestId' => Expect::scalar()->castTo('int'),
+            'year' => Expect::scalar()->castTo('int'),
+            'series' => Expect::arrayOf(Expect::scalar()->castTo('int')),
+        ]);
     }
 }

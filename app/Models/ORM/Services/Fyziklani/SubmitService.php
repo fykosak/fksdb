@@ -25,7 +25,7 @@ class SubmitService extends Service
 
     public function findAll(ModelEvent $event): TypedSelection
     {
-        return $this->getTable()->where('fyziklani_team_id.event_id', $event->event_id);
+        return $this->getTable()->where('fyziklani_team.event_id', $event->event_id);
     }
 
     public function serialiseSubmits(ModelEvent $event, ?string $lastUpdated): array
