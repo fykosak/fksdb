@@ -561,6 +561,10 @@ orm:
                     type: string
                     title: Login UK
                     permission: RESTRICT
+                isic_number:
+                    type: string
+                    title: ISIC
+                    permission: RESTRICT
                 linkedin_id:
                     type: string
                     title: Linkedin Id
