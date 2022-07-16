@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read \DateTimeInterface until
@@ -20,7 +20,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string note
  * @property-read int teacher_id
  */
-class ModelTeacher extends AbstractModel implements Resource
+class ModelTeacher extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'teacher';

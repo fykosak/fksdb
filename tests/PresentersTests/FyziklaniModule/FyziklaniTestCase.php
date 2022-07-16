@@ -6,13 +6,13 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -73,7 +73,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         return $event;
     }
 
-    protected function createTeam(array $data): TeamModel
+    protected function createTeam(array $data): TeamModel2
     {
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
@@ -90,7 +90,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['room'])) {
             $data['room'] = '101';
         }
-        return $this->getContainer()->getByType(TeamService::class)->createNewModel($data);
+        return $this->getContainer()->getByType(TeamService2::class)->createNewModel($data);
     }
 
     protected function createTask(array $data): TaskModel

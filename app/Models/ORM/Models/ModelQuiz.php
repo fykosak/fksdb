@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read ActiveRow task
@@ -13,7 +13,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read int question_id
  * @property-read int question_nr
  */
-class ModelQuiz extends AbstractModel
+class ModelQuiz extends Model
 {
 
     public function getFQName(): string

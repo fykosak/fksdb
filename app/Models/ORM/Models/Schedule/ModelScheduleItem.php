@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
@@ -29,7 +29,7 @@ use Nette\Security\Resource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModel implements Resource, NodeCreator
+class ModelScheduleItem extends Model implements Resource, NodeCreator
 {
 
     public const RESOURCE_ID = 'event.scheduleItem';

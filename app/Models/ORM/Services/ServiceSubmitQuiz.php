@@ -9,9 +9,9 @@ use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelQuiz;
 use FKSDB\Models\ORM\Models\ModelSubmitQuiz;
 use Nette\Utils\DateTime;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceSubmitQuiz extends AbstractService
+class ServiceSubmitQuiz extends Service
 {
 
     public function findByContestant(ModelQuiz $question, ModelContestant $contestant): ?ModelSubmitQuiz

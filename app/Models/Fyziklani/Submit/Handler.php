@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use Nette\DI\Container;
 use Nette\Security\User;
 use Tracy\Debugger;
@@ -36,7 +36,7 @@ class Handler
     }
 
     public function injectPrimary(
-        TeamService $teamService,
+        TeamService2 $teamService,
         TaskService $taskService,
         SubmitService $submitService,
         User $user
@@ -123,7 +123,7 @@ class Handler
                     _('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
                     $points,
                     $submit->getFyziklaniTeam()->name,
-                    $submit->getFyziklaniTeam()->e_fyziklani_team_id,
+                    $submit->getFyziklaniTeam()->fyziklani_team_id,
                     $submit->getFyziklaniTask()->label,
                     $submit->getFyziklaniTask()->name
                 ),
@@ -179,7 +179,7 @@ class Handler
                     _('Scoring has been checked. %d points, team "%s" (%d), task %s "%s".'),
                     $points,
                     $submit->getFyziklaniTeam()->name,
-                    $submit->getFyziklaniTeam()->e_fyziklani_team_id,
+                    $submit->getFyziklaniTeam()->fyziklani_team_id,
                     $submit->getFyziklaniTask()->label,
                     $submit->getFyziklaniTask()->name
                 ),
@@ -188,12 +188,12 @@ class Handler
         );
     }
 
-    public function createSubmit(Logger $logger, TaskModel $task, TeamModel $team, int $points): void
+    public function createSubmit(Logger $logger, TaskModel $task, TeamModel2 $team, int $points): void
     {
         $submit = $this->submitService->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
-            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
+            'fyziklani_team_id' => $team->fyziklani_team_id,
             'state' => SubmitModel::STATE_NOT_CHECKED,
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
@@ -204,7 +204,7 @@ class Handler
                     _('Points saved; %d points, team: "%s" (%d), task: %s "%s"'),
                     $points,
                     $team->name,
-                    $team->e_fyziklani_team_id,
+                    $team->fyziklani_team_id,
                     $task->label,
                     $task->name
                 ),

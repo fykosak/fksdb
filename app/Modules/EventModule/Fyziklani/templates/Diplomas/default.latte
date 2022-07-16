@@ -9,9 +9,10 @@
                 <span class="text-success">closed: {$stats['closed']}</span>
                 <span>total: {$stats['opened']+$stats['closed']}</span>
             </div>
-            {if $presenter->isReadyAllToCalculate($category)}
+        {var $teamCategory = FKSDB\Models\ORM\Models\Fyziklani\TeamCategory::tryFrom($category)}
+            {if $presenter->isReadyAllToCalculate($teamCategory)}
                 <a class="btn btn-outline-primary"
-                   href="{link calculate! category=>$category}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
+                   href="{link calculate! category=>$teamCategory}">{\sprintf(_('Calculate refults for %s category'), $category)}</a>
             {else}
                 <span class="btn btn-outline-warning disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
             {/if}

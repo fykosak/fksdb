@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 interface ReferencedHandler
 {
@@ -17,9 +17,9 @@ interface ReferencedHandler
 
     public function setResolution(string $resolution): void;
 
-    public function update(AbstractModel $model, array $values): void;
+    public function update(Model $model, array $values): void;
 
-    public function createFromValues(array $values): AbstractModel;
+    public function createFromValues(array $values): Model;
 
-    public function findBySecondaryKey(string $key): ?AbstractModel;
+    public function findBySecondaryKey(string $key): ?Model;
 }

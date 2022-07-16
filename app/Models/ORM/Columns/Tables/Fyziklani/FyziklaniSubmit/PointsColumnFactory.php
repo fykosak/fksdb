@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use Nette\Utils\Html;
 
@@ -15,7 +15,7 @@ class PointsColumnFactory extends ColumnFactory
     /**
      * @param SubmitModel $model
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         $el = Html::el('span');
         if (!\is_null($model->points)) {

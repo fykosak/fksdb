@@ -300,23 +300,6 @@ CREATE TABLE IF NOT EXISTS `contestant_base` (
   COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
 
 -- -----------------------------------------------------
--- Table `dakos_person`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `dakos_person` (
-  `dakos_id`  INT(11) NOT NULL
-  COMMENT 'Id účastníka z dakosího exportu',
-  `person_id` INT(11) NOT NULL,
-  PRIMARY KEY (`dakos_id`),
-  INDEX `person_id` (`person_id` ASC),
-  CONSTRAINT `dakos_person_ibfk_1`
-  FOREIGN KEY (`person_id`)
-  REFERENCES `person` (`person_id`)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  COMMENT = 'Identifikace osoby z DaKoSu';
-
--- -----------------------------------------------------
 -- Table `school`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `school` (
@@ -344,39 +327,6 @@ CREATE TABLE IF NOT EXISTS `school` (
   CONSTRAINT `school_ibfk_1`
   FOREIGN KEY (`address_id`)
   REFERENCES `address` (`address_id`)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
--- Table `dakos_school`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `dakos_school` (
-  `dakos_SKOLA_Id` INT(11) NOT NULL,
-  `school_id`      INT(11) NOT NULL,
-  PRIMARY KEY (`dakos_SKOLA_Id`),
-  INDEX `school_id` (`school_id` ASC),
-  CONSTRAINT `dakos_school_ibfk_1`
-  FOREIGN KEY (`school_id`)
-  REFERENCES `school` (`school_id`)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
-
--- -----------------------------------------------------
--- Table `olddb_person`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `olddb_person` (
-  `olddb_uid`       INT(11)    NOT NULL
-  COMMENT 'users.id ze staré DB',
-  `person_id`       INT(11)    NOT NULL,
-  `olddb_redundant` TINYINT(1) NOT NULL
-  COMMENT 'Tato data se nezkopírovala',
-  PRIMARY KEY (`olddb_uid`),
-  INDEX `person_id` (`person_id` ASC),
-  CONSTRAINT `olddb_person_ibfk_1`
-  FOREIGN KEY (`person_id`)
-  REFERENCES `person` (`person_id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
@@ -696,27 +646,6 @@ CREATE TABLE IF NOT EXISTS `submit` (
   DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `event_has_org`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `event_has_org` (
-  `event_id`  INT(11) NOT NULL,
-  `person_id` INT(11) NOT NULL,
-  PRIMARY KEY (`event_id`, `person_id`),
-  INDEX `fk_event_has_org_person1_idx` (`person_id` ASC),
-  CONSTRAINT `fk_action_has_org_event1`
-  FOREIGN KEY (`event_id`)
-  REFERENCES `event` (`event_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_event_has_org_person1`
-  FOREIGN KEY (`person_id`)
-  REFERENCES `person` (`person_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
 -- Table `task_contribution`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `task_contribution` (
@@ -790,6 +719,45 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   ENGINE = InnoDB;
 
 -- -----------------------------------------------------
+-- Table `fyziklani_team`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fyziklani_team`
+(
+    `fyziklani_team_id` INT                        NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT(11)                    NOT NULL,
+    `name`              VARCHAR(30)                NOT NULL,
+    `state`            ENUM (
+        'applied',
+        'pending',
+        'approved',
+        'spare',
+        'participated',
+        'missed',
+        'disqualified',
+        'cancelled'
+        )                              NOT NULL,
+    `category`          ENUM ('A','B','C','O','F') NOT NULL,
+    `created`           TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `phone`             VARCHAR(30)                NULL     DEFAULT NULL,
+    `note`              TEXT                       NULL     DEFAULT NULL,
+    `password`          CHAR(40)                   NULL     DEFAULT NULL,
+    `points`            INT(11)                    NULL     DEFAULT NULL,
+    `rank_category`     INT(11)                    NULL     DEFAULT NULL,
+    `rank_total`        INT(11)                    NULL     DEFAULT NULL,
+    `force_a`           TINYINT(1)                 NULL     DEFAULT NULL,
+    `game_lang`         ENUM ('cs','en')           NULL     DEFAULT NULL
+        COMMENT 'Game lang',
+    INDEX `idx_fyziklani_team__event` (`event_id` ASC),
+    CONSTRAINT `fk_fyziklani_team__event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `e_fyziklani_participant`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `e_fyziklani_participant` (
@@ -812,14 +780,49 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_participant` (
   ENGINE = InnoDB;
 
 -- -----------------------------------------------------
--- Table `e_fyziklani_participant_with_team`
+-- Table `fyziklani_team_member`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_fyziklani_participant_with_team` (
-  `team_id`        INT NULL DEFAULT NULL,
-  `participant_id` INT NOT NULL,
-  PRIMARY KEY (`participant_id`)
+CREATE TABLE IF NOT EXISTS `fyziklani_team_member`
+(
+    `fyziklani_team_member_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id` INT NOT NULL,
+    `fyziklani_team_id`  INT NOT NULL,
+    INDEX `idx_fyziklani_team_member__fyziklani_team` (`fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team_member__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    CONSTRAINT `fk_fyziklani_team_member__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_fyziklani_team_member__team`
+        FOREIGN KEY (`fyziklani_team_id`)
+            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+    ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table `fyziklani_team_teacher`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `fyziklani_team_teacher`
+(
+    `fyziklani_team_teacher_id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `person_id` INT NOT NULL,
+    `fyziklani_team_id`  INT NOT NULL,
+    INDEX `idx_fyziklani_team_teacher__fyziklani_team` (`fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_team_teacher__person` (`person_id` ASC, `fyziklani_team_id` ASC),
+    CONSTRAINT `fk_fyziklani_team_teacher__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_fyziklani_team_teacher__team`
+        FOREIGN KEY (`fyziklani_team_id`)
+            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
+)
+    ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `stored_query`
@@ -827,7 +830,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_participant_with_team` (
 CREATE TABLE IF NOT EXISTS `stored_query` (
   `query_id`      INT          NOT NULL AUTO_INCREMENT,
   `qid`           VARCHAR(64)  NULL     DEFAULT NULL
-  COMMENT 'identifikátor pro URL, práva apod.\ndotazy s QIDem nelze mazat',
+  COMMENT 'identifikátor pro URL, práva apod. dotazy s QIDem nelze mazat',
   `name`          VARCHAR(32)  NOT NULL
   COMMENT 'název dotazu, identifikace pro člověka',
   `description`   TEXT         NULL     DEFAULT NULL,
@@ -1122,23 +1125,23 @@ CREATE TABLE IF NOT EXISTS `event_org` (
 -- -----------------------------------------------------
 -- Table `fyziklani_task`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `fyziklani_task` (
-  `fyziklani_task_id` INT NOT NULL AUTO_INCREMENT,
-  `event_id`          INT NOT NULL,
-  `label`             CHAR(2) CHARACTER SET 'utf8'
-  COLLATE 'utf8_bin'      NOT NULL,
-  `name`              VARCHAR(45) CHARACTER SET 'utf8'
-  COLLATE 'utf8_bin'      NULL     DEFAULT NULL,
-  PRIMARY KEY (`fyziklani_task_id`),
-  INDEX `fk_fyziklani_task_1_idx` (`event_id` ASC),
-  UNIQUE INDEX `uq_event_id_label` (`event_id` ASC, `label` ASC),
-  CONSTRAINT `fk_fyziklani_task_1`
-  FOREIGN KEY (`event_id`)
-  REFERENCES `event` (`event_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+CREATE TABLE IF NOT EXISTS `fyziklani_task`
+(
+    `fyziklani_task_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `event_id`          INT NOT NULL,
+    `label`             CHAR(2) CHARACTER SET 'utf8'
+        COLLATE 'utf8_bin'  NOT NULL,
+    `name`              VARCHAR(45) CHARACTER SET 'utf8'
+        COLLATE 'utf8_bin'  NULL DEFAULT NULL,
+    INDEX `idx_fyziklani_task__event` (`event_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_task__event__label` (`event_id` ASC, `label` ASC),
+    CONSTRAINT `fk_fyziklani_task__event`
+        FOREIGN KEY (`event_id`)
+            REFERENCES `event` (`event_id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )
-  ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `fyziklani_submit`
@@ -1147,25 +1150,24 @@ CREATE TABLE IF NOT EXISTS `fyziklani_submit`
 (
     `fyziklani_submit_id` INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `fyziklani_task_id`   INT         NOT NULL,
-    `e_fyziklani_team_id` INT         NOT NULL,
+    `fyziklani_team_id`   INT         NOT NULL,
     `points`              TINYINT     NULL     DEFAULT NULL,
     `skipped`             BOOLEAN     NULL     DEFAULT NULL COMMENT 'skippnutá vo FOLe',
     `state`               VARCHAR(64) NULL     DEFAULT NULL,
     `modified`            TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
-    INDEX `fk_fyziklani_submit_1_idx` (`fyziklani_task_id` ASC),
-    INDEX `fk_fyziklani_submit_2_idx` (`e_fyziklani_team_id` ASC),
-    UNIQUE INDEX `uq_fyziklani_task_id_e_fyziklani_team_id` (`fyziklani_task_id` ASC, `e_fyziklani_team_id` ASC),
-
-    CONSTRAINT `fk_fyziklani_submit_1`
+    INDEX `idx_fyziklani_submit__task` (`fyziklani_task_id` ASC),
+    INDEX `idx__fyziklani_submit__team` (`fyziklani_team_id` ASC),
+    UNIQUE INDEX `uq_fyziklani_submit__task__team` (`fyziklani_task_id` ASC, `fyziklani_team_id` ASC),
+    CONSTRAINT `fk_fyziklani_submit__task`
         FOREIGN KEY (`fyziklani_task_id`)
             REFERENCES `fyziklani_task` (`fyziklani_task_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
 
-    CONSTRAINT `fk_fyziklani_submit_2`
-        FOREIGN KEY (`e_fyziklani_team_id`)
-            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
+    CONSTRAINT `fk_fyziklani_submit__team`
+        FOREIGN KEY (`fyziklani_team_id`)
+            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )
@@ -1192,7 +1194,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_seat`
     `sector`            VARCHAR(2) NULL DEFAULT NULL,
     `layout_x`          DOUBLE     NOT NULL,
     `layout_y`          DOUBLE     NOT NULL,
-    CONSTRAINT `fk_fyziklani_seat_room_1`
+    CONSTRAINT `fk_fyziklani_seat__fyziklani_seat_room`
         FOREIGN KEY (`fyziklani_room_id`)
             REFERENCES `fyziklani_room` (`fyziklani_room_id`)
             ON DELETE NO ACTION
@@ -1206,15 +1208,15 @@ CREATE TABLE IF NOT EXISTS `fyziklani_seat`
 CREATE TABLE IF NOT EXISTS `fyziklani_team_seat`
 (
     `fyziklani_seat_id` INT NOT NULL,
-    `e_fyziklani_team_id`    INT NULL DEFAULT NULL,
-    UNIQUE INDEX `e_fyziklani_team_id_UNIQUE` (`e_fyziklani_team_id` ASC),
-    INDEX `fk_fyziklani_team_seat_2_idx` (`fyziklani_seat_id` ASC),
-    CONSTRAINT `fyziklani_team_seat_1`
-        FOREIGN KEY (`e_fyziklani_team_id`)
-            REFERENCES `e_fyziklani_team` (`e_fyziklani_team_id`)
+    `fyziklani_team_id` INT NULL DEFAULT NULL,
+    UNIQUE INDEX `uq_fyziklani_team_seat__team` (`fyziklani_team_id` ASC),
+    INDEX `idx_fyziklani_team_seat__seat` (`fyziklani_seat_id` ASC),
+    CONSTRAINT `fk_fyziklani_team_seat__team`
+        FOREIGN KEY (`fyziklani_team_id`)
+            REFERENCES `fyziklani_team` (`fyziklani_team_id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION,
-    CONSTRAINT `fyziklani_team_seat_2`
+    CONSTRAINT `fk_fyziklani_team_seat__seat`
         FOREIGN KEY (`fyziklani_seat_id`)
             REFERENCES `fyziklani_seat` (`fyziklani_seat_id`)
             ON DELETE NO ACTION
@@ -1295,7 +1297,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
   `tasks_on_board`      INTEGER     NULL      DEFAULT NULL,
   `available_points`    VARCHAR(64) NULL      DEFAULT NULL
   COMMENT 'comma serialized points',
-  CONSTRAINT `fk_fyziklani_game_setup_event`
+  CONSTRAINT `fk_fyziklani_game_setup__event`
   FOREIGN KEY (`event_id`)
   REFERENCES `event` (`event_id`)
     ON DELETE RESTRICT
@@ -1383,7 +1385,7 @@ CREATE TABLE IF NOT EXISTS `schedule_payment` (
   `schedule_payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `payment_id`          INT(11) NOT NULL,
   `person_schedule_id`  INT(11) NOT NULL,
-  UNIQUE INDEX `UC_schedule_payment_1` (`person_schedule_id`, payment_id),
+  UNIQUE INDEX `uq_schedule_payment___payment__person` (`person_schedule_id`, payment_id),
   INDEX `fk_schedule_payment_1_idx` (`payment_id` ASC),
   INDEX `fk_schedule_payment_2_idx` (`person_schedule_id` ASC),
   CONSTRAINT `fk_schedule_payment_1`

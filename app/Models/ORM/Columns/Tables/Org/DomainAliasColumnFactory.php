@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Org;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
@@ -22,7 +22,7 @@ class DomainAliasColumnFactory extends ColumnFactory
      * @param ModelOrg $model
      * @throws ContestNotFoundException
      */
-    protected function createHtmlValue(AbstractModel $model): Html
+    protected function createHtmlValue(Model $model): Html
     {
         switch ($model->contest_id) {
             case ModelContest::ID_FYKOS:
@@ -37,7 +37,7 @@ class DomainAliasColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $control = new TextInput($this->getTitle());
-        $control->addRule(Form::MAX_LENGTH, null, 32);
+        $control->addRule(Form::MAX_LENGTH, _('Max length reached'), 32);
         $control->addCondition(Form::FILLED);
         $control->addRule(
             Form::PATTERN,

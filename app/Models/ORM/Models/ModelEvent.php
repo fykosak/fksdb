@@ -7,9 +7,10 @@ namespace FKSDB\Models\ORM\Models;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\GameSetupModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
@@ -28,12 +29,17 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface|null registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModel implements Resource, NodeCreator
+class ModelEvent extends Model implements Resource, NodeCreator
 {
 
     private const TEAM_EVENTS = [1, 9, 13];
     public const RESOURCE_ID = 'event';
-    private const POSSIBLY_ATTENDING_STATES = ['participated', 'approved', 'spare', 'applied'];
+    private const POSSIBLY_ATTENDING_STATES = [
+        TeamState::PARTICIPATED,
+        TeamState::APPROVED,
+        TeamState::SPARE,
+        TeamState::APPLIED,
+    ];
 
     public function getEventType(): ModelEventType
     {
@@ -94,19 +100,20 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
-    public function getTeams(): GroupedSelection
+    public function getFyziklaniTeams(): GroupedSelection
     {
-        return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
 
-    public function getParticipatingTeams(): GroupedSelection
+    public function getParticipatingFyziklaniTeams(): GroupedSelection
     {
-        return $this->getTeams()->where('status', 'participated');
+        return $this->getFyziklaniTeams()->where('state', TeamState::PARTICIPATED);
     }
 
-    public function getPossiblyAttendingTeams(): GroupedSelection
+    public function getPossiblyAttendingFyziklaniTeams(): GroupedSelection
     {
-        return $this->getTeams()->where('status', self::POSSIBLY_ATTENDING_STATES);
+        // TODO
+        return $this->getFyziklaniTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
     public function getEventOrgs(): GroupedSelection
@@ -132,10 +139,6 @@ class ModelEvent extends AbstractModel implements Resource, NodeCreator
             'eventYear' => $this->event_year,
             'begin' => $this->begin ? $this->begin->format('c') : null,
             'end' => $this->end ? $this->end->format('c') : null,
-            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
-            // TODO remove
-            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null,
-            // TODO remove
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'report' => $this->report,

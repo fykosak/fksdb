@@ -6,24 +6,24 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
  * @property-read string state
- * @property-read int e_fyziklani_team_id
+ * @property-read int fyziklani_team_id
  * @property-read int|null points
  * @property-read bool|null skipped
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id
- * @property-read ActiveRow e_fyziklani_team
+ * @property-read ActiveRow fyziklani_team
  * @property-read ActiveRow fyziklani_task
  * @property-read \DateTimeInterface modified
  */
-class SubmitModel extends AbstractModel implements Resource
+class SubmitModel extends Model implements Resource
 {
 
     public const STATE_NOT_CHECKED = 'not_checked';
@@ -41,9 +41,9 @@ class SubmitModel extends AbstractModel implements Resource
         return $this->getFyziklaniTeam()->getEvent();
     }
 
-    public function getFyziklaniTeam(): TeamModel
+    public function getFyziklaniTeam(): TeamModel2
     {
-        return TeamModel::createFromActiveRow($this->e_fyziklani_team);
+        return TeamModel2::createFromActiveRow($this->fyziklani_team);
     }
 
     public function isChecked(): bool
@@ -55,7 +55,7 @@ class SubmitModel extends AbstractModel implements Resource
     {
         return [
             'points' => $this->points,
-            'teamId' => $this->e_fyziklani_team_id,
+            'teamId' => $this->fyziklani_team_id,
             'taskId' => $this->fyziklani_task_id,
             'created' => $this->modified->format('c'),
         ];

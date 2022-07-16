@@ -9,7 +9,7 @@ use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceTask;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -47,7 +47,7 @@ class SubmitContainer extends BaseComponent
         $this->serviceTask = $serviceTask;
     }
 
-    private function getAvailableTasks(): TypedTableSelection
+    private function getAvailableTasks(): TypedSelection
     {
         // TODO related
         return $this->serviceTask->getTable()

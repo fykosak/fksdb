@@ -11,14 +11,14 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use Fykosak\NetteORM\AbstractModel;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\Service;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
@@ -37,7 +37,7 @@ class BaseHolder
     private ?EventRelation $eventRelation;
     public ModelEvent $event;
     public string $label;
-    /** @var AbstractService|AbstractServiceMulti */
+    /** @var Service|ServiceMulti */
     private $service;
     public ?string $joinOn = null;
     public ?string $joinTo = null;
@@ -45,7 +45,7 @@ class BaseHolder
     public Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    /** @var ActiveRow|null|AbstractModel|AbstractModelMulti */
+    /** @var ActiveRow|null|Model|ModelMulti */
     private ?ActiveRow $model;
     public array $paramScheme;
     private array $parameters;
@@ -193,7 +193,7 @@ class BaseHolder
     }
 
     /**
-     * @return AbstractService|AbstractServiceMulti
+     * @return Service|ServiceMulti
      */
     public function getService()
     {
@@ -201,7 +201,7 @@ class BaseHolder
     }
 
     /**
-     * @param AbstractService|AbstractServiceMulti $service
+     * @param Service|ServiceMulti $service
      */
     public function setService($service): void
     {

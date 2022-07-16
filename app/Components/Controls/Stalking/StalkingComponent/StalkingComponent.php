@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
@@ -58,7 +58,7 @@ class StalkingComponent extends BaseStalkingComponent
     }
 
     /**
-     * @param array|AbstractModel[] $definition
+     * @param array|Model[] $definition
      */
     private function renderMulti(array $definition, ModelPerson $person): void
     {

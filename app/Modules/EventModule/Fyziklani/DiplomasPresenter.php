@@ -8,6 +8,7 @@ use FKSDB\Components\Controls\Fyziklani\FinalResultsComponent;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Models\Fyziklani\Ranking\RankingStrategy;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Utils\Html;
@@ -49,11 +50,11 @@ class DiplomasPresenter extends BasePresenter
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->getEvent()->getParticipatingTeams()
+                'closed' => $this->getEvent()->getParticipatingFyziklaniTeams()
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->getEvent()->getParticipatingTeams()
+                'opened' => $this->getEvent()->getParticipatingFyziklaniTeams()
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),
@@ -66,7 +67,7 @@ class DiplomasPresenter extends BasePresenter
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(string $category = null): void
+    public function handleCalculate(?TeamCategory $category = null): void
     {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->teamService);
         $log = $closeStrategy->close($category);
@@ -82,9 +83,9 @@ class DiplomasPresenter extends BasePresenter
     /**
      * @throws EventNotFoundException
      */
-    public function isReadyAllToCalculate(?string $category = null): bool
+    public function isReadyAllToCalculate(?TeamCategory $category = null): bool
     {
-        return $this->teamService->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->teamService->isReadyForClosing($this->getEvent(), $category);
     }
 
     /**

@@ -9,6 +9,7 @@ use FKSDB\Components\EntityForms\FyziklaniSubmitFormComponent;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Models\Fyziklani\Submit\Handler;
 use Fykosak\Utils\Logging\FlashMessageDump;
@@ -49,6 +50,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -66,6 +68,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -79,6 +82,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     final public function renderEdit(): void
     {
@@ -91,6 +95,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     public function handleCheck(): void
     {
@@ -133,6 +138,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): FyziklaniSubmitFormComponent
     {

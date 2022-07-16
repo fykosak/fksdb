@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use Nette\Database\Table\ActiveRow;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int submit_question_id
@@ -17,7 +17,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read \DateTimeInterface submitted_on
  * @property-read string answer
  */
-class ModelSubmitQuiz extends AbstractModel
+class ModelSubmitQuiz extends Model
 {
 
     public function getTask(): ModelTask

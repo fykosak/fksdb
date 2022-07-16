@@ -7,7 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 
 /**
@@ -25,7 +25,7 @@ abstract class EntityPresenter extends BasePresenter
      * @persistent
      */
     public ?int $id = null;
-    private ?AbstractModel $model;
+    private ?Model $model;
 
     public function authorizedCreate(): void
     {
@@ -46,7 +46,7 @@ abstract class EntityPresenter extends BasePresenter
     /**
      * @deprecated
      */
-    final public function getModel(): ?AbstractModel
+    final public function getModel(): ?Model
     {
         if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
@@ -54,7 +54,7 @@ abstract class EntityPresenter extends BasePresenter
         return $this->model;
     }
 
-    abstract protected function loadModel(int $id): ?AbstractModel;
+    abstract protected function loadModel(int $id): ?Model;
 
     public function authorizedList(): void
     {
@@ -81,7 +81,7 @@ abstract class EntityPresenter extends BasePresenter
         $this->setDefaults($this->getModel(), $form);
     }
 
-    protected function setDefaults(?AbstractModel $model, Form $form): void
+    protected function setDefaults(?Model $model, Form $form): void
     {
         if (!$model) {
             return;

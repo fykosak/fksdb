@@ -22,13 +22,13 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -105,7 +105,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModel|ActiveRow|TeamModel|ModelEventParticipant|null
+     * @return ModelMulti|Model|ActiveRow|TeamModel|ModelEventParticipant|null
      * @throws NeonSchemaException
      */
     private function getEventApplication(): ?ActiveRow

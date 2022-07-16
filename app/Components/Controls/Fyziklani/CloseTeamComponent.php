@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
 use Nette\DI\Container;
@@ -15,10 +15,10 @@ use Nette\DI\Container;
 class CloseTeamComponent extends BaseComponent
 {
 
-    private TeamModel $team;
+    private TeamModel2 $team;
     private Connection $connection;
 
-    public function __construct(Container $container, TeamModel $team)
+    public function __construct(Container $container, TeamModel2 $team)
     {
         parent::__construct($container);
         $this->team = $team;

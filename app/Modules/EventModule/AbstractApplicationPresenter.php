@@ -13,8 +13,10 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\UI\PageTitle;
@@ -30,7 +32,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    final public function injectQuarterly(ServiceEventParticipant $serviceEventParticipant): void
+    final public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void
     {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
@@ -48,6 +50,14 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      */
     final public function titleDetail(): PageTitle
     {
+        $entity = $this->getEntity();
+        if ($entity instanceof TeamModel2) {
+            return new PageTitle(
+                null,
+                sprintf(_('Application detail "%s"'), $entity->name),
+                'fa fa-user'
+            );
+        }
         return new PageTitle(
             null,
             sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()),
@@ -97,6 +107,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
@@ -114,6 +125,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
+     * @throws GoneException
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent
     {

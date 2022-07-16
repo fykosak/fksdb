@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\Utils;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\Strings;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int series
@@ -22,7 +22,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read \DateTimeInterface submit_deadline
  * @property-read \DateTimeInterface submit_start
  */
-class ModelTask extends AbstractModel
+class ModelTask extends Model
 {
 
     public function getFQName(): string

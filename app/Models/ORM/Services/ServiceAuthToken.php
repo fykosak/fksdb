@@ -8,12 +8,12 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Fykosak\NetteORM\TypedTableSelection;
+use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 
-class ServiceAuthToken extends AbstractService
+class ServiceAuthToken extends Service
 {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
@@ -103,7 +103,7 @@ class ServiceAuthToken extends AbstractService
         }
     }
 
-    public function findTokensByEventId(ModelEvent $event): TypedTableSelection
+    public function findTokensByEventId(ModelEvent $event): TypedSelection
     {
         return $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)

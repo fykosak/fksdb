@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 
 final class TaskCodePreprocessor
 {
 
     private TaskService $taskService;
-    private TeamService $teamService;
+    private TeamService2 $teamService;
     private ModelEvent $event;
 
     public function __construct(
         ModelEvent $event,
-        TeamService $teamService,
+        TeamService2 $teamService,
         TaskService $taskService
     ) {
         $this->teamService = $teamService;
@@ -83,7 +83,7 @@ final class TaskCodePreprocessor
     /**
      * @throws TaskCodeException
      */
-    public function getTeam(string $code): TeamModel
+    public function getTeam(string $code): TeamModel2
     {
         $fullCode = self::createFullCode($code);
 

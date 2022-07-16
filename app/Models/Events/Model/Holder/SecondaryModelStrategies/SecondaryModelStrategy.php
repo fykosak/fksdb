@@ -7,9 +7,9 @@ namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
-use Fykosak\NetteORM\AbstractService;
+use Fykosak\NetteORM\Service;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
@@ -35,7 +35,7 @@ abstract class SecondaryModelStrategy
     }
 
     /**
-     * @param AbstractService|AbstractServiceMulti $service
+     * @param Service|ServiceMulti $service
      * @param BaseHolder[] $holders
      */
     public function loadSecondaryModels(
@@ -69,7 +69,7 @@ abstract class SecondaryModelStrategy
     }
 
     /**
-     * @param AbstractService|AbstractServiceMulti $service
+     * @param Service|ServiceMulti $service
      * @param BaseHolder[] $holders
      */
     public function updateSecondaryModels(

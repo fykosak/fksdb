@@ -7,6 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\ModelOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use Fykosak\Utils\UI\PageTitle;
@@ -30,6 +31,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -43,6 +45,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function getEntity(): ModelOrg
     {
@@ -57,6 +60,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -76,6 +80,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -100,6 +105,7 @@ class OrgPresenter extends BasePresenter
     /**
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): OrgFormComponent
     {

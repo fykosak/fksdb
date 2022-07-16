@@ -7,7 +7,7 @@ namespace FKSDB\Models\WebService\Models;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
-use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
+use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -17,13 +17,13 @@ class FyziklaniResultsWebModel extends WebModel
 
     private ServiceEvent $serviceEvent;
     private SubmitService $submitService;
-    private TeamService $teamService;
+    private TeamService2 $teamService;
     private TaskService $taskService;
 
     public function injectServices(
         ServiceEvent $serviceEvent,
         SubmitService $submitService,
-        TeamService $teamService,
+        TeamService2 $teamService,
         TaskService $taskService
     ): void {
         $this->serviceEvent = $serviceEvent;

@@ -12,7 +12,7 @@ use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
-use Fykosak\NetteORM\AbstractModel;
+use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int person_id
@@ -34,7 +34,7 @@ use Fykosak\NetteORM\AbstractModel;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModel implements Resource
+class ModelPayment extends Model implements Resource
 {
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment

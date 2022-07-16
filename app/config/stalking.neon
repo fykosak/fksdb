@@ -177,14 +177,14 @@ parameters:
         event_teacher:
             layout: grid
             minimalPermission: 16
-            table: e_fyziklani_team
-            model: FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam
+            table: fyziklani_team_teacher
+            model: FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
             links:
-                - e_fyziklani_team.detail
+                - fyziklani_team.detail
             rows:
-                - e_fyziklani_team.name
+                - fyziklani_team.name
                 - event.event
-                - e_fyziklani_team.status
+                - fyziklani_team.state
         schedule_item:
             layout: grid
             minimalPermission: 16
