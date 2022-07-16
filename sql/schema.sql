@@ -434,6 +434,8 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'ostatní/poznámka',
   `uk_login`               VARCHAR(8)   NULL DEFAULT NULL
   COMMENT 'CAS login, pro orgy',
+  `isic_number`              VARCHAR(14)  NULL DEFAULT NULL
+  COMMENT 'číslo ISICu',
   `account`                VARCHAR(32)  NULL DEFAULT NULL
   COMMENT 'bankovní účet jako text',
   `agreed`                 DATETIME     NULL DEFAULT NULL
@@ -469,10 +471,12 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'email rodič otec',
   `email_parent_m`         VARCHAR(255)  NULL DEFAULT NULL
   COMMENT 'email rodič mama',
-  `pizza`                  VARCHAR(255) NULL DEFAULT NULL COMMENT 'pizza',
+  `pizza`                  VARCHAR(255) NULL DEFAULT NULL
+  COMMENT 'pizza',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),
+  UNIQUE INDEX `isic_number_UNIQUE` (`isic_number` ASC),
   UNIQUE INDEX `born_id_UNIQUE` (`born_id` ASC),
   UNIQUE INDEX `fb_id_UNIQUE` (`fb_id` ASC),
   UNIQUE INDEX `linkedin_id_UNIQUE` (`linkedin_id` ASC),
