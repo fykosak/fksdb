@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Models\ORM\Models\ModelContestYear;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -122,12 +123,12 @@ class ReferencedPersonFactory
                 return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history[$field]
                     : null;
             case 'post_contact_d':
-                return $person->getDeliveryPostContact();
+                return $person->getPostContact(new PostContactType(PostContactType::DELIVERY));
             case 'post_contact_p':
                 if ($targetValidation || !$hasDelivery) {
                     return $person->getPermanentPostContact();
                 }
-                return $person->getPermanentPostContact(true);
+                return $person->getPermanentPostContact(false);
             case 'person_has_flag':
                 return ($flag = $person->getPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:

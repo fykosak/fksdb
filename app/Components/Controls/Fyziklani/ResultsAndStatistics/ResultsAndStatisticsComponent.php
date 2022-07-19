@@ -19,8 +19,6 @@ use Nette\Utils\DateTime;
 
 class ResultsAndStatisticsComponent extends AjaxComponent
 {
-    private TeamService2 $teamService;
-    private TaskService $taskService;
     private SubmitService $submitService;
     private ModelEvent $event;
     private ?string $lastUpdated = null;
@@ -36,14 +34,9 @@ class ResultsAndStatisticsComponent extends AjaxComponent
         return $this->event;
     }
 
-    final public function injectPrimary(
-        SubmitService $submitService,
-        TaskService $taskService,
-        TeamService2 $teamService
-    ): void {
+    final public function injectPrimary(SubmitService $submitService): void
+    {
         $this->submitService = $submitService;
-        $this->taskService = $taskService;
-        $this->teamService = $teamService;
     }
 
     public function handleRefresh(string $lastUpdated): void

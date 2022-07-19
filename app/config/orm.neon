@@ -972,10 +972,6 @@ orm:
                 description:
                     type: text
                     title: _('Description')
-                php_post_proc:
-                    type: string
-                    title: _('PHP post processing')
-                    description: _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.')
 
         stored_query_parameter:
              service: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter
@@ -988,8 +984,8 @@ orm:
              model: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType
 #wareHouse
         warehouse_product:
-             service: FKSDB\Models\ORM\Services\Warehouse\ServiceProduct
-             model: FKSDB\Models\ORM\Models\Warehouse\ModelProduct
+             service: FKSDB\Models\ORM\Services\Warehouse\ProductService
+             model: FKSDB\Models\ORM\Models\Warehouse\ProductModel
              columnFactories:
                  product_id:
                      type: primaryKey
@@ -1010,21 +1006,13 @@ orm:
                      type: text
                      title: _('Note')
                  category:
-                     type: state
+                     type: enum
                      title: _('Category')
-                     states:
-                         game: {badge: 'badge bg-color-1', label: 'Game'}
-                         game-extension: {badge: 'badge bg-color-1', label: 'Game extension'}
-                         apparel: {badge: 'badge bg-color-2', label: 'Apparel'}
-                         book: {badge: 'badge bg-color-3', label: 'Book'}
-                         other: {badge: 'badge bg-color-4', label: 'Book'}
+                     enumClassName: FKSDB\Models\ORM\Models\Warehouse\ProductCategory
 
         warehouse_producer:
-             service: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
-             model: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
-             referencedAccess:
-                 model: FKSDB\Models\ORM\Models\Warehouse\IProducerReferencedModel
-                 method: getProducer
+             service: FKSDB\Models\ORM\Services\Warehouse\ProducerService
+             model: FKSDB\Models\ORM\Models\Warehouse\ProducerModel
              columnFactories:
                  producer_id:
                      type: primaryKey
@@ -1033,8 +1021,8 @@ orm:
                      type: string
                      title: _('Producer')
         warehouse_item:
-            service: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
-            model: FKSDB\Models\ORM\Models\Warehouse\ModelItem
+            service: FKSDB\Models\ORM\Services\Warehouse\ItemService
+            model: FKSDB\Models\ORM\Models\Warehouse\ItemModel
 
 
         e_dsef_participant:

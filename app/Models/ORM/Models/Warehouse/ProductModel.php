@@ -12,7 +12,7 @@ use Nette\Security\Resource;
  * @property-read int product_id
  * @property-read int producer_id
  * @property-read ActiveRow producer
- * @property-read string category
+ * @property-read ProductCategory category
  * @property-read string name_cs
  * @property-read string name_en
  * @property-read string description_cs
@@ -20,14 +20,8 @@ use Nette\Security\Resource;
  * @property-read string note neverejná poznámka
  * @property-read string url URL k objednaniu produktu
  */
-class ModelProduct extends Model implements Resource
+class ProductModel extends Model implements Resource
 {
-
-    public const CATEGORY_APPAREL = 'apparel';
-    public const CATEGORY_GAME = 'game';
-    public const CATEGORY_GAME_EXTENSION = 'game-extension';
-    public const CATEGORY_BOOK = 'book';
-    public const CATEGORY_OTHER = 'other';
 
     public const RESOURCE_ID = 'warehouse.product';
 
@@ -36,8 +30,22 @@ class ModelProduct extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getProducer(): ?ModelProducer
+    public function getProducer(): ?ProducerModel
     {
-        return $this->producer ? ModelProducer::createFromActiveRow($this->producer) : null;
+        return $this->producer ? ProducerModel::createFromActiveRow($this->producer) : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'category':
+                $value = new ProductCategory($value);
+                break;
+        }
+        return $value;
     }
 }

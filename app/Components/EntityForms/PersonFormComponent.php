@@ -67,13 +67,13 @@ class PersonFormComponent extends EntityFormComponent
         $this->serviceAddress = $serviceAddress;
     }
 
-    public static function mapAddressContainerNameToType(string $containerName): string
+    public static function mapAddressContainerNameToType(string $containerName): PostContactType
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return PostContactType::PERMANENT;
+                return new PostContactType(PostContactType::PERMANENT);
             case self::POST_CONTACT_DELIVERY:
-                return PostContactType::DELIVERY;
+                return new PostContactType(PostContactType::DELIVERY);
             default:
                 throw new InvalidArgumentException();
         }
@@ -141,8 +141,10 @@ class PersonFormComponent extends EntityFormComponent
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress() ?? [],
-                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress() ?? [],
+                self::POST_CONTACT_DELIVERY => $this->model->getAddress(new PostContactType(PostContactType::DELIVERY))
+                    ?? [],
+                self::POST_CONTACT_PERMANENT => $this->model->getAddress(new PostContactType(PostContactType::PERMANENT))
+                    ?? [],
             ]);
         }
     }

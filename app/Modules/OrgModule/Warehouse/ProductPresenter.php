@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\Warehouse\ProductsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
@@ -18,7 +18,7 @@ class ProductPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceProduct $serviceProduct;
+    private ProductService $serviceProduct;
 
     public function titleList(): PageTitle
     {
@@ -35,7 +35,7 @@ class ProductPresenter extends BasePresenter
         return new PageTitle(null, _('Create product'), 'fa fa-plus');
     }
 
-    public function injectService(ServiceProduct $serviceProduct): void
+    public function injectService(ProductService $serviceProduct): void
     {
         $this->serviceProduct = $serviceProduct;
     }
@@ -60,7 +60,7 @@ class ProductPresenter extends BasePresenter
         return new ProductsGrid($this->getContext());
     }
 
-    protected function getORMService(): ServiceProduct
+    protected function getORMService(): ProductService
     {
         return $this->serviceProduct;
     }

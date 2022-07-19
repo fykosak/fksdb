@@ -85,7 +85,7 @@ abstract class AESOPModel
 
     protected function getAESOPContestant(ModelPerson $person): array
     {
-        $postContact = $person->getPermanentPostContact(false);
+        $postContact = $person->getPermanentPostContact(true);
         $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->getSchool();
         $spamFlag = $person->getPersonHasFlag('spam_mff');

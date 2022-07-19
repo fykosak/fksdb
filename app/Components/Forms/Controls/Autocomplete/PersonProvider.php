@@ -6,6 +6,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteORM\TypedSelection;
 
@@ -75,7 +76,7 @@ class PersonProvider implements FilteredDataProvider
     private function getItem(ModelPerson $person): array
     {
         $place = null;
-        $address = $person->getDeliveryAddress();
+        $address = $person->getAddress(new PostContactType(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }

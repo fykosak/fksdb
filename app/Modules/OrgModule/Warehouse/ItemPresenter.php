@@ -6,7 +6,7 @@ namespace FKSDB\Modules\OrgModule\Warehouse;
 
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceItem;
+use FKSDB\Models\ORM\Services\Warehouse\ItemService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
@@ -16,9 +16,9 @@ class ItemPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceItem $serviceItem;
+    private ItemService $serviceItem;
 
-    public function injectService(ServiceItem $serviceItem): void
+    public function injectService(ItemService $serviceItem): void
     {
         $this->serviceItem = $serviceItem;
     }
@@ -53,7 +53,7 @@ class ItemPresenter extends BasePresenter
         return new ItemsGrid($this->getContext(), $this->getSelectedContest());
     }
 
-    protected function getORMService(): ServiceItem
+    protected function getORMService(): ItemService
     {
         return $this->serviceItem;
     }

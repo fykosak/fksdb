@@ -15,17 +15,4 @@ use FKSDB\Models\ORM\Services\OldServiceSingle;
  */
 class TeamService extends OldServiceSingle
 {
-
-    /**
-     * @return TeamModel[]
-     */
-    public static function serialiseTeams(ModelEvent $event): array
-    {
-        $teams = [];
-        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $row) {
-            $team = TeamModel2::createFromActiveRow($row);
-            $teams[] = $team->__toArray();
-        }
-        return $teams;
-    }
 }

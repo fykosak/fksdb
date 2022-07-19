@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `display_name`     VARCHAR(511) CHARACTER SET 'utf8'
   COLLATE 'utf8_czech_ci'                                 NULL     DEFAULT NULL
   COMMENT 'zobrazované jméno, liší-li se od <other_name> <family_name>',
-  `gender`           ENUM ('M', 'F') CHARACTER SET 'utf8' NOT NULL,
+  `gender`           ENUM ('M', 'F') CHARACTER SET 'utf8' NOT NULL, # TOTO to enum gender->sex?
   `created`          TIMESTAMP                            NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`person_id`)
 )
@@ -419,7 +419,7 @@ CREATE TABLE IF NOT EXISTS `grant` (
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
   `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
-  COMMENT 'Prefer language code by ISO 639-1',
+  COMMENT 'Prefer language code by ISO 639-1', # TODO to enum
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -494,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `post_contact` (
   `person_id`       INT(11)         NOT NULL,
   `address_id`      INT(11)         NOT NULL,
   `type`            ENUM ('P', 'D') NOT NULL
-  COMMENT 'doručovací (Delivery), trvalá (Permanent)',
+  COMMENT 'doručovací (Delivery), trvalá (Permanent)', # TODO to enum
   PRIMARY KEY (`post_contact_id`),
   INDEX `person_id` (`person_id` ASC),
   INDEX `address_id` (`address_id` ASC),
@@ -619,7 +619,7 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Task',
   `submitted_on` DATETIME                NULL     DEFAULT NULL,
   `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
-  COMMENT 'Typ příjmu řešení',
+  COMMENT 'Typ příjmu řešení', # TODO to enum
   `note`         VARCHAR(255)            NULL     DEFAULT NULL
   COMMENT 'Pocet stranek a jine poznamky',
   `raw_points`   DECIMAL(4, 2)           NULL     DEFAULT NULL
@@ -648,7 +648,7 @@ CREATE TABLE IF NOT EXISTS `task_contribution` (
   `contribution_id` INT                                  NOT NULL AUTO_INCREMENT,
   `task_id`         INT(11)                              NOT NULL,
   `person_id`       INT(11)                              NOT NULL,
-  `type`            ENUM ('author', 'solution', 'grade') NOT NULL,
+  `type`            ENUM ('author', 'solution', 'grade') NOT NULL, # TODO to enum
   PRIMARY KEY (`contribution_id`),
   INDEX `fk_org_task_contribution_task1_idx` (`task_id` ASC),
   INDEX `fk_task_contribution_person1_idx` (`person_id` ASC),
@@ -831,7 +831,6 @@ CREATE TABLE IF NOT EXISTS `stored_query` (
   COMMENT 'název dotazu, identifikace pro člověka',
   `description`   TEXT         NULL     DEFAULT NULL,
   `sql`           TEXT         NOT NULL,
-  `php_post_proc` VARCHAR(255) NULL     DEFAULT NULL,
   PRIMARY KEY (`query_id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   UNIQUE INDEX `qid_UNIQUE` (`qid` ASC)
@@ -849,7 +848,7 @@ CREATE TABLE IF NOT EXISTS `stored_query_parameter` (
   COMMENT 'název parametru pro použití v SQL',
   `description`     TEXT                               NULL     DEFAULT NULL,
   `type`            ENUM ('integer', 'string', 'bool') NOT NULL
-  COMMENT 'datový typ parametru',
+  COMMENT 'datový typ parametru', # TODO to enum
   `default_integer` INT(11)                            NULL     DEFAULT NULL
   COMMENT 'implicitní hodnota',
   `default_string`  VARCHAR(255)                       NULL     DEFAULT NULL
@@ -874,7 +873,7 @@ CREATE TABLE IF NOT EXISTS `flag` (
   `name`        VARCHAR(64)                                           NOT NULL,
   `description` TEXT                                                  NULL DEFAULT NULL,
   `type`        ENUM ('global', 'contest', 'ac_year', 'contest_year') NOT NULL
-  COMMENT 'rozsah platnosti flagu',
+  COMMENT 'rozsah platnosti flagu', # TODO to enum
   PRIMARY KEY (`flag_id`),
   UNIQUE INDEX `name_UNIQUE` (`fid` ASC)
 )
@@ -1410,7 +1409,7 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `carbon_copy`         VARCHAR(128) NULL                                              DEFAULT NULL,
     `blind_carbon_copy`   VARCHAR(128) NULL                                              DEFAULT NULL,
     `text`                TEXT         NOT NULL,
-    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved',
+    `state`               ENUM ('saved','waiting','sent','failed','canceled','rejected') DEFAULT 'saved', # TODO to enum
     `created`             DATETIME     NOT NULL                                          DEFAULT CURRENT_TIMESTAMP,
     `sent`                DATETIME     NULL                                              DEFAULT NULL,
     INDEX `email_message_person` (`recipient_person_id` ASC),
@@ -1491,12 +1490,12 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
     `item_id`           INT(11)                                  NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `product_id`        INT(11)                                  NOT NULL,
     `contest_id`        INT(11)                                  NOT NULL,
-    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL,
+    `state`             ENUM ('new','used','unpacked','damaged') NOT NULL, # TODO to enum
     `description_cs`    VARCHAR(256)                             NULL     DEFAULT NULL,
     `description_en`    VARCHAR(256)                             NULL     DEFAULT NULL,
     `data`              VARCHAR(256)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
     `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
-    `purchase_currency` ENUM ('czk','eur')                       NOT NULL DEFAULT 'czk' COMMENT 'pořizovací měna',
+    `purchase_currency` ENUM ('czk','eur')                       NOT NULL DEFAULT 'czk' COMMENT 'pořizovací měna', # TODO to enum
     `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
     `available`         BOOLEAN                                  NOT NULL DEFAULT FALSE COMMENT 'available in online store',

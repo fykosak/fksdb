@@ -110,40 +110,25 @@ class ModelPerson extends Model implements Resource
         return $this->related(DbNames::TAB_POST_CONTACT, 'person_id');
     }
 
-    public function getDeliveryAddress(): ?ModelAddress
-    {
-        return $this->getAddress(PostContactType::DELIVERY);
-    }
-
-    public function getPermanentAddress(): ?ModelAddress
-    {
-        return $this->getAddress(PostContactType::PERMANENT);
-    }
-
-    public function getAddress(string $type): ?ModelAddress
+    public function getAddress(PostContactType $type): ?ModelAddress
     {
         $postContact = $this->getPostContact($type);
         return $postContact ? $postContact->getAddress() : null;
     }
 
-    public function getPostContact(string $type): ?ModelPostContact
+    public function getPostContact(PostContactType $type): ?ModelPostContact
     {
-        $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
+        $postContact = $this->getPostContacts()->where(['type' => $type->value])->fetch();
         return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
     }
 
-    public function getDeliveryPostContact(): ?ModelPostContact
+    public function getPermanentPostContact(bool $fallback = true): ?ModelPostContact
     {
-        return $this->getPostContact(PostContactType::DELIVERY);
-    }
-
-    public function getPermanentPostContact(bool $noFallback = false): ?ModelPostContact
-    {
-        $postContact = $this->getPostContact(PostContactType::PERMANENT);
+        $postContact = $this->getPostContact(new PostContactType(PostContactType::PERMANENT));
         if ($postContact) {
             return $postContact;
-        } elseif (!$noFallback) {
-            return $this->getDeliveryPostContact();
+        } elseif ($fallback) {
+            return $this->getPostContact(new PostContactType(PostContactType::DELIVERY));
         } else {
             return null;
         }
@@ -152,11 +137,6 @@ class ModelPerson extends Model implements Resource
     public function getEventParticipants(): GroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
-    }
-
-    public function getFyziklaniParticipants(): GroupedSelection
-    {
-        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
     }
 
     public function getFyziklaniTeachers(): GroupedSelection

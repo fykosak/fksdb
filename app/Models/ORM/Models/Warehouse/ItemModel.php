@@ -28,7 +28,7 @@ use Nette\Security\Resource;
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka
  */
-class ModelItem extends Model implements Resource
+class ItemModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'warehouse.item';
 
@@ -42,13 +42,13 @@ class ModelItem extends Model implements Resource
         return ModelContest::createFromActiveRow($this->contest);
     }
 
-    public function getProducer(): ?ModelProducer
+    public function getProducer(): ?ProducerModel
     {
         return $this->getProduct()->getProducer();
     }
 
-    public function getProduct(): ModelProduct
+    public function getProduct(): ProductModel
     {
-        return ModelProduct::createFromActiveRow($this->product);
+        return ProductModel::createFromActiveRow($this->product);
     }
 }

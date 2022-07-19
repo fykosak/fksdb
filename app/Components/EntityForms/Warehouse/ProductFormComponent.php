@@ -7,10 +7,10 @@ namespace FKSDB\Components\EntityForms\Warehouse;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProducer;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\SelectBox;
@@ -19,15 +19,15 @@ use Nette\Forms\Form;
 class ProductFormComponent extends EntityFormComponent
 {
 
-    protected ServiceProducer $serviceProducer;
-    protected ServiceProduct $serviceProduct;
+    protected ProducerService $serviceProducer;
+    protected ProductService $serviceProduct;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public const CONTAINER = 'container';
 
     public function injectServiceProducer(
-        ServiceProducer $serviceProducer,
-        ServiceProduct $serviceProduct,
+        ProducerService $serviceProducer,
+        ProductService $serviceProduct,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
         $this->serviceProducer = $serviceProducer;
@@ -74,7 +74,7 @@ class ProductFormComponent extends EntityFormComponent
             'note',
         ]);
         $producers = [];
-        /** @var ModelProducer $producer */
+        /** @var ProducerModel $producer */
         foreach ($this->serviceProducer->getTable() as $producer) {
             $producers[$producer->producer_id] = $producer->name;
         }

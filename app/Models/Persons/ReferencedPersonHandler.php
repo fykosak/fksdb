@@ -156,8 +156,8 @@ class ReferencedPersonHandler implements ReferencedHandler
                         $this->event,
                         \array_keys((array)$data['person_schedule'])[0]
                     )) ?: null),
-                self::POST_CONTACT_DELIVERY => $person->getDeliveryPostContact(),
-                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(true),
+                self::POST_CONTACT_DELIVERY => $person->getPostContact(new PostContactType(PostContactType::DELIVERY)),
+                self::POST_CONTACT_PERMANENT => $person->getPermanentPostContact(false),
             ];
             $originalModels = \array_keys($data);
 

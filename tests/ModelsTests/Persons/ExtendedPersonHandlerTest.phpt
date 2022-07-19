@@ -11,6 +11,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
@@ -139,7 +140,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getPermanentAddress();
+        $address = $person->getAddress(new PostContactType(PostContactType::PERMANENT));
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);
