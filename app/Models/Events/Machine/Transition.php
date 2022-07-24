@@ -21,10 +21,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     private string $mask;
     private string $name;
     private string $source;
+    public string $target;
     private bool $visible;
     public array $onExecuted = [];
 
-    public function __construct(string $mask, ?string $label = null, string $type = BehaviorType::TYPE_DEFAULT)
+    public function __construct(string $mask, ?string $label = null, string $type = BehaviorType::DEFAULT)
     {
         $this->setMask($mask);
         $this->setLabel($label ?? '');
@@ -70,6 +71,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         $this->baseMachine = $baseMachine;
     }
 
+    public function setTargetState(string $target): void
+    {
+        $this->target = $target;
+    }
+
     public function getSource(): string
     {
         return $this->source;
@@ -78,6 +84,11 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     public function isCreating(): bool
     {
         return strpos($this->source, AbstractMachine::STATE_INIT) !== false;
+    }
+
+    public function isTerminating(): bool
+    {
+        return $this->target === AbstractMachine::STATE_TERMINATED;
     }
 
     public function isVisible(): bool
@@ -217,7 +228,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
      */
     private function changeState(BaseHolder $holder): void
     {
-        $holder->setModelState($this->targetState);
+        $holder->setModelState($this->target);
     }
 
     /**
@@ -227,7 +238,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
     {
         $parts = self::parseMask($mask);
 
-        if (count($parts) == 2 && $parts[1] != $this->targetState) {
+        if (count($parts) == 2 && $parts[1] != $this->target) {
             return false;
         }
         $stateMask = $parts[0];

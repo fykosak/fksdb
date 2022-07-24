@@ -65,7 +65,7 @@ orm:
             model: FKSDB\Models\ORM\Models\ModelContestYear
         email_message:
             service: FKSDB\Models\ORM\Services\ServiceEmailMessage
-            model: FKSDB\Models\ORM\Models\ModelEmailMessage
+            model: FKSDB\Models\ORM\Models\EmailMessageModel
             columnFactories:
                 email_message_id:
                     type: primaryKey
@@ -93,14 +93,10 @@ orm:
                     type: string
                     title: _('Text')
                 state:
-                    type: state
+                    type: enum
                     title: _('State')
-                    states:
-                        saved: [badge :'badge bg-color-1', label: Saved]
-                        waiting: [badge :'badge bg-color-2', label: Waiting]
-                        sent: [badge :'badge bg-color-3', label: Sent]
-                        failed: [badge :'badge bg-color-4', label: Failed]
-                        canceled: [badge :'badge bg-color-6', label: Canceled]
+                    enumClassName: FKSDB\Models\ORM\Models\EmailMessageState
+
              #created:
              #send:
         event:
@@ -384,13 +380,9 @@ orm:
                      class: FKSDB\Models\ORM\Columns\Tables\Payment\CurrencyColumnFactory
                      title: _('Currency')
                  state:
-                     type: state
+                     type: enum
                      title: _('State')
-                     states:
-                         waiting: [badge: 'badge bg-warning', label: 'Waiting for paying']
-                         canceled: [badge: 'badge bg-secondary', label: 'Payment canceled']
-                         received: [badge: 'badge bg-success', label: 'Payment received']
-                         new: [badge: 'badge bg-primary', label: 'New payment']
+                     enumClassName: FKSDB\Models\ORM\Models\PaymentState
              linkFactories:
                  detail:
                       destination: ':Event:Payment:detail'

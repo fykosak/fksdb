@@ -103,7 +103,7 @@ class ServiceAuthToken extends Service
         }
     }
 
-    public function findTokensByEventId(ModelEvent $event): TypedSelection
+    public function findTokensByEvent(ModelEvent $event): TypedSelection
     {
         return $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)

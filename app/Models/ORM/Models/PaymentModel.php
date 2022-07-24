@@ -20,7 +20,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int payment_id
  * @property-read ActiveRow event
  * @property-read int event_id
- * @property-read string state
+ * @property-read PaymentState state
  * @property-read float price
  * @property-read string currency
  * @property-read \DateTimeInterface created
@@ -34,13 +34,8 @@ use Fykosak\NetteORM\Model;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends Model implements Resource
+class PaymentModel extends Model implements Resource
 {
-
-    public const STATE_WAITING = 'waiting'; // waiting for confirm payment
-    public const STATE_RECEIVED = 'received'; // payment received
-    public const STATE_CANCELED = 'canceled'; // payment canceled
-    public const STATE_NEW = 'new'; // new payment
     public const RESOURCE_ID = 'event.payment';
 
     public function getPerson(): ModelPerson
@@ -79,7 +74,7 @@ class ModelPayment extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return \in_array($this->state, [Machine\AbstractMachine::STATE_INIT, self::STATE_NEW]);
+        return \in_array($this->state->value, [Machine\AbstractMachine::STATE_INIT, PaymentState::NEW]);
     }
 
     /**
@@ -98,13 +93,27 @@ class ModelPayment extends Model implements Resource
         return Currency::from($this->currency);
     }
 
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = new PaymentState($value);
+                break;
+        }
+        return $value;
+    }
+
     public function __toArray(): array
     {
         return [
             'personId' => $this->person_id,
             'paymentId' => $this->payment_id,
             'paymentUId' => $this->getPaymentId(),
-            'state' => $this->state,
+            'state' => $this->state->value,
             'price' => $this->price,
             'currency' => $this->currency,
             'constantSymbol' => $this->constant_symbol,

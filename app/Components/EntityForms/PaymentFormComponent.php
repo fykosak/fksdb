@@ -11,25 +11,24 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
-use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 
 /**
- * @property ModelPayment|null $model
+ * @property PaymentModel|null $model
  */
 class PaymentFormComponent extends EntityFormComponent
 {
@@ -45,7 +44,7 @@ class PaymentFormComponent extends EntityFormComponent
         Container $container,
         bool $isOrg,
         PaymentMachine $machine,
-        ?ModelPayment $model
+        ?PaymentModel $model
     ) {
         parent::__construct($container, $model);
         $this->machine = $machine;

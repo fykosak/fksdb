@@ -178,7 +178,7 @@ class Holder
     ): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->targetState;
+            $newStates[$name] = $transition->target;
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);

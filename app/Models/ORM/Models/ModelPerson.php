@@ -99,7 +99,7 @@ class ModelPerson extends Model implements Resource
         return $this->related(DbNames::TAB_PERSON_HAS_FLAG, 'person_id');
     }
 
-    public function getPersonHasFlag(string $flagType): ?ModelPersonHasFlag
+    public function hasPersonFlag(string $flagType): ?ModelPersonHasFlag
     {
         $row = $this->getFlags()->where('flag.fid', $flagType)->fetch();
         return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
@@ -147,15 +147,6 @@ class ModelPerson extends Model implements Resource
     public function getTeamMembers(): GroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'person_id');
-    }
-
-    public function isEventParticipant(?int $eventId = null): bool
-    {
-        $tmp = $this->getEventParticipants();
-        if ($eventId) {
-            $tmp->where('event_id = ?', $eventId);
-        }
-        return (bool)$tmp->fetch();
     }
 
     public function getEventOrgs(): GroupedSelection
@@ -324,7 +315,7 @@ class ModelPerson extends Model implements Resource
         foreach ($schedule as $pSchRow) {
             $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
             $payment = $pSchedule->getPayment();
-            if (!$payment || $payment->state !== ModelPayment::STATE_RECEIVED) {
+            if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
                 $toPay[] = $pSchedule;
             }
         }

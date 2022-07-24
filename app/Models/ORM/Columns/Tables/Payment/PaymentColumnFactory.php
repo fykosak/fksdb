@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
@@ -49,7 +49,7 @@ class PaymentColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelPayment $model
+     * @param PaymentModel $model
      * @throws BadTypeException
      * @throws CannotAccessModelException
      */

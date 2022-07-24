@@ -21,20 +21,12 @@ use Nette\Security\Resource;
  * @property-read string|null carbon_copy
  * @property-read string|null blind_carbon_copy
  * @property-read string text
- * @property-read string state
+ * @property-read EmailMessageState state
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface sent
  */
-class ModelEmailMessage extends Model implements Resource
+class EmailMessageModel extends Model implements Resource
 {
-
-    public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
-    public const STATE_WAITING = 'waiting'; //čaká na poslanie
-    public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
-    public const STATE_FAILED = 'failed'; // posielanie zlyhalo
-    public const STATE_CANCELED = 'canceled'; // posielanie zrušené
-    public const STATE_REJECTED = 'rejected'; // zastavené kvôli GDPR
-
     public const RESOURCE_ID = 'emailMessage';
 
     public function toMessage(): Message
@@ -73,5 +65,19 @@ class ModelEmailMessage extends Model implements Resource
     public function getResourceId(): string
     {
         return static::RESOURCE_ID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = new EmailMessageState($value);
+                break;
+        }
+        return $value;
     }
 }

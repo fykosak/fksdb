@@ -34,6 +34,25 @@ class FormUtils
     }
 
     /**
+     * Convert empty strings to nulls.
+     * @todo Move to general utils.
+     */
+    public static function emptyStrToNull2(iterable $values): array
+    {
+        $result = [];
+        foreach ($values as $key => $value) {
+            if (is_iterable($values)) {
+                $result[$key] = self::emptyStrToNull2($value);
+            } elseif ($value === '') {
+                $result[$key] = null;
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * @todo Move to general utils.
      */
     public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash

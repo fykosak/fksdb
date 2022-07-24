@@ -111,7 +111,7 @@ class PersonFormComponent extends EntityFormComponent
     {
         $connection = $this->servicePerson->explorer->getConnection();
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values, true);
+        $data = FormUtils::emptyStrToNull2($values);
         $connection->beginTransaction();
         $this->logger->clear();
         $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
@@ -141,10 +141,10 @@ class PersonFormComponent extends EntityFormComponent
             $this->getForm()->setDefaults([
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $this->model->getAddress(new PostContactType(PostContactType::DELIVERY))
-                    ?? [],
-                self::POST_CONTACT_PERMANENT => $this->model->getAddress(new PostContactType(PostContactType::PERMANENT))
-                    ?? [],
+                self::POST_CONTACT_DELIVERY =>
+                    $this->model->getAddress(new PostContactType(PostContactType::DELIVERY)) ?? [],
+                self::POST_CONTACT_PERMANENT =>
+                    $this->model->getAddress(new PostContactType(PostContactType::PERMANENT)) ?? [],
             ]);
         }
     }
@@ -162,7 +162,7 @@ class PersonFormComponent extends EntityFormComponent
                 } else {
                     $address = $this->serviceAddress->createNewModel($datum);
                     $postContactData = [
-                        'type' => $shortType,
+                        'type' => $shortType->value,
                         'person_id' => $person->person_id,
                         'address_id' => $address->address_id,
                     ];
@@ -171,7 +171,7 @@ class PersonFormComponent extends EntityFormComponent
                 }
             } elseif ($oldAddress) {
                 $this->servicePostContact->getTable()->where([
-                    'type' => $shortType,
+                    'type' => $shortType->value,
                     'person_id' => $person->person_id,
                 ])->delete();
                 $oldAddress->delete();

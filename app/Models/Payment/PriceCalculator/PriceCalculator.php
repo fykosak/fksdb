@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Payment\Transition\PaymentHolder;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 use Fykosak\Utils\Price\Currency;
@@ -59,7 +59,7 @@ class PriceCalculator implements TransitionCallback
     /**
      * @return array[]
      */
-    public function getGridItems(ModelPayment $modelPayment): array
+    public function getGridItems(PaymentModel $modelPayment): array
     {
         $items = [];
         foreach ($this->preProcess as $preProcess) {

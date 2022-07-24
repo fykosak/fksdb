@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `auth_token` (
   `login_id` INT(11)      NOT NULL,
   `token`    VARCHAR(255) NOT NULL,
   `type`     VARCHAR(31)  NOT NULL
-  COMMENT 'type of token (from programmers POV)',
+  COMMENT 'type of token (from programmers POV)', # TODO ENUM
   `data`     VARCHAR(255) NULL     DEFAULT NULL
   COMMENT 'various purpose data',
   `since`    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services\Schedule;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\PaymentState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
@@ -24,7 +25,7 @@ class ServiceSchedulePayment extends Service
      * @throws StorageException
      * @throws ModelException
      */
-    public function storeItems(array $data, ModelPayment $payment): void
+    public function storeItems(array $data, PaymentModel $payment): void
     {
         if (!$this->explorer->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
@@ -38,7 +39,7 @@ class ServiceSchedulePayment extends Service
         foreach ($newScheduleIds as $id) {
             /** @var ModelSchedulePayment $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
-                ->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED)
+                ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
                 ->fetch();
             if ($model) {
                 throw new DuplicatePaymentException(sprintf(

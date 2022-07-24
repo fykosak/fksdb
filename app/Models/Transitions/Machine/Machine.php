@@ -38,9 +38,10 @@ abstract class Machine extends AbstractMachine
      */
     public function getAvailableTransitions(ModelHolder $holder): array
     {
-        return \array_filter($this->getTransitions(), function (Transition $transition) use ($holder): bool {
-            return $this->isAvailable($transition, $holder);
-        });
+        return \array_filter(
+            $this->getTransitions(),
+            fn(Transition $transition): bool => $this->isAvailable($transition, $holder)
+        );
     }
 
     /**
@@ -141,7 +142,7 @@ abstract class Machine extends AbstractMachine
             throw $exception;
         }
         $this->explorer->getConnection()->commit();
-        $holder->updateState($transition->targetState);
+        $holder->updateState($transition->targetStateEnum);
         $transition->callAfterExecute($holder);
     }
 

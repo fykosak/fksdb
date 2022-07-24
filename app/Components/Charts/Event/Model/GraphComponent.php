@@ -7,6 +7,7 @@ namespace FKSDB\Components\Charts\Event\Model;
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Controls\Events\ExpressionPrinter;
 use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Transitions\Machine\Machine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
@@ -70,12 +71,13 @@ class GraphComponent extends FrontEndComponent implements Chart
     {
         $states = $this->getAllStates();
         $edges = [];
+        /** @var Transition $transition */
         foreach ($this->baseMachine->getTransitions() as $transition) {
             foreach ($states as $state) {
                 if ($transition->matches($state)) {
                     $edges[] = [
                         'from' => $state,
-                        'to' => $transition->targetState,
+                        'to' => $transition->target,
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

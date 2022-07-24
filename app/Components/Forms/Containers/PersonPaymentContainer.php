@@ -8,7 +8,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
 
 class PersonPaymentContainer extends ContainerWithOptions

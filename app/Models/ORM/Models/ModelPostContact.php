@@ -14,6 +14,6 @@ class ModelPostContact extends Model
 {
     public function getAddress(): ?ModelAddress
     {
-        return $this->address ? ModelAddress::createFromActiveRow($this->address) : null;
+        return ModelAddress::createFromActiveRow($this->address);
     }
 }

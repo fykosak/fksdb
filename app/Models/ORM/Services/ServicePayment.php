@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelPayment createNewModel(array $data)
+ * @method PaymentModel createNewModel(array $data)
  */
 class ServicePayment extends Service
 {

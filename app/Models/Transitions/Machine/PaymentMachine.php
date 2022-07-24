@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FKSDB\Models\Payment\Transition;
+namespace FKSDB\Models\Transitions\Machine;
 
+use FKSDB\Models\ORM\Models\PaymentState;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use FKSDB\Models\Transitions\TransitionsDecorator;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\Database\Explorer;
 
 class PaymentMachine extends Machine
@@ -47,11 +48,11 @@ class PaymentMachine extends Machine
 
     public function getCreatingState(): string
     {
-        return ModelPayment::STATE_NEW;
+        return PaymentState::NEW;
     }
 
     /**
-     * @param ModelPayment|null $model
+     * @param PaymentModel|null $model
      */
     public function createHolder(?Model $model): PaymentHolder
     {

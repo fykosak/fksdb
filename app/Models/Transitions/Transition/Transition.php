@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions\Transition;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\SmartObject;
 
 class Transition
@@ -19,41 +19,48 @@ class Transition
     private ?BehaviorType $behaviorType = null;
     private string $label;
     /** @var TransitionCallback[] */
-    public array $beforeExecuteCallbacks = [];
+    public array $beforeExecute = [];
     /** @var TransitionCallback[] */
-    public array $afterExecuteCallbacks = [];
-    public string $sourceState;
-    public string $targetState;
+    public array $afterExecute = [];
+
+    public ?EnumColumn $sourceStateEnum; // null for INIT
+    public ?EnumColumn $targetStateEnum; // null for TERMINATED
     protected ExpressionEvaluator $evaluator;
 
-    public function setSourceState(string $sourceState): void
+    public function setSourceStateEnum(?EnumColumn $sourceState): void
     {
-        $this->sourceState = $sourceState;
+        $this->sourceStateEnum = $sourceState;
     }
 
-    public function matchSource(string $source): bool
+    public function setTargetStateEnum(?EnumColumn $targetState): void
     {
-        return $this->sourceState === $source || $this->sourceState === AbstractMachine::STATE_ANY;
+        $this->targetStateEnum = $targetState;
     }
 
-    public function setTargetState(string $targetState): void
+    final public function matchSource(?EnumColumn $source): bool
     {
-        $this->targetState = $targetState;
+        if (is_null($source) && is_null($this->sourceStateEnum)) {
+            return true;
+        }
+        if ($source->value === $this->sourceStateEnum->value) {
+            return true;
+        }
+        return false;
     }
 
     public function isCreating(): bool
     {
-        return $this->sourceState === AbstractMachine::STATE_INIT;
+        return is_null($this->sourceStateEnum);
     }
 
     public function isTerminating(): bool
     {
-        return $this->targetState === AbstractMachine::STATE_TERMINATED;
+        return is_null($this->sourceStateEnum);
     }
 
     public function getId(): string
     {
-        return static::createId($this->sourceState, $this->targetState);
+        return static::createId2($this->sourceStateEnum, $this->targetStateEnum);
     }
 
     public static function createId(string $sourceState, string $targetState): string
@@ -61,13 +68,19 @@ class Transition
         return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
     }
 
+    public static function createId2(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    {
+        return ($sourceState ? $sourceState->value : 'init') . '__' .
+            ($targetState ? $targetState->value : 'terminated');
+    }
+
     public function getBehaviorType(): BehaviorType
     {
         if ($this->isTerminating()) {
-            return new BehaviorType(BehaviorType::TYPE_DANGEROUS);
+            return new BehaviorType(BehaviorType::DANGEROUS);
         }
         if ($this->isCreating()) {
-            return new BehaviorType(BehaviorType::TYPE_SUCCESS);
+            return new BehaviorType(BehaviorType::SUCCESS);
         }
         return $this->behaviorType;
     }
@@ -102,31 +115,31 @@ class Transition
         return (bool)$this->evaluator->evaluate($this->condition, ...$args);
     }
 
-    public function canExecute2(ModelHolder $model): bool
+    public function canExecute2(ModelHolder $holder): bool
     {
-        return $this->isConditionFulfilled($model);
+        return $this->isConditionFulfilled($holder);
     }
 
     public function addBeforeExecute(callable $callBack): void
     {
-        $this->beforeExecuteCallbacks[] = $callBack;
+        $this->beforeExecute[] = $callBack;
     }
 
     public function addAfterExecute(callable $callBack): void
     {
-        $this->afterExecuteCallbacks[] = $callBack;
+        $this->afterExecute[] = $callBack;
     }
 
     final public function callBeforeExecute(ModelHolder $holder, ...$args): void
     {
-        foreach ($this->beforeExecuteCallbacks as $callback) {
+        foreach ($this->beforeExecute as $callback) {
             $callback($holder, ...$args);
         }
     }
 
     final public function callAfterExecute(...$args): void
     {
-        foreach ($this->afterExecuteCallbacks as $callback) {
+        foreach ($this->afterExecute as $callback) {
             $callback(...$args);
         }
     }

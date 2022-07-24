@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-use FKSDB\Models\ORM\Models\ModelEmailMessage;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail;
@@ -29,7 +30,7 @@ $query = $serviceEmailMessage->getMessagesToSend(
     $argv[1] ? (int)$argv[1] : (int)$container->getParameters()['spamMailer']['defaultLimit']
 );
 $counter = 0;
-/** @var ModelEmailMessage $model */
+/** @var EmailMessageModel $model */
 foreach ($query as $model) {
     $counter++;
     if ($counter > SAFE_LIMIT) {
@@ -41,12 +42,12 @@ foreach ($query as $model) {
         $serviceUnsubscribedEmail->checkEmail($message->getHeader('To')); // TODO hack?
 
         $mailer->send($message);
-        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
+        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::SENT, 'sent' => new DateTime()]);
     } catch (UnsubscribedEmailException $exception) {
-        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_REJECTED]);
+        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::REJECTED]);
         Debugger::log($exception, 'mailer-exceptions-unsubscribed');
     } catch (Throwable $exception) {
-        $serviceEmailMessage->updateModel($model, ['state' => ModelEmailMessage::STATE_FAILED]);
+        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::FAILED]);
         Debugger::log($exception, 'mailer-exceptions');
     }
 }

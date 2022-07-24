@@ -7,10 +7,11 @@ namespace FKSDB\Models\Transitions\TransitionsGenerator;
 use FKSDB\Models\Authorization\EventAuthorizator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Models\PaymentState;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\Payment\Transition\PaymentHolder;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
@@ -42,7 +43,7 @@ abstract class PaymentTransitions implements TransitionsDecorator
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
         $machine->setImplicitCondition(
-            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->event, ModelPayment::RESOURCE_ID)
+            new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->event, PaymentModel::RESOURCE_ID)
         );
 
         $this->decorateTransitionAllToCanceled($machine);
@@ -56,11 +57,11 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void
     {
-        foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
-            $transition = $machine->getTransitionById(Transition::createId($state, ModelPayment::STATE_CANCELED));
+        foreach ([PaymentState::NEW, PaymentState::WAITING] as $state) {
+            $transition = $machine->getTransitionById(Transition::createId($state, PaymentState::CANCELED));
             $transition->setCondition(fn() => true);
-            $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
-            $transition->beforeExecuteCallbacks[] =
+            $transition->beforeExecute[] = $this->getClosureDeleteRows();
+            $transition->beforeExecute[] =
                 fn(PaymentHolder $holder) => $holder->getModel()->update(['price' => null]);
         }
     }
@@ -71,9 +72,9 @@ abstract class PaymentTransitions implements TransitionsDecorator
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void
     {
         $transition = $machine->getTransitionById(
-            Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED)
+            Transition::createId(PaymentState::WAITING, PaymentState::RECEIVED)
         );
-        $transition->beforeExecuteCallbacks[] = function (PaymentHolder $holder) {
+        $transition->beforeExecute[] = function (PaymentHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
                 $this->servicePersonSchedule->updateModel($personSchedule, [$personSchedule->state => 'received']);
             }

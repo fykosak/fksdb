@@ -251,7 +251,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         } else {
             $data = array_merge($data, [
                 'person_id' => $person->person_id,
-                'type' => PersonFormComponent::mapAddressContainerNameToType($type),
+                'type' => PersonFormComponent::mapAddressContainerNameToType($type)->value,
             ]);
             $mainModel = $this->serviceAddress->createNewModel($data);
             $data['address_id'] = $mainModel->address_id;
@@ -373,7 +373,7 @@ class ReferencedPersonHandler implements ReferencedHandler
                 unset($data['person_has_flag'][$fid]);
                 continue;
             }
-            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid);
+            $models['person_has_flag'][$fid] = $person->hasPersonFlag($fid);
         }
     }
 

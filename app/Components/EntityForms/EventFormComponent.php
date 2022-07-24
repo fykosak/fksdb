@@ -158,7 +158,7 @@ class EventFormComponent extends EntityFormComponent
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
         /** @var ModelAuthToken $token $token */
-        foreach ($this->serviceAuthToken->findTokensByEventId($event) as $token) {
+        foreach ($this->serviceAuthToken->findTokensByEvent($event) as $token) {
             $this->serviceAuthToken->updateModel($token, $tokenData);
         }
         $connection->commit();

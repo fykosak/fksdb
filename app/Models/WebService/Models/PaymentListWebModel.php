@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Services\ServicePayment;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -21,7 +21,7 @@ class PaymentListWebModel extends WebModel
     public function getJsonResponse(array $params): array
     {
         $data = [];
-        /** @var ModelPayment $payment */
+        /** @var PaymentModel $payment */
         foreach ($this->servicePayment->getTable()->where('event_id', $params['event_id']) as $payment) {
             $data[] = $payment->__toArray();
         }

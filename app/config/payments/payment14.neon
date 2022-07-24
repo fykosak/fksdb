@@ -22,13 +22,14 @@ services:
              - setUp(%fyziklani14payment.symbolGenerator.variableSymbolStart%, %fyziklani14payment.symbolGenerator.variableSymbolEnd%, %fyziklani14payment.symbolGenerator.info%)
 
     fyziklani14payment.machine:
-        factory: FKSDB\Models\Payment\Transition\PaymentMachine
+        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
         setup:
             - setEventId(145)
             - setScheduleGroupTypes([accommodation])
 transitions:
     fyziklani14payment:
         machine: fyziklani14payment.machine
+        stateEnum: FKSDB\Models\ORM\Models\PaymentState
         transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani14Payment()
         transitions:
             __init->new:

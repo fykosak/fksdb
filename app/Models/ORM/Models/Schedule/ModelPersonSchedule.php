@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\PaymentState;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 
@@ -43,13 +44,13 @@ class ModelPersonSchedule extends Model
         return $this->getScheduleGroup()->getEvent();
     }
 
-    public function getPayment(): ?ModelPayment
+    public function getPayment(): ?PaymentModel
     {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;
         }
-        return ModelPayment::createFromActiveRow($data);
+        return PaymentModel::createFromActiveRow($data);
     }
 
     public function hasActivePayment(): bool
@@ -58,7 +59,7 @@ class ModelPersonSchedule extends Model
         if (!$payment) {
             return false;
         }
-        if ($payment->state == ModelPayment::STATE_CANCELED) {
+        if ($payment->state->value == PaymentState::CANCELED) {
             return false;
         }
         return true;

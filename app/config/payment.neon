@@ -53,7 +53,7 @@ services:
         setup:
             - addPreprocess(FKSDB\Models\Payment\PriceCalculator\PreProcess\SchedulePrice())
     fyziklani13payment.machine:
-        factory: FKSDB\Models\Payment\Transition\PaymentMachine
+        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
         setup:
             - setEventId(137)
             - setScheduleGroupTypes([accommodation])
@@ -64,7 +64,7 @@ services:
              - setUp(%fyziklani14payment.symbolGenerator.variableSymbolStart%, %fyziklani14payment.symbolGenerator.variableSymbolEnd%, %fyziklani14payment.symbolGenerator.info%)
 
     fyziklani14payment.machine:
-        factory: FKSDB\Models\Payment\Transition\PaymentMachine
+        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
         setup:
             - setEventId(145)
             - setScheduleGroupTypes([accommodation])
@@ -75,7 +75,7 @@ services:
                  - setUp(%fyziklani16payment.symbolGenerator.variableSymbolStart%, %fyziklani16payment.symbolGenerator.variableSymbolEnd%, %fyziklani16payment.symbolGenerator.info%)
 
     fyziklani16payment.machine:
-        factory: FKSDB\Models\Payment\Transition\PaymentMachine
+        factory: FKSDB\Models\Transitions\Machine\PaymentMachine
         setup:
             - setEventId(165)
             - setScheduleGroupTypes([accommodation])
@@ -83,6 +83,7 @@ services:
 transitions:
     fyziklani13payment:
         machine: fyziklani13payment.machine
+        stateEnum: FKSDB\Models\ORM\Models\PaymentState
         transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
         transitions:
             __init->new:
@@ -108,6 +109,7 @@ transitions:
                     - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/receive',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
     fyziklani14payment:
         machine: fyziklani14payment.machine
+        stateEnum: FKSDB\Models\ORM\Models\PaymentState
         transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani14Payment()
         transitions:
             __init->new:
@@ -131,6 +133,7 @@ transitions:
                     - FKSDB\Models\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2020/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
     fyziklani16payment:
         machine: fyziklani16payment.machine
+        stateEnum: FKSDB\Models\ORM\Models\PaymentState
         transitionsDecorator: FKSDB\Models\Payment\Transition\TransitionsGenerator\Fyziklani16Payment()
         transitions:
             __init->new:

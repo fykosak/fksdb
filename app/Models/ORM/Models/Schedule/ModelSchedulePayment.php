@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Schedule;
 
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -16,9 +16,9 @@ use Nette\Database\Table\ActiveRow;
 class ModelSchedulePayment extends Model
 {
 
-    public function getPayment(): ModelPayment
+    public function getPayment(): PaymentModel
     {
-        return ModelPayment::createFromActiveRow($this->payment);
+        return PaymentModel::createFromActiveRow($this->payment);
     }
 
     public function getPersonSchedule(): ModelPersonSchedule

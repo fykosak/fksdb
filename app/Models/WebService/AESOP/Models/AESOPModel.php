@@ -88,7 +88,7 @@ abstract class AESOPModel
         $postContact = $person->getPermanentPostContact(true);
         $history = $person->getHistoryByContestYear($this->contestYear);
         $school = $history->getSchool();
-        $spamFlag = $person->getPersonHasFlag('spam_mff');
+        $spamFlag = $person->hasPersonFlag('spam_mff');
         return [
             'name' => $person->other_name,
             'surname' => $person->family_name,

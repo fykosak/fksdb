@@ -11,10 +11,11 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelEmailMessage;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
@@ -120,7 +121,7 @@ class MailSender
         ModelLogin $login,
         BaseMachine $baseMachine,
         BaseHolder $baseHolder
-    ): ModelEmailMessage {
+    ): EmailMessageModel {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->holder;
@@ -162,7 +163,7 @@ class MailSender
             $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
         }
         $data['recipient'] = $email;
-        $data['state'] = ModelEmailMessage::STATE_WAITING;
+        $data['state'] = EmailMessageState::WAITING;
         return $this->serviceEmailMessage->createNewModel($data);
     }
 
