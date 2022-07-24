@@ -117,6 +117,8 @@ parameters:
                 # required to ORG
                 uk_login:
                   required: false
+                isic_number:
+                  required: false
                 account:
                   required: false
                 # to webpage
@@ -284,6 +286,8 @@ parameters:
                   required: false
                 # required to ORG
                 uk_login:
+                  required: false
+                isic_number:
                   required: false
                 account:
                   required: false

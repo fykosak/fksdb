@@ -24,6 +24,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string im
  * @property-read string note
  * @property-read string uk_login
+ * @property-read string isic_number
  * @property-read string account
  * @property-read string birthplace
  * @property-read string origin
@@ -37,6 +38,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string academic_degree_prefix
  * @property-read string academic_degree_suffix
  * @property-read string preferred_lang
+ * @property-read string pizza
  */
 class ModelPersonInfo extends Model
 {

@@ -1,11 +1,22 @@
 {layout ../@layout.latte}
 {block content}
     {control form}
-    <hr/>
-    {foreach $persons as $person}
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-12"><b>{$person->getFullName()}</b></div>
-            <div class="col-lg-9 col-md-6 col-sm-12"> {control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</div>
-        </div>
-    {/foreach}
+    <table class="table table-sm table-hover table-striped">
+        <thead>
+            <tr>
+                <th><b>Person</b></th>
+                <th><b>Pizza</b></th>
+                <th><b>ISIC</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $persons as $person}
+                <tr>
+                    <td><b>{$person->getFullName()}</b></div>
+                    <td>{control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</td>
+                    <td>{control valuePrinter:onlyValue 'person_info.isic_number', $person->getInfo()}</td>
+                </tr>
+            {/foreach}
+        </tbody>
+    <table>
 {/block}
