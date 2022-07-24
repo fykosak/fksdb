@@ -205,7 +205,7 @@ class EventWebModel extends WebModel
 
             foreach ($team->getMembers() as $memberRow) {
                 $member = TeamMemberModel::createFromActiveRow($memberRow);
-                $teamData['members'][] = $this->createMemberArray($member);
+                $teamData['members'][] = $this->createParticipantArray($member);
             }
             $teamsData[$team->fyziklani_team_id] = $teamData;
         }
@@ -243,11 +243,14 @@ class EventWebModel extends WebModel
     private function createTeamMemberNode(TeamMemberModel $member, \DOMDocument $doc): \DOMElement
     {
         $pNode = $member->createXMLNode($doc);
-        XMLHelper::fillArrayToNode($this->createMemberArray($member), $doc, $pNode);
+        XMLHelper::fillArrayToNode($this->createParticipantArray($member), $doc, $pNode);
         return $pNode;
     }
 
-    private function createMemberArray(TeamMemberModel $member): array
+    /**
+     * @param TeamMemberModel|ModelEventParticipant $member
+     */
+    private function createParticipantArray($member): array
     {
         $history = $member->getPersonHistory();
         return [
@@ -255,22 +258,11 @@ class EventWebModel extends WebModel
             'email' => $member->getPerson()->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
-            'countryIso' => $history ? $history->getSchool()->getAddress()->getRegion()->country_iso : null,
-        ];
-    }
-
-    private function createParticipantArray(ModelEventParticipant $participant): array
-    {
-        $history = $participant->getPersonHistory();
-        return [
-            'name' => $participant->getPerson()->getFullName(),
-            'email' => $participant->getPerson()->getInfo()->email,
-            'schoolId' => $history ? $history->school_id : null,
-            'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
             'countryIso' => $history ? (
             ($school = $history->getSchool())
                 ? $school->getAddress()->getRegion()->country_iso
-                : null) : null,
+                : null
+            ) : null,
         ];
     }
 

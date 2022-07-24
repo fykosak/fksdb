@@ -4,18 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\WebService\XMLHelper;
+use Nette\Schema\Elements\Structure;
+use Nette\Schema\Expect;
 
 class OrganizersWebModel extends WebModel
 {
 
     private ServiceOrg $serviceOrg;
+    private ServiceContest $serviceContest;
 
-    public function inject(ServiceOrg $serviceOrg): void
+    public function inject(ServiceOrg $serviceOrg, ServiceContest $serviceContest): void
     {
         $this->serviceOrg = $serviceOrg;
+        $this->serviceContest = $serviceContest;
     }
 
     /**
@@ -56,5 +62,42 @@ class OrganizersWebModel extends WebModel
 
         $doc->formatOutput = true;
         return new \SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+    }
+
+    public function getJsonResponse(array $params): array
+    {
+        $contest = $this->serviceContest->findByPrimary($params['contestId']);
+        $organisers = $contest->related(DbNames::TAB_ORG);
+        if (isset($params['year'])) {
+            $organisers->where('since<=?', $params['year'])
+                ->where('until IS NULL OR until >=?', $params['year']);
+        }
+        $items = [];
+        foreach ($organisers as $row) {
+            $org = ModelOrg::createFromActiveRow($row);
+            $items[] = [
+                'name' => $org->getPerson()->getFullName(),
+                'personId' => $org->person_id,
+                'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
+                'career' => $org->getPerson()->getInfo()->career,
+                'contribution' => $org->contribution,
+                'order' => $org->order,
+                'role' => $org->role,
+                'since' => $org->since,
+                'until' => $org->until,
+                'texSignature' => $org->tex_signature,
+                'domainAlias' => $org->domain_alias,
+            ];
+        }
+        return $items;
+    }
+
+    public function getExpectedParams(): Structure
+    {
+        return Expect::structure([
+            'contest_id' => Expect::scalar()->castTo('int')->required(),
+            'year' => Expect::scalar()->castTo('int')->nullable(),
+        ]);
     }
 }
