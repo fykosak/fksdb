@@ -10,22 +10,22 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_seat_id
- * @property-read ActiveRow fyziklani_seat
+ * @property-read SeatModel fyziklani_seat
  * @property-read int fyziklani_team_id
- * @property-read ActiveRow fyziklani_team
+ * @property-read TeamModel2 fyziklani_team
  */
 class TeamSeatModel extends Model
 {
 
     public function getSeat(): SeatModel
     {
-        return SeatModel::createFromActiveRow($this->fyziklani_seat);
+        return SeatModel::createFromActiveRow($this->fyziklani_seat, $this->mapper);
     }
 
     public function getTeam(): ?TeamModel2
     {
         if ($this->fyziklani_team_id) {
-            return TeamModel2::createFromActiveRow($this->fyziklani_team);
+            return TeamModel2::createFromActiveRow($this->fyziklani_team, $this->mapper);
         }
         return null;
     }

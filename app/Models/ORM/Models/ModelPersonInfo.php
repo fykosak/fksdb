@@ -19,7 +19,7 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface agreed
  * @property-read \DateTimeInterface born
  * @property-read int person_id
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read string id_number
  * @property-read string im
  * @property-read string note
@@ -40,9 +40,4 @@ use Fykosak\NetteORM\Model;
  */
 class ModelPersonInfo extends Model
 {
-
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
 }

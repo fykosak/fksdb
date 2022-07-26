@@ -66,15 +66,15 @@ class EventWebModel extends WebModel
         $lastPersonId = null;
         $currentNode = null;
         foreach ($query as $row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+            $model = ModelPersonSchedule::createFromActiveRow($row, $event->mapper);
             if ($lastPersonId !== $model->person_id) {
                 $lastPersonId = $model->person_id;
                 $currentNode = $doc->createElement('personSchedule');
                 $personNode = $doc->createElement('person');
                 XMLHelper::fillArrayToNode([
-                    'name' => $model->getPerson()->getFullName(),
+                    'name' => $model->person->getFullName(),
                     'personId' => $model->person_id,
-                    'email' => $model->getPerson()->getInfo()->email,
+                    'email' => $model->person->getInfo()->email,
                 ], $doc, $personNode);
                 $currentNode->appendChild($personNode);
                 $rootNode->appendChild($currentNode);
@@ -95,9 +95,9 @@ class EventWebModel extends WebModel
         foreach ($query as $model) {
             $data[] = [
                 'person' => [
-                    'name' => $model->getPerson()->getFullName(),
+                    'name' => $model->person->getFullName(),
                     'personId' => $model->person_id,
-                    'email' => $model->getPerson()->getInfo()->email,
+                    'email' => $model->person->getInfo()->email,
                 ],
                 'scheduleItemId' => $model->schedule_item_id,
             ];
@@ -109,11 +109,11 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('schedule');
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row);
+            $group = ModelScheduleGroup::createFromActiveRow($row, $event->mapper);
             $groupNode = $group->createXMLNode($doc);
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow);
+                $item = ModelScheduleItem::createFromActiveRow($itemRow, $event->mapper);
                 $groupNode->appendChild($item->createXMLNode($doc));
             }
             $rootNode->appendChild($groupNode);
@@ -125,12 +125,12 @@ class EventWebModel extends WebModel
     {
         $data = [];
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row);
+            $group = ModelScheduleGroup::createFromActiveRow($row, $event->mapper);
             $datum = $group->__toArray();
             $datum['schedule_items'] = [];
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow);
+                $item = ModelScheduleItem::createFromActiveRow($itemRow, $event->mapper);
                 $datum['schedule_items'][] = $item->__toArray();
             }
             $data[] = $datum;
@@ -149,11 +149,11 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('teams');
         foreach ($event->getFyziklaniTeams() as $row) {
-            $team = TeamModel2::createFromActiveRow($row);
+            $team = TeamModel2::createFromActiveRow($row, $event->mapper);
             $teamNode = $team->createXMLNode($doc);
 
             foreach ($team->getTeachers() as $teacherRow) {
-                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
+                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $event->mapper);
                 $teacherNode = $doc->createElement('teacher');
                 $teacherNode->setAttribute('personId', (string)$teacher->person_id);
                 XMLHelper::fillArrayToNode([
@@ -164,7 +164,7 @@ class EventWebModel extends WebModel
             }
 
             foreach ($team->getMembers() as $memberRow) {
-                $member = TeamMemberModel::createFromActiveRow($memberRow);
+                $member = TeamMemberModel::createFromActiveRow($memberRow, $event->mapper);
                 $pNode = $this->createTeamMemberNode($member, $doc);
                 $teamNode->appendChild($pNode);
             }
@@ -196,7 +196,7 @@ class EventWebModel extends WebModel
                 'members' => [],
             ];
             foreach ($team->getTeachers() as $teacherRow) {
-                $teacher = ModelTeacher::createFromActiveRow($teacherRow);
+                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $event->mapper);
                 $teamData['teachers'][] = [
                     'name' => $teacher->getPerson()->getFullName(),
                     'email' => $teacher->getPerson()->getInfo()->email,
@@ -204,7 +204,7 @@ class EventWebModel extends WebModel
             }
 
             foreach ($team->getMembers() as $memberRow) {
-                $member = TeamMemberModel::createFromActiveRow($memberRow);
+                $member = TeamMemberModel::createFromActiveRow($memberRow, $event->mapper);
                 $teamData['members'][] = $this->createParticipantArray($member);
             }
             $teamsData[$team->fyziklani_team_id] = $teamData;
@@ -216,7 +216,7 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('participants');
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = ModelEventParticipant::createFromActiveRow($row, $event->mapper);
             $pNode = $this->createParticipantNode($participant, $doc);
             $rootNode->appendChild($pNode);
         }
@@ -227,7 +227,7 @@ class EventWebModel extends WebModel
     {
         $participants = [];
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = ModelEventParticipant::createFromActiveRow($row, $event->mapper);
             $participants[$participant->event_participant_id] = $this->createParticipantArray($participant);
         }
         return $participants;
@@ -254,13 +254,13 @@ class EventWebModel extends WebModel
     {
         $history = $member->getPersonHistory();
         return [
-            'name' => $member->getPerson()->getFullName(),
-            'email' => $member->getPerson()->getInfo()->email,
+            'name' => $member->person->getFullName(),
+            'email' => $member->person->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
             'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
             'countryIso' => $history ? (
             ($school = $history->getSchool())
-                ? $school->getAddress()->getRegion()->country_iso
+                ? $school->address->getRegion()->country_iso
                 : null
             ) : null,
         ];

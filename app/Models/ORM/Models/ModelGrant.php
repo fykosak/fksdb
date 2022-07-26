@@ -9,19 +9,9 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int contest_id
- * @property-read ActiveRow role
- * @property-read ActiveRow contest
+ * @property-read ModelRole role
+ * @property-read ModelContest contest
  */
 class ModelGrant extends Model
 {
-
-    public function getRole(): ModelRole
-    {
-        return ModelRole::createFromActiveRow($this->role);
-    }
-
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest);
-    }
 }

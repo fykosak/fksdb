@@ -22,11 +22,11 @@ class ModelSubmitQuiz extends Model
 
     public function getTask(): ModelTask
     {
-        return ModelTask::createFromActiveRow($this->task);
+        return ModelTask::createFromActiveRow($this->task, $this->mapper);
     }
 
     public function getContestant(): ModelContestant
     {
-        return ModelContestant::createFromActiveRow($this->contestant_base);
+        return ModelContestant::createFromActiveRow($this->contestant_base, $this->mapper);
     }
 }

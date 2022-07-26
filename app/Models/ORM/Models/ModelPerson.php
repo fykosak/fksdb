@@ -40,7 +40,7 @@ class ModelPerson extends Model implements Resource
     public function getLogin(): ?ModelLogin
     {
         $login = $this->related(DbNames::TAB_LOGIN, 'person_id')->fetch();
-        return $login ? ModelLogin::createFromActiveRow($login) : null;
+        return $login ? ModelLogin::createFromActiveRow($login, $this->mapper) : null;
     }
 
     public function getPreferredLang(): ?string
@@ -51,7 +51,7 @@ class ModelPerson extends Model implements Resource
     public function getInfo(): ?ModelPersonInfo
     {
         $info = $this->related(DbNames::TAB_PERSON_INFO, 'person_id')->fetch();
-        return $info ? ModelPersonInfo::createFromActiveRow($info) : null;
+        return $info ? ModelPersonInfo::createFromActiveRow($info, $this->mapper) : null;
     }
 
     public function getHistoryByContestYear(
@@ -67,7 +67,7 @@ class ModelPerson extends Model implements Resource
             ->where('ac_year', $acYear)
             ->fetch();
         if ($history) {
-            return ModelPersonHistory::createFromActiveRow($history);
+            return ModelPersonHistory::createFromActiveRow($history, $this->mapper);
         }
         if ($extrapolated) {
             $lastHistory = $this->getLastHistory();
@@ -102,7 +102,7 @@ class ModelPerson extends Model implements Resource
     public function hasPersonFlag(string $flagType): ?ModelPersonHasFlag
     {
         $row = $this->getFlags()->where('flag.fid', $flagType)->fetch();
-        return $row ? ModelPersonHasFlag::createFromActiveRow($row) : null;
+        return $row ? ModelPersonHasFlag::createFromActiveRow($row, $this->mapper) : null;
     }
 
     public function getPostContacts(): GroupedSelection
@@ -113,13 +113,13 @@ class ModelPerson extends Model implements Resource
     public function getAddress(PostContactType $type): ?ModelAddress
     {
         $postContact = $this->getPostContact($type);
-        return $postContact ? $postContact->getAddress() : null;
+        return $postContact ? $postContact->address : null;
     }
 
     public function getPostContact(PostContactType $type): ?ModelPostContact
     {
         $postContact = $this->getPostContacts()->where(['type' => $type->value])->fetch();
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact) : null;
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact, $this->mapper) : null;
     }
 
     public function getPermanentPostContact(bool $fallback = true): ?ModelPostContact
@@ -160,7 +160,7 @@ class ModelPerson extends Model implements Resource
     private function getLastHistory(): ?ModelPersonHistory
     {
         $row = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
-        return $row ? ModelPersonHistory::createFromActiveRow($row) : null;
+        return $row ? ModelPersonHistory::createFromActiveRow($row, $this->mapper) : null;
     }
 
     public function getFullName(): string
@@ -181,8 +181,8 @@ class ModelPerson extends Model implements Resource
     {
         $result = [];
         foreach ($this->related(DbNames::TAB_ORG, 'person_id') as $org) {
-            $org = ModelOrg::createFromActiveRow($org);
-            $year = $org->getContest()->getCurrentContestYear()->year;
+            $org = ModelOrg::createFromActiveRow($org, $this->mapper);
+            $year = $org->contest->getCurrentContestYear()->year;
             if ($org->since <= $year && ($org->until === null || $org->until >= $year)) {
                 $result[$org->contest_id] = $org;
             }
@@ -208,8 +208,8 @@ class ModelPerson extends Model implements Resource
     {
         $result = [];
         foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
-            $contestant = ModelContestant::createFromActiveRow($contestant);
-            $currentYear = $contestant->getContest()->getCurrentContestYear()->year;
+            $contestant = ModelContestant::createFromActiveRow($contestant, $this->mapper);
+            $currentYear = $contestant->contest->getCurrentContestYear()->year;
             if ($contestant->year >= $currentYear) { // forward contestant
                 if (isset($result[$contestant->contest_id])) {
                     if ($contestant->year > $result[$contestant->contest_id]->year) {
@@ -261,8 +261,8 @@ class ModelPerson extends Model implements Resource
             ->where('schedule_item.schedule_group.schedule_group_type', $type);
         $items = [];
         foreach ($query as $row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            $scheduleItem = $model->getScheduleItem();
+            $model = ModelPersonSchedule::createFromActiveRow($row, $this->mapper);
+            $scheduleItem = $model->schedule_item;
             $items[$scheduleItem->schedule_group_id] = $scheduleItem->schedule_item_id;
         }
         if (!count($items)) {
@@ -313,7 +313,7 @@ class ModelPerson extends Model implements Resource
             ->where('schedule_item.schedule_group.schedule_group_type', $types)
             ->where('schedule_item.price_czk IS NOT NULL OR schedule_item.price_eur IS NOT NULL');
         foreach ($schedule as $pSchRow) {
-            $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow);
+            $pSchedule = ModelPersonSchedule::createFromActiveRow($pSchRow, $this->mapper);
             $payment = $pSchedule->getPayment();
             if (!$payment || $payment->state->value !== PaymentState::RECEIVED) {
                 $toPay[] = $pSchedule;
@@ -331,26 +331,32 @@ class ModelPerson extends Model implements Resource
         if ($teachers->count('*')) {
             $teams = [];
             foreach ($teachers as $row) {
-                $teams[] = TeamTeacherModel::createFromActiveRow($row)->getFyziklaniTeam();
+                $teams[] = TeamTeacherModel::createFromActiveRow($row, $this->mapper)->getFyziklaniTeam();
             }
             $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
 
         $eventOrg = $this->getEventOrgs()->where('event_id', $eventId)->fetch();
         if (isset($eventOrg)) {
-            $roles[] = new EventOrgRole($event, ModelEventOrg::createFromActiveRow($eventOrg));
+            $roles[] = new EventOrgRole($event, ModelEventOrg::createFromActiveRow($eventOrg, $this->mapper));
         }
         $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
         if (isset($eventParticipant)) {
-            $roles[] = new ParticipantRole($event, ModelEventParticipant::createFromActiveRow($eventParticipant));
+            $roles[] = new ParticipantRole(
+                $event,
+                ModelEventParticipant::createFromActiveRow($eventParticipant, $this->mapper)
+            );
         }
         $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $eventId)->fetch();
         if ($teamMember) {
-            $roles[] = new FyziklaniTeamMemberRole($event, TeamMemberModel::createFromActiveRow($teamMember));
+            $roles[] = new FyziklaniTeamMemberRole(
+                $event,
+                TeamMemberModel::createFromActiveRow($teamMember, $this->mapper)
+            );
         }
         $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
         if (isset($org)) {
-            $roles[] = new ContestOrgRole($event, ModelOrg::createFromActiveRow($org));
+            $roles[] = new ContestOrgRole($event, ModelOrg::createFromActiveRow($org, $this->mapper));
         }
         return $roles;
     }

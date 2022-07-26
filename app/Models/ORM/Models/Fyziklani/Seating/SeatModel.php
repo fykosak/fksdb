@@ -11,7 +11,7 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_seat_id
- * @property-read ActiveRow fyziklani_room
+ * @property-read RoomModel fyziklani_room
  * @property-read string sector
  * @property-read double layout_x
  * @property-read double layout_y
@@ -19,10 +19,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class SeatModel extends Model
 {
-    public function getRoom(): RoomModel
-    {
-        return RoomModel::createFromActiveRow($this->fyziklani_room);
-    }
 
     public function getTeamSeat(ModelEvent $event): ?TeamSeatModel
     {
@@ -30,6 +26,6 @@ class SeatModel extends Model
             'fyziklani_team.event_id',
             $event->event_id
         )->fetch();
-        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
+        return $row ? TeamSeatModel::createFromActiveRow($row, $this->mapper) : null;
     }
 }

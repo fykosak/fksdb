@@ -9,15 +9,10 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int flag_id
- * @property-read ActiveRow flag
+ * @property-read ModelFlag flag
  * @property-read int value
  * @property-read \DateTimeInterface modified
  */
 class ModelPersonHasFlag extends Model
 {
-
-    public function getFlag(): ModelFlag
-    {
-        return ModelFlag::createFromActiveRow($this->flag);
-    }
 }

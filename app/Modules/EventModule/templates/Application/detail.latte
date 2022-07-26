@@ -20,7 +20,7 @@
     {/foreach}
     {if $hasSchedule}
         <h2>{_'Schedule'}</h2>
-        {control personScheduleGrid $model->getPerson(),$model->getEvent()}
+        {control personScheduleGrid $model->person,$model->event}
     {/if}
     {include ../AbstractApplication/applicationControl.latte}
     <h2>{_'Transitions'}</h2>

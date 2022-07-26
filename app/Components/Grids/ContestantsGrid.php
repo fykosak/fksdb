@@ -56,7 +56,7 @@ class ContestantsGrid extends BaseGrid
             'person_history.study_year',
         ]);
         $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
+            $contestant = ModelContestant::createFromActiveRow($row, $this->mapper);
             return $contestant->getPersonHistory()->getSchool()->name_abbrev;
         });
 

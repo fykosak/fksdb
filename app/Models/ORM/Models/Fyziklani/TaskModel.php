@@ -13,16 +13,10 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string label
  * @property-read int fyziklani_task_id
  * @property-read int event_id
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  */
 class TaskModel extends Model
 {
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
-    }
-
     public function __toArray(bool $hideName = false): array
     {
         return [

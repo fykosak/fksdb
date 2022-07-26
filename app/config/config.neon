@@ -165,3 +165,4 @@ includes:
     - stalking.neon
     #- payment.neon
     - payments/common.neon
+    - fyziklani/default.neon

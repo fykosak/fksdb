@@ -28,7 +28,7 @@ class ApplicationEditLink extends LinkFactory
      */
     protected function prepareParams(Model $model): array
     {
-        if ($model->getEvent()->isTeamEvent()) {
+        if ($model->event->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,
                 'id' => $model->getFyziklaniTeam()->e_fyziklani_team_id,

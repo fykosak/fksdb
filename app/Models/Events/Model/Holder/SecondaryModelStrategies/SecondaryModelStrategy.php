@@ -50,7 +50,7 @@ abstract class SecondaryModelStrategy
             if ($primaryModel instanceof TeamModel) {
                 /** @var ServiceMFyziklaniParticipant $service */
                 foreach ($primaryModel->getFyziklaniParticipants() as $row) {
-                    $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row);
+                    $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row, $primaryModel->mapper);
                     $secondary[] = $service->composeModel(
                         $fyziklaniParticipant->getEventParticipant(),
                         $fyziklaniParticipant

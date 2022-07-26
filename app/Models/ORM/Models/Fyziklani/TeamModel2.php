@@ -30,7 +30,7 @@ use Nette\Security\Resource;
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  * @property-read GameLang game_lang
  * @property-read int rank_category
  * @property-read int rank_total
@@ -41,17 +41,12 @@ class TeamModel2 extends Model implements Resource
 
     public function getContest(): ModelContest
     {
-        return $this->getEvent()->getContest();
+        return $this->event->getContest();
     }
 
     public function getTeachers(): GroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
     }
 
     public function getMembers(): GroupedSelection
@@ -62,7 +57,7 @@ class TeamModel2 extends Model implements Resource
     public function getTeamSeat(): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
-        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
+        return $row ? TeamSeatModel::createFromActiveRow($row, $this->mapper) : null;
     }
 
     /* ******************** SUBMITS ******************************* */
@@ -121,7 +116,7 @@ class TeamModel2 extends Model implements Resource
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $rest = $person->getScheduleRests($this->getEvent(), $types);
+            $rest = $person->getScheduleRests($this->event, $types);
             if (count($rest)) {
                 $toPay[] = $rest;
             }
@@ -136,10 +131,10 @@ class TeamModel2 extends Model implements Resource
     {
         $persons = [];
         foreach ($this->getMembers() as $pRow) {
-            $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
+            $persons[] = TeamMemberModel::createFromActiveRow($pRow, $this->mapper)->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
-            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->getPerson();
+            $persons[] = TeamTeacherModel::createFromActiveRow($pRow, $this->mapper)->getPerson();
         }
         return $persons;
     }

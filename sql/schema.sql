@@ -139,15 +139,15 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   `arrival_time`          TIME          NULL     DEFAULT NULL
   COMMENT 'Čas příjezdu',
   `arrival_destination`   VARCHAR(20)   NULL     DEFAULT NULL
-  COMMENT 'Místo prijezdu\n',
+  COMMENT 'Místo prijezdu',
   `arrival_ticket`        TINYINT(1)    NULL     DEFAULT NULL
-  COMMENT 'společný lístek na cestu tam\n',
+  COMMENT 'společný lístek na cestu tam',
   `departure_time`        TIME          NULL     DEFAULT NULL
-  COMMENT 'Čas odjezdu\n',
+  COMMENT 'Čas odjezdu',
   `departure_destination` VARCHAR(20)   NULL     DEFAULT NULL
-  COMMENT 'Místo odjezdu\n',
+  COMMENT 'Místo odjezdu',
   `departure_ticket`      TINYINT(1)    NULL     DEFAULT NULL
-  COMMENT 'společný lístek na cestu zpět\n\n',
+  COMMENT 'společný lístek na cestu zpět',
   `swimmer`               TINYINT(1)    NULL     DEFAULT NULL
   COMMENT 'plavec?',
   `used_drugs`            TEXT          NULL     DEFAULT NULL
@@ -494,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `post_contact` (
   `person_id`       INT(11)         NOT NULL,
   `address_id`      INT(11)         NOT NULL,
   `type`            ENUM ('P', 'D') NOT NULL
-  COMMENT 'doručovací (Delivery), trvalá (Permanent)', # TODO to enum
+  COMMENT 'doručovací (Delivery), trvalá (Permanent)',
   PRIMARY KEY (`post_contact_id`),
   INDEX `person_id` (`person_id` ASC),
   INDEX `address_id` (`address_id` ASC),
@@ -1303,7 +1303,8 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 -- Table `schedule_group`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `schedule_group` (
+CREATE TABLE IF NOT EXISTS `schedule_group`
+(
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `schedule_group_type` ENUM (
         'accommodation',
@@ -1315,7 +1316,13 @@ CREATE TABLE IF NOT EXISTS `schedule_group` (
         'weekend_info',
         'dsef_morning',
         'dsef_afternoon',
-        'vaccination_covid') NOT NULL,
+        'vaccination_covid',
+        't-shirt_size',
+        't-shirt_color',
+        'jumper_size',
+        'arrival_destination',
+        'departure_destination'
+        )                              NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,

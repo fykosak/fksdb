@@ -2,9 +2,9 @@
 {define submit-row}
     {if $submit}
         <td>
-            {if $submit->source === FKSDB\Models\ORM\Models\ModelSubmit::SOURCE_POST}
+            {if $submit->source === FKSDB\Models\ORM\Models\SubmitModel::SOURCE_POST}
                 <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
-            {elseif $submit->source === FKSDB\Models\ORM\Models\ModelSubmit::SOURCE_QUIZ}
+            {elseif $submit->source === FKSDB\Models\ORM\Models\SubmitModel::SOURCE_QUIZ}
                 <i class="text-warning fa fa-list-ul" title="#{$submit->submit_id}"></i>
             {else}
                 <a class="text-success"

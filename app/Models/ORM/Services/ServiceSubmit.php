@@ -6,21 +6,21 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelTask;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelSubmit findByPrimary($key)
- * @method ModelSubmit createNewModel(array $data)
- * @method ModelSubmit storeModel(array $data, ?ModelSubmit $model = null)
+ * @method SubmitModel findByPrimary($key)
+ * @method SubmitModel createNewModel(array $data)
+ * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
 class ServiceSubmit extends Service
 {
 
     private array $submitCache = [];
 
-    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit
+    public function findByContestantId(int $ctId, int $taskId, bool $useCache = true): ?SubmitModel
     {
         $key = $ctId . ':' . $taskId;
         if (!isset($this->submitCache[$key]) || !$useCache) {
@@ -33,17 +33,17 @@ class ServiceSubmit extends Service
         return $this->submitCache[$key];
     }
 
-    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?ModelSubmit
+    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?SubmitModel
     {
         $key = $contestant->ct_id . ':' . $task->task_id;
         if (!isset($this->submitCache[$key]) || !$useCache) {
             $row = $contestant->related(DbNames::TAB_SUBMIT)->where('task_id', $task->task_id)->fetch();
-            $this->submitCache[$key] = $row ? ModelSubmit::createFromActiveRow($row) : null;
+            $this->submitCache[$key] = $row ? SubmitModel::createFromActiveRow($row, $this->mapper) : null;
         }
         return $this->submitCache[$key];
     }
 
-    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array
+    public static function serializeSubmit(?SubmitModel $submit, ModelTask $task, ?int $studyYear): array
     {
         return [
             'submitId' => $submit ? $submit->submit_id : null,

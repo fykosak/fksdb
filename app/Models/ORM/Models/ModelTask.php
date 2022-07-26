@@ -18,7 +18,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int points
  * @property-read int year
  * @property-read int contest_id
- * @property-read ActiveRow contest
+ * @property-read ModelContest contest
  * @property-read \DateTimeInterface submit_deadline
  * @property-read \DateTimeInterface submit_start
  */
@@ -43,7 +43,7 @@ class ModelTask extends Model
 
         $result = [];
         foreach ($contributions as $contribution) {
-            $contributionModel = ModelTaskContribution::createFromActiveRow($contribution);
+            $contributionModel = ModelTaskContribution::createFromActiveRow($contribution, $this->mapper);
             $result[$contributionModel->contribution_id] = $contributionModel;
         }
         return $result;
@@ -58,7 +58,7 @@ class ModelTask extends Model
 
         $result = [];
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = ModelTaskStudyYear::createFromActiveRow($studyYear);
+            $studyYearModel = ModelTaskStudyYear::createFromActiveRow($studyYear, $this->mapper);
             $result[$studyYearModel->study_year] = $studyYearModel;
         }
         return $result;
@@ -67,10 +67,5 @@ class ModelTask extends Model
     public function webalizeLabel(): string
     {
         return Strings::webalize($this->label, null, false);
-    }
-
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest);
     }
 }

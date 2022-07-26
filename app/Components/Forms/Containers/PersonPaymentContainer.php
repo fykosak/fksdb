@@ -53,14 +53,14 @@ class PersonPaymentContainer extends ContainerWithOptions
                 if ($model->person_id !== $lastPersonId) {
                     $container = new ModelContainer();
                     $this->addComponent($container, 'person' . $model->person_id);
-                    $container->setOption('label', $model->getPerson()->getFullName());
+                    $container->setOption('label', $model->person->getFullName());
                     $lastPersonId = $model->person_id;
                 }
                 $container->addCheckbox(
                     (string)$model->person_schedule_id,
                     $model->getLabel()
                     . ' ('
-                    . $model->getScheduleItem()->getPrice()->__toString()
+                    . $model->schedule_item->getPrice()->__toString()
                     . ')'
                 );
             }

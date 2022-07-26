@@ -30,7 +30,7 @@ class ContestantPresenter extends ExtendedPersonPresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
+            sprintf(_('Edit the contestant %s'), $this->getModel()->person->getFullName()),
             'fa fa-user-edit'
         );
     }

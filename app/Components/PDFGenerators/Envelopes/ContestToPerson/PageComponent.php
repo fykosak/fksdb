@@ -33,7 +33,7 @@ class PageComponent extends AbstractPageComponent
         }
         if ($postContact) {
             $this->template->person = $row;
-            $this->template->address = $postContact->getAddress();
+            $this->template->address = $postContact->address;
         }
         $this->template->contest = $this->contest;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'envelope.latte');

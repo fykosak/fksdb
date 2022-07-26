@@ -22,9 +22,6 @@ class EnumColumnFactory extends ColumnFactory
         $this->className = $className;
     }
 
-    /**
-     * @throws NotImplementedException
-     */
     protected function createFormControl(...$args): BaseControl
     {
         $items = [];

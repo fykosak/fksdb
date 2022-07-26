@@ -16,7 +16,7 @@ class TaskService extends Service
         $result = $event->getFyziklaniTasks()->where([
             'label' => $label,
         ])->fetch();
-        return $result ? TaskModel::createFromActiveRow($result) : null;
+        return $result ? TaskModel::createFromActiveRow($result, $this->mapper) : null;
     }
 
     /**
@@ -27,7 +27,7 @@ class TaskService extends Service
         $tasks = [];
 
         foreach ($event->getFyziklaniTasks()->order('label') as $row) {
-            $model = TaskModel::createFromActiveRow($row);
+            $model = TaskModel::createFromActiveRow($row, $event->mapper);
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

@@ -219,7 +219,7 @@ class Transition extends \FKSDB\Models\Transitions\Transition\Transition
         try {
             $this->callAfterExecute($this, $holder);
         } catch (\Throwable $exception) {
-            throw new TransitionOnExecutedException($this->getName(), null, $exception);
+            throw new TransitionOnExecutedException($this->getName(), 0, $exception);
         }
     }
 

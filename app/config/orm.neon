@@ -337,7 +337,7 @@ orm:
                     title: Edit
         payment:
              service: FKSDB\Models\ORM\Services\ServicePayment
-             model: FKSDB\Models\ORM\Models\ModelPayment
+             model: FKSDB\Models\ORM\Models\PaymentModel
              columnFactories:
                  payment:
                     type: class
@@ -613,7 +613,7 @@ orm:
             model: FKSDB\Models\ORM\Models\ModelStudyYear
         submit:
             service: FKSDB\Models\ORM\Services\ServiceSubmit
-            model: FKSDB\Models\ORM\Models\ModelSubmit
+            model: FKSDB\Models\ORM\Models\SubmitModel
         submit_quiz:
             service: FKSDB\Models\ORM\Services\ServiceSubmitQuiz
             model: FKSDB\Models\ORM\Models\ModelSubmitQuiz

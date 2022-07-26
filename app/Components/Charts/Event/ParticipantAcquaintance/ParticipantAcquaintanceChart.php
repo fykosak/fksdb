@@ -25,17 +25,17 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
     {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = ModelEventParticipant::createFromActiveRow($row, $this->event->mapper);
 
             $participants = [];
-            foreach ($participant->getPerson()->getEventParticipants()->where('status', ['participated']) as $item) {
-                $personParticipation = ModelEventParticipant::createFromActiveRow($item);
-                $participants[] = $personParticipation->getEvent()->event_id;
+            foreach ($participant->person->getEventParticipants()->where('status', ['participated']) as $item) {
+                $personParticipation = ModelEventParticipant::createFromActiveRow($item, $this->event->mapper);
+                $participants[] = $personParticipation->event->event_id;
             }
             $datum = [
                 'person' => [
-                    'name' => $participant->getPerson()->getFullName(),
-                    'gender' => $participant->getPerson()->gender,
+                    'name' => $participant->person->getFullName(),
+                    'gender' => $participant->person->gender,
                 ],
                 'participation' => $participants,
             ];

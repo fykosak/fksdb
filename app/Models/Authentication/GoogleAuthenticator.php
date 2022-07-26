@@ -87,6 +87,6 @@ class GoogleAuthenticator extends AbstractAuthenticator
         $org = $this->serviceOrg->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
             ->fetch();
-        return $org ? $org->getPerson() : null;
+        return $org ? $org->person : null;
     }
 }

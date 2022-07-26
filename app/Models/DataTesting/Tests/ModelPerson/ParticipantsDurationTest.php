@@ -30,8 +30,8 @@ class ParticipantsDurationTest extends PersonTest
             $max = null;
             $min = null;
             foreach ($person->getEventParticipants() as $row) {
-                $model = ModelEventParticipant::createFromActiveRow($row);
-                $event = $model->getEvent();
+                $model = ModelEventParticipant::createFromActiveRow($row, $person->mapper);
+                $event = $model->event;
                 if ($event->getEventType()->contest_id !== $contestId) {
                     continue;
                 }

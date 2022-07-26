@@ -19,6 +19,6 @@ class ServiceTask extends Service
             'series' => $series,
             'tasknr' => $taskNumber,
         ])->fetch();
-        return $row ? ModelTask::createFromActiveRow($row) : null;
+        return $row ? ModelTask::createFromActiveRow($row, $this->mapper) : null;
     }
 }

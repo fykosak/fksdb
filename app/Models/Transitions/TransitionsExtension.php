@@ -7,10 +7,8 @@ namespace FKSDB\Models\Transitions;
 use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
-use FKSDB\Models\Transitions\Machine\Machine;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
-use Tracy\Debugger;
 
 class TransitionsExtension extends CompilerExtension
 {

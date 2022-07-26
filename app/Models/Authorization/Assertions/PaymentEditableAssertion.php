@@ -13,8 +13,8 @@ class PaymentEditableAssertion implements Assertion
 {
     public function __invoke(Permission $acl, ?string $role, ?string $resourceId, ?string $privilege): bool
     {
-        /** @var PaymentModel $payment */
+        /** @var PaymentModel|null $payment */
         $payment = $acl->getQueriedResource();
-        return \in_array($payment->state->value, [Machine\AbstractMachine::STATE_INIT, PaymentState::NEW]);
+        return !isset($payment) || $payment->state->value == PaymentState::NEW;
     }
 }

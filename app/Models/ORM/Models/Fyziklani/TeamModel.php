@@ -42,7 +42,10 @@ class TeamModel extends Model implements Resource
 
     public function getTeacher(): ?ModelPerson
     {
-        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow($this->ref('person', 'teacher_id')) : null;
+        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow(
+            $this->ref('person', 'teacher_id'),
+            $this->mapper
+        ) : null;
     }
 
     public function getFyziklaniParticipants(): GroupedSelection
@@ -57,7 +60,7 @@ class TeamModel extends Model implements Resource
     {
         $persons = [];
         foreach ($this->getFyziklaniParticipants() as $pRow) {
-            $persons[] = ParticipantModel::createFromActiveRow($pRow)->getEventParticipant()->getPerson();
+            $persons[] = ParticipantModel::createFromActiveRow($pRow, $this->mapper)->getEventParticipant()->person;
         }
         $teacher = $this->getTeacher();
         if ($teacher) {

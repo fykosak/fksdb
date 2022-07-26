@@ -20,7 +20,7 @@ class SubmitService extends Service
     public function findByTaskAndTeam(TaskModel $task, TeamModel2 $team): ?SubmitModel
     {
         $row = $team->getAllSubmits()->where('fyziklani_task_id', $task->fyziklani_task_id)->fetch();
-        return $row ? SubmitModel::createFromActiveRow($row) : null;
+        return $row ? SubmitModel::createFromActiveRow($row, $this->mapper) : null;
     }
 
     public function findAll(ModelEvent $event): TypedSelection
@@ -37,7 +37,7 @@ class SubmitService extends Service
             $query->where('modified >= ?', $lastUpdated);
         }
         foreach ($query as $row) {
-            $submit = SubmitModel::createFromActiveRow($row);
+            $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
             $submits[$submit->fyziklani_submit_id] = $submit->__toArray();
         }
         return $submits;

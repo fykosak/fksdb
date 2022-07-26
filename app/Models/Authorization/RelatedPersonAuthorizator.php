@@ -55,7 +55,7 @@ class RelatedPersonAuthorizator
                 }
             } elseif ($model instanceof TeamModel2) {
                 foreach ($model->getTeachers() as $teacherRow) {
-                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
+                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $model->mapper);
                     if ($teacher->person_id == $person->person_id) {
                         return true;
                     }

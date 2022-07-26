@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\StorageException;
@@ -46,7 +46,7 @@ class AjaxSubmitComponent extends AjaxComponent
     /**
      * @throws NotFoundException
      */
-    private function getSubmit(bool $throw = false): ?ModelSubmit
+    private function getSubmit(bool $throw = false): ?SubmitModel
     {
         $submit = $this->serviceSubmit->findByContestant($this->contestant, $this->task, false);
         if ($throw && is_null($submit)) {

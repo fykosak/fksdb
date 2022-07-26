@@ -52,8 +52,8 @@ class SchoolsGrid extends EntityGrid
         //
         $this->addColumn('name', _('Name'));
         $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
-            $school = ModelSchool::createFromActiveRow($row);
-            return $school->getAddress()->city;
+            $school = ModelSchool::createFromActiveRow($row, $this->mapper);
+            return $school->address->city;
         });
         $this->addColumn('active', _('Active?'))->setRenderer(
             fn(ModelSchool $row): Html => Html::el('span')

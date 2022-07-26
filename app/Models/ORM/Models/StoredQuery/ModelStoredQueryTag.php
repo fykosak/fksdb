@@ -20,6 +20,6 @@ class ModelStoredQueryTag extends Model
 
     public function getTagType(): ModelStoredQueryTagType
     {
-        return ModelStoredQueryTagType::createFromActiveRow($this->tag_type);
+        return ModelStoredQueryTagType::createFromActiveRow($this->tag_type, $this->mapper);
     }
 }

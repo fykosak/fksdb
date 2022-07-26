@@ -17,7 +17,7 @@ use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
- * @property-read ActiveRow schedule_group
+ * @property-read ModelScheduleGroup schedule_group
  * @property-read float price_eur
  * @property-read float price_czk
  * @property-read int|null capacity
@@ -36,12 +36,12 @@ class ModelScheduleItem extends Model implements Resource, NodeCreator
 
     public function getScheduleGroup(): ModelScheduleGroup
     {
-        return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
+        return ModelScheduleGroup::createFromActiveRow($this->schedule_group, $this->mapper);
     }
 
     public function getEvent(): ModelEvent
     {
-        return $this->getScheduleGroup()->getEvent();
+        return $this->schedule_group->event;
     }
 
     /**

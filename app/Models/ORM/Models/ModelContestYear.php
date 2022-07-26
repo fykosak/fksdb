@@ -11,13 +11,15 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int contest_id
  * @property-read int ac_year
  * @property-read int year
- * @property-read ActiveRow contest
+ * @property-read ModelContest contest
  */
 class ModelContestYear extends Model
 {
-
+    /**
+     * @deprecated
+     */
     public function getContest(): ModelContest
     {
-        return ModelContest::createFromActiveRow($this->contest);
+        return ModelContest::createFromActiveRow($this->contest, $this->mapper);
     }
 }

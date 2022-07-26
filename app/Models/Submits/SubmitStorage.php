@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 
 /**
  * Storage for signle file for each submit. Storage must keep original file
@@ -29,14 +29,14 @@ interface SubmitStorage
     /**
      * File is renamed/moved to own purposes.
      */
-    public function storeFile(string $filename, ModelSubmit $submit): void;
+    public function storeFile(string $filename, SubmitModel $submit): void;
 
     /**
      * @return string filename with absolute path
      */
-    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string;
+    public function retrieveFile(SubmitModel $submit, int $type = self::TYPE_PROCESSED): ?string;
 
-    public function fileExists(ModelSubmit $submit): bool;
+    public function fileExists(SubmitModel $submit): bool;
 
-    public function deleteFile(ModelSubmit $submit): void;
+    public function deleteFile(SubmitModel $submit): void;
 }

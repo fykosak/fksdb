@@ -57,8 +57,8 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void
     {
-        foreach ([PaymentState::NEW, PaymentState::WAITING] as $state) {
-            $transition = $machine->getTransitionById(Transition::createId($state, PaymentState::CANCELED));
+        foreach ([new PaymentState(PaymentState::NEW), new PaymentState(PaymentState::WAITING)] as $state) {
+            $transition = $machine->getTransitionByStates($state, new PaymentState(PaymentState::CANCELED));
             $transition->setCondition(fn() => true);
             $transition->beforeExecute[] = $this->getClosureDeleteRows();
             $transition->beforeExecute[] =
@@ -71,8 +71,9 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void
     {
-        $transition = $machine->getTransitionById(
-            Transition::createId(PaymentState::WAITING, PaymentState::RECEIVED)
+        $transition = $machine->getTransitionByStates(
+            new PaymentState(PaymentState::WAITING),
+            new PaymentState(PaymentState::RECEIVED)
         );
         $transition->beforeExecute[] = function (PaymentHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {

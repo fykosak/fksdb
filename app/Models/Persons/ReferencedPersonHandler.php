@@ -193,7 +193,7 @@ class ReferencedPersonHandler implements ReferencedHandler
                         if ($model) {
                             /** @var ModelPostContact $model */
                             $this->servicePostContact->dispose($model);
-                            $this->serviceAddress->dispose($model->getAddress());
+                            $this->serviceAddress->dispose($model->address);
                         }
                     }
                     continue;
@@ -246,7 +246,7 @@ class ReferencedPersonHandler implements ReferencedHandler
     private function storePostContact(ModelPerson $person, ?ModelPostContact $model, array $data, string $type): void
     {
         if ($model) {
-            $this->serviceAddress->updateModel($model->getAddress(), $data);
+            $this->serviceAddress->updateModel($model->address, $data);
             $this->servicePostContact->updateModel($model, $data);
         } else {
             $data = array_merge($data, [
@@ -322,7 +322,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
             $data = array_merge(
                 $models[self::POST_CONTACT_DELIVERY]->toArray(),
-                $models[self::POST_CONTACT_DELIVERY]->getAddress()->toArray()
+                $models[self::POST_CONTACT_DELIVERY]->address->toArray()
             );
 
             unset($data['post_contact_id']);

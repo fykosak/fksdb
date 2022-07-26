@@ -17,7 +17,7 @@ use Nette\Security\Resource;
  * @property-read int schedule_group_id
  * @property-read ScheduleGroupType schedule_group_type
  * @property-read int event_id
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  * @property-read \DateTimeInterface start
  * @property-read \DateTimeInterface end
  * @property-read string name_cs
@@ -31,11 +31,6 @@ class ModelScheduleGroup extends Model implements Resource, NodeCreator
     public function getItems(): GroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
     }
 
     /**

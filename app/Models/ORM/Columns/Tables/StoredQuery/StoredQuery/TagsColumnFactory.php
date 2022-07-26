@@ -35,7 +35,7 @@ class TagsColumnFactory extends ColumnFactory
         /** @var ModelStoredQueryTag $tagRow */
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
-            $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
+            $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type, $model->mapper);
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([

@@ -10,9 +10,9 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read int person_id
- * @property-read ActiveRow contest
+ * @property-read ModelContest contest
  * @property-read int ct_id
  * @property-read int contest_id
  * @property-read int year
@@ -23,12 +23,7 @@ class ModelContestant extends Model implements Resource
 
     public function getPerson(): ModelPerson
     {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest);
+        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
     }
 
     public function getContestYear(): ModelContestYear
@@ -37,12 +32,12 @@ class ModelContestant extends Model implements Resource
             'contest_id',
             $this->contest_id
         )->where('year', $this->year)->fetch();
-        return ModelContestYear::createFromActiveRow($row);
+        return ModelContestYear::createFromActiveRow($row, $this->mapper);
     }
 
     public function getPersonHistory(): ModelPersonHistory
     {
-        return $this->getPerson()->getHistoryByContestYear($this->getContestYear());
+        return $this->person->getHistoryByContestYear($this->getContestYear());
     }
 
     public function getResourceId(): string

@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelQuiz;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceQuiz;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
@@ -149,7 +149,7 @@ class SubmitPresenter extends BasePresenter
                 $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant(), $task);
-            if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
+            if ($submit && $submit->source == SubmitModel::SOURCE_POST) {
                 continue; // prevDeadline will work though
             }
             $container = new ModelContainer();

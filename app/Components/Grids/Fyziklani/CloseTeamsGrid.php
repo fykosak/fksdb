@@ -54,7 +54,7 @@ class CloseTeamsGrid extends BaseGrid
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(fn(ActiveRow $row): bool => TeamModel2::createFromActiveRow($row)->canClose(false));
+        ])->setShow(fn(ActiveRow $row): bool => TeamModel2::createFromActiveRow($row, $this->mapper)->canClose(false));
     }
 
     protected function getModelClassName(): string

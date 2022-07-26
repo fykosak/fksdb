@@ -20,11 +20,11 @@ class ParticipantModel extends Model
 
     public function getEventParticipant(): ModelEventParticipant
     {
-        return ModelEventParticipant::createFromActiveRow($this->event_participant);
+        return ModelEventParticipant::createFromActiveRow($this->event_participant, $this->mapper);
     }
 
     public function getFyziklaniTeam(): TeamModel
     {
-        return TeamModel::createFromActiveRow($this->e_fyziklani_team);
+        return TeamModel::createFromActiveRow($this->e_fyziklani_team, $this->mapper);
     }
 }

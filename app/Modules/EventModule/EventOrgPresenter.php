@@ -54,7 +54,7 @@ class EventOrgPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
+            sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->person->getFullName()),
             'fa fa-user-edit'
         );
     }

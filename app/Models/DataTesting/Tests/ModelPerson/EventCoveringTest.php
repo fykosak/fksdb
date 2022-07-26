@@ -33,15 +33,15 @@ class EventCoveringTest extends PersonTest
             ModelContest::ID_VYFUK => [],
         ];
         foreach ($person->getEventParticipants() as $row) {
-            $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
-            $year = $eventParticipant->getEvent()->year;
-            $contestId = $eventParticipant->getEvent()->getContest()->contest_id;
+            $eventParticipant = ModelEventParticipant::createFromActiveRow($row, $person->mapper);
+            $year = $eventParticipant->event->year;
+            $contestId = $eventParticipant->event->getContest()->contest_id;
             if (!\in_array($year, $participantsYears[$contestId])) {
                 $participantsYears[$contestId][] = $year;
             }
         }
         foreach ($person->getContestants() as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
+            $contestant = ModelContestant::createFromActiveRow($row, $person->mapper);
             $year = $contestant->year;
             $contestId = $contestant->contest_id;
             if (!\in_array($year, $contestantYears[$contestId])) {
@@ -63,7 +63,7 @@ class EventCoveringTest extends PersonTest
                 }
                 $query = $person->getOrgs($contestId);
                 foreach ($query as $row) {
-                    $org = ModelOrg::createFromActiveRow($row);
+                    $org = ModelOrg::createFromActiveRow($row, $person->mapper);
                     if ($org->until) {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
@@ -98,9 +98,9 @@ class EventCoveringTest extends PersonTest
             ModelContest::ID_VYFUK => [],
         ];
         foreach ($person->getEventOrgs() as $row) {
-            $eventOrg = ModelEventOrg::createFromActiveRow($row);
-            $year = $eventOrg->getEvent()->year;
-            $contestId = $eventOrg->getEvent()->getContest()->contest_id;
+            $eventOrg = ModelEventOrg::createFromActiveRow($row, $person->mapper);
+            $year = $eventOrg->event->year;
+            $contestId = $eventOrg->event->getContest()->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {
                 $eventOrgYears[$contestId][] = $year;
             }

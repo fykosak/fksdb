@@ -46,11 +46,6 @@ class PaymentMachine extends Machine
         $this->scheduleGroupTypes = $types;
     }
 
-    public function getCreatingState(): string
-    {
-        return PaymentState::NEW;
-    }
-
     /**
      * @param PaymentModel|null $model
      */

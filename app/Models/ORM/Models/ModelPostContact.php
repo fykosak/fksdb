@@ -8,12 +8,8 @@ use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * @property-read ActiveRow address
+ * @property-read ModelAddress address
  */
 class ModelPostContact extends Model
 {
-    public function getAddress(): ?ModelAddress
-    {
-        return ModelAddress::createFromActiveRow($this->address);
-    }
 }

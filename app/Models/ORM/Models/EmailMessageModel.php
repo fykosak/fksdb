@@ -59,7 +59,8 @@ class EmailMessageModel extends Model implements Resource
 
     public function getPerson(): ?ModelPerson
     {
-        return isset($this->recipient_person_id) ? ModelPerson::createFromActiveRow($this->person) : null;
+        return isset($this->recipient_person_id) ? ModelPerson::createFromActiveRow($this->person, $this->mapper)
+            : null;
     }
 
     public function getResourceId(): string

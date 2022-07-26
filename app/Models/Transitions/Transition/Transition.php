@@ -14,7 +14,7 @@ class Transition
 {
     use SmartObject;
 
-    /** @var callable|bool */
+    /** @var callable */
     protected $condition;
     private ?BehaviorType $behaviorType = null;
     private string $label;
@@ -60,15 +60,10 @@ class Transition
 
     public function getId(): string
     {
-        return static::createId2($this->sourceStateEnum, $this->targetStateEnum);
+        return static::createId($this->sourceStateEnum, $this->targetStateEnum);
     }
 
-    public static function createId(string $sourceState, string $targetState): string
-    {
-        return str_replace('*', '_any_', $sourceState) . '__' . $targetState;
-    }
-
-    public static function createId2(?EnumColumn $sourceState, ?EnumColumn $targetState): string
+    public static function createId(?EnumColumn $sourceState, ?EnumColumn $targetState): string
     {
         return ($sourceState ? $sourceState->value : 'init') . '__' .
             ($targetState ? $targetState->value : 'terminated');
@@ -112,7 +107,7 @@ class Transition
 
     protected function isConditionFulfilled(...$args): bool
     {
-        return (bool)$this->evaluator->evaluate($this->condition, ...$args);
+        return (bool)$this->evaluator->evaluate($this->condition ?? fn() => true, ...$args);
     }
 
     public function canExecute2(ModelHolder $holder): bool

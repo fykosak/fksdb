@@ -19,8 +19,8 @@ use Nette\Security\Resource;
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id
- * @property-read ActiveRow fyziklani_team
- * @property-read ActiveRow fyziklani_task
+ * @property-read TeamModel2 fyziklani_team
+ * @property-read TaskModel fyziklani_task
  * @property-read \DateTimeInterface modified
  */
 class SubmitModel extends Model implements Resource
@@ -33,17 +33,17 @@ class SubmitModel extends Model implements Resource
 
     public function getFyziklaniTask(): TaskModel
     {
-        return TaskModel::createFromActiveRow($this->fyziklani_task);
+        return TaskModel::createFromActiveRow($this->fyziklani_task, $this->mapper);
     }
 
     public function getEvent(): ModelEvent
     {
-        return $this->getFyziklaniTeam()->getEvent();
+        return $this->getFyziklaniTeam()->event;
     }
 
     public function getFyziklaniTeam(): TeamModel2
     {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team);
+        return TeamModel2::createFromActiveRow($this->fyziklani_team, $this->mapper);
     }
 
     public function isChecked(): bool

@@ -14,8 +14,8 @@ use FKSDB\Models\ORM\Models\ModelPerson;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * @property-read ActiveRow person
- * @property-read ActiveRow schedule_item
+ * @property-read ModelPerson person
+ * @property-read ModelScheduleItem schedule_item
  * @property-read int person_id
  * @property-read int schedule_item_id
  * @property-read string state
@@ -24,24 +24,14 @@ use Nette\Database\Table\ActiveRow;
 class ModelPersonSchedule extends Model
 {
 
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
-    public function getScheduleItem(): ModelScheduleItem
-    {
-        return ModelScheduleItem::createFromActiveRow($this->schedule_item);
-    }
-
     public function getScheduleGroup(): ModelScheduleGroup
     {
-        return $this->getScheduleItem()->getScheduleGroup();
+        return $this->schedule_item->schedule_group;
     }
 
     public function getEvent(): ModelEvent
     {
-        return $this->getScheduleGroup()->getEvent();
+        return $this->getScheduleGroup()->event;
     }
 
     public function getPayment(): ?PaymentModel
@@ -50,7 +40,7 @@ class ModelPersonSchedule extends Model
         if (!$data) {
             return null;
         }
-        return PaymentModel::createFromActiveRow($data);
+        return PaymentModel::createFromActiveRow($data, $this->mapper);
     }
 
     public function hasActivePayment(): bool
@@ -70,13 +60,13 @@ class ModelPersonSchedule extends Model
      */
     public function getLabel(): string
     {
-        $item = $this->getScheduleItem();
-        $group = $item->getScheduleGroup();
+        $item = $this->schedule_item;
+        $group = $item->schedule_group;
         switch ($group->schedule_group_type->value) {
             case ScheduleGroupType::ACCOMMODATION:
                 return sprintf(
                     _('Accommodation for %s from %s to %s in %s'),
-                    $this->getPerson()->getFullName(),
+                    $this->person->getFullName(),
                     $group->start->format(_('__date')),
                     $group->end->format(_('__date')),
                     $item->name_cs

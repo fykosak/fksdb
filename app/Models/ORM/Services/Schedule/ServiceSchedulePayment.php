@@ -44,7 +44,7 @@ class ServiceSchedulePayment extends Service
             if ($model) {
                 throw new DuplicatePaymentException(sprintf(
                     _('Item "%s" has already another payment.'),
-                    $model->getPersonSchedule()->getLabel()
+                    $model->person_schedule->getLabel()
                 ));
             }
             $this->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);

@@ -28,7 +28,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 ]
             )->fetch();
 
-            $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
+            $this->contestant = $row ? ModelContestant::createFromActiveRow($row, $person->mapper) : null;
         }
         return $this->contestant;
     }

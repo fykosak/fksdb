@@ -32,7 +32,7 @@ class TeamService2 extends Service
     {
         $teams = [];
         foreach ($event->getPossiblyAttendingFyziklaniTeams() as $row) {
-            $team = TeamModel2::createFromActiveRow($row);
+            $team = TeamModel2::createFromActiveRow($row, $event->mapper);
             $teams[] = $team->__toArray();
         }
         return $teams;

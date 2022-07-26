@@ -11,22 +11,16 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int ac_year
  * @property-read int|null school_id
  * @property-read ActiveRow|null school
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read int person_id
  * @property-read string class
  * @property-read int study_year
  */
 class ModelPersonHistory extends Model
 {
-
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
     public function getSchool(): ?ModelSchool
     {
-        return $this->school ? ModelSchool::createFromActiveRow($this->school) : null;
+        return $this->school ? ModelSchool::createFromActiveRow($this->school, $this->mapper) : null;
     }
 
     public function extrapolate(int $acYear): ModelPersonHistory
@@ -43,7 +37,7 @@ class ModelPersonHistory extends Model
         foreach ($data as $key => $value) {
             $tmpData[$key] = $value; // this is workaround to properly set modfified flag
         }
-        return new self($tmpData, $this->getTable());
+        return new self($tmpData, $this->getTable(), $this->mapper);
     }
 
     /** @var string[][] */

@@ -9,7 +9,7 @@ use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read ActiveRow address
+ * @property-read ModelAddress address
  * @property-read string name_abbrev
  * @property-read int school_id
  * @property-read bool|int active
@@ -19,11 +19,6 @@ class ModelSchool extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'school';
-
-    public function getAddress(): ModelAddress
-    {
-        return ModelAddress::createFromActiveRow($this->address);
-    }
 
     public function getResourceId(): string
     {

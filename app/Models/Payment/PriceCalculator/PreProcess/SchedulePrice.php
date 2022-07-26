@@ -18,7 +18,7 @@ class SchedulePrice implements Preprocess
     {
         $price = MultiCurrencyPrice::createFromCurrencies([$modelPayment->getCurrency()]);
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
-            $modelPrice = $model->getScheduleItem()->getPrice();
+            $modelPrice = $model->schedule_item->getPrice();
             $price->add($modelPrice);
         }
         return $price;
@@ -34,7 +34,7 @@ class SchedulePrice implements Preprocess
         $items = [];
 
         foreach ($modelPayment->getRelatedPersonSchedule() as $model) {
-            $scheduleItem = $model->getScheduleItem();
+            $scheduleItem = $model->schedule_item;
             $items[] = [
                 'label' => $model->getLabel(),
                 'price' => $scheduleItem->getPrice(),

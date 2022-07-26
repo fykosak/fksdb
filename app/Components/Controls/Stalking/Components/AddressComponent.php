@@ -15,6 +15,7 @@ class AddressComponent extends BaseStalkingComponent
         $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $this->template->postContacts = $person->getPostContacts();
         $this->template->personId = $person->person_id;
+        $this->template->mapper = $person->mapper;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
     }
 }

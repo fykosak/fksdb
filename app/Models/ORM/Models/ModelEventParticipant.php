@@ -16,10 +16,10 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read int event_participant_id
  * @property-read int event_id
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  * @property-read int person_id
  * @property-read string note poznámka
  * @property-read string status
@@ -49,29 +49,19 @@ class ModelEventParticipant extends Model implements Resource, NodeCreator
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
     public function getPersonHistory(): ?ModelPersonHistory
     {
-        return $this->getPerson()->getHistoryByContestYear($this->getEvent()->getContestYear());
+        return $this->person->getHistoryByContestYear($this->event->getContestYear());
     }
 
     public function getContest(): ModelContest
     {
-        return $this->getEvent()->getContest();
+        return $this->event->getContest();
     }
 
     public function __toString(): string
     {
-        return $this->getPerson()->__toString();
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
+        return $this->person->__toString();
     }
 
     /**
@@ -90,7 +80,7 @@ class ModelEventParticipant extends Model implements Resource, NodeCreator
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
             ->select('e_fyziklani_team.*')
             ->fetch();
-        return $row ? TeamModel::createFromActiveRow($row) : null;
+        return $row ? TeamModel::createFromActiveRow($row, $this->mapper) : null;
     }
 
     public function getResourceId(): string

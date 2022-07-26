@@ -50,7 +50,7 @@
     {foreach $model->getTeachers() as $teacherRow}
         {var FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher = \FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel::createFromActiveRow($teacherRow)}
         {control valuePrinter:row 'person.person_link', $teacher}
-        {include personSchedule, person => $teacher->getPerson(),event=> $model->getEvent()}
+        {include personSchedule, person => $teacher->getPerson(),event=> $model->event}
     {/foreach}
     <hr/>
 
@@ -70,10 +70,12 @@
 
         {control valuePrinter:row 'school.school', $history}
 
-        {include personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
+        {include personSchedule, person => $participant->getPerson(),event=>$model->event}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
+    <h2>{_'Transitions'}</h2>
+    {control applicationTransitions}
     <hr/>
     {if $event->event_type_id === 1}
         <h2>{_'Seating'}</h2>

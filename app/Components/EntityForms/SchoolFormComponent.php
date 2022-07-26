@@ -63,7 +63,7 @@ class SchoolFormComponent extends EntityFormComponent
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */
-            $this->serviceAddress->updateModel($this->model->getAddress(), $addressData);
+            $this->serviceAddress->updateModel($this->model->address, $addressData);
             /* School */
             $this->serviceSchool->updateModel($this->model, $schoolData);
         } else {
@@ -90,7 +90,7 @@ class SchoolFormComponent extends EntityFormComponent
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONT_SCHOOL => $this->model->toArray(),
-                self::CONT_ADDRESS => $this->model->getAddress() ? $this->model->getAddress()->toArray() : null,
+                self::CONT_ADDRESS => $this->model->address ? $this->model->address->toArray() : null,
             ]);
         }
     }

@@ -18,7 +18,7 @@ class ServiceEventParticipant extends OldServiceSingle
             return parent::storeModel($data, $model);
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                throw new DuplicateApplicationException($model->getPerson(), $exception);
+                throw new DuplicateApplicationException($model->person, $exception);
             }
             throw $exception;
         }
@@ -41,9 +41,9 @@ class ServiceEventParticipant extends OldServiceSingle
      */
     public function dispose(Model $model): void
     {
-        $person = $model->getPerson();
+        $person = $model->person;
         if ($person) {
-            $person->removeScheduleForEvent($model->getEvent());
+            $person->removeScheduleForEvent($model->event);
         }
         parent::dispose($model);
     }

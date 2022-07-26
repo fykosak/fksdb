@@ -39,10 +39,10 @@ class SignaturesWebModel extends WebModel
         $rootNode = $doc->createElement('signatures');
         $organisers = $contest->related(DbNames::TAB_ORG);
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = ModelOrg::createFromActiveRow($row, $contest->mapper);
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'texSignature' => $org->tex_signature,
                 'domainAlias' => $org->domain_alias,
             ], $doc, $orgNode);

@@ -19,10 +19,10 @@ use Fykosak\NetteORM\Model;
  * @property-read int ct_id
  * @property-read ActiveRow contestant_base
  * @property-read int task_id
- * @property-read ActiveRow task
+ * @property-read ModelTask task
  * @property-read bool corrected
  */
-class ModelSubmit extends Model implements Resource
+class SubmitModel extends Model implements Resource
 {
 
     public const SOURCE_UPLOAD = 'upload';
@@ -36,13 +36,13 @@ class ModelSubmit extends Model implements Resource
 
     public function getTask(): ModelTask
     {
-        return ModelTask::createFromActiveRow($this->task);
+        return ModelTask::createFromActiveRow($this->task, $this->mapper);
     }
 
     public function getContestant(): ModelContestant
     {
         // TODO why?
-        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'), $this->mapper);
     }
 
     public function getResourceId(): string

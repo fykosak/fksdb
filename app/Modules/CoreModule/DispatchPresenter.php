@@ -47,7 +47,7 @@ class DispatchPresenter extends BasePresenter
                         'contestId' => $contestId,
                     ]
                 ),
-                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
+                'title' => sprintf(_('Contestant %s'), $contestant->contest->name),
             ];
         }
         return $result;
@@ -67,7 +67,7 @@ class DispatchPresenter extends BasePresenter
                         'contestId' => $contestId,
                     ]
                 ),
-                'title' => sprintf(_('Organiser %s'), $org->getContest()->name),
+                'title' => sprintf(_('Organiser %s'), $org->contest->name),
             ];
         }
         return $results;

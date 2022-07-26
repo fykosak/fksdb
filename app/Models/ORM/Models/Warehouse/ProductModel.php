@@ -32,7 +32,7 @@ class ProductModel extends Model implements Resource
 
     public function getProducer(): ?ProducerModel
     {
-        return $this->producer ? ProducerModel::createFromActiveRow($this->producer) : null;
+        return $this->producer ? ProducerModel::createFromActiveRow($this->producer, $this->mapper) : null;
     }
 
     /**

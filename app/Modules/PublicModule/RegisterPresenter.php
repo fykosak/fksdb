@@ -340,7 +340,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             return null;
         }
         $row = $contest->getContestYears()->where('year', $this->year)->fetch();
-        return $row ? ModelContestYear::createFromActiveRow($row) : null;
+        return $row ? ModelContestYear::createFromActiveRow($row, $contest->mapper) : null;
     }
 
     /**

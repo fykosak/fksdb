@@ -44,11 +44,11 @@ class OrganizersWebModel extends WebModel
         foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
-                'career' => $org->getPerson()->getInfo()->career,
+                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
+                'career' => $org->person->getInfo()->career,
                 'contribution' => $org->contribution,
                 'order' => $org->order,
                 'role' => $org->role,
@@ -74,13 +74,13 @@ class OrganizersWebModel extends WebModel
         }
         $items = [];
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = ModelOrg::createFromActiveRow($row, $this->serviceContest->mapper);
             $items[] = [
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
-                'career' => $org->getPerson()->getInfo()->career,
+                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
+                'career' => $org->person->getInfo()->career,
                 'contribution' => $org->contribution,
                 'order' => $org->order,
                 'role' => $org->role,

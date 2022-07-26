@@ -36,7 +36,7 @@ class TeacherPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
+            sprintf(_('Edit teacher %s'), $this->getEntity()->person->getFullName()),
             'fas fa-user-edit'
         );
     }

@@ -14,31 +14,31 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_team_member_id
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read int person_id
  * @property-read int fyziklani_team_id
- * @property-read ActiveRow fyziklani_team
+ * @property-read TeamModel2 fyziklani_team
  */
 class TeamMemberModel extends Model
 {
     public function getEvent(): ModelEvent
     {
-        return $this->getFyziklaniTeam()->getEvent();
+        return $this->getFyziklaniTeam()->event;
     }
 
     public function getPerson(): ModelPerson
     {
-        return ModelPerson::createFromActiveRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
     }
 
     public function getFyziklaniTeam(): TeamModel2
     {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team);
+        return TeamModel2::createFromActiveRow($this->fyziklani_team, $this->mapper);
     }
 
     public function getPersonHistory(): ?ModelPersonHistory
     {
-        return $this->getPerson()->getHistoryByContestYear($this->getFyziklaniTeam()->getEvent()->getContestYear());
+        return $this->getPerson()->getHistoryByContestYear($this->getFyziklaniTeam()->event->getContestYear());
     }
 
     public function getSchool(): ?ModelSchool

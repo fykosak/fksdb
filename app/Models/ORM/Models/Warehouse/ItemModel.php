@@ -12,9 +12,9 @@ use Nette\Security\Resource;
 /**
  * @property-read int item_id
  * @property-read int product_id
- * @property-read ActiveRow product
+ * @property-read ProductModel product
  * @property-read int contest_id
- * @property-read ActiveRow contest
+ * @property-read ModelContest contest
  * @property-read string state ENUM ('new','used','unpacked','damaged') NOT NULL,
  * @property-read string|null description_cs
  * @property-read string|null description_en
@@ -39,7 +39,7 @@ class ItemModel extends Model implements Resource
 
     public function getContest(): ModelContest
     {
-        return ModelContest::createFromActiveRow($this->contest);
+        return ModelContest::createFromActiveRow($this->contest, $this->mapper);
     }
 
     public function getProducer(): ?ProducerModel
@@ -49,6 +49,6 @@ class ItemModel extends Model implements Resource
 
     public function getProduct(): ProductModel
     {
-        return ProductModel::createFromActiveRow($this->product);
+        return ProductModel::createFromActiveRow($this->product, $this->mapper);
     }
 }

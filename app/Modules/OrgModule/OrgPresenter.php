@@ -37,7 +37,7 @@ class OrgPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()),
+            sprintf(_('Edit of organiser %s'), $this->getEntity()->person->getFullName()),
             'fa fa-user-edit'
         );
     }
@@ -64,7 +64,7 @@ class OrgPresenter extends BasePresenter
      */
     public function titleDetail(): PageTitle
     {
-        return new PageTitle(null, sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user');
+        return new PageTitle(null, sprintf(_('Org %s'), $this->getEntity()->person->getFullName()), 'fa fa-user');
     }
 
     public function titleCreate(): PageTitle

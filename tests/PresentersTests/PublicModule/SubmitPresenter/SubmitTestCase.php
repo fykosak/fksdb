@@ -6,7 +6,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Models\ORM\Models\ModelContestant;
 use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\ModelTask;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
@@ -151,7 +151,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         $this->assertSubmit($this->contestant, $this->taskAll);
     }
 
-    protected function assertSubmit(ModelContestant $contestant, ModelTask $task): ModelSubmit
+    protected function assertSubmit(ModelContestant $contestant, ModelTask $task): SubmitModel
     {
         $submit = $this->getContainer()
             ->getByType(ServiceSubmit::class)

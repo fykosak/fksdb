@@ -18,16 +18,16 @@ class ModelMDsefParticipant extends ModelMulti
 
     public function __toString(): string
     {
-        return $this->mainModel->getPerson()->getFullName();
+        return $this->mainModel->person->getFullName();
     }
 
     public function getEvent(): ModelEvent
     {
-        return $this->mainModel->getEvent();
+        return $this->mainModel->event;
     }
 
     public function getPerson(): ModelPerson
     {
-        return $this->mainModel->getPerson();
+        return $this->mainModel->person;
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "69d3df1fd99e391d0947e36bcb48cdf3",
+    "content-hash": "bad166dedff73d393cc0dae5cde641c1",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -99,16 +99,16 @@
         },
         {
             "name": "fykosak/nette-orm",
-            "version": "dev-master",
+            "version": "dev-dev-mapper",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "0aa2b76"
+                "reference": "0d9829a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/0aa2b76",
-                "reference": "0aa2b76",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/0d9829a",
+                "reference": "0d9829a",
                 "shasum": ""
             },
             "require": {
@@ -122,7 +122,6 @@
                 "nette/tester": "^2.4.0",
                 "squizlabs/php_codesniffer": "3.6.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -150,9 +149,9 @@
             ],
             "support": {
                 "issues": "https://github.com/fykosak/nette-orm/issues",
-                "source": "https://github.com/fykosak/nette-orm/tree/master"
+                "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
             },
-            "time": "2022-06-18T21:18:21+00:00"
+            "time": "2022-07-26T22:21:46+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -479,16 +478,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v2.11.4",
+            "version": "v2.11.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "3a5ed09d92b3bb2c428814bb919c2f8637bc49b1"
+                "reference": "89e647e51213af8a270fe9903b8735a2f6c83ad1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/3a5ed09d92b3bb2c428814bb919c2f8637bc49b1",
-                "reference": "3a5ed09d92b3bb2c428814bb919c2f8637bc49b1",
+                "url": "https://api.github.com/repos/nette/latte/zipball/89e647e51213af8a270fe9903b8735a2f6c83ad1",
+                "reference": "89e647e51213af8a270fe9903b8735a2f6c83ad1",
                 "shasum": ""
             },
             "require": {
@@ -557,9 +556,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v2.11.4"
+                "source": "https://github.com/nette/latte/tree/v2.11.5"
             },
-            "time": "2022-05-30T13:34:15+00:00"
+            "time": "2022-06-26T10:12:18+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -2540,7 +2539,7 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
@@ -2587,7 +2586,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.2"
             },
             "funding": [
                 {
@@ -2607,16 +2606,16 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.9.3",
+            "version": "v2.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "3aadc88c00d7aca84ce2f07da236a703cc183d52"
+                "reference": "0ed605329b095f5f5fe2db2adc3d1ee80c917294"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/3aadc88c00d7aca84ce2f07da236a703cc183d52",
-                "reference": "3aadc88c00d7aca84ce2f07da236a703cc183d52",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/0ed605329b095f5f5fe2db2adc3d1ee80c917294",
+                "reference": "0ed605329b095f5f5fe2db2adc3d1ee80c917294",
                 "shasum": ""
             },
             "require": {
@@ -2675,9 +2674,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.9.3"
+                "source": "https://github.com/nette/tracy/tree/v2.9.4"
             },
-            "time": "2022-05-30T19:31:14+00:00"
+            "time": "2022-07-19T14:06:15+00:00"
         }
     ],
     "packages-dev": [

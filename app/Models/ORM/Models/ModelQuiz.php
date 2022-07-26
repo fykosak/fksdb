@@ -23,11 +23,11 @@ class ModelQuiz extends Model
 
     public function getTask(): ModelTask
     {
-        return ModelTask::createFromActiveRow($this->task);
+        return ModelTask::createFromActiveRow($this->task, $this->mapper);
     }
 
     public function getContest(): ModelContest
     {
-        return $this->getTask()->getContest();
+        return $this->getTask()->contest;
     }
 }

@@ -128,7 +128,7 @@ parameters:
             label: Payment
             minimalPermission: 128
             table: payment
-            model: FKSDB\Models\ORM\Models\ModelPayment
+            model: FKSDB\Models\ORM\Models\PaymentModel
             links:
                 - payment.detail
             rows:

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read ActiveRow contest
- * @property-read ActiveRow person
+ * @property-read ModelContest contest
+ * @property-read ModelPerson person
  * @property-read int since
  * @property-read int contest_id
  * @property-read int|null until
@@ -26,16 +25,6 @@ class ModelOrg extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'org';
-
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest);
-    }
-
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
 
     public function getResourceId(): string
     {

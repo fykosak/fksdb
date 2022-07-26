@@ -8,7 +8,7 @@
             {foreach $rests as $rest}
                 <tr>
                     <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice()->__toString()}</td>
+                    <td>{$rest->schedule_item->getPrice()->__toString()}</td>
                 </tr>
             {/foreach}
             </tbody>

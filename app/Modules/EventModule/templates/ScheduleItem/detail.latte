@@ -1,6 +1,6 @@
 {block content}
     {varType FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem $model}
-    {include './group.detail.latte' group=>$model->getScheduleGroup()}
+    {include './group.detail.latte' group=>$model->schedule_group}
     <hr/>
     <h2>{_'Schedule item'}</h2>
 

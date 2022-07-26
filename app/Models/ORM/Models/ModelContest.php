@@ -29,7 +29,7 @@ class ModelContest extends Model
     public function getContestYear(?int $year): ?ModelContestYear
     {
         $row = $this->getContestYears()->where('year', $year)->fetch();
-        return $row ? ModelContestYear::createFromActiveRow($row) : null;
+        return $row ? ModelContestYear::createFromActiveRow($row, $this->mapper) : null;
     }
 
     public function getFirstYear(): int
@@ -51,6 +51,6 @@ class ModelContest extends Model
     {
         /** @var ActiveRow|ModelContestYear $row */
         $row = $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
-        return ModelContestYear::createFromActiveRow($row);
+        return ModelContestYear::createFromActiveRow($row, $this->mapper);
     }
 }

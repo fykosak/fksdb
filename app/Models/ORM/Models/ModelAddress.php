@@ -20,6 +20,6 @@ class ModelAddress extends Model
 
     public function getRegion(): ?ModelRegion
     {
-        return $this->region_id ? ModelRegion::createFromActiveRow($this->region) : null;
+        return $this->region_id ? ModelRegion::createFromActiveRow($this->region, $this->mapper) : null;
     }
 }

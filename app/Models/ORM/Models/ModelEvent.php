@@ -43,18 +43,19 @@ class ModelEvent extends Model implements Resource, NodeCreator
 
     public function getEventType(): ModelEventType
     {
-        return ModelEventType::createFromActiveRow($this->event_type);
+        return ModelEventType::createFromActiveRow($this->event_type, $this->mapper);
     }
 
     public function getContest(): ModelContest
     {
-        return $this->getEventType()->getContest();
+        return $this->getEventType()->contest;
     }
 
     public function getContestYear(): ModelContestYear
     {
         return ModelContestYear::createFromActiveRow(
-            $this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch()
+            $this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch(),
+            $this->mapper
         );
     }
 
@@ -82,7 +83,7 @@ class ModelEvent extends Model implements Resource, NodeCreator
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();
         }
-        return GameSetupModel::createFromActiveRow($gameSetupRow);
+        return GameSetupModel::createFromActiveRow($gameSetupRow, $this->mapper);
     }
 
     public function getScheduleGroups(): GroupedSelection

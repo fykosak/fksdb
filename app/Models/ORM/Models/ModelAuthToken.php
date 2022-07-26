@@ -9,7 +9,7 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read string token
- * @property-read ActiveRow login
+ * @property-read ModelLogin login
  * @property-read int login_id
  * @property-read string data
  * @property-read string type
@@ -27,6 +27,6 @@ class ModelAuthToken extends Model
 
     public function getLogin(): ModelLogin
     {
-        return ModelLogin::createFromActiveRow($this->login);
+        return ModelLogin::createFromActiveRow($this->login, $this->mapper);
     }
 }

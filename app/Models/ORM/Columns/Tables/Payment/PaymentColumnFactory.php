@@ -40,7 +40,7 @@ class PaymentColumnFactory extends ColumnFactory
      */
     protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
-        if ($originalModel instanceof ModelPersonSchedule && !$originalModel->getScheduleItem()->isPayable()) {
+        if ($originalModel instanceof ModelPersonSchedule && !$originalModel->schedule_item->isPayable()) {
             return Html::el('span')
                 ->addAttributes(['class' => 'badge bg-info'])
                 ->addText(_('Not payable'));

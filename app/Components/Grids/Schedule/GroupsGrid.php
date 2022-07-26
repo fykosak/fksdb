@@ -41,7 +41,7 @@ class GroupsGrid extends RelatedGrid
             'schedule_group.end',
         ]);
         $this->addColumn('items_count', _('Items count'))->setRenderer(function (ActiveRow $row): int {
-            $model = ModelScheduleGroup::createFromActiveRow($row);
+            $model = ModelScheduleGroup::createFromActiveRow($row, $this->mapper);
             return $model->getItems()->count();
         });
 

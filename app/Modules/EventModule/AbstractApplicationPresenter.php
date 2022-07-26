@@ -17,6 +17,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\UI\PageTitle;
@@ -127,7 +128,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws CannotAccessModelException
      * @throws GoneException
      */
-    protected function createComponentApplicationTransitions(): TransitionButtonsComponent
+    protected function createComponentApplicationTransitions(): BaseComponent
     {
         $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         return new TransitionButtonsComponent(

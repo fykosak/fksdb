@@ -16,9 +16,9 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int person_id
- * @property-read ActiveRow person
+ * @property-read ModelPerson person
  * @property-read int payment_id
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  * @property-read int event_id
  * @property-read PaymentState state
  * @property-read float price
@@ -40,12 +40,12 @@ class PaymentModel extends Model implements Resource
 
     public function getPerson(): ModelPerson
     {
-        return ModelPerson::createFromActiveRow($this->person);
+        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
     }
 
     public function getEvent(): ModelEvent
     {
-        return ModelEvent::createFromActiveRow($this->event);
+        return ModelEvent::createFromActiveRow($this->event, $this->mapper);
     }
 
     /**
@@ -57,7 +57,7 @@ class PaymentModel extends Model implements Resource
         $items = [];
         /** @var ModelSchedulePayment $row */
         foreach ($query as $row) {
-            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
+            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule, $this->mapper);
         }
         return $items;
     }
@@ -74,7 +74,7 @@ class PaymentModel extends Model implements Resource
 
     public function canEdit(): bool
     {
-        return \in_array($this->state->value, [Machine\AbstractMachine::STATE_INIT, PaymentState::NEW]);
+        return $this->state->value == PaymentState::NEW;
     }
 
     /**

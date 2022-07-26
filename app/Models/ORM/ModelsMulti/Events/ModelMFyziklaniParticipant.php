@@ -17,11 +17,11 @@ class ModelMFyziklaniParticipant extends ModelMulti
 
     public function getEvent(): ModelEvent
     {
-        return $this->mainModel->getEvent();
+        return $this->mainModel->event;
     }
 
     public function getPerson(): ModelPerson
     {
-        return $this->mainModel->getPerson();
+        return $this->mainModel->person;
     }
 }

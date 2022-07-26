@@ -55,7 +55,7 @@ abstract class AESOPModel
         if (!$school) {
             return null;
         }
-        $countryISO = $school->getAddress()->getRegion()->country_iso;
+        $countryISO = $school->address->getRegion()->country_iso;
         if ($countryISO === 'cz') {
             return 'red-izo:' . $school->izo;
         }
@@ -93,10 +93,10 @@ abstract class AESOPModel
             'name' => $person->other_name,
             'surname' => $person->family_name,
             'id' => $person->person_id,
-            'street' => $postContact->getAddress()->target,
-            'town' => $postContact->getAddress()->city,
-            'postcode' => $postContact->getAddress()->postal_code,
-            'country' => $postContact->getAddress()->getRegion()->country_iso,
+            'street' => $postContact->address->target,
+            'town' => $postContact->address->city,
+            'postcode' => $postContact->address->postal_code,
+            'country' => $postContact->address->getRegion()->country_iso,
             'fullname' => $person->display_name,
             'gender' => $person->gender,
             'school' => $this->formatSchool($school),

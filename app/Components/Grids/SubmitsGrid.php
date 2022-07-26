@@ -8,7 +8,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -62,7 +62,7 @@ class SubmitsGrid extends BaseGrid
         //
         $this->addColumn('task', _('Task'))
             ->setRenderer(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return $submit->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Timestamp'));
@@ -75,15 +75,15 @@ class SubmitsGrid extends BaseGrid
             ->setClass('btn btn-sm btn-outline-warning')
             ->setText(_('Cancel'))
             ->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return $submit->canRevoke();
             })
             ->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return $this->link('revoke!', $submit->submit_id);
             })
             ->setConfirmationDialog(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return sprintf(
                     _('Do you really want to take the solution of task %s back?'),
                     $submit->getTask()->getFQName()
@@ -91,19 +91,19 @@ class SubmitsGrid extends BaseGrid
             });
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return $this->link('downloadUploaded!', $submit->submit_id);
             })
             ->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return !$submit->isQuiz();
             });
         $this->addButton('download_corrected')
             ->setText(_('Download corrected'))->setLink(function (ActiveRow $row): string {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 return $this->link('downloadCorrected!', $submit->submit_id);
             })->setShow(function (ActiveRow $row): bool {
-                $submit = ModelSubmit::createFromActiveRow($row);
+                $submit = SubmitModel::createFromActiveRow($row, $this->mapper);
                 if (!$submit->isQuiz()) {
                     return (bool)$submit->corrected;
                 } else {
@@ -160,6 +160,6 @@ class SubmitsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelSubmit::class;
+        return SubmitModel::class;
     }
 }

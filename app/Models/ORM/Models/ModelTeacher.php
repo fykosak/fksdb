@@ -13,8 +13,8 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface since
  * @property-read int school_id
  * @property-read int person_id
- * @property-read ActiveRow person
- * @property-read ActiveRow school
+ * @property-read ModelPerson person
+ * @property-read ModelSchool school
  * @property-read string state
  * @property-read int number_brochures
  * @property-read string note
@@ -24,16 +24,6 @@ class ModelTeacher extends Model implements Resource
 {
 
     public const RESOURCE_ID = 'teacher';
-
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person);
-    }
-
-    public function getSchool(): ModelSchool
-    {
-        return ModelSchool::createFromActiveRow($this->school);
-    }
 
     public function getResourceId(): string
     {

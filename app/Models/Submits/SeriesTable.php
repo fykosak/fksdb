@@ -7,7 +7,7 @@ namespace FKSDB\Models\Submits;
 use FKSDB\Models\ORM\Models\{
     ModelContestant,
     ModelContestYear,
-    ModelSubmit,
+    SubmitModel,
 };
 use FKSDB\Models\ORM\Services\{
     ServiceContestant,
@@ -78,7 +78,7 @@ class SeriesTable
     {
         // store submits in 2D hash for better access
         $submitsTable = [];
-        /** @var ModelSubmit $submit */
+        /** @var SubmitModel $submit */
         foreach ($this->getSubmits() as $submit) {
             $submitsTable[$submit->ct_id] = $submitsTable[$submit->ct_id] ?? [];
             $submitsTable[$submit->ct_id][$submit->task_id] = $submit;
@@ -105,7 +105,7 @@ class SeriesTable
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
-                /** @var ModelSubmit $submit */
+                /** @var SubmitModel $submit */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

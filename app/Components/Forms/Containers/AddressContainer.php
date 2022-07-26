@@ -54,7 +54,7 @@ class AddressContainer extends ModelContainer
     {
         if ($data instanceof ActiveRow) { //assert its from address table
             if ($data instanceof ModelPostContact) {
-                $address = $data->getAddress();
+                $address = $data->address;
             } else {
                 $address = $data;
             }

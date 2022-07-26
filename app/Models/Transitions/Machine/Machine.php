@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Transitions\Machine;
 
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Transition\Transition;
@@ -52,6 +53,23 @@ abstract class Machine extends AbstractMachine
         $transitions = \array_filter(
             $this->getTransitions(),
             fn(Transition $transition): bool => $transition->getId() === $id
+        );
+        return $this->selectTransition($transitions);
+    }
+
+    public function getTransitionByStates(?EnumColumn $source, ?EnumColumn $target): ?Transition
+    {
+        $transitions = \array_filter(
+            $this->getTransitions(),
+            function (Transition $transition) use ($target, $source): bool {
+                $matchSource = is_null($source) && is_null($transition->sourceStateEnum) ||
+                    ($source && $transition->sourceStateEnum &&
+                        ($source->value === $transition->sourceStateEnum->value));
+                $matchTarget = is_null($target) && is_null($transition->targetStateEnum) ||
+                    ($target && $transition->targetStateEnum &&
+                        ($target->value === $transition->targetStateEnum->value));
+                return $matchSource && $matchTarget;
+            }
         );
         return $this->selectTransition($transitions);
     }

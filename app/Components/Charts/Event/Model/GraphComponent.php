@@ -8,7 +8,7 @@ use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Components\Controls\Events\ExpressionPrinter;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Transition;
-use FKSDB\Models\Transitions\Machine\Machine;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
@@ -42,7 +42,10 @@ class GraphComponent extends FrontEndComponent implements Chart
      */
     private function getAllStates(): array
     {
-        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
+        return array_merge(
+            $this->baseMachine->getStates(),
+            [AbstractMachine::STATE_INIT, AbstractMachine::STATE_TERMINATED]
+        );
     }
 
     /**
@@ -55,9 +58,9 @@ class GraphComponent extends FrontEndComponent implements Chart
         foreach ($states as $state) {
             $nodes[$state] = [
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === Machine::STATE_INIT
+                'type' => $state === AbstractMachine::STATE_INIT
                     ? 'init'
-                    : ($state === Machine::STATE_TERMINATED ? 'terminated'
+                    : ($state === AbstractMachine::STATE_TERMINATED ? 'terminated'
                         : 'default'),
             ];
         }

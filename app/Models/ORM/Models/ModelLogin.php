@@ -24,7 +24,7 @@ class ModelLogin extends Model implements IIdentity
 
     public function getPerson(): ?ModelPerson
     {
-        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+        return $this->person ? ModelPerson::createFromActiveRow($this->person, $this->mapper) : null;
     }
 
     public function __toString(): string
@@ -71,8 +71,8 @@ class ModelLogin extends Model implements IIdentity
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = ModelGrant::createFromActiveRow($row);
-                $this->roles[] = new Grant($grant->getRole()->name, $grant->getContest());
+                $grant = ModelGrant::createFromActiveRow($row, $this->mapper);
+                $this->roles[] = new Grant($grant->role->name, $grant->contest);
             }
             // roles from other tables
             $person = $this->getPerson();
@@ -80,13 +80,13 @@ class ModelLogin extends Model implements IIdentity
                 foreach ($person->getActiveOrgs() as $org) {
                     $this->roles[] = new Grant(
                         ModelRole::ORG,
-                        $org->getContest(),
+                        $org->contest,
                     );
                 }
                 foreach ($person->getActiveContestants() as $contestant) {
                     $this->roles[] = new Grant(
                         ModelRole::CONTESTANT,
-                        $contestant->getContest(),
+                        $contestant->contest,
                     );
                 }
             }
