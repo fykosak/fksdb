@@ -50,7 +50,7 @@ class EventAuthorizator
     {
         $login = $this->user->getIdentity();
         /** @var ModelLogin $login */
-        $person = $login ? $login->getPerson() : null;
+        $person = $login ? $login->person : null;
         return $person ? $person->getEventRoles($event) : [];
     }
 }

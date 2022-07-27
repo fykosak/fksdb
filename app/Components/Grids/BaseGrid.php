@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\SQL\SearchableDataSource;
 use FKSDB\Modules\Core\BasePresenter;
-use Fykosak\NetteORM\Mapper;
 use Fykosak\NetteORM\Model;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -39,7 +38,6 @@ abstract class BaseGrid extends Grid
     /** @persistent string */
     public ?array $searchTerm = null;
     protected ORMFactory $tableReflectionFactory;
-    protected Mapper $mapper;
 
     private Container $container;
 
@@ -50,10 +48,9 @@ abstract class BaseGrid extends Grid
         $container->callInjects($this);
     }
 
-    final public function injectBase(ORMFactory $tableReflectionFactory, Translator $translator, Mapper $mapper): void
+    final public function injectBase(ORMFactory $tableReflectionFactory, Translator $translator): void
     {
         $this->tableReflectionFactory = $tableReflectionFactory;
-        $this->mapper = $mapper;
         $this->setTranslator($translator);
     }
 
@@ -206,7 +203,7 @@ abstract class BaseGrid extends Grid
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
             function ($model) use ($factory, $userPermission): Html {
                 if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model, $this->mapper);
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $factory->render($model, $userPermission);
             }
@@ -269,14 +266,14 @@ abstract class BaseGrid extends Grid
             ->setText($label)
             ->setLink(function ($model) use ($destination, $paramMapCallback): string {
                 if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model, $this->mapper);
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
                 if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model, $this->mapper);
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
             });
@@ -295,14 +292,14 @@ abstract class BaseGrid extends Grid
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {
                 if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model, $this->mapper);
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $factory->create($this->getPresenter(), $model);
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($factory) {
                 if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model, $this->mapper);
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized(...$factory->createLinkParameters($model));
             });

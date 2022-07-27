@@ -146,7 +146,7 @@ class ExtendedPersonHandler
         iterable $values,
         ExtendedPersonPresenter $presenter
     ): void {
-        if ($this->contestYear->getContest() === null || $this->contestYear->year === null) {
+        if ($this->contestYear->contest === null || $this->contestYear->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
@@ -154,7 +154,7 @@ class ExtendedPersonHandler
 
         if (!$model) {
             $model = $this->service->createNewModel([
-                'contest_id' => $this->contestYear->getContest(),
+                'contest_id' => $this->contestYear->contest,
                 'person_id' => $person->getPrimary(),
                 'year' => $this->contestYear->year,
             ]);

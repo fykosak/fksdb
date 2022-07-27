@@ -69,8 +69,8 @@ trait YearPresenterTrait
                 /** @var ModelLogin $login */
                 $login = $this->getUser()->getIdentity();
                 $years = [];
-                if ($login && $login->getPerson()) {
-                    $contestants = $login->getPerson()->getContestants($contest);
+                if ($login && $login->person) {
+                    $contestants = $login->person->getContestants($contest);
                     /** @var ModelContestant $contestant */
                     foreach ($contestants as $contestant) {
                         $years[] = $contestant->year;

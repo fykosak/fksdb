@@ -24,9 +24,4 @@ class ModelAuthToken extends Model
     public const TYPE_RECOVERY = 'recovery';
     /** @const Notification about an event application. */
     public const TYPE_EVENT_NOTIFY = 'event_notify';
-
-    public function getLogin(): ModelLogin
-    {
-        return ModelLogin::createFromActiveRow($this->login, $this->mapper);
-    }
 }

@@ -29,7 +29,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
     protected function logAuthentication(ModelLogin $login): void
     {
         Debugger::log(
-            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->getPerson()),
+            sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),
             'auth-log'
         );
         $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);

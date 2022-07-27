@@ -40,7 +40,7 @@ class TokenAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException(_('Invalid authentication token.'));
         }
         // login by the identity
-        $login = $token->getLogin();
+        $login = $token->login;
         if (!$login->active) {
             throw new InactiveLoginException();
         }

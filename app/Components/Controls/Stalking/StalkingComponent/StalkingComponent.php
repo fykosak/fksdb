@@ -65,7 +65,7 @@ class StalkingComponent extends BaseStalkingComponent
         $models = [];
         $query = $person->related($definition['table']);
         foreach ($query as $datum) {
-            $models[] = ($definition['model'])::createFromActiveRow($datum, $person->mapper);
+            $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
         $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];

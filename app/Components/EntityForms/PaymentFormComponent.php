@@ -170,7 +170,7 @@ class PaymentFormComponent extends EntityFormComponent
             /** @var ModelLogin $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
             $this->getForm()->setDefaults([
-                'person_id' => $login->getPerson()->person_id,
+                'person_id' => $login->person->person_id,
             ]);
         }
     }

@@ -30,8 +30,8 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
     {
         $rawData = [];
         foreach ($this->event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row, $this->event->mapper);
-            $iso = $participant->getPersonHistory()->getSchool()->address->getRegion()->country_iso3;
+            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $iso = $participant->getPersonHistory()->school->address->region->country_iso3;
             $rawData[] = [
                 'country' => $iso,
                 'created' => $participant->created->format('c'),

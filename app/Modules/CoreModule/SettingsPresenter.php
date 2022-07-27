@@ -74,7 +74,7 @@ class SettingsPresenter extends BasePresenter
 
     protected function createComponentPreferredLangForm(): PreferredLangFormComponent
     {
-        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->getPerson());
+        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->person);
     }
 
     /**
@@ -96,7 +96,7 @@ class SettingsPresenter extends BasePresenter
             $uniqueLogin->setIgnoredLogin($login);
 
             $uniqueEmail = new UniqueEmail($this->servicePersonInfo);
-            $uniqueEmail->setIgnoredPerson($login->getPerson());
+            $uniqueEmail->setIgnoredPerson($login->person);
 
             return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
         };

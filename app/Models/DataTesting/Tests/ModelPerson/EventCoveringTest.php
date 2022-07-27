@@ -33,7 +33,7 @@ class EventCoveringTest extends PersonTest
             ModelContest::ID_VYFUK => [],
         ];
         foreach ($person->getEventParticipants() as $row) {
-            $eventParticipant = ModelEventParticipant::createFromActiveRow($row, $person->mapper);
+            $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
             $year = $eventParticipant->event->year;
             $contestId = $eventParticipant->event->getContest()->contest_id;
             if (!\in_array($year, $participantsYears[$contestId])) {
@@ -41,7 +41,7 @@ class EventCoveringTest extends PersonTest
             }
         }
         foreach ($person->getContestants() as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row, $person->mapper);
+            $contestant = ModelContestant::createFromActiveRow($row);
             $year = $contestant->year;
             $contestId = $contestant->contest_id;
             if (!\in_array($year, $contestantYears[$contestId])) {
@@ -63,7 +63,7 @@ class EventCoveringTest extends PersonTest
                 }
                 $query = $person->getOrgs($contestId);
                 foreach ($query as $row) {
-                    $org = ModelOrg::createFromActiveRow($row, $person->mapper);
+                    $org = ModelOrg::createFromActiveRow($row);
                     if ($org->until) {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
@@ -98,7 +98,7 @@ class EventCoveringTest extends PersonTest
             ModelContest::ID_VYFUK => [],
         ];
         foreach ($person->getEventOrgs() as $row) {
-            $eventOrg = ModelEventOrg::createFromActiveRow($row, $person->mapper);
+            $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $year = $eventOrg->event->year;
             $contestId = $eventOrg->event->getContest()->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {

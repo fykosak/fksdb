@@ -32,7 +32,7 @@ class ContestantsGrid extends BaseGrid
     protected function getData(): IDataSource
     {
         return new NDataSource(
-            $this->contestYear->getContest()->related(DbNames::TAB_CONTESTANT_BASE)->where(
+            $this->contestYear->contest->related(DbNames::TAB_CONTESTANT_BASE)->where(
                 'year',
                 $this->contestYear->year
             )
@@ -56,8 +56,8 @@ class ContestantsGrid extends BaseGrid
             'person_history.study_year',
         ]);
         $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ModelContestant::createFromActiveRow($row, $this->mapper);
-            return $contestant->getPersonHistory()->getSchool()->name_abbrev;
+            $contestant = ModelContestant::createFromActiveRow($row);
+            return $contestant->getPersonHistory()->school->name_abbrev;
         });
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);

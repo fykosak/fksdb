@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
@@ -23,12 +24,12 @@ use Nette\Security\Resource;
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
- * @property-read ActiveRow event
+ * @property-read ModelEvent event
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
  * @property-read int teacher_id
- * @property-read ActiveRow person
+ * @property-read ActiveRow|null person TODO!!!
  * @deprecated
  */
 class TeamModel extends Model implements Resource
@@ -43,8 +44,7 @@ class TeamModel extends Model implements Resource
     public function getTeacher(): ?ModelPerson
     {
         return isset($this->teacher_id) ? ModelPerson::createFromActiveRow(
-            $this->ref('person', 'teacher_id'),
-            $this->mapper
+            $this->ref('person', 'teacher_id')
         ) : null;
     }
 
@@ -60,7 +60,7 @@ class TeamModel extends Model implements Resource
     {
         $persons = [];
         foreach ($this->getFyziklaniParticipants() as $pRow) {
-            $persons[] = ParticipantModel::createFromActiveRow($pRow, $this->mapper)->getEventParticipant()->person;
+            $persons[] = ParticipantModel::createFromActiveRow($pRow)->event_participant->person;
         }
         $teacher = $this->getTeacher();
         if ($teacher) {

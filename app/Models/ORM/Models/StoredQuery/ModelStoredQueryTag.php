@@ -13,13 +13,8 @@ use Nette\Database\Table\ActiveRow;
  * @property-read string name
  * @property-read string description
  * @property-read int color
- * @property-read ActiveRow tag_type
+ * @property-read ModelStoredQueryTagType tag_type
  */
 class ModelStoredQueryTag extends Model
 {
-
-    public function getTagType(): ModelStoredQueryTagType
-    {
-        return ModelStoredQueryTagType::createFromActiveRow($this->tag_type, $this->mapper);
-    }
 }

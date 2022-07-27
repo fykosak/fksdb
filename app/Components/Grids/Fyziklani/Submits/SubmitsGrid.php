@@ -27,8 +27,8 @@ abstract class SubmitsGrid extends BaseGrid
     protected function addColumnTask(): void
     {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row): string {
-            $model = SubmitModel::createFromActiveRow($row, $this->mapper); // TODO is needed?
-            return $model->getFyziklaniTask()->label;
+            $model = SubmitModel::createFromActiveRow($row); // TODO is needed?
+            return $model->fyziklani_task->label;
         })->setSortable(false);
     }
 
@@ -40,9 +40,9 @@ abstract class SubmitsGrid extends BaseGrid
     {
         $this->addJoinedColumn('fyziklani_team.name_n_id', function ($row): TeamModel2 {
             if (!$row instanceof SubmitModel) {
-                $row = SubmitModel::createFromActiveRow($row, $this->mapper);
+                $row = SubmitModel::createFromActiveRow($row);
             }
-            return $row->getFyziklaniTeam();
+            return $row->fyziklani_team;
         });
     }
 

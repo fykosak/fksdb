@@ -31,13 +31,7 @@ use Nette\Security\Resource;
  */
 class ModelScheduleItem extends Model implements Resource, NodeCreator
 {
-
     public const RESOURCE_ID = 'event.scheduleItem';
-
-    public function getScheduleGroup(): ModelScheduleGroup
-    {
-        return ModelScheduleGroup::createFromActiveRow($this->schedule_group, $this->mapper);
-    }
 
     public function getEvent(): ModelEvent
     {

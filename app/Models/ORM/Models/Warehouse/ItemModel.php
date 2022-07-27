@@ -39,16 +39,16 @@ class ItemModel extends Model implements Resource
 
     public function getContest(): ModelContest
     {
-        return ModelContest::createFromActiveRow($this->contest, $this->mapper);
+        return ModelContest::createFromActiveRow($this->contest);
     }
 
     public function getProducer(): ?ProducerModel
     {
-        return $this->getProduct()->getProducer();
+        return $this->getProduct()->producer;
     }
 
     public function getProduct(): ProductModel
     {
-        return ProductModel::createFromActiveRow($this->product, $this->mapper);
+        return ProductModel::createFromActiveRow($this->product);
     }
 }

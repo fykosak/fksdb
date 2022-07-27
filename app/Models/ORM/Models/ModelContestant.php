@@ -23,7 +23,7 @@ class ModelContestant extends Model implements Resource
 
     public function getPerson(): ModelPerson
     {
-        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     public function getContestYear(): ModelContestYear
@@ -32,7 +32,7 @@ class ModelContestant extends Model implements Resource
             'contest_id',
             $this->contest_id
         )->where('year', $this->year)->fetch();
-        return ModelContestYear::createFromActiveRow($row, $this->mapper);
+        return ModelContestYear::createFromActiveRow($row);
     }
 
     public function getPersonHistory(): ModelPersonHistory

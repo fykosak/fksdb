@@ -60,7 +60,7 @@ class AddressContainer extends ModelContainer
             }
             /** @var ModelAddress $address */
             $data = $address->toArray();
-            $data['country_iso'] = $address->region_id ? $address->getRegion()->country_iso : null;
+            $data['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         } elseif (is_array($data) && isset($data['region_id'])) {
             $region = $this->serviceRegion->findByPrimary($data['region_id']);
             $data['country_iso'] = $region->country_iso;

@@ -20,7 +20,7 @@ class MyApplicationsPresenter extends BasePresenter
 
     private function getPerson(): ?ModelPerson
     {
-        return $this->getUser()->getIdentity()->getPerson();
+        return $this->getUser()->getIdentity()->person;
     }
 
     public function titleDefault(): PageTitle

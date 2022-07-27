@@ -38,7 +38,7 @@ class EventRole extends ColumnFactory
         } catch (CannotAccessModelException$exception) {
             /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
-            $person = $login->getPerson();
+            $person = $login->person;
         }
         /** @var ModelEvent $event */
         $event = ReferencedAccessor::accessModel($model, ModelEvent::class);

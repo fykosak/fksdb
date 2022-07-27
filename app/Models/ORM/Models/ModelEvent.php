@@ -21,7 +21,7 @@ use Nette\Security\Resource;
  * @property-read string name
  * @property-read int event_id
  * @property-read string report
- * @property-read ActiveRow event_type
+ * @property-read ModelEventType event_type
  * @property-read int event_type_id
  * @property-read \DateTimeInterface begin
  * @property-read \DateTimeInterface end
@@ -41,21 +41,15 @@ class ModelEvent extends Model implements Resource, NodeCreator
         TeamState::APPLIED,
     ];
 
-    public function getEventType(): ModelEventType
-    {
-        return ModelEventType::createFromActiveRow($this->event_type, $this->mapper);
-    }
-
     public function getContest(): ModelContest
     {
-        return $this->getEventType()->contest;
+        return $this->event_type->contest;
     }
 
     public function getContestYear(): ModelContestYear
     {
         return ModelContestYear::createFromActiveRow(
-            $this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch(),
-            $this->mapper
+            $this->getContest()->related(DbNames::TAB_CONTEST_YEAR)->where('year', $this->year)->fetch()
         );
     }
 
@@ -83,7 +77,7 @@ class ModelEvent extends Model implements Resource, NodeCreator
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();
         }
-        return GameSetupModel::createFromActiveRow($gameSetupRow, $this->mapper);
+        return GameSetupModel::createFromActiveRow($gameSetupRow);
     }
 
     public function getScheduleGroups(): GroupedSelection

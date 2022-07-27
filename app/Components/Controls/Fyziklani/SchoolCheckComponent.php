@@ -37,7 +37,7 @@ class SchoolCheckComponent extends BaseComponent
                 )
                 ->where(':fyziklani_team_member.person:person_history.school_id', $schoolId);
             foreach ($query as $team) {
-                $schools[$schoolId][] = TeamModel2::createFromActiveRow($team, $currentTeam->mapper);
+                $schools[$schoolId][] = TeamModel2::createFromActiveRow($team);
             }
         }
         $this->template->schools = $schools;
@@ -51,9 +51,9 @@ class SchoolCheckComponent extends BaseComponent
     {
         $schools = [];
         foreach ($team->getMembers() as $row) {
-            $participant = TeamMemberModel::createFromActiveRow($row, $team->mapper);
+            $participant = TeamMemberModel::createFromActiveRow($row);
             $history = $participant->getPersonHistory();
-            $schools[$history->school_id] = $history->getSchool();
+            $schools[$history->school_id] = $history->school;
         }
         return $schools;
     }

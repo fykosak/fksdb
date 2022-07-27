@@ -19,7 +19,7 @@ class TeamComponent extends FrontEndComponent implements Chart
     public function __construct(Container $context, ModelEvent $event)
     {
         parent::__construct($context, 'chart.events.teams.time-progress');
-        $this->eventType = $event->getEventType();
+        $this->eventType = $event->event_type;
     }
 
     protected function getData(): array

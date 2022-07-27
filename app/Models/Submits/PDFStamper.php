@@ -71,8 +71,8 @@ class PDFStamper implements StorageProcessing
             throw new InvalidStateException('Output file not set.');
         }
 
-        $series = $submit->getTask()->series;
-        $label = $submit->getTask()->label;
+        $series = $submit->task->series;
+        $label = $submit->task->label;
         $person = $submit->getContestant()->person;
 
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);

@@ -12,6 +12,7 @@ use Nette\Database\Table\GroupedSelection;
  * @property-read ModelContest contest
  * @property-read int contest_id
  * @property-read int event_type_id
+ * @property-read string name
  */
 class ModelEventType extends Model
 {

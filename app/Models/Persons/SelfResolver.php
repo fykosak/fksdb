@@ -46,7 +46,7 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver
         }
         /** @var ModelLogin $login */
         $login = $this->user->getIdentity();
-        $loggedPerson = $login->getPerson();
+        $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;
     }
 }

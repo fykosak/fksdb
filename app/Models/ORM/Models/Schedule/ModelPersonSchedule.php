@@ -23,15 +23,9 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelPersonSchedule extends Model
 {
-
-    public function getScheduleGroup(): ModelScheduleGroup
-    {
-        return $this->schedule_item->schedule_group;
-    }
-
     public function getEvent(): ModelEvent
     {
-        return $this->getScheduleGroup()->event;
+        return $this->schedule_item->schedule_group->event;
     }
 
     public function getPayment(): ?PaymentModel
@@ -40,7 +34,7 @@ class ModelPersonSchedule extends Model
         if (!$data) {
             return null;
         }
-        return PaymentModel::createFromActiveRow($data, $this->mapper);
+        return PaymentModel::createFromActiveRow($data);
     }
 
     public function hasActivePayment(): bool

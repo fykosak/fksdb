@@ -50,7 +50,7 @@
     {foreach $model->getTeachers() as $teacherRow}
         {var FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher = \FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel::createFromActiveRow($teacherRow)}
         {control valuePrinter:row 'person.person_link', $teacher}
-        {include personSchedule, person => $teacher->getPerson(),event=> $model->event}
+        {include personSchedule, person => $teacher->person,event=> $model->event}
     {/foreach}
     <hr/>
 

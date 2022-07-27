@@ -245,8 +245,8 @@ abstract class BasePresenter extends Presenter implements
     {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        if ($login && $login->getPerson()) {
-            return $login->getPerson()->getPreferredLang();
+        if ($login && $login->person) {
+            return $login->person->getPreferredLang();
         }
         return null;
     }

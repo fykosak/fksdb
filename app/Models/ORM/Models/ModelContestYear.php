@@ -15,11 +15,4 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelContestYear extends Model
 {
-    /**
-     * @deprecated
-     */
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest, $this->mapper);
-    }
 }

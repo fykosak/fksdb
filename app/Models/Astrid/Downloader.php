@@ -35,7 +35,7 @@ class Downloader
     {
         $mask = $this->container->getParameters()['tasks']['paths'];
 
-        $path = sprintf($mask, $contestYear->getContest()->getContestSymbol(), $contestYear->year, $series);
+        $path = sprintf($mask, $contestYear->contest->getContestSymbol(), $contestYear->year, $series);
         return $this->download($path);
     }
 

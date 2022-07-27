@@ -28,12 +28,12 @@ class TeamMemberModel extends Model
 
     public function getPerson(): ModelPerson
     {
-        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
+        return ModelPerson::createFromActiveRow($this->person);
     }
 
     public function getFyziklaniTeam(): TeamModel2
     {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team, $this->mapper);
+        return TeamModel2::createFromActiveRow($this->fyziklani_team);
     }
 
     public function getPersonHistory(): ?ModelPersonHistory
@@ -44,7 +44,7 @@ class TeamMemberModel extends Model
     public function getSchool(): ?ModelSchool
     {
         $history = $this->getPersonHistory();
-        return $history ? $history->getSchool() : null;
+        return $history ? $history->school : null;
     }
 
     public function __toArray(): array

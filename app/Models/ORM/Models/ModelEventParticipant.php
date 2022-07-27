@@ -80,7 +80,7 @@ class ModelEventParticipant extends Model implements Resource, NodeCreator
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')
             ->select('e_fyziklani_team.*')
             ->fetch();
-        return $row ? TeamModel::createFromActiveRow($row, $this->mapper) : null;
+        return $row ? TeamModel::createFromActiveRow($row) : null;
     }
 
     public function getResourceId(): string

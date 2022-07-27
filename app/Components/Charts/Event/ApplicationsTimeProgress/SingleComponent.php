@@ -19,7 +19,7 @@ class SingleComponent extends FrontEndComponent implements Chart
     public function __construct(Container $context, ModelEvent $event)
     {
         parent::__construct($context, 'chart.events.participants.time-progress');
-        $this->eventType = $event->getEventType();
+        $this->eventType = $event->event_type;
     }
 
     protected function getData(): array
@@ -29,12 +29,12 @@ class SingleComponent extends FrontEndComponent implements Chart
             'events' => [],
         ];
         foreach ($this->eventType->getEventsByType() as $eventRow) {
-            $event = ModelEvent::createFromActiveRow($eventRow, $this->eventType->mapper);
+            $event = ModelEvent::createFromActiveRow($eventRow);
             $participants = [];
             $query = $event->getPossiblyAttendingParticipants();
             /** @var ModelEventParticipant $participant */
             foreach ($query as $row) {
-                $participant = ModelEventParticipant::createFromActiveRow($row, $this->eventType->mapper);
+                $participant = ModelEventParticipant::createFromActiveRow($row);
                 $participants[] = [
                     'created' => $participant->created->format('c'),
                 ];

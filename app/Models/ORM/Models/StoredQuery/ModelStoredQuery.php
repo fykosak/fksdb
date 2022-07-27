@@ -28,7 +28,7 @@ class ModelStoredQuery extends Model implements Resource
     {
         $result = [];
         foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
-            $result[] = ModelStoredQueryParameter::createFromActiveRow($row, $this->mapper);
+            $result[] = ModelStoredQueryParameter::createFromActiveRow($row);
         }
         return $result;
     }
@@ -46,7 +46,7 @@ class ModelStoredQuery extends Model implements Resource
         $tags = $this->getTags();
         $result = [];
         foreach ($tags as $tag) {
-            $result[] = ModelStoredQueryTag::createFromActiveRow($tag, $this->mapper)->getTagType();
+            $result[] = ModelStoredQueryTag::createFromActiveRow($tag)->tag_type;
         }
         return $result;
     }

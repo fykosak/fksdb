@@ -31,19 +31,9 @@ class SubmitModel extends Model implements Resource
 
     public const RESOURCE_ID = 'fyziklani.submit';
 
-    public function getFyziklaniTask(): TaskModel
-    {
-        return TaskModel::createFromActiveRow($this->fyziklani_task, $this->mapper);
-    }
-
     public function getEvent(): ModelEvent
     {
-        return $this->getFyziklaniTeam()->event;
-    }
-
-    public function getFyziklaniTeam(): TeamModel2
-    {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team, $this->mapper);
+        return $this->fyziklani_team->event;
     }
 
     public function isChecked(): bool
@@ -72,9 +62,9 @@ class SubmitModel extends Model implements Resource
                 throw new AlreadyRevokedSubmitException();
             }
             return false;
-        } elseif (!$this->getFyziklaniTeam()->hasOpenSubmitting()) {
+        } elseif (!$this->fyziklani_team->hasOpenSubmitting()) {
             if ($throws) {
-                throw new ClosedSubmittingException($this->getFyziklaniTeam());
+                throw new ClosedSubmittingException($this->fyziklani_team);
             }
             return false;
         }

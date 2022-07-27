@@ -131,7 +131,7 @@ class EventFormComponent extends EntityFormComponent
             'registration_end',
             'report',
             'parameters',
-        ], $this->contestYear->getContest());
+        ], $this->contestYear->contest);
     }
 
     private function createParamDescription(Holder $holder): Html

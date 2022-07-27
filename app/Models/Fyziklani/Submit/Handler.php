@@ -108,8 +108,8 @@ class Handler
      */
     public function changePoints(Logger $logger, SubmitModel $submit, int $points): void
     {
-        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($submit->getFyziklaniTeam());
+        if (!$submit->fyziklani_team->hasOpenSubmitting()) {
+            throw new ClosedSubmittingException($submit->fyziklani_team);
         }
         $this->submitService->updateModel($submit, [
             'points' => $points,
@@ -122,10 +122,10 @@ class Handler
                 \sprintf(
                     _('Points edited. %d points, team: "%s" (%d), task: %s "%s"'),
                     $points,
-                    $submit->getFyziklaniTeam()->name,
-                    $submit->getFyziklaniTeam()->fyziklani_team_id,
-                    $submit->getFyziklaniTask()->label,
-                    $submit->getFyziklaniTask()->name
+                    $submit->fyziklani_team->name,
+                    $submit->fyziklani_team->fyziklani_team_id,
+                    $submit->fyziklani_task->label,
+                    $submit->fyziklani_task->name
                 ),
                 Message::LVL_SUCCESS
             )
@@ -162,8 +162,8 @@ class Handler
      */
     public function checkSubmit(Logger $logger, SubmitModel $submit, int $points): void
     {
-        if (!$submit->getFyziklaniTeam()->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($submit->getFyziklaniTeam());
+        if (!$submit->fyziklani_team->hasOpenSubmitting()) {
+            throw new ClosedSubmittingException($submit->fyziklani_team);
         }
         if ($submit->points != $points) {
             throw new PointsMismatchException();
@@ -178,10 +178,10 @@ class Handler
                 \sprintf(
                     _('Scoring has been checked. %d points, team "%s" (%d), task %s "%s".'),
                     $points,
-                    $submit->getFyziklaniTeam()->name,
-                    $submit->getFyziklaniTeam()->fyziklani_team_id,
-                    $submit->getFyziklaniTask()->label,
-                    $submit->getFyziklaniTask()->name
+                    $submit->fyziklani_team->name,
+                    $submit->fyziklani_team->fyziklani_team_id,
+                    $submit->fyziklani_task->label,
+                    $submit->fyziklani_task->name
                 ),
                 Message::LVL_SUCCESS
             )

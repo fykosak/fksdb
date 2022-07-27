@@ -66,7 +66,7 @@ class EventWebModel extends WebModel
         $lastPersonId = null;
         $currentNode = null;
         foreach ($query as $row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row, $event->mapper);
+            $model = ModelPersonSchedule::createFromActiveRow($row);
             if ($lastPersonId !== $model->person_id) {
                 $lastPersonId = $model->person_id;
                 $currentNode = $doc->createElement('personSchedule');
@@ -109,11 +109,11 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('schedule');
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row, $event->mapper);
+            $group = ModelScheduleGroup::createFromActiveRow($row);
             $groupNode = $group->createXMLNode($doc);
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow, $event->mapper);
+                $item = ModelScheduleItem::createFromActiveRow($itemRow);
                 $groupNode->appendChild($item->createXMLNode($doc));
             }
             $rootNode->appendChild($groupNode);
@@ -125,12 +125,12 @@ class EventWebModel extends WebModel
     {
         $data = [];
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row, $event->mapper);
+            $group = ModelScheduleGroup::createFromActiveRow($row);
             $datum = $group->__toArray();
             $datum['schedule_items'] = [];
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow, $event->mapper);
+                $item = ModelScheduleItem::createFromActiveRow($itemRow);
                 $datum['schedule_items'][] = $item->__toArray();
             }
             $data[] = $datum;
@@ -149,22 +149,22 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('teams');
         foreach ($event->getFyziklaniTeams() as $row) {
-            $team = TeamModel2::createFromActiveRow($row, $event->mapper);
+            $team = TeamModel2::createFromActiveRow($row);
             $teamNode = $team->createXMLNode($doc);
 
             foreach ($team->getTeachers() as $teacherRow) {
-                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $event->mapper);
+                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
                 $teacherNode = $doc->createElement('teacher');
                 $teacherNode->setAttribute('personId', (string)$teacher->person_id);
                 XMLHelper::fillArrayToNode([
-                    'name' => $teacher->getPerson()->getFullName(),
-                    'email' => $teacher->getPerson()->getInfo()->email,
+                    'name' => $teacher->person->getFullName(),
+                    'email' => $teacher->person->getInfo()->email,
                 ], $doc, $teacherNode);
                 $teamNode->appendChild($teacherNode);
             }
 
             foreach ($team->getMembers() as $memberRow) {
-                $member = TeamMemberModel::createFromActiveRow($memberRow, $event->mapper);
+                $member = TeamMemberModel::createFromActiveRow($memberRow);
                 $pNode = $this->createTeamMemberNode($member, $doc);
                 $teamNode->appendChild($pNode);
             }
@@ -196,15 +196,15 @@ class EventWebModel extends WebModel
                 'members' => [],
             ];
             foreach ($team->getTeachers() as $teacherRow) {
-                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $event->mapper);
+                $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
                 $teamData['teachers'][] = [
-                    'name' => $teacher->getPerson()->getFullName(),
-                    'email' => $teacher->getPerson()->getInfo()->email,
+                    'name' => $teacher->person->getFullName(),
+                    'email' => $teacher->person->getInfo()->email,
                 ];
             }
 
             foreach ($team->getMembers() as $memberRow) {
-                $member = TeamMemberModel::createFromActiveRow($memberRow, $event->mapper);
+                $member = TeamMemberModel::createFromActiveRow($memberRow);
                 $teamData['members'][] = $this->createParticipantArray($member);
             }
             $teamsData[$team->fyziklani_team_id] = $teamData;
@@ -216,7 +216,7 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('participants');
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row, $event->mapper);
+            $participant = ModelEventParticipant::createFromActiveRow($row);
             $pNode = $this->createParticipantNode($participant, $doc);
             $rootNode->appendChild($pNode);
         }
@@ -227,7 +227,7 @@ class EventWebModel extends WebModel
     {
         $participants = [];
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row, $event->mapper);
+            $participant = ModelEventParticipant::createFromActiveRow($row);
             $participants[$participant->event_participant_id] = $this->createParticipantArray($participant);
         }
         return $participants;
@@ -257,10 +257,10 @@ class EventWebModel extends WebModel
             'name' => $member->person->getFullName(),
             'email' => $member->person->getInfo()->email,
             'schoolId' => $history ? $history->school_id : null,
-            'schoolName' => $history ? $history->getSchool()->name_abbrev : null,
+            'schoolName' => $history ? $history->school->name_abbrev : null,
             'countryIso' => $history ? (
-            ($school = $history->getSchool())
-                ? $school->address->getRegion()->country_iso
+            ($school = $history->school)
+                ? $school->address->region->country_iso
                 : null
             ) : null,
         ];

@@ -207,7 +207,7 @@ class UploadedStorage implements SubmitStorage
      */
     private function createDirname(SubmitModel $submit): string
     {
-        $task = $submit->getTask();
+        $task = $submit->task;
         return sprintf(
             $this->directoryMask,
             $task->contest->getContestSymbol(),
@@ -219,7 +219,7 @@ class UploadedStorage implements SubmitStorage
 
     private function createFilename(SubmitModel $submit): string
     {
-        $task = $submit->getTask();
+        $task = $submit->task;
 
         $contestantName = $submit->getContestant()->person->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);

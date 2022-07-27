@@ -41,7 +41,7 @@ class TeamModel2 extends Model implements Resource
 
     public function getContest(): ModelContest
     {
-        return $this->event->getContest();
+        return $this->event->event_type->contest;
     }
 
     public function getTeachers(): GroupedSelection
@@ -57,7 +57,7 @@ class TeamModel2 extends Model implements Resource
     public function getTeamSeat(): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
-        return $row ? TeamSeatModel::createFromActiveRow($row, $this->mapper) : null;
+        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
     }
 
     /* ******************** SUBMITS ******************************* */
@@ -131,10 +131,10 @@ class TeamModel2 extends Model implements Resource
     {
         $persons = [];
         foreach ($this->getMembers() as $pRow) {
-            $persons[] = TeamMemberModel::createFromActiveRow($pRow, $this->mapper)->getPerson();
+            $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
-            $persons[] = TeamTeacherModel::createFromActiveRow($pRow, $this->mapper)->getPerson();
+            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->person;
         }
         return $persons;
     }

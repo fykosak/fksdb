@@ -20,7 +20,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     {
         if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
-            $person = $this->user->getIdentity()->getPerson();
+            $person = $this->user->getIdentity()->person;
             $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(
                 [
                     'contest_id' => $this->getSelectedContestYear()->contest_id,
@@ -28,7 +28,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 ]
             )->fetch();
 
-            $this->contestant = $row ? ModelContestant::createFromActiveRow($row, $person->mapper) : null;
+            $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
         }
         return $this->contestant;
     }

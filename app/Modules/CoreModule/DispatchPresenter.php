@@ -27,7 +27,7 @@ class DispatchPresenter extends BasePresenter
     {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $person = $login->getPerson();
+        $person = $login->person;
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
@@ -59,7 +59,7 @@ class DispatchPresenter extends BasePresenter
     private function getAllOrganisers(ModelLogin $login): array
     {
         $results = [];
-        foreach ($login->getPerson()->getActiveOrgs() as $contestId => $org) {
+        foreach ($login->person->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(
                     ':Org:Dashboard:default',

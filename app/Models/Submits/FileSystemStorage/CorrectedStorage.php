@@ -114,7 +114,7 @@ class CorrectedStorage implements SubmitStorage
      */
     private function createDirname(SubmitModel $submit): string
     {
-        $task = $submit->getTask();
+        $task = $submit->task;
         return sprintf(
             $this->directoryMask,
             $task->contest->getContestSymbol(),

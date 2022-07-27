@@ -118,9 +118,9 @@ class PersonPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $person = $this->getEntity();
-        $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
+        $this->template->isSelf = $this->getUser()->getIdentity()->person->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
-        $userPerson = $this->getUser()->getIdentity()->getPerson();
+        $userPerson = $this->getUser()->getIdentity()->person;
         Debugger::log(
             sprintf(
                 '%s (%d) stalk %s (%d)',

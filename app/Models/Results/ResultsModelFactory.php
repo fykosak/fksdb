@@ -48,7 +48,7 @@ class ResultsModelFactory implements XMLNodeSerializer
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
         return new CumulativeResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
@@ -62,7 +62,7 @@ class ResultsModelFactory implements XMLNodeSerializer
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
         return new DetailResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
@@ -76,7 +76,7 @@ class ResultsModelFactory implements XMLNodeSerializer
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException(
-                'Undefined results model for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+                'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
         return new BrojureResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
@@ -118,7 +118,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 }
         }
         throw new BadRequestException(
-            \sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->getContest()->name)
+            \sprintf('No evaluation strategy found for %s. of %s', $contestYear->year, $contestYear->contest->name)
         );
     }
 

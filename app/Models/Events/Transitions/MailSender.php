@@ -125,7 +125,7 @@ class MailSender
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->holder;
-        $person = $login->getPerson();
+        $person = $login->person;
         $event = $baseHolder->event;
         $email = $person->getInfo()->email;
         $application = $holder->primaryHolder->getModel2();
@@ -147,7 +147,7 @@ class MailSender
                 '//:Public:Application:',
                 [
                     'eventId' => $event->event_id,
-                    'contestId' => $event->getEventType()->contest_id,
+                    'contestId' => $event->event_type->contest_id,
                     'at' => $token->token,
                 ],
             ],

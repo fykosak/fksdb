@@ -73,7 +73,7 @@ class RankingStrategy
     {
         $teamsData = [];
         foreach ($teams as $row) {
-            $team = TeamModel2::createFromActiveRow($row, $this->event->mapper);
+            $team = TeamModel2::createFromActiveRow($row);
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -124,7 +124,7 @@ class RankingStrategy
         $sum = 0;
         $count = 0;
         foreach ($team->getAllSubmits() as $row) {
-            $submit = SubmitModel::createFromActiveRow($row, $team->mapper);
+            $submit = SubmitModel::createFromActiveRow($row);
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

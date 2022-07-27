@@ -42,7 +42,7 @@ class RelatedPersonAuthorizator
             return false;
         }
 
-        $person = $login->getPerson();
+        $person = $login->person;
         if (!$person) {
             return false;
         }
@@ -55,7 +55,7 @@ class RelatedPersonAuthorizator
                 }
             } elseif ($model instanceof TeamModel2) {
                 foreach ($model->getTeachers() as $teacherRow) {
-                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow, $model->mapper);
+                    $teacher = TeamTeacherModel::createFromActiveRow($teacherRow);
                     if ($teacher->person_id == $person->person_id) {
                         return true;
                     }

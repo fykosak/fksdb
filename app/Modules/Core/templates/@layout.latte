@@ -47,8 +47,8 @@
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
                                data-bs-toggle="dropdown">
                                 <span class="fas fa-user"></span>
-                                {if $login->getPerson()}
-                                    <b>{$login->getPerson()->getFullName()}</b>
+                                {if $login->person}
+                                    <b>{$login->person->getFullName()}</b>
                                 {else}
                                 {_'User'} <b>{$login->login}</b>
                                 {/if}

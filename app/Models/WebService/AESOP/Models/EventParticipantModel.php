@@ -46,7 +46,7 @@ order by surname, name",
             'setkani.j' => 'setkani.jaro',
             'setkani.p' => 'setkani.podzim',
         ];
-        return $this->contestYear->getContest()->getContestSymbol()
+        return $this->contestYear->contest->getContestSymbol()
             . '.'
             . $maskMapping[$this->eventName] ?? $this->eventName;
     }

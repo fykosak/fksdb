@@ -84,7 +84,7 @@ class AccountManager
      */
     public function sendRecovery(ModelLogin $login, string $lang): void
     {
-        $person = $login->getPerson();
+        $person = $login->person;
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();

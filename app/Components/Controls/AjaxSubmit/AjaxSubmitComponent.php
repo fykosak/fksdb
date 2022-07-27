@@ -108,7 +108,7 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(
                 new Message(
-                    \sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()),
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFQName()),
                     Message::LVL_ERROR
                 )
             );

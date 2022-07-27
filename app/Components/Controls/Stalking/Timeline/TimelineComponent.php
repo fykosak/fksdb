@@ -118,10 +118,10 @@ class TimelineComponent extends FrontEndComponent
         foreach ($this->person->getFyziklaniTeachers() as $row) {
             $teacher = TeamTeacherModel::createFromActiveRow($row);
             $eventTeachers[] = [
-                'event' => $this->eventToArray($teacher->getFyziklaniTeam()->event),
+                'event' => $this->eventToArray($teacher->fyziklani_team->event),
                 'model' => null,
             ];
-            $events[] = $teacher->getFyziklaniTeam()->event;
+            $events[] = $teacher->fyziklani_team->event;
         }
         return [
             $events,

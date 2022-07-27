@@ -38,7 +38,7 @@ class ServiceSubmit extends Service
         $key = $contestant->ct_id . ':' . $task->task_id;
         if (!isset($this->submitCache[$key]) || !$useCache) {
             $row = $contestant->related(DbNames::TAB_SUBMIT)->where('task_id', $task->task_id)->fetch();
-            $this->submitCache[$key] = $row ? SubmitModel::createFromActiveRow($row, $this->mapper) : null;
+            $this->submitCache[$key] = $row ? SubmitModel::createFromActiveRow($row) : null;
         }
         return $this->submitCache[$key];
     }

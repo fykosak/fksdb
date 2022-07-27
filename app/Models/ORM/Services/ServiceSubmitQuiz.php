@@ -20,7 +20,7 @@ class ServiceSubmitQuiz extends Service
         $result = $contestant->related(DbNames::TAB_SUBMIT_QUIZ)
             ->where('question_id', $question->question_id)
             ->fetch();
-        return $result ? ModelSubmitQuiz::createFromActiveRow($result, $this->mapper) : null;
+        return $result ? ModelSubmitQuiz::createFromActiveRow($result) : null;
     }
 
     public function saveSubmittedQuestion(ModelQuiz $question, ModelContestant $contestant, ?string $answer): void

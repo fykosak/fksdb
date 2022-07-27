@@ -17,7 +17,7 @@ use Fykosak\NetteORM\Model;
  * @property-read int raw_points
  * @property-read int points
  * @property-read int ct_id
- * @property-read ActiveRow contestant_base
+ * @property-read ActiveRow contestant_base TODO
  * @property-read int task_id
  * @property-read ModelTask task
  * @property-read bool corrected
@@ -34,15 +34,10 @@ class SubmitModel extends Model implements Resource
         return !($this->submitted_on || $this->note);
     }
 
-    public function getTask(): ModelTask
-    {
-        return ModelTask::createFromActiveRow($this->task, $this->mapper);
-    }
-
     public function getContestant(): ModelContestant
     {
         // TODO why?
-        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'), $this->mapper);
+        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     public function getResourceId(): string
@@ -69,8 +64,8 @@ class SubmitModel extends Model implements Resource
             return false;
         }
         $now = time();
-        $start = $this->getTask()->submit_start ? $this->getTask()->submit_start->getTimestamp() : 0;
-        $deadline = $this->getTask()->submit_deadline ? $this->getTask()->submit_deadline->getTimestamp() : ($now + 1);
+        $start = $this->task->submit_start ? $this->task->submit_start->getTimestamp() : 0;
+        $deadline = $this->task->submit_deadline ? $this->task->submit_deadline->getTimestamp() : ($now + 1);
         return ($now <= $deadline) && ($now >= $start);
     }
 

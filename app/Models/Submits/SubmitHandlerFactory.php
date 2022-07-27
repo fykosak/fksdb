@@ -55,7 +55,7 @@ class SubmitHandlerFactory
         if (!$filename) {
             throw new StorageException(_('Damaged submit file'));
         }
-        $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
+        $response = new FileResponse($filename, $submit->task->getFQName() . '-uploaded.pdf', 'application/pdf');
         $presenter->sendResponse($response);
     }
 
@@ -74,7 +74,7 @@ class SubmitHandlerFactory
         if (!$filename) {
             throw new StorageException(_('Damaged submit file'));
         }
-        $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
+        $response = new FileResponse($filename, $submit->task->getFQName() . '-corrected.pdf', 'application/pdf');
         $presenter->sendResponse($response);
     }
 

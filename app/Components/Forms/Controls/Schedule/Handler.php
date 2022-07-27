@@ -54,7 +54,7 @@ class Handler
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
         foreach ($oldRows as $oldRow) {
-            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow, $event->mapper);
+            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow);
             if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);

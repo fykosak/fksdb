@@ -44,6 +44,6 @@ order by surname, name",
 
     protected function getMask(): string
     {
-        return $this->contestYear->getContest()->getContestSymbol() . '.fyziklani.ucitele';
+        return $this->contestYear->contest->getContestSymbol() . '.fyziklani.ucitele';
     }
 }

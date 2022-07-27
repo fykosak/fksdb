@@ -43,7 +43,7 @@
         {else}
             {control valuePrinter:row 'person.full_name', $model}
         {/if}
-        {control valuePrinter:row 'person_info.email', $model->getPerson()->getInfo()}
+        {control valuePrinter:row 'person_info.email', $model->person->getInfo()}
     </div>
     <hr/>
     <h2>{_'Items'}</h2>

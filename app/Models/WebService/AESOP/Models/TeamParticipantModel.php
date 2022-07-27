@@ -73,7 +73,7 @@ order by surname, name;",
             'fol' => 'Fol',
             'klani' => 'fyziklani',
         ];
-        return $this->contestYear->getContest()->getContestSymbol()
+        return $this->contestYear->contest->getContestSymbol()
             . '.'
             . $mapping[$this->eventName]
             . '.'

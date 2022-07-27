@@ -134,7 +134,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $person = $this->fixture->getPerson();
         Assert::same('Jana', $person->other_name);
         Assert::same('Triková', $person->family_name);
-        $contestants = $person->getContestants($this->contestYear->getContest());
+        $contestants = $person->getContestants($this->contestYear->contest);
         Assert::same(1, count($contestants));
 
         $info = $person->getInfo();

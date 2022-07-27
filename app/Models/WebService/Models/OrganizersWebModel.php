@@ -74,7 +74,7 @@ class OrganizersWebModel extends WebModel
         }
         $items = [];
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row, $this->serviceContest->mapper);
+            $org = ModelOrg::createFromActiveRow($row);
             $items[] = [
                 'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,

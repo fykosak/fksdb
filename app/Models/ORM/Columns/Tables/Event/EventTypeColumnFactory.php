@@ -51,6 +51,6 @@ class EventTypeColumnFactory extends ColumnFactory
      */
     protected function createHtmlValue(Model $model): Html
     {
-        return Html::el('span')->addText($model->getEventType()->name);
+        return Html::el('span')->addText($model->event_type->name);
     }
 }

@@ -111,8 +111,8 @@ class PersonFactory extends AbstractFactory
     {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
-            if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
-                $default = $this->user->getIdentity()->getPerson()->person_id;
+            if ($this->user->isLoggedIn() && $this->user->getIdentity()->person) {
+                $default = $this->user->getIdentity()->person->person_id;
             } else {
                 $default = null;
             }

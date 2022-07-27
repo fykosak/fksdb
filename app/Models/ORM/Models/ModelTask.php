@@ -43,7 +43,7 @@ class ModelTask extends Model
 
         $result = [];
         foreach ($contributions as $contribution) {
-            $contributionModel = ModelTaskContribution::createFromActiveRow($contribution, $this->mapper);
+            $contributionModel = ModelTaskContribution::createFromActiveRow($contribution);
             $result[$contributionModel->contribution_id] = $contributionModel;
         }
         return $result;
@@ -58,7 +58,7 @@ class ModelTask extends Model
 
         $result = [];
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = ModelTaskStudyYear::createFromActiveRow($studyYear, $this->mapper);
+            $studyYearModel = ModelTaskStudyYear::createFromActiveRow($studyYear);
             $result[$studyYearModel->study_year] = $studyYearModel;
         }
         return $result;

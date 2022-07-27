@@ -83,7 +83,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
         ]);
         $items = [];
         foreach ($this->event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row, $this->event->mapper);
+            $group = ModelScheduleGroup::createFromActiveRow($row);
             $items[$group->schedule_group_id] = $group->getLabel() . '(' . $group->schedule_group_type->value . ')';
         }
         $container->addSelect('schedule_group_id', _('Schedule group Id'), $items);

@@ -1,11 +1,10 @@
 {layout '../@layout.latte'}
-{varType Fykosak\NetteORM\Mapper $mapper}
 {block content}
     {varType Nette\Database\Table\GroupedSelection|\Nette\Database\Table\ActiveRow[] $postContacts}
     {varType int $personId}
     {if count($postContacts)}
         {foreach $postContacts as $row}
-            {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row,$mapper)}
+            {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
             {var $address = $postContact->address}
             <h3 class="card-header">
                 {if $postContact->type == 'P'}
@@ -31,7 +30,7 @@
                     <div>{$address->postal_code}</div>
                 {/if}
                 {if isset($address->region_id)}
-                    <div>{$address->getRegion()->name}</div>
+                    <div>{$address->region->name}</div>
                 {/if}
             </div>
 

@@ -49,13 +49,13 @@ class SQLResultsCache
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException(
-                'Undefined evaluation strategy for ' . $contestYear->getContest()->name . '@' . $contestYear->year
+                'Undefined evaluation strategy for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
 // TODO related
         $tasks = $this->serviceTask->getTable()
             ->where([
-                'contest_id' => $contestYear->getContest()->contest_id,
+                'contest_id' => $contestYear->contest->contest_id,
                 'year' => $contestYear->year,
             ]);
 
@@ -63,7 +63,7 @@ class SQLResultsCache
         /** @var ModelTask $task */
         foreach ($tasks as $task) {
             $conditions = [];
-            $conditions[] = 't.contest_id = ' . $contestYear->getContest()->contest_id;
+            $conditions[] = 't.contest_id = ' . $contestYear->contest->contest_id;
             $conditions[] = 't.year = ' . $contestYear->year;
             $conditions[] = 's.task_id = ' . $task->task_id;
             $sql = '

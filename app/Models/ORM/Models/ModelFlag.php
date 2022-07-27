@@ -12,5 +12,4 @@ use Fykosak\NetteORM\Model;
  */
 class ModelFlag extends Model
 {
-
 }

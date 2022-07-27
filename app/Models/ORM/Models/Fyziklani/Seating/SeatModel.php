@@ -26,6 +26,6 @@ class SeatModel extends Model
             'fyziklani_team.event_id',
             $event->event_id
         )->fetch();
-        return $row ? TeamSeatModel::createFromActiveRow($row, $this->mapper) : null;
+        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
     }
 }

@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
  * @property-read int product_id
  * @property-read int producer_id
- * @property-read ActiveRow producer
+ * @property-read ProducerModel|null producer
  * @property-read ProductCategory category
  * @property-read string name_cs
  * @property-read string name_en
@@ -22,17 +21,11 @@ use Nette\Security\Resource;
  */
 class ProductModel extends Model implements Resource
 {
-
     public const RESOURCE_ID = 'warehouse.product';
 
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;
-    }
-
-    public function getProducer(): ?ProducerModel
-    {
-        return $this->producer ? ProducerModel::createFromActiveRow($this->producer, $this->mapper) : null;
     }
 
     /**

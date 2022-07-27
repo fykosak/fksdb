@@ -38,16 +38,6 @@ class PaymentModel extends Model implements Resource
 {
     public const RESOURCE_ID = 'event.payment';
 
-    public function getPerson(): ModelPerson
-    {
-        return ModelPerson::createFromActiveRow($this->person, $this->mapper);
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event, $this->mapper);
-    }
-
     /**
      * @return ModelPersonSchedule[]
      */
@@ -57,7 +47,7 @@ class PaymentModel extends Model implements Resource
         $items = [];
         /** @var ModelSchedulePayment $row */
         foreach ($query as $row) {
-            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule, $this->mapper);
+            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }
         return $items;
     }

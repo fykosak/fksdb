@@ -8,5 +8,4 @@ use Fykosak\NetteORM\Model;
 
 class ModelStudyYear extends Model
 {
-
 }

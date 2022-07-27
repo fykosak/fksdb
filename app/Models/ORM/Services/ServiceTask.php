@@ -14,11 +14,11 @@ class ServiceTask extends Service
 
     public function findBySeries(ModelContestYear $contestYear, int $series, int $taskNumber): ?ModelTask
     {
-        $row = $contestYear->getContest()->related(DbNames::TAB_TASK)->where([
+        $row = $contestYear->contest->related(DbNames::TAB_TASK)->where([
             'year' => $contestYear->year,
             'series' => $series,
             'tasknr' => $taskNumber,
         ])->fetch();
-        return $row ? ModelTask::createFromActiveRow($row, $this->mapper) : null;
+        return $row ? ModelTask::createFromActiveRow($row) : null;
     }
 }

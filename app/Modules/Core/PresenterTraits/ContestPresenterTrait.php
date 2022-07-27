@@ -73,10 +73,10 @@ trait ContestPresenterTrait
                 return $this->serviceContest->getTable();
             case YearChooserComponent::ROLE_CONTESTANT:
             default:
-                if (!$login || !$login->getPerson()) {
+                if (!$login || !$login->person) {
                     return $this->serviceContest->getTable()->where('1=0');
                 }
-                $person = $login->getPerson();
+                $person = $login->person;
                 $contestsIds = [];
                 foreach ($person->getActiveContestants() as $contestant) {
                     $contestsIds[] = $contestant->contest_id;
@@ -87,7 +87,7 @@ trait ContestPresenterTrait
                     return $this->serviceContest->getTable()->where('1=0');
                 }
                 $contestsIds = [];
-                foreach ($login->getPerson()->getActiveOrgs() as $org) {
+                foreach ($login->person->getActiveOrgs() as $org) {
                     $contestsIds[] = $org->contest;
                 }
                 return $this->serviceContest->getTable()->where('contest_id', $contestsIds);

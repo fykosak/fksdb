@@ -5,7 +5,7 @@
     ({$team->fyziklani_team_id}) {$team->name}
     {var $teamSeat = $team->getTeamSeat()}
     {if $teamSeat}
-        <small class="text-muted">{_'Sector'} {$teamSeat->getSeat()->sector}</small>
+        <small class="text-muted">{_'Sector'} {$teamSeat->fyziklani_seat->sector}</small>
     {/if}
 {/block}
 {block upperContent}

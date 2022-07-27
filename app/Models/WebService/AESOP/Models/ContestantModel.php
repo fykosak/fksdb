@@ -68,7 +68,7 @@ WHERE
 
     protected function getMask(): string
     {
-        return $this->contestYear->getContest()->getContestSymbol() . '.rocnik.' . $this->category->id;
+        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->id;
     }
 
     /**

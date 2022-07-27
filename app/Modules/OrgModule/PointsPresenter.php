@@ -74,7 +74,7 @@ class PointsPresenter extends BasePresenter
     {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        $person = $login->getPerson();
+        $person = $login->person;
         if (!$person) {
             return [];
         }
@@ -118,7 +118,7 @@ class PointsPresenter extends BasePresenter
     public function handleRecalculateAll(): void
     {
         try {
-            $years = $this->getSelectedContestYear()->getContest()->related(DbNames::TAB_TASK)
+            $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
                 ->select('year')
                 ->group('year');
             /** @var ModelTask|ActiveRow $year */

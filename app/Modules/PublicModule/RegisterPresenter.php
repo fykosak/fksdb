@@ -135,7 +135,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     public function actionContestant(): void
     {
         if ($this->user->isLoggedIn()) {
-            $person = $this->getPerson();
+            $person = $this->person;
 
             if (!$person) {
                 $this->flashMessage(
@@ -176,7 +176,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     {
         if (!isset($this->person)) {
             if ($this->user->isLoggedIn()) {
-                $this->person = $this->user->getIdentity()->getPerson();
+                $this->person = $this->user->getIdentity()->person;
             } else {
                 $this->person = null;
             }
@@ -340,7 +340,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             return null;
         }
         $row = $contest->getContestYears()->where('year', $this->year)->fetch();
-        return $row ? ModelContestYear::createFromActiveRow($row, $contest->mapper) : null;
+        return $row ? ModelContestYear::createFromActiveRow($row) : null;
     }
 
     /**

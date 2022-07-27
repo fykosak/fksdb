@@ -12,8 +12,8 @@
     <div>{$person->getFullName()}</div>
     <div>{$address->target}</div>
     <div>{$address->postal_code} {$address->city}</div>
-    {if $address->getRegion()->country_iso != 'CZ'}
-        <b>{$address->getRegion()->name}</b>
+    {if $address->region->country_iso != 'CZ'}
+        <b>{$address->region->name}</b>
     {/if}
 {/block}
 

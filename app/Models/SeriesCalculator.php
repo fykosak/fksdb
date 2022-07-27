@@ -23,7 +23,7 @@ class SeriesCalculator
 
     public static function getLastSeries(ModelContestYear $contestYear): int
     {
-        return $contestYear->getContest()->related(DbNames::TAB_TASK)->where([
+        return $contestYear->contest->related(DbNames::TAB_TASK)->where([
                 'year' => $contestYear->year,
             ])->max('series') ?? 1;
     }

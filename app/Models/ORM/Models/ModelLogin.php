@@ -16,20 +16,14 @@ use Nette\Security\IIdentity;
  * @property-read int login_id
  * @property-read \DateTimeInterface last_login
  * @property-read string hash
- * @property-read ActiveRow person
+ * @property-read ModelPerson|null person
  * @property-read string login
  */
 class ModelLogin extends Model implements IIdentity
 {
-
-    public function getPerson(): ?ModelPerson
-    {
-        return $this->person ? ModelPerson::createFromActiveRow($this->person, $this->mapper) : null;
-    }
-
     public function __toString(): string
     {
-        $person = $this->getPerson();
+        $person = $this->person;
         if ($person) {
             return $person->__toString();
         }
@@ -71,11 +65,11 @@ class ModelLogin extends Model implements IIdentity
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = ModelGrant::createFromActiveRow($row, $this->mapper);
+                $grant = ModelGrant::createFromActiveRow($row);
                 $this->roles[] = new Grant($grant->role->name, $grant->contest);
             }
             // roles from other tables
-            $person = $this->getPerson();
+            $person = $this->person;
             if ($person) {
                 foreach ($person->getActiveOrgs() as $org) {
                     $this->roles[] = new Grant(
