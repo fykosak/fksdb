@@ -61,32 +61,32 @@ events:
                         condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder1, self)
                     invited->invited1:
                         condition: role('admin')
                         label: _('Send first call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder1, self)
                     spare1->spare2:
                         condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder2, self)
                     invited1->invited2:
                         condition: role('admin')
                         label: _('Send second call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder2, self)
                     spare2->spare3:
                         condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/spare-reminder3, self)
                     invited2->invited3:
                         condition: role('admin')
                         label: _('Send last call')
                         onExecuted:
-                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder, self)
+                            - FKSDB\Models\Events\Transitions\MailSender(sous/36p/invited-reminder3, self)
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(regOpen(),role('admin'))
                         label: _('Decline participation')
