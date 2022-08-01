@@ -561,6 +561,11 @@ orm:
                     type: string
                     title: Login UK
                     permission: RESTRICT
+                isic_number:
+                    type: class
+                    class: FKSDB\Models\ORM\Columns\Tables\PersonInfo\IsicNumberColumnFactory
+                    title: ISIC
+                    permission: RESTRICT
                 linkedin_id:
                     type: string
                     title: Linkedin Id
