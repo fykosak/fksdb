@@ -7,10 +7,10 @@ namespace FKSDB\Models\Persons;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
@@ -37,16 +37,16 @@ class ExtendedPersonHandler
     protected ServicePerson $servicePerson;
     private Connection $connection;
     private AccountManager $accountManager;
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
     private string $invitationLang;
-    private ?ModelPerson $person = null;
+    private ?PersonModel $person = null;
 
     public function __construct(
         Service $service,
         ServicePerson $servicePerson,
         Connection $connection,
         AccountManager $accountManager,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
@@ -62,13 +62,13 @@ class ExtendedPersonHandler
         return $this->invitationLang;
     }
 
-    public function getPerson(): ModelPerson
+    public function getPerson(): PersonModel
     {
         return $this->person;
     }
 
     /**
-     * @return ModelPerson|null|Model|ActiveRow
+     * @return PersonModel|null|Model|ActiveRow
      */
     final protected function getReferencedPerson(Form $form): ?ActiveRow
     {
@@ -142,7 +142,7 @@ class ExtendedPersonHandler
     }
 
     protected function storeExtendedModel(
-        ModelPerson $person,
+        PersonModel $person,
         iterable $values,
         ExtendedPersonPresenter $presenter
     ): void {
@@ -162,8 +162,8 @@ class ExtendedPersonHandler
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
-            $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, (array)$data);
+            $data = FormUtils::emptyStrToNull2($values[self::CONT_MODEL]);
+            $this->service->updateModel($model, $data);
         }
     }
 }

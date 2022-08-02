@@ -7,7 +7,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\WithSchoolProcessing;
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelPersonHasFlag;
+use FKSDB\Models\ORM\Models\PersonHasFlagModel;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
@@ -54,7 +54,7 @@ class FlagProcessing extends WithSchoolProcessing
                 !($this->serviceSchool->isCzSkSchool($participantData['school_id'])
                     && $this->isStudent($participantData['study_year']))
             ) {
-                /** @var ModelPersonHasFlag $personHasFlag */
+                /** @var PersonHasFlagModel $personHasFlag */
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;

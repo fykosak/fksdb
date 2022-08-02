@@ -10,7 +10,7 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment;
@@ -167,7 +167,7 @@ class PaymentFormComponent extends EntityFormComponent
             $values['payment_accommodation'] = $items;
             $this->getForm()->setDefaults($values);
         } else {
-            /** @var ModelLogin $login */
+            /** @var LoginModel $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
             $this->getForm()->setDefaults([
                 'person_id' => $login->person->person_id,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
+use FKSDB\Models\ORM\Models\SubmitSource;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
@@ -40,7 +41,7 @@ class SubmitCheckComponent extends BaseComponent
         /** @var SubmitModel $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {
-            if ($submit->source === SubmitModel::SOURCE_UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
+            if ($submit->source->value === SubmitSource::UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(
                     sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id),

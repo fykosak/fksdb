@@ -9,7 +9,7 @@ use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use FKSDB\Modules\EventModule\Fyziklani\BasePresenter;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
@@ -20,16 +20,16 @@ use Nette\Utils\DateTime;
 class ResultsAndStatisticsComponent extends AjaxComponent
 {
     private SubmitService $submitService;
-    private ModelEvent $event;
+    private EventModel $event;
     private ?string $lastUpdated = null;
 
-    public function __construct(Container $container, ModelEvent $event, string $reactId)
+    public function __construct(Container $container, EventModel $event, string $reactId)
     {
         parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    final protected function getEvent(): ModelEvent
+    final protected function getEvent(): EventModel
     {
         return $this->event;
     }

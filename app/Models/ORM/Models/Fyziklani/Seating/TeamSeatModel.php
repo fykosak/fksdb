@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_seat_id

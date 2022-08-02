@@ -6,8 +6,8 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\Forms\Controls\BaseControl;
@@ -94,7 +94,7 @@ class FlagCheck extends AbstractAdjustment
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelPersonHistory $personHistory */
+        /** @var PersonHistoryModel $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)
@@ -109,7 +109,7 @@ class FlagCheck extends AbstractAdjustment
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelSchool|null $school */
+        /** @var SchoolModel|null $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)->fetch();

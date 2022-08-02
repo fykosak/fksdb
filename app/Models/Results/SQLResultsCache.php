@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Nette\Application\BadRequestException;
 use Nette\InvalidArgumentException;
@@ -23,7 +24,7 @@ class SQLResultsCache
         $this->serviceTask = $serviceTask;
     }
 
-    public function invalidate(ModelContestYear $contestYear): void
+    public function invalidate(ContestYearModel $contestYear): void
     {
         $data = [
             'calc_points' => null,
@@ -44,7 +45,7 @@ class SQLResultsCache
      * @throws BadRequestException
      * @throws \PDOException
      */
-    public function recalculate(ModelContestYear $contestYear): void
+    public function recalculate(ContestYearModel $contestYear): void
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
@@ -52,16 +53,11 @@ class SQLResultsCache
                 'Undefined evaluation strategy for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
-// TODO related
-        $tasks = $this->serviceTask->getTable()
-            ->where([
-                'contest_id' => $contestYear->contest->contest_id,
-                'year' => $contestYear->year,
-            ]);
+        $tasks = $contestYear->contest->related(DbNames::TAB_TASK)->where('year', $contestYear->year);
 
         $this->serviceTask->explorer->getConnection()->beginTransaction();
-        /** @var ModelTask $task */
-        foreach ($tasks as $task) {
+        foreach ($tasks as $row) {
+            $task = TaskModel::createFromActiveRow($row);
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contestYear->contest->contest_id;
             $conditions[] = 't.year = ' . $contestYear->year;
@@ -84,7 +80,7 @@ class SQLResultsCache
     /**
      * Calculate points from form-based tasks, such as quizzes.
      */
-    public function calculateQuizPoints(ModelContestYear $contestYear, int $series): void
+    public function calculateQuizPoints(ContestYearModel $contestYear, int $series): void
     {
         $params = [];
         $params[] = 'contest_id=' . $contestYear->contest_id;

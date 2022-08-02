@@ -9,9 +9,10 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -20,13 +21,13 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelScheduleItem getEntity()
+ * @method ScheduleItemModel getEntity()
  */
 class ScheduleItemPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private ModelScheduleGroup $group;
+    private ScheduleGroupModel $group;
 
     private ServiceScheduleItem $serviceScheduleItem;
 
@@ -40,7 +41,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
      */
     public function titleDetail(): PageTitle
     {
@@ -56,7 +57,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
      */
     public function titleEdit(): PageTitle
     {
@@ -77,7 +78,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
      */
     final public function renderDetail(): void
     {
@@ -97,7 +98,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
      */
     protected function createComponentEditForm(): ScheduleItemFormContainer
     {
@@ -109,7 +110,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
-     * @throws \FKSDB\Models\Exceptions\GoneException
+     * @throws GoneException
      */
     protected function createComponentPersonsGrid(): PersonsGrid
     {

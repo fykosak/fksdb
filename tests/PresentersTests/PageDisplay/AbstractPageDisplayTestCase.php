@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceGrant;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -17,8 +17,8 @@ use Tester\Assert;
 
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase
 {
-    protected ModelPerson $person;
-    private ModelLogin $login;
+    protected PersonModel $person;
+    private LoginModel $login;
 
     protected function setUp(): void
     {

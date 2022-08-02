@@ -9,8 +9,8 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceContestant;
@@ -25,7 +25,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
 {
     private ExtendedPersonHandler $fixture;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
 
     public function __construct(Container $container)
     {
@@ -41,7 +41,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
 
         $service = $this->getContainer()->getByType(ServiceContestant::class);
         $this->contestYear = $this->getContainer()->getByType(ServiceContest::class)
-            ->findByPrimary(ModelContest::ID_FYKOS)
+            ->findByPrimary(ContestModel::ID_FYKOS)
             ->getContestYear(1);
         $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');
     }
@@ -140,7 +140,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getAddress(new PostContactType(PostContactType::PERMANENT));
+        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::PERMANENT));
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);

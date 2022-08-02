@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -24,7 +24,7 @@ use Nette\Security\Resource;
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
- * @property-read ModelEvent event
+ * @property-read EventModel event
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
@@ -41,9 +41,9 @@ class TeamModel extends Model implements Resource
         return $this->name;
     }
 
-    public function getTeacher(): ?ModelPerson
+    public function getTeacher(): ?PersonModel
     {
-        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow(
+        return isset($this->teacher_id) ? PersonModel::createFromActiveRow(
             $this->ref('person', 'teacher_id')
         ) : null;
     }
@@ -54,7 +54,7 @@ class TeamModel extends Model implements Resource
     }
 
     /**
-     * @return ModelPerson[]
+     * @return PersonModel[]
      */
     public function getPersons(): array
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Application\Request;
@@ -18,7 +18,7 @@ $container = require '../../Bootstrap.php';
 class SecondaryLimitOk extends ResourceAvailabilityTestCase
 {
 
-    private ModelEvent $tsafEvent;
+    private EventModel $tsafEvent;
 
     protected function setUp(): void
     {

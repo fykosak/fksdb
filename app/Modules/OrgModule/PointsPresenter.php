@@ -8,10 +8,10 @@ use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\{
-    ModelContest,
-    ModelLogin,
-    ModelTask,
-    ModelTaskContribution,
+    ContestModel,
+    LoginModel,
+    TaskModel,
+    TaskContributionModel,
 };
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Results\SQLResultsCache;
@@ -72,7 +72,7 @@ class PointsPresenter extends BasePresenter
 
     private function getGradedTasks(): array
     {
-        /**@var ModelLogin $login */
+        /**@var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->person;
         if (!$person) {
@@ -83,7 +83,7 @@ class PointsPresenter extends BasePresenter
                 [
                     'person_id' => $person->person_id,
                     'task_id' => (clone $this->seriesTable->getTasks())->select('task_id'),
-                    'type' => ModelTaskContribution::TYPE_GRADE,
+                    'type' => TaskContributionModel::TYPE_GRADE,
                 ]
             )->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
@@ -92,7 +92,7 @@ class PointsPresenter extends BasePresenter
     final public function renderEntry(): void
     {
         $this->template->showAll = (bool)$this->all;
-        if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
+        if ($this->getSelectedContest()->contest_id === ContestModel::ID_VYFUK && $this->getSelectedSeries() > 6) {
             $this->template->hasQuizTask = true;
         } else {
             $this->template->hasQuizTask = false;
@@ -121,9 +121,13 @@ class PointsPresenter extends BasePresenter
             $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
                 ->select('year')
                 ->group('year');
-            /** @var ModelTask|ActiveRow $year */
+            /** @var TaskModel|ActiveRow $year */
             foreach ($years as $year) {
-                $this->resultsCache->recalculate($this->getSelectedContest()->getContestYear($year->year));
+                // TODO WTF -1 year
+                $contestYear = $this->getSelectedContest()->getContestYear($year->year);
+                if ($contestYear) {
+                    $this->resultsCache->recalculate($contestYear);
+                }
             }
 
             $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);

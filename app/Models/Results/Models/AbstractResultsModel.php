@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
@@ -37,13 +37,13 @@ abstract class AbstractResultsModel
     public const ALIAS_CONTESTANTS_COUNT = 'contestants-count';
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
-    protected ModelContestYear $contestYear;
+    protected ContestYearModel $contestYear;
     protected ServiceTask $serviceTask;
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
     public function __construct(
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         ServiceTask $serviceTask,
         Connection $connection,
         EvaluationStrategy $evaluationStrategy

@@ -6,8 +6,8 @@ namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\ComponentModel\IComponent;
@@ -16,14 +16,14 @@ use Nette\DI\Container;
 class SubmitContainer extends BaseComponent
 {
 
-    private ModelContestant $contestant;
+    private ContestantModel $contestant;
     private ServiceTask $serviceTask;
 
-    public function __construct(Container $container, ModelContestant $contestant)
+    public function __construct(Container $container, ContestantModel $contestant)
     {
         parent::__construct($container);
         $this->contestant = $contestant;
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
             $this->addComponent(
                 new AjaxSubmitComponent($this->getContext(), $task, $contestant),

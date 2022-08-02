@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ValuePrinters\PersonLink;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
@@ -23,7 +23,7 @@ class PersonLinkColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelPerson $model
+     * @param PersonModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

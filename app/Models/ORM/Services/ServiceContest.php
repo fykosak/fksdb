@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelContest findByPrimary($key)
+ * @method ContestModel findByPrimary($key)
  */
 class ServiceContest extends Service
 {

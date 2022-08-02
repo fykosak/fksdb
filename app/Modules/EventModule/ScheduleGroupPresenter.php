@@ -12,7 +12,7 @@ use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -21,7 +21,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelScheduleGroup getEntity()
+ * @method ScheduleGroupModel getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter
 {

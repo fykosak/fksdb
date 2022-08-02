@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
@@ -29,11 +29,11 @@ class TotalPersonsChart extends FrontEndComponent implements Chart
     {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
-        /** @var ModelPerson $person */
+        /** @var PersonModel $person */
         foreach ($query as $person) {
             $data[] = [
                 'created' => $person->created->format('c'),
-                'gender' => $person->gender,
+                'gender' => $person->gender->value,
                 'personId' => $person->person_id,
             ];
         }

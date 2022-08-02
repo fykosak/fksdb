@@ -99,7 +99,7 @@ class StudyYearsFromXML extends Stage
 
         // delete old contributions
         foreach ($task->getStudyYears() as $studyYear) {
-            $this->serviceTaskStudyYear->dispose($studyYear);
+            $this->serviceTaskStudyYear->disposeModel($studyYear);
         }
 
         // store new contributions

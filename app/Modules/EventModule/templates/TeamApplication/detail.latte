@@ -1,12 +1,12 @@
 {varType bool $hasSchedule}
-{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $rankVisible}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType string $field}
 {varType int $counter}
 
 {define personSchedule}
-    {varType FKSDB\Models\ORM\Models\ModelPerson $person}
+    {varType FKSDB\Models\ORM\Models\PersonModel $person}
     {if $hasSchedule}
         <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
         {control personScheduleGrid $person,$event}

@@ -9,14 +9,14 @@ use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
 
 /**
- * @method ModelSchool getEntity()
+ * @method SchoolModel getEntity()
  */
 class SchoolPresenter extends BasePresenter
 {

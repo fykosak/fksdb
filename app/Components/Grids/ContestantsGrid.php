@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -21,9 +21,9 @@ use NiftyGrid\DuplicateGlobalButtonException;
 class ContestantsGrid extends BaseGrid
 {
 
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
 
-    public function __construct(Container $container, ModelContestYear $contestYear)
+    public function __construct(Container $container, ContestYearModel $contestYear)
     {
         parent::__construct($container);
         $this->contestYear = $contestYear;
@@ -56,7 +56,7 @@ class ContestantsGrid extends BaseGrid
             'person_history.study_year',
         ]);
         $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
+            $contestant = ContestantModel::createFromActiveRow($row);
             return $contestant->getPersonHistory()->school->name_abbrev;
         });
 
@@ -71,6 +71,6 @@ class ContestantsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelContestant::class;
+        return ContestantModel::class;
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
@@ -39,7 +39,7 @@ class SignaturesWebModel extends WebModel
         $rootNode = $doc->createElement('signatures');
         $organisers = $contest->related(DbNames::TAB_ORG);
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = OrgModel::createFromActiveRow($row);
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
                 'name' => $org->person->getFullName(),

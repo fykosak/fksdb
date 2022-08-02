@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
+use FKSDB\Models\ORM\Models\SubmitSource;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
@@ -49,7 +50,7 @@ class SubmitHandlerFactory
     {
         $this->checkPrivilege($submit, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
-        if ($submit->source !== SubmitModel::SOURCE_UPLOAD) {
+        if ($submit->source->value !== SubmitSource::UPLOAD) {
             throw new StorageException(_('Only uploaded solutions can be downloaded.'));
         }
         if (!$filename) {
@@ -90,35 +91,35 @@ class SubmitHandlerFactory
             throw new StorageException(_('Submit cannot be revoked.'));
         }
         $this->uploadedStorage->deleteFile($submit);
-        $this->serviceSubmit->dispose($submit);
+        $this->serviceSubmit->disposeModel($submit);
     }
 
-    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): SubmitModel
+    public function handleSave(FileUpload $file, TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        $submit = $this->storeSubmit($task, $contestant, SubmitModel::SOURCE_UPLOAD);
+        $submit = $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::UPLOAD));
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
-    public function getUserStudyYear(ModelContestant $contestant): ?int
+    public function getUserStudyYear(ContestantModel $contestant): ?int
     {
         // TODO AC_year from contestant
         $personHistory = $contestant->getPersonHistory();
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 
-    public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): SubmitModel
+    public function handleQuizSubmit(TaskModel $task, ContestantModel $contestant): SubmitModel
     {
-        return $this->storeSubmit($task, $contestant, SubmitModel::SOURCE_QUIZ);
+        return $this->storeSubmit($task, $contestant, SubmitSource::tryFrom(SubmitSource::QUIZ));
     }
 
-    private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): SubmitModel
+    private function storeSubmit(TaskModel $task, ContestantModel $contestant, SubmitSource $source): SubmitModel
     {
         $submit = $this->serviceSubmit->findByContestant($contestant, $task);
         $data = [
             'submitted_on' => new DateTime(),
-            'source' => $source,
+            'source' => $source->value,
             'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
             'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
         ];

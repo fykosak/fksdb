@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelPersonHistory createNewModel(array $data)
+ * @method PersonHistoryModel createNewModel(array $data)
  */
 class ServicePersonHistory extends Service
 {

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -26,7 +26,7 @@ trait YearPresenterTrait
      * @persistent
      */
     public ?int $year = null;
-    private ?ModelContestYear $contestYear;
+    private ?ContestYearModel $contestYear;
 
     /**
      * @throws BadRequestException
@@ -41,7 +41,7 @@ trait YearPresenterTrait
         }
     }
 
-    public function getSelectedContestYear(): ?ModelContestYear
+    public function getSelectedContestYear(): ?ContestYearModel
     {
         if (!isset($this->contestYear)) {
             $this->contestYear = $this->getSelectedContest()->getContestYear($this->year);
@@ -49,7 +49,7 @@ trait YearPresenterTrait
         return $this->contestYear;
     }
 
-    private function isValidContestYear(?ModelContestYear $contestYear): bool
+    private function isValidContestYear(?ContestYearModel $contestYear): bool
     {
         if (!$contestYear) {
             return false;
@@ -66,12 +66,12 @@ trait YearPresenterTrait
             case YearChooserComponent::ROLE_SELECTED:
                 return $contest->getContestYears();
             case YearChooserComponent::ROLE_CONTESTANT:
-                /** @var ModelLogin $login */
+                /** @var LoginModel $login */
                 $login = $this->getUser()->getIdentity();
                 $years = [];
                 if ($login && $login->person) {
                     $contestants = $login->person->getContestants($contest);
-                    /** @var ModelContestant $contestant */
+                    /** @var ContestantModel $contestant */
                     foreach ($contestants as $contestant) {
                         $years[] = $contestant->year;
                     }
@@ -86,7 +86,7 @@ trait YearPresenterTrait
     /**
      * @throws ForbiddenRequestException
      */
-    private function selectYear(): ModelContestYear
+    private function selectYear(): ContestYearModel
     {
         $candidate = $this->getSelectedContest()->getCurrentContestYear();
         if (!$this->isValidContestYear($candidate)) {

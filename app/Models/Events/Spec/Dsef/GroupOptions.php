@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Events\ModelDsefGroup;
 use FKSDB\Models\ORM\Models\Events\ModelDsefParticipant;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\SmartObject;
@@ -64,7 +64,7 @@ class GroupOptions implements OptionsProvider
     /**
      * @return ModelDsefGroup[]
      */
-    private function getGroups(ModelEvent $event): array
+    private function getGroups(EventModel $event): array
     {
         return $event->related(DbNames::TAB_E_DSEF_GROUP)->fetchPairs('e_dsef_group_id');
     }

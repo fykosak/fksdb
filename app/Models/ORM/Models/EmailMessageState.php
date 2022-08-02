@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class EmailMessageState implements EnumColumn
+class EmailMessageState extends FakeStringEnum implements EnumColumn
 {
     public const SAVED = 'saved'; // uložená, na ďalšiu úpravu
     public const WAITING = 'waiting'; //čaká na poslanie
@@ -15,13 +16,6 @@ class EmailMessageState implements EnumColumn
     public const FAILED = 'failed'; // posielanie zlyhalo
     public const CANCELED = 'canceled'; // posielanie zrušené
     public const REJECTED = 'rejected'; // zastavené kvôli GDPR
-
-    public string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
-    }
 
     public function badge(): Html
     {
@@ -66,5 +60,10 @@ class EmailMessageState implements EnumColumn
             case self::WAITING:
                 return _('Waiting');
         }
+    }
+
+    public static function cases(): array
+    {
+        return [];// TODO
     }
 }

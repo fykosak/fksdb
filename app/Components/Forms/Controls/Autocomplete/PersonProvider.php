@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\NetteORM\TypedSelection;
@@ -26,7 +26,7 @@ class PersonProvider implements FilteredDataProvider
     /**
      * Syntactic sugar, should be solved more generally.
      */
-    public function filterOrgs(ModelContest $contest): void
+    public function filterOrgs(ContestModel $contest): void
     {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
@@ -66,17 +66,17 @@ class PersonProvider implements FilteredDataProvider
             ->order('family_name, other_name');
 
         $result = [];
-        /** @var ModelPerson $person */
+        /** @var PersonModel $person */
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
         return $result;
     }
 
-    private function getItem(ModelPerson $person): array
+    private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $person->getAddress(new PostContactType(PostContactType::DELIVERY));
+        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }

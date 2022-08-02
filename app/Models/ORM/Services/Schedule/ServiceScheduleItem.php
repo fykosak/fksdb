@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\Schedule;
 
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelScheduleItem|null findByPrimary($key)
- * @method ModelScheduleItem createNewModel(array $data)
+ * @method ScheduleItemModel|null findByPrimary($key)
+ * @method ScheduleItemModel createNewModel(array $data)
  */
 class ServiceScheduleItem extends Service
 {

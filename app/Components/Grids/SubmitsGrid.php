@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
@@ -26,11 +26,11 @@ use Tracy\Debugger;
 class SubmitsGrid extends BaseGrid
 {
 
-    private ModelContestant $contestant;
+    private ContestantModel $contestant;
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function __construct(Container $container, ModelContestant $contestant)
+    public function __construct(Container $container, ContestantModel $contestant)
     {
         parent::__construct($container);
         $this->contestant = $contestant;

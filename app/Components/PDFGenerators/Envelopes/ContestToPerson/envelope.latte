@@ -1,7 +1,7 @@
 {layout '../envelope.latte'}
-{varType FKSDB\Models\ORM\Models\ModelAddress $address}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
-{varType FKSDB\Models\ORM\Models\ModelContest $contest}
+{varType FKSDB\Models\ORM\Models\AddressModel $address}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType FKSDB\Models\ORM\Models\ContestModel $contest}
 {switch $contest->contest_id}
     {case 1}
     {import '../sender.fykos.latte'}

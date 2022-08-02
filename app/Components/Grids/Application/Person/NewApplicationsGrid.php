@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Application\Person;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Application\UI\Presenter;
@@ -52,9 +52,9 @@ class NewApplicationsGrid extends BaseGrid
         ]);
         $this->addButton('create')
             ->setText(_('Create application'))
-            ->setLink(fn(ModelEvent $row): string => $this->getPresenter()
+            ->setLink(fn(EventModel $row): string => $this->getPresenter()
                 ->link(':Public:Application:default', ['eventId' => $row->event_id]))
-            ->setShow(function (ModelEvent $modelEvent): bool {
+            ->setShow(function (EventModel $modelEvent): bool {
                 $holder = $this->eventDispatchFactory->getDummyHolder($modelEvent);
                 $machine = $this->eventDispatchFactory->getEventMachine($modelEvent);
                 $transitions = $machine->getPrimaryMachine()->getAvailableTransitions(

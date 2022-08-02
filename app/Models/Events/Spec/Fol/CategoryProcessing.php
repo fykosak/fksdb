@@ -7,7 +7,7 @@ namespace FKSDB\Models\Events\Spec\Fol;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\InvalidArgumentException;
@@ -48,7 +48,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
             if (!$member['school_id']) { // for future
                 $olds += 1;
             } else {
-                /** @var ModelSchool $school */
+                /** @var SchoolModel $school */
                 $school = $this->serviceSchool->findByPrimary($member['school_id']);
                 if (!in_array($school->address->region->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;

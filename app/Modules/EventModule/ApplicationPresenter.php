@@ -15,7 +15,7 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -42,7 +42,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     protected function getModelResource(): string
     {
-        return ModelEventParticipant::RESOURCE_ID;
+        return EventParticipantModel::RESOURCE_ID;
     }
 
     /**

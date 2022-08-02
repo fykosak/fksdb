@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -21,9 +21,9 @@ class ReferencedPersonHandlerFactory
     }
 
     public function create(
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         ?string $resolution,
-        ?ModelEvent $event = null
+        ?EventModel $event = null
     ): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $contestYear,

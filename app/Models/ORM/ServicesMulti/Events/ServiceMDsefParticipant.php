@@ -26,9 +26,9 @@ class ServiceMDsefParticipant extends ServiceMulti
      * Delete post contact including the address.
      * @throws ModelException
      */
-    public function dispose(ModelMulti $model): void
+    public function disposeModel(ModelMulti $model): void
     {
-        parent::dispose($model);
-        $this->mainService->dispose($model->mainModel);
+        parent::disposeModel($model);
+        $this->mainService->disposeModel($model->mainModel);
     }
 }

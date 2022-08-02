@@ -6,7 +6,7 @@ namespace FKSDB\Models\Transitions\Callbacks;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\ReferencedAccessor;
@@ -36,10 +36,10 @@ class MailCallback implements TransitionCallback
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
-        /** @var ModelPerson|null $person */
-        $person = ReferencedAccessor::accessModel($holder->getModel(), ModelPerson::class);
+        /** @var PersonModel|null $person */
+        $person = ReferencedAccessor::accessModel($holder->getModel(), PersonModel::class);
         if (is_null($person)) {
-            throw new BadTypeException(ModelPerson::class, $person);
+            throw new BadTypeException(PersonModel::class, $person);
         }
         $data = $this->emailData;
         $data['recipient'] = $person->getInfo()->email;

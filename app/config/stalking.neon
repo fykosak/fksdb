@@ -5,7 +5,6 @@ parameters:
             label: Base info
             minimalPermission: 1
             table: person
-            model: FKSDB\Models\ORM\Models\ModelPerson
             rows:
                 - person.family_name
                 - person.other_name
@@ -20,7 +19,6 @@ parameters:
             label: Contact info
             minimalPermission: 1
             table: person_info
-            model: FKSDB\Models\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.email
                 - person_info.phone
@@ -30,7 +28,6 @@ parameters:
             label: Contact to parents
             minimalPermission: 128
             table: person_info
-            model: FKSDB\Models\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.phone_parent_m
                 - person_info.phone_parent_d
@@ -42,7 +39,6 @@ parameters:
             label: Academic degree
             minimalPermission: 128
             table: person_info
-            model: FKSDB\Models\ORM\Models\ModelPersonInfo
             rows:
                 - person_info.academic_degree_prefix
                 - person_info.academic_degree_suffix
@@ -52,7 +48,6 @@ parameters:
              label: Extended info
              minimalPermission: 128
              table: person_info
-             model: FKSDB\Models\ORM\Models\ModelPersonInfo
              rows:
                  - person_info.born
                  - person_info.born_id
@@ -73,7 +68,6 @@ parameters:
              label: Login
              minimalPermission: 128
              table: login
-             model: FKSDB\Models\ORM\Models\ModelLogin
              rows:
                  - login.login
                  - login.login_id
@@ -85,7 +79,7 @@ parameters:
             minimalPermission: 128
             table: person_history
             links: []
-            model: FKSDB\Models\ORM\Models\ModelPersonHistory
+            model: FKSDB\Models\ORM\Models\PersonHistoryModel
             rows:
                 - person_history.ac_year
                 - school.school
@@ -109,7 +103,6 @@ parameters:
             label: Org
             minimalPermission: 128
             table: org
-            model: FKSDB\Models\ORM\Models\ModelOrg
             links:
                 - org.detail
                 - org.edit

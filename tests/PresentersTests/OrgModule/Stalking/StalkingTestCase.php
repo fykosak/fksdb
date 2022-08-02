@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceGrant;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServiceOrg;
@@ -16,7 +16,7 @@ use Nette\Application\Request;
 
 abstract class StalkingTestCase extends DatabaseTestCase
 {
-    protected ModelPerson $person;
+    protected PersonModel $person;
     protected IPresenter $fixture;
 
     protected function setUp(): void

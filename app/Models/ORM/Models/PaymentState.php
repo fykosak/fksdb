@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class PaymentState implements EnumColumn
+class PaymentState extends FakeStringEnum implements EnumColumn
 {
     public const WAITING = 'waiting'; // waiting for confirm payment
     public const RECEIVED = 'received'; // payment received
     public const CANCELED = 'canceled'; // payment canceled
     public const NEW = 'new'; // new payment
-
-    public string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
-    }
 
     public function badge(): Html
     {
@@ -54,5 +48,10 @@ class PaymentState implements EnumColumn
             case self::CANCELED:
                 return _('Payment canceled');
         }
+    }
+
+    public static function cases(): array
+    {
+        return [];
     }
 }

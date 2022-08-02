@@ -7,7 +7,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\EntityForms\SchoolFormComponent;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServiceSchool;
@@ -17,7 +17,7 @@ use Tester\Assert;
 
 class SchoolPresenterTest extends AbstractOrgPresenterTestCase
 {
-    private ModelSchool $school;
+    private SchoolModel $school;
 
     protected function setUp(): void
     {

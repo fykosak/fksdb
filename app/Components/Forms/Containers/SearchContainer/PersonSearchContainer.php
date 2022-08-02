@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -71,9 +71,9 @@ class PersonSearchContainer extends SearchContainer
     {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return fn($term): ?ModelPerson => $this->servicePerson->findByEmail($term);
+                return fn($term): ?PersonModel => $this->servicePerson->findByEmail($term);
             case self::SEARCH_ID:
-                return fn($term): ?ModelPerson => $this->servicePerson->findByPrimary($term);
+                return fn($term): ?PersonModel => $this->servicePerson->findByPrimary($term);
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }

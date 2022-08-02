@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -25,7 +25,7 @@ class ContestantModel extends AESOPModel
      * ContestantModel constructor.
      * @throws BadRequestException
      */
-    public function __construct(Container $container, ModelContestYear $contestYear, ?string $category)
+    public function __construct(Container $container, ContestYearModel $contestYear, ?string $category)
     {
         parent::__construct($container, $contestYear);
         $this->category = $this->getCategory($category);
@@ -52,7 +52,7 @@ WHERE
                                                order by surname, name",
             $this->contestYear->contest_id,
             $this->contestYear->ac_year,
-            $this->category->id
+            $this->category->value
         );
         $data = $this->calculateRank($this->filterCategory($query));
 
@@ -68,7 +68,7 @@ WHERE
 
     protected function getMask(): string
     {
-        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->id;
+        return $this->contestYear->contest->getContestSymbol() . '.rocnik.' . $this->category->value;
     }
 
     /**
@@ -99,7 +99,7 @@ WHERE
     {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($this->contestYear);
         foreach ($evaluationStrategy->getCategories() as $category) {
-            if ($category->id == $stringCategory) {
+            if ($category->value == $stringCategory) {
                 return $category;
             }
         }
@@ -160,7 +160,7 @@ WHERE
         return $data;
     }
 
-    private function studyYearToGraduation(?int $studyYear, ModelContestYear $contestYear): ?int
+    private function studyYearToGraduation(?int $studyYear, ContestYearModel $contestYear): ?int
     {
         if (is_null($studyYear)) {
             return null;

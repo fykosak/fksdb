@@ -8,10 +8,10 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTag;
+use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -27,15 +27,15 @@ class TagsColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelStoredQuery $model
+     * @param QueryModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {
         $baseEl = Html::el('div');
-        /** @var ModelStoredQueryTag $tagRow */
+        /** @var TagModel $tagRow */
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
-            $tag = ModelStoredQueryTagType::createFromActiveRow($tagRow->tag_type);
+            $tag = TagTypeModel::createFromActiveRow($tagRow->tag_type);
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([

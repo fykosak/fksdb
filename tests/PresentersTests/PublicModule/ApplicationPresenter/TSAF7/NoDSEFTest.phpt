@@ -6,7 +6,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
@@ -16,7 +16,7 @@ use Tester\Assert;
 class NoDSEFTest extends TsafTestCase
 {
 
-    protected ModelEventParticipant $tsafApp;
+    protected EventParticipantModel $tsafApp;
 
     protected function setUp(): void
     {

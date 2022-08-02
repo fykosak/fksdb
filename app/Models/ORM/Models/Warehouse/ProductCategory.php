@@ -5,22 +5,16 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class ProductCategory implements EnumColumn
+class ProductCategory extends FakeStringEnum implements EnumColumn
 {
     public const APPAREL = 'apparel';
     public const GAME = 'game';
     public const GAME_EXTENSION = 'game-extension';
     public const BOOK = 'book';
     public const OTHER = 'other';
-
-    public string $value;
-
-    public function __construct(string $value)
-    {
-        $this->value = $value;
-    }
 
     public function badge(): Html
     {
@@ -55,5 +49,10 @@ class ProductCategory implements EnumColumn
             default:
                 return _('Other');
         }
+    }
+
+    public static function cases(): array
+    {
+        return []; // TODO
     }
 }

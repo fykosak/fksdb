@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
 class ServiceStoredQuery extends Service
 {
 
-    public function findByQid(string $qid): ?ModelStoredQuery
+    public function findByQid(string $qid): ?QueryModel
     {
-        /** @var ModelStoredQuery $result */
+        /** @var QueryModel $result */
         $result = $this->getTable()->where('qid', $qid)->fetch();
         return $result;
     }

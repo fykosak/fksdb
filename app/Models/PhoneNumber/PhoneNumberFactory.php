@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\PhoneNumber;
 
-use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
@@ -47,9 +47,9 @@ class PhoneNumberFactory
         return Html::el('span')->addAttributes(['class' => 'badge bg-danger'])->addText($number);
     }
 
-    private function getRegion(string $number): ?ModelRegion
+    private function getRegion(string $number): ?RegionModel
     {
-        /** @var ModelRegion $region */
+        /** @var RegionModel $region */
         foreach ($this->getAllRegions() as $region) {
             if ($region->matchPhone($number)) {
                 return $region;

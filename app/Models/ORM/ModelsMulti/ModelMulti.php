@@ -7,15 +7,12 @@ namespace FKSDB\Models\ORM\ModelsMulti;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\SmartObject;
 
 /**
  * @deprecated
  */
 abstract class ModelMulti extends ActiveRow
 {
-    use SmartObject;
-
     public Model $mainModel;
     public Model $joinedModel;
 
@@ -31,19 +28,20 @@ abstract class ModelMulti extends ActiveRow
 
     public function toArray(): array
     {
-        return $this->mainModel->toArray() + $this->joinedModel->toArray();
+        return $this->mainModel->toArray() + parent::toArray();
     }
 
     /**
      * @return bool|mixed|ActiveRow|Selection|null
+     * @throws \ReflectionException
      */
     public function &__get(string $key)
     {
         if ($this->mainModel->__isset($key)) {
             return $this->mainModel->__get($key);
         }
-        if ($this->joinedModel->__isset($key)) {
-            return $this->joinedModel->__get($key);
+        if (parent::__isset($key)) {
+            return parent::__get($key);
         }
         // this reference isn't that important
         $null = null;
@@ -51,11 +49,11 @@ abstract class ModelMulti extends ActiveRow
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $key
      */
-    public function __isset($name): bool
+    public function __isset($key): bool
     {
-        return $this->mainModel->__isset($name) || $this->joinedModel->__isset($name);
+        return $this->mainModel->__isset($key) || parent::__isset($key);
     }
 
     /**
@@ -76,14 +74,6 @@ abstract class ModelMulti extends ActiveRow
     }
 
     /**
-     * @return mixed
-     */
-    public function getPrimary(bool $throw = true)
-    {
-        return $this->joinedModel->getPrimary($throw);
-    }
-
-    /**
      * @param mixed $column
      */
     public function offsetExists($column): bool
@@ -94,6 +84,7 @@ abstract class ModelMulti extends ActiveRow
     /**
      * @param mixed $column
      * @return bool|mixed|ActiveRow|Selection|null
+     * @throws \ReflectionException
      */
     public function &offsetGet($column)
     {

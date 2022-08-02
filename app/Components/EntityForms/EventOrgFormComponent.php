@@ -7,15 +7,15 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelEventOrg|null $model
+ * @property EventOrgModel|null $model
  */
 class EventOrgFormComponent extends EntityFormComponent
 {
@@ -24,9 +24,9 @@ class EventOrgFormComponent extends EntityFormComponent
     public const CONTAINER = 'event_org';
 
     private ServiceEventOrg $serviceEventOrg;
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(Container $container, ModelEvent $event, ?ModelEventOrg $model)
+    public function __construct(Container $container, EventModel $event, ?EventOrgModel $model)
     {
         parent::__construct($container, $model);
         $this->event = $event;
@@ -49,7 +49,7 @@ class EventOrgFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }

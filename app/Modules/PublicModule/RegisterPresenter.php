@@ -12,9 +12,9 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
@@ -66,7 +66,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      * @persistent
      */
     public ?int $personId = null;
-    private ?ModelPerson $person;
+    private ?PersonModel $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
@@ -114,7 +114,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         );
     }
 
-    public function getSelectedContest(): ?ModelContest
+    public function getSelectedContest(): ?ContestModel
     {
         return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
@@ -172,7 +172,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
     }
 
-    private function getPerson(): ?ModelPerson
+    private function getPerson(): ?PersonModel
     {
         if (!isset($this->person)) {
             if ($this->user->isLoggedIn()) {
@@ -333,14 +333,14 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         );
     }
 
-    public function getSelectedContestYear(): ?ModelContestYear
+    public function getSelectedContestYear(): ?ContestYearModel
     {
         $contest = $this->getSelectedContest();
         if (is_null($contest)) {
             return null;
         }
         $row = $contest->getContestYears()->where('year', $this->year)->fetch();
-        return $row ? ModelContestYear::createFromActiveRow($row) : null;
+        return $row ? ContestYearModel::createFromActiveRow($row) : null;
     }
 
     /**

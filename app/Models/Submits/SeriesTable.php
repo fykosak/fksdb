@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Submits;
 
 use FKSDB\Models\ORM\Models\{
-    ModelContestant,
-    ModelContestYear,
+    ContestantModel,
+    ContestYearModel,
     SubmitModel,
 };
 use FKSDB\Models\ORM\Services\{
@@ -26,7 +26,7 @@ class SeriesTable
     private ServiceTask $serviceTask;
     private ServiceSubmit $serviceSubmit;
 
-    public ModelContestYear $contestYear;
+    public ContestYearModel $contestYear;
     public int $series;
 
     /**
@@ -91,7 +91,7 @@ class SeriesTable
         $submitsTable = $this->getSubmitsTable();
         $contestants = $this->getContestants();
         $result = [];
-        /** @var ModelContestant $contestant */
+        /** @var ContestantModel $contestant */
         foreach ($contestants as $contestant) {
             $result[$contestant->ct_id] = [self::FORM_SUBMIT => $submitsTable[$contestant->ct_id] ?? null];
         }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -22,13 +22,13 @@ class ServiceAuthToken extends Service
      * @throws ModelException
      */
     public function createToken(
-        ModelLogin $login,
+        LoginModel $login,
         string $type,
         ?\DateTimeInterface $until,
         ?string $data = null,
         bool $refresh = false,
         ?\DateTimeInterface $since = null
-    ): ModelAuthToken {
+    ): AuthTokenModel {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -43,7 +43,7 @@ class ServiceAuthToken extends Service
 
         if ($refresh) {
             // TODO to related
-            /** @var ModelAuthToken $token */
+            /** @var AuthTokenModel $token */
             $token = $this->getTable()
                 ->where('login_id', $login->login_id)
                 ->where('type', $type)
@@ -77,7 +77,7 @@ class ServiceAuthToken extends Service
         return $token;
     }
 
-    public function verifyToken(string $tokenData, bool $strict = true): ?ModelAuthToken
+    public function verifyToken(string $tokenData, bool $strict = true): ?AuthTokenModel
     {
         $tokens = $this->getTable()
             ->where('token', $tokenData);
@@ -85,28 +85,28 @@ class ServiceAuthToken extends Service
             $tokens->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()');
         }
-        /** @var ModelAuthToken $token */
+        /** @var AuthTokenModel $token */
         $token = $tokens->fetch();
         return $token;
     }
 
     /**
-     * @param string|ModelAuthToken $token
+     * @param string|AuthTokenModel $token
      */
     public function disposeToken($token): void
     {
-        if (!$token instanceof ModelAuthToken) {
+        if (!$token instanceof AuthTokenModel) {
             $token = $this->verifyToken($token);
         }
         if ($token) {
-            $this->dispose($token);
+            $this->disposeModel($token);
         }
     }
 
-    public function findTokensByEvent(ModelEvent $event): TypedSelection
+    public function findTokensByEvent(EventModel $event): TypedSelection
     {
         return $this->getTable()
-            ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
+            ->where('type', AuthTokenModel::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
             ->where('data LIKE ?', $event->event_id . ':%');

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateApplicationException;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Exceptions\ModelException;
 
@@ -24,7 +24,7 @@ class ServiceEventParticipant extends OldServiceSingle
         }
     }
 
-    public function createNewModel(array $data): ModelEventParticipant
+    public function createNewModel(array $data): EventParticipantModel
     {
         try {
             return parent::createNewModel($data);
@@ -37,14 +37,14 @@ class ServiceEventParticipant extends OldServiceSingle
     }
 
     /**
-     * @param ModelEventParticipant $model
+     * @param EventParticipantModel $model
      */
-    public function dispose(Model $model): void
+    public function disposeModel(Model $model): void
     {
         $person = $model->person;
         if ($person) {
             $person->removeScheduleForEvent($model->event);
         }
-        parent::dispose($model);
+        parent::disposeModel($model);
     }
 }

@@ -7,7 +7,7 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\Utils\FormUtils;
@@ -16,7 +16,7 @@ use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 /**
- * @property ModelSchool|null $model
+ * @property SchoolModel|null $model
  */
 class SchoolFormComponent extends EntityFormComponent
 {
@@ -56,8 +56,8 @@ class SchoolFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
-        $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
+        $addressData = FormUtils::emptyStrToNull2($values[self::CONT_ADDRESS]);
+        $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
 
         $connection = $this->serviceSchool->explorer->getConnection();
         $connection->beginTransaction();

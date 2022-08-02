@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Fykosak\NetteORM\TypedSelection;
 
@@ -35,13 +35,13 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var ModelStoredQueryTagType $tagType */
+        /** @var TagTypeModel $tagType */
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
         return $tagType->name;
     }
 
     /**
-     * @return ModelStoredQueryTagType[]
+     * @return TagTypeModel[]
      */
     public function getItems(): array
     {
@@ -49,7 +49,7 @@ class StoredQueryTagTypeProvider implements FilteredDataProvider
             ->order('name');
 
         $result = [];
-        /** @var ModelStoredQueryTagType $tagType */
+        /** @var TagTypeModel $tagType */
         foreach ($tagTypes as $tagType) {
             $result[] = [
                 self::LABEL => $tagType->name,

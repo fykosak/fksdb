@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\YearCalculator;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
@@ -18,15 +18,15 @@ use Nette\DI\Container;
 class TimelineComponent extends FrontEndComponent
 {
 
-    private ModelPerson $person;
+    private PersonModel $person;
 
-    public function __construct(Container $container, ModelPerson $person)
+    public function __construct(Container $container, PersonModel $person)
     {
         parent::__construct($container, 'chart.person.detail.timeline');
         $this->person = $person;
     }
 
-    private function eventToArray(ModelEvent $event): array
+    private function eventToArray(EventModel $event): array
     {
         return [
             'eventId' => $event->event_id,
@@ -49,7 +49,7 @@ class TimelineComponent extends FrontEndComponent
         ];
         $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = OrgModel::createFromActiveRow($row);
             $since = new \DateTime(
                 $org->contest->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
             );
@@ -74,7 +74,7 @@ class TimelineComponent extends FrontEndComponent
         }
         $contestants = [];
         foreach ($this->person->getContestants() as $row) {
-            $contestant = ModelContestant::createFromActiveRow($row);
+            $contestant = ContestantModel::createFromActiveRow($row);
             $year = $contestant->contest->getContestYear($contestant->year)->ac_year;
 
             $since = new \DateTime($year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
@@ -104,13 +104,13 @@ class TimelineComponent extends FrontEndComponent
         $events = [];
         $eventParticipants = [];
         foreach ($this->person->getEventParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = EventParticipantModel::createFromActiveRow($row);
             $events[] = $participant->event;
             $eventParticipants[] = ['event' => $this->eventToArray($participant->event), 'model' => null];
         }
         $eventOrganisers = [];
         foreach ($this->person->getEventOrgs() as $row) {
-            $eventOrg = ModelEventOrg::createFromActiveRow($row);
+            $eventOrg = EventOrgModel::createFromActiveRow($row);
             $events[] = $eventOrg->event;
             $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->event), 'model' => null];
         }
@@ -134,7 +134,7 @@ class TimelineComponent extends FrontEndComponent
     }
 
     /**
-     * @param ModelEvent[] $events
+     * @param EventModel[] $events
      * @return \DateTimeInterface[]
      */
     private function calculateFirstAndLast(array $events, array $dates): array

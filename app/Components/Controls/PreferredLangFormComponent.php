@@ -9,7 +9,7 @@ use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -18,11 +18,11 @@ use Nette\Forms\Controls\SubmitButton;
 class PreferredLangFormComponent extends FormComponent
 {
 
-    protected ModelPerson $person;
+    protected PersonModel $person;
 
     protected ServicePersonInfo $servicePersonInfo;
 
-    public function __construct(Container $container, ModelPerson $person)
+    public function __construct(Container $container, PersonModel $person)
     {
         parent::__construct($container);
         $this->person = $person;

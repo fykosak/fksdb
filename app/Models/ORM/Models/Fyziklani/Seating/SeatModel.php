@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int fyziklani_seat_id
@@ -20,7 +19,7 @@ use Nette\Database\Table\ActiveRow;
 class SeatModel extends Model
 {
 
-    public function getTeamSeat(ModelEvent $event): ?TeamSeatModel
+    public function getTeamSeat(EventModel $event): ?TeamSeatModel
     {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT)->where(
             'fyziklani_team.event_id',

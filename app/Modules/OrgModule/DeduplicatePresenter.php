@@ -11,7 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
@@ -29,8 +29,8 @@ class DeduplicatePresenter extends BasePresenter
     private ServicePerson $servicePerson;
     private Merger $merger;
     private ServicePersonInfo $servicePersonInfo;
-    private ModelPerson $trunkPerson;
-    private ModelPerson $mergedPerson;
+    private PersonModel $trunkPerson;
+    private PersonModel $mergedPerson;
 
     final public function injectQuarterly(
         ServicePerson $servicePerson,
@@ -222,7 +222,7 @@ class DeduplicatePresenter extends BasePresenter
     {
 
         $values = $form->getValues();
-        $values = FormUtils::emptyStrToNull($values);
+        $values = FormUtils::emptyStrToNull2($values);
 
         $merger = $this->merger;
         $merger->setConflictResolution($values);

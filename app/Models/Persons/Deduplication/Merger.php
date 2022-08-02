@@ -60,7 +60,7 @@ class Merger
     /**
      * Form values with proper resoluted values.
      */
-    public function setConflictResolution(iterable $rawValues): void
+    public function setConflictResolution(array $rawValues): void
     {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {

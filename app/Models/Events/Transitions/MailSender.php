@@ -14,10 +14,10 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -118,7 +118,7 @@ class MailSender
      * @throws ModelException
      */
     private function createMessage(
-        ModelLogin $login,
+        LoginModel $login,
         BaseMachine $baseMachine,
         BaseHolder $baseHolder
     ): EmailMessageModel {
@@ -167,14 +167,14 @@ class MailSender
         return $this->serviceEmailMessage->createNewModel($data);
     }
 
-    private function createToken(ModelLogin $login, ModelEvent $event, ActiveRow $application): ModelAuthToken
+    private function createToken(LoginModel $login, EventModel $event, ActiveRow $application): AuthTokenModel
     {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
+        return $this->serviceAuthToken->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string
+    private function getSubject(EventModel $event, ActiveRow $application, Holder $holder, Machine $machine): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
@@ -185,7 +185,7 @@ class MailSender
         // mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
-    private function getUntil(ModelEvent $event): \DateTimeInterface
+    private function getUntil(EventModel $event): \DateTimeInterface
     {
         return $event->registration_end ?? $event->end;
     }

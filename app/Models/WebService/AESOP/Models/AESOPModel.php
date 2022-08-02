@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;
@@ -23,11 +23,11 @@ abstract class AESOPModel
     protected const RANK = 'rank';
     protected const POINTS = 'points';
 
-    protected ModelContestYear $contestYear;
+    protected ContestYearModel $contestYear;
 
     protected Explorer $explorer;
 
-    public function __construct(Container $container, ModelContestYear $contestYear)
+    public function __construct(Container $container, ContestYearModel $contestYear)
     {
         $this->contestYear = $contestYear;
         $container->callInjects($this);
@@ -50,7 +50,7 @@ abstract class AESOPModel
         ];
     }
 
-    private function formatSchool(?ModelSchool $school): ?string
+    private function formatSchool(?SchoolModel $school): ?string
     {
         if (!$school) {
             return null;
@@ -83,7 +83,7 @@ abstract class AESOPModel
         return $response;
     }
 
-    protected function getAESOPContestant(ModelPerson $person): array
+    protected function getAESOPContestant(PersonModel $person): array
     {
         $postContact = $person->getPermanentPostContact(true);
         $history = $person->getHistoryByContestYear($this->contestYear);
@@ -98,7 +98,7 @@ abstract class AESOPModel
             'postcode' => $postContact->address->postal_code,
             'country' => $postContact->address->region->country_iso,
             'fullname' => $person->display_name,
-            'gender' => $person->gender,
+            'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
             'end-year' => ($history->study_year < 5 && $history->study_year > 0)

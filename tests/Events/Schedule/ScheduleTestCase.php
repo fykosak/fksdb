@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -19,13 +19,13 @@ use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase
 {
-    protected ModelScheduleItem $item;
+    protected ScheduleItemModel $item;
     protected IPresenter $fixture;
-    protected ModelScheduleGroup $group;
+    protected ScheduleGroupModel $group;
     protected array $persons = [];
-    protected ModelEvent $event;
+    protected EventModel $event;
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         return $this->event;
     }

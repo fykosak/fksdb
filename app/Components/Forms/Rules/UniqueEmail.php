@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePersonInfo;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueEmail
 {
     private ServicePersonInfo $servicePersonInfo;
-    private ?ModelPerson $ignoredPerson;
+    private ?PersonModel $ignoredPerson;
 
     public function __construct(ServicePersonInfo $servicePersonInfo)
     {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    public function setIgnoredPerson(ModelPerson $ignoredPerson): void
+    public function setIgnoredPerson(PersonModel $ignoredPerson): void
     {
         $this->ignoredPerson = $ignoredPerson;
     }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\InvalidArgumentException;
 
@@ -20,13 +20,13 @@ class SameYearEvent implements EventRelation
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function getEvent(ModelEvent $event): ModelEvent
+    public function getEvent(EventModel $event): EventModel
     {
         $result = $this->serviceEvent->getTable()->where([
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        /** @var ModelEvent|null $event */
+        /** @var EventModel|null $event */
         $event = $result->fetch();
         if ($event === null) {
             throw new InvalidArgumentException(

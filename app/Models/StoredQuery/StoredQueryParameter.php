@@ -4,69 +4,62 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterType;
 use Nette\InvalidStateException;
 
 class StoredQueryParameter
 {
     /** @var mixed */
-    private $defaultValue;
+    public $defaultValue;
+    public string $name;
+    public ParameterType $type;
+    public ?string $description;
 
-    private string $name;
-
-    private int $PDOType;
-
-    private ?string $description;
+    public static function fromModel(ParameterModel $model): self
+    {
+        return new StoredQueryParameter(
+            $model->name,
+            $model->getDefaultValue(),
+            $model->type,
+            $model->description
+        );
+    }
 
     /**
      * StoredQueryParameter constructor.
      * @param mixed $defaultValue
      */
-    public function __construct(string $name, $defaultValue, int $PDOType, string $description = null)
+    public function __construct(string $name, $defaultValue, ParameterType $type, ?string $description)
     {
         $this->name = $name;
-        $this->defaultValue = self::getTypedValue($defaultValue, $PDOType);
-        $this->PDOType = $PDOType;
+        $this->type = $type;
         $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultValue()
-    {
-        return $this->defaultValue;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
+        self::setTypedValue($defaultValue);
     }
 
     public function getPDOType(): int
     {
-        return $this->PDOType;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
+        return $this->type->getPDOType();
     }
 
     /**
      * @param mixed $value
-     * @return bool|int|string
      */
-    public function getTypedValue($value, int $type)
+    private function setTypedValue($value): void
     {
-        switch ($type) {
-            case \PDO::PARAM_BOOL:
-                return (bool)$value;
-            case \PDO::PARAM_INT:
-                return (int)$value;
-            case \PDO::PARAM_STR:
-                return (string)$value;
+        switch ($this->type->value) {
+            case ParameterType::BOOL:
+                $this->defaultValue = (bool)$value;
+                break;
+            case ParameterType::INT:
+                $this->defaultValue = (int)$value;
+                break;
+            case ParameterType::STRING:
+                $this->defaultValue = (string)$value;
+                break;
             default:
-                throw new InvalidStateException("Unsupported parameter type '$type'.");
+                throw new InvalidStateException("Unsupported parameter type '$this->type->value'.");
         }
     }
 }

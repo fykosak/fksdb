@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 class ContestantsFromSchoolGrid extends EntityGrid
 {
 
-    public function __construct(ModelSchool $school, Container $container)
+    public function __construct(SchoolModel $school, Container $container)
     {
         parent::__construct($container, ServiceContestant::class, [
             'person.full_name',

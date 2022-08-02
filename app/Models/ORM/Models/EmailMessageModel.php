@@ -57,9 +57,9 @@ class EmailMessageModel extends Model implements Resource
         return $message;
     }
 
-    public function getPerson(): ?ModelPerson
+    public function getPerson(): ?PersonModel
     {
-        return isset($this->recipient_person_id) ? ModelPerson::createFromActiveRow($this->person)
+        return isset($this->recipient_person_id) ? PersonModel::createFromActiveRow($this->person)
             : null;
     }
 
@@ -69,14 +69,15 @@ class EmailMessageModel extends Model implements Resource
     }
 
     /**
-     * @return mixed
+     * @return EmailMessageState|\FKSDB\Models\Utils\FakeStringEnum|mixed|ActiveRow|null
+     * @throws \ReflectionException
      */
     public function &__get(string $key)
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = new EmailMessageState($value);
+                $value = EmailMessageState::tryFrom($value);
                 break;
         }
         return $value;

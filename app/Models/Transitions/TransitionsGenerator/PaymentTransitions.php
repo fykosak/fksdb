@@ -15,7 +15,6 @@ use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Models\Transitions\TransitionsDecorator;
 use FKSDB\Models\Transitions\Machine\Machine;
-use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use Tracy\Debugger;
 
@@ -57,8 +56,8 @@ abstract class PaymentTransitions implements TransitionsDecorator
      */
     private function decorateTransitionAllToCanceled(PaymentMachine $machine): void
     {
-        foreach ([new PaymentState(PaymentState::NEW), new PaymentState(PaymentState::WAITING)] as $state) {
-            $transition = $machine->getTransitionByStates($state, new PaymentState(PaymentState::CANCELED));
+        foreach ([PaymentState::tryFrom(PaymentState::NEW), PaymentState::tryFrom(PaymentState::WAITING)] as $state) {
+            $transition = $machine->getTransitionByStates($state, PaymentState::tryFrom(PaymentState::CANCELED));
             $transition->setCondition(fn() => true);
             $transition->beforeExecute[] = $this->getClosureDeleteRows();
             $transition->beforeExecute[] =
@@ -72,8 +71,8 @@ abstract class PaymentTransitions implements TransitionsDecorator
     private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void
     {
         $transition = $machine->getTransitionByStates(
-            new PaymentState(PaymentState::WAITING),
-            new PaymentState(PaymentState::RECEIVED)
+            PaymentState::tryFrom(PaymentState::WAITING),
+            PaymentState::tryFrom(PaymentState::RECEIVED)
         );
         $transition->beforeExecute[] = function (PaymentHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {

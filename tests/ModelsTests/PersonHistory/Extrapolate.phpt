@@ -7,8 +7,8 @@ namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
 $container = require '../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
@@ -21,8 +21,8 @@ use Tester\Assert;
 class Extrapolate extends DatabaseTestCase
 {
     private ServicePersonHistory $service;
-    private ModelPerson $person;
-    private ModelSchool $school;
+    private PersonModel $person;
+    private SchoolModel $school;
 
     public function __construct(Container $container)
     {

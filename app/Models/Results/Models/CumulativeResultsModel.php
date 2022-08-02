@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
@@ -31,14 +31,14 @@ class CumulativeResultsModel extends AbstractResultsModel
             throw new InvalidStateException('Series not specified.');
         }
 
-        if (!isset($this->dataColumns[$category->id])) {
+        if (!isset($this->dataColumns[$category->value])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);
             $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
 
             foreach ($this->getSeries() as $series) {
                 $points = null;
-                /** @var ModelTask $task */
+                /** @var TaskModel $task */
                 foreach ($this->getTasks($series) as $task) {
                     $points += $this->evaluationStrategy->getTaskPoints($task, $category);
                 }
@@ -64,9 +64,9 @@ class CumulativeResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sumLimit,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->id] = $dataColumns;
+            $this->dataColumns[$category->value] = $dataColumns;
         }
-        return $this->dataColumns[$category->id];
+        return $this->dataColumns[$category->value];
     }
 
     public function getSeries(): array

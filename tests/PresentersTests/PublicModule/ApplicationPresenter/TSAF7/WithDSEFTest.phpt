@@ -6,7 +6,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
@@ -16,7 +16,7 @@ use Tester\Assert;
 class WithDSEFTest extends TsafTestCase
 {
 
-    private ModelEventParticipant $tsafApp;
+    private EventParticipantModel $tsafApp;
 
     protected function setUp(): void
     {
@@ -87,7 +87,7 @@ class WithDSEFTest extends TsafTestCase
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
-        /** @var ModelEventParticipant $application */
+        /** @var EventParticipantModel $application */
         $application = $this->assertApplication($this->tsafEvent, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);

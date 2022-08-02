@@ -19,9 +19,9 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\ServiceEvent;
@@ -38,7 +38,7 @@ class ApplicationPresenter extends BasePresenter
 {
 
     public const PARAM_AFTER = 'a';
-    private ?ModelEvent $event;
+    private ?EventModel $event;
     private ?ActiveRow $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
@@ -66,7 +66,7 @@ class ApplicationPresenter extends BasePresenter
      */
     public function authorizedDefault(): void
     {
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         $event = $this->getEvent();
         if (
             $this->eventAuthorizator->isAllowed('event.participant', 'edit', $event)
@@ -105,7 +105,7 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ModelMulti|Model|ActiveRow|TeamModel|ModelEventParticipant|null
+     * @return ModelMulti|Model|ActiveRow|TeamModel|EventParticipantModel|null
      * @throws NeonSchemaException
      */
     private function getEventApplication(): ?ActiveRow
@@ -154,8 +154,8 @@ class ApplicationPresenter extends BasePresenter
             if (!$eventApplication) {
                 throw new NotFoundException(_('Unknown application.'));
             }
-            /** @var ModelEvent $event */
-            $event = ReferencedAccessor::accessModel($eventApplication, ModelEvent::class);
+            /** @var EventModel $event */
+            $event = ReferencedAccessor::accessModel($eventApplication, EventModel::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }
@@ -163,7 +163,7 @@ class ApplicationPresenter extends BasePresenter
 
         $this->initializeMachine();
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
             $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
                 $this->tokenAuthenticator->disposeTokenData();
@@ -248,11 +248,11 @@ class ApplicationPresenter extends BasePresenter
         parent::startup();
     }
 
-    private function getEvent(): ?ModelEvent
+    private function getEvent(): ?EventModel
     {
         if (!isset($this->event)) {
             $eventId = null;
-            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_EVENT_NOTIFY)) {
                 $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
                     $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());

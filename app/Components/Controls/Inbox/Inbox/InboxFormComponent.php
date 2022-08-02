@@ -6,6 +6,7 @@ namespace FKSDB\Components\Controls\Inbox\Inbox;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
+use FKSDB\Models\ORM\Models\SubmitSource;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
@@ -53,7 +54,7 @@ class InboxFormComponent extends SeriesTableFormComponent
                         'task_id' => $taskNo,
                         'ct_id' => $ctId,
                         'submitted_on' => $submittedOn,
-                        'source' => SubmitModel::SOURCE_POST,
+                        'source' => SubmitSource::POST,
                     ]);
                     $this->flashMessage(
                         \sprintf(_('Submit for contestant #%d and task %d created'), $ctId, $taskNo),

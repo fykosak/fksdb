@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
@@ -37,11 +37,11 @@ class BrojureResultsModel extends AbstractResultsModel
             throw new InvalidStateException('Series not specified.');
         }
 
-        if (!isset($this->dataColumns[$category->id])) {
+        if (!isset($this->dataColumns[$category->value])) {
             $dataColumns = [];
             $sumLimit = $this->getSumLimit($category);
             $studentPilnySumLimit = $this->getSumLimitForStudentPilny();
-            /** @var ModelTask $task */
+            /** @var TaskModel $task */
             foreach ($this->getTasks($this->listedSeries) as $task) {
                 $dataColumns[] = [
                     self::COL_DEF_LABEL => $task->label,
@@ -76,9 +76,9 @@ class BrojureResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sumLimit,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->id] = $dataColumns;
+            $this->dataColumns[$category->value] = $dataColumns;
         }
-        return $this->dataColumns[$category->id];
+        return $this->dataColumns[$category->value];
     }
 
     public function getSeries(): array
@@ -132,7 +132,7 @@ class BrojureResultsModel extends AbstractResultsModel
 
         $tasks = $this->getTasks($this->listedSeries);
         $i = 0;
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($tasks as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = 'round(MAX(IF(t.task_id = ' . $task->task_id . ', '
@@ -211,7 +211,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks
             $points = null;
-            /** @var ModelTask $task */
+            /** @var TaskModel $task */
             foreach ($this->getTasks($series) as $task) {
                 $points += $this->evaluationStrategy->getTaskPoints($task, $category);
             }

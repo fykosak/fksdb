@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueLogin
 {
     private ServiceLogin $serviceLogin;
-    private ?ModelLogin $ignoredLogin;
+    private ?LoginModel $ignoredLogin;
 
     public function __construct(ServiceLogin $serviceLogin)
     {
         $this->serviceLogin = $serviceLogin;
     }
 
-    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void
+    public function setIgnoredLogin(?LoginModel $ignoredLogin): void
     {
         $this->ignoredLogin = $ignoredLogin;
     }

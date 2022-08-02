@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\Models\ORM\Models\ModelAddress;
-use FKSDB\Models\ORM\Models\ModelPostContact;
-use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Models\AddressModel;
+use FKSDB\Models\ORM\Models\PostContactModel;
+use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
@@ -47,18 +47,18 @@ class AddressContainer extends ModelContainer
     }
 
     /**
-     * @param ModelPostContact|mixed $data
+     * @param PostContactModel|mixed $data
      * @return static
      */
     public function setValues($data, bool $erase = false): self
     {
         if ($data instanceof ActiveRow) { //assert its from address table
-            if ($data instanceof ModelPostContact) {
+            if ($data instanceof PostContactModel) {
                 $address = $data->address;
             } else {
                 $address = $data;
             }
-            /** @var ModelAddress $address */
+            /** @var AddressModel $address */
             $data = $address->toArray();
             $data['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         } elseif (is_array($data) && isset($data['region_id'])) {
@@ -83,7 +83,7 @@ class AddressContainer extends ModelContainer
                     . ' before getting values from the address container.'
                 );
             }
-            /** @var ModelRegion|null $region */
+            /** @var RegionModel|null $region */
             $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }

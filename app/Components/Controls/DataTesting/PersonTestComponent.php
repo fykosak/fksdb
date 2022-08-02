@@ -11,7 +11,7 @@ use FKSDB\Models\DataTesting\DataTestingFactory;
 use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
@@ -109,7 +109,7 @@ class PersonTestComponent extends BaseComponent
     {
         $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
-        /** @var ModelPerson $model */
+        /** @var PersonModel $model */
         foreach ($query as $model) {
             $logger = new MemoryLogger();
             foreach ($this->tests as $test) {

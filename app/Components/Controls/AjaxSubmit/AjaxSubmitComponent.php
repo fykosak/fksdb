@@ -8,9 +8,9 @@ use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
@@ -26,11 +26,11 @@ class AjaxSubmitComponent extends AjaxComponent
 {
 
     private ServiceSubmit $serviceSubmit;
-    private ModelTask $task;
-    private ModelContestant $contestant;
+    private TaskModel $task;
+    private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant)
     {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;

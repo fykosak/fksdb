@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ServiceTask;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
@@ -43,7 +43,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     /**
      * @throws BadRequestException
      */
-    public function createCumulativeResultsModel(ModelContestYear $contestYear): CumulativeResultsModel
+    public function createCumulativeResultsModel(ContestYearModel $contestYear): CumulativeResultsModel
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
@@ -57,7 +57,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     /**
      * @throws BadRequestException
      */
-    public function createDetailResultsModel(ModelContestYear $contestYear): DetailResultsModel
+    public function createDetailResultsModel(ContestYearModel $contestYear): DetailResultsModel
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
@@ -71,7 +71,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     /**
      * @throws BadRequestException
      */
-    public function createBrojureResultsModel(ModelContestYear $contestYear): BrojureResultsModel
+    public function createBrojureResultsModel(ContestYearModel $contestYear): BrojureResultsModel
     {
         $evaluationStrategy = self::findEvaluationStrategy($contestYear);
         if ($evaluationStrategy === null) {
@@ -85,7 +85,7 @@ class ResultsModelFactory implements XMLNodeSerializer
     /**
      * @throws BadRequestException
      */
-    public function createSchoolCumulativeResultsModel(ModelContestYear $contestYear): SchoolCumulativeResultsModel
+    public function createSchoolCumulativeResultsModel(ContestYearModel $contestYear): SchoolCumulativeResultsModel
     {
         $cumulativeResultsModel = $this->createCumulativeResultsModel($contestYear);
         return new SchoolCumulativeResultsModel(
@@ -99,16 +99,16 @@ class ResultsModelFactory implements XMLNodeSerializer
     /**
      * @throws BadRequestException
      */
-    public static function findEvaluationStrategy(ModelContestYear $contestYear): EvaluationStrategy
+    public static function findEvaluationStrategy(ContestYearModel $contestYear): EvaluationStrategy
     {
         switch ($contestYear->contest_id) {
-            case ModelContest::ID_FYKOS:
+            case ContestModel::ID_FYKOS:
                 if ($contestYear->year >= 25) {
                     return new EvaluationFykos2011();
                 } else {
                     return new EvaluationFykos2001();
                 }
-            case ModelContest::ID_VYFUK:
+            case ContestModel::ID_VYFUK:
                 if ($contestYear->year >= 4) {
                     return new EvaluationVyfuk2014();
                 } elseif ($contestYear->year >= 2) {
@@ -142,7 +142,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 // category node
                 $categoryNode = $doc->createElement('category');
                 $node->appendChild($categoryNode);
-                $categoryNode->setAttribute('id', $category->id);
+                $categoryNode->setAttribute('id', $category->value);
 
                 $columnDefsNode = $doc->createElement('column-definitions');
                 $categoryNode->appendChild($columnDefsNode);

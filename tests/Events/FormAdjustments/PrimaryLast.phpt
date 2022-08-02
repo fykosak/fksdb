@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use Nette\Application\Request;
@@ -19,7 +19,7 @@ $container = require '../../Bootstrap.php';
 class PrimaryLast extends ResourceAvailabilityTestCase
 {
 
-    private ModelEventParticipant $app;
+    private EventParticipantModel $app;
 
     protected function setUp(): void
     {

@@ -10,8 +10,8 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\Persons\AclResolver;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
@@ -39,7 +39,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|null $model
+     * @param ContestantModel|null $model
      * @param Form|Control[][] $form
      */
     protected function setDefaults(?Model $model, Form $form): void
@@ -120,7 +120,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         );
     }
 
-    protected function getAcYearFromModel(): ?ModelContestYear
+    protected function getAcYearFromModel(): ?ContestYearModel
     {
         return null;
     }

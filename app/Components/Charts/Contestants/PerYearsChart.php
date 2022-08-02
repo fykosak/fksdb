@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Components\Charts\Core\Chart;
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
@@ -14,9 +14,9 @@ class PerYearsChart extends FrontEndComponent implements Chart
 {
 
     private ServiceSubmit $serviceSubmit;
-    protected ModelContest $contest;
+    protected ContestModel $contest;
 
-    public function __construct(Container $container, ModelContest $contest)
+    public function __construct(Container $container, ContestModel $contest)
     {
         parent::__construct($container, 'chart.contestants.per-years');
         $this->contest = $contest;

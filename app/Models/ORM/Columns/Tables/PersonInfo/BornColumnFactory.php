@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -23,7 +23,7 @@ class BornColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelPersonInfo $model
+     * @param PersonInfoModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

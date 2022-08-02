@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
@@ -52,11 +52,11 @@ class SchoolsGrid extends EntityGrid
         //
         $this->addColumn('name', _('Name'));
         $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
-            $school = ModelSchool::createFromActiveRow($row);
+            $school = SchoolModel::createFromActiveRow($row);
             return $school->address->city;
         });
         $this->addColumn('active', _('Active?'))->setRenderer(
-            fn(ModelSchool $row): Html => Html::el('span')
+            fn(SchoolModel $row): Html => Html::el('span')
                 ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])
                 ->addText(($row->active))
         );

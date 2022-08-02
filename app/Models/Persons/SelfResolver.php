@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -20,12 +20,12 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver
         $this->user = $user;
     }
 
-    public function isVisible(?ModelPerson $person): bool
+    public function isVisible(?PersonModel $person): bool
     {
         return !$person || $this->isSelf($person);
     }
 
-    public function getResolutionMode(?ModelPerson $person): string
+    public function getResolutionMode(?PersonModel $person): string
     {
         if (!$person) {
             return ReferencedHandler::RESOLUTION_EXCEPTION;
@@ -34,17 +34,17 @@ class SelfResolver implements VisibilityResolver, ModifiabilityResolver
             : ReferencedHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(?ModelPerson $person): bool
+    public function isModifiable(?PersonModel $person): bool
     {
         return !$person || $this->isSelf($person);
     }
 
-    protected function isSelf(ModelPerson $person): bool
+    protected function isSelf(PersonModel $person): bool
     {
         if (!$this->user->isLoggedIn()) {
             return false;
         }
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->user->getIdentity();
         $loggedPerson = $login->person;
         return $loggedPerson && $loggedPerson->person_id == $person->person_id;

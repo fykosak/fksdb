@@ -4,23 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\ModelsMulti\Events;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 
 /**
- * @property-read ModelEventParticipant $mainModel
+ * @property-read EventParticipantModel $mainModel
+ * @deprecated
  */
 class ModelMFyziklaniParticipant extends ModelMulti
 {
 
-    public function getEvent(): ModelEvent
+    public function getEvent(): EventModel
     {
         return $this->mainModel->event;
     }
 
-    public function getPerson(): ModelPerson
+    public function getPerson(): PersonModel
     {
         return $this->mainModel->person;
     }

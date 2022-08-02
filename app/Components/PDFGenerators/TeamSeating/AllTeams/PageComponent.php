@@ -6,15 +6,15 @@ namespace FKSDB\Components\PDFGenerators\TeamSeating\AllTeams;
 
 use FKSDB\Components\PDFGenerators\TeamSeating\SeatingPageComponent;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 
 class PageComponent extends SeatingPageComponent
 {
     private RoomModel $room;
-    protected ModelEvent $event;
+    protected EventModel $event;
 
-    public function __construct(ModelEvent $event, RoomModel $room, Container $container)
+    public function __construct(EventModel $event, RoomModel $room, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;

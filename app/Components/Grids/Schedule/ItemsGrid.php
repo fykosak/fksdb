@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -16,7 +16,7 @@ use NiftyGrid\DuplicateColumnException;
 class ItemsGrid extends RelatedGrid
 {
 
-    public function __construct(Container $container, ModelScheduleGroup $group)
+    public function __construct(Container $container, ScheduleGroupModel $group)
     {
         parent::__construct($container, $group, 'schedule_item');
     }
@@ -46,6 +46,6 @@ class ItemsGrid extends RelatedGrid
 
     protected function getModelClassName(): string
     {
-        return ModelScheduleItem::class;
+        return ScheduleItemModel::class;
     }
 }

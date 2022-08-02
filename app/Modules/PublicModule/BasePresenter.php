@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 
@@ -14,12 +14,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
 {
     use YearPresenterTrait;
 
-    private ?ModelContestant $contestant;
+    private ?ContestantModel $contestant;
 
-    public function getContestant(): ?ModelContestant
+    public function getContestant(): ?ContestantModel
     {
         if (!isset($this->contestant)) {
-            /** @var ModelPerson $person */
+            /** @var PersonModel $person */
             $person = $this->user->getIdentity()->person;
             $row = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where(
                 [
@@ -28,7 +28,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
                 ]
             )->fetch();
 
-            $this->contestant = $row ? ModelContestant::createFromActiveRow($row) : null;
+            $this->contestant = $row ? ContestantModel::createFromActiveRow($row) : null;
         }
         return $this->contestant;
     }

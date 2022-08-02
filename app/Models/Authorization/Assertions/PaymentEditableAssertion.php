@@ -6,7 +6,6 @@ namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
-use FKSDB\Models\Transitions\Machine;
 use Nette\Security\Permission;
 
 class PaymentEditableAssertion implements Assertion

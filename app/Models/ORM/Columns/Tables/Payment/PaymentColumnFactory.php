@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
@@ -40,7 +40,7 @@ class PaymentColumnFactory extends ColumnFactory
      */
     protected function prerenderOriginalModel(Model $originalModel): ?Html
     {
-        if ($originalModel instanceof ModelPersonSchedule && !$originalModel->schedule_item->isPayable()) {
+        if ($originalModel instanceof PersonScheduleModel && !$originalModel->schedule_item->isPayable()) {
             return Html::el('span')
                 ->addAttributes(['class' => 'badge bg-info'])
                 ->addText(_('Not payable'));

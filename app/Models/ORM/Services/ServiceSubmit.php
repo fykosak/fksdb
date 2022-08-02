@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use Fykosak\NetteORM\Service;
 
 /**
@@ -33,7 +33,7 @@ class ServiceSubmit extends Service
         return $this->submitCache[$key];
     }
 
-    public function findByContestant(ModelContestant $contestant, ModelTask $task, bool $useCache = true): ?SubmitModel
+    public function findByContestant(ContestantModel $contestant, TaskModel $task, bool $useCache = true): ?SubmitModel
     {
         $key = $contestant->ct_id . ':' . $task->task_id;
         if (!isset($this->submitCache[$key]) || !$useCache) {
@@ -43,7 +43,7 @@ class ServiceSubmit extends Service
         return $this->submitCache[$key];
     }
 
-    public static function serializeSubmit(?SubmitModel $submit, ModelTask $task, ?int $studyYear): array
+    public static function serializeSubmit(?SubmitModel $submit, TaskModel $task, ?int $studyYear): array
     {
         return [
             'submitId' => $submit ? $submit->submit_id : null,

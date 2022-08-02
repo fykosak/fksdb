@@ -12,7 +12,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceAddress;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -24,7 +24,7 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
- * @property ModelPerson|null $model
+ * @property PersonModel|null $model
  */
 class PersonFormComponent extends EntityFormComponent
 {
@@ -44,7 +44,7 @@ class PersonFormComponent extends EntityFormComponent
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
-    public function __construct(Container $container, int $userPermission, ?ModelPerson $person)
+    public function __construct(Container $container, int $userPermission, ?PersonModel $person)
     {
         parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
@@ -71,9 +71,9 @@ class PersonFormComponent extends EntityFormComponent
     {
         switch ($containerName) {
             case self::POST_CONTACT_PERMANENT:
-                return new PostContactType(PostContactType::PERMANENT);
+                return PostContactType::tryFrom(PostContactType::PERMANENT);
             case self::POST_CONTACT_DELIVERY:
-                return new PostContactType(PostContactType::DELIVERY);
+                return PostContactType::tryFrom(PostContactType::DELIVERY);
             default:
                 throw new InvalidArgumentException();
         }
@@ -142,14 +142,14 @@ class PersonFormComponent extends EntityFormComponent
                 self::PERSON_CONTAINER => $this->model->toArray(),
                 self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
                 self::POST_CONTACT_DELIVERY =>
-                    $this->model->getAddress(new PostContactType(PostContactType::DELIVERY)) ?? [],
+                    $this->model->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY)) ?? [],
                 self::POST_CONTACT_PERMANENT =>
-                    $this->model->getAddress(new PostContactType(PostContactType::PERMANENT)) ?? [],
+                    $this->model->getAddress(PostContactType::tryFrom(PostContactType::PERMANENT)) ?? [],
             ]);
         }
     }
 
-    private function storeAddresses(ModelPerson $person, array $data): void
+    private function storeAddresses(PersonModel $person, array $data): void
     {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);

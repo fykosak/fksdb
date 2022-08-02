@@ -8,17 +8,17 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\DI\Container;
 use FKSDB\Components\Controls\Stalking\Components;
 
 class StalkingContainer extends BaseComponent
 {
 
-    private ModelPerson $person;
+    private PersonModel $person;
     private int $userPermission;
 
-    public function __construct(Container $container, ModelPerson $person, int $userPermission)
+    public function __construct(Container $container, PersonModel $person, int $userPermission)
     {
         parent::__construct($container);
         $this->person = $person;

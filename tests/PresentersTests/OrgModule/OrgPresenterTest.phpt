@@ -7,17 +7,17 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\EntityForms\OrgFormComponent;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class OrgPresenterTest extends AbstractOrgPresenterTestCase
 {
-    private ModelPerson $person;
-    private ModelOrg $org;
-    private ModelPerson $orgPerson;
+    private PersonModel $person;
+    private OrgModel $org;
+    private PersonModel $orgPerson;
 
     protected function setUp(): void
     {

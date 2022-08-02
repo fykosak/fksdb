@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Persons;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Security\Resource;
 use Nette\SmartObject;
 
@@ -16,20 +16,20 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
 
     private ContestAuthorizator $contestAuthorizator;
 
-    private ModelContest $contest;
+    private ContestModel $contest;
 
-    public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest)
+    public function __construct(ContestAuthorizator $contestAuthorizator, ContestModel $contest)
     {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->contest = $contest;
     }
 
-    public function isVisible(?ModelPerson $person): bool
+    public function isVisible(?PersonModel $person): bool
     {
         return !$person || $this->isAllowed($person, 'edit');
     }
 
-    public function getResolutionMode(?ModelPerson $person): string
+    public function getResolutionMode(?PersonModel $person): string
     {
         if (!$person) {
             return ReferencedHandler::RESOLUTION_EXCEPTION;
@@ -38,7 +38,7 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
             : ReferencedHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(?ModelPerson $person): bool
+    public function isModifiable(?PersonModel $person): bool
     {
         return !$person || $this->isAllowed($person, 'edit');
     }
@@ -46,7 +46,7 @@ class AclResolver implements VisibilityResolver, ModifiabilityResolver
     /**
      * @param string|Resource|null $privilege
      */
-    private function isAllowed(ModelPerson $person, $privilege): bool
+    private function isAllowed(PersonModel $person, $privilege): bool
     {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }

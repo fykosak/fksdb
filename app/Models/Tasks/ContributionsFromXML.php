@@ -6,7 +6,7 @@ namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Pipeline\Stage;
 
@@ -84,12 +84,12 @@ class ContributionsFromXML extends Stage
                     $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
                     continue;
                 }
-                $contributors[] = ModelOrg::createFromActiveRow($row);
+                $contributors[] = OrgModel::createFromActiveRow($row);
             }
 
             // delete old contributions
             foreach ($task->getContributions($type) as $contribution) {
-                $this->taskContributionService->dispose($contribution);
+                $this->taskContributionService->disposeModel($contribution);
             }
 
             // store new contributions

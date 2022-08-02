@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Models\RegionModel;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelRegion findByPrimary($key)
+ * @method RegionModel findByPrimary($key)
  */
 class ServiceRegion extends Service
 {

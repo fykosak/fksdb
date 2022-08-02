@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -43,7 +43,7 @@ class YearCalculator
         return $calYear;
     }
 
-    public static function getGraduationYear(int $studyYear, ?ModelContestYear $contestYear): int
+    public static function getGraduationYear(int $studyYear, ?ContestYearModel $contestYear): int
     {
         $acYear = is_null($contestYear) ? self::getCurrentAcademicYear() : $contestYear->ac_year;
 
@@ -59,7 +59,7 @@ class YearCalculator
     /**
      * @see getCurrentAcademicYear
      */
-    public function getForwardShift(ModelContest $contest): int
+    public function getForwardShift(ContestModel $contest): int
     {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {

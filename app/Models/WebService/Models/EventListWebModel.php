@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -31,7 +31,7 @@ class EventListWebModel extends WebModel
         $document = new \DOMDocument();
         $document->formatOutput = true;
         $rootNode = $document->createElement('events');
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         foreach ($query as $event) {
             $rootNode->appendChild($event->createXMLNode($document));
         }
@@ -42,7 +42,7 @@ class EventListWebModel extends WebModel
     {
         $query = $this->serviceEvent->getTable()->where('event_type_id', $params['event_type_ids']);
         $events = [];
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         foreach ($query as $event) {
             $events[$event->event_id] = $event->__toArray();
         }

@@ -7,8 +7,8 @@ namespace FKSDB\Models\ORM\Columns\Tables\Event;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\ServiceEventType;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -30,7 +30,7 @@ class EventTypeColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         [$contest] = $args;
-        if (!$contest instanceof ModelContest) {
+        if (!$contest instanceof ContestModel) {
             throw new \InvalidArgumentException();
         }
 
@@ -47,7 +47,7 @@ class EventTypeColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelEvent $model
+     * @param EventModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

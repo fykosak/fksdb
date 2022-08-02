@@ -8,16 +8,16 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\DI\Container;
 
 class SchoolCheckComponent extends BaseComponent
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -45,7 +45,7 @@ class SchoolCheckComponent extends BaseComponent
     }
 
     /**
-     * @return ModelSchool[]
+     * @return SchoolModel[]
      */
     private function getSchoolsFromTeam(TeamModel2 $team): array
     {

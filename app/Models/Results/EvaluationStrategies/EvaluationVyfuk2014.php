@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
 
@@ -26,7 +26,7 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
 
     public function categoryToStudyYears(ModelCategory $category): array
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_ES_6:
                 return [6];
             case ModelCategory::CAT_ES_7:
@@ -36,11 +36,11 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
             case ModelCategory::CAT_ES_9:
                 return [null, 9];
             default:
-                throw new InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1') {
             return 'IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)';
@@ -58,11 +58,11 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
         s.raw_points)";
     }
 
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
     {
         if ($task->label == '1' && $task->series < 7) {
             if (
-                in_array($category->id, [
+                in_array($category->value, [
                     ModelCategory::CAT_ES_6,
                     ModelCategory::CAT_ES_7,
                 ])
@@ -78,7 +78,7 @@ class EvaluationVyfuk2014 implements EvaluationStrategy
 
     public function getTaskPointsColumn(ModelCategory $category): string
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
                 return 'IF (s.raw_points IS NOT NULL, t.points, NULL)';

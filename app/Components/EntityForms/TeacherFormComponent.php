@@ -9,14 +9,14 @@ use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 
 /**
- * @property ModelTeacher|null $model
+ * @property TeacherModel|null $model
  */
 class TeacherFormComponent extends EntityFormComponent
 {
@@ -56,7 +56,7 @@ class TeacherFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         $this->serviceTeacher->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),

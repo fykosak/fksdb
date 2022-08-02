@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
@@ -47,7 +47,7 @@ class PersonPaymentContainer extends ContainerWithOptions
         $query->order('person.family_name ,person_id');
         $lastPersonId = null;
         $container = null;
-        /** @var ModelPersonSchedule $model */
+        /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             if ($this->showAll || !$model->hasActivePayment()) {
                 if ($model->person_id !== $lastPersonId) {

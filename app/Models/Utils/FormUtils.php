@@ -10,38 +10,26 @@ use Nette\Utils\ArrayHash;
 
 class FormUtils
 {
-
-    /**
-     * Convert empty strings to nulls.
-     *
-     * @param string|iterable $values
-     * @return iterable|null
-     * @todo Move to general utils.
-     */
-    public static function emptyStrToNull($values, bool $asArray = false)
+    public static function emptyStrToNull(iterable $values): ArrayHash
     {
-        if (is_iterable($values)) {
-            $result = $asArray ? [] : new ArrayHash();
-            foreach ($values as $key => $value) {
-                $result[$key] = self::emptyStrToNull($value, $asArray);
+        $result = new ArrayHash();
+        foreach ($values as $key => $value) {
+            if (is_iterable($value)) {
+                $result[$key] = self::emptyStrToNull($value);
+            } elseif ($value === '') {
+                $result[$key] = null;
+            } else {
+                $result[$key] = $value;
             }
-            return $result;
-        } elseif ($values === '') {
-            return null;
-        } else {
-            return $values;
         }
+        return $result;
     }
 
-    /**
-     * Convert empty strings to nulls.
-     * @todo Move to general utils.
-     */
     public static function emptyStrToNull2(iterable $values): array
     {
         $result = [];
         foreach ($values as $key => $value) {
-            if (is_iterable($values)) {
+            if (is_iterable($value)) {
                 $result[$key] = self::emptyStrToNull2($value);
             } elseif ($value === '') {
                 $result[$key] = null;
@@ -52,35 +40,16 @@ class FormUtils
         return $result;
     }
 
-    /**
-     * @todo Move to general utils.
-     */
-    public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash
+    public static function removeEmptyValues(iterable $values, bool $ignoreNulls = false): array
     {
-        $result = new ArrayHash();
+        $result = [];
         foreach ($values as $key => $value) {
-            if ($value instanceof ArrayHash) {
-                $clear = self::removeEmptyHashes($value, $ignoreNulls);
+            if (is_iterable($value)) {
+                $clear = self::removeEmptyValues($value, $ignoreNulls);
                 if (count($clear)) {
                     $result[$key] = $clear;
                 }
             } elseif (!$ignoreNulls || $value !== null) {
-                $result[$key] = $value;
-            }
-        }
-        return $result;
-    }
-
-    public static function removeEmptyValues(array $values): array
-    {
-        $result = [];
-        foreach ($values as $key => $value) {
-            if (is_array($value)) {
-                $clear = self::removeEmptyValues($value);
-                if (count($clear)) {
-                    $result[$key] = $clear;
-                }
-            } elseif ($value !== null) {
                 $result[$key] = $value;
             }
         }

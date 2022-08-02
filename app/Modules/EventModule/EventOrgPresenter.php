@@ -10,7 +10,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
+use FKSDB\Models\ORM\Models\EventOrgModel;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -20,7 +20,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelEventOrg getEntity()
+ * @method EventOrgModel getEntity()
  */
 class EventOrgPresenter extends BasePresenter
 {

@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\PersonInfo;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
-use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -33,7 +33,7 @@ class CitizenshipColumnFactory extends ColumnFactory
     {
         $countries = $this->serviceRegion->getCountries();
         $results = [];
-        /** @var ModelRegion $country */
+        /** @var RegionModel $country */
         foreach ($countries as $country) {
             $results[$country->country_iso] = $country->name;
         }

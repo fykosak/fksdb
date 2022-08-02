@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\PaymentState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use Fykosak\NetteORM\Service;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
@@ -37,7 +37,7 @@ class ServiceSchedulePayment extends Service
         }
         $payment->related(DbNames::TAB_SCHEDULE_PAYMENT)->delete();
         foreach ($newScheduleIds as $id) {
-            /** @var ModelSchedulePayment $model */
+            /** @var SchedulePaymentModel $model */
             $model = $this->getTable()->where('person_schedule_id', $id)
                 ->where('payment.state !=? OR payment.state IS NULL', PaymentState::CANCELED)
                 ->fetch();

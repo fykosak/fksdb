@@ -6,9 +6,10 @@ namespace FKSDB\Models\ORM\Models\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class ScheduleGroupType implements EnumColumn
+class ScheduleGroupType extends FakeStringEnum implements EnumColumn
 {
     public const ACCOMMODATION = 'accommodation';
     public const ACCOMMODATION_GENDER = 'accommodation_gender';
@@ -30,19 +31,6 @@ class ScheduleGroupType implements EnumColumn
 
     public const ARRIVAL_DESTINATION = 'arrival_destination';
     public const DEPARTURE_DESTINATION = 'departure_destination';
-
-
-    public string $value;
-
-    public function __construct(string $type)
-    {
-        $this->value = $type;
-    }
-
-    public static function tryFrom(?string $type): ?self
-    {
-        return $type ? new self($type) : null;
-    }
 
     /**
      * @return self[]

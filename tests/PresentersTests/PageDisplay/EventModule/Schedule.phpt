@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
 
 $container = require '../../../Bootstrap.php';
@@ -12,7 +12,7 @@ $container = require '../../../Bootstrap.php';
 class Schedule extends EventModuleTestCase
 {
 
-    private ModelScheduleGroup $scheduleGroup;
+    private ScheduleGroupModel $scheduleGroup;
 
     protected function setUp(): void
     {

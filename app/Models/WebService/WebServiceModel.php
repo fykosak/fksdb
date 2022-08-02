@@ -7,7 +7,7 @@ namespace FKSDB\Models\WebService;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Schema\Processor;
 use FKSDB\Models\WebService\Models\{
     FyziklaniResultsWebModel,
@@ -33,7 +33,7 @@ class WebServiceModel
 {
     use SmartObject;
 
-    private ModelLogin $authenticatedLogin;
+    private LoginModel $authenticatedLogin;
     private PasswordAuthenticator $authenticator;
     private Container $container;
 

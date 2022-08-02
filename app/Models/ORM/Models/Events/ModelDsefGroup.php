@@ -11,5 +11,4 @@ use Fykosak\NetteORM\Model;
  */
 class ModelDsefGroup extends Model
 {
-
 }

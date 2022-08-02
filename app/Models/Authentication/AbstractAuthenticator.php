@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authentication;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
@@ -26,7 +26,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
     /**
      * @throws \Exception
      */
-    protected function logAuthentication(ModelLogin $login): void
+    protected function logAuthentication(LoginModel $login): void
     {
         Debugger::log(
             sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),

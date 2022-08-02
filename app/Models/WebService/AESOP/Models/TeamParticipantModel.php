@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\DI\Container;
 
 class TeamParticipantModel extends EventModel
@@ -14,7 +14,7 @@ class TeamParticipantModel extends EventModel
 
     public function __construct(
         Container $container,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         string $eventName,
         string $category
     ) {

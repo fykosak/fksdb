@@ -7,8 +7,8 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
@@ -20,8 +20,8 @@ use Nette\Utils\DateTime;
 
 abstract class FyziklaniTestCase extends DatabaseTestCase
 {
-    protected ModelEvent $event;
-    protected ModelPerson $userPerson;
+    protected EventModel $event;
+    protected PersonModel $userPerson;
 
     protected function setUp(): void
     {
@@ -38,7 +38,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         );
     }
 
-    protected function createEvent(array $data): ModelEvent
+    protected function createEvent(array $data): EventModel
     {
         if (!isset($data['event_type_id'])) {
             $data['event_type_id'] = 1;

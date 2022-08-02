@@ -13,7 +13,7 @@ use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use Fykosak\Utils\Logging\DevNullLogger;
@@ -39,7 +39,7 @@ class ApplicationHandlerTest extends EventTestCase
         $this->serviceTeam = $this->getContainer()->getByType(TeamService::class);
     }
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         throw new BadRequestException();
     }

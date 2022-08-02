@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\StoredQuery;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
 class StoredQueryTagCloudComponent extends BaseComponent
@@ -38,7 +38,7 @@ class StoredQueryTagCloudComponent extends BaseComponent
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte');
     }
 
-    final public function renderDetail(ModelStoredQuery $query): void
+    final public function renderDetail(QueryModel $query): void
     {
         $this->template->tags = $query->getStoredQueryTagTypes();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.detail.latte');

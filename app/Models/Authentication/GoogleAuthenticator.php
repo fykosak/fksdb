@@ -6,10 +6,10 @@ namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -40,7 +40,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
      * @throws InactiveLoginException
      * @throws \Exception
      */
-    public function authenticate(array $user): ModelLogin
+    public function authenticate(array $user): LoginModel
     {
         $person = $this->findPerson($user);
 
@@ -62,7 +62,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
     /**
      * @throws AuthenticationException
      */
-    private function findPerson(array $user): ?ModelPerson
+    private function findPerson(array $user): ?PersonModel
     {
         if (!$user['email']) {
             throw new AuthenticationException(_('Email not found in the google account.'));
@@ -70,20 +70,20 @@ class GoogleAuthenticator extends AbstractAuthenticator
         return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
     }
 
-    private function findOrg(array $user): ?ModelPerson
+    private function findOrg(array $user): ?PersonModel
     {
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
             case 'fykos.cz':
-                $contestId = ModelContest::ID_FYKOS;
+                $contestId = ContestModel::ID_FYKOS;
                 break;
             case 'vyfuk.org':
-                $contestId = ModelContest::ID_VYFUK;
+                $contestId = ContestModel::ID_VYFUK;
                 break;
             default:
                 return null;
         }
-        /** @var ModelOrg|null $org */
+        /** @var OrgModel|null $org */
         $org = $this->serviceOrg->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
             ->fetch();

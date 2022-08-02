@@ -7,7 +7,7 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
@@ -23,10 +23,10 @@ use Tester\Assert;
 
 class Authorization extends FyziklaniTestCase
 {
-    private ModelPerson $perPerson;
-    private ModelPerson $perOrg;
-    private ModelPerson $perOrgOther;
-    private ModelPerson $perContestant;
+    private PersonModel $perPerson;
+    private PersonModel $perOrg;
+    private PersonModel $perOrgOther;
+    private PersonModel $perContestant;
     private SubmitModel $submit;
 
     protected function setUp(): void

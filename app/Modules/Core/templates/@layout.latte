@@ -42,7 +42,7 @@
                 {block nav-right}
                     {control languageChooser}
                     {if $user->isLoggedIn()}
-                        {var FKSDB\Models\ORM\Models\ModelLogin $login = $user->getIdentity()}
+                        {var FKSDB\Models\ORM\Models\LoginModel $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
                                data-bs-toggle="dropdown">

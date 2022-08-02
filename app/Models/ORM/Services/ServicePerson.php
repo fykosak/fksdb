@@ -5,33 +5,33 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelPerson|null findByPrimary($key)
- * @method ModelPerson createNewModel(array $data)
+ * @method PersonModel|null findByPrimary($key)
+ * @method PersonModel createNewModel(array $data)
  */
 class ServicePerson extends Service
 {
 
-    public function findByEmail(?string $email): ?ModelPerson
+    public function findByEmail(?string $email): ?PersonModel
     {
         if (!$email) {
             return null;
         }
-        /** @var ModelPerson|null $result */
+        /** @var PersonModel|null $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
         return $result;
     }
 
     /**
-     * @param ModelPerson|null $model
+     * @param PersonModel|null $model
      */
-    public function storeModel(array $data, ?Model $model = null): ModelPerson
+    public function storeModel(array $data, ?Model $model = null): PersonModel
     {
         if (is_null($model) && is_null($data['gender'])) {
-            $data['gender'] = ModelPerson::inferGender($data);
+            $data['gender'] = PersonModel::inferGender($data);
         }
         return parent::storeModel($data, $model);
     }

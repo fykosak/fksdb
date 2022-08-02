@@ -12,8 +12,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Models\ModelTaskContribution;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Models\TaskContributionModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use FKSDB\Models\ORM\Services\ServiceTaskContribution;
 use FKSDB\Models\Submits\SeriesTable;
@@ -53,7 +53,7 @@ class HandoutFormComponent extends BaseComponent
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
         $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
             $control->setMultiSelect(true);
@@ -74,17 +74,17 @@ class HandoutFormComponent extends BaseComponent
         $values = $form->getValues();
         $connection = $this->serviceTaskContribution->explorer->getConnection();
         $connection->beginTransaction();
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => ModelTaskContribution::TYPE_GRADE,
+                'type' => TaskContributionModel::TYPE_GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
-                    'type' => ModelTaskContribution::TYPE_GRADE,
+                    'type' => TaskContributionModel::TYPE_GRADE,
                 ];
                 $this->serviceTaskContribution->createNewModel($data);
             }
@@ -107,17 +107,17 @@ class HandoutFormComponent extends BaseComponent
     public function setDefaults(): void
     {
         $taskIds = [];
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->serviceTaskContribution->getTable()->where([
-            'type' => ModelTaskContribution::TYPE_GRADE,
+            'type' => TaskContributionModel::TYPE_GRADE,
             'task_id' => $taskIds,
         ]);
 
         $values = [];
-        /** @var ModelTaskContribution $contribution */
+        /** @var TaskContributionModel $contribution */
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;

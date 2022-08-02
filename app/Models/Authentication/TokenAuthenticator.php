@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceLogin;
 use Nette\Http\Session;
@@ -33,7 +33,7 @@ class TokenAuthenticator extends AbstractAuthenticator
      * @throws AuthenticationException
      * @throws \Exception
      */
-    public function authenticate(string $tokenData): ModelLogin
+    public function authenticate(string $tokenData): LoginModel
     {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
@@ -95,7 +95,7 @@ class TokenAuthenticator extends AbstractAuthenticator
         unset($section->data);
     }
 
-    private function storeAuthToken(ModelAuthToken $token): void
+    private function storeAuthToken(AuthTokenModel $token): void
     {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;

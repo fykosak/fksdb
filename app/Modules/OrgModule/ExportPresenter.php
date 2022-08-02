@@ -9,7 +9,7 @@ use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloudComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
@@ -21,7 +21,7 @@ use Nette\Security\Resource;
 use Nette\Utils\Strings;
 
 /**
- * @method ModelStoredQuery getEntity()
+ * @method QueryModel getEntity()
  */
 class ExportPresenter extends BasePresenter
 {
@@ -65,7 +65,7 @@ class ExportPresenter extends BasePresenter
         return $this->storedQuery;
     }
 
-    public function getQueryByQId(): ?ModelStoredQuery
+    public function getQueryByQId(): ?QueryModel
     {
         $qid = $this->getParameter('qid');
         if ($qid) {

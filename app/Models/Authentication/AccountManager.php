@@ -8,9 +8,9 @@ use FKSDB\Models\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Models\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use FKSDB\Models\ORM\Services\ServiceLogin;
@@ -53,12 +53,12 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin
+    public function createLoginWithInvitation(PersonModel $person, string $email, string $lang): LoginModel
     {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->invitationExpiration);
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
+        $token = $this->serviceAuthToken->createToken($login, AuthTokenModel::TYPE_INITIAL_LOGIN, $until);
 
         $templateParams = [
             'token' => $token->token,
@@ -82,7 +82,7 @@ class AccountManager
      * @throws BadTypeException
      * @throws \Exception
      */
-    public function sendRecovery(ModelLogin $login, string $lang): void
+    public function sendRecovery(LoginModel $login, string $lang): void
     {
         $person = $login->person;
         $recoveryAddress = $person ? $person->getInfo()->email : null;
@@ -90,14 +90,14 @@ class AccountManager
             throw new RecoveryNotImplementedException();
         }
         $token = $login->related(DbNames::TAB_AUTH_TOKEN)
-            ->where('type', ModelAuthToken::TYPE_RECOVERY)
+            ->where('type', AuthTokenModel::TYPE_RECOVERY)
             ->where('until > ?', new DateTime())->fetch();
         if ($token) {
             throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->recoveryExpiration);
-        $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
+        $token = $this->serviceAuthToken->createToken($login, AuthTokenModel::TYPE_RECOVERY, $until);
         $templateParams = [
             'token' => $token->token,
             'login' => $login,
@@ -112,16 +112,16 @@ class AccountManager
         $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    public function cancelRecovery(ModelLogin $login): void
+    public function cancelRecovery(LoginModel $login): void
     {
         $login->related(DbNames::TAB_AUTH_TOKEN)->where([
-            'type' => ModelAuthToken::TYPE_RECOVERY,
+            'type' => AuthTokenModel::TYPE_RECOVERY,
         ])->delete();
     }
 
-    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin
+    final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel
     {
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,
             'login' => $login,

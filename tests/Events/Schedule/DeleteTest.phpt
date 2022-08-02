@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
@@ -22,9 +22,9 @@ $container = require '../../Bootstrap.php';
 class DeleteTest extends ScheduleTestCase
 {
 
-    protected ModelPerson $lastPerson;
+    protected PersonModel $lastPerson;
 
-    protected ModelEventParticipant $dsefApp;
+    protected EventParticipantModel $dsefApp;
 
     protected function setUp(): void
     {

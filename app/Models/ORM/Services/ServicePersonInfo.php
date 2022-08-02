@@ -6,15 +6,15 @@ namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPersonInfo;
+use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method ModelPersonInfo findByPrimary($key)
+ * @method PersonInfoModel findByPrimary($key)
  */
 class ServicePersonInfo extends Service
 {
-    public function createNewModel(array $data): ModelPersonInfo
+    public function createNewModel(array $data): PersonInfoModel
     {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new \DateTime();
@@ -23,7 +23,7 @@ class ServicePersonInfo extends Service
     }
 
     /**
-     * @param ModelPersonInfo $model
+     * @param PersonInfoModel $model
      * @throws ModelException
      */
     public function updateModel(Model $model, array $data): bool

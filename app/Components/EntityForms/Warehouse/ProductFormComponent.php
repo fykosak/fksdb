@@ -39,7 +39,7 @@ class ProductFormComponent extends EntityFormComponent
     {
         /** @var array $values */
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
         $this->serviceProduct->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(

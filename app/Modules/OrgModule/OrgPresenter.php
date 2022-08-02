@@ -8,7 +8,7 @@ use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -47,9 +47,9 @@ class OrgPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws GoneException
      */
-    public function getEntity(): ModelOrg
+    public function getEntity(): OrgModel
     {
-        /** @var ModelOrg $entity */
+        /** @var OrgModel $entity */
         $entity = $this->traitGetEntity();
         if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
             throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
@@ -94,7 +94,7 @@ class OrgPresenter extends BasePresenter
 
     protected function getModelResource(): string
     {
-        return ModelOrg::RESOURCE_ID;
+        return OrgModel::RESOURCE_ID;
     }
 
     protected function createComponentCreateForm(): OrgFormComponent

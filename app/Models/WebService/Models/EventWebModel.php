@@ -7,12 +7,11 @@ namespace FKSDB\Models\WebService\Models;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelTeacher;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\WebService\XMLHelper;
@@ -56,7 +55,7 @@ class EventWebModel extends WebModel
         return new \SoapVar($doc->saveXML($root), XSD_ANYXML);
     }
 
-    private function createPersonScheduleNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
+    private function createPersonScheduleNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('personSchedule');
 
@@ -66,7 +65,7 @@ class EventWebModel extends WebModel
         $lastPersonId = null;
         $currentNode = null;
         foreach ($query as $row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+            $model = PersonScheduleModel::createFromActiveRow($row);
             if ($lastPersonId !== $model->person_id) {
                 $lastPersonId = $model->person_id;
                 $currentNode = $doc->createElement('personSchedule');
@@ -86,12 +85,12 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
-    private function createPersonScheduleArray(ModelEvent $event): array
+    private function createPersonScheduleArray(EventModel $event): array
     {
         $data = [];
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $event->event_id);
-        /** @var ModelPersonSchedule $model */
+        /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             $data[] = [
                 'person' => [
@@ -105,15 +104,15 @@ class EventWebModel extends WebModel
         return $data;
     }
 
-    private function createScheduleListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
+    private function createScheduleListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('schedule');
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row);
+            $group = ScheduleGroupModel::createFromActiveRow($row);
             $groupNode = $group->createXMLNode($doc);
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow);
+                $item = ScheduleItemModel::createFromActiveRow($itemRow);
                 $groupNode->appendChild($item->createXMLNode($doc));
             }
             $rootNode->appendChild($groupNode);
@@ -121,16 +120,16 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
-    private function createScheduleListArray(ModelEvent $event): array
+    private function createScheduleListArray(EventModel $event): array
     {
         $data = [];
         foreach ($event->getScheduleGroups() as $row) {
-            $group = ModelScheduleGroup::createFromActiveRow($row);
+            $group = ScheduleGroupModel::createFromActiveRow($row);
             $datum = $group->__toArray();
             $datum['schedule_items'] = [];
 
             foreach ($group->getItems() as $itemRow) {
-                $item = ModelScheduleItem::createFromActiveRow($itemRow);
+                $item = ScheduleItemModel::createFromActiveRow($itemRow);
                 $datum['schedule_items'][] = $item->__toArray();
             }
             $data[] = $datum;
@@ -138,14 +137,14 @@ class EventWebModel extends WebModel
         return $data;
     }
 
-    public function createEventDetailNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
+    public function createEventDetailNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('eventDetail');
         $rootNode->appendChild($event->createXMLNode($doc));
         return $rootNode;
     }
 
-    private function createTeamListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
+    private function createTeamListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('teams');
         foreach ($event->getFyziklaniTeams() as $row) {
@@ -174,7 +173,7 @@ class EventWebModel extends WebModel
         return $rootNode;
     }
 
-    private function createTeamListArray(ModelEvent $event): array
+    private function createTeamListArray(EventModel $event): array
     {
         $teamsData = [];
         foreach ($event->getFyziklaniTeams() as $row) {
@@ -212,28 +211,28 @@ class EventWebModel extends WebModel
         return $teamsData;
     }
 
-    private function createParticipantListNode(\DOMDocument $doc, ModelEvent $event): \DOMElement
+    private function createParticipantListNode(\DOMDocument $doc, EventModel $event): \DOMElement
     {
         $rootNode = $doc->createElement('participants');
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = EventParticipantModel::createFromActiveRow($row);
             $pNode = $this->createParticipantNode($participant, $doc);
             $rootNode->appendChild($pNode);
         }
         return $rootNode;
     }
 
-    private function createParticipantListArray(ModelEvent $event): array
+    private function createParticipantListArray(EventModel $event): array
     {
         $participants = [];
         foreach ($event->getParticipants() as $row) {
-            $participant = ModelEventParticipant::createFromActiveRow($row);
+            $participant = EventParticipantModel::createFromActiveRow($row);
             $participants[$participant->event_participant_id] = $this->createParticipantArray($participant);
         }
         return $participants;
     }
 
-    private function createParticipantNode(ModelEventParticipant $participant, \DOMDocument $doc): \DOMElement
+    private function createParticipantNode(EventParticipantModel $participant, \DOMDocument $doc): \DOMElement
     {
         $pNode = $participant->createXMLNode($doc);
         XMLHelper::fillArrayToNode($this->createParticipantArray($participant), $doc, $pNode);
@@ -248,7 +247,7 @@ class EventWebModel extends WebModel
     }
 
     /**
-     * @param TeamMemberModel|ModelEventParticipant $member
+     * @param TeamMemberModel|EventParticipantModel $member
      */
     private function createParticipantArray($member): array
     {

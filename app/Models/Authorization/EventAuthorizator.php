@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\Authorization\EventRole\EventRole;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
@@ -30,7 +30,7 @@ class EventAuthorizator
     /**
      * @param Resource|string|null $resource
      */
-    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool
+    public function isAllowed($resource, ?string $privilege, EventModel $event): bool
     {
         if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest())) {
             return true;
@@ -46,10 +46,10 @@ class EventAuthorizator
     /**
      * @return EventRole[]
      */
-    private function getRolesForEvent(ModelEvent $event): array
+    private function getRolesForEvent(EventModel $event): array
     {
         $login = $this->user->getIdentity();
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $person = $login ? $login->person : null;
         return $person ? $person->getEventRoles($event) : [];
     }

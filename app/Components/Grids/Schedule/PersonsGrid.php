@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -17,9 +17,9 @@ use NiftyGrid\DuplicateColumnException;
 class PersonsGrid extends BaseGrid
 {
 
-    private ModelScheduleItem $item;
+    private ScheduleItemModel $item;
 
-    public function __construct(Container $container, ModelScheduleItem $item)
+    public function __construct(Container $container, ScheduleItemModel $item)
     {
         parent::__construct($container);
         $this->item = $item;
@@ -44,6 +44,6 @@ class PersonsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelPersonSchedule::class;
+        return PersonScheduleModel::class;
     }
 }

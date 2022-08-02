@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Columns\Tables\Org;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\StringPrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Form;
@@ -33,7 +33,7 @@ class OrderColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelOrg $model
+     * @param OrgModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

@@ -272,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `auth_token` (
   DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `contestant_base`
+-- Table `contestant_base` # TODO rename to contestant and rename PK
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `contestant_base` (
   `ct_id`      INT(11)    NOT NULL AUTO_INCREMENT,
@@ -611,35 +611,36 @@ CREATE TABLE IF NOT EXISTS `task` (
 -- -----------------------------------------------------
 -- Table `submit`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `submit` (
-  `submit_id`    INT(11)                 NOT NULL AUTO_INCREMENT,
-  `ct_id`        INT(11)                 NOT NULL
-  COMMENT 'Contestant',
-  `task_id`      INT(11)                 NOT NULL
-  COMMENT 'Task',
-  `submitted_on` DATETIME                NULL     DEFAULT NULL,
-  `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
-  COMMENT 'Typ příjmu řešení', # TODO to enum
-  `note`         VARCHAR(255)            NULL     DEFAULT NULL
-  COMMENT 'Pocet stranek a jine poznamky',
-  `raw_points`   DECIMAL(4, 2)           NULL     DEFAULT NULL
-  COMMENT 'Pred prepoctem',
-  `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
-  COMMENT 'Cache spoctenych bodu.',
-  `corrected`       TINYINT(1)   NULL DEFAULT 0
-  COMMENT 'Má uloha nahrané riešnie?',
-  PRIMARY KEY (`submit_id`),
-  UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
-  INDEX `task_id` (`task_id` ASC),
-  CONSTRAINT `submit_ibfk_1`
-  FOREIGN KEY (`ct_id`)
-  REFERENCES `contestant_base` (`ct_id`),
-  CONSTRAINT `submit_ibfk_2`
-  FOREIGN KEY (`task_id`)
-  REFERENCES `task` (`task_id`)
+CREATE TABLE IF NOT EXISTS `submit`
+(
+    `submit_id`    INT(11)                         NOT NULL AUTO_INCREMENT,
+    `ct_id`        INT(11)                         NOT NULL
+        COMMENT 'Contestant',
+    `task_id`      INT(11)                         NOT NULL
+        COMMENT 'Task',
+    `submitted_on` DATETIME                        NULL DEFAULT NULL,
+    `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
+        COMMENT 'Typ příjmu řešení', # TODO to enum
+    `note`         VARCHAR(255)                    NULL DEFAULT NULL
+        COMMENT 'Pocet stranek a jine poznamky',
+    `raw_points`   DECIMAL(4, 2)                   NULL DEFAULT NULL
+        COMMENT 'Pred prepoctem',
+    `calc_points`  DECIMAL(4, 2)                   NULL DEFAULT NULL
+        COMMENT 'Cache spoctenych bodu.',
+    `corrected`    BOOLEAN                         NULL DEFAULT FALSE
+        COMMENT 'Má uloha nahrané riešnie?',
+    PRIMARY KEY (`submit_id`),
+    UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
+    INDEX `task_id` (`task_id` ASC),
+    CONSTRAINT `submit_ibfk_1`
+        FOREIGN KEY (`ct_id`)
+            REFERENCES `contestant_base` (`ct_id`),
+    CONSTRAINT `submit_ibfk_2`
+        FOREIGN KEY (`task_id`)
+            REFERENCES `task` (`task_id`)
 )
-  ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8;
+    ENGINE = InnoDB
+    DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
 -- Table `task_contribution`
@@ -1097,7 +1098,7 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag` (
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
-  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT, # TODO rename
   `note`      TEXT(32) NULL DEFAULT NULL,
   `event_id`  INT(11)  NOT NULL,
   `person_id` INT(11)  NOT NULL,

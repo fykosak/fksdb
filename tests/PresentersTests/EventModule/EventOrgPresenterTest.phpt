@@ -8,9 +8,9 @@ $container = require '../../Bootstrap.php';
 
 use DateTime;
 use FKSDB\Components\EntityForms\EventOrgFormComponent;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceEventOrg;
 use FKSDB\Models\ORM\Services\ServiceOrg;
@@ -22,10 +22,10 @@ use Tester\Assert;
 class EventOrgPresenterTest extends EntityPresenterTestCase
 {
 
-    private ModelPerson $person;
-    private ModelPerson $eventOrgPerson;
-    private ModelEventOrg $eventOrg;
-    private ModelEvent $event;
+    private PersonModel $person;
+    private PersonModel $eventOrgPerson;
+    private EventOrgModel $eventOrg;
+    private EventModel $event;
 
     protected function setUp(): void
     {

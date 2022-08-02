@@ -104,11 +104,12 @@ class TransitionsExtension extends CompilerExtension
           }*/
         return [
             array_map(
-                fn(string $state): ?EnumColumn => $state !== AbstractMachine::STATE_INIT ? new $enumClassName($state)
+                fn(string $state): ?EnumColumn => $state !== AbstractMachine::STATE_INIT
+                    ? $enumClassName::tryFrom($state)
                     : null,
                 explode('|', $sources)
             ),
-            $target !== AbstractMachine::STATE_TERMINATED ? new $enumClassName($target) : null,
+            $target !== AbstractMachine::STATE_TERMINATED ? $enumClassName::tryFrom($target) : null,
         ];
     }
 }

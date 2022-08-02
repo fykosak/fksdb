@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Application\BadRequestException;
@@ -32,7 +32,7 @@ class StoredQueryFactory implements XMLNodeSerializer
     }
 
     /**
-     * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
+     * @param ParameterModel[]|StoredQueryParameter[] $parameters
      */
     public function createQueryFromSQL(BasePresenter $presenter, string $sql, array $parameters): StoredQuery
     {
@@ -41,7 +41,7 @@ class StoredQueryFactory implements XMLNodeSerializer
         return $storedQuery;
     }
 
-    public function createQuery(BasePresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery
+    public function createQuery(BasePresenter $presenter, QueryModel $patternQuery): StoredQuery
     {
         $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
@@ -125,15 +125,5 @@ class StoredQueryFactory implements XMLNodeSerializer
                 $rowNode->appendChild($colNode);
             }
         }
-    }
-
-    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter
-    {
-        return new StoredQueryParameter(
-            $model->name,
-            $model->getDefaultValue(),
-            $model->getPDOType(),
-            $model->description
-        );
     }
 }

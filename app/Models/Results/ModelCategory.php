@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results;
 
 /**
+ * TODO to enum
  * POD, not represented in database
  */
 class ModelCategory
@@ -21,10 +22,10 @@ class ModelCategory
     public const CAT_UNK = 'UNK';
     public const CAT_ALL = 'ALL';
 
-    public string $id;
+    public string $value;
 
-    public function __construct(string $id)
+    public function __construct(string $value)
     {
-        $this->id = $id;
+        $this->value = $value;
     }
 }

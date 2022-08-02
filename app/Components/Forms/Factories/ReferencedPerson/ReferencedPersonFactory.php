@@ -10,9 +10,9 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
@@ -56,12 +56,12 @@ class ReferencedPersonFactory
 
     public function createReferencedPerson(
         array $fieldsDefinition,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         string $searchType,
         bool $allowClear,
         ModifiabilityResolver $modifiabilityResolver,
         VisibilityResolver $visibilityResolver,
-        ?ModelEvent $event = null
+        ?EventModel $event = null
     ): ReferencedId {
         $handler = $this->referencedPersonHandlerFactory->create($contestYear, null, $event);
         return new ReferencedId(
@@ -81,11 +81,11 @@ class ReferencedPersonFactory
     }
 
     final public static function isFilled(
-        ModelPerson $person,
+        PersonModel $person,
         string $sub,
         string $field,
-        ModelContestYear $contestYear,
-        ?ModelEvent $event = null
+        ContestYearModel $contestYear,
+        ?EventModel $event = null
     ): bool {
         $value = self::getPersonValue($person, $sub, $field, $contestYear, false, false, true, $event);
         return !($value === null || $value === '');
@@ -95,14 +95,14 @@ class ReferencedPersonFactory
      * @return mixed
      */
     public static function getPersonValue(
-        ?ModelPerson $person,
+        ?PersonModel $person,
         string $sub,
         string $field,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         bool $extrapolate = false,
         bool $hasDelivery = false,
         bool $targetValidation = false,
-        ?ModelEvent $event = null
+        ?EventModel $event = null
     ) {
         if (!$person) {
             return null;
@@ -123,7 +123,7 @@ class ReferencedPersonFactory
                 return ($history = $person->getHistoryByContestYear($contestYear, $extrapolate)) ? $history[$field]
                     : null;
             case 'post_contact_d':
-                return $person->getPostContact(new PostContactType(PostContactType::DELIVERY));
+                return $person->getPostContact(PostContactType::tryFrom(PostContactType::DELIVERY));
             case 'post_contact_p':
                 if ($targetValidation || !$hasDelivery) {
                     return $person->getPermanentPostContact();

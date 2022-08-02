@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -18,10 +18,10 @@ use NiftyGrid\DuplicateColumnException;
 abstract class AbstractApplicationsGrid extends BaseGrid
 {
 
-    protected ModelEvent $event;
+    protected EventModel $event;
     private Holder $holder;
 
-    public function __construct(ModelEvent $event, Holder $holder, Container $container)
+    public function __construct(EventModel $event, Holder $holder, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;

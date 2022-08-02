@@ -14,7 +14,7 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Authentication\Provider\GoogleProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\SendFailedException;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceAuthToken;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
@@ -221,7 +221,7 @@ final class AuthenticationPresenter extends BasePresenter
         $values = $form->getValues();
         try {
             $this->getUser()->login($values['id'], $values['password']);
-            /** @var ModelLogin $login */
+            /** @var LoginModel $login */
             $this->initialRedirect();
         } catch (AuthenticationException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);

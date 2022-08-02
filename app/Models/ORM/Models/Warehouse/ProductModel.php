@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use Fykosak\NetteORM\Model;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
@@ -29,14 +30,16 @@ class ProductModel extends Model implements Resource
     }
 
     /**
-     * @return mixed
+     * @param string $key
+     * @return ProductCategory|mixed|ActiveRow
+     * @throws \ReflectionException
      */
     public function &__get(string $key)
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'category':
-                $value = new ProductCategory($value);
+                $value = ProductCategory::tryFrom($value);
                 break;
         }
         return $value;

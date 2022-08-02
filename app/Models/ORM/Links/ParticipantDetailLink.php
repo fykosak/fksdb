@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Links;
 
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 
 class ParticipantDetailLink extends LinkFactory
 {
@@ -16,7 +16,7 @@ class ParticipantDetailLink extends LinkFactory
     }
 
     /**
-     * @param ModelEventParticipant $model
+     * @param EventParticipantModel $model
      */
     protected function getDestination(Model $model): string
     {
@@ -28,7 +28,7 @@ class ParticipantDetailLink extends LinkFactory
     }
 
     /**
-     * @param ModelEventParticipant $model
+     * @param EventParticipantModel $model
      */
     protected function prepareParams(Model $model): array
     {

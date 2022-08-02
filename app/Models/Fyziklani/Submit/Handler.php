@@ -11,7 +11,7 @@ use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use Nette\DI\Container;
@@ -24,11 +24,11 @@ class Handler
     public const LOG_FORMAT = 'Submit %d was %s by %s';
     private SubmitService $submitService;
     private User $user;
-    private ModelEvent $event;
+    private EventModel $event;
     private TaskCodePreprocessor $taskCodePreprocessor;
 
     public function __construct(
-        ModelEvent $event,
+        EventModel $event,
         Container $container
     ) {
         $this->event = $event;

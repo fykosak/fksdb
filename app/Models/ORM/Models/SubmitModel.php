@@ -5,39 +5,35 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
- * @property-read \DateTimeInterface submitted_on
  * @property-read int submit_id
- * @property-read string source
- * @property-read string note
- * @property-read int raw_points
- * @property-read int points
  * @property-read int ct_id
  * @property-read ActiveRow contestant_base TODO
  * @property-read int task_id
- * @property-read ModelTask task
+ * @property-read TaskModel task
+ * @property-read \DateTimeInterface submitted_on
+ * @property-read SubmitSource source
+ * @property-read string note
+ * @property-read float raw_points
+ * @property-read float calc_points
  * @property-read bool corrected
  */
 class SubmitModel extends Model implements Resource
 {
-
-    public const SOURCE_UPLOAD = 'upload';
-    public const SOURCE_POST = 'post';
-    public const SOURCE_QUIZ = 'quiz';
-
     public function isEmpty(): bool
     {
         return !($this->submitted_on || $this->note);
     }
 
-    public function getContestant(): ModelContestant
+    public function getContestant(): ContestantModel
     {
         // TODO why?
-        return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ContestantModel::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
     public function getResourceId(): string
@@ -60,7 +56,7 @@ class SubmitModel extends Model implements Resource
 
     public function canRevoke(): bool
     {
-        if ($this->source != self::SOURCE_UPLOAD) {
+        if ($this->source->value != SubmitSource::UPLOAD) {
             return false;
         }
         $now = time();
@@ -71,6 +67,21 @@ class SubmitModel extends Model implements Resource
 
     public function isQuiz(): bool
     {
-        return $this->source === self::SOURCE_QUIZ;
+        return $this->source->value === SubmitSource::QUIZ;
+    }
+
+    /**
+     * @return SubmitSource|FakeStringEnum|mixed|ActiveRow|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'source':
+                $value = SubmitSource::tryFrom($value);
+                break;
+        }
+        return $value;
     }
 }

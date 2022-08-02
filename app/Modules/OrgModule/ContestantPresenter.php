@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Form;
 
 /**
- * @method ModelContestant getModel()
+ * @method ContestantModel getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter
 {
@@ -80,7 +80,7 @@ class ContestantPresenter extends ExtendedPersonPresenter
         return $this->serviceContestant;
     }
 
-    protected function getAcYearFromModel(): ?ModelContestYear
+    protected function getAcYearFromModel(): ?ContestYearModel
     {
         $model = $this->getModel();
         if (!$model) {
@@ -91,6 +91,6 @@ class ContestantPresenter extends ExtendedPersonPresenter
 
     protected function getModelResource(): string
     {
-        return ModelContestant::RESOURCE_ID;
+        return ContestantModel::RESOURCE_ID;
     }
 }

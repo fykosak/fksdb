@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServiceSubmit;
 use FKSDB\Models\ORM\Services\ServiceTask;
@@ -27,10 +27,10 @@ abstract class SubmitTestCase extends DatabaseTestCase
 {
     public const TOKEN = 'foo';
     public const FILE_01 = 'file01.pdf';
-    protected ModelTask $taskAll;
-    protected ModelTask $taskRestricted;
-    protected ModelPerson $person;
-    protected ModelContestant $contestant;
+    protected TaskModel $taskAll;
+    protected TaskModel $taskRestricted;
+    protected PersonModel $person;
+    protected ContestantModel $contestant;
     protected IPresenter $fixture;
 
     protected function setUp(): void
@@ -151,7 +151,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         $this->assertSubmit($this->contestant, $this->taskAll);
     }
 
-    protected function assertSubmit(ModelContestant $contestant, ModelTask $task): SubmitModel
+    protected function assertSubmit(ContestantModel $contestant, TaskModel $task): SubmitModel
     {
         $submit = $this->getContainer()
             ->getByType(ServiceSubmit::class)
@@ -162,7 +162,7 @@ abstract class SubmitTestCase extends DatabaseTestCase
         return $submit;
     }
 
-    protected function assertNotSubmit(ModelContestant $contestant, ModelTask $task): void
+    protected function assertNotSubmit(ContestantModel $contestant, TaskModel $task): void
     {
         $submit = $this->getContainer()
             ->getByType(ServiceSubmit::class)

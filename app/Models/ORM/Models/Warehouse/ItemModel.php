@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelContest;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Security\Resource;
 
 /**
@@ -14,7 +13,7 @@ use Nette\Security\Resource;
  * @property-read int product_id
  * @property-read ProductModel product
  * @property-read int contest_id
- * @property-read ModelContest contest
+ * @property-read ContestModel contest
  * @property-read string state ENUM ('new','used','unpacked','damaged') NOT NULL,
  * @property-read string|null description_cs
  * @property-read string|null description_en
@@ -37,18 +36,8 @@ class ItemModel extends Model implements Resource
         return self::RESOURCE_ID;
     }
 
-    public function getContest(): ModelContest
-    {
-        return ModelContest::createFromActiveRow($this->contest);
-    }
-
     public function getProducer(): ?ProducerModel
     {
-        return $this->getProduct()->producer;
-    }
-
-    public function getProduct(): ProductModel
-    {
-        return ProductModel::createFromActiveRow($this->product);
+        return $this->product->producer;
     }
 }

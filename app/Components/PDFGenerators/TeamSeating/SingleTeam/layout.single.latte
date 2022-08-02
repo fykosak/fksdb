@@ -1,6 +1,6 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team}
-{varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[][] $rests}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[][] $rests}
 {block headline}
     ({$team->fyziklani_team_id}) {$team->name}
     {var $teamSeat = $team->getTeamSeat()}

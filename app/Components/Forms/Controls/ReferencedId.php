@@ -11,7 +11,7 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Utils\Promise;
 use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Control;
@@ -121,12 +121,12 @@ class ReferencedId extends HiddenField
     }
 
     /**
-     * @param string|int|ActiveRow|Model|ModelPerson $value
+     * @param string|int|ActiveRow|Model|PersonModel $value
      * @return static
      */
     public function setValue($value, bool $force = false): self
     {
-        if ($value instanceof ModelPerson) {
+        if ($value instanceof PersonModel) {
             $personModel = $value;
         } elseif ($value === self::VALUE_PROMISE) {
             $personModel = null;
@@ -139,7 +139,7 @@ class ReferencedId extends HiddenField
         }
         $this->setModel($personModel ?? null, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
-        if ($value instanceof ModelPerson) {
+        if ($value instanceof PersonModel) {
             $value = $personModel->getPrimary();
         }
         $this->getSearchContainer()->setOption('visible', !$value);

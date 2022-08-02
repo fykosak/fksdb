@@ -6,8 +6,8 @@ namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
 $container = require '../../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPostContact;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\ServiceAddress;
@@ -24,7 +24,7 @@ use Tester\Assert;
 
 class WriteOnlyTraitTest extends DsefTestCase
 {
-    private ModelEventParticipant $dsefApp;
+    private EventParticipantModel $dsefApp;
 
     protected function setUp(): void
     {

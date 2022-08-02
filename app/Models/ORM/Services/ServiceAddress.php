@@ -8,8 +8,8 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelAddress;
-use FKSDB\Models\ORM\Models\ModelRegion;
+use FKSDB\Models\ORM\Models\AddressModel;
+use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
@@ -22,7 +22,7 @@ class ServiceAddress extends Service
     /**
      * @throws ModelException
      */
-    public function createNewModel(array $data): ModelAddress
+    public function createNewModel(array $data): AddressModel
     {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
@@ -50,7 +50,7 @@ class ServiceAddress extends Service
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-        /** @var ActiveRow|ModelRegion $row */
+        /** @var ActiveRow|RegionModel $row */
         $row = $this->explorer->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
@@ -62,9 +62,9 @@ class ServiceAddress extends Service
             $firstChar = substr($postalCode, 0, 1);
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
-                return ModelRegion::CZECH_REPUBLIC;
+                return RegionModel::CZECH_REPUBLIC;
             } elseif (in_array($firstChar, ['8', '9', '0'])) {
-                return ModelRegion::SLOVAKIA;
+                return RegionModel::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);
             }

@@ -16,7 +16,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\ServicePerson;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -29,7 +29,7 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @method ModelPerson getEntity()
+ * @method PersonModel getEntity()
  */
 class PersonPresenter extends BasePresenter
 {
@@ -119,7 +119,7 @@ class PersonPresenter extends BasePresenter
     {
         $person = $this->getEntity();
         $this->template->isSelf = $this->getUser()->getIdentity()->person->person_id === $person->person_id;
-        /** @var ModelPerson $userPerson */
+        /** @var PersonModel $userPerson */
         $userPerson = $this->getUser()->getIdentity()->person;
         Debugger::log(
             sprintf(

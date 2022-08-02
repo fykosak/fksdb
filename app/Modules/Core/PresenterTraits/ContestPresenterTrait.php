@@ -6,8 +6,8 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
@@ -26,7 +26,7 @@ trait ContestPresenterTrait
      * @persistent
      */
     public ?int $contestId = null;
-    private ?ModelContest $contest;
+    private ?ContestModel $contest;
 
     /**
      * @throws BadRequestException
@@ -42,7 +42,7 @@ trait ContestPresenterTrait
         }
     }
 
-    public function getSelectedContest(): ?ModelContest
+    public function getSelectedContest(): ?ContestModel
     {
         if (!isset($this->contest)) {
             $this->contest = $this->serviceContest->findByPrimary($this->contestId);
@@ -50,7 +50,7 @@ trait ContestPresenterTrait
         return $this->contest;
     }
 
-    private function isValidContest(?ModelContest $contest): bool
+    private function isValidContest(?ContestModel $contest): bool
     {
         if (!$contest) {
             return false;
@@ -59,11 +59,11 @@ trait ContestPresenterTrait
     }
 
     /**
-     * @return TypedSelection|ModelContest[]
+     * @return TypedSelection|ContestModel[]
      */
     private function getAvailableContests(): TypedSelection
     {
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 
         switch ($this->getRole()) {
@@ -99,9 +99,9 @@ trait ContestPresenterTrait
     /**
      * @throws BadRequestException
      */
-    private function selectContest(): ModelContest
+    private function selectContest(): ContestModel
     {
-        /** @var ModelContest $candidate */
+        /** @var ContestModel $candidate */
         $candidate = $this->getAvailableContests()->fetch();
         if (!$this->isValidContest($candidate)) {
             throw new BadRequestException(_('No contest available'));

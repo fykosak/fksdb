@@ -1,5 +1,5 @@
 {block content}
-    {varType FKSDB\Models\ORM\Models\ModelSchool[][]|\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[][] $schools}
+    {varType FKSDB\Models\ORM\Models\SchoolModel[][]|\FKSDB\Models\ORM\Models\Fyziklani\TeamModel2[][] $schools}
     <h2>{_'Teams per school'}</h2>
     {foreach $schools as $row}
         <h3>{$row['school']->name_abbrev}</h3>

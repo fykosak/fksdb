@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\Models\Transitions\Machine;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
 use Nette\Database\Table\ActiveRow;
@@ -16,9 +16,9 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int person_id
- * @property-read ModelPerson person
+ * @property-read PersonModel person
  * @property-read int payment_id
- * @property-read ModelEvent event
+ * @property-read EventModel event
  * @property-read int event_id
  * @property-read PaymentState state
  * @property-read float price
@@ -39,15 +39,15 @@ class PaymentModel extends Model implements Resource
     public const RESOURCE_ID = 'event.payment';
 
     /**
-     * @return ModelPersonSchedule[]
+     * @return PersonScheduleModel[]
      */
     public function getRelatedPersonSchedule(): array
     {
         $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
-        /** @var ModelSchedulePayment $row */
+        /** @var SchedulePaymentModel $row */
         foreach ($query as $row) {
-            $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
+            $items[] = PersonScheduleModel::createFromActiveRow($row->person_schedule);
         }
         return $items;
     }
@@ -84,14 +84,16 @@ class PaymentModel extends Model implements Resource
     }
 
     /**
-     * @return mixed
+     * @param string $key
+     * @return PaymentState|FakeStringEnum|mixed|ActiveRow|null
+     * @throws \ReflectionException
      */
     public function &__get(string $key)
     {
         $value = parent::__get($key);
         switch ($key) {
             case 'state':
-                $value = new PaymentState($value);
+                $value = PaymentState::tryFrom($value);
                 break;
         }
         return $value;

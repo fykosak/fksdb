@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -19,9 +19,9 @@ class AllPersonsGrid extends BaseGrid
 {
 
     private ServicePersonSchedule $servicePersonSchedule;
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(Container $container, ModelEvent $event)
+    public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container);
         $this->event = $event;
@@ -64,6 +64,6 @@ class AllPersonsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelPersonSchedule::class;
+        return PersonScheduleModel::class;
     }
 }

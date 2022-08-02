@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
 
@@ -58,7 +58,7 @@ class SchoolProvider implements FilteredDataProvider
         }
 
         $result = [];
-        /** @var ModelSchool $school */
+        /** @var SchoolModel $school */
         foreach ($schools as $school) {
             $result[] = $this->getItem($school);
         }
@@ -67,7 +67,7 @@ class SchoolProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var ModelSchool $school */
+        /** @var SchoolModel $school */
         $school = $this->serviceSchool->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
@@ -83,7 +83,7 @@ class SchoolProvider implements FilteredDataProvider
         throw new NotImplementedException();
     }
 
-    private function getItem(ModelSchool $school): array
+    private function getItem(SchoolModel $school): array
     {
         return [
             self::LABEL => $school->name_abbrev,

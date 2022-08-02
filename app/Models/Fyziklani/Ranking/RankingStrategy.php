@@ -7,7 +7,7 @@ namespace FKSDB\Models\Fyziklani\Ranking;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Nette\Database\Table\GroupedSelection;
 use Nette\SmartObject;
@@ -18,9 +18,9 @@ class RankingStrategy
     use SmartObject;
 
     private TeamService2 $teamService;
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, TeamService2 $teamService)
+    public function __construct(EventModel $event, TeamService2 $teamService)
     {
         $this->teamService = $teamService;
         $this->event = $event;

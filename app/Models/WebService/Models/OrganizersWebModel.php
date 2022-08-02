@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Services\ServiceContest;
 use FKSDB\Models\ORM\Services\ServiceOrg;
 use FKSDB\Models\WebService\XMLHelper;
@@ -40,7 +40,7 @@ class OrganizersWebModel extends WebModel
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
         $doc->appendChild($rootNode);
-        /** @var ModelOrg $org */
+        /** @var OrgModel $org */
         foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
@@ -74,7 +74,7 @@ class OrganizersWebModel extends WebModel
         }
         $items = [];
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = OrgModel::createFromActiveRow($row);
             $items[] = [
                 'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,

@@ -4,7 +4,7 @@
     {varType int $personId}
     {if count($postContacts)}
         {foreach $postContacts as $row}
-            {var FKSDB\Models\ORM\Models\ModelPostContact $postContact = FKSDB\Models\ORM\Models\ModelPostContact::createFromActiveRow($row)}
+            {var FKSDB\Models\ORM\Models\PostContactModel $postContact = FKSDB\Models\ORM\Models\PostContactModel::createFromActiveRow($row)}
             {var $address = $postContact->address}
             <h3 class="card-header">
                 {if $postContact->type == 'P'}

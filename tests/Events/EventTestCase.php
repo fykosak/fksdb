@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\ServiceEvent;
 use FKSDB\Models\ORM\Services\ServiceEventParticipant;
 use FKSDB\Models\ORM\Services\ServicePerson;
@@ -17,7 +17,7 @@ use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase
 {
-    protected function createEvent(array $data): ModelEvent
+    protected function createEvent(array $data): EventModel
     {
         if (!isset($data['year'])) {
             $data['year'] = 1;
@@ -52,9 +52,9 @@ abstract class EventTestCase extends DatabaseTestCase
         );
     }
 
-    abstract protected function getEvent(): ModelEvent;
+    abstract protected function getEvent(): EventModel;
 
-    protected function assertApplication(ModelEvent $event, string $email): ModelEventParticipant
+    protected function assertApplication(EventModel $event, string $email): EventParticipantModel
     {
         $person = $this->getContainer()->getByType(ServicePerson::class)->findByEmail($email);
         Assert::notEqual(null, $person);
@@ -66,7 +66,7 @@ abstract class EventTestCase extends DatabaseTestCase
         return $application;
     }
 
-    protected function assertExtendedApplication(ModelEventParticipant $application, string $table): Row
+    protected function assertExtendedApplication(EventParticipantModel $application, string $table): Row
     {
         $application = $this->explorer->fetch(
             'SELECT * FROM `' . $table . '` WHERE event_participant_id = ?',

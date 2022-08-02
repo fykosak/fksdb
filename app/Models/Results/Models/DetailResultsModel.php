@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\Models;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidStateException;
 
@@ -23,10 +23,10 @@ class DetailResultsModel extends AbstractResultsModel
      */
     public function getDataColumns(ModelCategory $category): array
     {
-        if (!isset($this->dataColumns[$category->id])) {
+        if (!isset($this->dataColumns[$category->value])) {
             $dataColumns = [];
             $sum = 0;
-            /** @var ModelTask $task */
+            /** @var TaskModel $task */
             foreach ($this->getTasks($this->series) as $task) {
                 $taskPoints = $this->evaluationStrategy->getTaskPoints($task, $category);
                 $dataColumns[] = [
@@ -41,9 +41,9 @@ class DetailResultsModel extends AbstractResultsModel
                 self::COL_DEF_LIMIT => $sum,
                 self::COL_ALIAS => self::ALIAS_SUM,
             ];
-            $this->dataColumns[$category->id] = $dataColumns;
+            $this->dataColumns[$category->value] = $dataColumns;
         }
-        return $this->dataColumns[$category->id];
+        return $this->dataColumns[$category->value];
     }
 
     public function getSeries(): int
@@ -79,7 +79,7 @@ class DetailResultsModel extends AbstractResultsModel
 
         $tasks = $this->getTasks($this->series);
         $i = 0;
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($tasks as $task) {
             $points = $this->evaluationStrategy->getPointsColumn($task);
             $select[] = 'round(MAX(IF(t.task_id = ' . $task->task_id . ', ' . $points . ", null))) AS '" .

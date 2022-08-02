@@ -8,14 +8,14 @@ use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\Services\ServiceTeacher;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
 
 /**
- * @method ModelTeacher getEntity()
+ * @method TeacherModel getEntity()
  */
 class TeacherPresenter extends BasePresenter
 {
@@ -99,6 +99,6 @@ class TeacherPresenter extends BasePresenter
 
     protected function getModelResource(): string
     {
-        return ModelTeacher::RESOURCE_ID;
+        return TeacherModel::RESOURCE_ID;
     }
 }
