@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Models\Results\ModelCategory;
@@ -38,18 +38,18 @@ abstract class AbstractResultsModel
     public const COL_ALIAS = 'alias';
     public const DATA_PREFIX = 'd';
     protected ContestYearModel $contestYear;
-    protected ServiceTask $serviceTask;
+    protected TaskService $taskService;
     protected Connection $connection;
     protected EvaluationStrategy $evaluationStrategy;
 
     public function __construct(
         ContestYearModel $contestYear,
-        ServiceTask $serviceTask,
+        TaskService $taskService,
         Connection $connection,
         EvaluationStrategy $evaluationStrategy
     ) {
         $this->contestYear = $contestYear;
-        $this->serviceTask = $serviceTask;
+        $this->taskService = $taskService;
         $this->connection = $connection;
         $this->evaluationStrategy = $evaluationStrategy;
     }
@@ -115,7 +115,7 @@ abstract class AbstractResultsModel
 
     protected function getTasks(int $series): TypedSelection
     {
-        return $this->serviceTask->getTable()
+        return $this->taskService->getTable()
             ->select('task_id, label, points,series')
             ->where([
                 'contest_id' => $this->contestYear->contest_id,

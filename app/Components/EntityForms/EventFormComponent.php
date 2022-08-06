@@ -16,8 +16,8 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Logging\Message;
@@ -37,8 +37,8 @@ class EventFormComponent extends EntityFormComponent
 
     private ContestYearModel $contestYear;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private ServiceAuthToken $serviceAuthToken;
-    private ServiceEvent $serviceEvent;
+    private AuthTokenService $authTokenService;
+    private EventService $eventService;
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ContestYearModel $contestYear, Container $container, ?EventModel $model)
@@ -49,13 +49,13 @@ class EventFormComponent extends EntityFormComponent
 
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        ServiceAuthToken $serviceAuthToken,
-        ServiceEvent $serviceEvent,
+        AuthTokenService $authTokenService,
+        EventService $eventService,
         EventDispatchFactory $eventDispatchFactory
     ): void {
-        $this->serviceAuthToken = $serviceAuthToken;
+        $this->authTokenService = $authTokenService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -75,7 +75,7 @@ class EventFormComponent extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
         $data['year'] = $this->contestYear->year;
         /** @var EventModel $model */
-        $model = $this->serviceEvent->storeModel($data, $this->model);
+        $model = $this->eventService->storeModel($data, $this->model);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
@@ -153,13 +153,13 @@ class EventFormComponent extends EntityFormComponent
 
     private function updateTokens(EventModel $event): void
     {
-        $connection = $this->serviceAuthToken->explorer->getConnection();
+        $connection = $this->authTokenService->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
         /** @var AuthTokenModel $token $token */
-        foreach ($this->serviceAuthToken->findTokensByEvent($event) as $token) {
-            $this->serviceAuthToken->updateModel($token, $tokenData);
+        foreach ($this->authTokenService->findTokensByEvent($event) as $token) {
+            $this->authTokenService->updateModel($token, $tokenData);
         }
         $connection->commit();
     }

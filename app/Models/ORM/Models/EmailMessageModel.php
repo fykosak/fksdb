@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
+use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
@@ -69,7 +70,7 @@ class EmailMessageModel extends Model implements Resource
     }
 
     /**
-     * @return EmailMessageState|\FKSDB\Models\Utils\FakeStringEnum|mixed|ActiveRow|null
+     * @return EmailMessageState|FakeStringEnum|mixed|ActiveRow|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

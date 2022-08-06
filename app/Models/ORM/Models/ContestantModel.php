@@ -8,7 +8,7 @@ use Fykosak\NetteORM\Model;
 use Nette\Security\Resource;
 
 /**
- * @property-read int ct_id
+ * @property-read int contestant_id
  * @property-read int contest_id
  * @property-read ContestModel contest
  * @property-read int year

@@ -19,7 +19,7 @@ use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -31,11 +31,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    protected ServiceEventParticipant $serviceEventParticipant;
+    protected EventParticipantService $eventParticipantService;
 
-    final public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void
+    final public function injectServiceEventParticipant(EventParticipantService $eventParticipantService): void
     {
-        $this->serviceEventParticipant = $serviceEventParticipant;
+        $this->eventParticipantService = $eventParticipantService;
     }
 
     final public function titleList(): PageTitle

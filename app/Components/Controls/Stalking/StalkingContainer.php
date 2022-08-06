@@ -49,7 +49,7 @@ class StalkingContainer extends BaseComponent
 
     protected function createComponentContestantBasesGrid(): PersonRelatedGrid
     {
-        return new PersonRelatedGrid('contestant_base', $this->person, $this->userPermission, $this->getContext());
+        return new PersonRelatedGrid('contestant', $this->person, $this->userPermission, $this->getContext());
     }
 
     protected function createComponentTaskContributionsGrid(): PersonRelatedGrid

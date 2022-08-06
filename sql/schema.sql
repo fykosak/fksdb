@@ -272,32 +272,30 @@ CREATE TABLE IF NOT EXISTS `auth_token` (
   DEFAULT CHARACTER SET = utf8;
 
 -- -----------------------------------------------------
--- Table `contestant_base` # TODO rename to contestant and rename PK
+-- Table `contestant`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `contestant_base` (
-  `ct_id`      INT(11)    NOT NULL AUTO_INCREMENT,
-  `contest_id` INT(11)    NOT NULL
-  COMMENT 'seminář',
-  `year`       TINYINT(4) NOT NULL
-  COMMENT 'Rocnik semináře',
-  `person_id`  INT(11)    NOT NULL,
-  `created`    TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ct_id`),
-  UNIQUE INDEX `contest_id` (`contest_id` ASC, `year` ASC, `person_id` ASC),
-  INDEX `person_id` (`person_id` ASC),
-  CONSTRAINT `contestant_base_ibfk_1`
-  FOREIGN KEY (`person_id`)
-  REFERENCES `person` (`person_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT,
-  CONSTRAINT `contestant_base_ibfk_3`
-  FOREIGN KEY (`contest_id`)
-  REFERENCES `contest` (`contest_id`)
-    ON DELETE RESTRICT
-    ON UPDATE RESTRICT
+CREATE TABLE IF NOT EXISTS `contestant`
+(
+    `contestant_id` INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `contest_id`    INT(11)    NOT NULL COMMENT 'seminář',
+    `year`          TINYINT(4) NOT NULL COMMENT 'Rocnik semináře',
+    `person_id`     INT(11)    NOT NULL,
+    `created`       TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE INDEX `contest_id` (`contest_id` ASC, `year` ASC, `person_id` ASC),
+    INDEX `person_id` (`person_id` ASC),
+    CONSTRAINT `fk_contestant__person`
+        FOREIGN KEY (`person_id`)
+            REFERENCES `person` (`person_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT,
+    CONSTRAINT `fk_contestant__contest`
+        FOREIGN KEY (`contest_id`)
+            REFERENCES `contest` (`contest_id`)
+            ON DELETE RESTRICT
+            ON UPDATE RESTRICT
 )
-  ENGINE = InnoDB
-  COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
+    ENGINE = InnoDB
+    COMMENT = 'Instance ucastnika (v konkretnim rocniku a semináři)';
 
 -- -----------------------------------------------------
 -- Table `school`
@@ -613,28 +611,28 @@ CREATE TABLE IF NOT EXISTS `task` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `submit`
 (
-    `submit_id`    INT(11)                         NOT NULL AUTO_INCREMENT,
-    `ct_id`        INT(11)                         NOT NULL
+    `submit_id`     INT(11)                         NOT NULL AUTO_INCREMENT,
+    `contestant_id` INT(11)                         NOT NULL
         COMMENT 'Contestant',
-    `task_id`      INT(11)                         NOT NULL
+    `task_id`       INT(11)                         NOT NULL
         COMMENT 'Task',
-    `submitted_on` DATETIME                        NULL DEFAULT NULL,
-    `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
+    `submitted_on`  DATETIME                        NULL DEFAULT NULL,
+    `source`        ENUM ('post', 'upload', 'quiz') NOT NULL
         COMMENT 'Typ příjmu řešení', # TODO to enum
-    `note`         VARCHAR(255)                    NULL DEFAULT NULL
+    `note`          VARCHAR(255)                    NULL DEFAULT NULL
         COMMENT 'Pocet stranek a jine poznamky',
-    `raw_points`   DECIMAL(4, 2)                   NULL DEFAULT NULL
+    `raw_points`    DECIMAL(4, 2)                   NULL DEFAULT NULL
         COMMENT 'Pred prepoctem',
-    `calc_points`  DECIMAL(4, 2)                   NULL DEFAULT NULL
+    `calc_points`   DECIMAL(4, 2)                   NULL DEFAULT NULL
         COMMENT 'Cache spoctenych bodu.',
-    `corrected`    BOOLEAN                         NULL DEFAULT FALSE
+    `corrected`     BOOLEAN                         NULL DEFAULT FALSE
         COMMENT 'Má uloha nahrané riešnie?',
     PRIMARY KEY (`submit_id`),
-    UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
+    UNIQUE INDEX `cons_uniq` (`contestant_id` ASC, `task_id` ASC),
     INDEX `task_id` (`task_id` ASC),
     CONSTRAINT `submit_ibfk_1`
-        FOREIGN KEY (`ct_id`)
-            REFERENCES `contestant_base` (`ct_id`),
+        FOREIGN KEY (`contestant_id`)
+            REFERENCES `contestant` (`contestant_id`),
     CONSTRAINT `submit_ibfk_2`
         FOREIGN KEY (`task_id`)
             REFERENCES `task` (`task_id`)
@@ -1449,25 +1447,26 @@ CREATE TABLE IF NOT EXISTS `quiz` (
 -- -----------------------------------------------------
 -- Table `submit_quiz`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `submit_quiz` (
-	`submit_question_id`  INT(11)    NOT NULL AUTO_INCREMENT,
-	`ct_id`               INT(11)    NOT NULL
-	COMMENT 'Resitel',
-	`question_id`         INT(11)    NOT NULL
-	COMMENT 'Otazka',
-	`submitted_on`        DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`answer`              VARCHAR(1) NULL,
-	PRIMARY KEY (`submit_question_id`),
-	UNIQUE INDEX `submit_qstn` (`ct_id` ASC, `question_id` ASC),
-	INDEX `question_id` (`question_id` ASC),
-	CONSTRAINT `submit_qstn_ibfk_1`
-	FOREIGN KEY (`ct_id`)
-	REFERENCES `contestant_base` (`ct_id`),
-	CONSTRAINT `submit_qstn_ibfk_2`
-	FOREIGN KEY (`question_id`)
-	REFERENCES `quiz` (`question_id`)
+CREATE TABLE IF NOT EXISTS `submit_quiz`
+(
+    `submit_question_id` INT(11)    NOT NULL AUTO_INCREMENT,
+    `contestant_id`      INT(11)    NOT NULL
+        COMMENT 'Resitel',
+    `question_id`        INT(11)    NOT NULL
+        COMMENT 'Otazka',
+    `submitted_on`       DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `answer`             VARCHAR(1) NULL,
+    PRIMARY KEY (`submit_question_id`),
+    UNIQUE INDEX `submit_qstn` (`contestant_id` ASC, `question_id` ASC),
+    INDEX `question_id` (`question_id` ASC),
+    CONSTRAINT `submit_qstn_ibfk_1`
+        FOREIGN KEY (`contestant_id`)
+            REFERENCES `contestant` (`contestant_id`),
+    CONSTRAINT `submit_qstn_ibfk_2`
+        FOREIGN KEY (`question_id`)
+            REFERENCES `quiz` (`question_id`)
 )
-	ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `warehouse_producer`
 (

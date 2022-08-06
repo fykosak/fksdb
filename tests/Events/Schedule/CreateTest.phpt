@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -23,7 +23,7 @@ class CreateTest extends ScheduleTestCase
         Assert::equal(
             3,
             $this->getContainer()
-                ->getByType(ServicePersonSchedule::class)
+                ->getByType(PersonScheduleService::class)
                 ->getTable()
                 ->where(['schedule_item_id' => $this->item->schedule_item_id])
                 ->count('*')

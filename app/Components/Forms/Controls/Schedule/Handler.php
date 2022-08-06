@@ -10,20 +10,20 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 
 class Handler
 {
-    private ServicePersonSchedule $servicePersonSchedule;
-    private ServiceScheduleItem $serviceScheduleItem;
+    private PersonScheduleService $personScheduleService;
+    private ScheduleItemService $scheduleItemService;
 
     public function __construct(
-        ServicePersonSchedule $servicePersonSchedule,
-        ServiceScheduleItem $serviceScheduleItem
+        PersonScheduleService $personScheduleService,
+        ScheduleItemService $scheduleItemService
     ) {
-        $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->personScheduleService = $personScheduleService;
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -79,9 +79,9 @@ class Handler
 
         foreach ($newScheduleData as $id) {
             /** @var ScheduleItemModel $modelScheduleItem */
-            $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
+            $modelScheduleItem = $this->scheduleItemService->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->servicePersonSchedule->createNewModel(
+                $this->personScheduleService->createNewModel(
                     ['person_id' => $person->person_id, 'schedule_item_id' => $id]
                 );
             } else {

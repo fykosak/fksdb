@@ -6,7 +6,7 @@ namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
 use FKSDB\Models\YearCalculator;
@@ -17,7 +17,7 @@ use Nette\DI\Container;
 class ContestantModel extends AESOPModel
 {
 
-    protected ServiceTask $serviceTask;
+    protected TaskService $taskService;
 
     private ?ModelCategory $category;
 
@@ -32,9 +32,9 @@ class ContestantModel extends AESOPModel
         $container->callInjects($this);
     }
 
-    public function injectTaskService(ServiceTask $serviceTask): void
+    public function injectTaskService(TaskService $taskService): void
     {
-        $this->serviceTask = $serviceTask;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -81,7 +81,7 @@ WHERE
         if (!$this->category) {
             return null;
         }
-        $tasks = $this->serviceTask->getTable()
+        $tasks = $this->taskService->getTable()
             ->where('contest_id', $this->contestYear->contest_id)
             ->where('year', $this->contestYear->year)
             ->where('series BETWEEN 1 AND 6');

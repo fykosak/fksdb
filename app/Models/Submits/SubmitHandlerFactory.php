@@ -11,7 +11,7 @@ use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\FileSystemStorage\CorrectedStorage;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\BadRequestException;
@@ -26,18 +26,18 @@ class SubmitHandlerFactory
 
     public CorrectedStorage $correctedStorage;
     public UploadedStorage $uploadedStorage;
-    public ServiceSubmit $serviceSubmit;
+    public SubmitService $submitService;
     public ContestAuthorizator $contestAuthorizator;
 
     public function __construct(
         CorrectedStorage $correctedStorage,
         UploadedStorage $uploadedStorage,
-        ServiceSubmit $serviceSubmit,
+        SubmitService $submitService,
         ContestAuthorizator $contestAuthorizator
     ) {
         $this->correctedStorage = $correctedStorage;
         $this->uploadedStorage = $uploadedStorage;
-        $this->serviceSubmit = $serviceSubmit;
+        $this->submitService = $submitService;
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
@@ -91,7 +91,7 @@ class SubmitHandlerFactory
             throw new StorageException(_('Submit cannot be revoked.'));
         }
         $this->uploadedStorage->deleteFile($submit);
-        $this->serviceSubmit->disposeModel($submit);
+        $this->submitService->disposeModel($submit);
     }
 
     public function handleSave(FileUpload $file, TaskModel $task, ContestantModel $contestant): SubmitModel
@@ -116,14 +116,14 @@ class SubmitHandlerFactory
 
     private function storeSubmit(TaskModel $task, ContestantModel $contestant, SubmitSource $source): SubmitModel
     {
-        $submit = $this->serviceSubmit->findByContestant($contestant, $task);
+        $submit = $this->submitService->findByContestant($contestant, $task);
         $data = [
             'submitted_on' => new DateTime(),
             'source' => $source->value,
             'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
-            'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
+            'contestant_id' => $contestant->contestant_id,// ugly is submit exists -- rewrite same by same value
         ];
-        return $this->serviceSubmit->storeModel($data, $submit);
+        return $this->submitService->storeModel($data, $submit);
     }
 
     /**
@@ -131,7 +131,7 @@ class SubmitHandlerFactory
      */
     public function getSubmit(int $id, bool $throw = true): ?SubmitModel
     {
-        $submit = $this->serviceSubmit->findByPrimary($id);
+        $submit = $this->submitService->findByPrimary($id);
         if ($throw && !$submit) {
             throw new NotFoundException(_('Submit does not exist.'));
         }

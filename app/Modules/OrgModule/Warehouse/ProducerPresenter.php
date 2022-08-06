@@ -24,11 +24,11 @@ class ProducerPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ProducerService $serviceProducer;
+    private ProducerService $producerService;
 
-    public function injectService(ProducerService $serviceProducer): void
+    public function injectService(ProducerService $producerService): void
     {
-        $this->serviceProducer = $serviceProducer;
+        $this->producerService = $producerService;
     }
 
     public function titleList(): PageTitle
@@ -57,7 +57,7 @@ class ProducerPresenter extends BasePresenter
 
     protected function getORMService(): ProducerService
     {
-        return $this->serviceProducer;
+        return $this->producerService;
     }
 
     protected function createComponentCreateForm(): Control

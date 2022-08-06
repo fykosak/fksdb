@@ -7,7 +7,7 @@ namespace FKSDB\Models\Tasks;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Pipeline\Stage;
 
 /**
@@ -24,9 +24,9 @@ class ContributionsFromXML extends Stage
         'solution' => 'solution-authors/solution-author',
     ];
 
-    private ServiceTaskContribution $taskContributionService;
+    private TaskContributionService $taskContributionService;
 
-    public function __construct(ServiceTaskContribution $taskContributionService)
+    public function __construct(TaskContributionService $taskContributionService)
     {
         $this->taskContributionService = $taskContributionService;
     }
@@ -52,17 +52,17 @@ class ContributionsFromXML extends Stage
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void
+    private function processTask(\SimpleXMLElement $xMLTask): void
     {
         $tasks = $this->data->getTasks();
-        $tasknr = (int)(string)$XMLTask->number;
+        $tasknr = (int)(string)$xMLTask->number;
 
         $task = $tasks[$tasknr];
         $this->taskContributionService->explorer->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
             [$parent, $child] = explode('/', $xmlElement);
-            $parentEl = $XMLTask->{$parent}[0];
+            $parentEl = $xMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
             if (!$parentEl || !isset($parentEl->{$child})) {

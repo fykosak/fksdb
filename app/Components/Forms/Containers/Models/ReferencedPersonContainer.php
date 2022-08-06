@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
@@ -38,7 +38,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     public VisibilityResolver $visibilityResolver;
     public ContestYearModel $contestYear;
     private array $fieldsDefinition;
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
     protected AddressFactory $addressFactory;
@@ -72,11 +72,11 @@ class ReferencedPersonContainer extends ReferencedContainer
     final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;

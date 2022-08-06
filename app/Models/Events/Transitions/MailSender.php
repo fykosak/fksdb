@@ -18,9 +18,9 @@ use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
@@ -50,9 +50,9 @@ class MailSender
     private $addressees;
     private MailTemplateFactory $mailTemplateFactory;
     private AccountManager $accountManager;
-    private ServiceAuthToken $serviceAuthToken;
-    private ServicePerson $servicePerson;
-    private ServiceEmailMessage $serviceEmailMessage;
+    private AuthTokenService $authTokenService;
+    private PersonService $personService;
+    private EmailMessageService $emailMessageService;
 
     /**
      * MailSender constructor.
@@ -63,17 +63,17 @@ class MailSender
         $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
-        ServiceAuthToken $serviceAuthToken,
-        ServicePerson $servicePerson,
-        ServiceEmailMessage $serviceEmailMessage
+        AuthTokenService $authTokenService,
+        PersonService $personService,
+        EmailMessageService $emailMessageService
     ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
-        $this->serviceAuthToken = $serviceAuthToken;
-        $this->servicePerson = $servicePerson;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->authTokenService = $authTokenService;
+        $this->personService = $personService;
+        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -90,7 +90,7 @@ class MailSender
     private function send(Transition $transition, Holder $holder): void
     {
         $personIds = $this->resolveAdressees($transition, $holder);
-        $persons = $this->servicePerson->getTable()
+        $persons = $this->personService->getTable()
             ->where('person.person_id', $personIds)
             ->where(':person_info.email IS NOT NULL')
             ->fetchPairs('person_id');
@@ -164,14 +164,14 @@ class MailSender
         }
         $data['recipient'] = $email;
         $data['state'] = EmailMessageState::WAITING;
-        return $this->serviceEmailMessage->createNewModel($data);
+        return $this->emailMessageService->createNewModel($data);
     }
 
     private function createToken(LoginModel $login, EventModel $event, ActiveRow $application): AuthTokenModel
     {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        return $this->serviceAuthToken->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
+        return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
     private function getSubject(EventModel $event, ActiveRow $application, Holder $holder, Machine $machine): string

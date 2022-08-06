@@ -6,7 +6,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\InvalidStateException;
 
 class SchoolProvider implements FilteredDataProvider
@@ -14,7 +14,7 @@ class SchoolProvider implements FilteredDataProvider
 
     private const LIMIT = 50;
 
-    private ServiceSchool $serviceSchool;
+    private SchoolService $schoolService;
 
     /**
      * School with school_id equal to defaultValue is suggested even when it's not
@@ -24,9 +24,9 @@ class SchoolProvider implements FilteredDataProvider
      */
     private $defaultValue;
 
-    public function __construct(ServiceSchool $serviceSchool)
+    public function __construct(SchoolService $schoolService)
     {
-        $this->serviceSchool = $serviceSchool;
+        $this->schoolService = $schoolService;
     }
 
     /**
@@ -37,7 +37,7 @@ class SchoolProvider implements FilteredDataProvider
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 
-        $schools = $this->serviceSchool->getTable();
+        $schools = $this->schoolService->getTable();
         foreach ($tokens as $token) {
             $schools->where(
                 'name_full LIKE concat(\'%\', ?, \'%\') OR name_abbrev LIKE concat(\'%\', ?, \'%\')',
@@ -68,7 +68,7 @@ class SchoolProvider implements FilteredDataProvider
     public function getItemLabel(int $id): string
     {
         /** @var SchoolModel $school */
-        $school = $this->serviceSchool->findByPrimary($id);
+        $school = $this->schoolService->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");
         }

@@ -13,13 +13,13 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceContestYear;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\ContestYearService;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\YearCalculator;
 use FKSDB\Tests\MockEnvironment\MockApplication;
 use FKSDB\Tests\MockEnvironment\MockPresenter;
@@ -56,13 +56,13 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel(
+        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel(
             ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
         );
-        $this->genericSchool = $this->getContainer()->getByType(ServiceSchool::class)->createNewModel(
+        $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->createNewModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
-        $serviceContestYear = $this->getContainer()->getByType(ServiceContestYear::class);
+        $serviceContestYear = $this->getContainer()->getByType(ContestYearService::class);
         $fykosData = [
             'contest_id' => ContestModel::ID_FYKOS,
             'year' => 1,
@@ -111,7 +111,7 @@ abstract class DatabaseTestCase extends TestCase
 
             DbNames::TAB_ORG,
             DbNames::TAB_PERSON_HISTORY,
-            DbNames::TAB_CONTESTANT_BASE,
+            DbNames::TAB_CONTESTANT,
             DbNames::TAB_CONTEST_YEAR,
             DbNames::TAB_SCHOOL,
             DbNames::TAB_ADDRESS,
@@ -130,13 +130,13 @@ abstract class DatabaseTestCase extends TestCase
         ?array $info = null,
         ?array $loginData = null
     ): PersonModel {
-        $person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel(
+        $person = $this->getContainer()->getByType(PersonService::class)->createNewModel(
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
         if ($info) {
             $info['person_id'] = $person->person_id;
-            $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel($info);
+            $this->getContainer()->getByType(PersonInfoService::class)->createNewModel($info);
         }
 
         if (!is_null($loginData)) {
@@ -147,7 +147,7 @@ abstract class DatabaseTestCase extends TestCase
             ];
             $loginData = array_merge($data, $loginData);
 
-            $pseudoLogin = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel($loginData);
+            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->createNewModel($loginData);
 
             if (isset($pseudoLogin->hash)) {
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
@@ -170,7 +170,7 @@ abstract class DatabaseTestCase extends TestCase
         ?int $studyYear = null,
         ?string $class = null
     ): PersonHistoryModel {
-        return $this->getContainer()->getByType(ServicePersonHistory::class)->createNewModel([
+        return $this->getContainer()->getByType(PersonHistoryService::class)->createNewModel([
             'person_id' => $person->person_id,
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,

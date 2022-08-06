@@ -13,8 +13,8 @@ use FKSDB\Models\ORM\Services\Fyziklani\GameSetupService;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Utils\DateTime;
 
@@ -33,7 +33,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->createNewModel(
             ['person_id' => $this->userPerson->person_id, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
     }
@@ -58,7 +58,7 @@ abstract class FyziklaniTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        $event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($data);
+        $event = $this->getContainer()->getByType(EventService::class)->createNewModel($data);
         $this->getContainer()->getByType(GameSetupService::class)->createNewModel([
             'event_id' => $event->event_id,
             'game_start' => new \DateTime('2016-01-01T10:00:00'),

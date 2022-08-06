@@ -9,21 +9,21 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class FyziklaniResultsWebModel extends WebModel
 {
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
     private SubmitService $submitService;
 
     public function injectServices(
-        ServiceEvent $serviceEvent,
+        EventService $eventService,
         SubmitService $submitService
     ): void {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->submitService = $submitService;
     }
 
@@ -32,7 +32,7 @@ class FyziklaniResultsWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $event = $this->serviceEvent->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($params['event_id']);
         $gameSetup = $event->getFyziklaniGameSetup();
 
         $result = [

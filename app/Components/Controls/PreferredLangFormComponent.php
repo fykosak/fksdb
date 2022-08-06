@@ -10,7 +10,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -20,7 +20,7 @@ class PreferredLangFormComponent extends FormComponent
 
     protected PersonModel $person;
 
-    protected ServicePersonInfo $servicePersonInfo;
+    protected PersonInfoService $personInfoService;
 
     public function __construct(Container $container, PersonModel $person)
     {
@@ -28,9 +28,9 @@ class PreferredLangFormComponent extends FormComponent
         $this->person = $person;
     }
 
-    final public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void
+    final public function injectServicePersonInfo(PersonInfoService $personInfoService): void
     {
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton
@@ -44,7 +44,7 @@ class PreferredLangFormComponent extends FormComponent
         $values = $form->getValues();
         $lang = $values['preferred_lang'];
         try {
-            $this->servicePersonInfo->storeModel(
+            $this->personInfoService->storeModel(
                 ['preferred_lang' => $lang, 'person_id' => $this->person->person_id],
                 $this->person->getInfo()
             );

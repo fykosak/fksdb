@@ -7,10 +7,10 @@ namespace FKSDB\Tests\Events\Schedule;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\Services\ServiceGrant;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\LoginService;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Schema\Helpers;
@@ -37,7 +37,7 @@ class DeleteTest extends ScheduleTestCase
                 'born' => DateTime::from('2000-01-01'),
             ]
         );
-        $this->dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->lastPerson->person_id,
             'event_id' => $this->event->event_id,
             'status' => 'cancelled',
@@ -48,14 +48,14 @@ class DeleteTest extends ScheduleTestCase
                 'e_dsef_group_id' => 2,
             ]
         );
-        $this->getContainer()->getByType(ServicePersonSchedule::class)->createNewModel([
+        $this->getContainer()->getByType(PersonScheduleService::class)->createNewModel([
             'person_id' => $this->lastPerson->person_id,
             'schedule_item_id' => $this->item->schedule_item_id,
         ]);
-        $login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+        $login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
             ['person_id' => $this->lastPerson->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+        $this->getContainer()->getByType(GrantService::class)->createNewModel(
             ['login_id' => $login->login_id, 'role_id' => 5, 'contest_id' => 1]
         );
         $this->authenticateLogin($login, $this->fixture);
@@ -117,7 +117,7 @@ class DeleteTest extends ScheduleTestCase
         //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
         Assert::equal(
             0,
-            $this->getContainer()->getByType(ServicePersonSchedule::class)->getTable()->where(
+            $this->getContainer()->getByType(PersonScheduleService::class)->getTable()->where(
                 ['schedule_item_id' => $this->item->schedule_item_id, 'person_id' => $this->lastPerson->person_id]
             )->count('*')
         );

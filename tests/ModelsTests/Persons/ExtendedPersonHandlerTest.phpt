@@ -12,8 +12,8 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PostContactType;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -39,8 +39,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $this->mockApplication();
         $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
 
-        $service = $this->getContainer()->getByType(ServiceContestant::class);
-        $this->contestYear = $this->getContainer()->getByType(ServiceContest::class)
+        $service = $this->getContainer()->getByType(ContestantService::class);
+        $this->contestYear = $this->getContainer()->getByType(ContestService::class)
             ->findByPrimary(ContestModel::ID_FYKOS)
             ->getContestYear(1);
         $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');

@@ -13,9 +13,9 @@ use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
+use FKSDB\Models\ORM\Services\StoredQuery\ParameterService;
+use FKSDB\Models\ORM\Services\StoredQuery\TagService;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use FKSDB\Models\Utils\FormUtils;
@@ -34,22 +34,22 @@ class StoredQueryFormComponent extends EntityFormComponent
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
     private const CONT_MAIN = 'main';
-    private ServiceStoredQuery $serviceStoredQuery;
-    private ServiceStoredQueryTag $serviceStoredQueryTag;
-    private ServiceStoredQueryParameter $serviceStoredQueryParameter;
+    private QueryService $storedQueryService;
+    private TagService $storedQueryTagService;
+    private ParameterService $storedQueryParameterService;
     private StoredQueryFactory $storedQueryFactory;
     private SingleReflectionFormFactory $reflectionFormFactory;
 
     final public function injectPrimary(
-        ServiceStoredQuery $serviceStoredQuery,
-        ServiceStoredQueryTag $serviceStoredQueryTag,
-        ServiceStoredQueryParameter $serviceStoredQueryParameter,
+        QueryService $storedQueryService,
+        TagService $storedQueryTagService,
+        ParameterService $storedQueryParameterService,
         StoredQueryFactory $storedQueryFactory,
         SingleReflectionFormFactory $reflectionFormFactory
     ): void {
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
-        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+        $this->storedQueryService = $storedQueryService;
+        $this->storedQueryTagService = $storedQueryTagService;
+        $this->storedQueryParameterService = $storedQueryParameterService;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->reflectionFormFactory = $reflectionFormFactory;
     }
@@ -60,16 +60,16 @@ class StoredQueryFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = FormUtils::emptyStrToNull2($form->getValues());
-        $connection = $this->serviceStoredQuery->explorer->getConnection();
+        $connection = $this->storedQueryService->explorer->getConnection();
         $connection->beginTransaction();
 
         $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
 
         if (isset($this->model)) {
             $model = $this->model;
-            $this->serviceStoredQuery->updateModel($model, $data);
+            $this->storedQueryService->updateModel($model, $data);
         } else {
-            $model = $this->serviceStoredQuery->createNewModel($data);
+            $model = $this->storedQueryService->createNewModel($data);
         }
 
         $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
@@ -135,11 +135,11 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function saveTags(array $tags, QueryModel $query): void
     {
-        $this->serviceStoredQueryTag->getTable()->where([
+        $this->storedQueryTagService->getTable()->where([
             'query_id' => $query->query_id,
         ])->delete();
         foreach ($tags as $tagTypeId) {
-            $this->serviceStoredQueryTag->createNewModel([
+            $this->storedQueryTagService->createNewModel([
                 'query_id' => $query->query_id,
                 'tag_type_id' => $tagTypeId,
             ]);
@@ -196,7 +196,7 @@ class StoredQueryFormComponent extends EntityFormComponent
 
     private function saveParameters(array $parameters, QueryModel $query): void
     {
-        $this->serviceStoredQueryParameter->getTable()
+        $this->storedQueryParameterService->getTable()
             ->where(['query_id' => $query->query_id])->delete();
 
         foreach ($parameters as $paramMetaData) {
@@ -206,7 +206,7 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $data,
                 ParameterModel::setInferDefaultValue($data['type'], $paramMetaData['default'])
             );
-            $this->serviceStoredQueryParameter->createNewModel($data);
+            $this->storedQueryParameterService->createNewModel($data);
         }
     }
 

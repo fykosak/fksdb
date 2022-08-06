@@ -14,7 +14,7 @@ use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -24,12 +24,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
 {
     /** @persistent */
     public ?int $eventId = null;
-    protected ServiceEvent $serviceEvent;
+    protected EventService $eventService;
     protected EventDispatchFactory $eventDispatchFactory;
 
-    final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void
+    final public function injectEventBase(EventService $eventService, EventDispatchFactory $eventDispatchFactory): void
     {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -89,7 +89,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     {
         static $event;
         if (!isset($event) || $event->event_id !== $this->eventId) {
-            $event = $this->serviceEvent->findByPrimary($this->eventId);
+            $event = $this->eventService->findByPrimary($this->eventId);
             if (!$event) {
                 throw new EventNotFoundException();
             }

@@ -7,8 +7,8 @@ namespace FKSDB\Models\Authentication;
 use FKSDB\Models\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\LoginService;
 use Nette\Http\Session;
 use Nette\InvalidStateException;
 use Nette\Security\AuthenticationException;
@@ -19,12 +19,12 @@ class TokenAuthenticator extends AbstractAuthenticator
     public const PARAM_AUTH_TOKEN = 'at';
     public const SESSION_NS = 'auth';
 
-    private ServiceAuthToken $authTokenService;
+    private AuthTokenService $authTokenService;
     private Session $session;
 
-    public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin)
+    public function __construct(AuthTokenService $authTokenService, Session $session, LoginService $loginService)
     {
-        parent::__construct($serviceLogin);
+        parent::__construct($loginService);
         $this->authTokenService = $authTokenService;
         $this->session = $session;
     }

@@ -93,7 +93,7 @@ class DetailResultsModel extends AbstractResultsModel
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
-left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
+left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_id';
 
         $conditions = [
             'ct.year' => $this->contestYear->year,

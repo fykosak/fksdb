@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\TeacherModel;
-use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
@@ -21,11 +21,11 @@ class TeacherPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceTeacher $serviceTeacher;
+    private TeacherService $teacherService;
 
-    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void
+    final public function injectServiceTeacher(TeacherService $teacherService): void
     {
-        $this->serviceTeacher = $serviceTeacher;
+        $this->teacherService = $teacherService;
     }
 
     /**
@@ -92,9 +92,9 @@ class TeacherPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    protected function getORMService(): ServiceTeacher
+    protected function getORMService(): TeacherService
     {
-        return $this->serviceTeacher;
+        return $this->teacherService;
     }
 
     protected function getModelResource(): string

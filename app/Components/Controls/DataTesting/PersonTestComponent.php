@@ -12,7 +12,7 @@ use FKSDB\Models\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\DataTesting\TestLog;
 use Nette\Forms\Form;
 
@@ -37,12 +37,12 @@ class PersonTestComponent extends BaseComponent
      */
     public ?array $levels = [];
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void
+    final public function injectPrimary(PersonService $personService, DataTestingFactory $dataTestingFactory): void
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
@@ -107,7 +107,7 @@ class PersonTestComponent extends BaseComponent
      */
     private function calculateProblems(): array
     {
-        $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
+        $query = $this->personService->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
         /** @var PersonModel $model */
         foreach ($query as $model) {

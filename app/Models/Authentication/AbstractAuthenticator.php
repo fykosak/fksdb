@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authentication;
 
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\ServiceLogin;
+use FKSDB\Models\ORM\Services\LoginService;
 use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
@@ -16,11 +16,11 @@ use Tracy\Debugger;
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
 
-    protected ServiceLogin $serviceLogin;
+    protected LoginService $loginService;
 
-    public function __construct(ServiceLogin $serviceLogin)
+    public function __construct(LoginService $loginService)
     {
-        $this->serviceLogin = $serviceLogin;
+        $this->loginService = $loginService;
     }
 
     /**
@@ -32,6 +32,6 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
             sprintf('LoginId %s (%s) successfully logged in', $login->login_id, $login->person),
             'auth-log'
         );
-        $this->serviceLogin->updateModel($login, ['last_login' => DateTime::from(time())]);
+        $this->loginService->updateModel($login, ['last_login' => DateTime::from(time())]);
     }
 }

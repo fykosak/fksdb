@@ -13,8 +13,8 @@ use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
@@ -29,15 +29,15 @@ class SettingsPresenter extends BasePresenter
 
     public const CONT_LOGIN = 'login';
 
-    private ServiceLogin $loginService;
-    private ServicePersonInfo $servicePersonInfo;
+    private LoginService $loginService;
+    private PersonInfoService $personInfoService;
 
     final public function injectQuarterly(
-        ServiceLogin $loginService,
-        ServicePersonInfo $servicePersonInfo
+        LoginService $loginService,
+        PersonInfoService $personInfoService
     ): void {
         $this->loginService = $loginService;
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
     }
 
     public function titleDefault(): PageTitle
@@ -95,7 +95,7 @@ class SettingsPresenter extends BasePresenter
             $uniqueLogin = new UniqueLogin($this->loginService);
             $uniqueLogin->setIgnoredLogin($login);
 
-            $uniqueEmail = new UniqueEmail($this->servicePersonInfo);
+            $uniqueEmail = new UniqueEmail($this->personInfoService);
             $uniqueEmail->setIgnoredPerson($login->person);
 
             return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);

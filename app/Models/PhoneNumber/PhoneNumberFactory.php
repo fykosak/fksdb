@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Models\PhoneNumber;
 
 use FKSDB\Models\ORM\Models\RegionModel;
-use FKSDB\Models\ORM\Services\ServiceRegion;
+use FKSDB\Models\ORM\Services\RegionService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Utils\Html;
 
 class PhoneNumberFactory
 {
 
-    private ServiceRegion $serviceRegion;
+    private RegionService $regionService;
 
     private TypedSelection $table;
 
-    public function __construct(ServiceRegion $serviceRegion)
+    public function __construct(RegionService $regionService)
     {
-        $this->serviceRegion = $serviceRegion;
-        $this->table = $this->serviceRegion->getTable();
+        $this->regionService = $regionService;
+        $this->table = $this->regionService->getTable();
     }
 
     private function getAllRegions(): TypedSelection

@@ -77,7 +77,7 @@ class DispatchPresenter extends BasePresenter
     {
         if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
-            $query = $this->serviceContest->getTable();
+            $query = $this->contestService->getTable();
             /** @var ContestModel $contest */
             foreach ($query as $contest) {
                 $this->contestsProperty[$contest->contest_id] = [

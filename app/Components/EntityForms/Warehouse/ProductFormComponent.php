@@ -19,19 +19,19 @@ use Nette\Forms\Form;
 class ProductFormComponent extends EntityFormComponent
 {
 
-    protected ProducerService $serviceProducer;
-    protected ProductService $serviceProduct;
+    protected ProducerService $producerService;
+    protected ProductService $productService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public const CONTAINER = 'container';
 
     public function injectServiceProducer(
-        ProducerService $serviceProducer,
-        ProductService $serviceProduct,
+        ProducerService $producerService,
+        ProductService $productService,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
-        $this->serviceProducer = $serviceProducer;
-        $this->serviceProduct = $serviceProduct;
+        $this->producerService = $producerService;
+        $this->productService = $productService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
@@ -41,7 +41,7 @@ class ProductFormComponent extends EntityFormComponent
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
-        $this->serviceProduct->storeModel($data, $this->model);
+        $this->productService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Product has been updated.') : _('Product has been created.'),
             Message::LVL_SUCCESS
@@ -75,7 +75,7 @@ class ProductFormComponent extends EntityFormComponent
         ]);
         $producers = [];
         /** @var ProducerModel $producer */
-        foreach ($this->serviceProducer->getTable() as $producer) {
+        foreach ($this->producerService->getTable() as $producer) {
             $producers[$producer->producer_id] = $producer->name;
         }
         $container->addComponent(new SelectBox(_('Producer'), $producers), 'producer_id', 'name_cs');

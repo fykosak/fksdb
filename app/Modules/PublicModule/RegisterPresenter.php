@@ -15,8 +15,8 @@ use FKSDB\Models\Expressions\Helpers;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\ExtendedPersonPresenter;
@@ -67,19 +67,19 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
      */
     public ?int $personId = null;
     private ?PersonModel $person;
-    private ServiceContestant $serviceContestant;
+    private ContestantService $contestantService;
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     final public function injectTernary(
-        ServiceContestant $serviceContestant,
-        ServicePerson $servicePerson,
+        ContestantService $contestantService,
+        PersonService $personService,
         ReferencedPersonFactory $referencedPersonFactory,
         ExtendedPersonHandlerFactory $handlerFactory
     ): void {
-        $this->serviceContestant = $serviceContestant;
-        $this->servicePerson = $servicePerson;
+        $this->contestantService = $contestantService;
+        $this->personService = $personService;
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->handlerFactory = $handlerFactory;
     }
@@ -116,7 +116,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function getSelectedContest(): ?ContestModel
     {
-        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
+        return $this->contestId ? $this->contestService->findByPrimary($this->contestId) : null;
     }
 
     /* ********************* ACTIONS ***************** */
@@ -146,7 +146,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
             }
         } else {
             $email = $this->getHttpRequest()->getQuery('email');
-            $person = $this->servicePerson->findByEmail($email);
+            $person = $this->personService->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {
                     $this->flashMessage(_('An existing account found. To continue, please sign in.'));
@@ -186,7 +186,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     final public function renderContest(): void
     {
-        $this->template->contests = $this->serviceContest->getTable();
+        $this->template->contests = $this->contestService->getTable();
     }
 
     final public function renderYear(): void
@@ -295,7 +295,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
         }
 
         $handler = $this->handlerFactory->create(
-            $this->serviceContestant,
+            $this->contestantService,
             $this->getSelectedContestYear(),
             $this->getLang()
         );

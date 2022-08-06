@@ -6,9 +6,9 @@ namespace FKSDB\Tests\Events;
 
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Database\Row;
@@ -31,7 +31,7 @@ abstract class EventTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        return $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($data);
+        return $this->getContainer()->getByType(EventService::class)->createNewModel($data);
     }
 
     protected function createPostRequest(array $formData, array $params = []): Request
@@ -56,9 +56,9 @@ abstract class EventTestCase extends DatabaseTestCase
 
     protected function assertApplication(EventModel $event, string $email): EventParticipantModel
     {
-        $person = $this->getContainer()->getByType(ServicePerson::class)->findByEmail($email);
+        $person = $this->getContainer()->getByType(PersonService::class)->findByEmail($email);
         Assert::notEqual(null, $person);
-        $application = $this->getContainer()->getByType(ServiceEventParticipant::class)->getTable()->where([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->getTable()->where([
             'event_id' => $event->event_id,
             'person_id' => $person->person_id,
         ])->fetch();

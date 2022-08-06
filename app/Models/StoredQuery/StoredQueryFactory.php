@@ -6,7 +6,7 @@ namespace FKSDB\Models\StoredQuery;
 
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
@@ -23,12 +23,12 @@ class StoredQueryFactory implements XMLNodeSerializer
     public const PARAM_SERIES = 'series';
     public const PARAM_AC_YEAR = 'ac_year';
     private Connection $connection;
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $storedQueryService;
 
-    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery)
+    public function __construct(Connection $connection, QueryService $storedQueryService)
     {
         $this->connection = $connection;
-        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->storedQueryService = $storedQueryService;
     }
 
     /**
@@ -50,7 +50,7 @@ class StoredQueryFactory implements XMLNodeSerializer
 
     public function createQueryFromQid(string $qid, array $parameters): StoredQuery
     {
-        $patternQuery = $this->serviceStoredQuery->findByQid($qid);
+        $patternQuery = $this->storedQueryService->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }

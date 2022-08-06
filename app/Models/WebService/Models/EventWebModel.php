@@ -12,8 +12,8 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;
@@ -23,13 +23,13 @@ use Nette\Schema\Expect;
 class EventWebModel extends WebModel
 {
 
-    private ServiceEvent $serviceEvent;
-    private ServicePersonSchedule $servicePersonSchedule;
+    private EventService $eventService;
+    private PersonScheduleService $personScheduleService;
 
-    public function inject(ServiceEvent $serviceEvent, ServicePersonSchedule $servicePersonSchedule): void
+    public function inject(EventService $eventService, PersonScheduleService $personScheduleService): void
     {
-        $this->serviceEvent = $serviceEvent;
-        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->eventService = $eventService;
+        $this->personScheduleService = $personScheduleService;
     }
 
     /**
@@ -40,7 +40,7 @@ class EventWebModel extends WebModel
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown eventId.');
         }
-        $event = $this->serviceEvent->findByPrimary($args->eventId);
+        $event = $this->eventService->findByPrimary($args->eventId);
         if (is_null($event)) {
             throw new \SoapFault('Sender', 'Unknown event.');
         }
@@ -59,7 +59,7 @@ class EventWebModel extends WebModel
     {
         $rootNode = $doc->createElement('personSchedule');
 
-        $query = $this->servicePersonSchedule->getTable()
+        $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $event->event_id)
             ->order('person_id');
         $lastPersonId = null;
@@ -88,7 +88,7 @@ class EventWebModel extends WebModel
     private function createPersonScheduleArray(EventModel $event): array
     {
         $data = [];
-        $query = $this->servicePersonSchedule->getTable()
+        $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $event->event_id);
         /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
@@ -271,7 +271,7 @@ class EventWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $event = $this->serviceEvent->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($params['event_id']);
         if (is_null($event)) {
             throw new BadRequestException('Unknown event.', IResponse::S404_NOT_FOUND);
         }

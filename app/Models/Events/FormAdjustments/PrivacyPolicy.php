@@ -12,7 +12,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 use Nette\SmartObject;
@@ -27,14 +27,14 @@ class PrivacyPolicy implements Processing, FormAdjustment
     use SmartObject;
 
     protected const CONTROL_NAME = 'privacy';
-    private ServicePersonInfo $servicePersonInfo;
+    private PersonInfoService $personInfoService;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public function __construct(
-        ServicePersonInfo $servicePersonInfo,
+        PersonInfoService $personInfoService,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ) {
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
@@ -74,9 +74,9 @@ class PrivacyPolicy implements Processing, FormAdjustment
                 $this->trySetAgreed($value);
             } elseif (isset($values[$key . '_1']) && isset($values[$key . '_1']['person_info'])) {
                 $personId = $value;
-                $personInfo = $this->servicePersonInfo->findByPrimary($personId);
+                $personInfo = $this->personInfoService->findByPrimary($personId);
                 if ($personInfo) {
-                    $this->servicePersonInfo->updateModel($personInfo, ['agreed' => 1]);
+                    $this->personInfoService->updateModel($personInfo, ['agreed' => 1]);
 
                     $values[$key . '_1']['person_info']['agreed'] = 1;
                 }

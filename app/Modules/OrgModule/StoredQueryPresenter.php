@@ -11,7 +11,7 @@ use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
@@ -25,11 +25,11 @@ class StoredQueryPresenter extends BasePresenter
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $storedQueryService;
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void
+    final public function injectServiceStoredQuery(QueryService $storedQueryService): void
     {
-        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->storedQueryService = $storedQueryService;
     }
 
     /**
@@ -110,9 +110,9 @@ class StoredQueryPresenter extends BasePresenter
         return new StoredQueryTagCloudComponent($this->getContext());
     }
 
-    protected function getORMService(): ServiceStoredQuery
+    protected function getORMService(): QueryService
     {
-        return $this->serviceStoredQuery;
+        return $this->storedQueryService;
     }
 
     /**

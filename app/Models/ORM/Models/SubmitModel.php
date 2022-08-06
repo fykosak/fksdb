@@ -12,8 +12,8 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int submit_id
- * @property-read int ct_id
- * @property-read ActiveRow contestant_base TODO
+ * @property-read int contestant_id
+ * @property-read ActiveRow contestant
  * @property-read int task_id
  * @property-read TaskModel task
  * @property-read \DateTimeInterface submitted_on
@@ -33,7 +33,7 @@ class SubmitModel extends Model implements Resource
     public function getContestant(): ContestantModel
     {
         // TODO why?
-        return ContestantModel::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
+        return ContestantModel::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT, 'contestant_id'));
     }
 
     public function getResourceId(): string

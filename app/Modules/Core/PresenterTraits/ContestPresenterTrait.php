@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Choosers\ContestChooserComponent;
 use FKSDB\Components\Controls\Choosers\YearChooserComponent;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ContestService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
@@ -16,7 +16,7 @@ use Nette\Security\User;
 
 /**
  * Trait ContestPresenterTrait
- * @property ServiceContest $serviceContest
+ * @property ContestService $contestService
  * @method User getUser()
  */
 trait ContestPresenterTrait
@@ -45,7 +45,7 @@ trait ContestPresenterTrait
     public function getSelectedContest(): ?ContestModel
     {
         if (!isset($this->contest)) {
-            $this->contest = $this->serviceContest->findByPrimary($this->contestId);
+            $this->contest = $this->contestService->findByPrimary($this->contestId);
         }
         return $this->contest;
     }
@@ -68,29 +68,29 @@ trait ContestPresenterTrait
 
         switch ($this->getRole()) {
             case YearChooserComponent::ROLE_SELECTED:
-                return $this->serviceContest->getTable()->where('contest_id', $this->contestId);
+                return $this->contestService->getTable()->where('contest_id', $this->contestId);
             case YearChooserComponent::ROLE_ALL:
-                return $this->serviceContest->getTable();
+                return $this->contestService->getTable();
             case YearChooserComponent::ROLE_CONTESTANT:
             default:
                 if (!$login || !$login->person) {
-                    return $this->serviceContest->getTable()->where('1=0');
+                    return $this->contestService->getTable()->where('1=0');
                 }
                 $person = $login->person;
                 $contestsIds = [];
                 foreach ($person->getActiveContestants() as $contestant) {
                     $contestsIds[] = $contestant->contest_id;
                 }
-                return $this->serviceContest->getTable()->where('contest_id', $contestsIds);
+                return $this->contestService->getTable()->where('contest_id', $contestsIds);
             case YearChooserComponent::ROLE_ORG:
                 if (!$login) {
-                    return $this->serviceContest->getTable()->where('1=0');
+                    return $this->contestService->getTable()->where('1=0');
                 }
                 $contestsIds = [];
                 foreach ($login->person->getActiveOrgs() as $org) {
                     $contestsIds[] = $org->contest;
                 }
-                return $this->serviceContest->getTable()->where('contest_id', $contestsIds);
+                return $this->contestService->getTable()->where('contest_id', $contestsIds);
         }
     }
 

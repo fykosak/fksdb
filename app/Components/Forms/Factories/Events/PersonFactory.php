@@ -12,7 +12,7 @@ use FKSDB\Models\Events\Model\Holder\DataValidator;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\PersonContainerResolver;
 use FKSDB\Models\Expressions\Helpers;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\SelfResolver;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Controls\BaseControl;
@@ -36,7 +36,7 @@ class PersonFactory extends AbstractFactory
     private SelfResolver $selfResolver;
     private ExpressionEvaluator $evaluator;
     private User $user;
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private DIContainer $container;
 
     /**
@@ -57,7 +57,7 @@ class PersonFactory extends AbstractFactory
         SelfResolver $selfResolver,
         ExpressionEvaluator $evaluator,
         User $user,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         DIContainer $container
     ) {
         $this->fieldsDefinition = $fieldsDefinition;
@@ -69,7 +69,7 @@ class PersonFactory extends AbstractFactory
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->container = $container;
     }
 
@@ -132,7 +132,7 @@ class PersonFactory extends AbstractFactory
         $event = $field->getBaseHolder()->event;
         $contestYear = $event->getContestYear();
         $personId = $field->getValue();
-        $person = $personId ? $this->servicePerson->findByPrimary($personId) : null;
+        $person = $personId ? $this->personService->findByPrimary($personId) : null;
 
         if (!$person) {
             return;

@@ -10,19 +10,19 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Application\UI\Form;
 
 class PizzaComponent extends BaseComponent
 {
 
     private array $persons = [];
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private PersonFactory $personFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void
+    final public function injectPrimary(PersonService $personService, PersonFactory $personFactory): void
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->personFactory = $personFactory;
     }
 
@@ -36,7 +36,7 @@ class PizzaComponent extends BaseComponent
         $personsField = $this->personFactory->createPersonSelect(
             true,
             _('Persons'),
-            new PersonProvider($this->servicePerson)
+            new PersonProvider($this->personService)
         );
         $personsField->setMultiSelect(true);
         $form->addComponent($personsField, 'persons');
@@ -44,7 +44,7 @@ class PizzaComponent extends BaseComponent
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
             foreach ($values['persons'] as $personId) {
-                $this->persons[] = $this->servicePerson->findByPrimary($personId);
+                $this->persons[] = $this->personService->findByPrimary($personId);
             }
         };
         return $control;

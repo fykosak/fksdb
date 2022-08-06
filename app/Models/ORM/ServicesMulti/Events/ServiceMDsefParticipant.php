@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\ServicesMulti\Events;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 
@@ -17,7 +17,7 @@ use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 class ServiceMDsefParticipant extends ServiceMulti
 {
 
-    public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService)
+    public function __construct(EventParticipantService $mainService, ServiceDsefParticipant $joinedService)
     {
         parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMDsefParticipant::class);
     }

@@ -7,19 +7,19 @@ namespace FKSDB\Models\Persons;
 use FKSDB\Models\Authentication\AccountManager;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Service;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Database\Connection;
 
 class ExtendedPersonHandlerFactory
 {
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private Connection $connection;
     private AccountManager $accountManager;
 
-    public function __construct(ServicePerson $servicePerson, Connection $connection, AccountManager $accountManager)
+    public function __construct(PersonService $personService, Connection $connection, AccountManager $accountManager)
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
     }
@@ -31,7 +31,7 @@ class ExtendedPersonHandlerFactory
     ): ExtendedPersonHandler {
         return new ExtendedPersonHandler(
             $service,
-            $this->servicePerson,
+            $this->personService,
             $this->connection,
             $this->accountManager,
             $contestYear,

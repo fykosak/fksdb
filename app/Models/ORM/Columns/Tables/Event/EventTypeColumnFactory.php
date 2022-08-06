@@ -9,19 +9,19 @@ use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\ServiceEventType;
+use FKSDB\Models\ORM\Services\EventTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 class EventTypeColumnFactory extends ColumnFactory
 {
-    private ServiceEventType $serviceEventType;
+    private EventTypeService $eventTypeService;
 
-    public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory)
+    public function __construct(EventTypeService $eventTypeService, MetaDataFactory $metaDataFactory)
     {
         parent::__construct($metaDataFactory);
-        $this->serviceEventType = $serviceEventType;
+        $this->eventTypeService = $eventTypeService;
     }
 
     /**
@@ -36,7 +36,7 @@ class EventTypeColumnFactory extends ColumnFactory
 
         $element = new SelectBox($this->getTitle());
 
-        $types = $this->serviceEventType->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
+        $types = $this->eventTypeService->getTable()->where('contest_id', $contest->contest_id)->fetchPairs(
             'event_type_id',
             'name'
         );

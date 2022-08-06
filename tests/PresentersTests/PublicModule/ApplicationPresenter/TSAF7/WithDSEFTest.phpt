@@ -8,7 +8,7 @@ $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -23,13 +23,13 @@ class WithDSEFTest extends TsafTestCase
         parent::setUp();
         $this->authenticatePerson($this->person, $this->fixture);
 
-        $this->tsafApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->tsafEvent->event_id,
             'status' => 'invited',
         ]);
 
-        $dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->dsefEvent->event_id,
             'status' => 'applied',

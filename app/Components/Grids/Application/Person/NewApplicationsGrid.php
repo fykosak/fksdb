@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\IDataSource;
@@ -19,19 +19,19 @@ use NiftyGrid\DuplicateColumnException;
 class NewApplicationsGrid extends BaseGrid
 {
 
-    protected ServiceEvent $serviceEvent;
+    protected EventService $eventService;
 
     protected EventDispatchFactory $eventDispatchFactory;
 
-    final public function injectPrimary(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void
+    final public function injectPrimary(EventService $eventService, EventDispatchFactory $eventDispatchFactory): void
     {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     protected function getData(): IDataSource
     {
-        $events = $this->serviceEvent->getTable()
+        $events = $this->eventService->getTable()
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
         return new NDataSource($events);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Results\Models;
 
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\Database\Connection;
@@ -29,10 +29,10 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function __construct(
         CumulativeResultsModel $cumulativeResultsModel,
         ContestYearModel $contestYear,
-        ServiceTask $serviceTask,
+        TaskService $taskService,
         Connection $connection
     ) {
-        parent::__construct($contestYear, $serviceTask, $connection, new EvaluationNullObject());
+        parent::__construct($contestYear, $taskService, $connection, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
 

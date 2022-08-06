@@ -6,7 +6,7 @@ namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
@@ -17,13 +17,13 @@ class DuplicateFinder
     public const IDX_SCORE = 'score';
     public const DIFFERENT_PATTERN = 'not-same';
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     private array $parameters;
 
-    public function __construct(ServicePerson $servicePerson, Container $container)
+    public function __construct(PersonService $personService, Container $container)
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
@@ -33,7 +33,7 @@ class DuplicateFinder
         /* Create buckets for quadratic search. */
         /** @var PersonModel $person */
         foreach (
-            $this->servicePerson->getTable()->select(
+            $this->personService->getTable()->select(
                 "person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'"
             ) as $person
         ) {

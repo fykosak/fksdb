@@ -13,7 +13,7 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -29,11 +29,11 @@ class ScheduleItemPresenter extends BasePresenter
 
     private ScheduleGroupModel $group;
 
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
 
-    final public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void
+    final public function injectServiceScheduleItem(ScheduleItemService $scheduleItemService): void
     {
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -117,9 +117,9 @@ class ScheduleItemPresenter extends BasePresenter
         return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceScheduleItem
+    protected function getORMService(): ScheduleItemService
     {
-        return $this->serviceScheduleItem;
+        return $this->scheduleItemService;
     }
 
     /**

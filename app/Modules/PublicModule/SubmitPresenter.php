@@ -16,10 +16,10 @@ use FKSDB\Models\ORM\Models\QuizModel;
 use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
-use FKSDB\Models\ORM\Services\ServiceQuiz;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
-use FKSDB\Models\ORM\Services\ServiceSubmitQuiz;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\QuizService;
+use FKSDB\Models\ORM\Services\SubmitService;
+use FKSDB\Models\ORM\Services\SubmitQuizService;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
@@ -35,19 +35,19 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter
 {
 
-    private ServiceSubmit $submitService;
-    private ServiceSubmitQuiz $submitQuizQuestionService;
+    private SubmitService $submitService;
+    private SubmitQuizService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
-    private ServiceTask $taskService;
-    private ServiceQuiz $quizQuestionService;
+    private TaskService $taskService;
+    private QuizService $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
-        ServiceSubmit $submitService,
-        ServiceSubmitQuiz $submitQuizQuestionService,
+        SubmitService $submitService,
+        SubmitQuizService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
-        ServiceTask $taskService,
-        ServiceQuiz $quizQuestionService,
+        TaskService $taskService,
+        QuizService $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
@@ -227,7 +227,7 @@ class SubmitPresenter extends BasePresenter
         $values = $form->getValues();
 
         Debugger::log(
-            \sprintf('Contestant %d upload %s', $this->getContestant()->ct_id, $values['tasks']),
+            \sprintf('Contestant %d upload %s', $this->getContestant()->contestant_id, $values['tasks']),
             'old-submit'
         );
 

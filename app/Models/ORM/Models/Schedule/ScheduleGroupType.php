@@ -56,6 +56,9 @@ class ScheduleGroupType extends FakeStringEnum implements EnumColumn
         ];
     }
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         $badge = '';

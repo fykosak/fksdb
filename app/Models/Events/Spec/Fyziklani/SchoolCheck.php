@@ -7,7 +7,7 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
 use FKSDB\Models\Persons\ModelDataConflictException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Control;
@@ -15,12 +15,12 @@ use Nette\Forms\Control;
 abstract class SchoolCheck extends AbstractAdjustment
 {
 
-    private ServicePersonHistory $servicePersonHistory;
+    private PersonHistoryService $personHistoryService;
     private Holder $holder;
 
-    public function __construct(ServicePersonHistory $servicePersonHistory)
+    public function __construct(PersonHistoryService $personHistoryService)
     {
-        $this->servicePersonHistory = $servicePersonHistory;
+        $this->personHistoryService = $personHistoryService;
     }
 
     public function getHolder(): Holder
@@ -61,7 +61,7 @@ abstract class SchoolCheck extends AbstractAdjustment
             }, $personControls)
         );
 
-        $schools = $this->servicePersonHistory->getTable()
+        $schools = $this->personHistoryService->getTable()
             ->where('person_id', $personIds)
             ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)
             ->fetchPairs('person_id', 'school_id');

@@ -10,10 +10,10 @@ use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\Services\ServiceGrant;
-use FKSDB\Models\ORM\Services\ServicePostContact;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -31,20 +31,20 @@ class WriteOnlyTraitTest extends DsefTestCase
         parent::setUp();
 
         // create address for person
-        $address = $this->getContainer()->getByType(ServiceAddress::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel([
             'target' => 'PomaláUlice',
             'city' => 'SinCity',
             'postal_code' => '67401',
             'region_id' => '3',
         ]);
-        $this->getContainer()->getByType(ServicePostContact::class)->createNewModel([
+        $this->getContainer()->getByType(PostContactService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'address_id' => $address->address_id,
             'type' => PostContactType::DELIVERY,
         ]);
 
         // apply person
-        $this->dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->event->event_id,
             'status' => 'applied',
@@ -58,7 +58,7 @@ class WriteOnlyTraitTest extends DsefTestCase
 
         // create admin
         $admin = $this->createPerson('Admin', 'Adminovič', null, []);
-        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel([
+        $this->getContainer()->getByType(GrantService::class)->createNewModel([
             'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
@@ -154,7 +154,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         Assert::equal(3, $application->lunch_count);
 
         $address = $this->getContainer()
-            ->getByType(ServicePostContact::class)
+            ->getByType(PostContactService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id, 'type' => PostContactType::PERMANENT])
             ->fetch();
@@ -162,7 +162,7 @@ class WriteOnlyTraitTest extends DsefTestCase
         Assert::notEqual(null, $address);
 
         $address = $this->getContainer()
-            ->getByType(ServiceAddress::class)
+            ->getByType(AddressService::class)
             ->getTable()
             ->where(['address_id' => $address->address_id])
             ->fetch();

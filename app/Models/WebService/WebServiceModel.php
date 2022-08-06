@@ -94,14 +94,14 @@ class WebServiceModel
     /**
      * @throws \SoapFault
      */
-    private function checkAuthentication(string $serviceName): void
+    private function checkAuthentication(string $nameService): void
     {
         if (!isset($this->authenticatedLogin)) {
-            $msg = sprintf('Unauthenticated access to %s.', $serviceName);
+            $msg = sprintf('Unauthenticated access to %s.', $nameService);
             $this->log($msg);
             throw new \SoapFault('Sender', $msg);
         } else {
-            $this->log(sprintf('Called %s ', $serviceName));
+            $this->log(sprintf('Called %s ', $nameService));
         }
     }
 

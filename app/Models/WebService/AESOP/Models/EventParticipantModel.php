@@ -26,7 +26,7 @@ order by surname, name",
             $this->mapEventNameToTypeId(),
             $this->contestYear->year,
         );
-        $event = $this->serviceEvent->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
+        $event = $this->eventService->getByEventTypeId($this->contestYear, $this->mapEventNameToTypeId());
         return $this->formatResponse(
             $this->getDefaultParams() + [
                 'max-rank' => $query->getRowCount(),

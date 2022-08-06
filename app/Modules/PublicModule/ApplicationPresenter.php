@@ -24,7 +24,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 use FKSDB\Models\ORM\ReferencedAccessor;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
@@ -42,7 +42,7 @@ class ApplicationPresenter extends BasePresenter
     private ?ActiveRow $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -52,11 +52,11 @@ class ApplicationPresenter extends BasePresenter
     }
 
     final public function injectTernary(
-        ServiceEvent $serviceEvent,
+        EventService $eventService,
         RelatedPersonAuthorizator $relatedPersonAuthorizator,
         EventDispatchFactory $eventDispatchFactory
     ): void {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -260,7 +260,7 @@ class ApplicationPresenter extends BasePresenter
                 }
             }
             $eventId = $eventId ?? $this->getParameter('eventId');
-            $this->event = $this->serviceEvent->findByPrimary($eventId);
+            $this->event = $this->eventService->findByPrimary($eventId);
         }
 
         return $this->event;

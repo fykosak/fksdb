@@ -14,7 +14,7 @@ class Transition
 {
     use SmartObject;
 
-    /** @var callable */
+    /** @var callable|bool */
     protected $condition;
     private ?BehaviorType $behaviorType = null;
     private string $label;

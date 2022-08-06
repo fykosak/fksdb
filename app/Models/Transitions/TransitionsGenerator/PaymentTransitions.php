@@ -9,7 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\PaymentModel;
 use FKSDB\Models\ORM\Models\PaymentState;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use FKSDB\Models\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
@@ -22,14 +22,14 @@ abstract class PaymentTransitions implements TransitionsDecorator
 {
 
     protected EventAuthorizator $eventAuthorizator;
-    protected ServicePersonSchedule $servicePersonSchedule;
+    protected PersonScheduleService $personScheduleService;
 
     public function __construct(
         EventAuthorizator $eventAuthorizator,
-        ServicePersonSchedule $servicePersonSchedule
+        PersonScheduleService $personScheduleService
     ) {
         $this->eventAuthorizator = $eventAuthorizator;
-        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->personScheduleService = $personScheduleService;
     }
 
     /**
@@ -76,7 +76,7 @@ abstract class PaymentTransitions implements TransitionsDecorator
         );
         $transition->beforeExecute[] = function (PaymentHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
-                $this->servicePersonSchedule->updateModel($personSchedule, [$personSchedule->state => 'received']);
+                $this->personScheduleService->updateModel($personSchedule, [$personSchedule->state => 'received']);
             }
         };
         $transition->setCondition(fn() => false);

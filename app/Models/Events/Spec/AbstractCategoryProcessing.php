@@ -12,7 +12,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
@@ -21,11 +21,11 @@ use Nette\Utils\ArrayHash;
 abstract class AbstractCategoryProcessing extends WithSchoolProcessing implements OptionsProvider
 {
 
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
 
-    public function __construct(ServicePerson $servicePerson)
+    public function __construct(PersonService $personService)
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
     }
 
     protected function saveCategory(?TeamCategory $category, ArrayHash $values, Holder $holder, Logger $logger): void
@@ -105,7 +105,7 @@ abstract class AbstractCategoryProcessing extends WithSchoolProcessing implement
     {
         $personControls = $this->getControl("$baseHolder->name.person_id");
         $value = reset($personControls)->getValue(false);
-        $person = $this->servicePerson->findByPrimary($value);
+        $person = $this->personService->findByPrimary($value);
         return $person->getHistoryByContestYear($baseHolder->holder->primaryHolder->event->getContestYear());
     }
 

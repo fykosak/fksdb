@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Pipeline\PipelineException;
 use FKSDB\Models\Pipeline\Stage;
 
@@ -23,9 +23,9 @@ class TasksFromXML extends Stage
         'label' => 'label',
     ];
 
-    private ServiceTask $taskService;
+    private TaskService $taskService;
 
-    public function __construct(ServiceTask $taskService)
+    public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
     }
@@ -59,10 +59,10 @@ class TasksFromXML extends Stage
         return $this->data;
     }
 
-    private function processTask(\SimpleXMLElement $XMLTask): void
+    private function processTask(\SimpleXMLElement $xMLTask): void
     {
         $series = $this->data->getSeries();
-        $tasknr = (int)(string)$XMLTask->number;
+        $tasknr = (int)(string)$xMLTask->number;
 
         // update fields
         $data = [];
@@ -75,7 +75,7 @@ class TasksFromXML extends Stage
                 $name = $matches[1];
                 $lang = $matches[2];
                 /** @var \SimpleXMLElement[] $elements */
-                $elements = $XMLTask->{$name};
+                $elements = $xMLTask->{$name};
                 $csvalue = null;
 
                 if (count($elements) == 1) {
@@ -97,7 +97,7 @@ class TasksFromXML extends Stage
                 }
                 $value = $value ?: $csvalue;
             } else {
-                $value = (string)$XMLTask->{$xmlElement};
+                $value = (string)$xMLTask->{$xmlElement};
             }
             $data[$column] = $value;
         }

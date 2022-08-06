@@ -6,7 +6,7 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\SmartObject;
 
@@ -17,11 +17,11 @@ class SignaturesWebModel extends WebModel
 {
     use SmartObject;
 
-    private ServiceContest $serviceContest;
+    private ContestService $contestService;
 
-    public function inject(ServiceContest $serviceContest): void
+    public function inject(ContestService $contestService): void
     {
-        $this->serviceContest = $serviceContest;
+        $this->contestService = $contestService;
     }
 
     /**
@@ -32,7 +32,7 @@ class SignaturesWebModel extends WebModel
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->serviceContest->findByPrimary($args->contestId);
+        $contest = $this->contestService->findByPrimary($args->contestId);
 
         $doc = new \DOMDocument();
 

@@ -81,7 +81,7 @@ class PersonModel extends Model implements Resource
 
     public function getContestants(?ContestModel $contest = null): GroupedSelection
     {
-        $related = $this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id');
+        $related = $this->related(DbNames::TAB_CONTESTANT, 'person_id');
         if ($contest) {
             $related->where('contest_id', $contest->contest_id);
         }
@@ -210,7 +210,7 @@ class PersonModel extends Model implements Resource
     public function getActiveContestants(): array
     {
         $result = [];
-        foreach ($this->related(DbNames::TAB_CONTESTANT_BASE, 'person_id') as $contestant) {
+        foreach ($this->related(DbNames::TAB_CONTESTANT, 'person_id') as $contestant) {
             $contestant = ContestantModel::createFromActiveRow($contestant);
             $currentYear = $contestant->contest->getCurrentContestYear()->year;
             if ($contestant->year >= $currentYear) { // forward contestant

@@ -7,7 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ContestantService;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Form;
 
@@ -19,11 +19,11 @@ class ContestantPresenter extends ExtendedPersonPresenter
 
     protected string $fieldsDefinition = 'adminContestant';
 
-    private ServiceContestant $serviceContestant;
+    private ContestantService $contestantService;
 
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void
+    final public function injectServiceContestant(ContestantService $contestantService): void
     {
-        $this->serviceContestant = $serviceContestant;
+        $this->contestantService = $contestantService;
     }
 
     public function titleEdit(): PageTitle
@@ -75,9 +75,9 @@ class ContestantPresenter extends ExtendedPersonPresenter
         // no container for contestant
     }
 
-    protected function getORMService(): ServiceContestant
+    protected function getORMService(): ContestantService
     {
-        return $this->serviceContestant;
+        return $this->contestantService;
     }
 
     protected function getAcYearFromModel(): ?ContestYearModel

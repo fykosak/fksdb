@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
@@ -20,7 +20,7 @@ class ScheduleField extends TextInput
 
     private EventModel $event;
     private string $type;
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
 
     /**
      * @throws BadRequestException
@@ -29,13 +29,13 @@ class ScheduleField extends TextInput
     public function __construct(
         EventModel $event,
         string $type,
-        ServiceScheduleItem $serviceScheduleItem,
+        ScheduleItemService $scheduleItemService,
         ?string $label
     ) {
         parent::__construct($label ?? $this->getDefaultLabel($type));
         $this->event = $event;
         $this->type = $type;
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
         $this->registerFrontend('event.schedule');
         $this->appendProperty();
     }

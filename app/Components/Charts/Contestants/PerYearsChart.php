@@ -6,14 +6,14 @@ namespace FKSDB\Components\Charts\Contestants;
 
 use FKSDB\Components\Charts\Core\Chart;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Services\SubmitService;
 use Fykosak\NetteFrontendComponent\Components\FrontEndComponent;
 use Nette\DI\Container;
 
 class PerYearsChart extends FrontEndComponent implements Chart
 {
 
-    private ServiceSubmit $serviceSubmit;
+    private SubmitService $submitService;
     protected ContestModel $contest;
 
     public function __construct(Container $container, ContestModel $contest)
@@ -22,22 +22,22 @@ class PerYearsChart extends FrontEndComponent implements Chart
         $this->contest = $contest;
     }
 
-    public function injectSecondary(ServiceSubmit $serviceSubmit): void
+    public function injectSecondary(SubmitService $submitService): void
     {
-        $this->serviceSubmit = $serviceSubmit;
+        $this->submitService = $submitService;
     }
 
     protected function getData(): array
     {
-        $seriesQuery = $this->serviceSubmit->getTable()
+        $seriesQuery = $this->submitService->getTable()
             ->where('task.contest_id', $this->contest->contest_id)
             ->group('task.series, task.year')
-            ->select('COUNT(DISTINCT ct_id) AS count,task.series, task.year');
+            ->select('COUNT(DISTINCT contestant_id) AS count,task.series, task.year');
 
-        $yearsQuery = $this->serviceSubmit->getTable()
+        $yearsQuery = $this->submitService->getTable()
             ->where('task.contest_id', $this->contest->contest_id)
             ->group('task.year')
-            ->select('COUNT(DISTINCT ct_id) AS count, task.year');
+            ->select('COUNT(DISTINCT contestant_id) AS count, task.year');
 
         $data = [];
         foreach ($seriesQuery as $row) {

@@ -13,7 +13,7 @@ use FKSDB\Models\ORM\Models\{
     TaskModel,
     TaskContributionModel,
 };
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
@@ -33,16 +33,16 @@ class PointsPresenter extends BasePresenter
     public ?bool $all = null;
     private SQLResultsCache $resultsCache;
     private SeriesTable $seriesTable;
-    private ServiceTaskContribution $serviceTaskContribution;
+    private TaskContributionService $taskContributionService;
 
     final public function injectQuarterly(
         SQLResultsCache $resultsCache,
         SeriesTable $seriesTable,
-        ServiceTaskContribution $serviceTaskContribution
+        TaskContributionService $taskContributionService
     ): void {
         $this->resultsCache = $resultsCache;
         $this->seriesTable = $seriesTable;
-        $this->serviceTaskContribution = $serviceTaskContribution;
+        $this->taskContributionService = $taskContributionService;
     }
 
     public function titleEntry(): PageTitle
@@ -78,7 +78,7 @@ class PointsPresenter extends BasePresenter
         if (!$person) {
             return [];
         }
-        $gradedTasks = $this->serviceTaskContribution->getTable()
+        $gradedTasks = $this->taskContributionService->getTable()
             ->where(
                 [
                     'person_id' => $person->person_id,

@@ -18,13 +18,13 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceFlag;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonHasFlag;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServicePostContact;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\FlagService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonHasFlagService;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Database\Table\ActiveRow;
@@ -37,17 +37,17 @@ class ReferencedPersonHandler implements ReferencedHandler
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    private ServicePerson $servicePerson;
-    private ServicePersonInfo $servicePersonInfo;
-    private ServicePersonHistory $servicePersonHistory;
+    private PersonService $personService;
+    private PersonInfoService $personInfoService;
+    private PersonHistoryService $personHistoryService;
 
-    private ServiceAddress $serviceAddress;
-    private ServicePostContact $servicePostContact;
+    private AddressService $addressService;
+    private PostContactService $postContactService;
 
-    private ServicePersonHasFlag $servicePersonHasFlag;
+    private PersonHasFlagService $personHasFlagService;
     private ContestYearModel $contestYear;
     private Handler $eventScheduleHandler;
-    private ServiceFlag $serviceFlag;
+    private FlagService $flagService;
 
     private EventModel $event;
 
@@ -63,22 +63,22 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     public function inject(
         Handler $eventScheduleHandler,
-        ServicePerson $servicePerson,
-        ServicePersonInfo $servicePersonInfo,
-        ServicePersonHistory $servicePersonHistory,
-        ServicePersonHasFlag $servicePersonHasFlag,
-        ServiceAddress $serviceAddress,
-        ServicePostContact $servicePostContact,
-        ServiceFlag $serviceFlag
+        PersonService $personService,
+        PersonInfoService $personInfoService,
+        PersonHistoryService $personHistoryService,
+        PersonHasFlagService $personHasFlagService,
+        AddressService $addressService,
+        PostContactService $postContactService,
+        FlagService $flagService
     ): void {
         $this->eventScheduleHandler = $eventScheduleHandler;
-        $this->servicePerson = $servicePerson;
-        $this->servicePersonInfo = $servicePersonInfo;
-        $this->servicePersonHistory = $servicePersonHistory;
-        $this->servicePersonHasFlag = $servicePersonHasFlag;
-        $this->serviceAddress = $serviceAddress;
-        $this->servicePostContact = $servicePostContact;
-        $this->serviceFlag = $serviceFlag;
+        $this->personService = $personService;
+        $this->personInfoService = $personInfoService;
+        $this->personHistoryService = $personHistoryService;
+        $this->personHasFlagService = $personHasFlagService;
+        $this->addressService = $addressService;
+        $this->postContactService = $postContactService;
+        $this->flagService = $flagService;
     }
 
     public function getResolution(): string
@@ -193,8 +193,8 @@ class ReferencedPersonHandler implements ReferencedHandler
 
                         if ($model) {
                             /** @var PostContactModel $model */
-                            $this->servicePostContact->disposeModel($model);
-                            $this->serviceAddress->disposeModel($model->address);
+                            $this->postContactService->disposeModel($model);
+                            $this->addressService->disposeModel($model->address);
                         }
                     }
                     continue;
@@ -204,13 +204,13 @@ class ReferencedPersonHandler implements ReferencedHandler
                         $this->storePerson($model, (array)$data);
                         continue 2;
                     case 'person_info':
-                        $this->servicePersonInfo->storeModel(
+                        $this->personInfoService->storeModel(
                             array_merge((array)$data['person_info'], ['person_id' => $person->person_id]),
                             $model
                         );
                         continue 2;
                     case 'person_history':
-                        $this->servicePersonHistory->storeModel(
+                        $this->personHistoryService->storeModel(
                             array_merge((array)$data['person_history'], [
                                 'ac_year' => $this->contestYear->ac_year,
                                 'person_id' => $person->person_id,
@@ -227,8 +227,8 @@ class ReferencedPersonHandler implements ReferencedHandler
                         continue 2;
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
-                            $flag = $this->serviceFlag->findByFid($flagId);
-                            $this->servicePersonHasFlag->storeModel([
+                            $flag = $this->flagService->findByFid($flagId);
+                            $this->personHasFlagService->storeModel([
                                 'value' => $flagValue,
                                 'flag_id' => $flag->flag_id,
                                 'person_id' => $person->person_id,
@@ -247,16 +247,16 @@ class ReferencedPersonHandler implements ReferencedHandler
     private function storePostContact(PersonModel $person, ?PostContactModel $model, array $data, string $type): void
     {
         if ($model) {
-            $this->serviceAddress->updateModel($model->address, $data);
-            $this->servicePostContact->updateModel($model, $data);
+            $this->addressService->updateModel($model->address, $data);
+            $this->postContactService->updateModel($model, $data);
         } else {
             $data = array_merge($data, [
                 'person_id' => $person->person_id,
                 'type' => PersonFormComponent::mapAddressContainerNameToType($type)->value,
             ]);
-            $mainModel = $this->serviceAddress->createNewModel($data);
+            $mainModel = $this->addressService->createNewModel($data);
             $data['address_id'] = $mainModel->address_id;
-            $this->servicePostContact->createNewModel($data);
+            $this->postContactService->createNewModel($data);
         }
     }
 
@@ -297,7 +297,7 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     private function storePerson(?PersonModel $person, array $data): PersonModel
     {
-        return $this->servicePerson->storeModel((array)$data['person'], $person);
+        return $this->personService->storeModel((array)$data['person'], $person);
     }
 
     private function removeConflicts(iterable $data, iterable $conflicts): iterable
@@ -330,9 +330,9 @@ class ReferencedPersonHandler implements ReferencedHandler
             unset($data['address_id']);
             unset($data['type']);
 
-            $addressModel = $this->serviceAddress->createNewModel($data);
+            $addressModel = $this->addressService->createNewModel($data);
             $data['address_id'] = $addressModel->address_id;
-            $joinedModel = $this->servicePostContact->createNewModel($data);
+            $joinedModel = $this->postContactService->createNewModel($data);
             $models[self::POST_CONTACT_PERMANENT] = $joinedModel;
         }
     }
@@ -380,7 +380,7 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     private function beginTransaction(): void
     {
-        $connection = $this->servicePerson->explorer->getConnection();
+        $connection = $this->personService->explorer->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
         } else {
@@ -390,7 +390,7 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     private function commit(): void
     {
-        $connection = $this->servicePerson->explorer->getConnection();
+        $connection = $this->personService->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
@@ -398,7 +398,7 @@ class ReferencedPersonHandler implements ReferencedHandler
 
     private function rollback(): void
     {
-        $connection = $this->servicePerson->explorer->getConnection();
+        $connection = $this->personService->explorer->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();
         }
@@ -411,6 +411,6 @@ class ReferencedPersonHandler implements ReferencedHandler
      */
     public function findBySecondaryKey(string $key): ?PersonModel
     {
-        return $this->servicePerson->findByEmail($key);
+        return $this->personService->findByEmail($key);
     }
 }

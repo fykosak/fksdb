@@ -14,10 +14,10 @@ use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
-use FKSDB\Models\ORM\Services\ServicePostContact;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
+use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -37,10 +37,10 @@ class PersonFormComponent extends EntityFormComponent
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private AddressFactory $addressFactory;
-    private ServicePerson $servicePerson;
-    private ServicePersonInfo $servicePersonInfo;
-    private ServicePostContact $servicePostContact;
-    private ServiceAddress $serviceAddress;
+    private PersonService $personService;
+    private PersonInfoService $personInfoService;
+    private PostContactService $postContactService;
+    private AddressService $addressService;
     private MemoryLogger $logger;
     private FieldLevelPermission $userPermission;
 
@@ -53,18 +53,18 @@ class PersonFormComponent extends EntityFormComponent
 
     final public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        ServicePerson $servicePerson,
-        ServicePersonInfo $servicePersonInfo,
+        PersonService $personService,
+        PersonInfoService $personInfoService,
         AddressFactory $addressFactory,
-        ServicePostContact $servicePostContact,
-        ServiceAddress $serviceAddress
+        PostContactService $postContactService,
+        AddressService $addressService
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->servicePerson = $servicePerson;
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personService = $personService;
+        $this->personInfoService = $personInfoService;
         $this->addressFactory = $addressFactory;
-        $this->servicePostContact = $servicePostContact;
-        $this->serviceAddress = $serviceAddress;
+        $this->postContactService = $postContactService;
+        $this->addressService = $addressService;
     }
 
     public static function mapAddressContainerNameToType(string $containerName): PostContactType
@@ -109,13 +109,13 @@ class PersonFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $connection = $this->servicePerson->explorer->getConnection();
+        $connection = $this->personService->explorer->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values);
         $connection->beginTransaction();
         $this->logger->clear();
-        $person = $this->servicePerson->storeModel($data[self::PERSON_CONTAINER], $this->model);
-        $this->servicePersonInfo->storeModel(
+        $person = $this->personService->storeModel($data[self::PERSON_CONTAINER], $this->model);
+        $this->personInfoService->storeModel(
             array_merge($data[self::PERSON_INFO_CONTAINER], ['person_id' => $person->person_id,]),
             $person->getInfo()
         );
@@ -157,20 +157,20 @@ class PersonFormComponent extends EntityFormComponent
             $oldAddress = $person->getAddress($shortType);
             if (count($datum)) {
                 if ($oldAddress) {
-                    $this->serviceAddress->updateModel($oldAddress, $datum);
+                    $this->addressService->updateModel($oldAddress, $datum);
                     $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
                 } else {
-                    $address = $this->serviceAddress->createNewModel($datum);
+                    $address = $this->addressService->createNewModel($datum);
                     $postContactData = [
                         'type' => $shortType->value,
                         'person_id' => $person->person_id,
                         'address_id' => $address->address_id,
                     ];
-                    $this->servicePostContact->createNewModel($postContactData);
+                    $this->postContactService->createNewModel($postContactData);
                     $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
                 }
             } elseif ($oldAddress) {
-                $this->servicePostContact->getTable()->where([
+                $this->postContactService->getTable()->where([
                     'type' => $shortType->value,
                     'person_id' => $person->person_id,
                 ])->delete();

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use Nette\Utils\DateTime;
 use FKSDB\Models\Pipeline\Stage;
 
@@ -16,9 +16,9 @@ class DeadlineFromXML extends Stage
 {
 
     private SeriesData $data;
-    private ServiceTask $taskService;
+    private TaskService $taskService;
 
-    public function __construct(ServiceTask $taskService)
+    public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
     }

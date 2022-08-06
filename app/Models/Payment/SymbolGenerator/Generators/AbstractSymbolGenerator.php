@@ -7,17 +7,17 @@ namespace FKSDB\Models\Payment\SymbolGenerator\Generators;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Models\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
 abstract class AbstractSymbolGenerator implements TransitionCallback
 {
-    protected ServicePayment $servicePayment;
+    protected PaymentService $paymentService;
 
-    public function __construct(ServicePayment $servicePayment)
+    public function __construct(PaymentService $paymentService)
     {
-        $this->servicePayment = $servicePayment;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -35,6 +35,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback
         /** @var PaymentModel $model */
         $model = $holder->getModel();
         $info = $this->create($model, ...$args);
-        $this->servicePayment->updateModel($model, $info);
+        $this->paymentService->updateModel($model, $info);
     }
 }

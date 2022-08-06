@@ -7,7 +7,7 @@ namespace FKSDB\Models\Results;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2001;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationFykos2011;
 use FKSDB\Models\Results\EvaluationStrategies\EvaluationStrategy;
@@ -32,12 +32,12 @@ class ResultsModelFactory implements XMLNodeSerializer
     use SmartObject;
 
     private Connection $connection;
-    private ServiceTask $serviceTask;
+    private TaskService $taskService;
 
-    public function __construct(Connection $connection, ServiceTask $serviceTask)
+    public function __construct(Connection $connection, TaskService $taskService)
     {
         $this->connection = $connection;
-        $this->serviceTask = $serviceTask;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -51,7 +51,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
-        return new CumulativeResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
+        return new CumulativeResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
@@ -65,7 +65,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
-        return new DetailResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
+        return new DetailResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
@@ -79,7 +79,7 @@ class ResultsModelFactory implements XMLNodeSerializer
                 'Undefined results model for ' . $contestYear->contest->name . '@' . $contestYear->year
             );
         }
-        return new BrojureResultsModel($contestYear, $this->serviceTask, $this->connection, $evaluationStrategy);
+        return new BrojureResultsModel($contestYear, $this->taskService, $this->connection, $evaluationStrategy);
     }
 
     /**
@@ -91,7 +91,7 @@ class ResultsModelFactory implements XMLNodeSerializer
         return new SchoolCumulativeResultsModel(
             $cumulativeResultsModel,
             $contestYear,
-            $this->serviceTask,
+            $this->taskService,
             $this->connection
         );
     }

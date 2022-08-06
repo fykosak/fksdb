@@ -18,7 +18,7 @@ class ProductPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ProductService $serviceProduct;
+    private ProductService $productService;
 
     public function titleList(): PageTitle
     {
@@ -35,9 +35,9 @@ class ProductPresenter extends BasePresenter
         return new PageTitle(null, _('Create product'), 'fa fa-plus');
     }
 
-    public function injectService(ProductService $serviceProduct): void
+    public function injectService(ProductService $productService): void
     {
-        $this->serviceProduct = $serviceProduct;
+        $this->productService = $productService;
     }
 
     protected function createComponentCreateForm(): Control
@@ -62,7 +62,7 @@ class ProductPresenter extends BasePresenter
 
     protected function getORMService(): ProductService
     {
-        return $this->serviceProduct;
+        return $this->productService;
     }
 
     /**

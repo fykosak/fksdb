@@ -22,8 +22,8 @@ class GroupOptions implements OptionsProvider
 {
     use SmartObject;
 
-    private ServiceMDsefParticipant $serviceMParticipant;
-    private ServiceDsefGroup $serviceDsefGroup;
+    private ServiceMDsefParticipant $mParticipantService;
+    private ServiceDsefGroup $dsefGroupService;
     /** @var string|string[] */
     private $includeStates;
     /** @var string|string[] */
@@ -38,15 +38,15 @@ class GroupOptions implements OptionsProvider
      * @param string|array $excludeStates any state or array of state
      */
     public function __construct(
-        ServiceMDsefParticipant $serviceMParticipant,
-        ServiceDsefGroup $serviceDsefGroup,
+        ServiceMDsefParticipant $mParticipantService,
+        ServiceDsefGroup $dsefGroupService,
         $includeStates = AbstractMachine::STATE_ANY,
         $excludeStates = ['cancelled']
     ) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
-        $this->serviceMParticipant = $serviceMParticipant;
-        $this->serviceDsefGroup = $serviceDsefGroup;
+        $this->mParticipantService = $mParticipantService;
+        $this->dsefGroupService = $dsefGroupService;
     }
 
     private function transformGroups(iterable $groups): array
@@ -77,7 +77,7 @@ class GroupOptions implements OptionsProvider
         $model = $baseHolder->getModel2();
         $groups = $this->getGroups($event);
 
-        $selection = $this->serviceMParticipant->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->mParticipantService->mainService->explorer->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)

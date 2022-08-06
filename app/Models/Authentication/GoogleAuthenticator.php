@@ -10,28 +10,28 @@ use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Security\AuthenticationException;
 
 class GoogleAuthenticator extends AbstractAuthenticator
 {
 
-    private ServiceOrg $serviceOrg;
+    private OrgService $orgService;
     private AccountManager $accountManager;
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     public function __construct(
-        ServiceOrg $serviceOrg,
+        OrgService $orgService,
         AccountManager $accountManager,
-        ServiceLogin $serviceLogin,
-        ServicePerson $servicePerson
+        LoginService $loginService,
+        PersonService $personService
     ) {
-        parent::__construct($serviceLogin);
-        $this->serviceOrg = $serviceOrg;
+        parent::__construct($loginService);
+        $this->orgService = $orgService;
         $this->accountManager = $accountManager;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
     }
 
     /**
@@ -67,7 +67,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
         if (!$user['email']) {
             throw new AuthenticationException(_('Email not found in the google account.'));
         }
-        return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
+        return $this->findOrg($user) ?? $this->personService->findByEmail($user['email']);
     }
 
     private function findOrg(array $user): ?PersonModel
@@ -84,7 +84,7 @@ class GoogleAuthenticator extends AbstractAuthenticator
                 return null;
         }
         /** @var OrgModel|null $org */
-        $org = $this->serviceOrg->getTable()
+        $org = $this->orgService->getTable()
             ->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])
             ->fetch();
         return $org ? $org->person : null;

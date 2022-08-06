@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
@@ -22,7 +22,7 @@ class SchoolsGrid extends EntityGrid
 
     public function __construct(Container $container)
     {
-        parent::__construct($container, ServiceSchool::class, [], []);
+        parent::__construct($container, SchoolService::class, [], []);
     }
 
     protected function getData(): IDataSource

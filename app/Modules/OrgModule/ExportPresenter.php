@@ -10,7 +10,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use Fykosak\Utils\UI\PageTitle;
@@ -28,15 +28,15 @@ class ExportPresenter extends BasePresenter
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $queryService;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;
 
     final public function injectServiceStoredQuery(
-        ServiceStoredQuery $serviceStoredQuery,
+        QueryService $queryService,
         StoredQueryFactory $storedQueryFactory
     ): void {
-        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->queryService = $queryService;
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
@@ -69,7 +69,7 @@ class ExportPresenter extends BasePresenter
     {
         $qid = $this->getParameter('qid');
         if ($qid) {
-            return $this->serviceStoredQuery->findByQid($qid);
+            return $this->queryService->findByQid($qid);
         }
         return null;
     }
@@ -164,9 +164,9 @@ class ExportPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
-    protected function getORMService(): ServiceStoredQuery
+    protected function getORMService(): QueryService
     {
-        return $this->serviceStoredQuery;
+        return $this->queryService;
     }
 
     /**

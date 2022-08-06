@@ -85,7 +85,7 @@ class TimelineComponent extends FrontEndComponent
                 'since' => $since->format('c'),
                 'until' => $until->format('c'),
                 'model' => [
-                    'contestantId' => $contestant->ct_id,
+                    'contestantId' => $contestant->contestant_id,
                     'contestId' => $contestant->contest_id,
                 ],
             ];

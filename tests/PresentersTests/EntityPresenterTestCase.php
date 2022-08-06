@@ -6,9 +6,9 @@ namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceGrant;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Response;
@@ -46,16 +46,16 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 
     protected function loginUser(int $roleId = 1000): void
     {
-        $this->cartesianPerson = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
+        $this->cartesianPerson = $this->getContainer()->getByType(PersonService::class)->createNewModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+        $this->login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
-        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+        $this->getContainer()->getByType(GrantService::class)->createNewModel(
             ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->login, $this->fixture);

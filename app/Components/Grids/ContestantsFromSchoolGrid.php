@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Services\ContestantService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -17,9 +17,9 @@ class ContestantsFromSchoolGrid extends EntityGrid
 
     public function __construct(SchoolModel $school, Container $container)
     {
-        parent::__construct($container, ServiceContestant::class, [
+        parent::__construct($container, ContestantService::class, [
             'person.full_name',
-            'contestant_base.year',
+            'contestant.year',
             'person_history.study_year',
             'contest.contest',
         ], [
@@ -35,8 +35,8 @@ class ContestantsFromSchoolGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-        $this->addLinkButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
-        $this->addLinkButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
+        $this->addLinkButton(':Org:Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
+        $this->addLinkButton(':Org:Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
         $this->paginate = false;
     }
 }

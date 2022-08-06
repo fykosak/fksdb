@@ -11,8 +11,8 @@ use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceContestant;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\ContestantService;
+use FKSDB\Models\ORM\Services\OrgService;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Request;
@@ -42,7 +42,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->createNewModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
@@ -50,7 +50,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->createNewModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
@@ -58,7 +58,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka4@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ServiceContestant::class)->createNewModel(
+        $this->getContainer()->getByType(ContestantService::class)->createNewModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
         );
 

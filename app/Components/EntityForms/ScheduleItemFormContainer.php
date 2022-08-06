@@ -10,7 +10,7 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
@@ -24,7 +24,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
 
     public const CONTAINER = 'container';
 
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
     private EventModel $event;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
@@ -35,10 +35,10 @@ class ScheduleItemFormContainer extends EntityFormComponent
     }
 
     final public function injectPrimary(
-        ServiceScheduleItem $serviceScheduleItem,
+        ScheduleItemService $scheduleItemService,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
@@ -48,7 +48,7 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
         /** @var ScheduleItemModel $model */
-        $model = $this->serviceScheduleItem->storeModel($data, $this->model);
+        $model = $this->scheduleItemService->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);
     }

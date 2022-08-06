@@ -8,7 +8,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\TaskModel;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Services\TaskService;
 use Fykosak\NetteORM\TypedSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -17,7 +17,7 @@ class SubmitContainer extends BaseComponent
 {
 
     private ContestantModel $contestant;
-    private ServiceTask $serviceTask;
+    private TaskService $taskService;
 
     public function __construct(Container $container, ContestantModel $contestant)
     {
@@ -42,15 +42,15 @@ class SubmitContainer extends BaseComponent
         return $component;
     }
 
-    final public function injectPrimary(ServiceTask $serviceTask): void
+    final public function injectPrimary(TaskService $taskService): void
     {
-        $this->serviceTask = $serviceTask;
+        $this->taskService = $taskService;
     }
 
     private function getAvailableTasks(): TypedSelection
     {
         // TODO related
-        return $this->serviceTask->getTable()
+        return $this->taskService->getTable()
             ->where('contest_id = ? AND year = ?', $this->contestant->contest_id, $this->contestant->year)
             ->where('submit_start IS NULL OR submit_start < NOW()')
             ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')

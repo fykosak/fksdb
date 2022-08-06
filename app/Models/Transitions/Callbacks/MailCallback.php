@@ -7,14 +7,14 @@ namespace FKSDB\Models\Transitions\Callbacks;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use Fykosak\NetteORM\ReferencedAccessor;
 
 class MailCallback implements TransitionCallback
 {
 
-    protected ServiceEmailMessage $serviceEmailMessage;
+    protected EmailMessageService $emailMessageService;
     protected MailTemplateFactory $mailTemplateFactory;
     protected string $templateFile;
     protected array $emailData;
@@ -22,12 +22,12 @@ class MailCallback implements TransitionCallback
     public function __construct(
         string $templateFile,
         array $emailData,
-        ServiceEmailMessage $serviceEmailMessage,
+        EmailMessageService $emailMessageService,
         MailTemplateFactory $mailTemplateFactory
     ) {
         $this->templateFile = $templateFile;
         $this->emailData = $emailData;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->emailMessageService = $emailMessageService;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
@@ -49,6 +49,6 @@ class MailCallback implements TransitionCallback
             $person->getPreferredLang(),
             ['model' => $holder->getModel()]
         );
-        $this->serviceEmailMessage->addMessageToSend($data);
+        $this->emailMessageService->addMessageToSend($data);
     }
 }

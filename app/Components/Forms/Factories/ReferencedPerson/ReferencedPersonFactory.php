@@ -14,7 +14,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PostContactType;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -26,7 +26,7 @@ class ReferencedPersonFactory
 {
     use SmartObject;
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     private PersonFactory $personFactory;
 
@@ -39,14 +39,14 @@ class ReferencedPersonFactory
     private Container $context;
 
     public function __construct(
-        ServicePerson $servicePerson,
+        PersonService $personService,
         PersonFactory $personFactory,
         ReferencedPersonHandlerFactory $referencedPersonHandlerFactory,
         PersonProvider $personProvider,
         PersonScheduleFactory $personScheduleFactory,
         Container $context
     ) {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
@@ -75,7 +75,7 @@ class ReferencedPersonFactory
                 $event,
                 $allowClear
             ),
-            $this->servicePerson,
+            $this->personService,
             $handler
         );
     }

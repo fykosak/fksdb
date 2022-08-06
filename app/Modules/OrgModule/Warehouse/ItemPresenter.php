@@ -16,11 +16,11 @@ class ItemPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ItemService $serviceItem;
+    private ItemService $itemService;
 
-    public function injectService(ItemService $serviceItem): void
+    public function injectService(ItemService $itemService): void
     {
-        $this->serviceItem = $serviceItem;
+        $this->itemService = $itemService;
     }
 
     public function titleList(): PageTitle
@@ -55,7 +55,7 @@ class ItemPresenter extends BasePresenter
 
     protected function getORMService(): ItemService
     {
-        return $this->serviceItem;
+        return $this->itemService;
     }
 
     /**

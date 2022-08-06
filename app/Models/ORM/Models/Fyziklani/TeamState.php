@@ -21,6 +21,9 @@ class TeamState extends FakeStringEnum implements EnumColumn
     public const DISQUALIFIED = 'disqualified';
     public const CANCELLED = 'cancelled';
 
+    /**
+     * @throws NotImplementedException
+     */
     public function badge(): Html
     {
         $badge = '';

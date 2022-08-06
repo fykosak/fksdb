@@ -7,7 +7,7 @@ namespace FKSDB\Components\Grids\Events;
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\ContestYearModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -18,7 +18,7 @@ class EventsGrid extends EntityGrid
 
     public function __construct(Container $container, ContestYearModel $contestYear)
     {
-        parent::__construct($container, ServiceEvent::class, [
+        parent::__construct($container, EventService::class, [
             'event.event_id',
             'event.event_type',
             'event.name',

@@ -12,18 +12,18 @@ use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 class TagsColumnFactory extends ColumnFactory
 {
-    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
+    private TagTypeService $storedQueryTagTypeService;
 
-    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, MetaDataFactory $metaDataFactory)
+    public function __construct(TagTypeService $storedQueryTagTypeService, MetaDataFactory $metaDataFactory)
     {
         parent::__construct($metaDataFactory);
-        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
+        $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 
     /**
@@ -51,7 +51,7 @@ class TagsColumnFactory extends ColumnFactory
     protected function createFormControl(...$args): BaseControl
     {
         $select = new AutocompleteSelectBox(true, $this->getTitle(), 'tags');
-        $select->setDataProvider(new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType));
+        $select->setDataProvider(new StoredQueryTagTypeProvider($this->storedQueryTagTypeService));
         $select->setMultiSelect(true);
         return $select;
     }

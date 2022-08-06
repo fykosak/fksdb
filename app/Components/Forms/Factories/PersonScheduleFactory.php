@@ -7,17 +7,17 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 use Nette\Application\BadRequestException;
 
 class PersonScheduleFactory
 {
 
-    private ServiceScheduleItem $serviceScheduleItem;
+    private ScheduleItemService $scheduleItemService;
 
-    public function __construct(ServiceScheduleItem $serviceScheduleItem)
+    public function __construct(ScheduleItemService $scheduleItemService)
     {
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -26,6 +26,6 @@ class PersonScheduleFactory
      */
     public function createField(string $fieldName, EventModel $event, ?string $label): ScheduleField
     {
-        return new ScheduleField($event, $fieldName, $this->serviceScheduleItem, $label);
+        return new ScheduleField($event, $fieldName, $this->scheduleItemService, $label);
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
@@ -16,7 +16,7 @@ abstract class EventModuleTestCase extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->event = $this->getContainer()->getByType(ServiceEvent::class)->createNewModel($this->getEventData());
+        $this->event = $this->getContainer()->getByType(EventService::class)->createNewModel($this->getEventData());
     }
 
     abstract protected function getEventData(): array;

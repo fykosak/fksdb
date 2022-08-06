@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\OrgModel;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\OrgService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\ForbiddenRequestException;
@@ -21,11 +21,11 @@ class OrgPresenter extends BasePresenter
         getEntity as traitGetEntity;
     }
 
-    private ServiceOrg $serviceOrg;
+    private OrgService $orgService;
 
-    final public function injectServiceOrg(ServiceOrg $serviceOrg): void
+    final public function injectServiceOrg(OrgService $orgService): void
     {
-        $this->serviceOrg = $serviceOrg;
+        $this->orgService = $orgService;
     }
 
     /**
@@ -87,9 +87,9 @@ class OrgPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): ServiceOrg
+    protected function getORMService(): OrgService
     {
-        return $this->serviceOrg;
+        return $this->orgService;
     }
 
     protected function getModelResource(): string

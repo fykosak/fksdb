@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 
 $container = require '../../../Bootstrap.php';
 
@@ -18,7 +18,7 @@ class Schedule extends EventModuleTestCase
     {
         parent::setUp();
         $this->scheduleGroup = $this->getContainer()
-            ->getByType(ServiceScheduleGroup::class)
+            ->getByType(ScheduleGroupService::class)
             ->createNewModel([
             'schedule_group_type' => 'accommodation',
             'name_cs' => 'name CS',

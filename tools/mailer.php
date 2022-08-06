@@ -5,8 +5,8 @@ declare(strict_types=1);
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Models\EmailMessageState;
 use FKSDB\Models\ORM\Services\Exceptions\UnsubscribedEmailException;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\ORM\Services\ServiceUnsubscribedEmail;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\UnsubscribedEmailService;
 use Nette\DI\Container;
 use Nette\Mail\Mailer;
 use Tracy\Debugger;
@@ -22,9 +22,9 @@ if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['
 /** @var Mailer $mailer */
 $mailer = $container->getByType(Mailer::class);
 
-/** @var ServiceEmailMessage $serviceEmailMessage */
-$serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
-$serviceUnsubscribedEmail = $container->getByType(ServiceUnsubscribedEmail::class);
+/** @var EmailMessageService $serviceEmailMessage */
+$serviceEmailMessage = $container->getByType(EmailMessageService::class);
+$serviceUnsubscribedEmail = $container->getByType(UnsubscribedEmailService::class);
 $argv = $_SERVER['argv'];
 $query = $serviceEmailMessage->getMessagesToSend(
     $argv[1] ? (int)$argv[1] : (int)$container->getParameters()['spamMailer']['defaultLimit']

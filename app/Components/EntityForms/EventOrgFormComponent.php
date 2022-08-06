@@ -9,7 +9,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventOrgModel;
-use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\ORM\Services\EventOrgService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -23,7 +23,7 @@ class EventOrgFormComponent extends EntityFormComponent
 
     public const CONTAINER = 'event_org';
 
-    private ServiceEventOrg $serviceEventOrg;
+    private EventOrgService $eventOrgService;
     private EventModel $event;
 
     public function __construct(Container $container, EventModel $event, ?EventOrgModel $model)
@@ -32,9 +32,9 @@ class EventOrgFormComponent extends EntityFormComponent
         $this->event = $event;
     }
 
-    final public function injectPrimary(ServiceEventOrg $serviceEventOrg): void
+    final public function injectPrimary(EventOrgService $eventOrgService): void
     {
-        $this->serviceEventOrg = $serviceEventOrg;
+        $this->eventOrgService = $eventOrgService;
     }
 
     protected function configureForm(Form $form): void
@@ -53,7 +53,7 @@ class EventOrgFormComponent extends EntityFormComponent
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        $this->serviceEventOrg->storeModel($data, $this->model);
+        $this->eventOrgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Event org has been updated') : _('Event org has been created'),
             Message::LVL_SUCCESS

@@ -120,13 +120,13 @@ class CumulativeResultsModel extends AbstractResultsModel
         $select[] = "round(100 * SUM($sum) * " . $studentPilnySumLimitInversed . ") AS '" .
             self::ALIAS_TOTAL_PERCENTAGE . "'";
         $select[] = "round(SUM($sum)) AS '" . self::ALIAS_SUM . "'";
-        $select[] = 'ct.ct_id';
+        $select[] = 'ct.contestant_id';
 
         $from = ' from v_contestant ct
 left join person p using(person_id)
 left join school sch using(school_id)
 left join task t ON t.year = ct.year AND t.contest_id = ct.contest_id
-left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id';
+left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_id';
 
         $conditions = [
             'ct.year' => $this->contestYear->year,

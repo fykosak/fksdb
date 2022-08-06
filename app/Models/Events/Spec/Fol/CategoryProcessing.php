@@ -8,8 +8,8 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
@@ -17,12 +17,12 @@ class CategoryProcessing extends AbstractCategoryProcessing
 {
 
     private int $rulesVersion;
-    protected ServiceSchool $serviceSchool;
+    protected SchoolService $schoolService;
 
-    public function __construct(int $rulesVersion, ServiceSchool $serviceSchool, ServicePerson $servicePerson)
+    public function __construct(int $rulesVersion, SchoolService $schoolService, PersonService $personService)
     {
-        parent::__construct($servicePerson);
-        $this->serviceSchool = $serviceSchool;
+        parent::__construct($personService);
+        $this->schoolService = $schoolService;
         if (!in_array($rulesVersion, [1, 2])) {
             throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
         }
@@ -49,7 +49,7 @@ class CategoryProcessing extends AbstractCategoryProcessing
                 $olds += 1;
             } else {
                 /** @var SchoolModel $school */
-                $school = $this->serviceSchool->findByPrimary($member['school_id']);
+                $school = $this->schoolService->findByPrimary($member['school_id']);
                 if (!in_array($school->address->region->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;
                 }

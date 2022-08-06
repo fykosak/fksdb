@@ -14,8 +14,8 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\TaskContributionModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -23,9 +23,9 @@ use Nette\DI\Container;
 class HandoutFormComponent extends BaseComponent
 {
     public const TASK_PREFIX = 'task';
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private SeriesTable $seriesTable;
-    private ServiceTaskContribution $serviceTaskContribution;
+    private TaskContributionService $taskContributionService;
     private PersonFactory $personFactory;
 
     public function __construct(Container $container, SeriesTable $seriesTable)
@@ -36,12 +36,12 @@ class HandoutFormComponent extends BaseComponent
 
     final public function injectPrimary(
         PersonFactory $personFactory,
-        ServicePerson $servicePerson,
-        ServiceTaskContribution $serviceTaskContribution
+        PersonService $personService,
+        TaskContributionService $taskContributionService
     ): void {
         $this->personFactory = $personFactory;
-        $this->servicePerson = $servicePerson;
-        $this->serviceTaskContribution = $serviceTaskContribution;
+        $this->personService = $personService;
+        $this->taskContributionService = $taskContributionService;
     }
 
     /**
@@ -51,7 +51,7 @@ class HandoutFormComponent extends BaseComponent
     {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
-        $orgProvider = new PersonProvider($this->servicePerson);
+        $orgProvider = new PersonProvider($this->personService);
         $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
@@ -72,7 +72,7 @@ class HandoutFormComponent extends BaseComponent
     public function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $connection = $this->serviceTaskContribution->explorer->getConnection();
+        $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
@@ -86,7 +86,7 @@ class HandoutFormComponent extends BaseComponent
                     'person_id' => $personId,
                     'type' => TaskContributionModel::TYPE_GRADE,
                 ];
-                $this->serviceTaskContribution->createNewModel($data);
+                $this->taskContributionService->createNewModel($data);
             }
         }
 
@@ -111,7 +111,7 @@ class HandoutFormComponent extends BaseComponent
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
-        $contributions = $this->serviceTaskContribution->getTable()->where([
+        $contributions = $this->taskContributionService->getTable()->where([
             'type' => TaskContributionModel::TYPE_GRADE,
             'task_id' => $taskIds,
         ]);

@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -34,7 +34,7 @@ class ExtendedPersonHandler
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
     protected Service $service;
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
     private Connection $connection;
     private AccountManager $accountManager;
     private ContestYearModel $contestYear;
@@ -43,14 +43,14 @@ class ExtendedPersonHandler
 
     public function __construct(
         Service $service,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         Connection $connection,
         AccountManager $accountManager,
         ContestYearModel $contestYear,
         string $invitationLang
     ) {
         $this->service = $service;
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->connection = $connection;
         $this->accountManager = $accountManager;
         $this->contestYear = $contestYear;
@@ -102,7 +102,7 @@ class ExtendedPersonHandler
                 }
             }
 // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $this->person = $this->personService->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize

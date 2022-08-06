@@ -9,7 +9,7 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\EntityForms\OrgFormComponent;
 use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\OrgService;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -23,12 +23,12 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->createNewModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
 
         $this->orgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->org = $this->getContainer()->getByType(ServiceOrg::class)->createNewModel([
+        $this->org = $this->getContainer()->getByType(OrgService::class)->createNewModel([
             'person_id' => $this->orgPerson->person_id,
             'contest_id' => 1,
             'since' => 0,
@@ -115,7 +115,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->getContainer()
-            ->getByType(ServiceOrg::class)
+            ->getByType(OrgService::class)
             ->getTable()
             ->where(['org_id' => $this->org->org_id])
             ->fetch();
@@ -141,7 +141,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase
     private function countOrgs(): int
     {
         return $this->getContainer()
-            ->getByType(ServiceOrg::class)
+            ->getByType(OrgService::class)
             ->getTable()
             ->where(['person_id' => $this->person->person_id])
             ->count('*');

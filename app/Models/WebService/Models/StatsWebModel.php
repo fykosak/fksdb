@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\Models;
 
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\Stats\TaskStatsModel;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class StatsWebModel extends WebModel
 {
-    private ServiceContest $serviceContest;
+    private ContestService $contestService;
 
-    public function inject(ServiceContest $serviceContest): void
+    public function inject(ContestService $contestService): void
     {
-        $this->serviceContest = $serviceContest;
+        $this->contestService = $contestService;
     }
 
     /**
@@ -30,7 +30,7 @@ class StatsWebModel extends WebModel
         ) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $contest = $this->serviceContest->findByPrimary(
+        $contest = $this->contestService->findByPrimary(
             $this->container->getParameters()['inverseContestMapping'][$args->contest]
         );
         if (!isset($args->year)) {
@@ -45,7 +45,7 @@ class StatsWebModel extends WebModel
         $doc->appendChild($statsNode);
         $model = new TaskStatsModel(
             $contest->getContestYear((int)$args->year),
-            $this->serviceContest->explorer
+            $this->contestService->explorer
         );
 
         if (isset($args->series)) {

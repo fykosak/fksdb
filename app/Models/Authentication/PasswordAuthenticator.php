@@ -10,8 +10,8 @@ use FKSDB\Models\Authentication\Exceptions\NoLoginException;
 use FKSDB\Models\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Security\Authenticator;
 use Nette\Security\IdentityHandler;
 use Nette\Security\IIdentity;
@@ -19,12 +19,12 @@ use Nette\Security\SimpleIdentity;
 
 class PasswordAuthenticator extends AbstractAuthenticator implements Authenticator, IdentityHandler
 {
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
-    public function __construct(ServiceLogin $serviceLogin, ServicePerson $servicePerson)
+    public function __construct(LoginService $loginService, PersonService $personService)
     {
-        parent::__construct($serviceLogin);
-        $this->servicePerson = $servicePerson;
+        parent::__construct($loginService);
+        $this->personService = $personService;
     }
 
     /**
@@ -47,7 +47,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
 
     public function findPersonByEmail(string $id): ?PersonModel
     {
-        return $this->servicePerson->findByEmail($id);
+        return $this->personService->findByEmail($id);
     }
 
     /**
@@ -55,7 +55,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
      */
     private function findByEmail(string $id): ?LoginModel
     {
-        $person = $this->servicePerson->findByEmail($id);
+        $person = $this->personService->findByEmail($id);
         if (!$person) {
             return null;
         }
@@ -84,7 +84,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     private function findByLogin(string $id): LoginModel
     {
         /** @var LoginModel $login */
-        $login = $this->serviceLogin->getTable()->where('login = ?', $id)->fetch();
+        $login = $this->loginService->getTable()->where('login = ?', $id)->fetch();
         if ($login) {
             return $login;
         }
@@ -118,7 +118,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
     {
         // Find login
         /** @var LoginModel|null $login */
-        $login = $this->serviceLogin->findByPrimary($identity->getId());
+        $login = $this->loginService->findByPrimary($identity->getId());
         return $login;
     }
 }

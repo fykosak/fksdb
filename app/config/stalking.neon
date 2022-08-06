@@ -79,7 +79,6 @@ parameters:
             minimalPermission: 128
             table: person_history
             links: []
-            model: FKSDB\Models\ORM\Models\PersonHistoryModel
             rows:
                 - person_history.ac_year
                 - school.school
@@ -90,7 +89,6 @@ parameters:
             minimalPermission: 1024
             table: task_contribution
             links: []
-            model: FKSDB\Models\ORM\Models\ModelTaskContribution
             rows:
                 - task.fq_name
                 - task_contribution.type
@@ -121,7 +119,6 @@ parameters:
             label: Payment
             minimalPermission: 128
             table: payment
-            model: FKSDB\Models\ORM\Models\PaymentModel
             links:
                 - payment.detail
             rows:
@@ -129,22 +126,20 @@ parameters:
                 - event.event
                 - payment.price
                 - payment.state
-        contestant_base:
+        contestant:
             layout: grid
             minimalPermission: 128
-            table: contestant_base
-            model: FKSDB\Models\ORM\Models\ModelContestant
+            table: contestant
             links:
-                - contestant_base.edit
+                - contestant.edit
             rows:
-                - contestant_base.ct_id
-                - contestant_base.year
+                - contestant.contestant_id
+                - contestant.year
                 - contest.contest
         event_participant:
             layout: grid
             minimalPermission: 128
             table: event_participant
-            model: FKSDB\Models\ORM\Models\ModelEventParticipant
             links:
                 - event_participant.detail
                 - event_participant.edit
@@ -156,7 +151,6 @@ parameters:
             layout: grid
             minimalPermission: 128
             table: fyziklani_team_member
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel
             links: []
             rows:
                 - event.name
@@ -166,7 +160,6 @@ parameters:
             layout: grid
             minimalPermission: 128
             table: event_org
-            model: FKSDB\Models\ORM\Models\ModelEventOrg
             links:
                 - event_org.edit
                 - event_org.detail
@@ -179,7 +172,6 @@ parameters:
             layout: grid
             minimalPermission: 16
             table: fyziklani_team_teacher
-            model: FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel
             links:
                 - fyziklani_team.detail
             rows:
@@ -190,7 +182,6 @@ parameters:
             layout: grid
             minimalPermission: 16
             table: person_schedule
-            model: FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule
             links: []
             rows:
                 - schedule_item.name
@@ -204,7 +195,6 @@ parameters:
             layout: grid
             minimalPermission: 16
             table: email_message
-            model: FKSDB\Models\ORM\Models\ModelEmailMessage
             rows:
                 - email_message.email_message_id
                 - email_message.recipient

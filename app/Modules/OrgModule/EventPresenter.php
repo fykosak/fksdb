@@ -10,7 +10,7 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
@@ -22,11 +22,11 @@ class EventPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
 
-    final public function injectServiceEvent(ServiceEvent $serviceEvent): void
+    final public function injectServiceEvent(EventService $eventService): void
     {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
     }
 
     public function titleList(): PageTitle
@@ -75,9 +75,9 @@ class EventPresenter extends BasePresenter
         return new EventFormComponent($this->getSelectedContestYear(), $this->getContext(), $this->getEntity());
     }
 
-    protected function getORMService(): ServiceEvent
+    protected function getORMService(): EventService
     {
-        return $this->serviceEvent;
+        return $this->eventService;
     }
 
     /**

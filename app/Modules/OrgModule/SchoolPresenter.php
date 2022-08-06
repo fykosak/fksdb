@@ -10,7 +10,7 @@ use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\ORM\Models\SchoolModel;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
@@ -22,11 +22,11 @@ class SchoolPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceSchool $serviceSchool;
+    private SchoolService $schoolService;
 
-    final public function injectServiceSchool(ServiceSchool $serviceSchool): void
+    final public function injectServiceSchool(SchoolService $schoolService): void
     {
-        $this->serviceSchool = $serviceSchool;
+        $this->schoolService = $schoolService;
     }
 
     public function titleList(): PageTitle
@@ -106,8 +106,8 @@ class SchoolPresenter extends BasePresenter
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
-    protected function getORMService(): ServiceSchool
+    protected function getORMService(): SchoolService
     {
-        return $this->serviceSchool;
+        return $this->schoolService;
     }
 }

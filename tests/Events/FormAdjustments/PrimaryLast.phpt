@@ -6,7 +6,7 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
@@ -31,7 +31,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->app = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel(
+        $this->app = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel(
             [
                 'person_id' => $person->person_id,
                 'event_id' => $this->event->event_id,

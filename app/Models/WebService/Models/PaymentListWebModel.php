@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\Models\PaymentModel;
-use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\ORM\Services\PaymentService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class PaymentListWebModel extends WebModel
 {
-    private ServicePayment $servicePayment;
+    private PaymentService $paymentService;
 
-    public function injectService(ServicePayment $servicePayment): void
+    public function injectService(PaymentService $paymentService): void
     {
-        $this->servicePayment = $servicePayment;
+        $this->paymentService = $paymentService;
     }
 
     public function getJsonResponse(array $params): array
     {
         $data = [];
         /** @var PaymentModel $payment */
-        foreach ($this->servicePayment->getTable()->where('event_id', $params['event_id']) as $payment) {
+        foreach ($this->paymentService->getTable()->where('event_id', $params['event_id']) as $payment) {
             $data[] = $payment->__toArray();
         }
         return $data;

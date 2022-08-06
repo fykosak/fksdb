@@ -7,23 +7,23 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\RegionModel;
-use FKSDB\Models\ORM\Services\ServiceRegion;
+use FKSDB\Models\ORM\Services\RegionService;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 
 class AddressContainer extends ModelContainer
 {
-    private ServiceRegion $serviceRegion;
+    private RegionService $regionService;
 
     public function __construct(DIContainer $container)
     {
         parent::__construct($container);
     }
 
-    final public function injectServiceRegion(ServiceRegion $serviceRegion): void
+    final public function injectServiceRegion(RegionService $regionService): void
     {
-        $this->serviceRegion = $serviceRegion;
+        $this->regionService = $regionService;
     }
 
     /**
@@ -62,7 +62,7 @@ class AddressContainer extends ModelContainer
             $data = $address->toArray();
             $data['country_iso'] = $address->region_id ? $address->region->country_iso : null;
         } elseif (is_array($data) && isset($data['region_id'])) {
-            $region = $this->serviceRegion->findByPrimary($data['region_id']);
+            $region = $this->regionService->findByPrimary($data['region_id']);
             $data['country_iso'] = $region->country_iso;
         }
 
@@ -77,14 +77,14 @@ class AddressContainer extends ModelContainer
     {
         $values = parent::getUnsafeValues($returnType);
         if (count($values) && !isset($values['region_id'])) {
-            if (!$this->serviceRegion) {
+            if (!$this->regionService) {
                 throw new InvalidStateException(
-                    'You must set ' . ServiceRegion::class
+                    'You must set ' . RegionService::class
                     . ' before getting values from the address container.'
                 );
             }
             /** @var RegionModel|null $region */
-            $region = $this->serviceRegion->getCountries()->where('country_iso', $values['country_iso'])->fetch();
+            $region = $this->regionService->getCountries()->where('country_iso', $values['country_iso'])->fetch();
             $values['region_id'] = $region ? $region->region_id : null;
         }
         return $values;
