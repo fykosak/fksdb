@@ -101,7 +101,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL),
+            ModelCategory::tryFrom(ModelCategory::CAT_ALL),
         ];
     }
 

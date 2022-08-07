@@ -17,10 +17,10 @@ class EvaluationVyfuk2011 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_ES_6),
-            new ModelCategory(ModelCategory::CAT_ES_7),
-            new ModelCategory(ModelCategory::CAT_ES_8),
-            new ModelCategory(ModelCategory::CAT_ES_9),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_6),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_7),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_8),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_9),
         ];
     }
 

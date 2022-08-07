@@ -198,7 +198,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
      */
     private function getSumLimitForStudentPilny(): int
     {
-        return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
+        return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::CAT_HS_4));
     }
 
     /**

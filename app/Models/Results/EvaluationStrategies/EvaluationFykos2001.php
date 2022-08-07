@@ -20,10 +20,10 @@ class EvaluationFykos2001 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_HS_1),
-            new ModelCategory(ModelCategory::CAT_HS_2),
-            new ModelCategory(ModelCategory::CAT_HS_3),
-            new ModelCategory(ModelCategory::CAT_HS_4),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_1),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_2),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_3),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_4),
         ];
     }
 
