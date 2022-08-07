@@ -55,6 +55,7 @@ parameters:
                  - person_info.id_number
                  - person_info.employer
                  - person_info.uk_login
+                 - person_info.isic_number
                  - person_info.health_insurance
                  - person_info.citizenship
                  - person_info.account

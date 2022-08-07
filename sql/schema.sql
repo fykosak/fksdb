@@ -368,6 +368,7 @@ CREATE TABLE IF NOT EXISTS `person_info`
     `im`                     VARCHAR(32)      NULL DEFAULT NULL COMMENT 'ICQ, XMPP, etc.',
     `note`                   TEXT             NULL DEFAULT NULL COMMENT 'ostatní/poznámka',
     `uk_login`               VARCHAR(8)       NULL DEFAULT NULL COMMENT 'CAS login, pro orgy',
+    `isic_number`            VARCHAR(14)      NULL DEFAULT NULL COMMENT 'číslo ISICu',
     `account`                VARCHAR(32)      NULL DEFAULT NULL COMMENT 'bankovní účet jako text',
     `agreed`                 DATETIME         NULL DEFAULT NULL COMMENT 'čas posledního souhlasu ze zprac. os. ú. nebo null',
     `birthplace`             VARCHAR(255)     NULL DEFAULT NULL COMMENT 'název města narození osoby',

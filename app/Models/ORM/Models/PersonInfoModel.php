@@ -17,6 +17,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string im
  * @property-read string note
  * @property-read string uk_login
+ * @property-read string isic_number
  * @property-read string account
  * @property-read \DateTimeInterface agreed
  * @property-read string birthplace
