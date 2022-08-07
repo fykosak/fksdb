@@ -32,14 +32,13 @@ class TaskModel extends Model
     }
 
     /**
-     * @param string|null $type ModelTaskContribution::TYPE_*
      * @return TaskContributionModel[] indexed by contribution_id
      */
-    public function getContributions(?string $type = null): array
+    public function getContributions(?TaskContributionType $type = null): array
     {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type !== null) {
-            $contributions->where(['type' => $type]);
+            $contributions->where(['type' => $type->value]);
         }
 
         $result = [];

@@ -7,12 +7,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\{
-    ContestModel,
-    LoginModel,
-    TaskModel,
-    TaskContributionModel,
-};
+use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel, TaskContributionModel};
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
@@ -83,7 +78,7 @@ class PointsPresenter extends BasePresenter
                 [
                     'person_id' => $person->person_id,
                     'task_id' => (clone $this->seriesTable->getTasks())->select('task_id'),
-                    'type' => TaskContributionModel::TYPE_GRADE,
+                    'type' => TaskContributionType::GRADE,
                 ]
             )->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);

@@ -648,7 +648,8 @@ orm:
              model: FKSDB\Models\ORM\Models\TaskContributionModel
              columnFactories:
                  type:
-                    type: string
+                    type: enum
+                    enumClassName: FKSDB\Models\ORM\Models\TaskContributionType
                     title: _('Type')
         task_study_year:
             service: FKSDB\Models\ORM\Services\TaskStudyYearService

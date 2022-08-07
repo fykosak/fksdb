@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use FKSDB\Models\ORM\Models\TaskContributionType;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
@@ -88,7 +89,7 @@ class ContributionsFromXML extends Stage
             }
 
             // delete old contributions
-            foreach ($task->getContributions($type) as $contribution) {
+            foreach ($task->getContributions(TaskContributionType::tryFrom($type)) as $contribution) {
                 $this->taskContributionService->disposeModel($contribution);
             }
 

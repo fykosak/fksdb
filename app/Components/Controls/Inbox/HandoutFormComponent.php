@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox;
 
+use FKSDB\Models\ORM\Models\TaskContributionType;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -77,14 +78,14 @@ class HandoutFormComponent extends BaseComponent
         /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => TaskContributionModel::TYPE_GRADE,
+                'type' => TaskContributionType::GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
-                    'type' => TaskContributionModel::TYPE_GRADE,
+                    'type' => TaskContributionType::GRADE,
                 ];
                 $this->taskContributionService->createNewModel($data);
             }
@@ -112,7 +113,7 @@ class HandoutFormComponent extends BaseComponent
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->taskContributionService->getTable()->where([
-            'type' => TaskContributionModel::TYPE_GRADE,
+            'type' => TaskContributionType::GRADE,
             'task_id' => $taskIds,
         ]);
 
