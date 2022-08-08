@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Transitions;
 
 use FKSDB\Models\Expressions\Helpers;
+use FKSDB\Models\ORM\Columns\Types\EnumColumn;
+use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Nette\DI\CompilerExtension;
 use FKSDB\Models\Transitions\Transition\Transition;
 
@@ -15,10 +17,16 @@ class TransitionsExtension extends CompilerExtension
         parent::loadConfiguration();
         $config = $this->getConfig();
         foreach ($config as $machineName => $machine) {
+            $enumClassName = $machine['stateEnum'];
             foreach ($machine['transitions'] as $mask => $transition) {
-                [$sources, $target] = self::parseMask($mask);
+                [$sources, $target] = self::parseMask($mask, $enumClassName);
                 foreach ($sources as $source) {
-                    $this->createTransition($machineName, $source, $target, $transition);
+                    $this->createTransition(
+                        $machineName,
+                        $source,
+                        $target,
+                        $transition
+                    );
                 }
             }
         }
@@ -47,18 +55,24 @@ class TransitionsExtension extends CompilerExtension
 
     private function createTransition(
         string $machineName,
-        string $source,
-        string $target,
+        ?EnumColumn $source,
+        ?EnumColumn $target,
         array $transitionConfig
     ): void {
         $builder = $this->getContainerBuilder();
-        $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
+        $factory = $builder->addDefinition(
+            $this->prefix(
+                $machineName . '.' .
+                ($source ? $source->value : 'INIT') . '.' .
+                ($target ? $target->value : 'TERMINATED')
+            )
+        )
             ->addTag($machineName)
             ->setType(Transition::class)
             ->addSetup('setEvaluator', ['@events.expressionEvaluator'])
             ->addSetup('setCondition', [$transitionConfig['condition'] ?? null])
-            ->addSetup('setSourceState', [$source])
-            ->addSetup('setTargetState', [$target])
+            ->addSetup('setSourceStateEnum', [$source])
+            ->addSetup('setTargetStateEnum', [$target])
             ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
         if (isset($transitionConfig['behaviorType'])) {
             $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType']]);
@@ -75,9 +89,27 @@ class TransitionsExtension extends CompilerExtension
         }
     }
 
-    public static function parseMask(string $mask): array
+    /**
+     * @param EnumColumn|string $enumClassName
+     * @return ?EnumColumn[][]|?EnumColumn[]
+     */
+    public static function parseMask(string $mask, string $enumClassName): array
     {
-        [$source, $target] = explode('->', $mask);
-        return [explode('|', $source), $target];
+        [$sources, $target] = explode('->', $mask);
+        /*  if ($source === AbstractMachine::STATE_ANY) {
+              return [
+                  array_filter($enumClassName::cases(), fn(EnumColumn $case): bool => $case->value !== $target),
+                  new $enumClassName($target),
+              ];
+          }*/
+        return [
+            array_map(
+                fn(string $state): ?EnumColumn => $state !== AbstractMachine::STATE_INIT
+                    ? $enumClassName::tryFrom($state)
+                    : null,
+                explode('|', $sources)
+            ),
+            $target !== AbstractMachine::STATE_TERMINATED ? $enumClassName::tryFrom($target) : null,
+        ];
     }
 }

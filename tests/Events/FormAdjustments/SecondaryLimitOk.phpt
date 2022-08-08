@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Template;
@@ -18,7 +18,7 @@ $container = require '../../Bootstrap.php';
 class SecondaryLimitOk extends ResourceAvailabilityTestCase
 {
 
-    private ModelEvent $tsafEvent;
+    private EventModel $tsafEvent;
 
     protected function setUp(): void
     {
@@ -32,7 +32,7 @@ EOT
         ]);
 
         foreach ($this->persons as $person) {
-            $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+            $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
                 'person_id' => $person->person_id,
                 'event_id' => $this->tsafEvent->event_id,
                 'status' => 'applied',
@@ -57,12 +57,12 @@ EOT
         Assert::equal(
             2,
             (int)$this->getContainer()
-                ->getByType(ServiceEventParticipant::class)
+                ->getByType(EventParticipantService::class)
                 ->getTable()
                 ->where(['event_id' => $this->event->event_id])
                 ->sum('accomodation')
         );
-        $this->getContainer()->getByType(ServiceEvent::class)->updateModel($this->event, [
+        $this->getContainer()->getByType(EventService::class)->updateModel($this->event, [
             'parameters' => <<<EOT
 accomodationCapacity: $capacity                
 EOT]);

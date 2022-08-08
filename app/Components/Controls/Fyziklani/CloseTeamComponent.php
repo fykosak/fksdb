@@ -59,9 +59,9 @@ class CloseTeamComponent extends BaseComponent
     private function getNextTask(): string
     {
         $submits = $this->team->getNonRevokedSubmits()->count('*');
-        $tasksOnBoard = $this->team->getEvent()->getFyziklaniGameSetup()->tasks_on_board;
+        $tasksOnBoard = $this->team->event->getFyziklaniGameSetup()->tasks_on_board;
         /** @var TaskModel|null $nextTask */
-        $nextTask = $this->team->getEvent()
+        $nextTask = $this->team->event
             ->getFyziklaniTasks()
             ->order('label')
             ->limit(1, $submits + $tasksOnBoard)

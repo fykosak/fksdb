@@ -7,7 +7,7 @@ namespace FKSDB\Models\Events\Semantics;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Field;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 
 trait WithEventTrait
 {
@@ -15,7 +15,7 @@ trait WithEventTrait
     /**
      * @throws \InvalidArgumentException
      */
-    protected function getEvent(object $obj): ModelEvent
+    protected function getEvent(object $obj): EventModel
     {
         return $this->getHolder($obj)->primaryHolder->event;
     }

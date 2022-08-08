@@ -7,8 +7,8 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
-use FKSDB\Models\ORM\Services\ServiceGrant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
+use FKSDB\Models\ORM\Services\GrantService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -20,14 +20,14 @@ class WithDSEFAnonymousTest extends TsafTestCase
     {
         parent::setUp();
         $admin = $this->createPerson('Admin', 'Adminovič', null, []);
-        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel([
+        $this->getContainer()->getByType(GrantService::class)->createNewModel([
             'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
         ]);
         $this->authenticatePerson($admin, $this->fixture);
 
-        $dsefApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->dsefEvent->event_id,
             'status' => 'applied',

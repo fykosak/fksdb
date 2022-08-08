@@ -7,7 +7,7 @@ namespace FKSDB\Models\Events\Model\Grid;
 use FKSDB\Models\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
@@ -30,7 +30,7 @@ class SingleEventSource implements HolderSource
 {
     use SmartObject;
 
-    private ModelEvent $event;
+    private EventModel $event;
     private Container $container;
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
@@ -47,7 +47,7 @@ class SingleEventSource implements HolderSource
      * @throws NeonSchemaException
      * @throws ConfigurationNotFoundException
      */
-    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory)
+    public function __construct(EventModel $event, Container $container, EventDispatchFactory $eventDispatchFactory)
     {
         $this->event = $event;
         $this->container = $container;
@@ -59,7 +59,7 @@ class SingleEventSource implements HolderSource
             ->where($this->dummyHolder->primaryHolder->eventIdColumn, $this->event->getPrimary());
     }
 
-    public function getEvent(): ModelEvent
+    public function getEvent(): EventModel
     {
         return $this->event;
     }
@@ -98,7 +98,7 @@ class SingleEventSource implements HolderSource
             /** @var TypedSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
             if ($joinToCheck) {
-                /** @var ModelEvent $event */
+                /** @var EventModel $event */
                 $event = reset($group['holders'])->getEvent();
                 $secondarySelection->where(BaseHolder::EVENT_COLUMN, $event->getPrimary());
             }

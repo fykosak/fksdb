@@ -33,7 +33,8 @@ acl:
     - addRole(web)                      # webový stahovač dat (např. fksdbexport)
     - addRole(wiki)                     # neveřejný webový stahovač dat (např. fksdbexport na org wiki)
     # Roles automaticly added for event
-    - addRole(event.fyziklaniTeacher)
+    - addRole(event.fyziklaniTeamTeacher)
+    - addRole(event.fyziklaniTeamMember)
     - addRole(event.org)
     - addRole(event.contestOrg)
     - addRole(event.participant)
@@ -154,7 +155,7 @@ acl:
     - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
     - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
 
-    - allow([event.fyziklaniTeacher,event.participant], fyziklani.team, detail, @ownApplicationAssertion)
+    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], fyziklani.team, detail, @ownApplicationAssertion)
     - allow(event.participant, event.participant, detail, @ownApplicationAssertion)
 ## FYZIKLANI MODULE
     #base for org
@@ -175,9 +176,9 @@ acl:
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
 ##PAYMENTS (module)
-    - allow([event.fyziklaniTeacher,event.participant], event.payment, detail, @selfAssertion)
-    - allow([event.fyziklaniTeacher,event.participant], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
-    - allow([event.fyziklaniTeacher,event.participant], event.payment, create)
+    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, detail, @selfAssertion)
+    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, edit, and(@selfAssertion,@paymentEditableAssertion))
+    - allow([event.fyziklaniTeamTeacher,event.fyziklaniTeamMember], event.payment, create)
     - allow(eventManager, event.payment, ::constant(Nette\Security\Permission::ALL))
 
 ## WAREHOUSE MODULE

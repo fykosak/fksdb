@@ -11,9 +11,9 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Models\Persons\Deduplication\Merger;
 use Fykosak\Utils\Logging\Message;
@@ -26,20 +26,20 @@ use Nette\Utils\Html;
 class DeduplicatePresenter extends BasePresenter
 {
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private Merger $merger;
-    private ServicePersonInfo $servicePersonInfo;
-    private ModelPerson $trunkPerson;
-    private ModelPerson $mergedPerson;
+    private PersonInfoService $personInfoService;
+    private PersonModel $trunkPerson;
+    private PersonModel $mergedPerson;
 
     final public function injectQuarterly(
-        ServicePerson $servicePerson,
+        PersonService $personService,
         Merger $merger,
-        ServicePersonInfo $servicePersonInfo
+        PersonInfoService $personInfoService
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->merger = $merger;
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
     }
 
     public function authorizedPerson(): void
@@ -60,8 +60,8 @@ class DeduplicatePresenter extends BasePresenter
      */
     public function authorizedMerge(int $trunkId, int $mergedId): void
     {
-        $trunkPerson = $this->servicePerson->findByPrimary($trunkId);
-        $mergedPerson = $this->servicePerson->findByPrimary($mergedId);
+        $trunkPerson = $this->personService->findByPrimary($trunkId);
+        $mergedPerson = $this->personService->findByPrimary($mergedId);
         if (is_null($trunkPerson) || is_null($mergedPerson)) {
             throw new NotFoundException('Person does not exists');
         }
@@ -97,13 +97,13 @@ class DeduplicatePresenter extends BasePresenter
      */
     public function actionDontMerge(int $trunkId, int $mergedId): void
     {
-        $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
+        $mergedPI = $this->personInfoService->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
-        $this->servicePersonInfo->updateModel($mergedPI, $mergedData);
+        $this->personInfoService->updateModel($mergedPI, $mergedData);
 
-        $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
+        $trunkPI = $this->personInfoService->findByPrimary($trunkId);
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
-        $this->servicePersonInfo->updateModel($trunkPI, $trunkData);
+        $this->personInfoService->updateModel($trunkPI, $trunkData);
 
         $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         $this->backLinkRedirect(true);
@@ -184,14 +184,14 @@ class DeduplicatePresenter extends BasePresenter
     {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
-        $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
+        $trunkPersons = $this->personService->getTable()->where('person_id', array_keys($pairs));
 
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 
     protected function createPersonDuplicateFinder(): DuplicateFinder
     {
-        return new DuplicateFinder($this->servicePerson, $this->getContext());
+        return new DuplicateFinder($this->personService, $this->getContext());
     }
 
     /**
@@ -222,7 +222,7 @@ class DeduplicatePresenter extends BasePresenter
     {
 
         $values = $form->getValues();
-        $values = FormUtils::emptyStrToNull($values);
+        $values = FormUtils::emptyStrToNull2($values);
 
         $merger = $this->merger;
         $merger->setConflictResolution($values);

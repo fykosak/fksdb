@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 
 final class ReferencedAccessor
@@ -17,6 +18,10 @@ final class ReferencedAccessor
      */
     public static function accessModel(ActiveRow $model, string $modelClassName): ?ActiveRow
     {
+        if ($model instanceof Model) {
+            return \Fykosak\NetteORM\ReferencedAccessor::accessModel($model, $modelClassName);
+        }
+
         // model is already instance of desired model
         if ($model instanceof $modelClassName) {
             return $model;

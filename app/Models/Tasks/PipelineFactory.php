@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FKSDB\Models\Tasks;
 
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Services\ServiceStudyYear;
-use FKSDB\Models\ORM\Services\ServiceTask;
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
-use FKSDB\Models\ORM\Services\ServiceTaskStudyYear;
+use FKSDB\Models\ORM\Services\StudyYearService;
+use FKSDB\Models\ORM\Services\TaskService;
+use FKSDB\Models\ORM\Services\TaskContributionService;
+use FKSDB\Models\ORM\Services\TaskStudyYearService;
 use FKSDB\Models\Pipeline\Pipeline;
 
 /**
@@ -23,37 +23,35 @@ class PipelineFactory
      */
     private array $defaultStudyYears;
 
-    private ServiceTask $serviceTask;
-    private ServiceTaskContribution $serviceTaskContribution;
-    private ServiceTaskStudyYear $serviceTaskStudyYear;
-    private ServiceStudyYear $serviceStudyYear;
+    private TaskService $taskService;
+    private TaskContributionService $taskContributionService;
+    private TaskStudyYearService $taskStudyYearService;
+    private StudyYearService $studyYearService;
 
     public function __construct(
         array $defaultStudyYears,
-        ServiceTask $serviceTask,
-        ServiceTaskContribution $serviceTaskContribution,
-        ServiceTaskStudyYear $serviceTaskStudyYear,
-        ServiceStudyYear $serviceStudyYear
+        TaskService $taskService,
+        TaskContributionService $taskContributionService,
+        TaskStudyYearService $taskStudyYearService,
+        StudyYearService $studyYearService
     ) {
         $this->defaultStudyYears = $defaultStudyYears;
-        $this->serviceTask = $serviceTask;
-        $this->serviceTaskContribution = $serviceTaskContribution;
-        $this->serviceTaskStudyYear = $serviceTaskStudyYear;
-        $this->serviceStudyYear = $serviceStudyYear;
+        $this->taskService = $taskService;
+        $this->taskContributionService = $taskContributionService;
+        $this->taskStudyYearService = $taskStudyYearService;
+        $this->studyYearService = $studyYearService;
     }
 
     public function create(): Pipeline
     {
         $pipeline = new Pipeline();
-        $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $pipeline->addStage(new TasksFromXML($this->serviceTask));
-        $pipeline->addStage(new DeadlineFromXML($this->serviceTask));
-        $pipeline->addStage(new ContributionsFromXML($this->serviceTaskContribution));
-        $pipeline->addStage(
-            new StudyYearsFromXML($this->defaultStudyYears, $this->serviceTaskStudyYear, $this->serviceStudyYear)
-        );
+        $pipeline->stages[] = new TasksFromXML($this->taskService);
+        $pipeline->stages[] = new DeadlineFromXML($this->taskService);
+        $pipeline->stages[] = new ContributionsFromXML($this->taskContributionService);
+        $pipeline->stages[] =
+            new StudyYearsFromXML($this->defaultStudyYears, $this->taskStudyYearService, $this->studyYearService);
 
         return $pipeline;
     }

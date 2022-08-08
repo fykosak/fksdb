@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ContestModel;
 use Fykosak\NetteORM\TypedSelection;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
@@ -14,9 +14,9 @@ final class ContestChooserComponent extends ChooserComponent
 {
 
     private TypedSelection $availableContests;
-    private ModelContest $contest;
+    private ContestModel $contest;
 
-    public function __construct(Container $container, ModelContest $contest, TypedSelection $availableContests)
+    public function __construct(Container $container, ContestModel $contest, TypedSelection $availableContests)
     {
         parent::__construct($container);
         $this->contest = $contest;
@@ -26,7 +26,7 @@ final class ContestChooserComponent extends ChooserComponent
     protected function getItem(): NavItem
     {
         $items = [];
-        /** @var ModelContest $contest */
+        /** @var ContestModel $contest */
         foreach ($this->availableContests as $contest) {
             $items[] = new NavItem(
                 new Title(null, $contest->name),

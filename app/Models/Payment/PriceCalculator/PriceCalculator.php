@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Payment\PriceCalculator;
 
-use FKSDB\Models\Payment\Transition\PaymentHolder;
+use FKSDB\Models\Transitions\Holder\PaymentHolder;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
 use FKSDB\Models\Transitions\Callbacks\TransitionCallback;
-use FKSDB\Models\ORM\Models\ModelPayment;
-use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PreProcess\Preprocess;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
@@ -16,13 +16,13 @@ use Fykosak\Utils\Price\MultiCurrencyPrice;
 class PriceCalculator implements TransitionCallback
 {
 
-    private ServicePayment $servicePayment;
+    private PaymentService $paymentService;
     /** @var Preprocess[] */
     private array $preProcess = [];
 
-    public function __construct(ServicePayment $servicePayment)
+    public function __construct(PaymentService $paymentService)
     {
-        $this->servicePayment = $servicePayment;
+        $this->paymentService = $paymentService;
     }
 
     /**
@@ -50,7 +50,7 @@ class PriceCalculator implements TransitionCallback
             $multiPrice->add($preProcess->calculate($holder->getModel()));
         }
         $price = $multiPrice->getPrice($holder->getModel()->getCurrency());
-        $this->servicePayment->updateModel(
+        $this->paymentService->updateModel(
             $holder->getModel(),
             ['price' => $price->getAmount(), 'currency' => $price->getCurrency()->value]
         );
@@ -59,7 +59,7 @@ class PriceCalculator implements TransitionCallback
     /**
      * @return array[]
      */
-    public function getGridItems(ModelPayment $modelPayment): array
+    public function getGridItems(PaymentModel $modelPayment): array
     {
         $items = [];
         foreach ($this->preProcess as $preProcess) {

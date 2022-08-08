@@ -11,15 +11,15 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\DI\Container;
 
 class MassTransitionsComponent extends BaseComponent
 {
-    private ModelEvent $event;
+    private EventModel $event;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(Container $container, ModelEvent $event)
+    public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container);
         $this->event = $event;

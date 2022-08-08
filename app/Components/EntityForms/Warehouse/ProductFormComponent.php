@@ -7,10 +7,10 @@ namespace FKSDB\Components\EntityForms\Warehouse;
 use FKSDB\Components\EntityForms\EntityFormComponent;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProducer;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
+use FKSDB\Models\ORM\Services\Warehouse\ProductService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Controls\SelectBox;
@@ -19,19 +19,19 @@ use Nette\Forms\Form;
 class ProductFormComponent extends EntityFormComponent
 {
 
-    protected ServiceProducer $serviceProducer;
-    protected ServiceProduct $serviceProduct;
+    protected ProducerService $producerService;
+    protected ProductService $productService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     public const CONTAINER = 'container';
 
     public function injectServiceProducer(
-        ServiceProducer $serviceProducer,
-        ServiceProduct $serviceProduct,
+        ProducerService $producerService,
+        ProductService $productService,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
-        $this->serviceProducer = $serviceProducer;
-        $this->serviceProduct = $serviceProduct;
+        $this->producerService = $producerService;
+        $this->productService = $productService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
@@ -39,9 +39,9 @@ class ProductFormComponent extends EntityFormComponent
     {
         /** @var array $values */
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
 
-        $this->serviceProduct->storeModel($data, $this->model);
+        $this->productService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Product has been updated.') : _('Product has been created.'),
             Message::LVL_SUCCESS
@@ -74,8 +74,8 @@ class ProductFormComponent extends EntityFormComponent
             'note',
         ]);
         $producers = [];
-        /** @var ModelProducer $producer */
-        foreach ($this->serviceProducer->getTable() as $producer) {
+        /** @var ProducerModel $producer */
+        foreach ($this->producerService->getTable() as $producer) {
             $producers[$producer->producer_id] = $producer->name;
         }
         $container->addComponent(new SelectBox(_('Producer'), $producers), 'producer_id', 'name_cs');

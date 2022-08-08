@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use Fykosak\NetteORM\Mapper;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -19,18 +20,22 @@ use NiftyGrid\DuplicateGlobalButtonException;
 class PersonRelatedGrid extends BaseGrid
 {
 
-    protected ModelPerson $person;
-
+    protected PersonModel $person;
     protected array $definition;
-
+    private Mapper $mapper;
     protected int $userPermissions;
 
-    public function __construct(string $section, ModelPerson $person, int $userPermissions, Container $container)
+    public function __construct(string $section, PersonModel $person, int $userPermissions, Container $container)
     {
         $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
         $this->person = $person;
         $this->userPermissions = $userPermissions;
+    }
+
+    public function injectMapper(Mapper $mapper): void
+    {
+        $this->mapper = $mapper;
     }
 
     protected function getData(): IDataSource
@@ -63,6 +68,6 @@ class PersonRelatedGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return $this->definition['model'];
+        return $this->mapper->getDefinition($this->definition['table'])['model'];
     }
 }

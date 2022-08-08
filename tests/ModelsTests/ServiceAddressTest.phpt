@@ -8,7 +8,7 @@ namespace FKSDB\Tests\ModelsTests;
 $container = require '../Bootstrap.php';
 
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use FKSDB\Models\ORM\Services\ServiceAddress;
+use FKSDB\Models\ORM\Services\AddressService;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;
@@ -16,9 +16,9 @@ use Tester\TestCase;
 class ServiceAddressTest extends TestCase
 {
 
-    private ServiceAddress $fixture;
+    private AddressService $fixture;
 
-    public function __construct(ServiceAddress $service)
+    public function __construct(AddressService $service)
     {
         $this->fixture = $service;
     }
@@ -49,5 +49,5 @@ class ServiceAddressTest extends TestCase
     }
 }
 
-$testCase = new ServiceAddressTest($container->getByType(ServiceAddress::class));
+$testCase = new ServiceAddressTest($container->getByType(AddressService::class));
 $testCase->run();

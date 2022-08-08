@@ -5,32 +5,32 @@ declare(strict_types=1);
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\ContestantService;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\Form;
 
 /**
- * @method ModelContestant getModel()
+ * @method ContestantModel getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter
 {
 
     protected string $fieldsDefinition = 'adminContestant';
 
-    private ServiceContestant $serviceContestant;
+    private ContestantService $contestantService;
 
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void
+    final public function injectServiceContestant(ContestantService $contestantService): void
     {
-        $this->serviceContestant = $serviceContestant;
+        $this->contestantService = $contestantService;
     }
 
     public function titleEdit(): PageTitle
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()),
+            sprintf(_('Edit the contestant %s'), $this->getModel()->person->getFullName()),
             'fa fa-user-edit'
         );
     }
@@ -75,12 +75,12 @@ class ContestantPresenter extends ExtendedPersonPresenter
         // no container for contestant
     }
 
-    protected function getORMService(): ServiceContestant
+    protected function getORMService(): ContestantService
     {
-        return $this->serviceContestant;
+        return $this->contestantService;
     }
 
-    protected function getAcYearFromModel(): ?ModelContestYear
+    protected function getAcYearFromModel(): ?ContestYearModel
     {
         $model = $this->getModel();
         if (!$model) {
@@ -91,6 +91,6 @@ class ContestantPresenter extends ExtendedPersonPresenter
 
     protected function getModelResource(): string
     {
-        return ModelContestant::RESOURCE_ID;
+        return ContestantModel::RESOURCE_ID;
     }
 }

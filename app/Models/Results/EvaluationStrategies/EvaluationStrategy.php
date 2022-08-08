@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 
 interface EvaluationStrategy
@@ -15,7 +15,7 @@ interface EvaluationStrategy
      * There are available tables 'contestant' aliased to 'ct' and
      * 'submit' aliased to 's'.
      */
-    public function getPointsColumn(ModelTask $task): string;
+    public function getPointsColumn(TaskModel $task): string;
 
     /**
      * Should return SQL expression with points for given submit.
@@ -45,5 +45,5 @@ interface EvaluationStrategy
     /**
      * Should return points for correctly solved task (aka Student Pilný).
      */
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): ?int;
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int;
 }

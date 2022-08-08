@@ -6,19 +6,24 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
+use FKSDB\Components\Controls\Transitions\TransitionButtonsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Components\PDFGenerators\TeamSeating\SingleTeam\PageComponent;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
+use FKSDB\Models\Transitions\Machine\FyziklaniTeamMachine;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Application\ForbiddenRequestException;
+use Nette\DI\MissingServiceException;
 
 /**
  * @method TeamModel2 getEntity()
@@ -101,5 +106,45 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
     protected function getORMService(): TeamService2
     {
         return $this->teamService;
+    }
+
+    /**
+     * @return FyziklaniTeamMachine
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     */
+    private function getMachine(): FyziklaniTeamMachine
+    {
+        static $machine;
+        if (!isset($machine)) {
+            try {
+                $machine = $this->getContext()->getService(
+                    sprintf('fyziklani%dteam.machine', $this->getEvent()->event_year)
+                );
+            } catch (MissingServiceException $exception) {
+                $machine = $this->getContext()->getService('fyziklani.default.machine');
+            }
+            if (!$machine instanceof FyziklaniTeamMachine) {
+                throw new BadTypeException(FyziklaniTeamMachine::class, $machine);
+            }
+        }
+        return $machine;
+    }
+
+    /**
+     * @return BaseComponent
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws GoneException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentApplicationTransitions(): BaseComponent
+    {
+        return new TransitionButtonsComponent(
+            $this->getMachine(),
+            $this->getContext(),
+            $this->getMachine()->createHolder($this->getEntity())
+        );
     }
 }

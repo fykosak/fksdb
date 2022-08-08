@@ -27,9 +27,9 @@ class PageComponent extends SeatingPageComponent
         $this->template->rests = $row->getScheduleRest();
         $this->template->team = $row;
         $teamSeat = $row->getTeamSeat();
-        $this->template->room = $teamSeat ? $teamSeat->getSeat()->getRoom() : null;
-        $this->template->event = $row->getEvent();
-        $this->template->sector = $teamSeat ? $teamSeat->getSeat()->sector : null;
+        $this->template->room = $teamSeat ? $teamSeat->fyziklani_seat->fyziklani_room : null;
+        $this->template->event = $row->event;
+        $this->template->sector = $teamSeat ? $teamSeat->fyziklani_seat->sector : null;
         $this->template->showBigNav = true;
 
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');

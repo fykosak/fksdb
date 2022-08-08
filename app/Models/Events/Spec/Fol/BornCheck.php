@@ -6,10 +6,10 @@ namespace FKSDB\Models\Events\Spec\Fol;
 
 use FKSDB\Models\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Models\ModelPersonHistory;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Models\PersonHistoryModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -17,14 +17,14 @@ use Nette\Forms\Control;
 class BornCheck extends AbstractAdjustment
 {
 
-    private ServiceSchool $serviceSchool;
-    private ServicePersonHistory $servicePersonHistory;
+    private SchoolService $schoolService;
+    private PersonHistoryService $personHistoryService;
     private Holder $holder;
 
-    public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory)
+    public function __construct(SchoolService $schoolService, PersonHistoryService $personHistoryService)
     {
-        $this->serviceSchool = $serviceSchool;
-        $this->servicePersonHistory = $servicePersonHistory;
+        $this->schoolService = $schoolService;
+        $this->personHistoryService = $personHistoryService;
     }
 
     public function getHolder(): Holder
@@ -58,7 +58,7 @@ class BornCheck extends AbstractAdjustment
                     }
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
-                    if ($this->serviceSchool->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
+                    if ($this->schoolService->isCzSkSchool($schoolId) && $this->isStudent($studyYear)) {
                         $form->addError($msg);
                         return false;
                     }
@@ -86,8 +86,8 @@ class BornCheck extends AbstractAdjustment
         }
 
         $personId = $personControl->getValue();
-        /** @var ModelPersonHistory|null $personHistory */
-        $personHistory = $this->servicePersonHistory->getTable()
+        /** @var PersonHistoryModel|null $personHistory */
+        $personHistory = $this->personHistoryService->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)
             ->fetch();
@@ -100,8 +100,8 @@ class BornCheck extends AbstractAdjustment
             return (int)$schoolControl->getValue();
         }
         $personId = $personControl->getValue();
-        /** @var ModelSchool|null $school */
-        $school = $this->servicePersonHistory->getTable()
+        /** @var SchoolModel|null $school */
+        $school = $this->personHistoryService->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->primaryHolder->event->getContestYear()->ac_year)->fetch();
         return $school->school_id;

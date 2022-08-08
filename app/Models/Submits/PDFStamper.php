@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Submits;
 
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
@@ -61,7 +61,7 @@ class PDFStamper implements StorageProcessing
     /**
      * @throws ProcessingException
      */
-    public function process(ModelSubmit $submit): void
+    public function process(SubmitModel $submit): void
     {
         if (!$this->getInputFile()) {
             throw new InvalidStateException('Input file not set.');
@@ -71,9 +71,9 @@ class PDFStamper implements StorageProcessing
             throw new InvalidStateException('Output file not set.');
         }
 
-        $series = $submit->getTask()->series;
-        $label = $submit->getTask()->label;
-        $person = $submit->getContestant()->getPerson();
+        $series = $submit->task->series;
+        $label = $submit->task->label;
+        $person = $submit->getContestant()->person;
 
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {

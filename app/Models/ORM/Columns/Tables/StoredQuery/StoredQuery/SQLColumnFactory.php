@@ -7,13 +7,13 @@ namespace FKSDB\Models\ORM\Columns\Tables\StoredQuery\StoredQuery;
 use FKSDB\Components\Forms\Controls\SQLConsole;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
 use Nette\Utils\Html;
 
 class SQLColumnFactory extends ColumnFactory
 {
     /**
-     * @param ModelStoredQuery $model
+     * @param QueryModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

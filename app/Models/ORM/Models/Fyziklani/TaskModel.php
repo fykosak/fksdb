@@ -4,25 +4,18 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read string name
  * @property-read string label
  * @property-read int fyziklani_task_id
  * @property-read int event_id
- * @property-read ActiveRow event
+ * @property-read EventModel event
  */
 class TaskModel extends Model
 {
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
-    }
-
     public function __toArray(bool $hideName = false): array
     {
         return [

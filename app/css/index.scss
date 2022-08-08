@@ -30,8 +30,8 @@ $input-border-radius-lg: 0;
 @include color-variant(#17becf, color-10);
 @include color-variant(#000000, color-11);
 :root {
-  --color-fof-main: #{$FOFMainColor};
-  --color-fol-main: #{$FOLMainColor};
+  --color-fof-main: #{$fOFMainColor};
+  --color-fol-main: #{$fOLMainColor};
   --color-fykos-main: #{$fykosMainColor};
   --color-vyfuk-main: #{$vyfukMainColor};
 
@@ -59,8 +59,8 @@ $input-border-radius-lg: 0;
 @include color-variant(deeppink, 'pink');
 @include color-variant(#dc3545, 'error');
 
-@include color-variant($FOLMainColor, "fol");
-@include color-variant($FOFMainColor, "fof");
+@include color-variant($fOLMainColor, "fol");
+@include color-variant($fOFMainColor, "fof");
 
 
 .fyziklani-header {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ContestModel;
 use Nette\Security\Role;
 
 /**
@@ -12,16 +12,16 @@ use Nette\Security\Role;
  */
 class Grant implements Role
 {
-    private ?ModelContest $contest;
+    private ?ContestModel $contest;
     private string $roleId;
 
-    public function __construct(string $roleId, ?ModelContest $contest = null)
+    public function __construct(string $roleId, ?ContestModel $contest = null)
     {
         $this->roleId = $roleId;
         $this->contest = $contest;
     }
 
-    public function getContest(): ?ModelContest
+    public function getContest(): ?ContestModel
     {
         return $this->contest;
     }

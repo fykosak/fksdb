@@ -5,17 +5,25 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\BaseStalkingComponent;
+use Fykosak\NetteORM\Mapper;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
 class StalkingComponent extends BaseStalkingComponent
 {
+    private Mapper $mapper;
+
+    public function injectMapper(Mapper $mapper): void
+    {
+        $this->mapper = $mapper;
+    }
+
     /**
      * @throws NotImplementedException
      */
-    final public function render(string $section, ModelPerson $person, int $userPermission): void
+    final public function render(string $section, PersonModel $person, int $userPermission): void
     {
         $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
@@ -35,9 +43,8 @@ class StalkingComponent extends BaseStalkingComponent
     /**
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person): void
+    private function renderSingle(array $definition, PersonModel $person): void
     {
-        $model = null;
         switch ($definition['table']) {
             case 'person_info':
                 $model = $person->getInfo();
@@ -60,12 +67,13 @@ class StalkingComponent extends BaseStalkingComponent
     /**
      * @param array|Model[] $definition
      */
-    private function renderMulti(array $definition, ModelPerson $person): void
+    private function renderMulti(array $definition, PersonModel $person): void
     {
         $models = [];
         $query = $person->related($definition['table']);
+        $modelClass = $this->mapper->getDefinition($definition['table'])['model'];
         foreach ($query as $datum) {
-            $models[] = ($definition['model'])::createFromActiveRow($datum);
+            $models[] = ($modelClass)::createFromActiveRow($datum);
         }
         $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];

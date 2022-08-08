@@ -6,24 +6,24 @@ namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleItemService;
 
 class Handler
 {
-    private ServicePersonSchedule $servicePersonSchedule;
-    private ServiceScheduleItem $serviceScheduleItem;
+    private PersonScheduleService $personScheduleService;
+    private ScheduleItemService $scheduleItemService;
 
     public function __construct(
-        ServicePersonSchedule $servicePersonSchedule,
-        ServiceScheduleItem $serviceScheduleItem
+        PersonScheduleService $personScheduleService,
+        ScheduleItemService $scheduleItemService
     ) {
-        $this->servicePersonSchedule = $servicePersonSchedule;
-        $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->personScheduleService = $personScheduleService;
+        $this->scheduleItemService = $scheduleItemService;
     }
 
     /**
@@ -31,7 +31,7 @@ class Handler
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(array $data, ModelPerson $person, ModelEvent $event): void
+    public function prepareAndUpdate(array $data, PersonModel $person, EventModel $event): void
     {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
             $this->updateDataType($newScheduleData, $type, $person, $event);
@@ -45,16 +45,16 @@ class Handler
      * @throws \PDOException
      * @throws ModelException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void
+    private function updateDataType(array $newScheduleData, string $type, PersonModel $person, EventModel $event): void
     {
         $oldRows = $person->getScheduleForEvent($event)->where(
             'schedule_item.schedule_group.schedule_group_type',
             $type
         );
 
-        /** @var ModelPersonSchedule $modelPersonSchedule */
+        /** @var PersonScheduleModel $modelPersonSchedule */
         foreach ($oldRows as $oldRow) {
-            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($oldRow);
+            $modelPersonSchedule = PersonScheduleModel::createFromActiveRow($oldRow);
             if (in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
@@ -78,10 +78,10 @@ class Handler
         }
 
         foreach ($newScheduleData as $id) {
-            /** @var ModelScheduleItem $modelScheduleItem */
-            $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
+            /** @var ScheduleItemModel $modelScheduleItem */
+            $modelScheduleItem = $this->scheduleItemService->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->servicePersonSchedule->createNewModel(
+                $this->personScheduleService->createNewModel(
                     ['person_id' => $person->person_id, 'schedule_item_id' => $id]
                 );
             } else {

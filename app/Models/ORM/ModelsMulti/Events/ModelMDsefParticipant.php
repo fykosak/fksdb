@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\ModelsMulti\Events;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
 
 /**
- * @property-read  ModelEventParticipant $mainModel
+ * @property-read  EventParticipantModel $mainModel
  * @deprecated
  */
 class ModelMDsefParticipant extends ModelMulti
@@ -18,16 +18,16 @@ class ModelMDsefParticipant extends ModelMulti
 
     public function __toString(): string
     {
-        return $this->mainModel->getPerson()->getFullName();
+        return $this->mainModel->person->getFullName();
     }
 
-    public function getEvent(): ModelEvent
+    public function getEvent(): EventModel
     {
-        return $this->mainModel->getEvent();
+        return $this->mainModel->event;
     }
 
-    public function getPerson(): ModelPerson
+    public function getPerson(): PersonModel
     {
-        return $this->mainModel->getPerson();
+        return $this->mainModel->person;
     }
 }

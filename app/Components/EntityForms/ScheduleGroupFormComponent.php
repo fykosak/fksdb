@@ -6,47 +6,47 @@ namespace FKSDB\Components\EntityForms;
 
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Models\ORM\Services\Schedule\ScheduleGroupService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelScheduleGroup|null $model
+ * @property ScheduleGroupModel|null $model
  */
 class ScheduleGroupFormComponent extends EntityFormComponent
 {
 
     public const CONTAINER = 'container';
 
-    private ServiceScheduleGroup $serviceScheduleGroup;
-    private ModelEvent $event;
+    private ScheduleGroupService $scheduleGroupService;
+    private EventModel $event;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleGroup $model)
+    public function __construct(EventModel $event, Container $container, ?ScheduleGroupModel $model)
     {
         parent::__construct($container, $model);
         $this->event = $event;
     }
 
     final public function injectPrimary(
-        ServiceScheduleGroup $serviceScheduleGroup,
+        ScheduleGroupService $scheduleGroupService,
         SingleReflectionFormFactory $singleReflectionFormFactory
     ): void {
-        $this->serviceScheduleGroup = $serviceScheduleGroup;
+        $this->scheduleGroupService = $scheduleGroupService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
-        $model = $this->serviceScheduleGroup->storeModel($data, $this->model);
+        $model = $this->scheduleGroupService->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }

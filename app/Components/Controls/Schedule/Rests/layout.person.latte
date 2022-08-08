@@ -1,5 +1,5 @@
-{varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[] $rests}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[] $rests}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
 {block content}
     {if count($rests)}
         <h3>{$person->getFullName()}</h3>
@@ -8,7 +8,7 @@
             {foreach $rests as $rest}
                 <tr>
                     <td>{$rest->getLabel()}</td>
-                    <td>{$rest->getScheduleItem()->getPrice()->__toString()}</td>
+                    <td>{$rest->schedule_item->getPrice()->__toString()}</td>
                 </tr>
             {/foreach}
             </tbody>

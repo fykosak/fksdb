@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
@@ -117,7 +117,7 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
 
     protected function getModelClassName(): string
     {
-        return ModelEventParticipant::class;
+        return EventParticipantModel::class;
     }
 
     protected function getTableName(): string

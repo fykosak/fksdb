@@ -5,31 +5,26 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Services\Fyziklani\SubmitService;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
 
 class FyziklaniResultsWebModel extends WebModel
 {
 
-    private ServiceEvent $serviceEvent;
+    private EventService $eventService;
     private SubmitService $submitService;
-    private TeamService2 $teamService;
-    private TaskService $taskService;
 
     public function injectServices(
-        ServiceEvent $serviceEvent,
-        SubmitService $submitService,
-        TeamService2 $teamService,
-        TaskService $taskService
+        EventService $eventService,
+        SubmitService $submitService
     ): void {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->submitService = $submitService;
-        $this->teamService = $teamService;
-        $this->taskService = $taskService;
     }
 
     /**
@@ -37,17 +32,20 @@ class FyziklaniResultsWebModel extends WebModel
      */
     public function getJsonResponse(array $params): array
     {
-        $event = $this->serviceEvent->findByPrimary($params['event_id']);
+        $event = $this->eventService->findByPrimary($params['event_id']);
         $gameSetup = $event->getFyziklaniGameSetup();
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
-            'categories' => ['A', 'B', 'C'],
+            'categories' => array_map(
+                fn(TeamCategory $category): string => $category->value,
+                TeamCategory::casesForEvent($event)
+            ),
             'refreshDelay' => $gameSetup->refresh_delay,
             'tasksOnBoard' => $gameSetup->tasks_on_board,
             'submits' => [],
-            'teams' => $this->teamService->serialiseTeams($event),
-            'tasks' => $this->taskService->serialiseTasks($event),
+            'teams' => TeamService2::serialiseTeams($event),
+            'tasks' => TaskService::serialiseTasks($event),
             'times' => [
                 'toStart' => $gameSetup->game_start->getTimestamp() - time(),
                 'toEnd' => $gameSetup->game_end->getTimestamp() - time(),

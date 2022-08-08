@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
@@ -17,11 +17,11 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase
 
     protected IPresenter $fixture;
     protected array $persons = [];
-    protected ModelEvent $event;
+    protected EventModel $event;
 
     abstract protected function getCapacity(): int;
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         return $this->event;
     }
@@ -57,7 +57,7 @@ EOT
             'Bílá',
             ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')]
         );
-        $application = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',
@@ -73,7 +73,7 @@ EOT
             'Bílá II.',
             ['email' => 'bila2@hrad.cz', 'born' => DateTime::from('2000-01-01')]
         );
-        $application = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',

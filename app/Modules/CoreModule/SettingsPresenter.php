@@ -11,10 +11,10 @@ use FKSDB\Components\Forms\Rules\UniqueEmail;
 use FKSDB\Components\Forms\Rules\UniqueLogin;
 use FKSDB\Models\Authentication\PasswordAuthenticator;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Models\Utils\FormUtils;
@@ -29,15 +29,15 @@ class SettingsPresenter extends BasePresenter
 
     public const CONT_LOGIN = 'login';
 
-    private ServiceLogin $loginService;
-    private ServicePersonInfo $servicePersonInfo;
+    private LoginService $loginService;
+    private PersonInfoService $personInfoService;
 
     final public function injectQuarterly(
-        ServiceLogin $loginService,
-        ServicePersonInfo $servicePersonInfo
+        LoginService $loginService,
+        PersonInfoService $personInfoService
     ): void {
         $this->loginService = $loginService;
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
     }
 
     public function titleDefault(): PageTitle
@@ -50,7 +50,7 @@ class SettingsPresenter extends BasePresenter
      */
     public function actionDefault(): void
     {
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 
         $defaults = [
@@ -63,18 +63,18 @@ class SettingsPresenter extends BasePresenter
 
     final public function renderDefault(): void
     {
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
 
-        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY)) {
             $this->flashMessage(_('Set up new password.'), Message::LVL_WARNING);
         }
     }
 
     protected function createComponentPreferredLangForm(): PreferredLangFormComponent
     {
-        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->getPerson());
+        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->person);
     }
 
     /**
@@ -84,19 +84,19 @@ class SettingsPresenter extends BasePresenter
     {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Authentication'));
         $rule = function (BaseControl $baseControl) use ($login): bool {
             $uniqueLogin = new UniqueLogin($this->loginService);
             $uniqueLogin->setIgnoredLogin($login);
 
-            $uniqueEmail = new UniqueEmail($this->servicePersonInfo);
-            $uniqueEmail->setIgnoredPerson($login->getPerson());
+            $uniqueEmail = new UniqueEmail($this->personInfoService);
+            $uniqueEmail->setIgnoredPerson($login->person);
 
             return $uniqueEmail($baseControl) && $uniqueLogin($baseControl);
         };
@@ -180,12 +180,12 @@ class SettingsPresenter extends BasePresenter
     {
         $values = $form->getValues();
         $tokenAuthentication =
-            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
-        /** @var ModelLogin $login */
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_INITIAL_LOGIN) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(AuthTokenModel::TYPE_RECOVERY);
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
 
-        $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN], true);
+        $loginData = FormUtils::emptyStrToNull2($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
             $loginData['hash'] = $login->createHash($loginData['password']);
         }

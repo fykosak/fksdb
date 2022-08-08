@@ -8,24 +8,24 @@ use FKSDB\Components\EntityForms\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\ModelTeacher;
-use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\ORM\Models\TeacherModel;
+use FKSDB\Models\ORM\Services\TeacherService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Security\Resource;
 
 /**
- * @method ModelTeacher getEntity()
+ * @method TeacherModel getEntity()
  */
 class TeacherPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceTeacher $serviceTeacher;
+    private TeacherService $teacherService;
 
-    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void
+    final public function injectServiceTeacher(TeacherService $teacherService): void
     {
-        $this->serviceTeacher = $serviceTeacher;
+        $this->teacherService = $teacherService;
     }
 
     /**
@@ -36,7 +36,7 @@ class TeacherPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()),
+            sprintf(_('Edit teacher %s'), $this->getEntity()->person->getFullName()),
             'fas fa-user-edit'
         );
     }
@@ -92,13 +92,13 @@ class TeacherPresenter extends BasePresenter
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    protected function getORMService(): ServiceTeacher
+    protected function getORMService(): TeacherService
     {
-        return $this->serviceTeacher;
+        return $this->teacherService;
     }
 
     protected function getModelResource(): string
     {
-        return ModelTeacher::RESOURCE_ID;
+        return TeacherModel::RESOURCE_ID;
     }
 }

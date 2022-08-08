@@ -1,4 +1,4 @@
-{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {default FKSDB\Models\ORM\Models\Fyziklani\Seating\RoomModel|null $room = null}
 {default FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $team = null}
 {default bool $showTeamId = false}
@@ -21,11 +21,11 @@
                 {var FKSDB\Models\ORM\Models\Fyziklani\TeamModel2|null $selectedTeam = null}
                 {var $occuiedTeamSeat = $seat->getTeamSeat($event)}
                 {if $team}
-                    {if $occuiedTeamSeat && $occuiedTeamSeat->getTeam()->fyziklani_team_id === $team->fyziklani_team_id}
+                    {if $occuiedTeamSeat && $occuiedTeamSeat->fyziklani_team->fyziklani_team_id === $team->fyziklani_team_id}
                         {do $selectedTeam = $team}
                     {/if}
                 {else}
-                    {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->getTeam():null}
+                    {do $selectedTeam = $occuiedTeamSeat? $occuiedTeamSeat->fyziklani_team:null}
                 {/if}
 
                 {var $className = $selectedTeam?' occupied':' free'}

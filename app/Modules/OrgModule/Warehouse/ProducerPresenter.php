@@ -10,25 +10,25 @@ use FKSDB\Components\Grids\Warehouse\ProductsFromProducerGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Warehouse\ModelProducer;
-use FKSDB\Models\ORM\Services\Warehouse\ServiceProducer;
+use FKSDB\Models\ORM\Models\Warehouse\ProducerModel;
+use FKSDB\Models\ORM\Services\Warehouse\ProducerService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
 use Nette\Security\Resource;
 
 /**
- * @method ModelProducer getEntity(bool $throw = true)
+ * @method ProducerModel getEntity(bool $throw = true)
  */
 class ProducerPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceProducer $serviceProducer;
+    private ProducerService $producerService;
 
-    public function injectService(ServiceProducer $serviceProducer): void
+    public function injectService(ProducerService $producerService): void
     {
-        $this->serviceProducer = $serviceProducer;
+        $this->producerService = $producerService;
     }
 
     public function titleList(): PageTitle
@@ -55,9 +55,9 @@ class ProducerPresenter extends BasePresenter
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): ServiceProducer
+    protected function getORMService(): ProducerService
     {
-        return $this->serviceProducer;
+        return $this->producerService;
     }
 
     protected function createComponentCreateForm(): Control

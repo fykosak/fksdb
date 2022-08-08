@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
@@ -25,9 +25,9 @@ class DispatchPresenter extends BasePresenter
      */
     final public function renderDefault(): void
     {
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $person = $login->getPerson();
+        $person = $login->person;
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
@@ -36,7 +36,7 @@ class DispatchPresenter extends BasePresenter
     /**
      * @throws InvalidLinkException
      */
-    private function getAllContestants(ModelPerson $person): array
+    private function getAllContestants(PersonModel $person): array
     {
         $result = [];
         foreach ($person->getActiveContestants() as $contestId => $contestant) {
@@ -47,7 +47,7 @@ class DispatchPresenter extends BasePresenter
                         'contestId' => $contestId,
                     ]
                 ),
-                'title' => sprintf(_('Contestant %s'), $contestant->getContest()->name),
+                'title' => sprintf(_('Contestant %s'), $contestant->contest->name),
             ];
         }
         return $result;
@@ -56,10 +56,10 @@ class DispatchPresenter extends BasePresenter
     /**
      * @throws InvalidLinkException
      */
-    private function getAllOrganisers(ModelLogin $login): array
+    private function getAllOrganisers(LoginModel $login): array
     {
         $results = [];
-        foreach ($login->getPerson()->getActiveOrgs() as $contestId => $org) {
+        foreach ($login->person->getActiveOrgs() as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(
                     ':Org:Dashboard:default',
@@ -67,7 +67,7 @@ class DispatchPresenter extends BasePresenter
                         'contestId' => $contestId,
                     ]
                 ),
-                'title' => sprintf(_('Organiser %s'), $org->getContest()->name),
+                'title' => sprintf(_('Organiser %s'), $org->contest->name),
             ];
         }
         return $results;
@@ -77,8 +77,8 @@ class DispatchPresenter extends BasePresenter
     {
         if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
-            $query = $this->serviceContest->getTable();
-            /** @var ModelContest $contest */
+            $query = $this->contestService->getTable();
+            /** @var ContestModel $contest */
             foreach ($query as $contest) {
                 $this->contestsProperty[$contest->contest_id] = [
                     'symbol' => $contest->getContestSymbol(),

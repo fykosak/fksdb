@@ -10,8 +10,8 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelEventOrg;
-use FKSDB\Models\ORM\Services\ServiceEventOrg;
+use FKSDB\Models\ORM\Models\EventOrgModel;
+use FKSDB\Models\ORM\Services\EventOrgService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
@@ -20,17 +20,17 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelEventOrg getEntity()
+ * @method EventOrgModel getEntity()
  */
 class EventOrgPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private ServiceEventOrg $serviceEventOrg;
+    private EventOrgService $eventOrgService;
 
-    final public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void
+    final public function injectServiceEventOrg(EventOrgService $eventOrgService): void
     {
-        $this->serviceEventOrg = $serviceEventOrg;
+        $this->eventOrgService = $eventOrgService;
     }
 
     public function titleList(): PageTitle
@@ -54,7 +54,7 @@ class EventOrgPresenter extends BasePresenter
     {
         return new PageTitle(
             null,
-            sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()),
+            sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->person->getFullName()),
             'fa fa-user-edit'
         );
     }
@@ -80,9 +80,9 @@ class EventOrgPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): ServiceEventOrg
+    protected function getORMService(): EventOrgService
     {
-        return $this->serviceEventOrg;
+        return $this->eventOrgService;
     }
 
     /**

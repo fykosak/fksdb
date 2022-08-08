@@ -16,8 +16,8 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Forms\Controls\SubmitButton;
@@ -29,21 +29,21 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * TODO fix referenced person
- * @method ModelPerson getEntity()
+ * @method PersonModel getEntity()
  */
 class PersonPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private PersonFactory $personFactory;
     private int $userPermissions;
 
     final public function injectQuarterly(
-        ServicePerson $servicePerson,
+        PersonService $personService,
         PersonFactory $personFactory
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->personFactory = $personFactory;
     }
 
@@ -118,9 +118,9 @@ class PersonPresenter extends BasePresenter
     final public function renderDetail(): void
     {
         $person = $this->getEntity();
-        $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
-        /** @var ModelPerson $userPerson */
-        $userPerson = $this->getUser()->getIdentity()->getPerson();
+        $this->template->isSelf = $this->getUser()->getIdentity()->person->person_id === $person->person_id;
+        /** @var PersonModel $userPerson */
+        $userPerson = $this->getUser()->getIdentity()->person;
         Debugger::log(
             sprintf(
                 '%s (%d) stalk %s (%d)',
@@ -152,7 +152,7 @@ class PersonPresenter extends BasePresenter
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addComponent(
-            $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)),
+            $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->personService)),
             'person_id'
         );
 
@@ -232,9 +232,9 @@ class PersonPresenter extends BasePresenter
         throw new NotImplementedException();
     }
 
-    protected function getORMService(): ServicePerson
+    protected function getORMService(): PersonService
     {
-        return $this->servicePerson;
+        return $this->personService;
     }
 
     /**

@@ -99,10 +99,10 @@ abstract class ServiceMulti
      * Use this method to delete a model!
      * @throws \InvalidArgumentException
      */
-    public function dispose(ModelMulti $model): void
+    public function disposeModel(ModelMulti $model): void
     {
         $this->checkType($model);
-        $this->joinedService->dispose($model->joinedModel);
+        $this->joinedService->disposeModel($model->joinedModel);
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
@@ -136,7 +136,7 @@ abstract class ServiceMulti
         );
         // $selection->joinWhere($mainTable, "$joinedTable.{$mainTable}_id = $mainTable.{$mainTable}_id");
         // $selection->select("$joinedTable.*");
-         $selection->select("$mainTable.*");
+        $selection->select("$mainTable.*");
 
         return $selection;
     }

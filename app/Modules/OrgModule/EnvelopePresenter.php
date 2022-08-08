@@ -9,7 +9,7 @@ use FKSDB\Components\PDFGenerators\Envelopes\ContestToPerson\PageComponent;
 use FKSDB\Components\PDFGenerators\Providers\AbstractPageComponent;
 use FKSDB\Components\PDFGenerators\Providers\ProviderComponent;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
@@ -18,16 +18,16 @@ class EnvelopePresenter extends BasePresenter
 {
 
     private Explorer $readOnlyExplorer;
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     /** @persistent */
     public array $personIds = [];
     /** @persistent */
     public string $format = AbstractPageComponent::FORMAT_B5_LANDSCAPE;
 
-    public function injectDatabase(ServicePerson $servicePerson): void
+    public function injectDatabase(PersonService $personService): void
     {
         $this->readOnlyExplorer = $this->getContext()->getService('database.ro.context');
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
     }
 
     public function titleDefault(): PageTitle
@@ -39,7 +39,7 @@ class EnvelopePresenter extends BasePresenter
     {
         return new ProviderComponent(
             new PageComponent($this->getSelectedContest(), $this->getContext(), $this->format),
-            $this->servicePerson->getTable()->where('person_id', $this->personIds),
+            $this->personService->getTable()->where('person_id', $this->personIds),
             $this->getContext(),
         );
     }

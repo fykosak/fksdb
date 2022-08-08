@@ -1,11 +1,11 @@
 {layout '../@layout.latte'}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $team}
-{varType FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule[][] $rests}
+{varType FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel[][] $rests}
 {block headline}
     ({$team->fyziklani_team_id}) {$team->name}
     {var $teamSeat = $team->getTeamSeat()}
     {if $teamSeat}
-        <small class="text-muted">{_'Sector'} {$teamSeat->getSeat()->sector}</small>
+        <small class="text-muted">{_'Sector'} {$teamSeat->fyziklani_seat->sector}</small>
     {/if}
 {/block}
 {block upperContent}
@@ -16,10 +16,10 @@
         {foreach $rests as $personRest}
             {foreach $personRest as $rest}
                 {if $team->game_lang === 'cs'}
-                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#8211; {substr($rest->getScheduleItem()->name_cs, 0, 5)}
+                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {substr($rest->schedule_item->name_cs, 0, 5)}
                     <br>
                 {else}
-                    &#9634; {$rest->getPerson()->family_name} &#8211; {$rest->getScheduleItem()->getPrice()->czk->__toString()} &#8211; {substr($rest->getScheduleItem()->name_en, 0, 5)}
+                    &#9634; {$rest->person->family_name} &#8211; {$rest->schedule_item->getPrice()->czk->__toString()} &#8211; {substr($rest->schedule_item->name_en, 0, 5)}
                     <br>
                 {/if}
             {/foreach}

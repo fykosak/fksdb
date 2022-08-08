@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -19,9 +19,9 @@ use NiftyGrid\DuplicateColumnException;
 class OrgsGrid extends BaseGrid
 {
 
-    private ModelContest $contest;
+    private ContestModel $contest;
 
-    public function __construct(Container $container, ModelContest $contest)
+    public function __construct(Container $container, ContestModel $contest)
     {
         parent::__construct($container);
         $this->contest = $contest;
@@ -69,6 +69,6 @@ class OrgsGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelOrg::class;
+        return OrgModel::class;
     }
 }

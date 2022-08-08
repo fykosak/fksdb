@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\DI\Container;
@@ -13,27 +13,27 @@ use Nette\DI\Container;
 final class EventChooserComponent extends ChooserComponent
 {
 
-    private ModelEvent $event;
-    private ServiceEvent $serviceEvent;
+    private EventModel $event;
+    private EventService $eventService;
 
-    public function __construct(Container $container, ModelEvent $event)
+    public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    final public function injectServiceEvent(ServiceEvent $serviceEvent): void
+    final public function injectServiceEvent(EventService $eventService): void
     {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
     }
 
     protected function getItem(): NavItem
     {
         $items = [];
-        $query = $this->serviceEvent->getTable()
+        $query = $this->eventService->getTable()
             ->where('event_type_id=?', $this->event->event_type_id)
             ->order('event_year DESC');
-        /** @var ModelEvent $event */
+        /** @var EventModel $event */
         foreach ($query as $event) {
             $items[] = new NavItem(
                 new Title(null, $event->name),

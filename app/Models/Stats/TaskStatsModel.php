@@ -4,30 +4,20 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Stats;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use Nette\Database\Connection;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use Nette\Database\Explorer;
 use Nette\Database\Row;
 
 class TaskStatsModel
 {
-    protected ModelContestYear $contestYear;
-    protected Connection $connection;
-    protected int $series;
+    protected ContestYearModel $contestYear;
+    protected Explorer $explorer;
+    public int $series;
 
-    public function __construct(ModelContestYear $contestYear, Connection $connection)
+    public function __construct(ContestYearModel $contestYear, Explorer $explorer)
     {
         $this->contestYear = $contestYear;
-        $this->connection = $connection;
-    }
-
-    public function getSeries(): int
-    {
-        return $this->series;
-    }
-
-    public function setSeries(int $series): void
-    {
-        $this->series = $series;
+        $this->explorer = $explorer;
     }
 
     /**
@@ -37,11 +27,12 @@ class TaskStatsModel
      */
     public function getData(array $labels): array
     {
-        $sql = 'SELECT * FROM `v_task_stats` WHERE ' .
-            'contest_id = ? AND year = ? ' .
-            "AND series = ? AND label IN ('" . implode("','", $labels) . "')";
-
-        $stmt = $this->connection->query($sql, $this->contestYear->contest_id, $this->contestYear->year, $this->series);
-        return $stmt->fetchAll();
+        return $this->explorer->query(
+            'SELECT * FROM `v_task_stats` WHERE contest_id = ? AND year = ? AND series = ? AND label IN ?',
+            $this->contestYear->contest_id,
+            $this->contestYear->year,
+            $this->series,
+            $labels
+        )->fetchAll();
     }
 }

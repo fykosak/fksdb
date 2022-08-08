@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 
 abstract class PersonTest
 {
@@ -20,5 +20,5 @@ abstract class PersonTest
         $this->title = $title;
     }
 
-    abstract public function run(Logger $logger, ModelPerson $person): void;
+    abstract public function run(Logger $logger, PersonModel $person): void;
 }

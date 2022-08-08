@@ -6,7 +6,7 @@ namespace FKSDB\Models\Events\Spec\Fyziklani;
 
 use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
 use Nette\Forms\Form;
 
 class SchoolsInTeam extends SchoolCheck
@@ -23,9 +23,9 @@ class SchoolsInTeam extends SchoolCheck
     public function __construct(
         $schoolsInTeam,
         ExpressionEvaluator $evaluator,
-        ServicePersonHistory $servicePersonHistory
+        PersonHistoryService $personHistoryService
     ) {
-        parent::__construct($servicePersonHistory);
+        parent::__construct($personHistoryService);
         $this->evaluator = $evaluator;
         $this->setSchoolsInTeam($schoolsInTeam);
     }

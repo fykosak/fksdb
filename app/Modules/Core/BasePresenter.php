@@ -15,8 +15,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\FilteredDataProvider;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\UI\PageStyleContainer;
 use Fykosak\Utils\Localization\GettextTranslator;
 use Fykosak\Utils\Localization\UnsupportedLanguageException;
@@ -49,7 +49,7 @@ abstract class BasePresenter extends Presenter implements
     public ?string $lang = null;
     private string $language;
     protected YearCalculator $yearCalculator;
-    protected ServiceContest $serviceContest;
+    protected ContestService $contestService;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
     private ?PageTitle $pageTitle;
@@ -70,12 +70,12 @@ abstract class BasePresenter extends Presenter implements
     final public function injectBase(
         Container $diContainer,
         YearCalculator $yearCalculator,
-        ServiceContest $serviceContest,
+        ContestService $contestService,
         PresenterBuilder $presenterBuilder,
         GettextTranslator $translator
     ): void {
         $this->yearCalculator = $yearCalculator;
-        $this->serviceContest = $serviceContest;
+        $this->contestService = $contestService;
         $this->presenterBuilder = $presenterBuilder;
         $this->translator = $translator;
         $this->diContainer = $diContainer;
@@ -243,10 +243,10 @@ abstract class BasePresenter extends Presenter implements
 
     private function getUserPreferredLang(): ?string
     {
-        /**@var ModelLogin $login */
+        /**@var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        if ($login && $login->getPerson()) {
-            return $login->getPerson()->getPreferredLang();
+        if ($login && $login->person) {
+            return $login->person->getPreferredLang();
         }
         return null;
     }

@@ -11,29 +11,19 @@ use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Fyziklani\NotSetGameParametersException;
 use FKSDB\Models\Fyziklani\Submit\TaskCodeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
 class PointsEntryComponent extends AjaxComponent
 {
-    private TeamService2 $teamService;
-    private TaskService $taskService;
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(Container $container, ModelEvent $event)
+    public function __construct(Container $container, EventModel $event)
     {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
-    }
-
-    final public function injectPrimary(
-        TaskService $taskService,
-        TeamService2 $teamService
-    ): void {
-        $this->taskService = $taskService;
-        $this->teamService = $teamService;
     }
 
     /**
@@ -43,8 +33,8 @@ class PointsEntryComponent extends AjaxComponent
     {
         return [
             'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->taskService->serialiseTasks($this->event),
-            'teams' => $this->teamService->serialiseTeams($this->event),
+            'tasks' => TaskService::serialiseTasks($this->event),
+            'teams' => TeamService2::serialiseTeams($this->event),
         ];
     }
 

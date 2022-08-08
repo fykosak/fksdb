@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Charts\Event\Applications;
 
 use FKSDB\Components\Charts\Core\GeoCharts\GeoChart;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamMemberService;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
@@ -13,10 +13,10 @@ use Nette\DI\Container;
 abstract class ApplicationsPerCountryChart extends GeoChart
 {
 
-    protected ModelEvent $event;
+    protected EventModel $event;
     protected TeamMemberService $teamMemberService;
 
-    public function __construct(Container $context, ModelEvent $event, string $scale)
+    public function __construct(Container $context, EventModel $event, string $scale)
     {
         parent::__construct($context, $scale);
         $this->event = $event;

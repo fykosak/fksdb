@@ -52,7 +52,7 @@ abstract class SecondaryModelStrategy
                 foreach ($primaryModel->getFyziklaniParticipants() as $row) {
                     $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row);
                     $secondary[] = $service->composeModel(
-                        $fyziklaniParticipant->getEventParticipant(),
+                        $fyziklaniParticipant->event_participant,
                         $fyziklaniParticipant
                     );
                 }

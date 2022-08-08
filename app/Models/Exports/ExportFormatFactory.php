@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Exports;
 
 use FKSDB\Models\Exports\Formats\CSVFormat;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use Nette\DI\Container;
@@ -23,20 +23,20 @@ class ExportFormatFactory
 
     private Container $container;
     private StoredQueryFactory $storedQueryFactory;
-    private ServiceEvent $serviceEvent;
-    private ServiceContest $serviceContest;
+    private EventService $eventService;
+    private ContestService $contestService;
     public array $defaultFormats;
 
     public function __construct(
         Container $container,
         StoredQueryFactory $storedQueryFactory,
-        ServiceEvent $serviceEvent,
-        ServiceContest $serviceContest
+        EventService $eventService,
+        ContestService $contestService
     ) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
-        $this->serviceEvent = $serviceEvent;
-        $this->serviceContest = $serviceContest;
+        $this->eventService = $eventService;
+        $this->contestService = $contestService;
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Save CSV (without head)'),

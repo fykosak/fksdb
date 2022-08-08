@@ -8,8 +8,8 @@ use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Services\EmailMessageService;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use Nette\Application\UI\Control;
@@ -19,11 +19,11 @@ class SpamPresenter extends BasePresenter
 {
     use EntityPresenterTrait;
 
-    private ServiceEmailMessage $serviceEmailMessage;
+    private EmailMessageService $emailMessageService;
 
-    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void
+    final public function injectServiceEmailMessage(EmailMessageService $emailMessageService): void
     {
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -47,8 +47,8 @@ class SpamPresenter extends BasePresenter
     public function authorizedDetail(): void
     {
         $authorized = true;
-        /** @var ModelContest $contest */
-        foreach ($this->serviceContest->getTable() as $contest) {
+        /** @var ContestModel $contest */
+        foreach ($this->contestService->getTable() as $contest) {
             $authorized = $authorized
                 && $this->contestAuthorizator->isAllowed(
                     $this->getORMService()->getModelClassName()::RESOURCE_ID,
@@ -59,9 +59,9 @@ class SpamPresenter extends BasePresenter
         $this->setAuthorized($authorized);
     }
 
-    protected function getORMService(): ServiceEmailMessage
+    protected function getORMService(): EmailMessageService
     {
-        return $this->serviceEmailMessage;
+        return $this->emailMessageService;
     }
 
     /**
