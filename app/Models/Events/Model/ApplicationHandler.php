@@ -20,7 +20,7 @@ use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Database\Connection;
@@ -36,7 +36,7 @@ class ApplicationHandler
     public const ERROR_SKIP = 'skip';
     public const STATE_TRANSITION = 'transition';
     public const STATE_OVERWRITE = 'overwrite';
-    private ModelEvent $event;
+    private EventModel $event;
 
     private Logger $logger;
 
@@ -45,7 +45,7 @@ class ApplicationHandler
     private Machine $machine;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelEvent $event, Logger $logger, Container $container)
+    public function __construct(EventModel $event, Logger $logger, Container $container)
     {
         $this->event = $event;
         $this->logger = $logger;

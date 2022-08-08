@@ -12,12 +12,12 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Expressions\NeonScheme;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Models\Utils\FormUtils;
 use FKSDB\Models\Utils\Utils;
 use Fykosak\Utils\Logging\Message;
@@ -29,19 +29,19 @@ use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
 /**
- * @property ModelEvent|null $model
+ * @property EventModel|null $model
  */
 class EventFormComponent extends EntityFormComponent
 {
     public const CONT_EVENT = 'event';
 
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private ServiceAuthToken $serviceAuthToken;
-    private ServiceEvent $serviceEvent;
+    private AuthTokenService $authTokenService;
+    private EventService $eventService;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelContestYear $contestYear, Container $container, ?ModelEvent $model)
+    public function __construct(ContestYearModel $contestYear, Container $container, ?EventModel $model)
     {
         parent::__construct($container, $model);
         $this->contestYear = $contestYear;
@@ -49,13 +49,13 @@ class EventFormComponent extends EntityFormComponent
 
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        ServiceAuthToken $serviceAuthToken,
-        ServiceEvent $serviceEvent,
+        AuthTokenService $authTokenService,
+        EventService $eventService,
         EventDispatchFactory $eventDispatchFactory
     ): void {
-        $this->serviceAuthToken = $serviceAuthToken;
+        $this->authTokenService = $authTokenService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -72,10 +72,10 @@ class EventFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
+        $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
         $data['year'] = $this->contestYear->year;
-        /** @var ModelEvent $model */
-        $model = $this->serviceEvent->storeModel($data, $this->model);
+        /** @var EventModel $model */
+        $model = $this->eventService->storeModel($data, $this->model);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
@@ -131,7 +131,7 @@ class EventFormComponent extends EntityFormComponent
             'registration_end',
             'report',
             'parameters',
-        ], $this->contestYear->getContest());
+        ], $this->contestYear->contest);
     }
 
     private function createParamDescription(Holder $holder): Html
@@ -151,15 +151,15 @@ class EventFormComponent extends EntityFormComponent
         return $result;
     }
 
-    private function updateTokens(ModelEvent $event): void
+    private function updateTokens(EventModel $event): void
     {
-        $connection = $this->serviceAuthToken->explorer->getConnection();
+        $connection = $this->authTokenService->explorer->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
         $tokenData = ['until' => $event->registration_end ?? $event->end];
-        /** @var ModelAuthToken $token $token */
-        foreach ($this->serviceAuthToken->findTokensByEventId($event) as $token) {
-            $this->serviceAuthToken->updateModel($token, $tokenData);
+        /** @var AuthTokenModel $token $token */
+        foreach ($this->authTokenService->findTokensByEvent($event) as $token) {
+            $this->authTokenService->updateModel($token, $tokenData);
         }
         $connection->commit();
     }

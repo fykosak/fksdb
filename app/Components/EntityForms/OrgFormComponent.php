@@ -8,16 +8,16 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
 /**
- * @property ModelOrg|null $model
+ * @property OrgModel|null $model
  */
 class OrgFormComponent extends EntityFormComponent
 {
@@ -25,11 +25,11 @@ class OrgFormComponent extends EntityFormComponent
 
     public const CONTAINER = 'org';
 
-    private ServiceOrg $serviceOrg;
-    private ModelContest $contest;
+    private OrgService $orgService;
+    private ContestModel $contest;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(Container $container, ModelContest $contest, ?ModelOrg $model)
+    public function __construct(Container $container, ContestModel $contest, ?OrgModel $model)
     {
         parent::__construct($container, $model);
         $this->contest = $contest;
@@ -37,10 +37,10 @@ class OrgFormComponent extends EntityFormComponent
 
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        ServiceOrg $serviceOrg
+        OrgService $orgService
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->serviceOrg = $serviceOrg;
+        $this->orgService = $orgService;
     }
 
     /**
@@ -60,11 +60,11 @@ class OrgFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        $this->serviceOrg->storeModel($data, $this->model);
+        $this->orgService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Org has been updated.') : _('Org has been created.'),
             Message::LVL_SUCCESS

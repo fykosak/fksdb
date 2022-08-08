@@ -1,15 +1,15 @@
 {block content}
-    {varType FKSDB\Models\ORM\Models\ModelPayment $model}
+    {varType FKSDB\Models\ORM\Models\PaymentModel $model}
     {varType bool $isOrg}
     {varType array $items}
     <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
     {var $progress = 0}
-    {switch $model->state}
-        {case \FKSDB\Models\ORM\Models\ModelPayment::STATE_NEW}
+    {switch $model->state->value}
+        {case FKSDB\Models\ORM\Models\PaymentState::NEW}
         {php $progress = 1}
-        {case \FKSDB\Models\ORM\Models\ModelPayment::STATE_WAITING}
+        {case FKSDB\Models\ORM\Models\PaymentState::WAITING}
         {php $progress = 2}
-        {case \FKSDB\Models\ORM\Models\ModelPayment::STATE_RECEIVED}
+        {case FKSDB\Models\ORM\Models\PaymentState::RECEIVED}
         {php $progress = 3}
     {/switch}
     <div class="state-line mt-3 mb-3">
@@ -43,7 +43,7 @@
         {else}
             {control valuePrinter:row 'person.full_name', $model}
         {/if}
-        {control valuePrinter:row 'person_info.email', $model->getPerson()->getInfo()}
+        {control valuePrinter:row 'person_info.email', $model->person->getInfo()}
     </div>
     <hr/>
     <h2>{_'Items'}</h2>

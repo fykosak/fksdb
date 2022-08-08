@@ -8,10 +8,10 @@ use Fykosak\NetteFrontendComponent\Components\AjaxComponent;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Submits\SubmitHandlerFactory;
 use Nette\Application\BadRequestException;
@@ -25,30 +25,30 @@ use Tracy\Debugger;
 class AjaxSubmitComponent extends AjaxComponent
 {
 
-    private ServiceSubmit $serviceSubmit;
-    private ModelTask $task;
-    private ModelContestant $contestant;
+    private SubmitService $submitService;
+    private TaskModel $task;
+    private ContestantModel $contestant;
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant)
+    public function __construct(Container $container, TaskModel $task, ContestantModel $contestant)
     {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
     }
 
-    final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void
+    final public function injectPrimary(SubmitService $submitService, SubmitHandlerFactory $submitHandlerFactory): void
     {
-        $this->serviceSubmit = $serviceSubmit;
+        $this->submitService = $submitService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
     /**
      * @throws NotFoundException
      */
-    private function getSubmit(bool $throw = false): ?ModelSubmit
+    private function getSubmit(bool $throw = false): ?SubmitModel
     {
-        $submit = $this->serviceSubmit->findByContestant($this->contestant, $this->task, false);
+        $submit = $this->submitService->findByContestant($this->contestant, $this->task, false);
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
         }
@@ -71,7 +71,7 @@ class AjaxSubmitComponent extends AjaxComponent
     protected function getData(): array
     {
         $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant);
-        return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
+        return SubmitService::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
     /**
@@ -82,7 +82,7 @@ class AjaxSubmitComponent extends AjaxComponent
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
-            $this->serviceSubmit->explorer->getConnection()->beginTransaction();
+            $this->submitService->explorer->getConnection()->beginTransaction();
             $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
@@ -95,7 +95,7 @@ class AjaxSubmitComponent extends AjaxComponent
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
-            $this->serviceSubmit->explorer->getConnection()->commit();
+            $this->submitService->explorer->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), Message::LVL_SUCCESS));
             $this->sendAjaxResponse();
         }
@@ -108,7 +108,7 @@ class AjaxSubmitComponent extends AjaxComponent
             $this->submitHandlerFactory->handleRevoke($submit);
             $this->getLogger()->log(
                 new Message(
-                    \sprintf(_('Uploading of task %s cancelled.'), $submit->getTask()->getFQName()),
+                    \sprintf(_('Uploading of task %s cancelled.'), $submit->task->getFQName()),
                     Message::LVL_ERROR
                 )
             );

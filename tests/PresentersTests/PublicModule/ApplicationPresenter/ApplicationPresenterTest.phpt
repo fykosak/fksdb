@@ -8,7 +8,7 @@ $container = require '../../../Bootstrap.php';
 
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\NotFoundException;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
@@ -23,7 +23,7 @@ class ApplicationPresenterTest extends EventTestCase
 
     private IPresenter $fixture;
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         throw new BadRequestException();
     }

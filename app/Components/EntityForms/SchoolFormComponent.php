@@ -7,16 +7,16 @@ namespace FKSDB\Components\EntityForms;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelSchool;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceSchool;
+use FKSDB\Models\ORM\Models\SchoolModel;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\Utils\FormUtils;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 
 /**
- * @property ModelSchool|null $model
+ * @property SchoolModel|null $model
  */
 class SchoolFormComponent extends EntityFormComponent
 {
@@ -24,21 +24,21 @@ class SchoolFormComponent extends EntityFormComponent
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 
-    private ServiceAddress $serviceAddress;
-    private ServiceSchool $serviceSchool;
+    private AddressService $addressService;
+    private SchoolService $schoolService;
     private SchoolFactory $schoolFactory;
     private AddressFactory $addressFactory;
 
     final public function injectPrimary(
         AddressFactory $addressFactory,
         SchoolFactory $schoolFactory,
-        ServiceAddress $serviceAddress,
-        ServiceSchool $serviceSchool
+        AddressService $addressService,
+        SchoolService $schoolService
     ): void {
         $this->addressFactory = $addressFactory;
         $this->schoolFactory = $schoolFactory;
-        $this->serviceAddress = $serviceAddress;
-        $this->serviceSchool = $serviceSchool;
+        $this->addressService = $addressService;
+        $this->schoolService = $schoolService;
     }
 
     protected function configureForm(Form $form): void
@@ -56,22 +56,22 @@ class SchoolFormComponent extends EntityFormComponent
     protected function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
-        $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
+        $addressData = FormUtils::emptyStrToNull2($values[self::CONT_ADDRESS]);
+        $schoolData = FormUtils::emptyStrToNull2($values[self::CONT_SCHOOL]);
 
-        $connection = $this->serviceSchool->explorer->getConnection();
+        $connection = $this->schoolService->explorer->getConnection();
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */
-            $this->serviceAddress->updateModel($this->model->getAddress(), $addressData);
+            $this->addressService->updateModel($this->model->address, $addressData);
             /* School */
-            $this->serviceSchool->updateModel($this->model, $schoolData);
+            $this->schoolService->updateModel($this->model, $schoolData);
         } else {
             /* Address */
-            $address = $this->serviceAddress->createNewModel($addressData);
+            $address = $this->addressService->createNewModel($addressData);
             /* School */
             $schoolData['address_id'] = $address->address_id;
-            $this->serviceSchool->createNewModel($schoolData);
+            $this->schoolService->createNewModel($schoolData);
         }
         $connection->commit();
 
@@ -90,7 +90,7 @@ class SchoolFormComponent extends EntityFormComponent
         if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 self::CONT_SCHOOL => $this->model->toArray(),
-                self::CONT_ADDRESS => $this->model->getAddress() ? $this->model->getAddress()->toArray() : null,
+                self::CONT_ADDRESS => $this->model->address ? $this->model->address->toArray() : null,
             ]);
         }
     }

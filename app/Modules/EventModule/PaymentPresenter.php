@@ -11,10 +11,10 @@ use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Events\Exceptions\EventNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\GoneException;
-use FKSDB\Models\ORM\Models\ModelPayment;
-use FKSDB\Models\ORM\Services\ServicePayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
+use FKSDB\Models\ORM\Services\PaymentService;
 use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -24,18 +24,18 @@ use Nette\DI\MissingServiceException;
 use Nette\Security\Resource;
 
 /**
- * @method ModelPayment getEntity
+ * @method PaymentModel getEntity
  */
 class PaymentPresenter extends BasePresenter
 {
     use EventEntityPresenterTrait;
 
-    private ServicePayment $servicePayment;
+    private PaymentService $paymentService;
     private PriceCalculator $priceCalculator;
 
-    final public function injectServicePayment(ServicePayment $servicePayment, PriceCalculator $priceCalculator): void
+    final public function injectServicePayment(PaymentService $paymentService, PriceCalculator $priceCalculator): void
     {
-        $this->servicePayment = $servicePayment;
+        $this->paymentService = $paymentService;
         $this->priceCalculator = $priceCalculator;
     }
 
@@ -200,9 +200,9 @@ class PaymentPresenter extends BasePresenter
         return $this->isAllowed($resource, $privilege);
     }
 
-    protected function getORMService(): ServicePayment
+    protected function getORMService(): PaymentService
     {
-        return $this->servicePayment;
+        return $this->paymentService;
     }
     /* ********* Components *****************/
     /**

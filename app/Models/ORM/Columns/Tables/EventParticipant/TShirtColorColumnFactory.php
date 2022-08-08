@@ -7,13 +7,13 @@ namespace FKSDB\Models\ORM\Columns\Tables\EventParticipant;
 use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Utils\Html;
 
 class TShirtColorColumnFactory extends ColumnFactory
 {
     /**
-     * @param ModelEventParticipant $model
+     * @param EventParticipantModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

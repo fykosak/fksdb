@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\WebService\AESOP\Models;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\DI\Container;
 
 abstract class EventModel extends AESOPModel
 {
     protected string $eventName;
-    protected ServiceEvent $serviceEvent;
+    protected EventService $eventService;
 
-    public function __construct(Container $container, ModelContestYear $contestYear, string $eventName)
+    public function __construct(Container $container, ContestYearModel $contestYear, string $eventName)
     {
         parent::__construct($container, $contestYear);
         $this->eventName = $eventName;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void
+    public function injectServiceEvent(EventService $eventService): void
     {
-        $this->serviceEvent = $serviceEvent;
+        $this->eventService = $eventService;
     }
 
     protected function mapEventNameToTypeId(): int

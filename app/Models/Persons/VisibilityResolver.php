@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 
 interface VisibilityResolver
 {
-    public function isVisible(?ModelPerson $person): bool;
+    public function isVisible(?PersonModel $person): bool;
 }

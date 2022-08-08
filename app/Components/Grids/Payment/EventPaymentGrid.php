@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -18,7 +18,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
 class EventPaymentGrid extends RelatedGrid
 {
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container, $event, 'payment');
     }
@@ -48,6 +48,6 @@ class EventPaymentGrid extends RelatedGrid
 
     protected function getModelClassName(): string
     {
-        return ModelPayment::class;
+        return PaymentModel::class;
     }
 }

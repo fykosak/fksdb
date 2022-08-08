@@ -6,14 +6,14 @@ namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Models\Payment\Transition\PaymentMachine;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
+use FKSDB\Models\Transitions\Machine\PaymentMachine;
 use Nette\DI\Container;
 
 class PersonPaymentContainer extends ContainerWithOptions
 {
-    private ServicePersonSchedule $servicePersonSchedule;
+    private PersonScheduleService $personScheduleService;
     private PaymentMachine $machine;
     private bool $showAll;
 
@@ -28,9 +28,9 @@ class PersonPaymentContainer extends ContainerWithOptions
         $this->configure();
     }
 
-    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void
+    final public function injectServicePersonSchedule(PersonScheduleService $personScheduleService): void
     {
-        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->personScheduleService = $personScheduleService;
     }
 
     /**
@@ -39,7 +39,7 @@ class PersonPaymentContainer extends ContainerWithOptions
      */
     protected function configure(): void
     {
-        $query = $this->servicePersonSchedule->getTable()
+        $query = $this->personScheduleService->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->machine->event->event_id);
         if (count($this->machine->scheduleGroupTypes)) {
             $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->machine->scheduleGroupTypes);
@@ -47,20 +47,20 @@ class PersonPaymentContainer extends ContainerWithOptions
         $query->order('person.family_name ,person_id');
         $lastPersonId = null;
         $container = null;
-        /** @var ModelPersonSchedule $model */
+        /** @var PersonScheduleModel $model */
         foreach ($query as $model) {
             if ($this->showAll || !$model->hasActivePayment()) {
                 if ($model->person_id !== $lastPersonId) {
                     $container = new ModelContainer();
                     $this->addComponent($container, 'person' . $model->person_id);
-                    $container->setOption('label', $model->getPerson()->getFullName());
+                    $container->setOption('label', $model->person->getFullName());
                     $lastPersonId = $model->person_id;
                 }
                 $container->addCheckbox(
                     (string)$model->person_schedule_id,
                     $model->getLabel()
                     . ' ('
-                    . $model->getScheduleItem()->getPrice()->__toString()
+                    . $model->schedule_item->getPrice()->__toString()
                     . ')'
                 );
             }

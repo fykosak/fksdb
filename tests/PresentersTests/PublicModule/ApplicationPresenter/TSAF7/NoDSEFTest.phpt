@@ -6,9 +6,9 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
@@ -16,14 +16,14 @@ use Tester\Assert;
 class NoDSEFTest extends TsafTestCase
 {
 
-    protected ModelEventParticipant $tsafApp;
+    protected EventParticipantModel $tsafApp;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->authenticatePerson($this->person, $this->fixture);
 
-        $this->tsafApp = $this->getContainer()->getByType(ServiceEventParticipant::class)->createNewModel([
+        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
             'person_id' => $this->person,
             'event_id' => $this->tsafEvent->event_id,
             'status' => 'invited',
@@ -71,8 +71,8 @@ class NoDSEFTest extends TsafTestCase
             'eventId' => $this->tsafEvent->event_id,
             'id' => $this->tsafApp->event_participant_id,
         ]);
-        /** @var ServiceEmailMessage $serviceEmail */
-        $serviceEmail = $this->getContainer()->getByType(ServiceEmailMessage::class);
+        /** @var EmailMessageService $serviceEmail */
+        $serviceEmail = $this->getContainer()->getByType(EmailMessageService::class);
         $before = $serviceEmail->getTable()->count();
         $response = $this->fixture->run($request);
 

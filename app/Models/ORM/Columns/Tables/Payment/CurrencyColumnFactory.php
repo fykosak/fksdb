@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Price\Currency;
 use Nette\Forms\Controls\BaseControl;
@@ -26,7 +26,7 @@ class CurrencyColumnFactory extends ColumnFactory
     }
 
     /**
-     * @param ModelPayment $model
+     * @param PaymentModel $model
      * @throws \Exception
      */
     protected function createHtmlValue(Model $model): Html

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model;
 
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;
 use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\VisibilityResolver;
@@ -37,7 +37,7 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
         $this->evaluator = $evaluator;
     }
 
-    public function getResolutionMode(?ModelPerson $person): string
+    public function getResolutionMode(?PersonModel $person): string
     {
         if (!$person) {
             return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
@@ -46,12 +46,12 @@ class PersonContainerResolver implements VisibilityResolver, ModifiabilityResolv
             : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    public function isModifiable(?ModelPerson $person): bool
+    public function isModifiable(?PersonModel $person): bool
     {
         return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
-    public function isVisible(?ModelPerson $person): bool
+    public function isVisible(?PersonModel $person): bool
     {
         return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }

@@ -8,10 +8,10 @@ use FKSDB\Models\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Models\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\Fyziklani\Seating\TeamSeatModel;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
@@ -30,7 +30,7 @@ use Nette\Security\Resource;
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
- * @property-read ActiveRow event
+ * @property-read EventModel event
  * @property-read GameLang game_lang
  * @property-read int rank_category
  * @property-read int rank_total
@@ -39,19 +39,14 @@ class TeamModel2 extends Model implements Resource
 {
     public const RESOURCE_ID = 'fyziklani.team';
 
-    public function getContest(): ModelContest
+    public function getContest(): ContestModel
     {
-        return $this->getEvent()->getContest();
+        return $this->event->event_type->contest;
     }
 
     public function getTeachers(): GroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return ModelEvent::createFromActiveRow($this->event);
     }
 
     public function getMembers(): GroupedSelection
@@ -114,14 +109,14 @@ class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @return ModelPersonSchedule[]
+     * @return PersonScheduleModel[]
      */
     public function getScheduleRest(
         array $types = [ScheduleGroupType::ACCOMMODATION, ScheduleGroupType::WEEKEND]
     ): array {
         $toPay = [];
         foreach ($this->getPersons() as $person) {
-            $rest = $person->getScheduleRests($this->getEvent(), $types);
+            $rest = $person->getScheduleRests($this->event, $types);
             if (count($rest)) {
                 $toPay[] = $rest;
             }
@@ -130,7 +125,7 @@ class TeamModel2 extends Model implements Resource
     }
 
     /**
-     * @return ModelPerson[]
+     * @return PersonModel[]
      */
     public function getPersons(): array
     {
@@ -139,13 +134,15 @@ class TeamModel2 extends Model implements Resource
             $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
-            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->getPerson();
+            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->person;
         }
         return $persons;
     }
 
     /**
-     * @return mixed
+     * @param string $key
+     * @return GameLang|TeamCategory|TeamState|mixed|ActiveRow|null
+     * @throws \ReflectionException
      */
     public function &__get(string $key)
     {

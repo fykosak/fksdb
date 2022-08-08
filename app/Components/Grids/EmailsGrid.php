@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\ORM\Services\EmailMessageService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -16,7 +16,7 @@ class EmailsGrid extends EntityGrid
 
     public function __construct(Container $container)
     {
-        parent::__construct($container, ServiceEmailMessage::class, [
+        parent::__construct($container, EmailMessageService::class, [
             'email_message.email_message_id',
             'email_message.recipient',
             'email_message.subject',

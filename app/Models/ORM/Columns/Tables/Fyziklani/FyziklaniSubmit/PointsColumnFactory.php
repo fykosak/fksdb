@@ -11,7 +11,6 @@ use Nette\Utils\Html;
 
 class PointsColumnFactory extends ColumnFactory
 {
-
     /**
      * @param SubmitModel $model
      */

@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Services\ServicePersonHistory;
+use FKSDB\Models\ORM\Services\PersonHistoryService;
 use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
@@ -30,9 +30,9 @@ class TeamsPerSchool extends SchoolCheck
         $teamsPerSchool,
         ExpressionEvaluator $evaluator,
         Explorer $explorer,
-        ServicePersonHistory $servicePersonHistory
+        PersonHistoryService $personHistoryService
     ) {
-        parent::__construct($servicePersonHistory);
+        parent::__construct($personHistoryService);
         $this->explorer = $explorer;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);

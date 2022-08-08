@@ -9,14 +9,14 @@ use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelTeacher;
+use FKSDB\Models\ORM\Models\TeacherModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\Utils\FormUtils;
 use Nette\Forms\Form;
 
 /**
- * @property ModelTeacher|null $model
+ * @property TeacherModel|null $model
  */
 class TeacherFormComponent extends EntityFormComponent
 {
@@ -25,16 +25,16 @@ class TeacherFormComponent extends EntityFormComponent
     private const CONTAINER = 'teacher';
     private SchoolFactory $schoolFactory;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-    private ServiceTeacher $serviceTeacher;
+    private TeacherService $teacherService;
 
     final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         SchoolFactory $schoolFactory,
-        ServiceTeacher $serviceTeacher
+        TeacherService $teacherService
     ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
-        $this->serviceTeacher = $serviceTeacher;
+        $this->teacherService = $teacherService;
     }
 
     /**
@@ -56,8 +56,8 @@ class TeacherFormComponent extends EntityFormComponent
 
     protected function handleFormSuccess(Form $form): void
     {
-        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        $this->serviceTeacher->storeModel($data, $this->model);
+        $data = FormUtils::emptyStrToNull2($form->getValues()[self::CONTAINER]);
+        $this->teacherService->storeModel($data, $this->model);
         $this->getPresenter()->flashMessage(
             isset($this->model) ? _('Teacher has been updated') : _('Teacher has been created'),
             Message::LVL_SUCCESS

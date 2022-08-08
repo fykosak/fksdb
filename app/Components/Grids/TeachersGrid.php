@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServiceTeacher;
+use FKSDB\Models\ORM\Services\TeacherService;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -19,7 +19,7 @@ class TeachersGrid extends EntityGrid
 
     public function __construct(Container $container)
     {
-        parent::__construct($container, ServiceTeacher::class, [
+        parent::__construct($container, TeacherService::class, [
             'person.full_name',
             'teacher.note',
             'teacher.state',

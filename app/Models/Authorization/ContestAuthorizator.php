@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Authorization;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelRole;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\RoleModel;
 use Nette\Security\Resource;
 use Nette\Security\Permission;
 use Nette\Security\User;
@@ -41,13 +41,13 @@ class ContestAuthorizator
      *
      * @param Resource|string|null $resource
      */
-    public function isAllowed($resource, ?string $privilege, ?ModelContest $contest = null): bool
+    public function isAllowed($resource, ?string $privilege, ?ContestModel $contest = null): bool
     {
         if (!$this->getUser()->isLoggedIn()) {
-            $role = new Grant(ModelRole::GUEST, null);
+            $role = new Grant(RoleModel::GUEST, null);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
@@ -56,10 +56,10 @@ class ContestAuthorizator
      * @param Resource|string $resource
      */
     final public function isAllowedForLogin(
-        ModelLogin $login,
+        LoginModel $login,
         $resource,
         ?string $privilege,
-        ?ModelContest $contest = null
+        ?ContestModel $contest = null
     ): bool {
         foreach ($login->getRoles() as $role) {
             if (

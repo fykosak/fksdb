@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions;
 
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\ReferencedAccessor;
 use Nette\InvalidStateException;
 use Nette\Security\IIdentity;
@@ -37,8 +37,8 @@ class SelfAssertion implements Assertion
         }
         $model = $acl->getQueriedResource();
         try {
-            /** @var ModelContest $contest */
-            $contest = ReferencedAccessor::accessModel($model, ModelContest::class);
+            /** @var ContestModel $contest */
+            $contest = ReferencedAccessor::accessModel($model, ContestModel::class);
             if ($contest->contest_id !== $acl->getQueriedRole()->getContest()->contest_id) {
                 return false;
             }
@@ -47,11 +47,11 @@ class SelfAssertion implements Assertion
 
         $person = null;
         try {
-            $person = ReferencedAccessor::accessModel($model, ModelPerson::class);
+            $person = ReferencedAccessor::accessModel($model, PersonModel::class);
         } catch (CannotAccessModelException $exception) {
         }
 
-        if (!$person instanceof ModelPerson) {
+        if (!$person instanceof PersonModel) {
             return false;
         }
         return ($identity->getId() === $person->getLogin()->login_id);

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -23,12 +24,12 @@ use Nette\Security\Resource;
  * @property-read string phone
  * @property-read bool force_a
  * @property-read string password
- * @property-read ActiveRow event
+ * @property-read EventModel event
  * @property-read string game_lang
  * @property-read int rank_category
  * @property-read int rank_total
  * @property-read int teacher_id
- * @property-read ActiveRow person
+ * @property-read ActiveRow|null person TODO!!!
  * @deprecated
  */
 class TeamModel extends Model implements Resource
@@ -40,9 +41,11 @@ class TeamModel extends Model implements Resource
         return $this->name;
     }
 
-    public function getTeacher(): ?ModelPerson
+    public function getTeacher(): ?PersonModel
     {
-        return isset($this->teacher_id) ? ModelPerson::createFromActiveRow($this->ref('person', 'teacher_id')) : null;
+        return isset($this->teacher_id) ? PersonModel::createFromActiveRow(
+            $this->ref('person', 'teacher_id')
+        ) : null;
     }
 
     public function getFyziklaniParticipants(): GroupedSelection
@@ -51,13 +54,13 @@ class TeamModel extends Model implements Resource
     }
 
     /**
-     * @return ModelPerson[]
+     * @return PersonModel[]
      */
     public function getPersons(): array
     {
         $persons = [];
         foreach ($this->getFyziklaniParticipants() as $pRow) {
-            $persons[] = ParticipantModel::createFromActiveRow($pRow)->getEventParticipant()->getPerson();
+            $persons[] = ParticipantModel::createFromActiveRow($pRow)->event_participant->person;
         }
         $teacher = $this->getTeacher();
         if ($teacher) {

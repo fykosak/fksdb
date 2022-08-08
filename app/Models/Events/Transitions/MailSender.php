@@ -11,15 +11,16 @@ use FKSDB\Models\Events\Machine\Transition;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageState;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\Mail\MailTemplateFactory;
-use FKSDB\Models\ORM\Models\ModelAuthToken;
-use FKSDB\Models\ORM\Models\ModelEmailMessage;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Services\ServiceAuthToken;
-use FKSDB\Models\ORM\Services\ServiceEmailMessage;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\AuthTokenModel;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Services\AuthTokenService;
+use FKSDB\Models\ORM\Services\EmailMessageService;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
@@ -49,9 +50,9 @@ class MailSender
     private $addressees;
     private MailTemplateFactory $mailTemplateFactory;
     private AccountManager $accountManager;
-    private ServiceAuthToken $serviceAuthToken;
-    private ServicePerson $servicePerson;
-    private ServiceEmailMessage $serviceEmailMessage;
+    private AuthTokenService $authTokenService;
+    private PersonService $personService;
+    private EmailMessageService $emailMessageService;
 
     /**
      * MailSender constructor.
@@ -62,17 +63,17 @@ class MailSender
         $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
-        ServiceAuthToken $serviceAuthToken,
-        ServicePerson $servicePerson,
-        ServiceEmailMessage $serviceEmailMessage
+        AuthTokenService $authTokenService,
+        PersonService $personService,
+        EmailMessageService $emailMessageService
     ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
-        $this->serviceAuthToken = $serviceAuthToken;
-        $this->servicePerson = $servicePerson;
-        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->authTokenService = $authTokenService;
+        $this->personService = $personService;
+        $this->emailMessageService = $emailMessageService;
     }
 
     /**
@@ -89,7 +90,7 @@ class MailSender
     private function send(Transition $transition, Holder $holder): void
     {
         $personIds = $this->resolveAdressees($transition, $holder);
-        $persons = $this->servicePerson->getTable()
+        $persons = $this->personService->getTable()
             ->where('person.person_id', $personIds)
             ->where(':person_info.email IS NOT NULL')
             ->fetchPairs('person_id');
@@ -117,14 +118,14 @@ class MailSender
      * @throws ModelException
      */
     private function createMessage(
-        ModelLogin $login,
+        LoginModel $login,
         BaseMachine $baseMachine,
         BaseHolder $baseHolder
-    ): ModelEmailMessage {
+    ): EmailMessageModel {
         $machine = $baseMachine->getMachine();
 
         $holder = $baseHolder->holder;
-        $person = $login->getPerson();
+        $person = $login->person;
         $event = $baseHolder->event;
         $email = $person->getInfo()->email;
         $application = $holder->primaryHolder->getModel2();
@@ -146,7 +147,7 @@ class MailSender
                 '//:Public:Application:',
                 [
                     'eventId' => $event->event_id,
-                    'contestId' => $event->getEventType()->contest_id,
+                    'contestId' => $event->event_type->contest_id,
                     'at' => $token->token,
                 ],
             ],
@@ -162,18 +163,18 @@ class MailSender
             $data['blind_carbon_copy'] = $holder->getParameter(self::BCC_PARAM);
         }
         $data['recipient'] = $email;
-        $data['state'] = ModelEmailMessage::STATE_WAITING;
-        return $this->serviceEmailMessage->createNewModel($data);
+        $data['state'] = EmailMessageState::WAITING;
+        return $this->emailMessageService->createNewModel($data);
     }
 
-    private function createToken(ModelLogin $login, ModelEvent $event, ActiveRow $application): ModelAuthToken
+    private function createToken(LoginModel $login, EventModel $event, ActiveRow $application): AuthTokenModel
     {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
-        return $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_EVENT_NOTIFY, $until, $data, true);
+        return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    private function getSubject(ModelEvent $event, ActiveRow $application, Holder $holder, Machine $machine): string
+    private function getSubject(EventModel $event, ActiveRow $application, Holder $holder, Machine $machine): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
@@ -184,7 +185,7 @@ class MailSender
         // mb_strtolower($machine->getPrimaryMachine()->getStateName($holder->getPrimaryHolder()->getModelState()))
     }
 
-    private function getUntil(ModelEvent $event): \DateTimeInterface
+    private function getUntil(EventModel $event): \DateTimeInterface
     {
         return $event->registration_end ?? $event->end;
     }

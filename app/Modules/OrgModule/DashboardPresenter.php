@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class DashboardPresenter extends BasePresenter
@@ -12,9 +12,9 @@ class DashboardPresenter extends BasePresenter
 
     public function authorizedDefault(): void
     {
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $access = $login && count($login->getPerson()->getActiveOrgs());
+        $access = $login && count($login->person->getActiveOrgs());
         $this->setAuthorized($access);
     }
 

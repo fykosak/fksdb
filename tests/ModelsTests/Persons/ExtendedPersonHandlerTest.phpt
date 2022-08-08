@@ -9,10 +9,11 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceContestant;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\ContestantService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -24,7 +25,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
 {
     private ExtendedPersonHandler $fixture;
     private ReferencedPersonFactory $referencedPersonFactory;
-    private ModelContestYear $contestYear;
+    private ContestYearModel $contestYear;
 
     public function __construct(Container $container)
     {
@@ -38,9 +39,9 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $this->mockApplication();
         $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
 
-        $service = $this->getContainer()->getByType(ServiceContestant::class);
-        $this->contestYear = $this->getContainer()->getByType(ServiceContest::class)
-            ->findByPrimary(ModelContest::ID_FYKOS)
+        $service = $this->getContainer()->getByType(ContestantService::class);
+        $this->contestYear = $this->getContainer()->getByType(ContestService::class)
+            ->findByPrimary(ContestModel::ID_FYKOS)
             ->getContestYear(1);
         $this->fixture = $handlerFactory->create($service, $this->contestYear, 'cs');
     }
@@ -133,13 +134,13 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase
         $person = $this->fixture->getPerson();
         Assert::same('Jana', $person->other_name);
         Assert::same('Triková', $person->family_name);
-        $contestants = $person->getContestants($this->contestYear->getContest());
+        $contestants = $person->getContestants($this->contestYear->contest);
         Assert::same(1, count($contestants));
 
         $info = $person->getInfo();
         Assert::same('jana@sfsd.com', $info->email);
 
-        $address = $person->getPermanentAddress();
+        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::PERMANENT));
         Assert::same('Krtkova 12', $address->target);
         Assert::same('43243', $address->postal_code);
         Assert::notEqual(null, $address->region_id);

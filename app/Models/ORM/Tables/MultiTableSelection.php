@@ -10,6 +10,9 @@ use Nette\Database\Conventions;
 use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
+/**
+ * @deprecated
+ */
 class MultiTableSelection extends Selection
 {
 

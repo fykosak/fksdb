@@ -6,8 +6,8 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
-use FKSDB\Models\ORM\Services\ServiceAddress;
-use FKSDB\Models\ORM\Services\ServiceRegion;
+use FKSDB\Models\ORM\Services\AddressService;
+use FKSDB\Models\ORM\Services\RegionService;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -16,14 +16,14 @@ use Nette\Forms\Control;
 
 class AddressFactory
 {
-    private ServiceAddress $serviceAddress;
-    private ServiceRegion $serviceRegion;
+    private AddressService $addressService;
+    private RegionService $regionService;
     private Container $container;
 
-    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion)
+    public function __construct(Container $container, AddressService $addressService, RegionService $regionService)
     {
-        $this->serviceAddress = $serviceAddress;
-        $this->serviceRegion = $serviceRegion;
+        $this->addressService = $addressService;
+        $this->regionService = $regionService;
         $this->container = $container;
     }
 
@@ -94,7 +94,7 @@ class AddressFactory
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
 
         $country = $container->addSelect('country_iso', _('Country'));
-        $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
+        $country->setItems($this->regionService->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
         $country->setPrompt(_('Detect country from postal code (CR, SK only)'));
 
         // check valid address structure
@@ -112,7 +112,7 @@ class AddressFactory
         );
 
         /* Country + postal code validation */
-        $validPostalCode = fn(BaseControl $control): bool => $this->serviceAddress->tryInferRegion(
+        $validPostalCode = fn(BaseControl $control): bool => $this->addressService->tryInferRegion(
             $control->getValue()
         );
 
@@ -131,15 +131,15 @@ class AddressFactory
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
             $conditioned->addConditionOn(
                 $postalCode,
-                fn(BaseControl $control): bool => !$this->serviceAddress->tryInferRegion($control->getValue())
+                fn(BaseControl $control): bool => !$this->addressService->tryInferRegion($control->getValue())
             )
                 ->addRule(Form::FILLED, _('Country is required.'));
         }
         $country->addCondition(Form::FILLED)
             ->addConditionOn($postalCode, $validPostalCode)->addRule(
                 function (BaseControl $control) use ($postalCode): bool {
-                    $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
-                    $region = $this->serviceRegion->findByPrimary($regionId);
+                    $regionId = $this->addressService->inferRegion($postalCode->getValue());
+                    $region = $this->regionService->findByPrimary($regionId);
                     return $region->country_iso == $control->getValue();
                 },
                 _('Chosen country does not match provided postal code.')

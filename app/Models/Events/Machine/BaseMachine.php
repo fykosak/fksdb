@@ -104,17 +104,17 @@ class BaseMachine extends AbstractMachine
         );
     }
 
-    public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition
+    public function getTransitionByTarget(string $sourceState, string $target): ?Transition
     {
         $candidates = array_filter(
             $this->getMatchingTransitions($sourceState),
-            fn(Transition $transition): bool => $transition->targetState == $targetState
+            fn(Transition $transition): bool => $transition->target == $target
         );
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {
             throw new InvalidArgumentException(
-                sprintf('Target state %s is from state %s reachable via multiple edges.', $targetState, $sourceState)
+                sprintf('Target state %s is from state %s reachable via multiple edges.', $target, $sourceState)
             );
         } else {
             return reset($candidates);

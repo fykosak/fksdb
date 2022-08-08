@@ -4,30 +4,31 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\PostContactType;
+use FKSDB\Models\ORM\Services\PersonService;
 use Fykosak\NetteORM\TypedSelection;
 
 class PersonProvider implements FilteredDataProvider
 {
 
     private const PLACE = 'place';
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private TypedSelection $searchTable;
 
-    public function __construct(ServicePerson $servicePerson)
+    public function __construct(PersonService $personService)
     {
-        $this->servicePerson = $servicePerson;
-        $this->searchTable = $this->servicePerson->getTable();
+        $this->personService = $personService;
+        $this->searchTable = $this->personService->getTable();
     }
 
     /**
      * Syntactic sugar, should be solved more generally.
      */
-    public function filterOrgs(ModelContest $contest): void
+    public function filterOrgs(ContestModel $contest): void
     {
-        $this->searchTable = $this->servicePerson->getTable()
+        $this->searchTable = $this->personService->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
                 ':org.since <= ?' => $contest->getCurrentContestYear()->year,
@@ -55,7 +56,7 @@ class PersonProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        $person = $this->servicePerson->findByPrimary($id);
+        $person = $this->personService->findByPrimary($id);
         return $person->getFullName();
     }
 
@@ -65,17 +66,17 @@ class PersonProvider implements FilteredDataProvider
             ->order('family_name, other_name');
 
         $result = [];
-        /** @var ModelPerson $person */
+        /** @var PersonModel $person */
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
         return $result;
     }
 
-    private function getItem(ModelPerson $person): array
+    private function getItem(PersonModel $person): array
     {
         $place = null;
-        $address = $person->getDeliveryAddress();
+        $address = $person->getAddress(PostContactType::tryFrom(PostContactType::DELIVERY));
         if ($address) {
             $place = $address->city;
         }

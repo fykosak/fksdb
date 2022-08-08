@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
 
@@ -18,16 +18,16 @@ class EvaluationFykos2011 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_HS_1),
-            new ModelCategory(ModelCategory::CAT_HS_2),
-            new ModelCategory(ModelCategory::CAT_HS_3),
-            new ModelCategory(ModelCategory::CAT_HS_4),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_1),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_2),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_3),
+            ModelCategory::tryFrom(ModelCategory::CAT_HS_4),
         ];
     }
 
     public function categoryToStudyYears(ModelCategory $category): array
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_HS_1:
                 return [6, 7, 8, 9, 1];
             case ModelCategory::CAT_HS_2:
@@ -37,11 +37,11 @@ class EvaluationFykos2011 implements EvaluationStrategy
             case ModelCategory::CAT_HS_4:
                 return [null, 4];
             default:
-                throw new InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         if ($task->label == '1' || $task->label == '2') {
             return 'IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)';
@@ -60,9 +60,9 @@ class EvaluationFykos2011 implements EvaluationStrategy
     /**
      * @return float|int
      */
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
             case ModelCategory::CAT_ES_8:
@@ -81,7 +81,7 @@ class EvaluationFykos2011 implements EvaluationStrategy
 
     public function getTaskPointsColumn(ModelCategory $category): string
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
             case ModelCategory::CAT_ES_8:

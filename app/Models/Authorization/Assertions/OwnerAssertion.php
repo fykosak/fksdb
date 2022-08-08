@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\Authorization\Assertions;
 
 use FKSDB\Models\Authorization\Grant;
-use FKSDB\Models\ORM\Models\ModelContestant;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSubmit;
+use FKSDB\Models\ORM\Models\ContestantModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
 use Nette\InvalidStateException;
 use Nette\Security\Resource;
 use Nette\Security\Permission;
@@ -29,13 +29,13 @@ class OwnerAssertion
         if (!$login) {
             throw new InvalidStateException('Expecting logged user.');
         }
-        /** @var ModelSubmit $submit */
+        /** @var SubmitModel $submit */
         $submit = $acl->getQueriedResource();
 
         if (!$submit instanceof Resource) {
             return false;
         }
-        return $submit->getContestant()->getPerson()->getLogin()->login_id === $login->getId();
+        return $submit->getContestant()->person->getLogin()->login_id === $login->getId();
     }
 
     /**
@@ -47,7 +47,7 @@ class OwnerAssertion
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
-        /** @var ModelContestant $contestant */
+        /** @var ContestantModel $contestant */
         $contestant = $acl->getQueriedResource();
         /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
@@ -64,7 +64,7 @@ class OwnerAssertion
         if (!$state) {
             throw new InvalidStateException('Expecting logged user.');
         }
-        /** @var ModelPerson $person */
+        /** @var PersonModel $person */
         $person = $acl->getQueriedResource();
         /** @var Grant $grant */
         $grant = $acl->getQueriedRole();

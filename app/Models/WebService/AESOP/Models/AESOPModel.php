@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelSchool;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\DI\Container;
@@ -23,11 +23,11 @@ abstract class AESOPModel
     protected const RANK = 'rank';
     protected const POINTS = 'points';
 
-    protected ModelContestYear $contestYear;
+    protected ContestYearModel $contestYear;
 
     protected Explorer $explorer;
 
-    public function __construct(Container $container, ModelContestYear $contestYear)
+    public function __construct(Container $container, ContestYearModel $contestYear)
     {
         $this->contestYear = $contestYear;
         $container->callInjects($this);
@@ -50,12 +50,12 @@ abstract class AESOPModel
         ];
     }
 
-    private function formatSchool(?ModelSchool $school): ?string
+    private function formatSchool(?SchoolModel $school): ?string
     {
         if (!$school) {
             return null;
         }
-        $countryISO = $school->getAddress()->getRegion()->country_iso;
+        $countryISO = $school->address->region->country_iso;
         if ($countryISO === 'cz') {
             return 'red-izo:' . $school->izo;
         }
@@ -83,22 +83,22 @@ abstract class AESOPModel
         return $response;
     }
 
-    protected function getAESOPContestant(ModelPerson $person): array
+    protected function getAESOPContestant(PersonModel $person): array
     {
-        $postContact = $person->getPermanentPostContact(false);
+        $postContact = $person->getPermanentPostContact(true);
         $history = $person->getHistoryByContestYear($this->contestYear);
-        $school = $history->getSchool();
-        $spamFlag = $person->getPersonHasFlag('spam_mff');
+        $school = $history->school;
+        $spamFlag = $person->hasPersonFlag('spam_mff');
         return [
             'name' => $person->other_name,
             'surname' => $person->family_name,
             'id' => $person->person_id,
-            'street' => $postContact->getAddress()->target,
-            'town' => $postContact->getAddress()->city,
-            'postcode' => $postContact->getAddress()->postal_code,
-            'country' => $postContact->getAddress()->getRegion()->country_iso,
+            'street' => $postContact->address->target,
+            'town' => $postContact->address->city,
+            'postcode' => $postContact->address->postal_code,
+            'country' => $postContact->address->region->country_iso,
             'fullname' => $person->display_name,
-            'gender' => $person->gender,
+            'gender' => $person->gender->value,
             'school' => $this->formatSchool($school),
             'school-name' => $school->name_abbrev,
             'end-year' => ($history->study_year < 5 && $history->study_year > 0)

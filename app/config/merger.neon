@@ -6,13 +6,13 @@ parameters:
         # Merged children must be unique with respect to the secondary key
         # (FK of the merged parent is ignored).
         secondaryKeys:
-            contestant_base: [person_id, contest_id, year]
+            contestant: [person_id, contest_id, year]
             login: [person_id]
             person_info: [person_id]
             person_history: [person_id, ac_year]
             person_has_flag: [person_id, flag_id]
             person_schedule: [person_id, schedule_item_id]
-            submit: [ct_id, task_id]
+            submit: [contestant_id, task_id]
             org: [person_id, contest_id]
             post_contact: [person_id, type]
             event_participant: [person_id, event_id]
@@ -39,7 +39,7 @@ parameters:
                 created: @merge.less
                 last_login: @merge.greater
 
-            contestant_base:
+            contestant:
                 created: @merge.less
 
             submit:

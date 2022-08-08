@@ -6,14 +6,14 @@ namespace FKSDB\Models\ORM\Columns\Tables\Payment;
 
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelPayment;
+use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Utils\Html;
 
 class UIdColumnFactory extends ColumnFactory
 {
 
     /**
-     * @param ModelPayment $model
+     * @param PaymentModel $model
      */
     protected function createHtmlValue(Model $model): Html
     {

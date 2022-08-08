@@ -1,12 +1,11 @@
-{varType FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery $model}
+{varType FKSDB\Models\ORM\Models\StoredQuery\QueryModel $model}
 {varType FKSDB\Modules\Core\BasePresenter $presenter}
 {block content}
     <hr/>
     {control valuePrinter:row 'stored_query.description', $model,1024}
     {control valuePrinter:row 'stored_query.tags', $model,1024}
-    {control valuePrinter:row 'stored_query.php_post_proc', $model,1024}
     <hr/>
-    {if count($model->getParameters())}
+    {if count($model->getQueryParameters())}
         <h3>{_'Parameters'}</h3>
         <table class="table table-hover table-striped">
             <tr>
@@ -15,11 +14,11 @@
                 <th>{_'Default value'}</th>
                 <th>{_'Type'}</th>
             </tr>
-            {foreach $model->getParameters() as $param}
+            {foreach $model->getQueryParameters() as $param}
                 <tr>
                     <td>{$param->name}</td>
                     <td>{$param->description}</td>
-                    <td>{$param->getDefaultValue()}</td>
+                    <td>{$param->defaultValue}</td>
                     <td>{$param->type}</td>
                 </tr>
             {/foreach}

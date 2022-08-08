@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelOrg;
-use FKSDB\Models\ORM\Services\ServiceContest;
-use FKSDB\Models\ORM\Services\ServiceOrg;
+use FKSDB\Models\ORM\Models\OrgModel;
+use FKSDB\Models\ORM\Services\ContestService;
+use FKSDB\Models\ORM\Services\OrgService;
 use FKSDB\Models\WebService\XMLHelper;
 use Nette\Schema\Elements\Structure;
 use Nette\Schema\Expect;
@@ -15,13 +15,13 @@ use Nette\Schema\Expect;
 class OrganizersWebModel extends WebModel
 {
 
-    private ServiceOrg $serviceOrg;
-    private ServiceContest $serviceContest;
+    private OrgService $orgService;
+    private ContestService $contestService;
 
-    public function inject(ServiceOrg $serviceOrg, ServiceContest $serviceContest): void
+    public function inject(OrgService $orgService, ContestService $contestService): void
     {
-        $this->serviceOrg = $serviceOrg;
-        $this->serviceContest = $serviceContest;
+        $this->orgService = $orgService;
+        $this->contestService = $contestService;
     }
 
     /**
@@ -32,7 +32,7 @@ class OrganizersWebModel extends WebModel
         if (!isset($args->contestId)) {
             throw new \SoapFault('Sender', 'Unknown contest.');
         }
-        $organisers = $this->serviceOrg->getTable()->where('contest_id', $args->contestId);
+        $organisers = $this->orgService->getTable()->where('contest_id', $args->contestId);
         if (isset($args->year)) {
             $organisers->where('since<=?', $args->year)->where('until IS NULL OR until >=?', $args->year);
         }
@@ -40,15 +40,15 @@ class OrganizersWebModel extends WebModel
         $doc = new \DOMDocument();
         $rootNode = $doc->createElement('organizers');
         $doc->appendChild($rootNode);
-        /** @var ModelOrg $org */
+        /** @var OrgModel $org */
         foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
-                'career' => $org->getPerson()->getInfo()->career,
+                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
+                'career' => $org->person->getInfo()->career,
                 'contribution' => $org->contribution,
                 'order' => $org->order,
                 'role' => $org->role,
@@ -66,7 +66,7 @@ class OrganizersWebModel extends WebModel
 
     public function getJsonResponse(array $params): array
     {
-        $contest = $this->serviceContest->findByPrimary($params['contestId']);
+        $contest = $this->contestService->findByPrimary($params['contestId']);
         $organisers = $contest->related(DbNames::TAB_ORG);
         if (isset($params['year'])) {
             $organisers->where('since<=?', $params['year'])
@@ -74,13 +74,13 @@ class OrganizersWebModel extends WebModel
         }
         $items = [];
         foreach ($organisers as $row) {
-            $org = ModelOrg::createFromActiveRow($row);
+            $org = OrgModel::createFromActiveRow($row);
             $items[] = [
-                'name' => $org->getPerson()->getFullName(),
+                'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,
-                'academicDegreePrefix' => $org->getPerson()->getInfo()->academic_degree_prefix,
-                'academicDegreeSuffix' => $org->getPerson()->getInfo()->academic_degree_suffix,
-                'career' => $org->getPerson()->getInfo()->career,
+                'academicDegreePrefix' => $org->person->getInfo()->academic_degree_prefix,
+                'academicDegreeSuffix' => $org->person->getInfo()->academic_degree_suffix,
+                'career' => $org->person->getInfo()->career,
                 'contribution' => $org->contribution,
                 'order' => $org->order,
                 'role' => $org->role,

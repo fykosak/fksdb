@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefGroup;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
@@ -15,10 +15,10 @@ abstract class DsefTestCase extends EventTestCase
 {
 
     protected ApplicationPresenter $fixture;
-    protected ModelPerson $person;
-    protected ModelEvent $event;
+    protected PersonModel $person;
+    protected EventModel $event;
 
-    protected function getEvent(): ModelEvent
+    protected function getEvent(): EventModel
     {
         return $this->event;
     }

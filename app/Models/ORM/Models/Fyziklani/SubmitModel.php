@@ -7,8 +7,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use Nette\Database\Table\ActiveRow;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\Resource;
 
 /**
@@ -19,8 +18,8 @@ use Nette\Security\Resource;
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id
- * @property-read ActiveRow fyziklani_team
- * @property-read ActiveRow fyziklani_task
+ * @property-read TeamModel2 fyziklani_team
+ * @property-read TaskModel fyziklani_task
  * @property-read \DateTimeInterface modified
  */
 class SubmitModel extends Model implements Resource
@@ -31,19 +30,9 @@ class SubmitModel extends Model implements Resource
 
     public const RESOURCE_ID = 'fyziklani.submit';
 
-    public function getFyziklaniTask(): TaskModel
+    public function getEvent(): EventModel
     {
-        return TaskModel::createFromActiveRow($this->fyziklani_task);
-    }
-
-    public function getEvent(): ModelEvent
-    {
-        return $this->getFyziklaniTeam()->getEvent();
-    }
-
-    public function getFyziklaniTeam(): TeamModel2
-    {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team);
+        return $this->fyziklani_team->event;
     }
 
     public function isChecked(): bool
@@ -72,9 +61,9 @@ class SubmitModel extends Model implements Resource
                 throw new AlreadyRevokedSubmitException();
             }
             return false;
-        } elseif (!$this->getFyziklaniTeam()->hasOpenSubmitting()) {
+        } elseif (!$this->fyziklani_team->hasOpenSubmitting()) {
             if ($throws) {
-                throw new ClosedSubmittingException($this->getFyziklaniTeam());
+                throw new ClosedSubmittingException($this->fyziklani_team);
             }
             return false;
         }

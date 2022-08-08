@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 
 $container = require '../../Bootstrap.php';
 
@@ -15,13 +15,13 @@ class OrgModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel([
+        $this->getContainer()->getByType(OrgService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'contest_id' => 1,
             'since' => 1,
             'order' => 1,
         ]);
-        $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel(
+        $this->getContainer()->getByType(PersonInfoService::class)->createNewModel(
             ['person_id' => $this->person->person_id]
         );
     }

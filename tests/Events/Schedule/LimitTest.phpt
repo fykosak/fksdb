@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
@@ -18,7 +18,7 @@ class LimitTest extends ScheduleTestCase
 
         Assert::equal(
             2,
-            $this->getContainer()->getByType(ServicePersonSchedule::class)->getTable()->where(
+            $this->getContainer()->getByType(PersonScheduleService::class)->getTable()->where(
                 ['schedule_item_id' => $this->item->schedule_item_id]
             )->count('*')
         );
@@ -28,7 +28,7 @@ class LimitTest extends ScheduleTestCase
         Assert::type(TextResponse::class, $response);
         Assert::equal(
             2,
-            $this->getContainer()->getByType(ServicePersonSchedule::class)->getTable()->where(
+            $this->getContainer()->getByType(PersonScheduleService::class)->getTable()->where(
                 ['schedule_item_id' => $this->item->schedule_item_id]
             )->count('*')
         );

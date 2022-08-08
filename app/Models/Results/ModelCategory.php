@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results;
 
+use FKSDB\Models\Utils\FakeStringEnum;
+
 /**
+ * TODO to enum
  * POD, not represented in database
  */
-class ModelCategory
+class ModelCategory extends FakeStringEnum
 {
 
     public const CAT_HS_4 = '4';
@@ -21,10 +24,19 @@ class ModelCategory
     public const CAT_UNK = 'UNK';
     public const CAT_ALL = 'ALL';
 
-    public string $id;
-
-    public function __construct(string $id)
+    public static function cases(): array
     {
-        $this->id = $id;
+        return [
+            new self(self::CAT_HS_4),
+            new self(self::CAT_HS_3),
+            new self(self::CAT_HS_2),
+            new self(self::CAT_HS_1),
+            new self(self:: CAT_ES_9),
+            new self(self::CAT_ES_8),
+            new self(self:: CAT_ES_7),
+            new self(self::CAT_ES_6),
+            new self(self:: CAT_UNK),
+            new self(self::CAT_ALL),
+        ];
     }
 }

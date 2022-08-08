@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use Nette\InvalidArgumentException;
 
@@ -17,17 +17,17 @@ class EvaluationVyfuk2012 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            new ModelCategory(ModelCategory::CAT_ES_6),
-            new ModelCategory(ModelCategory::CAT_ES_7),
-            new ModelCategory(ModelCategory::CAT_ES_8),
-            new ModelCategory(ModelCategory::CAT_ES_9),
-            new ModelCategory(ModelCategory::CAT_UNK),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_6),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_7),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_8),
+            ModelCategory::tryFrom(ModelCategory::CAT_ES_9),
+            ModelCategory::tryFrom(ModelCategory::CAT_UNK),
         ];
     }
 
     public function categoryToStudyYears(ModelCategory $category): array
     {
-        switch ($category->id) {
+        switch ($category->value) {
             case ModelCategory::CAT_ES_6:
                 return [6];
             case ModelCategory::CAT_ES_7:
@@ -39,11 +39,11 @@ class EvaluationVyfuk2012 implements EvaluationStrategy
             case ModelCategory::CAT_UNK:
                 return [null];
             default:
-                throw new InvalidArgumentException('Invalid category ' . $category->id);
+                throw new InvalidArgumentException('Invalid category ' . $category->value);
         }
     }
 
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         return 's.raw_points';
     }
@@ -53,7 +53,7 @@ class EvaluationVyfuk2012 implements EvaluationStrategy
         return 's.raw_points';
     }
 
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): int
     {
         return $task->points;
     }

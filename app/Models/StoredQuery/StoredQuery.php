@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\StoredQuery;
 
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Models\StoredQuery\ParameterModel;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 use Nette\Security\Resource;
@@ -18,7 +18,7 @@ class StoredQuery implements IDataSource, Resource
 {
 
     private const INNER_QUERY = 'sub';
-    private ?ModelStoredQuery $queryPattern = null;
+    private ?QueryModel $queryPattern = null;
     private ?string $qid = null;
     private string $sql;
     private ?string $name = null;
@@ -42,18 +42,21 @@ class StoredQuery implements IDataSource, Resource
         $this->connection = $connection;
     }
 
-    public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self
+    public static function createFromQueryPattern(Connection $connection, QueryModel $queryPattern): self
     {
         $storedQuery = static::createWithoutQueryPattern(
             $connection,
             $queryPattern->sql,
-            $queryPattern->getParameters()
+            $queryPattern->getQueryParameters()
         );
         $storedQuery->queryPattern = $queryPattern;
         $storedQuery->name = $queryPattern->name;
         return $storedQuery;
     }
 
+    /**
+     * @param StoredQueryParameter[] $parameters
+     */
     public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters): self
     {
         $storedQuery = new StoredQuery($connection);
@@ -62,7 +65,7 @@ class StoredQuery implements IDataSource, Resource
         return $storedQuery;
     }
 
-    public function getQueryPattern(): ?ModelStoredQuery
+    public function getQueryPattern(): ?QueryModel
     {
         return $this->queryPattern;
     }
@@ -150,15 +153,11 @@ class StoredQuery implements IDataSource, Resource
         $this->parameterDefaultValues = [];
 
         foreach ($queryParameters as $parameter) {
-            if ($parameter instanceof ModelStoredQueryParameter) {
+            if ($parameter instanceof ParameterModel) {
                 $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
-                $this->queryParameters[] = new StoredQueryParameter(
-                    $parameter->name,
-                    $parameter->getDefaultValue(),
-                    $parameter->getPDOType()
-                );
+                $this->queryParameters[] = StoredQueryParameter::fromModel($parameter);
             } elseif ($parameter instanceof StoredQueryParameter) {
-                $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
+                $this->parameterDefaultValues[$parameter->name] = $parameter->defaultValue;
                 $this->queryParameters[] = $parameter;
             }
         }
@@ -210,8 +209,8 @@ class StoredQuery implements IDataSource, Resource
 
         // bind explicit parameters
         foreach ($this->getQueryParameters() as $parameter) {
-            $key = $parameter->getName();
-            $value = $this->parameterValues[$key] ?? $parameter->getDefaultValue();
+            $key = $parameter->name;
+            $value = $this->parameterValues[$key] ?? $parameter->defaultValue;
             $type = $parameter->getPDOType();
 
             $statement->bindValue($key, $value, $type);
