@@ -13,7 +13,7 @@ use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\Utils\Logging\Logger;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -104,7 +104,7 @@ class Holder
      * @return static
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event): self
+    public function inferEvent(EventModel $event): self
     {
         foreach ($this->getBaseHolders() as $baseHolder) {
             $baseHolder->inferEvent($event);
@@ -178,7 +178,7 @@ class Holder
     ): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->targetState;
+            $newStates[$name] = $transition->target;
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);

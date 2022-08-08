@@ -10,7 +10,7 @@ use FKSDB\Models\DataTesting\TestLog;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
@@ -20,19 +20,19 @@ use NiftyGrid\DuplicateColumnException;
 class PersonsGrid extends BaseGrid
 {
 
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
 
     private DataTestingFactory $dataTestingFactory;
 
-    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void
+    final public function injectPrimary(PersonService $personService, DataTestingFactory $dataTestingFactory): void
     {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
     protected function getData(): IDataSource
     {
-        $persons = $this->servicePerson->getTable();
+        $persons = $this->personService->getTable();
         return new NDataSource($persons);
     }
 

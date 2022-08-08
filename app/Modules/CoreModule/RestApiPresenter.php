@@ -54,7 +54,7 @@ class RestApiPresenter extends AuthenticatedPresenter
             self::AUTH_GITHUB => false,
             self::AUTH_HTTP => true,
             self::AUTH_LOGIN => true,
-            self::AUTH_TOKEN => true,
+            self::AUTH_TOKEN => false,
         ];
     }
 

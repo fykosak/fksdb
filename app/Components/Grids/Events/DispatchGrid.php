@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\ORM\Services\EventService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -19,7 +19,7 @@ class DispatchGrid extends EntityGrid
     {
         parent::__construct(
             $container,
-            ServiceEvent::class,
+            EventService::class,
             [
                 'event.event_id',
                 'event.name',

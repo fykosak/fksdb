@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Authorization\ContestAuthorizator;
-use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\ORM\Services\ContestService;
 use FKSDB\Models\StoredQuery\StoredQuery;
 use FKSDB\Models\StoredQuery\StoredQueryFactory;
 use FKSDB\Models\WebService\XMLNodeSerializer;
@@ -15,16 +15,16 @@ class ExportWebModel extends WebModel
 {
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
-    private ServiceContest $serviceContest;
+    private ContestService $contestService;
 
     public function inject(
         StoredQueryFactory $storedQueryFactory,
         ContestAuthorizator $contestAuthorizator,
-        ServiceContest $serviceContest
+        ContestService $contestService
     ): void {
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->serviceContest = $serviceContest;
+        $this->contestService = $contestService;
     }
 
     /**
@@ -94,7 +94,7 @@ class ExportWebModel extends WebModel
             $this->authenticatedLogin,
             $query,
             'execute',
-            $this->serviceContest->findByPrimary($implicitParameters[StoredQueryFactory::PARAM_CONTEST])
+            $this->contestService->findByPrimary($implicitParameters[StoredQueryFactory::PARAM_CONTEST])
         );
     }
 }

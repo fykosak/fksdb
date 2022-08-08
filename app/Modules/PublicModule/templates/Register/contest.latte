@@ -1,5 +1,5 @@
 {layout '../../../CoreModule/templates/@layout.latte'}
-{varType FKSDB\Models\ORM\Models\ModelContest[] $contests}
+{varType FKSDB\Models\ORM\Models\ContestModel[] $contests}
 {block content}
     {foreach $contests as $contest}
         <a href="{plink 'year' ,'contestId'=>$contest->contest_id}"

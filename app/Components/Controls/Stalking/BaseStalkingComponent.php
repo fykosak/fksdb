@@ -11,7 +11,7 @@ use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
 use FKSDB\Models\ORM\ORMFactory;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 
 abstract class BaseStalkingComponent extends BaseComponent
 {
@@ -23,7 +23,7 @@ abstract class BaseStalkingComponent extends BaseComponent
     }
 
     public function beforeRender(
-        ModelPerson $person,
+        PersonModel $person,
         string $headline,
         int $userPermissions,
         int $minimalPermissions

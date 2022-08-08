@@ -6,28 +6,17 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 
 // TODO to enum
 use FKSDB\Models\ORM\Columns\Types\EnumColumn;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\Utils\FakeStringEnum;
 use Nette\Utils\Html;
 
-class TeamCategory implements EnumColumn
+class TeamCategory extends FakeStringEnum implements EnumColumn
 {
     public const A = 'A';
     public const B = 'B';
     public const C = 'C';
     public const O = 'O';
     public const F = 'F';
-
-    public string $value;
-
-    public function __construct(string $category)
-    {
-        $this->value = $category;
-    }
-
-    public static function tryFrom(?string $category): ?self
-    {
-        return $category ? new self($category) : null;
-    }
 
     /**
      * @return self[]
@@ -64,7 +53,7 @@ class TeamCategory implements EnumColumn
     /**
      * @return self[]
      */
-    public static function casesForEvent(ModelEvent $event): array
+    public static function casesForEvent(EventModel $event): array
     {
         switch ($event->event_type_id) {
             case 1:

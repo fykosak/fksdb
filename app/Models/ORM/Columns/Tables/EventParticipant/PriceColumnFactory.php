@@ -8,13 +8,13 @@ use FKSDB\Components\Badges\NotSetBadge;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\PricePrinter;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use Nette\Utils\Html;
 
 class PriceColumnFactory extends ColumnFactory
 {
     /**
-     * @param ModelEventParticipant $model
+     * @param EventParticipantModel $model
      * @throws \Exception
      */
     protected function createHtmlValue(Model $model): Html

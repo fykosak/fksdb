@@ -11,7 +11,7 @@ class DbNames
     public const TAB_AUTH_TOKEN = 'auth_token';
     public const TAB_CONTEST = 'contest';
     public const TAB_CONTEST_YEAR = 'contest_year';
-    public const TAB_CONTESTANT_BASE = 'contestant_base';
+    public const TAB_CONTESTANT = 'contestant';
     public const TAB_EVENT = 'event';
     public const TAB_EVENT_ORG = 'event_org';
     public const TAB_EVENT_PARTICIPANT = 'event_participant';

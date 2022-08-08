@@ -163,9 +163,8 @@ class TasksPresenter extends BasePresenter
             } else {
                 $data = new SeriesData($this->getSelectedContestYear(), $series, $xml);
                 $pipeline = $this->pipelineFactory->create();
-                $pipeline->setInput($data);
-                $pipeline->run();
-                FlashMessageDump::dump($pipeline->getLogger(), $this);
+                $pipeline($data);
+                FlashMessageDump::dump($pipeline->logger, $this);
                 $this->flashMessage(_('Tasks successfully imported.'), Message::LVL_SUCCESS);
             }
         } catch (PipelineException $exception) {

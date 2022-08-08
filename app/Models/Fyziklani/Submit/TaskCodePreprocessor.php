@@ -6,7 +6,7 @@ namespace FKSDB\Models\Fyziklani\Submit;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TaskService;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 
@@ -15,10 +15,10 @@ final class TaskCodePreprocessor
 
     private TaskService $taskService;
     private TeamService2 $teamService;
-    private ModelEvent $event;
+    private EventModel $event;
 
     public function __construct(
-        ModelEvent $event,
+        EventModel $event,
         TeamService2 $teamService,
         TaskService $taskService
     ) {

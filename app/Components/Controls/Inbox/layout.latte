@@ -16,13 +16,13 @@
         <tbody>
         {var $counter = 0}
         {foreach $seriesTable->getContestants() as $contestant}
-            {if $displayAll || isset($table[$contestant->ct_id])}
+            {if $displayAll || isset($table[$contestant->contestant_id])}
                 {php $counter++}
                 <tr>
                     <th scope="row">{$contestant->getPerson()->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}
-                        {var $submit = isset($table[$contestant->ct_id][$task->task_id])?$table[$contestant->ct_id][$task->task_id]:null}
-                        {include submit-row, submit=>$submit,ctId=>$contestant->ct_id,taskId=>$task->task_id}
+                        {var $submit = isset($table[$contestant->contestant_id][$task->task_id])?$table[$contestant->contestant_id][$task->task_id]:null}
+                        {include submit-row, submit=>$submit,ctId=>$contestant->contestant_id,taskId=>$task->task_id}
                     {/foreach}
                 </tr>
             {/if}

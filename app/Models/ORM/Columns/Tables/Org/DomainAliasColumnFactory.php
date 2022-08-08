@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ValuePrinters\EmailPrinter;
 use FKSDB\Models\Exceptions\ContestNotFoundException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\ModelContest;
-use FKSDB\Models\ORM\Models\ModelOrg;
+use FKSDB\Models\ORM\Models\ContestModel;
+use FKSDB\Models\ORM\Models\OrgModel;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -19,15 +19,15 @@ class DomainAliasColumnFactory extends ColumnFactory
 {
 
     /**
-     * @param ModelOrg $model
+     * @param OrgModel $model
      * @throws ContestNotFoundException
      */
     protected function createHtmlValue(Model $model): Html
     {
         switch ($model->contest_id) {
-            case ModelContest::ID_FYKOS:
+            case ContestModel::ID_FYKOS:
                 return (new EmailPrinter())($model->domain_alias . '@fykos.cz');
-            case ModelContest::ID_VYFUK:
+            case ContestModel::ID_VYFUK:
                 return (new EmailPrinter())($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
                 throw new ContestNotFoundException($model->contest_id);

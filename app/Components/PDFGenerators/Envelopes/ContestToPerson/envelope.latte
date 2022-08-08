@@ -1,7 +1,7 @@
 {layout '../envelope.latte'}
-{varType FKSDB\Models\ORM\Models\ModelAddress $address}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
-{varType FKSDB\Models\ORM\Models\ModelContest $contest}
+{varType FKSDB\Models\ORM\Models\AddressModel $address}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
+{varType FKSDB\Models\ORM\Models\ContestModel $contest}
 {switch $contest->contest_id}
     {case 1}
     {import '../sender.fykos.latte'}
@@ -12,8 +12,8 @@
     <div>{$person->getFullName()}</div>
     <div>{$address->target}</div>
     <div>{$address->postal_code} {$address->city}</div>
-    {if $address->getRegion()->country_iso != 'CZ'}
-        <b>{$address->getRegion()->name}</b>
+    {if $address->region->country_iso != 'CZ'}
+        <b>{$address->region->name}</b>
     {/if}
 {/block}
 

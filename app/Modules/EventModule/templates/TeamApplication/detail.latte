@@ -1,12 +1,12 @@
 {varType bool $hasSchedule}
-{varType FKSDB\Models\ORM\Models\ModelEvent $event}
+{varType FKSDB\Models\ORM\Models\EventModel $event}
 {varType bool $rankVisible}
 {varType FKSDB\Models\ORM\Models\Fyziklani\TeamModel2 $model}
 {varType string $field}
 {varType int $counter}
 
 {define personSchedule}
-    {varType FKSDB\Models\ORM\Models\ModelPerson $person}
+    {varType FKSDB\Models\ORM\Models\PersonModel $person}
     {if $hasSchedule}
         <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
         {control personScheduleGrid $person,$event}
@@ -50,7 +50,7 @@
     {foreach $model->getTeachers() as $teacherRow}
         {var FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher = \FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel::createFromActiveRow($teacherRow)}
         {control valuePrinter:row 'person.person_link', $teacher}
-        {include personSchedule, person => $teacher->getPerson(),event=> $model->getEvent()}
+        {include personSchedule, person => $teacher->person,event=> $model->event}
     {/foreach}
     <hr/>
 
@@ -70,10 +70,12 @@
 
         {control valuePrinter:row 'school.school', $history}
 
-        {include personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
+        {include personSchedule, person => $participant->getPerson(),event=>$model->event}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}
+    <h2>{_'Transitions'}</h2>
+    {control applicationTransitions}
     <hr/>
     {if $event->event_type_id === 1}
         <h2>{_'Seating'}</h2>

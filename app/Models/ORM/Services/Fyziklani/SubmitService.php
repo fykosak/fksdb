@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
@@ -23,12 +23,12 @@ class SubmitService extends Service
         return $row ? SubmitModel::createFromActiveRow($row) : null;
     }
 
-    public function findAll(ModelEvent $event): TypedSelection
+    public function findAll(EventModel $event): TypedSelection
     {
-        return $this->getTable()->where('fyziklani_team_id.event_id', $event->event_id);
+        return $this->getTable()->where('fyziklani_team.event_id', $event->event_id);
     }
 
-    public function serialiseSubmits(ModelEvent $event, ?string $lastUpdated): array
+    public function serialiseSubmits(EventModel $event, ?string $lastUpdated): array
     {
         // TODO to related
         $query = $this->findAll($event);

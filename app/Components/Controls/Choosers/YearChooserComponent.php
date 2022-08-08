@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Models\ORM\Models\ModelContestYear;
+use FKSDB\Models\ORM\Models\ContestYearModel;
 use Fykosak\Utils\UI\Navigation\NavItem;
 use Fykosak\Utils\UI\Title;
 use Nette\Database\Table\GroupedSelection;
@@ -18,10 +18,10 @@ final class YearChooserComponent extends ChooserComponent
     public const ROLE_ALL = 'all';
     public const ROLE_SELECTED = 'selected';
 
-    private ?ModelContestYear $contestYear;
+    private ?ContestYearModel $contestYear;
     private GroupedSelection $availableYears;
 
-    public function __construct(Container $container, ?ModelContestYear $urlYear, GroupedSelection $availableYears)
+    public function __construct(Container $container, ?ContestYearModel $urlYear, GroupedSelection $availableYears)
     {
         parent::__construct($container);
         $this->contestYear = $urlYear;
@@ -32,7 +32,7 @@ final class YearChooserComponent extends ChooserComponent
     {
         $items = [];
         foreach ($this->availableYears as $row) {
-            $year = ModelContestYear::createFromActiveRow($row);
+            $year = ContestYearModel::createFromActiveRow($row);
             $items[] = new NavItem(
                 new Title(null, sprintf(_('Year %d'), $year->year)),
                 'this',

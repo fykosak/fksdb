@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Results\EvaluationStrategies;
 
-use FKSDB\Models\ORM\Models\ModelTask;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Exceptions\NotImplementedException;
 
@@ -33,7 +33,7 @@ class EvaluationNullObject implements EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getPointsColumn(ModelTask $task): string
+    public function getPointsColumn(TaskModel $task): string
     {
         throw new NotImplementedException();
     }
@@ -49,7 +49,7 @@ class EvaluationNullObject implements EvaluationStrategy
     /**
      * @throws NotImplementedException
      */
-    public function getTaskPoints(ModelTask $task, ModelCategory $category): ?int
+    public function getTaskPoints(TaskModel $task, ModelCategory $category): ?int
     {
         throw new NotImplementedException();
     }

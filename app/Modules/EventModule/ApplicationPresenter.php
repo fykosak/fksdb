@@ -15,8 +15,8 @@ use FKSDB\Models\Events\Model\Grid\SingleEventSource;
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use Fykosak\Utils\Logging\MemoryLogger;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
-use FKSDB\Models\ORM\Services\ServiceEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Services\EventParticipantService;
 use Fykosak\Utils\UI\PageTitle;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use Nette\Application\ForbiddenRequestException;
@@ -42,7 +42,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
 
     protected function getModelResource(): string
     {
-        return ModelEventParticipant::RESOURCE_ID;
+        return EventParticipantModel::RESOURCE_ID;
     }
 
     /**
@@ -97,8 +97,8 @@ class ApplicationPresenter extends AbstractApplicationPresenter
         return new ImportComponent($source, $handler, $this->getContext());
     }
 
-    protected function getORMService(): ServiceEventParticipant
+    protected function getORMService(): EventParticipantService
     {
-        return $this->serviceEventParticipant;
+        return $this->eventParticipantService;
     }
 }

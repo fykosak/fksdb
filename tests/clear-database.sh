@@ -39,7 +39,7 @@ DELETE FROM event;
 
 DELETE FROM org;
 DELETE FROM person_history;
-DELETE FROM contestant_base;
+DELETE FROM contestant;
 DELETE FROM contest_year;
 DELETE FROM school;
 DELETE FROM address;

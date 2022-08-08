@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Services\Fyziklani;
 
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Service;
 
 /**
@@ -15,7 +15,7 @@ use Fykosak\NetteORM\Service;
 class TeamService2 extends Service
 {
 
-    public function isReadyForClosing(ModelEvent $event, ?TeamCategory $category = null): bool
+    public function isReadyForClosing(EventModel $event, ?TeamCategory $category = null): bool
     {
         $query = $event->getParticipatingFyziklaniTeams();
         if ($category) {
@@ -28,7 +28,7 @@ class TeamService2 extends Service
     /**
      * @return TeamModel2[]
      */
-    public static function serialiseTeams(ModelEvent $event): array
+    public static function serialiseTeams(EventModel $event): array
     {
         $teams = [];
         foreach ($event->getPossiblyAttendingFyziklaniTeams() as $row) {

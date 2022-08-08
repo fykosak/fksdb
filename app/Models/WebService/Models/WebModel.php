@@ -6,7 +6,7 @@ namespace FKSDB\Models\WebService\Models;
 
 use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\ORM\Models\LoginModel;
 use Nette\DI\Container;
 use Nette\Schema\Elements\Structure;
 use Nette\SmartObject;
@@ -17,7 +17,7 @@ abstract class WebModel
     use SmartObject;
 
     protected Container $container;
-    protected ?ModelLogin $authenticatedLogin;
+    protected ?LoginModel $authenticatedLogin;
 
     final public function __construct(Container $container)
     {
@@ -25,7 +25,7 @@ abstract class WebModel
         $container->callInjects($this);
     }
 
-    final public function setLogin(?ModelLogin $authenticatedLogin): void
+    final public function setLogin(?LoginModel $authenticatedLogin): void
     {
         $this->authenticatedLogin = $authenticatedLogin;
     }

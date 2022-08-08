@@ -13,11 +13,11 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelContestYear;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\OmittedControlException;
-use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
@@ -36,14 +36,14 @@ class ReferencedPersonContainer extends ReferencedContainer
 
     public ModifiabilityResolver $modifiabilityResolver;
     public VisibilityResolver $visibilityResolver;
-    public ModelContestYear $contestYear;
+    public ContestYearModel $contestYear;
     private array $fieldsDefinition;
-    protected ServicePerson $servicePerson;
+    protected PersonService $personService;
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
     protected FlagFactory $flagFactory;
     protected AddressFactory $addressFactory;
     private PersonScheduleFactory $personScheduleFactory;
-    protected ?ModelEvent $event;
+    protected ?EventModel $event;
 
     private bool $configured = false;
 
@@ -51,9 +51,9 @@ class ReferencedPersonContainer extends ReferencedContainer
         Container $container,
         ModifiabilityResolver $modifiabilityResolver,
         VisibilityResolver $visibilityResolver,
-        ModelContestYear $contestYear,
+        ContestYearModel $contestYear,
         array $fieldsDefinition,
-        ?ModelEvent $event,
+        ?EventModel $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);
@@ -72,11 +72,11 @@ class ReferencedPersonContainer extends ReferencedContainer
     final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
-        ServicePerson $servicePerson,
+        PersonService $personService,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
     ): void {
-        $this->servicePerson = $servicePerson;
+        $this->personService = $personService;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;
@@ -142,7 +142,7 @@ class ReferencedPersonContainer extends ReferencedContainer
     }
 
     /**
-     * @param ActiveRow|ModelPerson|null $model
+     * @param ActiveRow|PersonModel|null $model
      */
     public function setModel(?ActiveRow $model, string $mode): void
     {
@@ -318,7 +318,7 @@ class ReferencedPersonContainer extends ReferencedContainer
      * @return mixed
      */
     protected function getPersonValue(
-        ?ModelPerson $person,
+        ?PersonModel $person,
         string $sub,
         string $field,
         bool $extrapolate = false,

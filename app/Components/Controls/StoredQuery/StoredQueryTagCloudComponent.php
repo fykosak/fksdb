@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\StoredQuery;
 
 use Fykosak\Utils\BaseComponent\BaseComponent;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 
 class StoredQueryTagCloudComponent extends BaseComponent
 {
-    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
+    private TagTypeService $storedQueryTagTypeService;
     /**
      * @persistent
      * @internal
      */
     public array $activeTagIds = [];
 
-    final public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void
+    final public function injectPrimary(TagTypeService $storedQueryTagTypeService): void
     {
-        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
+        $this->storedQueryTagTypeService = $storedQueryTagTypeService;
     }
 
     public function handleOnClick(int $activeTagId): void
@@ -33,12 +33,12 @@ class StoredQueryTagCloudComponent extends BaseComponent
 
     final public function renderList(): void
     {
-        $this->template->tags = $this->serviceStoredQueryTagType->getTable();
+        $this->template->tags = $this->storedQueryTagTypeService->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.list.latte');
     }
 
-    final public function renderDetail(ModelStoredQuery $query): void
+    final public function renderDetail(QueryModel $query): void
     {
         $this->template->tags = $query->getStoredQueryTagTypes();
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.detail.latte');

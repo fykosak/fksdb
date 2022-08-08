@@ -12,7 +12,7 @@ class ExpressionEvaluator
     use SmartObject;
 
     /**
-     * @param mixed $condition
+     * @param callable|mixed $condition
      * @param mixed $context
      * @return mixed
      */

@@ -28,7 +28,7 @@ abstract class SubmitsGrid extends BaseGrid
     {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row): string {
             $model = SubmitModel::createFromActiveRow($row); // TODO is needed?
-            return $model->getFyziklaniTask()->label;
+            return $model->fyziklani_task->label;
         })->setSortable(false);
     }
 
@@ -42,7 +42,7 @@ abstract class SubmitsGrid extends BaseGrid
             if (!$row instanceof SubmitModel) {
                 $row = SubmitModel::createFromActiveRow($row);
             }
-            return $row->getFyziklaniTeam();
+            return $row->fyziklani_team;
         });
     }
 

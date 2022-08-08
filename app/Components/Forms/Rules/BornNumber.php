@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Forms\Rules;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnly;
+use FKSDB\Models\ORM\Models\PersonGender;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 
@@ -83,7 +84,7 @@ class BornNumber
     /**
      * @throws OutOfRangeException
      */
-    public static function getGender(string $bornNumber): string
+    public static function getGender(string $bornNumber): PersonGender
     {
         [, $month, , , $control] = self::parseBornNumber($bornNumber);
 
@@ -91,6 +92,6 @@ class BornNumber
         if (is_null($control)) {
             throw new OutOfRangeException('Born number before 1954');
         }
-        return +$month > 50 ? 'F' : 'M';
+        return +$month > 50 ? PersonGender::tryFrom(PersonGender::FEMALE) : PersonGender::tryFrom(PersonGender::MALE);
     }
 }

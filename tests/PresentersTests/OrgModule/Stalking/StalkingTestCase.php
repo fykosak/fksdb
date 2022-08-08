@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServiceGrant;
-use FKSDB\Models\ORM\Services\ServiceLogin;
-use FKSDB\Models\ORM\Services\ServiceOrg;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\GrantService;
+use FKSDB\Models\ORM\Services\LoginService;
+use FKSDB\Models\ORM\Services\OrgService;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 
 abstract class StalkingTestCase extends DatabaseTestCase
 {
-    protected ModelPerson $person;
+    protected PersonModel $person;
     protected IPresenter $fixture;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->person = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
+        $this->person = $this->getContainer()->getByType(PersonService::class)->createNewModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'born_family_name' => 'Travisový',
             'display_name' => 'Tester Githubový',
             'gender' => 'M',
         ]);
-        $this->getContainer()->getByType(ServicePersonInfo::class)->createNewModel([
+        $this->getContainer()->getByType(PersonInfoService::class)->createNewModel([
             'person_id' => $this->person->person_id,
             'preferred_lang' => 'cs',
             'born' => '1989-11-17',
@@ -53,19 +53,19 @@ abstract class StalkingTestCase extends DatabaseTestCase
             'email_parent_d' => 'tester_d@example.com',
             'email_parent_m' => 'tester_m@example.com',
         ]);
-        $userPerson = $this->getContainer()->getByType(ServicePerson::class)->createNewModel([
+        $userPerson = $this->getContainer()->getByType(PersonService::class)->createNewModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
 
-        $login = $this->getContainer()->getByType(ServiceLogin::class)->createNewModel(
+        $login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
             ['person_id' => $userPerson->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(ServiceOrg::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->createNewModel(
             ['person_id' => $userPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->getContainer()->getByType(ServiceGrant::class)->createNewModel(
+        $this->getContainer()->getByType(GrantService::class)->createNewModel(
             ['login_id' => $login->login_id, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]
         );
         $this->fixture = $this->createPresenter('Org:Person');

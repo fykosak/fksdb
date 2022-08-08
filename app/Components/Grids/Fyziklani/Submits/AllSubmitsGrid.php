@@ -13,7 +13,7 @@ use Fykosak\Utils\Logging\FlashMessageDump;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\SubmitModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
@@ -30,9 +30,9 @@ use NiftyGrid\DuplicateColumnException;
 class AllSubmitsGrid extends SubmitsGrid
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;

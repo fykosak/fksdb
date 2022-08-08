@@ -8,7 +8,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
-use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -42,7 +42,7 @@ class RelatedPersonAuthorizator
             return false;
         }
 
-        $person = $login->getPerson();
+        $person = $login->person;
         if (!$person) {
             return false;
         }
@@ -61,7 +61,7 @@ class RelatedPersonAuthorizator
                     }
                 }
             } elseif (
-                $model instanceof ModelEventParticipant
+                $model instanceof EventParticipantModel
                 || $model instanceof ModelMFyziklaniParticipant
                 || $model instanceof ModelMDsefParticipant
             ) {

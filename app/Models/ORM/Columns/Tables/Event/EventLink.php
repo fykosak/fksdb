@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use Fykosak\NetteORM\Model;
 use Nette\Application\LinkGenerator;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
@@ -24,7 +24,7 @@ class EventLink extends ColumnFactory
     }
 
     /**
-     * @param ModelEvent $model
+     * @param EventModel $model
      * @throws InvalidLinkException
      */
     protected function createHtmlValue(Model $model): Html

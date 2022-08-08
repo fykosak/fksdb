@@ -10,15 +10,16 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\ModelLogin;
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Models\ModelQuiz;
-use FKSDB\Models\ORM\Models\ModelSubmit;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Services\ServiceQuiz;
-use FKSDB\Models\ORM\Services\ServiceSubmit;
-use FKSDB\Models\ORM\Services\ServiceSubmitQuiz;
-use FKSDB\Models\ORM\Services\ServiceTask;
+use FKSDB\Models\ORM\Models\LoginModel;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Models\QuizModel;
+use FKSDB\Models\ORM\Models\SubmitModel;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Models\SubmitSource;
+use FKSDB\Models\ORM\Services\QuizService;
+use FKSDB\Models\ORM\Services\SubmitService;
+use FKSDB\Models\ORM\Services\SubmitQuizService;
+use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Models\Submits\ProcessingException;
 use FKSDB\Models\Submits\StorageException;
@@ -34,19 +35,19 @@ use Tracy\Debugger;
 class SubmitPresenter extends BasePresenter
 {
 
-    private ServiceSubmit $submitService;
-    private ServiceSubmitQuiz $submitQuizQuestionService;
+    private SubmitService $submitService;
+    private SubmitQuizService $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
-    private ServiceTask $taskService;
-    private ServiceQuiz $quizQuestionService;
+    private TaskService $taskService;
+    private QuizService $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
     final public function injectTernary(
-        ServiceSubmit $submitService,
-        ServiceSubmitQuiz $submitQuizQuestionService,
+        SubmitService $submitService,
+        SubmitQuizService $submitQuizQuestionService,
         UploadedStorage $filesystemUploadedSubmitStorage,
-        ServiceTask $taskService,
-        ServiceQuiz $quizQuestionService,
+        TaskService $taskService,
+        QuizService $quizQuestionService,
         SubmitHandlerFactory $submitHandlerFactory
     ): void {
         $this->submitService = $submitService;
@@ -92,8 +93,8 @@ class SubmitPresenter extends BasePresenter
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
-            /** @var ModelPerson $person */
-            $person = $this->getUser()->getIdentity()->getPerson();
+            /** @var PersonModel $person */
+            $person = $this->getUser()->getIdentity()->person;
             $contestants = $person->getActiveContestants();
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
             $currentContestYear = $this->getSelectedContest()->getCurrentContestYear();
@@ -135,21 +136,21 @@ class SubmitPresenter extends BasePresenter
         $form = $control->getForm();
 
         $taskIds = [];
-        /** @var ModelLogin $login */
+        /** @var LoginModel $login */
         $login = $this->getUser()->getIdentity();
-        $personHistory = $login->getPerson()->getHistoryByContestYear($this->getSelectedContestYear());
+        $personHistory = $login->person->getHistoryByContestYear($this->getSelectedContestYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
             $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
         $prevDeadline = null;
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->submit_deadline !== $prevDeadline) {
                 $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant(), $task);
-            if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
+            if ($submit && $submit->source->value == SubmitSource::POST) {
                 continue; // prevDeadline will work though
             }
             $container = new ModelContainer();
@@ -182,7 +183,7 @@ class SubmitPresenter extends BasePresenter
                 //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
                 foreach ($questions as $row) {
-                    $question = ModelQuiz::createFromActiveRow($row);
+                    $question = QuizModel::createFromActiveRow($row);
                     $select = $container->addRadioList(
                         'question' . $question->question_id,
                         $task->getFQName() . ' - ' . $question->getFQName(),
@@ -226,7 +227,7 @@ class SubmitPresenter extends BasePresenter
         $values = $form->getValues();
 
         Debugger::log(
-            \sprintf('Contestant %d upload %s', $this->getContestant()->ct_id, $values['tasks']),
+            \sprintf('Contestant %d upload %s', $this->getContestant()->contestant_id, $values['tasks']),
             'old-submit'
         );
 
@@ -239,7 +240,7 @@ class SubmitPresenter extends BasePresenter
 
             foreach ($taskIds as $taskId) {
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
-                /** @var ModelTask $task */
+                /** @var TaskModel $task */
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
@@ -255,7 +256,7 @@ class SubmitPresenter extends BasePresenter
                 if (count($questions)) {
                     // Verification if user has event submitted any answer
                     $anySubmit = false;
-                    /** @var ModelQuiz $question */
+                    /** @var QuizModel $question */
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];

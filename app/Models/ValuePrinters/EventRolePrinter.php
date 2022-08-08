@@ -7,13 +7,13 @@ namespace FKSDB\Models\ValuePrinters;
 use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     EventOrgRole,
     EventRole,
-    FyziklaniTeacherRole,
+    FyziklaniTeamTeacherRole,
     FyziklaniTeamMemberRole,
     ParticipantRole
 };
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\Models\ModelEvent;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\EventModel;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -24,7 +24,7 @@ class EventRolePrinter
     /**
      * @throws NotImplementedException
      */
-    public function __invoke(ModelPerson $person, ModelEvent $event): Html
+    public function __invoke(PersonModel $person, EventModel $event): Html
     {
         $container = Html::el('span');
         $roles = $person->getEventRoles($event);
@@ -48,7 +48,7 @@ class EventRolePrinter
         $container = Html::el('span');
 
         foreach ($roles as $role) {
-            if ($role instanceof FyziklaniTeacherRole) {
+            if ($role instanceof FyziklaniTeamTeacherRole) {
                 foreach ($role->teams as $team) {
                     $container->addHtml(
                         Html::el('span')

@@ -6,7 +6,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
-use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -17,9 +17,9 @@ use NiftyGrid\DuplicateColumnException;
 class TaskGrid extends BaseGrid
 {
 
-    private ModelEvent $event;
+    private EventModel $event;
 
-    public function __construct(ModelEvent $event, Container $container)
+    public function __construct(EventModel $event, Container $container)
     {
         parent::__construct($container);
         $this->event = $event;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Controls\Inbox;
 
+use FKSDB\Models\ORM\Models\TaskContributionType;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -12,10 +13,10 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
-use FKSDB\Models\ORM\Models\ModelTask;
-use FKSDB\Models\ORM\Models\ModelTaskContribution;
-use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Models\ORM\Services\ServiceTaskContribution;
+use FKSDB\Models\ORM\Models\TaskModel;
+use FKSDB\Models\ORM\Models\TaskContributionModel;
+use FKSDB\Models\ORM\Services\PersonService;
+use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -23,9 +24,9 @@ use Nette\DI\Container;
 class HandoutFormComponent extends BaseComponent
 {
     public const TASK_PREFIX = 'task';
-    private ServicePerson $servicePerson;
+    private PersonService $personService;
     private SeriesTable $seriesTable;
-    private ServiceTaskContribution $serviceTaskContribution;
+    private TaskContributionService $taskContributionService;
     private PersonFactory $personFactory;
 
     public function __construct(Container $container, SeriesTable $seriesTable)
@@ -36,12 +37,12 @@ class HandoutFormComponent extends BaseComponent
 
     final public function injectPrimary(
         PersonFactory $personFactory,
-        ServicePerson $servicePerson,
-        ServiceTaskContribution $serviceTaskContribution
+        PersonService $personService,
+        TaskContributionService $taskContributionService
     ): void {
         $this->personFactory = $personFactory;
-        $this->servicePerson = $servicePerson;
-        $this->serviceTaskContribution = $serviceTaskContribution;
+        $this->personService = $personService;
+        $this->taskContributionService = $taskContributionService;
     }
 
     /**
@@ -51,9 +52,9 @@ class HandoutFormComponent extends BaseComponent
     {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
-        $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->seriesTable->contestYear->getContest());
-        /** @var ModelTask $task */
+        $orgProvider = new PersonProvider($this->personService);
+        $orgProvider->filterOrgs($this->seriesTable->contestYear->contest);
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
             $control->setMultiSelect(true);
@@ -72,21 +73,21 @@ class HandoutFormComponent extends BaseComponent
     public function handleFormSuccess(Form $form): void
     {
         $values = $form->getValues();
-        $connection = $this->serviceTaskContribution->explorer->getConnection();
+        $connection = $this->taskContributionService->explorer->getConnection();
         $connection->beginTransaction();
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $task->related(DbNames::TAB_TASK_CONTRIBUTION)->where([
-                'type' => ModelTaskContribution::TYPE_GRADE,
+                'type' => TaskContributionType::GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
                 $data = [
                     'task_id' => $task->task_id,
                     'person_id' => $personId,
-                    'type' => ModelTaskContribution::TYPE_GRADE,
+                    'type' => TaskContributionType::GRADE,
                 ];
-                $this->serviceTaskContribution->createNewModel($data);
+                $this->taskContributionService->createNewModel($data);
             }
         }
 
@@ -107,17 +108,17 @@ class HandoutFormComponent extends BaseComponent
     public function setDefaults(): void
     {
         $taskIds = [];
-        /** @var ModelTask $task */
+        /** @var TaskModel $task */
         foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
-        $contributions = $this->serviceTaskContribution->getTable()->where([
-            'type' => ModelTaskContribution::TYPE_GRADE,
+        $contributions = $this->taskContributionService->getTable()->where([
+            'type' => TaskContributionType::GRADE,
             'task_id' => $taskIds,
         ]);
 
         $values = [];
-        /** @var ModelTaskContribution $contribution */
+        /** @var TaskContributionModel $contribution */
         foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;

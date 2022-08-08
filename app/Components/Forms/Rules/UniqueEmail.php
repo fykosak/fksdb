@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Models\ORM\Models\ModelPerson;
-use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\ORM\Models\PersonModel;
+use FKSDB\Models\ORM\Services\PersonInfoService;
 use Nette\Forms\Controls\BaseControl;
 
 class UniqueEmail
 {
-    private ServicePersonInfo $servicePersonInfo;
-    private ?ModelPerson $ignoredPerson;
+    private PersonInfoService $personInfoService;
+    private ?PersonModel $ignoredPerson;
 
-    public function __construct(ServicePersonInfo $servicePersonInfo)
+    public function __construct(PersonInfoService $personInfoService)
     {
-        $this->servicePersonInfo = $servicePersonInfo;
+        $this->personInfoService = $personInfoService;
     }
 
-    public function setIgnoredPerson(ModelPerson $ignoredPerson): void
+    public function setIgnoredPerson(PersonModel $ignoredPerson): void
     {
         $this->ignoredPerson = $ignoredPerson;
     }
@@ -27,7 +27,7 @@ class UniqueEmail
     {
         $email = $control->getValue();
 
-        $conflicts = $this->servicePersonInfo->getTable()->where(['email' => $email]);
+        $conflicts = $this->personInfoService->getTable()->where(['email' => $email]);
         if ($this->ignoredPerson && $this->ignoredPerson->person_id) {
             $conflicts->where('NOT person_id = ?', $this->ignoredPerson->person_id);
         }

@@ -1,5 +1,5 @@
 {layout '../@layout.latte'}
-{varType FKSDB\Models\ORM\Models\ModelPerson $person}
+{varType FKSDB\Models\ORM\Models\PersonModel $person}
 {varType int $userPermissions}
 {define person}
     <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -57,6 +57,8 @@
 {define events}
     <h3>{_'Event participants'}</h3>
     {control eventParticipantsGrid}
+    <h3>{_'Team members'}</h3>
+    {control teamMembersGrid}
     <h3>{_'Payments'}</h3>
     {control paymentsGrid}
     <h3>{_'Event orgs'}</h3>

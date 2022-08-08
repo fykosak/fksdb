@@ -6,8 +6,8 @@ namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
+use FKSDB\Models\ORM\Services\StoredQuery\QueryService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
@@ -21,7 +21,7 @@ class StoredQueriesGrid extends BaseGrid
 
     public const DESCRIPTION_TRUNC = 80;
 
-    private ServiceStoredQuery $serviceStoredQuery;
+    private QueryService $storedQueryService;
 
     private array $activeTagIds;
 
@@ -31,9 +31,9 @@ class StoredQueriesGrid extends BaseGrid
         $this->activeTagIds = $activeTagIds;
     }
 
-    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void
+    final public function injectServiceStoredQuery(QueryService $storedQueryService): void
     {
-        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->storedQueryService = $storedQueryService;
     }
 
     /**
@@ -46,9 +46,9 @@ class StoredQueriesGrid extends BaseGrid
         parent::configure($presenter);
 
         if (count($this->activeTagIds)) {
-            $queries = $this->serviceStoredQuery->findByTagType($this->activeTagIds)->order('name');
+            $queries = $this->storedQueryService->findByTagType($this->activeTagIds)->order('name');
         } else {
-            $queries = $this->serviceStoredQuery->getTable()->order('name');
+            $queries = $this->storedQueryService->getTable()->order('name');
         }
         $this->setDataSource(new NDataSource($queries));
         $this->addColumns([
@@ -69,6 +69,6 @@ class StoredQueriesGrid extends BaseGrid
 
     protected function getModelClassName(): string
     {
-        return ModelStoredQuery::class;
+        return QueryModel::class;
     }
 }

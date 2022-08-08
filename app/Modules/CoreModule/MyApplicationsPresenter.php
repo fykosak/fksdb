@@ -7,7 +7,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Models\ORM\FieldLevelPermission;
-use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\Utils\UI\PageTitle;
 
 class MyApplicationsPresenter extends BasePresenter
@@ -18,9 +18,9 @@ class MyApplicationsPresenter extends BasePresenter
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getPerson());
     }
 
-    private function getPerson(): ?ModelPerson
+    private function getPerson(): ?PersonModel
     {
-        return $this->getUser()->getIdentity()->getPerson();
+        return $this->getUser()->getIdentity()->person;
     }
 
     public function titleDefault(): PageTitle
