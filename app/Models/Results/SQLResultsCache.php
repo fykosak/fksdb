@@ -56,8 +56,8 @@ class SQLResultsCache
         $tasks = $contestYear->contest->related(DbNames::TAB_TASK)->where('year', $contestYear->year);
 
         $this->taskService->explorer->getConnection()->beginTransaction();
-        foreach ($tasks as $row) {
-            $task = TaskModel::createFromActiveRow($row);
+        /** @var TaskModel $task */
+        foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contestYear->contest->contest_id;
             $conditions[] = 't.year = ' . $contestYear->year;

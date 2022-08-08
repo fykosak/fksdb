@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\Warehouse;
 
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
@@ -31,7 +30,7 @@ class ProductModel extends Model implements Resource
 
     /**
      * @param string $key
-     * @return ProductCategory|mixed|ActiveRow
+     * @return ProductCategory|mixed
      * @throws \ReflectionException
      */
     public function &__get(string $key)

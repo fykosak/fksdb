@@ -8,7 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -54,10 +53,5 @@ class PersonGrid extends BaseGrid
             'schedule_item.price_eur',
             'payment.payment',
         ]);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return PersonScheduleModel::class;
     }
 }

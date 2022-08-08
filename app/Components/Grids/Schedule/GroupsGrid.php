@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupModel;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -40,25 +39,23 @@ class GroupsGrid extends RelatedGrid
             'schedule_group.start',
             'schedule_group.end',
         ]);
-        $this->addColumn('items_count', _('Items count'))->setRenderer(function (ActiveRow $row): int {
-            $model = ScheduleGroupModel::createFromActiveRow($row);
-            return $model->getItems()->count();
-        });
+        $this->addColumn('items_count', _('Items count'))->setRenderer(
+            fn(ScheduleGroupModel $model): int => $model->getItems()->count()
+        );
 
         $this->addButton('detail')->setText(_('Detail'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ScheduleGroupModel $row */
-                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
-            });
+            ->setLink(
+                fn(ScheduleGroupModel $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:detail',
+                    ['id' => $row->schedule_group_id]
+                )
+            );
         $this->addButton('edit')->setText(_('Edit'))
-            ->setLink(function (ActiveRow $row): string {
-                /** @var ScheduleGroupModel $row */
-                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
-            });
-    }
-
-    protected function getModelClassName(): string
-    {
-        return ScheduleGroupModel::class;
+            ->setLink(
+                fn(ScheduleGroupModel $row): string => $this->getPresenter()->link(
+                    'ScheduleGroup:edit',
+                    ['id' => $row->schedule_group_id]
+                )
+            );
     }
 }

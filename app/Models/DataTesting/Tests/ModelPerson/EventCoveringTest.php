@@ -32,16 +32,16 @@ class EventCoveringTest extends PersonTest
             ContestModel::ID_FYKOS => [],
             ContestModel::ID_VYFUK => [],
         ];
-        foreach ($person->getEventParticipants() as $row) {
-            $eventParticipant = EventParticipantModel::createFromActiveRow($row);
+        /** @var EventParticipantModel $eventParticipant */
+        foreach ($person->getEventParticipants() as $eventParticipant) {
             $year = $eventParticipant->event->year;
             $contestId = $eventParticipant->event->getContest()->contest_id;
             if (!\in_array($year, $participantsYears[$contestId])) {
                 $participantsYears[$contestId][] = $year;
             }
         }
-        foreach ($person->getContestants() as $row) {
-            $contestant = ContestantModel::createFromActiveRow($row);
+        /** @var ContestantModel $contestant */
+        foreach ($person->getContestants() as $contestant) {
             $year = $contestant->year;
             $contestId = $contestant->contest_id;
             if (!\in_array($year, $contestantYears[$contestId])) {
@@ -62,8 +62,8 @@ class EventCoveringTest extends PersonTest
                     $logger->log($this->createLog($year, $contestId, $type, 'eventOrg'));
                 }
                 $query = $person->getOrgs($contestId);
-                foreach ($query as $row) {
-                    $org = OrgModel::createFromActiveRow($row);
+                /** @var OrgModel $org */
+                foreach ($query as $org) {
                     if ($org->until) {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
@@ -97,8 +97,8 @@ class EventCoveringTest extends PersonTest
             ContestModel::ID_FYKOS => [],
             ContestModel::ID_VYFUK => [],
         ];
-        foreach ($person->getEventOrgs() as $row) {
-            $eventOrg = EventOrgModel::createFromActiveRow($row);
+        /** @var EventOrgModel $eventOrg */
+        foreach ($person->getEventOrgs() as $eventOrg) {
             $year = $eventOrg->event->year;
             $contestId = $eventOrg->event->getContest()->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {

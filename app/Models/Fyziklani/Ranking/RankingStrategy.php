@@ -9,7 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -69,11 +69,11 @@ class RankingStrategy
      * @return array[]
      * @throws NotClosedTeamException
      */
-    private function getTeamsStats(GroupedSelection $teams): array
+    private function getTeamsStats(TypedGroupedSelection $teams): array
     {
         $teamsData = [];
-        foreach ($teams as $row) {
-            $team = TeamModel2::createFromActiveRow($row);
+        /** @var TeamModel2 $team */
+        foreach ($teams as $team) {
             if ($team->hasOpenSubmitting()) {
                 throw new NotClosedTeamException($team);
             }
@@ -106,7 +106,7 @@ class RankingStrategy
         };
     }
 
-    private function getAllTeams(?TeamCategory $category = null): GroupedSelection
+    private function getAllTeams(?TeamCategory $category = null): TypedGroupedSelection
     {
         $query = $this->event->getParticipatingFyziklaniTeams();
         if ($category) {
@@ -123,8 +123,8 @@ class RankingStrategy
         $arraySubmits = [];
         $sum = 0;
         $count = 0;
-        foreach ($team->getAllSubmits() as $row) {
-            $submit = SubmitModel::createFromActiveRow($row);
+        /** @var SubmitModel $submit */
+        foreach ($team->getAllSubmits() as $submit) {
             if ($submit->points !== null) {
                 $sum += $submit->points;
                 $count++;

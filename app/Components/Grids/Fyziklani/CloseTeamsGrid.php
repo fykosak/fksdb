@@ -9,7 +9,6 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -54,11 +53,6 @@ class CloseTeamsGrid extends BaseGrid
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(fn(ActiveRow $row): bool => TeamModel2::createFromActiveRow($row)->canClose(false));
-    }
-
-    protected function getModelClassName(): string
-    {
-        return TeamModel2::class;
+        ])->setShow(fn(TeamModel2 $row): bool => $row->canClose(false));
     }
 }

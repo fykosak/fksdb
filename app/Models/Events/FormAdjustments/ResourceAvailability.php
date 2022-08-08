@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Service;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Forms\Form;
 use Nette\Forms\Control;
 
@@ -98,7 +98,7 @@ class ResourceAvailability extends AbstractAdjustment
             /** @var BaseHolder $firstHolder */
             $firstHolder = reset($dataService['holders']);
             $event = $firstHolder->event;
-            /** @var GroupedSelection $table */
+            /** @var TypedGroupedSelection $table */
             $table = $dataService['service']->getTable();
             $table->where($firstHolder->eventIdColumn, $event->getPrimary());
             if (!in_array(AbstractMachine::STATE_ANY, $this->includeStates)) {

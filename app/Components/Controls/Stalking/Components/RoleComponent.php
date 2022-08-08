@@ -21,8 +21,7 @@ class RoleComponent extends BaseStalkingComponent
         $roles = [];
         if ($login) {
             /** @var GrantModel $grant */
-            foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = GrantModel::createFromActiveRow($row);
+            foreach ($login->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
                 $roles[] = new Grant($grant->role->name, $grant->contest);
             }
         }

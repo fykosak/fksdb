@@ -22,22 +22,12 @@ class TeamMemberModel extends Model
 {
     public function getEvent(): EventModel
     {
-        return $this->getFyziklaniTeam()->event;
-    }
-
-    public function getPerson(): PersonModel
-    {
-        return PersonModel::createFromActiveRow($this->person);
-    }
-
-    public function getFyziklaniTeam(): TeamModel2
-    {
-        return TeamModel2::createFromActiveRow($this->fyziklani_team);
+        return $this->fyziklani_team->event;
     }
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
-        return $this->getPerson()->getHistoryByContestYear($this->getFyziklaniTeam()->event->getContestYear());
+        return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
     }
 
     public function getSchool(): ?SchoolModel

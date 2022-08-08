@@ -6,7 +6,7 @@ namespace FKSDB\Models\ORM\Models\Fyziklani\Seating;
 
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 
 /**
  * @property-read int fyziklani_room_id
@@ -16,7 +16,7 @@ use Nette\Database\Table\GroupedSelection;
 class RoomModel extends Model
 {
 
-    public function getSeats(): GroupedSelection
+    public function getSeats(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SEAT);
     }

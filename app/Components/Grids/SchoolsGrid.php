@@ -9,7 +9,6 @@ use FKSDB\Models\ORM\Models\SchoolModel;
 use FKSDB\Models\ORM\Services\SchoolService;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
@@ -51,10 +50,7 @@ class SchoolsGrid extends EntityGrid
         // columns
         //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('city', _('City'))->setRenderer(function (ActiveRow $row) {
-            $school = SchoolModel::createFromActiveRow($row);
-            return $school->address->city;
-        });
+        $this->addColumn('city', _('City'))->setRenderer(fn(SchoolModel $school) => $school->address->city);
         $this->addColumn('active', _('Active?'))->setRenderer(
             fn(SchoolModel $row): Html => Html::el('span')
                 ->addAttributes(['class' => ('badge ' . ($row->active ? 'bg-success' : 'bg-danger'))])

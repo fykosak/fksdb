@@ -202,9 +202,6 @@ abstract class BaseGrid extends Grid
         $factory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $field));
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(
             function ($model) use ($factory, $userPermission): Html {
-                if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model);
-                }
                 return $factory->render($model, $userPermission);
             }
         )->setSortable(false);
@@ -223,15 +220,6 @@ abstract class BaseGrid extends Grid
                 return $factory->render($model, 1);
             }
         );
-    }
-
-    /**
-     * @return string|Model
-     * @throws NotImplementedException
-     */
-    protected function getModelClassName(): string
-    {
-        throw new NotImplementedException('Model className must be defined, if data source is not TypedSelection.');
     }
 
     /**
@@ -264,19 +252,11 @@ abstract class BaseGrid extends Grid
         };
         $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setLink(function ($model) use ($destination, $paramMapCallback): string {
-                if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model);
-                }
-                return $this->getPresenter()->link($destination, $paramMapCallback($model));
-            });
+            ->setLink(fn(Model $model): string => $this->getPresenter()->link($destination, $paramMapCallback($model)));
         if ($checkACL) {
-            $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
-                if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model);
-                }
-                return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
-            });
+            $button->setShow(
+                fn(Model $model): bool => $this->getPresenter()->authorized($destination, $paramMapCallback($model))
+            );
         }
         return $button;
     }
@@ -290,19 +270,11 @@ abstract class BaseGrid extends Grid
         $factory = $this->tableReflectionFactory->loadLinkFactory(...explode('.', $linkId, 2));
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($model) use ($factory): string {
-                if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model);
-                }
-                return $factory->create($this->getPresenter(), $model);
-            });
+            ->setLink(fn(Model $model): string => $factory->create($this->getPresenter(), $model));
         if ($checkACL) {
-            $button->setShow(function ($model) use ($factory) {
-                if (!$model instanceof Model) {
-                    $model = $this->getModelClassName()::createFromActiveRow($model);
-                }
-                return $this->getPresenter()->authorized(...$factory->createLinkParameters($model));
-            });
+            $button->setShow(
+                fn(Model $model) => $this->getPresenter()->authorized(...$factory->createLinkParameters($model))
+            );
         }
         return $button;
     }

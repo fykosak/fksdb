@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Service;
 
@@ -17,12 +16,7 @@ class PersonService extends Service
 
     public function findByEmail(?string $email): ?PersonModel
     {
-        if (!$email) {
-            return null;
-        }
-        /** @var PersonModel|null $result */
-        $result = $this->getTable()->where(':person_info.email', $email)->fetch();
-        return $result;
+        return $email ? $this->getTable()->where(':person_info.email', $email)->fetch() : null;
     }
 
     public function createNewModel(array $data): PersonModel

@@ -7,7 +7,7 @@ namespace FKSDB\Models\ORM\Models\StoredQuery;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\StoredQuery\StoredQueryParameter;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -28,7 +28,7 @@ class QueryModel extends Model implements Resource
     {
         $result = [];
         foreach ($this->related(DbNames::TAB_STORED_QUERY_PARAM, 'query_id') as $row) {
-            $result[] = ParameterModel::createFromActiveRow($row);
+            $result[] = $row;
         }
         return $result;
     }
@@ -41,7 +41,7 @@ class QueryModel extends Model implements Resource
         return array_map(fn(ParameterModel $model) => StoredQueryParameter::fromModel($model), $this->getParameters());
     }
 
-    public function getTags(): GroupedSelection
+    public function getTags(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_STORED_QUERY_TAG, 'query_id');
     }
@@ -54,7 +54,7 @@ class QueryModel extends Model implements Resource
         $tags = $this->getTags();
         $result = [];
         foreach ($tags as $tag) {
-            $result[] = TagModel::createFromActiveRow($tag)->tag_type;
+            $result[] = $tag->tag_type;
         }
         return $result;
     }
