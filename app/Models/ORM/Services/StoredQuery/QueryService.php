@@ -12,9 +12,7 @@ class QueryService extends Service
 {
     public function findByQid(string $qid): ?QueryModel
     {
-        /** @var QueryModel $result */
-        $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result;
+        return $this->getTable()->where('qid', $qid)->fetch();
     }
 
     public function findByTagType(array $tagTypeIds): ?TypedSelection

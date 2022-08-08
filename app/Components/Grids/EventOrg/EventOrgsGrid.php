@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\EventOrg;
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\EventOrgModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
@@ -37,10 +36,5 @@ class EventOrgsGrid extends RelatedGrid
         //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
         // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return EventOrgModel::class;
     }
 }

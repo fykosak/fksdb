@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
-use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\StudyYearService;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\ORM\Services\TaskContributionService;

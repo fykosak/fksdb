@@ -12,11 +12,6 @@ class FlagService extends Service
 
     public function findByFid(?string $fid): ?FlagModel
     {
-        if (!$fid) {
-            return null;
-        }
-        /** @var FlagModel $result */
-        $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result;
+        return $fid ? $this->getTable()->where('fid', $fid)->fetch() : null;
     }
 }

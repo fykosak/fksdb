@@ -134,12 +134,12 @@ class ResultsComponent extends BaseComponent
             $container->addComponent($subContainer, $name);
             // $subcontainer = $container->addContainer($name);
 
-            switch ($parameter->type) {
+            switch ($parameter->type->value) {
                 case ParameterType::INT:
                 case ParameterType::STRING:
                     $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
-                    if ($parameter->type == ParameterType::INT) {
+                    if ($parameter->type->value == ParameterType::INT) {
                         $valueElement->addRule(Form::INTEGER, _('Parameter %label is numeric.'));
                     }
 

@@ -15,8 +15,7 @@ use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -44,35 +43,34 @@ class TeamModel2 extends Model implements Resource
         return $this->event->event_type->contest;
     }
 
-    public function getTeachers(): GroupedSelection
+    public function getTeachers(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_TEACHER);
     }
 
-    public function getMembers(): GroupedSelection
+    public function getMembers(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM_MEMBER, 'fyziklani_team_id');
     }
 
     public function getTeamSeat(): ?TeamSeatModel
     {
-        $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
-        return $row ? TeamSeatModel::createFromActiveRow($row) : null;
+        return $this->related(DbNames::TAB_FYZIKLANI_TEAM_SEAT, 'fyziklani_team_id')->fetch();
     }
 
     /* ******************** SUBMITS ******************************* */
 
-    public function getAllSubmits(): GroupedSelection
+    public function getAllSubmits(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_SUBMIT, 'fyziklani_team_id');
     }
 
-    public function getNonRevokedSubmits(): GroupedSelection
+    public function getNonRevokedSubmits(): TypedGroupedSelection
     {
         return $this->getAllSubmits()->where('points IS NOT NULL');
     }
 
-    public function getNonCheckedSubmits(): GroupedSelection
+    public function getNonCheckedSubmits(): TypedGroupedSelection
     {
         return $this->getNonRevokedSubmits()->where('state IS NULL OR state != ?', SubmitModel::STATE_CHECKED);
     }
@@ -131,17 +129,17 @@ class TeamModel2 extends Model implements Resource
     {
         $persons = [];
         foreach ($this->getMembers() as $pRow) {
-            $persons[] = TeamMemberModel::createFromActiveRow($pRow)->getPerson();
+            $persons[] = $pRow->getPerson();
         }
         foreach ($this->getTeachers() as $pRow) {
-            $persons[] = TeamTeacherModel::createFromActiveRow($pRow)->person;
+            $persons[] = $pRow->person;
         }
         return $persons;
     }
 
     /**
      * @param string $key
-     * @return GameLang|TeamCategory|TeamState|mixed|ActiveRow|null
+     * @return GameLang|TeamCategory|TeamState|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

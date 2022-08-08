@@ -42,9 +42,9 @@ class TaskModel extends Model
         }
 
         $result = [];
+        /** @var TaskContributionModel $contribution */
         foreach ($contributions as $contribution) {
-            $contributionModel = TaskContributionModel::createFromActiveRow($contribution);
-            $result[$contributionModel->contribution_id] = $contributionModel;
+            $result[$contribution->contribution_id] = $contribution;
         }
         return $result;
     }
@@ -57,9 +57,9 @@ class TaskModel extends Model
         $studyYears = $this->related(DbNames::TAB_TASK_STUDY_YEAR, 'task_id');
 
         $result = [];
+        /** @var TaskStudyYearModel $studyYear */
         foreach ($studyYears as $studyYear) {
-            $studyYearModel = TaskStudyYearModel::createFromActiveRow($studyYear);
-            $result[$studyYearModel->study_year] = $studyYearModel;
+            $result[$studyYear->study_year] = $studyYear;
         }
         return $result;
     }

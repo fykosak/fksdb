@@ -21,14 +21,12 @@ abstract class BasePresenter extends AuthenticatedPresenter
         if (!isset($this->contestant)) {
             /** @var PersonModel $person */
             $person = $this->user->getIdentity()->person;
-            $row = $person->related(DbNames::TAB_CONTESTANT, 'person_id')->where(
+            $this->contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')->where(
                 [
                     'contest_id' => $this->getSelectedContestYear()->contest_id,
                     'year' => $this->getSelectedContestYear()->year,
                 ]
             )->fetch();
-
-            $this->contestant = $row ? ContestantModel::createFromActiveRow($row) : null;
         }
         return $this->contestant;
     }

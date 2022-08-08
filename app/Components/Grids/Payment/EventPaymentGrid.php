@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\Components\Grids\RelatedGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\PaymentModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -44,10 +43,5 @@ class EventPaymentGrid extends RelatedGrid
         $this->addLink('payment.detail', false);
         $this->paginate = false;
         $this->addCSVDownloadButton();
-    }
-
-    protected function getModelClassName(): string
-    {
-        return PaymentModel::class;
     }
 }

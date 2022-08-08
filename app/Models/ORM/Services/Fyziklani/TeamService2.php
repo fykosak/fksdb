@@ -31,8 +31,8 @@ class TeamService2 extends Service
     public static function serialiseTeams(EventModel $event): array
     {
         $teams = [];
-        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $row) {
-            $team = TeamModel2::createFromActiveRow($row);
+        /** @var TeamModel2 $team */
+        foreach ($event->getPossiblyAttendingFyziklaniTeams() as $team) {
             $teams[] = $team->__toArray();
         }
         return $teams;

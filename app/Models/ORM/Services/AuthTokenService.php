@@ -85,9 +85,7 @@ class AuthTokenService extends Service
             $tokens->where('since <= NOW()')
                 ->where('until IS NULL OR until >= NOW()');
         }
-        /** @var AuthTokenModel $token */
-        $token = $tokens->fetch();
-        return $token;
+        return $tokens->fetch();
     }
 
     /**

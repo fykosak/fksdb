@@ -74,7 +74,7 @@ class ContributionsFromXML extends Stage
                     $logger->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
                     continue;
                 }
-                $contributors[] = OrgModel::createFromActiveRow($row);
+                $contributors[] = $row;
             }
 
             // delete old contributions
@@ -83,6 +83,7 @@ class ContributionsFromXML extends Stage
             }
 
             // store new contributions
+            /** @var OrgModel $contributor */
             foreach ($contributors as $contributor) {
                 $this->taskContributionService->createNewModel([
                     'person_id' => $contributor->person_id,

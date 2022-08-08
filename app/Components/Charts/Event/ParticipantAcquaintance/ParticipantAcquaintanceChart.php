@@ -24,12 +24,12 @@ class ParticipantAcquaintanceChart extends FrontEndComponent implements Chart
     public function getData(): array
     {
         $data = [];
-        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
-            $participant = EventParticipantModel::createFromActiveRow($row);
-
+        /** @var EventParticipantModel $participant */
+        foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $participant) {
             $participants = [];
-            foreach ($participant->person->getEventParticipants()->where('status', ['participated']) as $item) {
-                $personParticipation = EventParticipantModel::createFromActiveRow($item);
+            /** @var EventParticipantModel $personParticipation */
+            $query = $participant->person->getEventParticipants()->where('status', ['participated']);
+            foreach ($query as $personParticipation) {
                 $participants[] = $personParticipation->event->event_id;
             }
             $datum = [

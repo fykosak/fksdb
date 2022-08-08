@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -46,10 +45,5 @@ class ResultsTotalGrid extends BaseGrid
             'fyziklani_team.name',
             'fyziklani_team.rank_total',
         ]);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return TeamModel2::class;
     }
 }

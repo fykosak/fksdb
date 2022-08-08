@@ -11,7 +11,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -74,51 +74,51 @@ class EventModel extends Model implements Resource, NodeCreator
         if (!$gameSetupRow) {
             throw new NotSetGameParametersException();
         }
-        return GameSetupModel::createFromActiveRow($gameSetupRow);
+        return $gameSetupRow;
     }
 
-    public function getScheduleGroups(): GroupedSelection
+    public function getScheduleGroups(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
-    public function getParticipants(): GroupedSelection
+    public function getParticipants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
-    public function getPossiblyAttendingParticipants(): GroupedSelection
+    public function getPossiblyAttendingParticipants(): TypedGroupedSelection
     {
         return $this->getParticipants()->where('status', self::POSSIBLY_ATTENDING_STATES);
     }
 
-    public function getFyziklaniTeams(): GroupedSelection
+    public function getFyziklaniTeams(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TEAM, 'event_id');
     }
 
-    public function getParticipatingFyziklaniTeams(): GroupedSelection
+    public function getParticipatingFyziklaniTeams(): TypedGroupedSelection
     {
         return $this->getFyziklaniTeams()->where('state', TeamState::PARTICIPATED);
     }
 
-    public function getPossiblyAttendingFyziklaniTeams(): GroupedSelection
+    public function getPossiblyAttendingFyziklaniTeams(): TypedGroupedSelection
     {
         // TODO
         return $this->getFyziklaniTeams()->where('state', self::POSSIBLY_ATTENDING_STATES);
     }
 
-    public function getEventOrgs(): GroupedSelection
+    public function getEventOrgs(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
     }
 
-    public function getPayments(): GroupedSelection
+    public function getPayments(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
-    public function getFyziklaniTasks(): GroupedSelection
+    public function getFyziklaniTasks(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_FYZIKLANI_TASK);
     }

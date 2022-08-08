@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ContestModel;
-use FKSDB\Models\ORM\Models\OrgModel;
 use FKSDB\Models\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -65,10 +64,5 @@ class OrgsGrid extends BaseGrid
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return OrgModel::class;
     }
 }

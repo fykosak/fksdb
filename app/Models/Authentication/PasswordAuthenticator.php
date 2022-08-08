@@ -116,9 +116,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements Authenticat
 
     public function wakeupIdentity(IIdentity $identity): ?LoginModel
     {
-        // Find login
-        /** @var LoginModel|null $login */
-        $login = $this->loginService->findByPrimary($identity->getId());
-        return $login;
+        return $this->loginService->findByPrimary($identity->getId());
     }
 }

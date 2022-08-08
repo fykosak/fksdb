@@ -9,10 +9,10 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\MultiCurrencyPrice;
 use Fykosak\Utils\Price\Price;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -60,7 +60,7 @@ class ScheduleItemModel extends Model implements Resource, NodeCreator
         return (bool)count($this->getPrice()->getPrices());
     }
 
-    public function getInterested(): GroupedSelection
+    public function getInterested(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }

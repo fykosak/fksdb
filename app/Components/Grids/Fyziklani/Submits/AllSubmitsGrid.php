@@ -18,7 +18,6 @@ use FKSDB\Models\SQL\SearchableDataSource;
 use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -147,14 +146,14 @@ class AllSubmitsGrid extends SubmitsGrid
 
         $rows = $this->event->getPossiblyAttendingFyziklaniTeams();
         $teams = [];
-        /** @var TeamModel2|ActiveRow $team */
+        /** @var TeamModel2 $team */
         foreach ($rows as $team) {
             $teams[$team->fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->event->getFyziklaniTasks();
         $tasks = [];
-        /** @var TaskModel|ActiveRow $task */
+        /** @var TaskModel $task */
         foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }

@@ -67,7 +67,7 @@ class EventRolePrinter
                     Html::el('span')
                         ->addAttributes(['class' => 'badge bg-color-9'])
                         ->addText(
-                            _('Team member') . ' - ' . _($role->member->getFyziklaniTeam()->state->label())
+                            _('Team member') . ' - ' . _($role->member->fyziklani_team->state->label())
                         )
                 );
             } elseif ($role instanceof ParticipantRole) {

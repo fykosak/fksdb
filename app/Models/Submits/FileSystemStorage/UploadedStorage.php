@@ -221,7 +221,7 @@ class UploadedStorage implements SubmitStorage
     {
         $task = $submit->task;
 
-        $contestantName = $submit->getContestant()->person->getFullName();
+        $contestantName = $submit->contestant->person->getFullName();
         $contestantName = preg_replace('/ +/', '_', $contestantName);
         $contestantName = Strings::webalize($contestantName, '_');
 

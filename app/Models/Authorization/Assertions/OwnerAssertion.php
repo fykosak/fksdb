@@ -35,7 +35,7 @@ class OwnerAssertion
         if (!$submit instanceof Resource) {
             return false;
         }
-        return $submit->getContestant()->person->getLogin()->login_id === $login->getId();
+        return $submit->contestant->person->getLogin()->login_id === $login->getId();
     }
 
     /**

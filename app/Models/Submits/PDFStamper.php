@@ -73,7 +73,7 @@ class PDFStamper implements StorageProcessing
 
         $series = $submit->task->series;
         $label = $submit->task->label;
-        $person = $submit->getContestant()->person;
+        $person = $submit->contestant->person;
 
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {

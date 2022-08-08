@@ -32,7 +32,7 @@ abstract class ModelMulti extends ActiveRow
     }
 
     /**
-     * @return bool|mixed|ActiveRow|Selection|null
+     * @return bool|mixed|Selection|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)
@@ -83,7 +83,7 @@ abstract class ModelMulti extends ActiveRow
 
     /**
      * @param mixed $column
-     * @return bool|mixed|ActiveRow|Selection|null
+     * @return bool|mixed|Selection|null
      * @throws \ReflectionException
      */
     public function &offsetGet($column)

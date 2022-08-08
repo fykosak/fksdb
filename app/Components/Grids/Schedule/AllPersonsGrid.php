@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Schedule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\EventModel;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Services\Schedule\PersonScheduleService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -60,10 +59,5 @@ class AllPersonsGrid extends BaseGrid
                 'payment.payment',
             ]
         );
-    }
-
-    protected function getModelClassName(): string
-    {
-        return PersonScheduleModel::class;
     }
 }

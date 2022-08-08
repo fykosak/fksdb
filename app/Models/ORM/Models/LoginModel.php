@@ -57,8 +57,8 @@ class LoginModel extends Model implements IIdentity
             $this->roles[] = new Grant(RoleModel::REGISTERED, null);
 
             // explicitly assigned roles
-            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
-                $grant = GrantModel::createFromActiveRow($row);
+            /** @var GrantModel $grant */
+            foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $grant) {
                 $this->roles[] = new Grant($grant->role->name, $grant->contest);
             }
             // roles from other tables

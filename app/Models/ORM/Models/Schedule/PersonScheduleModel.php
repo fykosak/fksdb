@@ -38,7 +38,7 @@ class PersonScheduleModel extends Model
         if (!$data) {
             return null;
         }
-        return PaymentModel::createFromActiveRow($data);
+        return $data;
     }
 
     public function hasActivePayment(): bool

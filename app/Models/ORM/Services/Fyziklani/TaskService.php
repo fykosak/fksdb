@@ -13,10 +13,9 @@ class TaskService extends Service
 
     public function findByLabel(string $label, EventModel $event): ?TaskModel
     {
-        $result = $event->getFyziklaniTasks()->where([
+        return $event->getFyziklaniTasks()->where([
             'label' => $label,
         ])->fetch();
-        return $result ? TaskModel::createFromActiveRow($result) : null;
     }
 
     /**
@@ -25,9 +24,8 @@ class TaskService extends Service
     public static function serialiseTasks(EventModel $event, bool $hideName = false): array
     {
         $tasks = [];
-
-        foreach ($event->getFyziklaniTasks()->order('label') as $row) {
-            $model = TaskModel::createFromActiveRow($row);
+        /** @var TaskModel $model */
+        foreach ($event->getFyziklaniTasks()->order('label') as $model) {
             $tasks[] = $model->__toArray($hideName);
         }
         return $tasks;

@@ -7,14 +7,13 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewComponent;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormComponent;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel, TaskContributionModel};
+use FKSDB\Models\ORM\Models\{ContestModel, LoginModel, TaskContributionType, TaskModel};
 use FKSDB\Models\ORM\Services\TaskContributionService;
 use FKSDB\Models\Results\SQLResultsCache;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Tracy\Debugger;
 
@@ -116,7 +115,7 @@ class PointsPresenter extends BasePresenter
             $years = $this->getSelectedContestYear()->contest->related(DbNames::TAB_TASK)
                 ->select('year')
                 ->group('year');
-            /** @var TaskModel|ActiveRow $year */
+            /** @var TaskModel $year */
             foreach ($years as $year) {
                 // TODO WTF -1 year
                 $contestYear = $this->getSelectedContest()->getContestYear($year->year);

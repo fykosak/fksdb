@@ -8,10 +8,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\EventParticipantModel;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateButtonException;
@@ -85,7 +84,7 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
         return $control;
     }
 
-    protected function getSource(): GroupedSelection
+    protected function getSource(): TypedGroupedSelection
     {
         return $this->event->getParticipants();
     }
@@ -113,11 +112,6 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid
             'note',
             'swimmer',
         ];
-    }
-
-    protected function getModelClassName(): string
-    {
-        return EventParticipantModel::class;
     }
 
     protected function getTableName(): string

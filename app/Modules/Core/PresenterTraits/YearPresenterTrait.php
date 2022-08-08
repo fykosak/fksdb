@@ -9,9 +9,9 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\YearCalculator;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Table\GroupedSelection;
 use Nette\InvalidStateException;
 
 /**
@@ -57,7 +57,7 @@ trait YearPresenterTrait
         return (bool)$this->getAvailableYears()->where('year', $contestYear->year)->fetch();
     }
 
-    protected function getAvailableYears(): GroupedSelection
+    protected function getAvailableYears(): TypedGroupedSelection
     {
         $contest = $this->getSelectedContest();
         switch ($this->getRole()) {

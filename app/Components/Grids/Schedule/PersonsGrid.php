@@ -6,7 +6,6 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleItemModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -40,10 +39,5 @@ class PersonsGrid extends BaseGrid
         $this->paginate = false;
         $this->addColumn('person_schedule_id', _('#'));
         $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return PersonScheduleModel::class;
     }
 }

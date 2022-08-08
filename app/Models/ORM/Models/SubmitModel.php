@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Models;
 
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\Utils\FakeStringEnum;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int submit_id
  * @property-read int contestant_id
- * @property-read ActiveRow contestant
+ * @property-read ContestantModel contestant
  * @property-read int task_id
  * @property-read TaskModel task
  * @property-read \DateTimeInterface submitted_on
@@ -25,20 +23,12 @@ use Fykosak\NetteORM\Model;
  */
 class SubmitModel extends Model implements Resource
 {
-    public function isEmpty(): bool
-    {
-        return !($this->submitted_on || $this->note);
-    }
 
-    public function getContestant(): ContestantModel
-    {
-        // TODO why?
-        return ContestantModel::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT, 'contestant_id'));
-    }
+    public const RESOURCE_ID = 'submit';
 
     public function getResourceId(): string
     {
-        return 'submit';
+        return self::RESOURCE_ID;
     }
 
     public function getFingerprint(): string
@@ -71,7 +61,7 @@ class SubmitModel extends Model implements Resource
     }
 
     /**
-     * @return SubmitSource|FakeStringEnum|mixed|ActiveRow|null
+     * @return SubmitSource|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

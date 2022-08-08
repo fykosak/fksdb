@@ -405,10 +405,6 @@ class ReferencedPersonHandler implements ReferencedHandler
         //else: TODO ? throw an exception?
     }
 
-    /**
-     * @param mixed $key
-     * @return PersonModel|null|ActiveRow
-     */
     public function findBySecondaryKey(string $key): ?PersonModel
     {
         return $this->personService->findByEmail($key);

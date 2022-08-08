@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Inbox\SeriesTableFormComponent;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use Fykosak\NetteORM\Exceptions\ModelException;
-use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Services\SubmitService;
 use FKSDB\Models\Submits\SeriesTable;
 use Fykosak\Utils\Logging\Message;

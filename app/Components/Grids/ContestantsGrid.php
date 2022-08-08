@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\ContestantModel;
 use FKSDB\Models\ORM\Models\ContestYearModel;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -55,10 +54,9 @@ class ContestantsGrid extends BaseGrid
             'person.full_name',
             'person_history.study_year',
         ]);
-        $this->addColumn('school_name', _('School'))->setRenderer(function (ActiveRow $row) {
-            $contestant = ContestantModel::createFromActiveRow($row);
-            return $contestant->getPersonHistory()->school->name_abbrev;
-        });
+        $this->addColumn('school_name', _('School'))->setRenderer(
+            fn(ContestantModel $row) => $row->getPersonHistory()->school->name_abbrev
+        );
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'contestant_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'contestant_id']);
@@ -67,10 +65,5 @@ class ContestantsGrid extends BaseGrid
             ->setLink($this->getPresenter()->link('create'));
 
         $this->paginate = false;
-    }
-
-    protected function getModelClassName(): string
-    {
-        return ContestantModel::class;
     }
 }
