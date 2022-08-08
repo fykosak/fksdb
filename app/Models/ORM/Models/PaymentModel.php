@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\Utils\Price\Currency;
 use Fykosak\Utils\Price\Price;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 use Fykosak\NetteORM\Model;
 
@@ -47,7 +46,7 @@ class PaymentModel extends Model implements Resource
         $items = [];
         /** @var SchedulePaymentModel $row */
         foreach ($query as $row) {
-            $items[] = PersonScheduleModel::createFromActiveRow($row->person_schedule);
+            $items[] = $row->person_schedule;
         }
         return $items;
     }
@@ -85,7 +84,7 @@ class PaymentModel extends Model implements Resource
 
     /**
      * @param string $key
-     * @return PaymentState|FakeStringEnum|mixed|ActiveRow|null
+     * @return PaymentState|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

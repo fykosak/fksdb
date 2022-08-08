@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -28,7 +28,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
 
     public const RESOURCE_ID = 'event.scheduleGroup';
 
-    public function getItems(): GroupedSelection
+    public function getItems(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);
     }

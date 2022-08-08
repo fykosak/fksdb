@@ -11,7 +11,6 @@ use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\StoredQuery\TagModel;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\StoredQuery\QueryModel;
-use FKSDB\Models\ORM\Models\StoredQuery\TagTypeModel;
 use FKSDB\Models\ORM\Services\StoredQuery\TagTypeService;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -35,7 +34,7 @@ class TagsColumnFactory extends ColumnFactory
         /** @var TagModel $tagRow */
         foreach ($model->getTags() as $tagRow) {
             // TODO why ->stored_query_tag_type
-            $tag = TagTypeModel::createFromActiveRow($tagRow->tag_type);
+            $tag = $tagRow->tag_type;
             $baseEl->addHtml(
                 Html::el('span')
                     ->addAttributes([

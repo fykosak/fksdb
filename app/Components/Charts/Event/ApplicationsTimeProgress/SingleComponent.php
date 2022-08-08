@@ -28,13 +28,12 @@ class SingleComponent extends FrontEndComponent implements Chart
             'participants' => [],
             'events' => [],
         ];
-        foreach ($this->eventType->getEvents() as $eventRow) {
-            $event = EventModel::createFromActiveRow($eventRow);
+        /** @var EventModel $event */
+        foreach ($this->eventType->getEvents() as $event) {
             $participants = [];
             $query = $event->getPossiblyAttendingParticipants();
             /** @var EventParticipantModel $participant */
-            foreach ($query as $row) {
-                $participant = EventParticipantModel::createFromActiveRow($row);
+            foreach ($query as $participant) {
                 $participants[] = [
                     'created' => $participant->created->format('c'),
                 ];

@@ -38,8 +38,8 @@ class SignaturesWebModel extends WebModel
 
         $rootNode = $doc->createElement('signatures');
         $organisers = $contest->related(DbNames::TAB_ORG);
-        foreach ($organisers as $row) {
-            $org = OrgModel::createFromActiveRow($row);
+        /** @var OrgModel $org */
+        foreach ($organisers as $org) {
             $orgNode = $doc->createElement('org');
             XMLHelper::fillArrayToNode([
                 'name' => $org->person->getFullName(),

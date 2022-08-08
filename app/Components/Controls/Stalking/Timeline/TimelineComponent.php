@@ -48,8 +48,8 @@ class TimelineComponent extends FrontEndComponent
             'until' => [],
         ];
         $organisers = [];
-        foreach ($this->person->getOrgs() as $row) {
-            $org = OrgModel::createFromActiveRow($row);
+        /** @var OrgModel $org */
+        foreach ($this->person->getOrgs() as $org) {
             $since = new \DateTime(
                 $org->contest->getContestYear($org->since)->ac_year . '-' . YearCalculator::FIRST_AC_MONTH . '-1'
             );
@@ -73,8 +73,8 @@ class TimelineComponent extends FrontEndComponent
             ];
         }
         $contestants = [];
-        foreach ($this->person->getContestants() as $row) {
-            $contestant = ContestantModel::createFromActiveRow($row);
+        /** @var ContestantModel $contestant */
+        foreach ($this->person->getContestants() as $contestant) {
             $year = $contestant->contest->getContestYear($contestant->year)->ac_year;
 
             $since = new \DateTime($year . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
@@ -103,20 +103,20 @@ class TimelineComponent extends FrontEndComponent
     {
         $events = [];
         $eventParticipants = [];
-        foreach ($this->person->getEventParticipants() as $row) {
-            $participant = EventParticipantModel::createFromActiveRow($row);
+        /** @var EventParticipantModel $participant */
+        foreach ($this->person->getEventParticipants() as $participant) {
             $events[] = $participant->event;
             $eventParticipants[] = ['event' => $this->eventToArray($participant->event), 'model' => null];
         }
         $eventOrganisers = [];
-        foreach ($this->person->getEventOrgs() as $row) {
-            $eventOrg = EventOrgModel::createFromActiveRow($row);
+        /** @var EventOrgModel $eventOrg */
+        foreach ($this->person->getEventOrgs() as $eventOrg) {
             $events[] = $eventOrg->event;
             $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->event), 'model' => null];
         }
         $eventTeachers = [];
-        foreach ($this->person->getFyziklaniTeachers() as $row) {
-            $teacher = TeamTeacherModel::createFromActiveRow($row);
+        /** @var TeamTeacherModel $teacher */
+        foreach ($this->person->getFyziklaniTeachers() as $teacher) {
             $eventTeachers[] = [
                 'event' => $this->eventToArray($teacher->fyziklani_team->event),
                 'model' => null,

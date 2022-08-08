@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 
 /**
  * @property-read int contribution_id
@@ -25,7 +24,7 @@ class TaskContributionModel extends Model
 
     /**
      * @param string $key
-     * @return TaskContributionType|FakeStringEnum|mixed|ActiveRow|null
+     * @return TaskContributionType|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

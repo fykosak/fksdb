@@ -143,7 +143,7 @@ class SubmitHandlerFactory
      */
     private function checkPrivilege(SubmitModel $submit, string $privilege): void
     {
-        if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->contest)) {
+        if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->contestant->contest)) {
             throw new ForbiddenRequestException(_('Access denied'));
         }
     }

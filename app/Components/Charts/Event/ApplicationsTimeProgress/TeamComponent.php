@@ -28,8 +28,8 @@ class TeamComponent extends FrontEndComponent implements Chart
             'teams' => [],
             'events' => [],
         ];
-        foreach ($this->eventType->getEvents() as $row) {
-            $event = EventModel::createFromActiveRow($row);
+        /** @var EventModel $event */
+        foreach ($this->eventType->getEvents() as $event) {
             $data['teams'][$event->event_id] = TeamService2::serialiseTeams($event);
             $data['events'][$event->event_id] = $event->__toArray();
         }

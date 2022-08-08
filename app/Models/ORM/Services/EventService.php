@@ -27,8 +27,6 @@ class EventService extends Service
 
     public function getByEventTypeId(ContestYearModel $contestYear, int $eventTypeId): ?EventModel
     {
-        /** @var EventModel $event */
-        $event = $this->getEvents($contestYear)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
-        return $event;
+        return $this->getEvents($contestYear)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
     }
 }

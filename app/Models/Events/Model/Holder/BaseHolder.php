@@ -281,8 +281,7 @@ class BaseHolder
             if (!$app) {
                 return null;
             }
-            $model = ReferencedAccessor::accessModel($app, PersonModel::class);
-            return $model;
+            return ReferencedAccessor::accessModel($app, PersonModel::class);
         } catch (CannotAccessModelException $exception) {
             return null;
         }

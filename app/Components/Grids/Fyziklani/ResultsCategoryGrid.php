@@ -7,7 +7,6 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamCategory;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -51,10 +50,5 @@ class ResultsCategoryGrid extends BaseGrid
             'fyziklani_team.name',
             'fyziklani_team.rank_category',
         ]);
-    }
-
-    protected function getModelClassName(): string
-    {
-        return TeamModel2::class;
     }
 }

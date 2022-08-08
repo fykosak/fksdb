@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\EmailMessageState;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\Models\EmailMessageModel;
 use Fykosak\NetteORM\TypedSelection;
-use Nette\Database\Table\ActiveRow;
 use Fykosak\NetteORM\Service;
 
 /**

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use FKSDB\Models\ORM\Models\Fyziklani\ParticipantModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant;
@@ -15,7 +14,6 @@ use Nette\InvalidStateException;
 
 abstract class SecondaryModelStrategy
 {
-
     /**
      * @param BaseHolder[] $holders
      * @param ActiveRow[] $models
@@ -49,8 +47,7 @@ abstract class SecondaryModelStrategy
         if ($primaryModel) {
             if ($primaryModel instanceof TeamModel) {
                 /** @var ServiceMFyziklaniParticipant $service */
-                foreach ($primaryModel->getFyziklaniParticipants() as $row) {
-                    $fyziklaniParticipant = ParticipantModel::createFromActiveRow($row);
+                foreach ($primaryModel->getFyziklaniParticipants() as $fyziklaniParticipant) {
                     $secondary[] = $service->composeModel(
                         $fyziklaniParticipant->event_participant,
                         $fyziklaniParticipant

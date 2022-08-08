@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Models\StoredQuery;
 
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
@@ -30,7 +29,7 @@ class ParameterModel extends Model
             case ParameterType::STRING:
                 return $this->default_string;
             default:
-                throw new InvalidStateException("Unsupported parameter type '$this->type'.");
+                throw new InvalidStateException("Unsupported parameter type '$this->type->value'.");
         }
     }
 
@@ -56,7 +55,7 @@ class ParameterModel extends Model
 
     /**
      * @param string $key
-     * @return ParameterType|mixed|ActiveRow
+     * @return ParameterType|mixed
      * @throws \ReflectionException
      */
     public function &__get(string $key)

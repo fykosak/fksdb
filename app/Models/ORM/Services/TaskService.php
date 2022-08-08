@@ -14,11 +14,10 @@ class TaskService extends Service
 
     public function findBySeries(ContestYearModel $contestYear, int $series, int $taskNumber): ?TaskModel
     {
-        $row = $contestYear->contest->related(DbNames::TAB_TASK)->where([
+        return $contestYear->contest->related(DbNames::TAB_TASK)->where([
             'year' => $contestYear->year,
             'series' => $series,
             'tasknr' => $taskNumber,
         ])->fetch();
-        return $row ? TaskModel::createFromActiveRow($row) : null;
     }
 }

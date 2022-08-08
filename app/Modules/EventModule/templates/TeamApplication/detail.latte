@@ -47,8 +47,8 @@
     <hr/>
 
     <h2>{_'Teachers'}</h2>
-    {foreach $model->getTeachers() as $teacherRow}
-        {var FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher = \FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel::createFromActiveRow($teacherRow)}
+    {foreach $model->getTeachers() as $teacher}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel $teacher}
         {control valuePrinter:row 'person.person_link', $teacher}
         {include personSchedule, person => $teacher->person,event=> $model->event}
     {/foreach}
@@ -57,20 +57,20 @@
     <h2>{_'Participants'}</h2>
 
     {var $counter = 0;}
-    {foreach $model->getMembers() as $memberRow}
-        {var FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $participant = \FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel::createFromActiveRow($memberRow)}
+    {foreach $model->getMembers() as $member}
+        {varType FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel $member}
         {php $counter++}
-        {var $history = $participant->getPersonHistory()}
+        {var $history = $member->getPersonHistory()}
 
         <h3>{_'Parcipant'} {$counter}</h3>
 
-        {control valuePrinter:row 'person.person_link', $participant}
+        {control valuePrinter:row 'person.person_link', $member}
 
         {control valuePrinter:row 'person_history.study_year', $history}
 
         {control valuePrinter:row 'school.school', $history}
 
-        {include personSchedule, person => $participant->getPerson(),event=>$model->event}
+        {include personSchedule, person => $member->person,event=>$model->event}
         <hr/>
     {/foreach}
     {include ../AbstractApplication/applicationControl.latte}

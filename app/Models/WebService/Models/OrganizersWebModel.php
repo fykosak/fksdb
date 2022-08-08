@@ -73,8 +73,8 @@ class OrganizersWebModel extends WebModel
                 ->where('until IS NULL OR until >=?', $params['year']);
         }
         $items = [];
-        foreach ($organisers as $row) {
-            $org = OrgModel::createFromActiveRow($row);
+        /** @var OrgModel $org */
+        foreach ($organisers as $org) {
             $items[] = [
                 'name' => $org->person->getFullName(),
                 'personId' => $org->person_id,

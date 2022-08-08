@@ -29,8 +29,8 @@ class ParticipantsTimeGeoChart extends FrontEndComponent implements Chart
     protected function getData(): array
     {
         $rawData = [];
-        foreach ($this->event->getParticipants() as $row) {
-            $participant = EventParticipantModel::createFromActiveRow($row);
+        /** @var EventParticipantModel $participant */
+        foreach ($this->event->getParticipants() as $participant) {
             $iso = $participant->getPersonHistory()->school->address->region->country_iso3;
             $rawData[] = [
                 'country' => $iso,

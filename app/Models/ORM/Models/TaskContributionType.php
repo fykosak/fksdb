@@ -39,8 +39,8 @@ class TaskContributionType extends FakeStringEnum implements EnumColumn
             case self::SOLUTION:
                 return _('Solution');
             case self::GRADE:
-                return _('Grade');
             default:
+                return _('Grade');
         }
     }
 

@@ -11,7 +11,6 @@ use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use Nette\Database\Table\ActiveRow;
 use Tracy\Debugger;
 
 class AddressService extends Service
@@ -50,7 +49,7 @@ class AddressService extends Service
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-        /** @var ActiveRow|RegionModel $row */
+        /** @var RegionModel $row */
         $row = $this->explorer->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;

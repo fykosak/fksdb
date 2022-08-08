@@ -16,7 +16,7 @@ class EventPrice implements Preprocess
          $ids = $this->getData($modelPayment);
          foreach ($ids as $id) {
              $row = $this->eventParticipantService->findByPrimary($id);
-             $model = ModelEventParticipant::createFromActiveRow($row);
+             $model = $row;
              $price->add($this->getPriceFromModel($model, $price));
          }*/
         return new MultiCurrencyPrice([]);
@@ -29,7 +29,7 @@ class EventPrice implements Preprocess
         $ids = $this->getData([]);
         foreach ($ids as $id) {
             $row = $this->eventParticipantService->findByPrimary($id);
-            $model = ModelEventParticipant::createFromActiveRow($row);
+            $model = $row;
             $items[] = [
                 'price' => $this->getPriceFromModel($model, $price),
                 'label' => '',// TODO

@@ -8,8 +8,8 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use Fykosak\NetteORM\Model;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Security\Resource;
 
 /**
@@ -48,7 +48,7 @@ class TeamModel extends Model implements Resource
         ) : null;
     }
 
-    public function getFyziklaniParticipants(): GroupedSelection
+    public function getFyziklaniParticipants(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
@@ -59,8 +59,9 @@ class TeamModel extends Model implements Resource
     public function getPersons(): array
     {
         $persons = [];
+        /** @var ParticipantModel $pRow */
         foreach ($this->getFyziklaniParticipants() as $pRow) {
-            $persons[] = ParticipantModel::createFromActiveRow($pRow)->event_participant->person;
+            $persons[] = $pRow->event_participant->person;
         }
         $teacher = $this->getTeacher();
         if ($teacher) {

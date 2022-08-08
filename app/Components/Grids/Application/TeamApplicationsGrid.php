@@ -9,11 +9,10 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\DbNames;
-use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamState;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateButtonException;
@@ -45,7 +44,7 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
         parent::configure($presenter);
     }
 
-    protected function getSource(): GroupedSelection
+    protected function getSource(): TypedGroupedSelection
     {
         return $this->event->getFyziklaniTeams();
     }
@@ -88,11 +87,6 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid
             'phone',
             'password',
         ];
-    }
-
-    protected function getModelClassName(): string
-    {
-        return TeamModel2::class;
     }
 
     protected function getTableName(): string

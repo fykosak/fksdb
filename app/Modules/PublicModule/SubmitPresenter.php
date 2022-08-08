@@ -13,7 +13,6 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\QuizModel;
-use FKSDB\Models\ORM\Models\SubmitModel;
 use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Models\SubmitSource;
 use FKSDB\Models\ORM\Services\QuizService;
@@ -182,8 +181,8 @@ class SubmitPresenter extends BasePresenter
             } else {
                 //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
-                foreach ($questions as $row) {
-                    $question = QuizModel::createFromActiveRow($row);
+                /** @var QuizModel $question */
+                foreach ($questions as $question) {
                     $select = $container->addRadioList(
                         'question' . $question->question_id,
                         $task->getFQName() . ' - ' . $question->getFQName(),

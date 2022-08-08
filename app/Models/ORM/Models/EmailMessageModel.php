@@ -70,7 +70,7 @@ class EmailMessageModel extends Model implements Resource
     }
 
     /**
-     * @return EmailMessageState|FakeStringEnum|mixed|ActiveRow|null
+     * @return EmailMessageState|FakeStringEnum|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

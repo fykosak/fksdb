@@ -73,8 +73,8 @@ class ScheduleField extends TextInput
     {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
-        foreach ($groups as $row) {
-            $group = ScheduleGroupModel::createFromActiveRow($row);
+        /** @var ScheduleGroupModel $group */
+        foreach ($groups as $group) {
             $groupList[] = $this->serializeGroup($group);
         }
         return ['groups' => $groupList, 'options' => $this->getRenderOptions()];
@@ -116,8 +116,8 @@ class ScheduleField extends TextInput
     {
         $groupArray = $group->__toArray();
         $itemList = [];
-        foreach ($group->getItems() as $row) {
-            $item = ScheduleItemModel::createFromActiveRow($row);
+        /** @var ScheduleItemModel $item */
+        foreach ($group->getItems() as $item) {
             $itemList[] = $item->__toArray();
         }
 

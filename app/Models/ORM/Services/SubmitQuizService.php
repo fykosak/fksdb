@@ -16,11 +16,9 @@ class SubmitQuizService extends Service
 
     public function findByContestant(QuizModel $question, ContestantModel $contestant): ?SubmitQuizModel
     {
-        /** @var SubmitQuizModel $result */
-        $result = $contestant->related(DbNames::TAB_SUBMIT_QUIZ)
+        return $contestant->related(DbNames::TAB_SUBMIT_QUIZ)
             ->where('question_id', $question->question_id)
             ->fetch();
-        return $result ? SubmitQuizModel::createFromActiveRow($result) : null;
     }
 
     public function saveSubmittedQuestion(QuizModel $question, ContestantModel $contestant, ?string $answer): void

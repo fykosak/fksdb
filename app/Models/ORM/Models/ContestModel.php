@@ -7,8 +7,7 @@ namespace FKSDB\Models\ORM\Models;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\YearCalculator;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\GroupedSelection;
+use Fykosak\NetteORM\TypedGroupedSelection;
 use Nette\Utils\Strings;
 
 /**
@@ -27,14 +26,12 @@ class ContestModel extends Model
 
     public function getContestYear(?int $year): ?ContestYearModel
     {
-        $row = $this->getContestYears()->where('year', $year)->fetch();
-        return $row ? ContestYearModel::createFromActiveRow($row) : null;
+        return $this->getContestYears()->where('year', $year)->fetch();
     }
 
     public function getContestYearByAcYear(?int $acYear): ?ContestYearModel
     {
-        $row = $this->getContestYears()->where('ac_year', $acYear)->fetch();
-        return $row ? ContestYearModel::createFromActiveRow($row) : null;
+        return $this->getContestYears()->where('ac_year', $acYear)->fetch();
     }
 
     public function getFirstYear(): int
@@ -47,15 +44,13 @@ class ContestModel extends Model
         return $this->getContestYears()->max('year');
     }
 
-    public function getContestYears(): GroupedSelection
+    public function getContestYears(): TypedGroupedSelection
     {
         return $this->related(DbNames::TAB_CONTEST_YEAR);
     }
 
     public function getCurrentContestYear(): ContestYearModel
     {
-        /** @var ActiveRow|ContestYearModel $row */
-        $row = $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
-        return ContestYearModel::createFromActiveRow($row);
+        return $this->getContestYears()->where('ac_year', YearCalculator::getCurrentAcademicYear())->fetch();
     }
 }
