@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Services\TaskService;
 use Nette\Utils\DateTime;
@@ -14,8 +15,6 @@ use FKSDB\Models\Pipeline\Stage;
  */
 class DeadlineFromXML extends Stage
 {
-
-    private SeriesData $data;
     private TaskService $taskService;
 
     public function __construct(TaskService $taskService)
@@ -23,31 +22,23 @@ class DeadlineFromXML extends Stage
         $this->taskService = $taskService;
     }
 
-    public function getOutput(): SeriesData
+    /**
+     * @param MemoryLogger $logger
+     * @param SeriesData $data
+     * @return SeriesData
+     */
+    public function __invoke(MemoryLogger $logger, $data): SeriesData
     {
-        return $this->data;
-    }
-
-    public function process(): void
-    {
-        $xml = $this->data->getData();
-        $deadline = (string)$xml->deadline[0];
+        $deadline = (string)$data->getData()->deadline[0];
         if (!$deadline) {
-            $this->log(new Message(_('Missing deadline of the series.'), Message::LVL_WARNING));
-            return;
+            $logger->log(new Message(_('Missing deadline of the series.'), Message::LVL_WARNING));
+            return $data;
         }
 
         $datetime = DateTime::createFromFormat('Y-m-d\TH:i:s', $deadline);
-        foreach ($this->data->getTasks() as $task) {
+        foreach ($data->getTasks() as $task) {
             $this->taskService->updateModel($task, ['submit_deadline' => $datetime]);
         }
-    }
-
-    /**
-     * @param SeriesData $data
-     */
-    public function setInput($data): void
-    {
-        $this->data = $data;
+        return $data;
     }
 }

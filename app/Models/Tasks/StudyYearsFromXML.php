@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Tasks;
 
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\Services\StudyYearService;
 use FKSDB\Models\ORM\Services\TaskStudyYearService;
@@ -16,10 +17,8 @@ class StudyYearsFromXML extends Stage
 {
 
     public const XML_ELEMENT_PARENT = 'study-years';
-
     public const XML_ELEMENT_CHILD = 'study-year';
 
-    private SeriesData $data;
     /** @var array   contribution type => xml element */
     private array $defaultStudyYears;
     private TaskStudyYearService $taskStudyYearService;
@@ -38,27 +37,18 @@ class StudyYearsFromXML extends Stage
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void
+    public function __invoke(MemoryLogger $logger, $data): SeriesData
     {
-        $this->data = $data;
-    }
-
-    public function process(): void
-    {
-        $xml = $this->data->getData();
+        $xml = $data->getData();
         foreach ($xml->problems[0]->problem as $task) {
-            $this->processTask($task);
+            $this->processTask($task, $logger, $data);
         }
+        return $data;
     }
 
-    public function getOutput(): SeriesData
+    private function processTask(\SimpleXMLElement $xMLTask, MemoryLogger $logger, SeriesData $data): void
     {
-        return $this->data;
-    }
-
-    private function processTask(\SimpleXMLElement $xMLTask): void
-    {
-        $tasks = $this->data->getTasks();
+        $tasks = $data->getTasks();
         $tasknr = (int)(string)$xMLTask->number;
 
         $task = $tasks[$tasknr];
@@ -80,7 +70,7 @@ class StudyYearsFromXML extends Stage
                 $hasYears = true;
 
                 if (!$this->studyYearService->findByPrimary($studyYear)) {
-                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), Message::LVL_INFO));
+                    $logger->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), Message::LVL_INFO));
                     continue;
                 }
 
@@ -90,11 +80,11 @@ class StudyYearsFromXML extends Stage
 
         if (!$studyYears) {
             if ($hasYears) {
-                $this->log(
+                $logger->log(
                     new Message(_('Filling in default study years despite incorrect specification.'), Message::LVL_INFO)
                 );
             }
-            $studyYears = $this->defaultStudyYears[$this->data->getContestYear()->contest_id];
+            $studyYears = $this->defaultStudyYears[$data->getContestYear()->contest_id];
         }
 
         // delete old contributions

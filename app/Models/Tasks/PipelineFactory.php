@@ -45,15 +45,13 @@ class PipelineFactory
     public function create(): Pipeline
     {
         $pipeline = new Pipeline();
-        $pipeline->setLogger(new MemoryLogger());
 
         // common stages
-        $pipeline->addStage(new TasksFromXML($this->taskService));
-        $pipeline->addStage(new DeadlineFromXML($this->taskService));
-        $pipeline->addStage(new ContributionsFromXML($this->taskContributionService));
-        $pipeline->addStage(
-            new StudyYearsFromXML($this->defaultStudyYears, $this->taskStudyYearService, $this->studyYearService)
-        );
+        $pipeline->stages[] = new TasksFromXML($this->taskService);
+        $pipeline->stages[] = new DeadlineFromXML($this->taskService);
+        $pipeline->stages[] = new ContributionsFromXML($this->taskContributionService);
+        $pipeline->stages[] =
+            new StudyYearsFromXML($this->defaultStudyYears, $this->taskStudyYearService, $this->studyYearService);
 
         return $pipeline;
     }

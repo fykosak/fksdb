@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Tasks;
 
 use FKSDB\Models\ORM\Models\TaskContributionType;
+use Fykosak\Utils\Logging\MemoryLogger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\OrgModel;
@@ -16,9 +17,6 @@ use FKSDB\Models\Pipeline\Stage;
  */
 class ContributionsFromXML extends Stage
 {
-
-    private SeriesData $data;
-
     /** @var array   contribution type => xml element */
     private static array $contributionFromXML = [
         'author' => 'authors/author',
@@ -35,27 +33,18 @@ class ContributionsFromXML extends Stage
     /**
      * @param SeriesData $data
      */
-    public function setInput($data): void
+    public function __invoke(MemoryLogger $logger, $data): SeriesData
     {
-        $this->data = $data;
-    }
-
-    public function process(): void
-    {
-        $xml = $this->data->getData();
+        $xml = $data->getData();
         foreach ($xml->problems[0]->problem as $task) {
-            $this->processTask($task);
+            $this->processTask($task, $logger, $data);
         }
+        return $data;
     }
 
-    public function getOutput(): SeriesData
+    private function processTask(\SimpleXMLElement $xMLTask, MemoryLogger $logger, SeriesData $data): void
     {
-        return $this->data;
-    }
-
-    private function processTask(\SimpleXMLElement $xMLTask): void
-    {
-        $tasks = $this->data->getTasks();
+        $tasks = $data->getTasks();
         $tasknr = (int)(string)$xMLTask->number;
 
         $task = $tasks[$tasknr];
@@ -76,13 +65,13 @@ class ContributionsFromXML extends Stage
                     continue;
                 }
 
-                $row = $this->data->getContestYear()->contest
+                $row = $data->getContestYear()->contest
                     ->related(DbNames::TAB_ORG)
                     ->where('tex_signature', $signature)
                     ->fetch();
 
                 if (!$row) {
-                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
+                    $logger->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), Message::LVL_INFO));
                     continue;
                 }
                 $contributors[] = OrgModel::createFromActiveRow($row);
