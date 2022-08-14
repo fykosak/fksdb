@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e008c71e1c16af5729353d6be20841d",
+    "content-hash": "bdd24a6dbd71e0dff34236c594d8bc9b",
     "packages": [
         {
             "name": "fykosak/nette-fks-utils",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fykosak/nette-orm.git",
-                "reference": "5d5ccd5"
+                "reference": "0022ca2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/5d5ccd5",
-                "reference": "5d5ccd5",
+                "url": "https://api.github.com/repos/fykosak/nette-orm/zipball/0022ca2",
+                "reference": "0022ca2",
                 "shasum": ""
             },
             "require": {
@@ -151,7 +151,7 @@
                 "issues": "https://github.com/fykosak/nette-orm/issues",
                 "source": "https://github.com/fykosak/nette-orm/tree/dev-mapper"
             },
-            "time": "2022-08-08T20:46:20+00:00"
+            "time": "2022-08-14T11:16:30+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

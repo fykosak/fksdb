@@ -40,14 +40,9 @@ class EventModel extends Model implements Resource, NodeCreator
         TeamState::APPLIED,
     ];
 
-    public function getContest(): ContestModel
-    {
-        return $this->event_type->contest;
-    }
-
     public function getContestYear(): ContestYearModel
     {
-        return $this->getContest()->getContestYear($this->year);
+        return $this->event_type->contest->getContestYear($this->year);
     }
 
     public function getResourceId(): string

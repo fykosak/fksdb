@@ -19,9 +19,4 @@ class QuizModel extends Model
     {
         return sprintf(_('%s. question'), $this->question_nr);
     }
-
-    public function getContest(): ContestModel
-    {
-        return $this->task->contest;
-    }
 }

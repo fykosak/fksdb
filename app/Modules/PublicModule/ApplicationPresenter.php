@@ -235,7 +235,7 @@ class ApplicationPresenter extends BasePresenter
                         array_merge(
                             $this->getParameters(),
                             [
-                                'contestId' => $this->getEvent()->getContest()->contest_id,
+                                'contestId' => $this->getEvent()->event_type->contest_id,
                                 'year' => $this->getEvent()->year,
                             ]
                         )
@@ -348,7 +348,7 @@ class ApplicationPresenter extends BasePresenter
                     break;
                 default:
                     $this->getPageStyleContainer()->setNavBarClassName(
-                        'navbar-dark bg-' . $event->getContest()->getContestSymbol()
+                        'navbar-dark bg-' . $event->event_type->contest->getContestSymbol()
                     );
             }
         }

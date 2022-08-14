@@ -364,7 +364,8 @@ class PersonModel extends Model implements Resource
                 $teamMember
             );
         }
-        $org = $this->getActiveOrgsAsQuery($event->getContest())->fetch();
+        /** @var OrgModel $org */
+        $org = $this->getActiveOrgsAsQuery($event->event_type->contest)->fetch();
         if (isset($org)) {
             $roles[] = new ContestOrgRole($event, $org);
         }

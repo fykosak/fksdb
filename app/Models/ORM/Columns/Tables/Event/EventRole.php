@@ -16,6 +16,7 @@ use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\User;
 use Nette\Utils\Html;
+use Tracy\Debugger;
 
 class EventRole extends ColumnFactory
 {

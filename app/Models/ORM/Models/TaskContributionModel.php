@@ -17,10 +17,6 @@ use Fykosak\NetteORM\Model;
  */
 class TaskContributionModel extends Model
 {
-    public function getContest(): ContestModel
-    {
-        return $this->task->contest;
-    }
 
     /**
      * @param string $key

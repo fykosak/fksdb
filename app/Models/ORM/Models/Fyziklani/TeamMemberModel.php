@@ -13,27 +13,17 @@ use Fykosak\NetteORM\Model;
 
 /**
  * @property-read int fyziklani_team_member_id
- * @property-read PersonModel person
  * @property-read int person_id
+ * @property-read PersonModel person
  * @property-read int fyziklani_team_id
  * @property-read TeamModel2 fyziklani_team
  */
 class TeamMemberModel extends Model
 {
-    public function getEvent(): EventModel
-    {
-        return $this->fyziklani_team->event;
-    }
 
     public function getPersonHistory(): ?PersonHistoryModel
     {
         return $this->person->getHistoryByContestYear($this->fyziklani_team->event->getContestYear());
-    }
-
-    public function getSchool(): ?SchoolModel
-    {
-        $history = $this->getPersonHistory();
-        return $history ? $history->school : null;
     }
 
     public function __toArray(): array

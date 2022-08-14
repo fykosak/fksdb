@@ -32,7 +32,7 @@ class EventAuthorizator
      */
     public function isAllowed($resource, ?string $privilege, EventModel $event): bool
     {
-        if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest())) {
+        if ($this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest)) {
             return true;
         }
         foreach ($this->getRolesForEvent($event) as $role) {
