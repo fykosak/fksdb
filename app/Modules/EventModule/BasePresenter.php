@@ -102,7 +102,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
      */
     final protected function getContest(): ContestModel
     {
-        return $this->getEvent()->getContest();
+        return $this->getEvent()->event_type->contest;
     }
 
     /**

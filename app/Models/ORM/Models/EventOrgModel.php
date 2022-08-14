@@ -20,11 +20,6 @@ class EventOrgModel extends Model implements Resource
 
     public const RESOURCE_ID = 'event.org';
 
-    public function getContest(): ContestModel
-    {
-        return $this->event->getContest();
-    }
-
     public function getResourceId(): string
     {
         return self::RESOURCE_ID;

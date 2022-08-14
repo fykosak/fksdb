@@ -53,6 +53,7 @@ class QueryModel extends Model implements Resource
     {
         $tags = $this->getTags();
         $result = [];
+        /** @var TagModel $tag */
         foreach ($tags as $tag) {
             $result[] = $tag->tag_type;
         }

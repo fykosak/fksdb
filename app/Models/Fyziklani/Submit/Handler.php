@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -113,7 +114,7 @@ class Handler
         }
         $this->submitService->updateModel($submit, [
             'points' => $points,
-            'state' => SubmitModel::STATE_CHECKED,
+            'state' => SubmitState::CHECKED,
             'modified' => new \DateTimeImmutable(),
         ]);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
@@ -142,7 +143,7 @@ class Handler
         if ($submit->canRevoke(true)) {
             $this->submitService->updateModel($submit, [
                 'points' => null,
-                'state' => SubmitModel::STATE_NOT_CHECKED,
+                'state' => SubmitState::NOT_CHECKED,
                 'modified' => new \DateTimeImmutable(),
             ]);
             $this->logEvent($submit, 'revoked');
@@ -169,7 +170,7 @@ class Handler
             throw new PointsMismatchException();
         }
         $this->submitService->updateModel($submit, [
-            'state' => SubmitModel::STATE_CHECKED,
+            'state' => SubmitState::CHECKED,
         ]);
         $this->logEvent($submit, 'checked');
 
@@ -194,7 +195,7 @@ class Handler
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
-            'state' => SubmitModel::STATE_NOT_CHECKED,
+            'state' => SubmitState::NOT_CHECKED,
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 

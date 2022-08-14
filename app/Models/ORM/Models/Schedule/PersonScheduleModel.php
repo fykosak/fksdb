@@ -22,16 +22,6 @@ use FKSDB\Models\ORM\Models\PersonModel;
  */
 class PersonScheduleModel extends Model
 {
-    public function getEvent(): EventModel
-    {
-        return $this->schedule_item->schedule_group->event;
-    }
-
-    public function getGroup(): ScheduleGroupModel
-    {
-        return $this->schedule_item->schedule_group;
-    }
-
     public function getPayment(): ?PaymentModel
     {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();

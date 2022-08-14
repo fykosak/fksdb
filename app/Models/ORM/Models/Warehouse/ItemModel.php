@@ -35,9 +35,4 @@ class ItemModel extends Model implements Resource
     {
         return self::RESOURCE_ID;
     }
-
-    public function getProducer(): ?ProducerModel
-    {
-        return $this->product->producer;
-    }
 }

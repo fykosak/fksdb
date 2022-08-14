@@ -7,11 +7,10 @@ namespace FKSDB\Models\ORM\Models\Fyziklani;
 use FKSDB\Models\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
 use Fykosak\NetteORM\Model;
-use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\Resource;
 
 /**
- * @property-read string state
+ * @property-read SubmitState state
  * @property-read int fyziklani_team_id
  * @property-read int|null points
  * @property-read bool|null skipped
@@ -24,20 +23,11 @@ use Nette\Security\Resource;
  */
 class SubmitModel extends Model implements Resource
 {
-
-    public const STATE_NOT_CHECKED = 'not_checked';
-    public const STATE_CHECKED = 'checked';
-
     public const RESOURCE_ID = 'fyziklani.submit';
-
-    public function getEvent(): EventModel
-    {
-        return $this->fyziklani_team->event;
-    }
 
     public function isChecked(): bool
     {
-        return $this->state === self::STATE_CHECKED;
+        return $this->state->value === SubmitState::CHECKED;
     }
 
     public function __toArray(): array
@@ -68,6 +58,22 @@ class SubmitModel extends Model implements Resource
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param string $key
+     * @return SubmitState|mixed|null
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = SubmitState::tryFrom($value);
+                break;
+        }
+        return $value;
     }
 
     public function getResourceId(): string

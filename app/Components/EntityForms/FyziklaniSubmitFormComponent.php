@@ -46,7 +46,7 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();
-            $handler = new Handler($this->model->getEvent(), $this->getContext());
+            $handler = new Handler($this->model->fyziklani_team->event, $this->getContext());
             $handler->changePoints($logger, $this->model, $values['points']);
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
@@ -64,7 +64,7 @@ class FyziklaniSubmitFormComponent extends EntityFormComponent
     {
         $field = new RadioList(_('Number of points'));
         $items = [];
-        foreach ($this->model->getEvent()->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
+        foreach ($this->model->fyziklani_team->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
         }
         $field->setItems($items);

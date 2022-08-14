@@ -26,7 +26,6 @@ class SubmitsGrid extends BaseGrid
 {
 
     private ContestantModel $contestant;
-
     private SubmitHandlerFactory $submitHandlerFactory;
 
     public function __construct(Container $container, ContestantModel $contestant)
@@ -42,8 +41,7 @@ class SubmitsGrid extends BaseGrid
 
     protected function getData(): IDataSource
     {
-        $submits = $this->contestant->related(DbNames::TAB_SUBMIT);
-        return new NDataSource($submits);
+        return new NDataSource($this->contestant->related(DbNames::TAB_SUBMIT));
     }
 
     /**
@@ -62,7 +60,8 @@ class SubmitsGrid extends BaseGrid
         $this->addColumn('task', _('Task'))
             ->setRenderer(fn(SubmitModel $submit): string => $submit->task->getFQName());
         $this->addColumn('submitted_on', _('Timestamp'));
-        $this->addColumn('source', _('Method of handing'));
+        $this->addColumn('source', _('Method of handing'))
+            ->setRenderer(fn(SubmitModel $model): string => $model->source->value);
 
         //
         // operations
