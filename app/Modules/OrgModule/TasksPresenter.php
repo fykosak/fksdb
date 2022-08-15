@@ -139,8 +139,6 @@ class TasksPresenter extends BasePresenter
         /** @var FileUpload[]|int[] $values */
         $values = $seriesForm->getValues();
         $series = $values['series'];
-        $file = null;
-
         switch ($values['source']) {
             case self::SOURCE_ASTRID:
                 $file = $this->downloader->downloadSeriesTasks($this->getSelectedContestYear(), $series);

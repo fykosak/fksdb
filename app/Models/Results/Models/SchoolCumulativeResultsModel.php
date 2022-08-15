@@ -101,7 +101,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     {
         //return $this->evaluationStrategy->getCategories();
         return [
-            ModelCategory::tryFrom(ModelCategory::CAT_ALL),
+            ModelCategory::tryFrom(ModelCategory::ALL),
         ];
     }
 
@@ -116,7 +116,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel
     public function getData(ModelCategory $category): array
     {
         $categories = [];
-        if ($category->value == ModelCategory::CAT_ALL) {
+        if ($category->value == ModelCategory::ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
         } else {
             $categories[] = $category;

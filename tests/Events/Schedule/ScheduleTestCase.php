@@ -42,13 +42,13 @@ EOT
             ,
         ]);
 
-        $this->group = $this->getContainer()->getByType(ScheduleGroupService::class)->createNewModel([
+        $this->group = $this->getContainer()->getByType(ScheduleGroupService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'schedule_group_type' => 'accommodation',
             'start' => new \DateTime(),
             'end' => new DateTime(),
         ]);
-        $this->item = $this->getContainer()->getByType(ScheduleItemService::class)->createNewModel([
+        $this->item = $this->getContainer()->getByType(ScheduleItemService::class)->storeModel([
             'name_cs' => 'Hotel Test',
             'name_en' => 'test hotel',
             'schedule_group_id' => $this->group->schedule_group_id,
@@ -57,7 +57,7 @@ EOT
             'capacity' => $this->getAccommodationCapacity(),
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
             'e_dsef_group_id' => 2,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',
@@ -75,12 +75,12 @@ EOT
                 'born' => DateTime::from('2000-01-01'),
             ]
         );
-        $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',
         ]);
-        $this->getContainer()->getByType(PersonScheduleService::class)->createNewModel([
+        $this->getContainer()->getByType(PersonScheduleService::class)->storeModel([
             'person_id' => end($this->persons),
             'schedule_item_id' => $this->item->schedule_item_id,
         ]);
@@ -93,12 +93,12 @@ EOT
                 'born' => DateTime::from('2000-01-01'),
             ]
         );
-        $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',
         ]);
-        $this->getContainer()->getByType(PersonScheduleService::class)->createNewModel([
+        $this->getContainer()->getByType(PersonScheduleService::class)->storeModel([
             'person_id' => end($this->persons),
             'schedule_item_id' => $this->item->schedule_item_id,
         ]);

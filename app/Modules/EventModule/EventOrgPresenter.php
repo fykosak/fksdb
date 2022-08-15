@@ -49,6 +49,7 @@ class EventOrgPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -107,6 +108,7 @@ class EventOrgPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): EventOrgFormComponent
     {

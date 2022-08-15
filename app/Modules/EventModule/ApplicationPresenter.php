@@ -52,6 +52,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {

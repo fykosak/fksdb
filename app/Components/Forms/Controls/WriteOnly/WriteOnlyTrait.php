@@ -61,7 +61,7 @@ trait WriteOnlyTrait
 // for JS
         if ($this->writeOnly && $this->getValue() && !$this->hasManualValue) {
             $control->addAttributes([
-                'data-writeOnly' => (int)true,
+                'data-writeOnly' => 1,
                 'data-writeOnly-value' => self::VALUE_ORIGINAL,
                 'data-writeOnly-label' => _('Hidden value'),
                 'value' => self::VALUE_ORIGINAL,

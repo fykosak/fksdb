@@ -55,6 +55,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -75,6 +76,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleGroupFormComponent
     {
@@ -103,6 +105,7 @@ class ScheduleGroupPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentItemsGrid(): ItemsGrid
     {

@@ -23,20 +23,20 @@ class WithDSEFTest extends TsafTestCase
         parent::setUp();
         $this->authenticatePerson($this->person, $this->fixture);
 
-        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->tsafEvent->event_id,
             'status' => 'invited',
         ]);
 
-        $dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->dsefEvent->event_id,
             'status' => 'applied',
             'lunch_count' => 3,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $dsefApp->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
@@ -87,7 +87,6 @@ class WithDSEFTest extends TsafTestCase
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
-        /** @var EventParticipantModel $application */
         $application = $this->assertApplication($this->tsafEvent, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);

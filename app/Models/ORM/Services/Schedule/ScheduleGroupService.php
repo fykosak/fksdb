@@ -9,7 +9,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @method ScheduleGroupModel|null findByPrimary($key)
- * @method ScheduleGroupModel createNewModel(array $data)
+ * @method ScheduleGroupModel storeModel(array $data, ?ScheduleGroupModel $model = null)
  */
 class ScheduleGroupService extends Service
 {

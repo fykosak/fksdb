@@ -52,6 +52,7 @@ class PaymentColumnFactory extends ColumnFactory
      * @param PaymentModel $model
      * @throws BadTypeException
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     protected function createHtmlValue(Model $model): Html
     {

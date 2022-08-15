@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\ORM\Services;
 
-use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use Fykosak\NetteORM\Service;
@@ -14,19 +13,10 @@ use Fykosak\NetteORM\Service;
  */
 class PersonInfoService extends Service
 {
-    public function createNewModel(array $data): PersonInfoModel
-    {
-        if (isset($data['agreed']) && $data['agreed'] == '1') {
-            $data['agreed'] = new \DateTime();
-        }
-        return parent::createNewModel($data);
-    }
-
     /**
-     * @param PersonInfoModel $model
-     * @throws ModelException
+     * @param PersonInfoModel|null $model
      */
-    public function updateModel(Model $model, array $data): bool
+    public function storeModel(array $data, ?Model $model = null): PersonInfoModel
     {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
@@ -35,6 +25,6 @@ class PersonInfoService extends Service
                 unset($data['agreed']);
             }
         }
-        return parent::updateModel($model, $data);
+        return parent::storeModel($data, $model);
     }
 }

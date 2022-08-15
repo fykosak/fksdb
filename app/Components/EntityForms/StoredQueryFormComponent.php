@@ -67,9 +67,9 @@ class StoredQueryFormComponent extends EntityFormComponent
 
         if (isset($this->model)) {
             $model = $this->model;
-            $this->storedQueryService->updateModel($model, $data);
+            $this->storedQueryService->storeModel($data, $model);
         } else {
-            $model = $this->storedQueryService->createNewModel($data);
+            $model = $this->storedQueryService->storeModel($data);
         }
 
         $this->saveTags($values[self::CONT_MAIN]['tags'], $model);
@@ -139,7 +139,7 @@ class StoredQueryFormComponent extends EntityFormComponent
             'query_id' => $query->query_id,
         ])->delete();
         foreach ($tags as $tagTypeId) {
-            $this->storedQueryTagService->createNewModel([
+            $this->storedQueryTagService->storeModel([
                 'query_id' => $query->query_id,
                 'tag_type_id' => $tagTypeId,
             ]);
@@ -206,7 +206,7 @@ class StoredQueryFormComponent extends EntityFormComponent
                 $data,
                 ParameterModel::setInferDefaultValue($data['type'], $paramMetaData['default'])
             );
-            $this->storedQueryParameterService->createNewModel($data);
+            $this->storedQueryParameterService->storeModel($data);
         }
     }
 

@@ -25,12 +25,12 @@ class SubmitQuizService extends Service
     {
         $submit = $this->findByContestant($question, $contestant);
         if ($submit) {
-            $this->updateModel($submit, [
+            $this->storeModel([
                 'submitted_on' => new DateTime(),
                 'answer' => $answer,
-            ]);
+            ], $submit);
         } else {
-            $this->createNewModel([
+            $this->storeModel([
                 'question_id' => $question->question_id,
                 'contestant_id' => $contestant->contestant_id,
                 'submitted_on' => new DateTime(),

@@ -8,6 +8,9 @@ use FKSDB\Models\ORM\Models\Fyziklani\TaskModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use Fykosak\NetteORM\Service;
 
+/**
+ * @method TaskModel storeModel(array $data, ?TaskModel $model = null)
+ */
 class TaskService extends Service
 {
 

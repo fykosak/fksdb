@@ -1,5 +1,5 @@
 {block content}
-    {varType array $charts}
+    {varType FKSDB\Components\Charts\Core\Chart[] $charts}
     <ul>
         {foreach $charts as $action=>$chart}
             <li><a href="{plink $action}">{$chart->getTitle()}</a></li>

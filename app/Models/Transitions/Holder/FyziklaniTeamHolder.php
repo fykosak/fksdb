@@ -23,7 +23,7 @@ class FyziklaniTeamHolder implements ModelHolder
 
     public function updateState(EnumColumn $newState): void
     {
-        $this->service->updateModel($this->team, ['state' => $newState->value]);
+        $this->service->storeModel(['state' => $newState->value], $this->team);
     }
 
     public function getState(): ?TeamState
@@ -38,6 +38,6 @@ class FyziklaniTeamHolder implements ModelHolder
 
     public function updateData(array $data): void
     {
-        $this->service->updateModel($this->team, $data);
+        $this->service->storeModel($data, $this->team);
     }
 }

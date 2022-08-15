@@ -158,7 +158,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
      */
     private function getSumLimitForStudentPilny(): int
     {
-        return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::CAT_HS_4));
+        return $this->getSumLimit(ModelCategory::tryFrom(ModelCategory::FYKOS_4));
     }
 
     /**
@@ -171,6 +171,7 @@ left join submit s ON s.task_id = t.task_id AND s.contestant_id = ct.contestant_
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks
             $points = null;
+            /** @var TaskModel $task */
             foreach ($this->getTasks($series) as $task) {
                 $points += $this->evaluationStrategy->getTaskPoints($task, $category);
             }

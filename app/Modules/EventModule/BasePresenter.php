@@ -12,7 +12,6 @@ use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\Expressions\NeonSchemaException;
-use FKSDB\Models\ORM\Models\ContestModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Services\EventService;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
@@ -95,14 +94,6 @@ abstract class BasePresenter extends AuthenticatedPresenter
             }
         }
         return $event;
-    }
-
-    /**
-     * @throws EventNotFoundException
-     */
-    final protected function getContest(): ContestModel
-    {
-        return $this->getEvent()->event_type->contest;
     }
 
     /**

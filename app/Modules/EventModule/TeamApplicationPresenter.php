@@ -44,6 +44,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -71,6 +72,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentSeating(): ProviderComponent
     {
@@ -138,6 +140,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter
      * @throws ForbiddenRequestException
      * @throws GoneException
      * @throws ModelNotFoundException
+     * @throws \ReflectionException
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {

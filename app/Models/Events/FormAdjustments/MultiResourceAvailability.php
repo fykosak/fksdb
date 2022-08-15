@@ -140,7 +140,7 @@ class MultiResourceAvailability extends AbstractAdjustment
         }
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
-        foreach ($o as $key => $option) {
+        foreach ($o as $option) {
             if (is_array($option)) {
                 $capacities[$option['value']] = $option['capacity'];
             }

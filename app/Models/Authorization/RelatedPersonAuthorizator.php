@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
+use FKSDB\Models\ORM\Models\LoginModel;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
@@ -36,6 +37,7 @@ class RelatedPersonAuthorizator
         if ($holder->primaryHolder->getModelState() == AbstractMachine::STATE_INIT) {
             return true;
         }
+        /** @var LoginModel|null $login */
         $login = $this->user->getIdentity();
         // further on only logged users can be related person
         if (!$login) {

@@ -51,6 +51,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -67,6 +68,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -88,6 +90,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function actionEdit(): void
     {
@@ -134,6 +137,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderEdit(): void
     {
@@ -148,6 +152,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -212,6 +217,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsComponent
     {
@@ -252,6 +258,7 @@ class PaymentPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): PaymentFormComponent
     {

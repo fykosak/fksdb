@@ -17,19 +17,18 @@ use FKSDB\Models\Exceptions\GoneException;
 use FKSDB\Models\Exceptions\NotFoundException;
 use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel;
 use FKSDB\Models\ORM\Models\AuthTokenModel;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ORM\Services\EventService;
 use Fykosak\Utils\Logging\Message;
 use Fykosak\Utils\UI\PageTitle;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 
 class ApplicationPresenter extends BasePresenter
@@ -37,7 +36,7 @@ class ApplicationPresenter extends BasePresenter
 
     public const PARAM_AFTER = 'a';
     private ?EventModel $event;
-    private ?ActiveRow $eventApplication = null;
+    private ?Model $eventApplication = null;
     private Holder $holder;
     private Machine $machine;
     private EventService $eventService;
@@ -103,10 +102,10 @@ class ApplicationPresenter extends BasePresenter
     }
 
     /**
-     * @return ActiveRow|TeamModel|EventParticipantModel|null
+     * @return TeamModel|EventParticipantModel|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication(): ?ActiveRow
+    private function getEventApplication(): ?Model
     {
         if (!isset($this->eventApplication)) {
             $id = $this->getParameter('id');
@@ -140,6 +139,7 @@ class ApplicationPresenter extends BasePresenter
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      * @throws NotFoundException
+     * @throws \ReflectionException
      */
     public function actionDefault(?int $eventId, ?int $id): void
     {
@@ -153,7 +153,7 @@ class ApplicationPresenter extends BasePresenter
                 throw new NotFoundException(_('Unknown application.'));
             }
             /** @var EventModel $event */
-            $event = ReferencedAccessor::accessModel($eventApplication, EventModel::class);
+            $event = $eventApplication->getReferencedModel(EventModel::class);
             if ($this->getEvent()->event_id !== $event->event_id) {
                 throw new ForbiddenRequestException();
             }

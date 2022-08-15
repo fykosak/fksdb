@@ -48,7 +48,7 @@ abstract class EntityFormComponent extends FormComponent
             if ($previous instanceof ConstraintViolationException) {
                 $this->flashMessage($previous->getMessage(), Message::LVL_ERROR);
             } else {
-                $this->flashMessage(_('Error when storing model'), Message::LVL_ERROR);
+                $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             }
         } catch (AbortException $exception) {
             throw $exception;

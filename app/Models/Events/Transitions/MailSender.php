@@ -22,7 +22,7 @@ use FKSDB\Models\ORM\Services\AuthTokenService;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\ORM\Services\PersonService;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 
@@ -164,17 +164,17 @@ class MailSender
         }
         $data['recipient'] = $email;
         $data['state'] = EmailMessageState::WAITING;
-        return $this->emailMessageService->createNewModel($data);
+        return $this->emailMessageService->storeModel($data);
     }
 
-    private function createToken(LoginModel $login, EventModel $event, ActiveRow $application): AuthTokenModel
+    private function createToken(LoginModel $login, EventModel $event, Model $application): AuthTokenModel
     {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
         return $this->authTokenService->createToken($login, AuthTokenModel::TYPE_EVENT_NOTIFY, $until, $data, true);
     }
 
-    private function getSubject(EventModel $event, ActiveRow $application, Holder $holder, Machine $machine): string
+    private function getSubject(EventModel $event, Model $application, Holder $holder, Machine $machine): string
     {
         if (in_array($event->event_type_id, [4, 5])) {
             return _('Camp invitation');
@@ -198,6 +198,8 @@ class MailSender
 
     /**
      * @return int[]
+     * @throws \ReflectionException
+     * @throws \ReflectionException
      */
     private function resolveAdressees(Transition $transition, Holder $holder): array
     {

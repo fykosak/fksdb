@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\PaymentModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PaymentModel createNewModel(array $data)
+ * @method PaymentModel storeModel(array $data, ?PaymentModel $model = null)
  */
 class PaymentService extends Service
 {
