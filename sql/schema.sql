@@ -1393,7 +1393,7 @@ CREATE TABLE IF NOT EXISTS `warehouse_item`
     `description_en`    VARCHAR(256)                             NULL     DEFAULT NULL,
     `data`              VARCHAR(256)                             NULL     DEFAULT NULL COMMENT 'dalšie info ',
     `purchase_price`    DECIMAL(10, 2)                           NULL     DEFAULT NULL COMMENT 'pořizovací cena',
-    `purchase_currency` ENUM ('czk','eur')                       NOT NULL DEFAULT 'czk' COMMENT 'pořizovací měna', # TODO to enum
+    `purchase_currency` ENUM ('CZK','EUR')                       NOT NULL DEFAULT 'CZK' COMMENT 'pořizovací měna', # TODO to enum
     `checked`           DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `shipped`           DATETIME                                 NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
     `available`         BOOLEAN                                  NOT NULL DEFAULT FALSE COMMENT 'available in online store',

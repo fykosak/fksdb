@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\OrgModule\Warehouse;
 
+use FKSDB\Components\EntityForms\Warehouse\ItemFormComponent;
 use FKSDB\Components\Grids\Warehouse\ItemsGrid;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Services\Warehouse\ItemService;
@@ -40,12 +41,12 @@ class ItemPresenter extends BasePresenter
 
     protected function createComponentCreateForm(): Control
     {
-        throw new NotImplementedException();
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
 
     protected function createComponentEditForm(): Control
     {
-        throw new NotImplementedException();
+        return new ItemFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
     protected function createComponentGrid(): ItemsGrid

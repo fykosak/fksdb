@@ -9,6 +9,7 @@ use FKSDB\Models\ORM\Columns\Types\{DateTime\DateColumnFactory,
     EmailColumnFactory,
     EnumColumnFactory,
     IntColumnFactory,
+    FloatColumnFactory,
     LogicColumnFactory,
     PrimaryKeyColumnFactory,
     StateColumnFactory,
@@ -105,6 +106,9 @@ class ORMExtension extends Extension
                 case 'int':
                     $this->registerIntRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
+                case 'float':
+                    $this->registerFloatRow($factory, $tableName, $modelClassName, $fieldName, $field);
+                    break;
                 case 'logic':
                     $this->registerLogicRow($factory, $tableName, $modelClassName, $fieldName, $field);
                     break;
@@ -170,6 +174,32 @@ class ORMExtension extends Extension
         array $field
     ): void {
         $this->setUpDefaultFactory($factory, $tableName, $modelClassName, $fieldName, IntColumnFactory::class, $field);
+        if (isset($field['nullValueFormat'])) {
+            $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
+        }
+        if (isset($field['prefix'])) {
+            $factory->addSetup('setPrefix', [$field['prefix']]);
+        }
+        if (isset($field['suffix'])) {
+            $factory->addSetup('setSuffix', [$field['suffix']]);
+        }
+    }
+
+    private function registerFloatRow(
+        ServiceDefinition $factory,
+        string $tableName,
+        string $modelClassName,
+        string $fieldName,
+        array $field
+    ): void {
+        $this->setUpDefaultFactory(
+            $factory,
+            $tableName,
+            $modelClassName,
+            $fieldName,
+            FloatColumnFactory::class,
+            $field
+        );
         if (isset($field['nullValueFormat'])) {
             $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
         }
