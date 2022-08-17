@@ -12,7 +12,7 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 
 /**
- * @method SubmitModel createNewModel(array $data)
+ * @method SubmitModel storeModel(array $data, ?SubmitModel $model = null)
  */
 class SubmitService extends Service
 {

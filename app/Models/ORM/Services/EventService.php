@@ -11,7 +11,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method EventModel createNewModel(array $data)
+ * @method EventModel storeModel(array $data, ?EventModel $model = null)
  * @method EventModel|null findByPrimary($key)
  */
 class EventService extends Service

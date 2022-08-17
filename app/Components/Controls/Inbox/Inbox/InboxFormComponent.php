@@ -49,7 +49,7 @@ class InboxFormComponent extends SeriesTableFormComponent
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), Message::LVL_WARNING);
                     $submit->delete();
                 } elseif ($submittedOn && !$submit) {
-                    $this->submitService->createNewModel([
+                    $this->submitService->storeModel([
                         'task_id' => $taskNo,
                         'contestant_id' => $ctId,
                         'submitted_on' => $submittedOn,

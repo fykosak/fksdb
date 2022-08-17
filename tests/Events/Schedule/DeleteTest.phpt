@@ -37,25 +37,25 @@ class DeleteTest extends ScheduleTestCase
                 'born' => DateTime::from('2000-01-01'),
             ]
         );
-        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => $this->lastPerson->person_id,
             'event_id' => $this->event->event_id,
             'status' => 'cancelled',
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel(
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel(
             [
                 'event_participant_id' => $this->dsefApp->event_participant_id,
                 'e_dsef_group_id' => 2,
             ]
         );
-        $this->getContainer()->getByType(PersonScheduleService::class)->createNewModel([
+        $this->getContainer()->getByType(PersonScheduleService::class)->storeModel([
             'person_id' => $this->lastPerson->person_id,
             'schedule_item_id' => $this->item->schedule_item_id,
         ]);
-        $login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
+        $login = $this->getContainer()->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->lastPerson->person_id, 'active' => 1]
         );
-        $this->getContainer()->getByType(GrantService::class)->createNewModel(
+        $this->getContainer()->getByType(GrantService::class)->storeModel(
             ['login_id' => $login->login_id, 'role_id' => 5, 'contest_id' => 1]
         );
         $this->authenticateLogin($login, $this->fixture);

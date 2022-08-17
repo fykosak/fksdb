@@ -19,7 +19,7 @@ class Schedule extends EventModuleTestCase
         parent::setUp();
         $this->scheduleGroup = $this->getContainer()
             ->getByType(ScheduleGroupService::class)
-            ->createNewModel([
+            ->storeModel([
             'schedule_group_type' => 'accommodation',
             'name_cs' => 'name CS',
             'name_en' => 'name EN',

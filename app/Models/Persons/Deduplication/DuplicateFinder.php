@@ -7,7 +7,7 @@ namespace FKSDB\Models\Persons\Deduplication;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Models\PersonInfoModel;
 use FKSDB\Models\ORM\Services\PersonService;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 
@@ -112,9 +112,9 @@ class DuplicateFinder
     }
 
     /**
-     * @param ActiveRow|PersonInfoModel $person
+     * @param PersonInfoModel $person
      */
-    private function getDifferentPersons(ActiveRow $person): array
+    private function getDifferentPersons(Model $person): array
     {
         if (!isset($person->duplicates)) {
             return [];

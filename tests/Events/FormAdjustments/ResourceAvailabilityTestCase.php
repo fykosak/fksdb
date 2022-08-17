@@ -41,7 +41,7 @@ EOT
             ,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
             'e_dsef_group_id' => 1,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',
@@ -57,13 +57,13 @@ EOT
             'Bílá',
             ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')]
         );
-        $application = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',
             'accomodation' => 1,
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $application->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
@@ -73,13 +73,13 @@ EOT
             'Bílá II.',
             ['email' => 'bila2@hrad.cz', 'born' => DateTime::from('2000-01-01')]
         );
-        $application = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $application = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => end($this->persons),
             'event_id' => $this->event->event_id,
             'status' => 'applied',
             'accomodation' => 1,
         ]);
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $application->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);

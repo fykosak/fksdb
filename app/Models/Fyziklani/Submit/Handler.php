@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Fyziklani\Submit;
 
+use FKSDB\Models\ORM\Models\Fyziklani\SubmitState;
 use FKSDB\Models\ORM\Models\Fyziklani\TeamModel2;
 use FKSDB\Models\ORM\Services\Fyziklani\TeamService2;
 use Fykosak\NetteORM\Exceptions\ModelException;
@@ -111,11 +112,11 @@ class Handler
         if (!$submit->fyziklani_team->hasOpenSubmitting()) {
             throw new ClosedSubmittingException($submit->fyziklani_team);
         }
-        $this->submitService->updateModel($submit, [
+        $this->submitService->storeModel([
             'points' => $points,
-            'state' => SubmitModel::STATE_CHECKED,
+            'state' => SubmitState::CHECKED,
             'modified' => new \DateTimeImmutable(),
-        ]);
+        ], $submit);
         $this->logEvent($submit, 'edited', \sprintf(' points %d', $points));
         $logger->log(
             new Message(
@@ -140,11 +141,11 @@ class Handler
     public function revokeSubmit(Logger $logger, SubmitModel $submit): void
     {
         if ($submit->canRevoke(true)) {
-            $this->submitService->updateModel($submit, [
+            $this->submitService->storeModel([
                 'points' => null,
-                'state' => SubmitModel::STATE_NOT_CHECKED,
+                'state' => SubmitState::NOT_CHECKED,
                 'modified' => new \DateTimeImmutable(),
-            ]);
+            ], $submit);
             $this->logEvent($submit, 'revoked');
             $logger->log(
                 new Message(
@@ -168,9 +169,9 @@ class Handler
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $this->submitService->updateModel($submit, [
-            'state' => SubmitModel::STATE_CHECKED,
-        ]);
+        $this->submitService->storeModel([
+            'state' => SubmitState::CHECKED,
+        ], $submit);
         $this->logEvent($submit, 'checked');
 
         $logger->log(
@@ -190,11 +191,11 @@ class Handler
 
     public function createSubmit(Logger $logger, TaskModel $task, TeamModel2 $team, int $points): void
     {
-        $submit = $this->submitService->createNewModel([
+        $submit = $this->submitService->storeModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
-            'state' => SubmitModel::STATE_NOT_CHECKED,
+            'state' => SubmitState::NOT_CHECKED,
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 

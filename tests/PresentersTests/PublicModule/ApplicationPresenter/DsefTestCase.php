@@ -36,7 +36,7 @@ EOT
             ,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefGroup::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefGroup::class)->storeModel([
             'e_dsef_group_id' => 1,
             'event_id' => $this->event->event_id,
             'name' => 'Alpha',

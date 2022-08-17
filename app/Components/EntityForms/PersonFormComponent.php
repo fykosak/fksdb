@@ -157,16 +157,16 @@ class PersonFormComponent extends EntityFormComponent
             $oldAddress = $person->getAddress($shortType);
             if (count($datum)) {
                 if ($oldAddress) {
-                    $this->addressService->updateModel($oldAddress, $datum);
+                    $this->addressService->storeModel($datum, $oldAddress);
                     $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
                 } else {
-                    $address = $this->addressService->createNewModel($datum);
+                    $address = $this->addressService->storeModel($datum);
                     $postContactData = [
                         'type' => $shortType->value,
                         'person_id' => $person->person_id,
                         'address_id' => $address->address_id,
                     ];
-                    $this->postContactService->createNewModel($postContactData);
+                    $this->postContactService->storeModel($postContactData);
                     $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
                 }
             } elseif ($oldAddress) {

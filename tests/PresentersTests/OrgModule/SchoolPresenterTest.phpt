@@ -23,10 +23,10 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
@@ -34,7 +34,7 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
             'postal_code' => '02001',
             'region_id' => '1',
         ]);
-        $this->school = $this->getContainer()->getByType(SchoolService::class)->createNewModel([
+        $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'address_id' => $address->address_id,
             'name' => 'Test school',
             'name_abbrev' => 'T school',
@@ -101,17 +101,15 @@ class SchoolPresenterTest extends AbstractOrgPresenterTestCase
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countSchools();
         Assert::equal($init, $after);
-        $school = $this->getContainer()->getByType(SchoolService::class)
-            ->getTable()
-            ->where(['school_id' => $this->school->school_id])
-            ->fetch();
+
+        $school = $this->getContainer()
+            ->getByType(SchoolService::class)
+            ->findByPrimary($this->school->school_id);
 
         Assert::equal('Test school edited', $school->name);
         $address = $this->getContainer()
             ->getByType(AddressService::class)
-            ->getTable()
-            ->where(['address_id' => $school->address_id])
-            ->fetch();
+            ->findByPrimary($school->address_id);
 
         Assert::equal('PU edited', $address->city);
     }

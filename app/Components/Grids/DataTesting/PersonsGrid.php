@@ -11,6 +11,7 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Models\ORM\Services\PersonService;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
@@ -56,7 +57,7 @@ class PersonsGrid extends BaseGrid
     }
 
     /**
-     * @param TestLog[] $logs
+     * @param Message[] $logs
      * @throws BadTypeException
      * @throws NotImplementedException
      */

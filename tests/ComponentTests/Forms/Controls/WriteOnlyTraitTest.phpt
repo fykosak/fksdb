@@ -6,8 +6,8 @@ namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
 $container = require '../../../Bootstrap.php';
 
+use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
-use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\PostContactType;
 use FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\Models\ORM\Services\AddressService;
@@ -31,34 +31,34 @@ class WriteOnlyTraitTest extends DsefTestCase
         parent::setUp();
 
         // create address for person
-        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'target' => 'PomaláUlice',
             'city' => 'SinCity',
             'postal_code' => '67401',
             'region_id' => '3',
         ]);
-        $this->getContainer()->getByType(PostContactService::class)->createNewModel([
+        $this->getContainer()->getByType(PostContactService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'address_id' => $address->address_id,
             'type' => PostContactType::DELIVERY,
         ]);
 
         // apply person
-        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->dsefApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'event_id' => $this->event->event_id,
             'status' => 'applied',
             'lunch_count' => 3,
         ]);
 
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $this->dsefApp->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);
 
         // create admin
         $admin = $this->createPerson('Admin', 'Adminovič', null, []);
-        $this->getContainer()->getByType(GrantService::class)->createNewModel([
+        $this->getContainer()->getByType(GrantService::class)->storeModel([
             'login_id' => $admin->person_id,
             'role_id' => 5,
             'contest_id' => 1,
@@ -160,7 +160,7 @@ class WriteOnlyTraitTest extends DsefTestCase
             ->fetch();
 
         Assert::notEqual(null, $address);
-
+        /** @var AddressModel $address */
         $address = $this->getContainer()
             ->getByType(AddressService::class)
             ->getTable()

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\EmailMessageModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -33,6 +34,9 @@ class EmailsGrid extends EntityGrid
     {
         parent::configure($presenter);
         $this->setDefaultOrder('created DESC');
+        $this->addColumn('person', _('Person'))->setRenderer(
+            fn(EmailMessageModel $model): ?string => (string)$model->person
+        );
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
         $this->paginate = true;
     }

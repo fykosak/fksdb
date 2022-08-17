@@ -6,7 +6,6 @@ namespace FKSDB\Models\ORM\Models;
 
 use FKSDB\Models\Utils\FakeStringEnum;
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Mail\Message;
 use Nette\Security\Resource;
@@ -15,7 +14,7 @@ use Nette\Security\Resource;
  * @property-read int email_message_id`
  * @property-read string recipient
  * @property-read int|null recipient_person_id
- * @property-read ActiveRow|null person
+ * @property-read PersonModel|null person
  * @property-read string sender
  * @property-read string reply_to
  * @property-read string subject
@@ -35,10 +34,10 @@ class EmailMessageModel extends Model implements Resource
         $message = new Message();
         $message->setSubject($this->subject);
         if (isset($this->recipient_person_id)) {
-            if (isset($this->recipient) && $this->getPerson()->getInfo()->email !== $this->recipient) {
+            if (isset($this->recipient) && $this->person->getInfo()->email !== $this->recipient) {
                 throw new InvalidStateException('Recipient and person\'s email not match');
             }
-            $message->addTo($this->getPerson()->getInfo()->email);
+            $message->addTo($this->person->getInfo()->email);
         } elseif (isset($this->recipient)) {
             $message->addTo($this->recipient);
         } else {
@@ -56,12 +55,6 @@ class EmailMessageModel extends Model implements Resource
         $message->setHtmlBody($this->text);
 
         return $message;
-    }
-
-    public function getPerson(): ?PersonModel
-    {
-        return isset($this->recipient_person_id) ? PersonModel::createFromActiveRow($this->person)
-            : null;
     }
 
     public function getResourceId(): string

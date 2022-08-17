@@ -27,7 +27,6 @@ use FKSDB\Models\ORM\Services\PersonInfoService;
 use FKSDB\Models\ORM\Services\PostContactService;
 use FKSDB\Models\Submits\StorageException;
 use FKSDB\Models\Utils\FormUtils;
-use Nette\Database\Table\ActiveRow;
 use Nette\SmartObject;
 
 class ReferencedPersonHandler implements ReferencedHandler
@@ -247,16 +246,16 @@ class ReferencedPersonHandler implements ReferencedHandler
     private function storePostContact(PersonModel $person, ?PostContactModel $model, array $data, string $type): void
     {
         if ($model) {
-            $this->addressService->updateModel($model->address, $data);
-            $this->postContactService->updateModel($model, $data);
+            $this->addressService->storeModel($data, $model->address);
+            $this->postContactService->storeModel($data, $model);
         } else {
             $data = array_merge($data, [
                 'person_id' => $person->person_id,
                 'type' => PersonFormComponent::mapAddressContainerNameToType($type)->value,
             ]);
-            $mainModel = $this->addressService->createNewModel($data);
+            $mainModel = $this->addressService->storeModel($data);
             $data['address_id'] = $mainModel->address_id;
-            $this->postContactService->createNewModel($data);
+            $this->postContactService->storeModel($data);
         }
     }
 
@@ -270,7 +269,7 @@ class ReferencedPersonHandler implements ReferencedHandler
                 continue;
             }
             if (isset($models[$key])) {
-                if ($models[$key] instanceof ActiveRow) {
+                if ($models[$key] instanceof Model) {
                     $subConflicts = $this->getModelConflicts($models[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
@@ -284,7 +283,7 @@ class ReferencedPersonHandler implements ReferencedHandler
         return $conflicts;
     }
 
-    private function getModelConflicts(ActiveRow $model, array $values): array
+    private function getModelConflicts(Model $model, array $values): array
     {
         $conflicts = [];
         foreach ($values as $key => $value) {
@@ -330,9 +329,9 @@ class ReferencedPersonHandler implements ReferencedHandler
             unset($data['address_id']);
             unset($data['type']);
 
-            $addressModel = $this->addressService->createNewModel($data);
+            $addressModel = $this->addressService->storeModel($data);
             $data['address_id'] = $addressModel->address_id;
-            $joinedModel = $this->postContactService->createNewModel($data);
+            $joinedModel = $this->postContactService->storeModel($data);
             $models[self::POST_CONTACT_PERMANENT] = $joinedModel;
         }
     }

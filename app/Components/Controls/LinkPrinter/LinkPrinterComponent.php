@@ -25,6 +25,7 @@ class LinkPrinterComponent extends BaseComponent
      * @throws BadTypeException
      * @throws CannotAccessModelException
      * @throws InvalidLinkException
+     * @throws \ReflectionException
      */
     final public function render(string $linkId, Model $model): void
     {

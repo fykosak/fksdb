@@ -47,7 +47,7 @@ class SchedulePaymentService extends Service
                     $model->person_schedule->getLabel()
                 ));
             }
-            $this->createNewModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
+            $this->storeModel(['payment_id' => $payment->payment_id, 'person_schedule_id' => $id]);
         }
     }
 

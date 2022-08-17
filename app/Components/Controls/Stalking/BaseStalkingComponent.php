@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Badges\ContestBadge;
-use FKSDB\Components\Badges\NoRecordsBadge;
-use FKSDB\Components\Badges\PermissionDeniedBadge;
 use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\LinkPrinter\LinkPrinterComponent;
 use FKSDB\Components\Controls\ColumnPrinter\ColumnPrinterComponent;
@@ -38,16 +36,6 @@ abstract class BaseStalkingComponent extends BaseComponent
     protected function createComponentContestBadge(): ContestBadge
     {
         return new ContestBadge($this->getContext());
-    }
-
-    protected function createComponentPermissionDenied(): PermissionDeniedBadge
-    {
-        return new PermissionDeniedBadge($this->getContext());
-    }
-
-    protected function createComponentNoRecords(): NoRecordsBadge
-    {
-        return new NoRecordsBadge($this->getContext());
     }
 
     protected function createComponentValuePrinter(): ColumnPrinterComponent

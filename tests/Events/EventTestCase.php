@@ -31,7 +31,7 @@ abstract class EventTestCase extends DatabaseTestCase
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        return $this->getContainer()->getByType(EventService::class)->createNewModel($data);
+        return $this->getContainer()->getByType(EventService::class)->storeModel($data);
     }
 
     protected function createPostRequest(array $formData, array $params = []): Request

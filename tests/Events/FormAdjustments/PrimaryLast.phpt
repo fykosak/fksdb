@@ -31,7 +31,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase
             ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],
             []
         );
-        $this->app = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel(
+        $this->app = $this->getContainer()->getByType(EventParticipantService::class)->storeModel(
             [
                 'person_id' => $person->person_id,
                 'event_id' => $this->event->event_id,
@@ -39,7 +39,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase
                 'accomodation' => 1,
             ]
         );
-        $this->getContainer()->getByType(ServiceDsefParticipant::class)->createNewModel([
+        $this->getContainer()->getByType(ServiceDsefParticipant::class)->storeModel([
             'event_participant_id' => $this->app->event_participant_id,
             'e_dsef_group_id' => 1,
         ]);

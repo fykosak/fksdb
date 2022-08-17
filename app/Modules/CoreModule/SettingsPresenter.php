@@ -190,7 +190,7 @@ class SettingsPresenter extends BasePresenter
             $loginData['hash'] = $login->createHash($loginData['password']);
         }
 
-        $this->loginService->updateModel($login, $loginData);
+        $this->loginService->storeModel($loginData, $login);
 
         $this->flashMessage(_('User information has been saved.'), Message::LVL_SUCCESS);
         if ($tokenAuthentication) {

@@ -12,9 +12,9 @@ use FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStra
 use FKSDB\Models\Events\Processing\GenKillProcessing;
 use FKSDB\Models\Events\Processing\Processing;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use FKSDB\Models\ORM\Models\EventModel;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -112,7 +112,7 @@ class Holder
         return $this;
     }
 
-    public function setModel(?ActiveRow $primaryModel = null, ?array $secondaryModels = null): void
+    public function setModel(?Model $primaryModel = null, ?array $secondaryModels = null): void
     {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {

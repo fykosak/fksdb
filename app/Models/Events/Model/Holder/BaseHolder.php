@@ -11,8 +11,6 @@ use FKSDB\Models\Events\Model\ExpressionEvaluator;
 use FKSDB\Models\ORM\Models\EventModel;
 use FKSDB\Models\ORM\Models\EventParticipantModel;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ModelsMulti\ModelMulti;
-use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\Transitions\Machine\AbstractMachine;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
@@ -20,7 +18,6 @@ use FKSDB\Models\ORM\ModelsMulti\Events\ModelMDsefParticipant;
 use FKSDB\Models\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
 use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidArgumentException;
 use Nette\Neon\Neon;
 
@@ -45,8 +42,7 @@ class BaseHolder
     public Holder $holder;
     /** @var Field[] */
     private array $fields = [];
-    /** @var ActiveRow|null|Model|ModelMulti */
-    private ?ActiveRow $model;
+    private ?Model $model;
     public array $paramScheme;
     private array $parameters;
     /** @var bool|callable */
@@ -150,14 +146,14 @@ class BaseHolder
     }
 
     /**
-     * @return ActiveRow|ModelMDsefParticipant|ModelMFyziklaniParticipant|EventParticipantModel
+     * @return ModelMDsefParticipant|ModelMFyziklaniParticipant|EventParticipantModel
      */
-    public function getModel2(): ?ActiveRow
+    public function getModel2(): ?Model
     {
         return $this->model ?? null;
     }
 
-    public function setModel(?ActiveRow $model): void
+    public function setModel(?Model $model): void
     {
         $this->model = $model;
     }
@@ -273,6 +269,9 @@ class BaseHolder
         return $container;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function getPerson(): ?PersonModel
     {
         /** @var PersonModel $model */
@@ -281,7 +280,7 @@ class BaseHolder
             if (!$app) {
                 return null;
             }
-            return ReferencedAccessor::accessModel($app, PersonModel::class);
+            return $app->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException $exception) {
             return null;
         }

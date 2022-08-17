@@ -49,9 +49,9 @@ class RankingStrategy
             /** @var TeamModel2 $team */
             $team = $teamData['team'];
             if ($total) {
-                $this->teamService->updateModel($team, ['rank_total' => $rank]);
+                $this->teamService->storeModel(['rank_total' => $rank], $team);
             } else {
-                $this->teamService->updateModel($team, ['rank_category' => $rank]);
+                $this->teamService->storeModel(['rank_category' => $rank], $team);
             }
             $log->addHtml(
                 Html::el('li')

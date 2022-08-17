@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\ModelsMulti;
 
 use Fykosak\NetteORM\Model;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**
  * @deprecated
  */
-abstract class ModelMulti extends ActiveRow
+abstract class ModelMulti extends Model
 {
     public Model $mainModel;
     public Model $joinedModel;
@@ -57,23 +56,6 @@ abstract class ModelMulti extends ActiveRow
     }
 
     /**
-     * @param string $column
-     * @param mixed $value
-     */
-    public function __set($column, $value): void
-    {
-        throw new \LogicException('Cannot update multiModel directly.');
-    }
-
-    /**
-     * @param string|int $key
-     */
-    public function __unset($key): void
-    {
-        throw new \LogicException('Cannot update multiModel directly.');
-    }
-
-    /**
      * @param mixed $column
      */
     public function offsetExists($column): bool
@@ -89,22 +71,5 @@ abstract class ModelMulti extends ActiveRow
     public function &offsetGet($column)
     {
         return $this->__get($column);
-    }
-
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     */
-    public function offsetSet($column, $value): void
-    {
-        throw new \LogicException('Cannot update multiModel directly.');
-    }
-
-    /**
-     * @param mixed $column
-     */
-    public function offsetUnset($column): void
-    {
-        throw new \LogicException('Cannot update multiModel directly.');
     }
 }

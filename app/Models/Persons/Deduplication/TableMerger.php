@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\Logger;
 use Fykosak\Utils\Logging\Message;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\MergeStrategy;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 
 /**
@@ -22,8 +22,8 @@ class TableMerger
     private string $table;
     private Merger $merger;
     private Explorer $explorer;
-    private ActiveRow $trunkRow;
-    private ActiveRow $mergedRow;
+    private Model $trunkRow;
+    private Model $mergedRow;
     /** @var MergeStrategy[] */
     private array $columnMergeStrategies = [];
     private MergeStrategy $globalMergeStrategy;
@@ -47,7 +47,7 @@ class TableMerger
      * Merging
      * ****************************** */
 
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
+    public function setMergedPair(Model $trunkRow, Model $mergedRow): void
     {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
@@ -118,7 +118,7 @@ class TableMerger
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
                     $refTrunk = $groupedTrunks[$secondaryKey] ?? null;
-                    /** @var ActiveRow|null $refMerged */
+                    /** @var Model|null $refMerged */
                     $refMerged = $groupedMerged[$secondaryKey] ?? null;
                     if ($refTrunk && $refMerged) {
                         $referencingMerger->setMergedPair($refTrunk, $refMerged);
@@ -186,7 +186,7 @@ class TableMerger
         return $result;
     }
 
-    private function getSecondaryKeyValue(ActiveRow $row, string $parentColumn): string
+    private function getSecondaryKeyValue(Model $row, string $parentColumn): string
     {
         $key = [];
         foreach ($this->getSecondaryKey() as $column) {
@@ -202,7 +202,7 @@ class TableMerger
      * Logging sugar
      * ****************************** */
 
-    private function logUpdate(ActiveRow $row, iterable $changes): void
+    private function logUpdate(Model $row, iterable $changes): void
     {
         $msg = [];
         foreach ($changes as $column => $value) {
@@ -225,7 +225,7 @@ class TableMerger
         }
     }
 
-    private function logDelete(ActiveRow $row): void
+    private function logDelete(Model $row): void
     {
         $this->logger->log(
             new Message(
@@ -235,7 +235,7 @@ class TableMerger
         );
     }
 
-    private function logTrunk(ActiveRow $row): void
+    private function logTrunk(Model $row): void
     {
         $this->logger->log(
             new Message(

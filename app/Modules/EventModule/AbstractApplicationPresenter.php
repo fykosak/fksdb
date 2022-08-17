@@ -109,6 +109,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent
     {
@@ -127,6 +128,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter
      * @throws NeonSchemaException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentApplicationTransitions(): BaseComponent
     {

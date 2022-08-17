@@ -11,26 +11,16 @@ use Fykosak\NetteORM\Exceptions\ModelException;
 
 class EventParticipantService extends OldServiceSingle
 {
-
-    public function storeModel(array $data, ?Model $model = null): Model
+    /**
+     * @param EventParticipantModel|null $model
+     */
+    public function storeModel(array $data, ?Model $model = null): EventParticipantModel
     {
         try {
             return parent::storeModel($data, $model);
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                throw new DuplicateApplicationException($model->person, $exception);
-            }
-            throw $exception;
-        }
-    }
-
-    public function createNewModel(array $data): EventParticipantModel
-    {
-        try {
-            return parent::createNewModel($data);
-        } catch (ModelException $exception) {
-            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                throw new DuplicateApplicationException(null, $exception);
+                throw new DuplicateApplicationException($model ? $model->person : null, $exception);
             }
             throw $exception;
         }

@@ -14,7 +14,6 @@ use Fykosak\NetteORM\Service;
 use Fykosak\NetteORM\TypedSelection;
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -35,9 +34,9 @@ class SingleEventSource implements HolderSource
     private EventDispatchFactory $eventDispatchFactory;
     private Selection $primarySelection;
     private Holder $dummyHolder;
-    /** @var ActiveRow[] */
+    /** @var Model[] */
     private ?array $primaryModels = null;
-    /** @var ActiveRow[][] */
+    /** @var Model[][] */
     private ?array $secondaryModels = null;
     /** @var Holder[] */
     private array $holders = [];
@@ -72,7 +71,7 @@ class SingleEventSource implements HolderSource
     private function loadData(): void
     {
         $joinToCheck = null;
-        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
+        foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $group) {
             if (!isset($joinToCheck)) {
                 $joinToCheck = $group['joinTo'];
             } elseif ($group['joinTo'] !== $joinToCheck) {
@@ -122,7 +121,7 @@ class SingleEventSource implements HolderSource
     {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
-            foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
+            foreach ($this->secondaryModels[$key] as $secondaryModel) {
                 $primaryPK = $secondaryModel[$group['joinOn']];
                 if (!isset($cache[$primaryPK])) {
                     $cache[$primaryPK] = [];

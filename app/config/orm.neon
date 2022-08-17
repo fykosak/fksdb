@@ -664,13 +664,13 @@ orm:
              model: FKSDB\Models\ORM\Models\TeacherModel
              columnFactories:
                  state:
-                    type: state
-                    states:
-                        proposal: [badge: 'badge bg-info', label: 'Proposal']
-                        cooperate: [badge: 'badge bg-success', label: 'Cooperate']
-                        ended: [badge: 'badge bg-dark',  label: 'Ended']
-                        undefined: [badge: 'badge bg-secondary',  label: 'Undefined']
-                    title: _('Cooperation status')
+                     type: state
+                     states:
+                         proposal: [badge: 'badge bg-info', label: 'Proposal']
+                         cooperate: [badge: 'badge bg-success', label: 'Cooperate']
+                         ended: [badge: 'badge bg-dark',  label: 'Ended']
+                         undefined: [badge: 'badge bg-secondary',  label: 'Undefined']
+                     title: _('Cooperation status')
                  since:
                     type: date
                     title: _('Teaches since')
@@ -714,11 +714,9 @@ orm:
                     type: primaryKey
                     title: _('Submit Id')
                 state:
-                    type: state
+                    type: enum
                     title: _('State')
-                    states:
-                        not_checked: [badge: 'badge bg-danger', label: 'not checked']
-                        checked: [badge: 'badge bg-success', label: 'checked']
+                    enumClassName: FKSDB\Models\ORM\Models\Fyziklani\SubmitState
                 created:
                     type: dateTime
                     title: _('Created')

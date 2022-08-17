@@ -31,7 +31,7 @@ class TimelineComponent extends FrontEndComponent
         return [
             'eventId' => $event->event_id,
             'name' => $event->name,
-            'contestId' => $event->getContest()->contest_id,
+            'contestId' => $event->event_type->contest_id,
             'begin' => $event->begin->format('c'),
             'eventTypeId' => $event->event_type_id,
         ];

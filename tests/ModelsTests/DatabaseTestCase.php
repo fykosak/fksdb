@@ -56,10 +56,10 @@ abstract class DatabaseTestCase extends TestCase
     protected function setUp(): void
     {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
-        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel(
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel(
             ['target' => 'nikde', 'city' => 'nicov', 'region_id' => 3]
         );
-        $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->createNewModel(
+        $this->genericSchool = $this->getContainer()->getByType(SchoolService::class)->storeModel(
             ['name' => 'Skola', 'name_abbrev' => 'SK', 'address_id' => $address->address_id]
         );
         $serviceContestYear = $this->getContainer()->getByType(ContestYearService::class);
@@ -130,13 +130,13 @@ abstract class DatabaseTestCase extends TestCase
         ?array $info = null,
         ?array $loginData = null
     ): PersonModel {
-        $person = $this->getContainer()->getByType(PersonService::class)->createNewModel(
+        $person = $this->getContainer()->getByType(PersonService::class)->storeModel(
             ['other_name' => $name, 'family_name' => $surname, 'gender' => 'M']
         );
 
         if ($info) {
             $info['person_id'] = $person->person_id;
-            $this->getContainer()->getByType(PersonInfoService::class)->createNewModel($info);
+            $this->getContainer()->getByType(PersonInfoService::class)->storeModel($info);
         }
 
         if (!is_null($loginData)) {
@@ -147,7 +147,7 @@ abstract class DatabaseTestCase extends TestCase
             ];
             $loginData = array_merge($data, $loginData);
 
-            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->createNewModel($loginData);
+            $pseudoLogin = $this->getContainer()->getByType(LoginService::class)->storeModel($loginData);
 
             if (isset($pseudoLogin->hash)) {
                 $hash = PasswordAuthenticator::calculateHash($loginData['hash'], $pseudoLogin);
@@ -170,7 +170,7 @@ abstract class DatabaseTestCase extends TestCase
         ?int $studyYear = null,
         ?string $class = null
     ): PersonHistoryModel {
-        return $this->getContainer()->getByType(PersonHistoryService::class)->createNewModel([
+        return $this->getContainer()->getByType(PersonHistoryService::class)->storeModel([
             'person_id' => $person->person_id,
             'ac_year' => $acYear,
             'school_id' => $school ? $school->school_id : null,

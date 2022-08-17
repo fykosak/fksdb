@@ -87,7 +87,7 @@ class HandoutFormComponent extends BaseComponent
                     'person_id' => $personId,
                     'type' => TaskContributionType::GRADE,
                 ];
-                $this->taskContributionService->createNewModel($data);
+                $this->taskContributionService->storeModel($data);
             }
         }
 

@@ -23,7 +23,7 @@ class NoDSEFTest extends TsafTestCase
         parent::setUp();
         $this->authenticatePerson($this->person, $this->fixture);
 
-        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+        $this->tsafApp = $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
             'person_id' => $this->person,
             'event_id' => $this->tsafEvent->event_id,
             'status' => 'invited',

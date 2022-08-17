@@ -28,4 +28,9 @@ abstract class FakeStringEnum
      * @return static[]
      */
     abstract public static function cases(): array;
+
+    public function __toString(): string
+    {
+        return $this->value;
+    }
 }
