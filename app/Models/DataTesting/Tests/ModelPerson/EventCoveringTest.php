@@ -35,7 +35,7 @@ class EventCoveringTest extends PersonTest
         /** @var EventParticipantModel $eventParticipant */
         foreach ($person->getEventParticipants() as $eventParticipant) {
             $year = $eventParticipant->event->year;
-            $contestId = $eventParticipant->event->getContest()->contest_id;
+            $contestId = $eventParticipant->event->event_type->contest_id;
             if (!\in_array($year, $participantsYears[$contestId])) {
                 $participantsYears[$contestId][] = $year;
             }
@@ -100,7 +100,7 @@ class EventCoveringTest extends PersonTest
         /** @var EventOrgModel $eventOrg */
         foreach ($person->getEventOrgs() as $eventOrg) {
             $year = $eventOrg->event->year;
-            $contestId = $eventOrg->event->getContest()->contest_id;
+            $contestId = $eventOrg->event->event_type->contest_id;
             if (!\in_array($year, $eventOrgYears[$contestId])) {
                 $eventOrgYears[$contestId][] = $year;
             }

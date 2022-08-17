@@ -59,7 +59,7 @@ class AuthTokenService extends Service
                 $tokenData = Random::generate(self::TOKEN_LENGTH, 'a-zA-Z0-9');
             } while ($this->verifyToken($tokenData));
 
-            $token = $this->createNewModel([
+            $token = $this->storeModel([
                 'until' => $until,
                 'login_id' => $login->login_id,
                 'token' => $tokenData,
@@ -68,7 +68,7 @@ class AuthTokenService extends Service
                 'type' => $type,
             ]);
         } else {
-            $this->updateModel($token, ['until' => $until]);
+            $this->storeModel(['until' => $until], $token);
         }
         if (!$outerTransaction) {
             $this->explorer->getConnection()->commit();

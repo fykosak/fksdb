@@ -56,6 +56,7 @@ class ClosePresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleTeam(): PageTitle
     {
@@ -102,6 +103,7 @@ class ClosePresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function actionTeam(): void
     {
@@ -130,6 +132,7 @@ class ClosePresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentCloseTeamControl(): CloseTeamComponent
     {
@@ -142,6 +145,7 @@ class ClosePresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid
     {

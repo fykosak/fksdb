@@ -49,9 +49,9 @@ class PointsFormComponent extends SeriesTableFormComponent
             }
             $submit = $this->submitService->findByPrimary($submitId);
             if ($points !== '' && $points !== $submit->raw_points) {
-                $this->submitService->updateModel($submit, ['raw_points' => +$points]);
+                $this->submitService->storeModel(['raw_points' => +$points], $submit);
             } elseif (!is_null($submit->raw_points) && $points === '') {
-                $this->submitService->updateModel($submit, ['raw_points' => null]);
+                $this->submitService->storeModel(['raw_points' => null], $submit);
             }
         }
         ($this->invalidCacheCallback)();

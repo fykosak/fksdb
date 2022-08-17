@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\AddressModel;
 use FKSDB\Models\ORM\Models\PostContactModel;
 use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\RegionService;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 use Nette\DI\Container as DIContainer;
 use Nette\InvalidStateException;
 
@@ -52,7 +52,7 @@ class AddressContainer extends ModelContainer
      */
     public function setValues($data, bool $erase = false): self
     {
-        if ($data instanceof ActiveRow) { //assert its from address table
+        if ($data instanceof Model) { //assert its from address table
             if ($data instanceof PostContactModel) {
                 $address = $data->address;
             } else {

@@ -81,7 +81,7 @@ class Handler
             /** @var ScheduleItemModel $modelScheduleItem */
             $modelScheduleItem = $this->scheduleItemService->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
-                $this->personScheduleService->createNewModel(
+                $this->personScheduleService->storeModel(
                     ['person_id' => $person->person_id, 'schedule_item_id' => $id]
                 );
             } else {

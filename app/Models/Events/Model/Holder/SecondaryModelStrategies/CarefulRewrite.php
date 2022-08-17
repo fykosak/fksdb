@@ -6,8 +6,8 @@ namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\ORM\ServicesMulti\ServiceMulti;
+use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\Service;
-use Nette\Database\Table\ActiveRow;
 
 class CarefulRewrite extends SecondaryModelStrategy
 {
@@ -39,7 +39,7 @@ class CarefulRewrite extends SecondaryModelStrategy
     /**
      * @param Service|ServiceMulti $service
      */
-    private function getConflicts(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): array
+    private function getConflicts(Model $foundModel, array $joinData, $service, BaseHolder $holder): array
     {
         $foundArray = $foundModel->toArray();
         $result = [];
@@ -61,7 +61,7 @@ class CarefulRewrite extends SecondaryModelStrategy
     /**
      * @param Service|ServiceMulti $service
      */
-    private function updateFoundModel(ActiveRow $foundModel, array $joinData, $service, BaseHolder $holder): void
+    private function updateFoundModel(Model $foundModel, array $joinData, $service, BaseHolder $holder): void
     {
         $data = [];
         foreach ($holder->data as $key => $value) {
@@ -70,6 +70,6 @@ class CarefulRewrite extends SecondaryModelStrategy
             }
             $data[$key] = $value;
         }
-        $service->updateModel($foundModel, $data);
+        $service->storeModel($data, $foundModel);
     }
 }

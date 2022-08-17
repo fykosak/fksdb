@@ -11,6 +11,7 @@ use Fykosak\NetteORM\Service;
 
 /**
  * @method TeamModel2 findByPrimary(int $key)
+ * @method TeamModel2 storeModel(array $data, ?TeamModel2 $model = null)
  */
 class TeamService2 extends Service
 {

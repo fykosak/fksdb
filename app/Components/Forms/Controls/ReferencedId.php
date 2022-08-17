@@ -17,7 +17,6 @@ use Fykosak\NetteORM\Service;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
@@ -38,7 +37,7 @@ class ReferencedId extends HiddenField
     private ReferencedHandler $handler;
     private ?Promise $promise = null;
     private bool $modelCreated = false;
-    private ?ActiveRow $model = null;
+    private ?Model $model = null;
     private bool $attachedOnValidate = false;
     private bool $attachedSearch = false;
 
@@ -115,13 +114,13 @@ class ReferencedId extends HiddenField
         $this->modelCreated = $modelCreated;
     }
 
-    public function getModel(): ?ActiveRow
+    public function getModel(): ?Model
     {
         return $this->model;
     }
 
     /**
-     * @param string|int|ActiveRow|Model|PersonModel $value
+     * @param string|int|Model|PersonModel $value
      * @return static
      */
     public function setValue($value, bool $force = false): self
@@ -237,7 +236,7 @@ class ReferencedId extends HiddenField
         }
     }
 
-    protected function setModel(?ActiveRow $model, string $mode): void
+    protected function setModel(?Model $model, string $mode): void
     {
         $this->getReferencedContainer()->setModel($model, $mode);
     }

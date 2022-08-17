@@ -22,10 +22,10 @@ use FKSDB\Models\Persons\ModifiabilityResolver;
 use FKSDB\Models\Persons\ReferencedHandler;
 use FKSDB\Models\Persons\VisibilityResolver;
 use FKSDB\Models\Persons\ReferencedPersonHandler;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
@@ -106,7 +106,6 @@ class ReferencedPersonContainer extends ReferencedContainer
             }
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $metadata);
-                $fullFieldName = "$sub.$fieldName";
                 if ($sub === 'person_info' && $fieldName === 'email') {
                     $control->addCondition(
                         function (): bool {
@@ -142,9 +141,9 @@ class ReferencedPersonContainer extends ReferencedContainer
     }
 
     /**
-     * @param ActiveRow|PersonModel|null $model
+     * @param PersonModel|null $model
      */
-    public function setModel(?ActiveRow $model, string $mode): void
+    public function setModel(?Model $model, string $mode): void
     {
         $resolution = $this->modifiabilityResolver->getResolutionMode($model);
         $modifiable = $this->modifiabilityResolver->isModifiable($model);

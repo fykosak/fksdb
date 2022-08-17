@@ -14,7 +14,7 @@ class PublicModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(ContestantService::class)->createNewModel(['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1]);
+        $this->getContainer()->getByType(ContestantService::class)->storeModel(['person_id' => $this->person->person_id, 'contest_id' => 1, 'year' => 1]);
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array

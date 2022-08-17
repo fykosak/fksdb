@@ -122,7 +122,7 @@ class AccountManager
     final public function createLogin(PersonModel $person, ?string $login = null, ?string $password = null): LoginModel
     {
         /** @var LoginModel $login */
-        $login = $this->loginService->createNewModel([
+        $login = $this->loginService->storeModel([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
@@ -131,7 +131,7 @@ class AccountManager
         /* Must be done after login_id is allocated. */
         if ($password) {
             $hash = $login->createHash($password);
-            $this->loginService->updateModel($login, ['hash' => $hash]);
+            $this->loginService->storeModel(['hash' => $hash], $login);
         }
         return $login;
     }

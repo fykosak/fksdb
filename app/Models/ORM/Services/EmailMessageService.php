@@ -10,7 +10,7 @@ use Fykosak\NetteORM\TypedSelection;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method EmailMessageModel createNewModel(array $data)
+ * @method EmailMessageModel storeModel(array $data)
  */
 class EmailMessageService extends Service
 {
@@ -26,6 +26,6 @@ class EmailMessageService extends Service
         if (!isset($data['reply_to'])) {
             $data['reply_to'] = $data['sender'];
         }
-        return $this->createNewModel($data);
+        return $this->storeModel($data);
     }
 }

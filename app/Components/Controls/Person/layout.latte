@@ -1,22 +1,23 @@
 {layout ../@layout.latte}
+{varType FKSDB\Models\ORM\Models\PersonModel[] $persons}
 {block content}
     {control form}
     <table class="table table-sm table-hover table-striped">
         <thead>
-            <tr>
-                <th><b>Person</b></th>
-                <th><b>Pizza</b></th>
-                <th><b>ISIC</b></th>
-            </tr>
+        <tr>
+            <th>{_'Person'}</th>
+            <th>{_'Pizza'}</th>
+            <th>{_'ISIC'}</th>
+        </tr>
         </thead>
         <tbody>
-            {foreach $persons as $person}
-                <tr>
-                    <td><b>{$person->getFullName()}</b></td>
-                    <td>{control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</td>
-                    <td>{control valuePrinter:onlyValue 'person_info.isic_number', $person->getInfo()}</td>
-                </tr>
-            {/foreach}
+        {foreach $persons as $person}
+            <tr>
+                <td><b>{$person->getFullName()}</b></td>
+                <td>{control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</td>
+                <td>{control valuePrinter:onlyValue 'person_info.isic_number', $person->getInfo()}</td>
+            </tr>
+        {/foreach}
         </tbody>
-    <table>
+    </table>
 {/block}

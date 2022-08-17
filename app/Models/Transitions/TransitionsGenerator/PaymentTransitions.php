@@ -76,7 +76,7 @@ abstract class PaymentTransitions implements TransitionsDecorator
         );
         $transition->beforeExecute[] = function (PaymentHolder $holder) {
             foreach ($holder->getModel()->getRelatedPersonSchedule() as $personSchedule) {
-                $this->personScheduleService->updateModel($personSchedule, [$personSchedule->state => 'received']);
+                $this->personScheduleService->storeModel([$personSchedule->state => 'received'], $personSchedule);
             }
         };
         $transition->setCondition(fn() => false);

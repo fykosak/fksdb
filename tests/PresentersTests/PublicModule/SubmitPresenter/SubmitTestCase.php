@@ -39,47 +39,47 @@ abstract class SubmitTestCase extends DatabaseTestCase
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
         $serviceTask = $this->getContainer()->getByType(TaskService::class);
         $serviceTaskStudyYear = $this->getContainer()->getByType(TaskStudyYearService::class);
-        $this->taskAll = $serviceTask->createNewModel([
+        $this->taskAll = $serviceTask->storeModel([
             'label' => '1',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
 
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskAll->task_id,
             'study_year' => '6',
         ]);
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskAll->task_id,
             'study_year' => '7',
         ]);
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskAll->task_id,
             'study_year' => '8',
         ]);
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskAll->task_id,
             'study_year' => '9',
         ]);
 
-        $this->taskRestricted = $serviceTask->createNewModel([
+        $this->taskRestricted = $serviceTask->storeModel([
             'label' => '2',
             'series' => '1',
             'year' => '1',
             'contest_id' => '1',
         ]);
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskRestricted->task_id,
             'study_year' => '6',
         ]);
-        $serviceTaskStudyYear->createNewModel([
+        $serviceTaskStudyYear->storeModel([
             'task_id' => $this->taskRestricted->task_id,
             'study_year' => '7',
         ]);
 
         $this->person = $this->createPerson('Matyáš', 'Korvín', null, []);
-        $this->contestant = $this->getContainer()->getByType(ContestantService::class)->createNewModel([
+        $this->contestant = $this->getContainer()->getByType(ContestantService::class)->storeModel([
             'contest_id' => 1,
             'year' => 1,
             'person_id' => $this->person->person_id,

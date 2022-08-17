@@ -13,13 +13,6 @@ use Nette\InvalidStateException;
 
 class StalkingComponent extends BaseStalkingComponent
 {
-    private Mapper $mapper;
-
-    public function injectMapper(Mapper $mapper): void
-    {
-        $this->mapper = $mapper;
-    }
-
     /**
      * @throws NotImplementedException
      */
@@ -69,15 +62,9 @@ class StalkingComponent extends BaseStalkingComponent
      */
     private function renderMulti(array $definition, PersonModel $person): void
     {
-        $models = [];
-        $query = $person->related($definition['table']);
-        $modelClass = $this->mapper->getDefinition($definition['table'])['model'];
-        foreach ($query as $datum) {
-            $models[] = ($modelClass)::createFromActiveRow($datum);
-        }
         $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];
-        $this->template->models = $models;
+        $this->template->models =  $person->related($definition['table']);
         $this->template->itemHeadline = $definition['itemHeadline'];
         $this->template->render(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
     }

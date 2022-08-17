@@ -50,9 +50,9 @@ class PriceCalculator implements TransitionCallback
             $multiPrice->add($preProcess->calculate($holder->getModel()));
         }
         $price = $multiPrice->getPrice($holder->getModel()->getCurrency());
-        $this->paymentService->updateModel(
-            $holder->getModel(),
-            ['price' => $price->getAmount(), 'currency' => $price->getCurrency()->value]
+        $this->paymentService->storeModel(
+            ['price' => $price->getAmount(), 'currency' => $price->getCurrency()->value],
+            $holder->getModel()
         );
     }
 

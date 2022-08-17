@@ -31,10 +31,10 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
     {
         parent::setUp();
         $this->loginUser();
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'contest_id' => 1, 'since' => 1, 'order' => 1]
         );
-        $this->event = $this->getContainer()->getByType(EventService::class)->createNewModel([
+        $this->event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,
@@ -43,7 +43,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             'name' => 'Dummy Event',
         ]);
         $this->eventOrgPerson = $this->createPerson('Tester_L', 'Testrovič_L');
-        $this->eventOrg = $this->getContainer()->getByType(EventOrgService::class)->createNewModel([
+        $this->eventOrg = $this->getContainer()->getByType(EventOrgService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'person_id' => $this->eventOrgPerson->person_id,
             'note' => 'note-original',
@@ -87,7 +87,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
             ],
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('SQLSTATE[23000]', $html);
+        Assert::contains('Error', $html);
         $after = $this->countEventOrgs();
         Assert::equal($init, $after);
     }
@@ -104,10 +104,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->getContainer()
-            ->getByType(EventOrgService::class)
-            ->getTable()
-            ->where(['e_org_id' => $this->eventOrg->e_org_id])
-            ->fetch();
+            ->getByType(EventOrgService::class)->findByPrimary($this->eventOrg->e_org_id);
         Assert::equal('note-edited', $org->note);
     }
 

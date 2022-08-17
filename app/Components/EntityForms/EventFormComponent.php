@@ -74,7 +74,6 @@ class EventFormComponent extends EntityFormComponent
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values[self::CONT_EVENT]);
         $data['year'] = $this->contestYear->year;
-        /** @var EventModel $model */
         $model = $this->eventService->storeModel($data, $this->model);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
@@ -159,7 +158,7 @@ class EventFormComponent extends EntityFormComponent
         $tokenData = ['until' => $event->registration_end ?? $event->end];
         /** @var AuthTokenModel $token $token */
         foreach ($this->authTokenService->findTokensByEvent($event) as $token) {
-            $this->authTokenService->updateModel($token, $tokenData);
+            $this->authTokenService->storeModel($tokenData, $token);
         }
         $connection->commit();
     }

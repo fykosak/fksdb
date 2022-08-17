@@ -17,7 +17,6 @@ use FKSDB\Models\Mail\SendFailedException;
 use Fykosak\NetteORM\Exceptions\ModelException;
 use Fykosak\Utils\Logging\Message;
 use Nette\Database\Connection;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -68,9 +67,9 @@ class ExtendedPersonHandler
     }
 
     /**
-     * @return PersonModel|null|Model|ActiveRow
+     * @return PersonModel|null|Model
      */
-    final protected function getReferencedPerson(Form $form): ?ActiveRow
+    final protected function getReferencedPerson(Form $form): ?Model
     {
         /** @var ReferencedId $input */
         $input = $form[self::CONT_AGGR][self::EL_PERSON];
@@ -153,7 +152,7 @@ class ExtendedPersonHandler
         $model = $presenter->getModel();
 
         if (!$model) {
-            $model = $this->service->createNewModel([
+            $model = $this->service->storeModel([
                 'contest_id' => $this->contestYear->contest,
                 'person_id' => $person->getPrimary(),
                 'year' => $this->contestYear->year,
@@ -163,7 +162,7 @@ class ExtendedPersonHandler
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull2($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, $data);
+            $this->service->storeModel($data, $model);
         }
     }
 }

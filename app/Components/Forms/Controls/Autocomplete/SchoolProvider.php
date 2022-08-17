@@ -67,7 +67,6 @@ class SchoolProvider implements FilteredDataProvider
 
     public function getItemLabel(int $id): string
     {
-        /** @var SchoolModel $school */
         $school = $this->schoolService->findByPrimary($id);
         if (!$school) {
             throw new InvalidStateException("Cannot find school with ID '$id'.");

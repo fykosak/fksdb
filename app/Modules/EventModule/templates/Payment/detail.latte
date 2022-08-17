@@ -1,7 +1,7 @@
 {block content}
     {varType FKSDB\Models\ORM\Models\PaymentModel $model}
     {varType bool $isOrg}
-    {varType array $items}
+    {varType Fykosak\Utils\Price\MultiCurrencyPrice[][]|string[][] $items}
     <div class="h2">{control valuePrinter:onlyValue 'payment.state', $model}</div>
     {var $progress = 0}
     {switch $model->state->value}

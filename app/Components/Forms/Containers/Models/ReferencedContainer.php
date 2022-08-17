@@ -9,11 +9,11 @@ use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;
 use FKSDB\Models\ORM\Columns\AbstractColumnException;
 use FKSDB\Models\ORM\OmittedControlException;
+use Fykosak\NetteORM\Model;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -140,5 +140,5 @@ abstract class ReferencedContainer extends ContainerWithOptions
      */
     abstract protected function configure(): void;
 
-    abstract public function setModel(?ActiveRow $model, string $mode): void;
+    abstract public function setModel(?Model $model, string $mode): void;
 }
