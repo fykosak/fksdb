@@ -35,4 +35,20 @@ class ItemModel extends Model implements Resource
     {
         return self::RESOURCE_ID;
     }
+
+    /**
+     * @param string $key
+     * @return ItemState|mixed
+     * @throws \ReflectionException
+     */
+    public function &__get(string $key)
+    {
+        $value = parent::__get($key);
+        switch ($key) {
+            case 'state':
+                $value = ItemState::tryFrom($value);
+                break;
+        }
+        return $value;
+    }
 }

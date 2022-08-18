@@ -17,17 +17,19 @@ class ItemState extends FakeStringEnum implements EnumColumn
 
     public function badge(): Html
     {
-        $badge = 'badge bg-color-4';
+        $badge = 'badge bg-color-2';
         switch ($this->value) {
             case self::NEW:
-                $badge = 'badge bg-color-2';
+                $badge = 'badge bg-color-3';
                 break;
             case self::USED:
+                $badge = 'badge bg-color-2';
+                break;
             case self::UNPACKED:
                 $badge = 'badge bg-color-1';
                 break;
             case self::DAMAGED:
-                $badge = 'badge bg-color-3';
+                $badge = 'badge bg-color-4';
                 break;
         }
         return Html::el('span')->addAttributes(['class' => $badge])->addText($this->label());
