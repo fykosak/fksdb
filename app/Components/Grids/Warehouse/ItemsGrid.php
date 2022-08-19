@@ -19,12 +19,13 @@ class ItemsGrid extends EntityGrid
     public function __construct(Container $container, ContestModel $contest)
     {
         parent::__construct($container, ItemService::class, [
+            'warehouse_item.item_id',
             'warehouse_product.name_cs',
             'warehouse_item.state',
             'warehouse_item.description_cs',
             'warehouse_item.data',
-            'warehouse_item.purchase_price'
-            /*'warehouse_item.purchase_currency'*/
+            'warehouse_item.purchase_price',
+            'warehouse_item.purchase_currency'
         ], [
             'contest_id' => $contest->contest_id,
         ]);

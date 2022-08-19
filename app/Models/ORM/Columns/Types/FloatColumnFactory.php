@@ -21,9 +21,17 @@ class FloatColumnFactory extends ColumnFactory
 
     private ?string $suffix = null;
 
+    /** @var FloatColumn|int */
+    private int $decimalDigitsCount;
+
+    public function setDecimalDigitsCount(int $count): void
+    {
+        $this->decimalDigitsCount = $count;
+    }
+
     protected function createHtmlValue(Model $model): Html
     {
-        return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))(
+        return (new NumberPrinter($this->prefix, $this->suffix, $this->decimalDigitsCount, $this->nullValue))(
             $model->{$this->getModelAccessKey()}
         );
     }

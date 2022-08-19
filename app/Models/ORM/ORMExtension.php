@@ -200,6 +200,7 @@ class ORMExtension extends Extension
             FloatColumnFactory::class,
             $field
         );
+        $factory->addSetup('setDecimalDigitsCount', [$field['decimalDigitsCount']]);
         if (isset($field['nullValueFormat'])) {
             $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
         }

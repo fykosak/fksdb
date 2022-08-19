@@ -1044,6 +1044,7 @@ orm:
                     title: _('Data')
                 purchase_price:
                     type: float
+                    decimalDigitsCount: 2
                     title: _('Price')
                 purchase_currency:
                      type: class
