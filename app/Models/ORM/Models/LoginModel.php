@@ -18,7 +18,7 @@ use Nette\Security\IIdentity;
  * @property-read string hash
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface last_login
- * @property-read bool active
+ * @property-read int active
  */
 class LoginModel extends Model implements IIdentity
 {

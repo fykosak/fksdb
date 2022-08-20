@@ -20,7 +20,7 @@ abstract class BasePresenter extends AuthenticatedPresenter
     {
         if (!isset($this->contestant)) {
             /** @var PersonModel $person */
-            $person = $this->user->getIdentity()->person;
+            $person = $this->getUser()->getIdentity()->person;
             $this->contestant = $person->related(DbNames::TAB_CONTESTANT, 'person_id')->where(
                 [
                     'contest_id' => $this->getSelectedContestYear()->contest_id,
