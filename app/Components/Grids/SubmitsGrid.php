@@ -51,21 +51,13 @@ class SubmitsGrid extends BaseGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-
         $this->setDefaultOrder('series DESC, tasknr ASC');
-
-        //
-        // columns
-        //
         $this->addColumn('task', _('Task'))
             ->setRenderer(fn(SubmitModel $submit): string => $submit->task->getFQName());
         $this->addColumn('submitted_on', _('Timestamp'));
         $this->addColumn('source', _('Method of handing'))
             ->setRenderer(fn(SubmitModel $model): string => $model->source->value);
 
-        //
-        // operations
-        //
         $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-outline-warning')
             ->setText(_('Cancel'))
@@ -83,7 +75,7 @@ class SubmitsGrid extends BaseGrid
         $this->addButton('download_corrected')
             ->setText(_('Download corrected'))->setLink(
                 fn(SubmitModel $submit): string => $this->link('downloadCorrected!', $submit->submit_id)
-            )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() ? $submit->corrected : false);
+            )->setShow(fn(SubmitModel $submit): bool => !$submit->isQuiz() && $submit->corrected);
 
         $this->paginate = false;
         $this->enableSorting = false;

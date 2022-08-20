@@ -31,7 +31,7 @@ use Nette\Security\Resource;
  * @property-read int points
  * @property-read int rank_total
  * @property-read int rank_category
- * @property-read bool force_a
+ * @property-read int force_a
  * @property-read GameLang game_lang
  */
 class TeamModel2 extends Model implements Resource

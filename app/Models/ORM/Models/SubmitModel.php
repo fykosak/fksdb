@@ -19,7 +19,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string note
  * @property-read float raw_points
  * @property-read float calc_points
- * @property-read bool corrected
+ * @property-read int corrected FUCK MARIADB
  */
 class SubmitModel extends Model implements Resource
 {

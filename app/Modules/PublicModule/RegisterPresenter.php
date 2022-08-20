@@ -134,8 +134,8 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
 
     public function actionContestant(): void
     {
-        if ($this->user->isLoggedIn()) {
-            $person = $this->person;
+        if ($this->getUser()->isLoggedIn()) {
+            $person = $this->getPerson();
 
             if (!$person) {
                 $this->flashMessage(
@@ -175,11 +175,7 @@ class RegisterPresenter extends CoreBasePresenter implements ExtendedPersonPrese
     private function getPerson(): ?PersonModel
     {
         if (!isset($this->person)) {
-            if ($this->user->isLoggedIn()) {
-                $this->person = $this->user->getIdentity()->person;
-            } else {
-                $this->person = null;
-            }
+            $this->person = $this->getUser()->isLoggedIn() ? $this->getUser()->getIdentity()->person : null;
         }
         return $this->person;
     }
