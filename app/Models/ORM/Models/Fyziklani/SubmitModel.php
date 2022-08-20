@@ -13,7 +13,7 @@ use Nette\Security\Resource;
  * @property-read SubmitState state
  * @property-read int fyziklani_team_id
  * @property-read int|null points
- * @property-read bool|null skipped
+ * @property-read int|null skipped
  * @property-read int fyziklani_task_id
  * @property-read int fyziklani_submit_id
  * @property-read int task_id

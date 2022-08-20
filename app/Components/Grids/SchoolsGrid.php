@@ -45,10 +45,6 @@ class SchoolsGrid extends EntityGrid
     protected function configure(Presenter $presenter): void
     {
         parent::configure($presenter);
-
-        //
-        // columns
-        //
         $this->addColumn('name', _('Name'));
         $this->addColumn('city', _('City'))->setRenderer(fn(SchoolModel $school) => $school->address->city);
         $this->addColumn('active', _('Active?'))->setRenderer(

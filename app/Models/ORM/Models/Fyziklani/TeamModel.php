@@ -22,7 +22,7 @@ use Nette\Security\Resource;
  * @property-read \DateTimeInterface created
  * @property-read \DateTimeInterface modified
  * @property-read string phone
- * @property-read bool force_a
+ * @property-read int force_a
  * @property-read string password
  * @property-read EventModel event
  * @property-read string game_lang

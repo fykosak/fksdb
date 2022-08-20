@@ -13,7 +13,7 @@ use Fykosak\NetteORM\Model;
  * @property-read \DateTimeInterface result_display
  * @property-read \DateTimeInterface result_hide
  * @property-read int refresh_delay
- * @property-read bool result_hard_display
+ * @property-read int result_hard_display
  * @property-read int tasks_on_board
  * @property-read string available_points
  */
