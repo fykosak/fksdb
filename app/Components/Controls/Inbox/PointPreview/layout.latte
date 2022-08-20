@@ -1,11 +1,12 @@
 {layout '../layout.latte'}
+{varType FKSDB\Models\ORM\Models\SubmitModel|null $submit}
 {define submit-row}
     <td>
         {if !$submit}
             <span>-</span>
         {elseif is_null($submit->raw_points)}
             <span class="text-muted">NA</span>
-        {elseif $submit->raw_points>$submit->getTask()->points}
+        {elseif $submit->raw_points > $submit->task->points}
             <b class="text-danger">{$submit->calc_points}</b>
         {else}
             <span>{$submit->calc_points}</span>

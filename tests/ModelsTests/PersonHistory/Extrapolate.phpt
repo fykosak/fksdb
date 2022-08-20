@@ -33,12 +33,12 @@ class Extrapolate extends DatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->person = $this->getContainer()->getByType(PersonService::class)->createNewModel([
+        $this->person = $this->getContainer()->getByType(PersonService::class)->storeModel([
             'family_name' => 'Testerovič',
             'other_name' => 'Tester',
             'gender' => 'M',
         ]);
-        $address = $this->getContainer()->getByType(AddressService::class)->createNewModel([
+        $address = $this->getContainer()->getByType(AddressService::class)->storeModel([
             'first_row' => 'PU',
             'second_row' => 'PU',
             'target' => 'PU',
@@ -46,7 +46,7 @@ class Extrapolate extends DatabaseTestCase
             'postal_code' => '02001',
             'region_id' => '1',
         ]);
-        $this->school = $this->getContainer()->getByType(SchoolService::class)->createNewModel([
+        $this->school = $this->getContainer()->getByType(SchoolService::class)->storeModel([
             'name_full' => 'GPU',
             'name' => 'GPU',
             'name_abbrev' => 'GPU',
@@ -60,7 +60,7 @@ class Extrapolate extends DatabaseTestCase
 
     public function testSimple(): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
@@ -77,7 +77,7 @@ class Extrapolate extends DatabaseTestCase
 
     public function testNull(): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,
@@ -97,7 +97,7 @@ class Extrapolate extends DatabaseTestCase
      */
     public function testStudyYear(int $from, int $step, ?int $to): void
     {
-        $fixture = $this->service->createNewModel([
+        $fixture = $this->service->storeModel([
             'person_id' => $this->person->person_id,
             'ac_year' => YearCalculator::getCurrentAcademicYear(),
             'school_id' => $this->school->school_id,

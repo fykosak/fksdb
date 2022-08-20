@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\Models\RegionModel;
+use FKSDB\Models\ORM\Models\SchoolModel;
 use Fykosak\NetteORM\Service;
 
+/**
+ * @method SchoolModel storeModel(array $data, ?SchoolModel $model = null)
+ * @method SchoolModel findByPrimary($key)
+ */
 class SchoolService extends Service
 {
 

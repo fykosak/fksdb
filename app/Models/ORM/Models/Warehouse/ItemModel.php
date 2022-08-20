@@ -23,7 +23,7 @@ use Nette\Security\Resource;
  * @property-read string|null purchase_currency pořizovací měna
  * @property-read \DateTimeInterface checked
  * @property-read \DateTimeInterface|null shipped kedy bola položka vyexpedovaná
- * @property-read bool available available in online store
+ * @property-read int available available in online store
  * @property-read string|null placement kde je uskladnena
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka

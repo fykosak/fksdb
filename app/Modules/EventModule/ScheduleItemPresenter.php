@@ -42,6 +42,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -58,6 +59,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleEdit(): PageTitle
     {
@@ -79,6 +81,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -99,6 +102,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): ScheduleItemFormContainer
     {
@@ -111,6 +115,7 @@ class ScheduleItemPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentPersonsGrid(): PersonsGrid
     {

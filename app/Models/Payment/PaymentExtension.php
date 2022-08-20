@@ -17,7 +17,7 @@ class PaymentExtension extends CompilerExtension
     {
         $builder = $this->getContainerBuilder();
         foreach ($this->config as $item) {
-            $symbolGenerator = $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
+            $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))
                 ->setFactory(DefaultGenerator::class)->addSetup('setUp', [
                     $item['symbolGenerator']['variableSymbolStart'],
                     $item['symbolGenerator']['variableSymbolEnd'],

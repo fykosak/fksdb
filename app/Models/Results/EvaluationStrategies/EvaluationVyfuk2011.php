@@ -17,10 +17,10 @@ class EvaluationVyfuk2011 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_6),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_7),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_8),
-            ModelCategory::tryFrom(ModelCategory::CAT_ES_9),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_6),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_7),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_8),
+            ModelCategory::tryFrom(ModelCategory::VYFUK_9),
         ];
     }
 
@@ -30,13 +30,13 @@ class EvaluationVyfuk2011 implements EvaluationStrategy
     public function categoryToStudyYears(ModelCategory $category): array
     {
         switch ($category->value) {
-            case ModelCategory::CAT_ES_6:
+            case ModelCategory::VYFUK_6:
                 return [6];
-            case ModelCategory::CAT_ES_7:
+            case ModelCategory::VYFUK_7:
                 return [7];
-            case ModelCategory::CAT_ES_8:
+            case ModelCategory::VYFUK_8:
                 return [8];
-            case ModelCategory::CAT_ES_9:
+            case ModelCategory::VYFUK_9:
                 return [null, 9];
             default:
                 throw new InvalidArgumentException('Invalid category ' . $category->value);

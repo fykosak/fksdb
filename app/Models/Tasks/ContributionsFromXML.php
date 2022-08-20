@@ -85,7 +85,7 @@ class ContributionsFromXML extends Stage
             // store new contributions
             /** @var OrgModel $contributor */
             foreach ($contributors as $contributor) {
-                $this->taskContributionService->createNewModel([
+                $this->taskContributionService->storeModel([
                     'person_id' => $contributor->person_id,
                     'task_id' => $task->task_id,
                     'type' => $type,

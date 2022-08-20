@@ -32,7 +32,7 @@ EOT
         ]);
 
         foreach ($this->persons as $person) {
-            $this->getContainer()->getByType(EventParticipantService::class)->createNewModel([
+            $this->getContainer()->getByType(EventParticipantService::class)->storeModel([
                 'person_id' => $person->person_id,
                 'event_id' => $this->tsafEvent->event_id,
                 'status' => 'applied',
@@ -62,10 +62,12 @@ EOT
                 ->where(['event_id' => $this->event->event_id])
                 ->sum('accomodation')
         );
-        $this->getContainer()->getByType(EventService::class)->updateModel($this->event, [
+        $this->getContainer()->getByType(EventService::class)->storeModel([
             'parameters' => <<<EOT
 accomodationCapacity: $capacity                
-EOT]);
+EOT
+    ,
+        ], $this->event);
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',

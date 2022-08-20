@@ -46,16 +46,16 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase
 
     protected function loginUser(int $roleId = 1000): void
     {
-        $this->cartesianPerson = $this->getContainer()->getByType(PersonService::class)->createNewModel([
+        $this->cartesianPerson = $this->getContainer()->getByType(PersonService::class)->storeModel([
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $this->login = $this->getContainer()->getByType(LoginService::class)->createNewModel(
+        $this->login = $this->getContainer()->getByType(LoginService::class)->storeModel(
             ['person_id' => $this->cartesianPerson->person_id, 'active' => 1]
         );
 
-        $this->getContainer()->getByType(GrantService::class)->createNewModel(
+        $this->getContainer()->getByType(GrantService::class)->storeModel(
             ['login_id' => $this->login->login_id, 'role_id' => $roleId, 'contest_id' => 1]
         );
         $this->authenticateLogin($this->login, $this->fixture);

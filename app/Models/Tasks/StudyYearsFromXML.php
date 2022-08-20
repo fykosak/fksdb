@@ -94,7 +94,7 @@ class StudyYearsFromXML extends Stage
 
         // store new contributions
         foreach ($studyYears as $studyYear) {
-            $this->taskStudyYearService->createNewModel([
+            $this->taskStudyYearService->storeModel([
                 'task_id' => $task->task_id,
                 'study_year' => $studyYear,
             ]);

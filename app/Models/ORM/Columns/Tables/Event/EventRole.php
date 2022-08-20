@@ -10,13 +10,11 @@ use Fykosak\NetteORM\Exceptions\CannotAccessModelException;
 use FKSDB\Models\ORM\Columns\ColumnFactory;
 use FKSDB\Models\ORM\MetaDataFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
-use FKSDB\Models\ORM\ReferencedAccessor;
 use FKSDB\Models\ValuePrinters\EventRolePrinter;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\EventModel;
 use Nette\Security\User;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 class EventRole extends ColumnFactory
 {
@@ -31,18 +29,19 @@ class EventRole extends ColumnFactory
     /**
      * @throws CannotAccessModelException
      * @throws NotImplementedException
+     * @throws \ReflectionException
      */
     protected function createHtmlValue(Model $model): Html
     {
         try {
-            $person = ReferencedAccessor::accessModel($model, PersonModel::class);
+            $person = $model->getReferencedModel(PersonModel::class);
         } catch (CannotAccessModelException$exception) {
             /** @var LoginModel $login */
             $login = $this->user->getIdentity();
             $person = $login->person;
         }
         /** @var EventModel $event */
-        $event = ReferencedAccessor::accessModel($model, EventModel::class);
+        $event = $model->getReferencedModel(EventModel::class);
         return (new EventRolePrinter())($person, $event);
     }
 

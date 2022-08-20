@@ -8,7 +8,7 @@ use FKSDB\Models\ORM\Models\PersonHistoryModel;
 use Fykosak\NetteORM\Service;
 
 /**
- * @method PersonHistoryModel createNewModel(array $data)
+ * @method PersonHistoryModel storeModel(array $data, ?PersonHistoryModel $model = null)
  */
 class PersonHistoryService extends Service
 {

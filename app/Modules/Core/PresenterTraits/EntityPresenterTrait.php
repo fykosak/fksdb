@@ -63,6 +63,7 @@ trait EntityPresenterTrait
      * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function authorizedEdit(): void
     {
@@ -104,6 +105,7 @@ trait EntityPresenterTrait
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function authorizedDelete(): void
     {
@@ -115,6 +117,7 @@ trait EntityPresenterTrait
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function authorizedDetail(): void
     {
@@ -151,6 +154,7 @@ trait EntityPresenterTrait
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function traitHandleDelete(): void
     {

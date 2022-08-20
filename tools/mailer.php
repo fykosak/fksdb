@@ -42,12 +42,12 @@ foreach ($query as $model) {
         $serviceUnsubscribedEmail->checkEmail($message->getHeader('To')); // TODO hack?
 
         $mailer->send($message);
-        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::SENT, 'sent' => new DateTime()]);
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::SENT, 'sent' => new DateTime()], $model);
     } catch (UnsubscribedEmailException $exception) {
-        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::REJECTED]);
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::REJECTED], $model);
         Debugger::log($exception, 'mailer-exceptions-unsubscribed');
     } catch (Throwable $exception) {
-        $serviceEmailMessage->updateModel($model, ['state' => EmailMessageState::FAILED]);
+        $serviceEmailMessage->storeModel(['state' => EmailMessageState::FAILED], $model);
         Debugger::log($exception, 'mailer-exceptions');
     }
 }

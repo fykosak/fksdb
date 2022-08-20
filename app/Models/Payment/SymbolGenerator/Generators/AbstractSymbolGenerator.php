@@ -35,6 +35,6 @@ abstract class AbstractSymbolGenerator implements TransitionCallback
         /** @var PaymentModel $model */
         $model = $holder->getModel();
         $info = $this->create($model, ...$args);
-        $this->paymentService->updateModel($model, $info);
+        $this->paymentService->storeModel($info, $model);
     }
 }

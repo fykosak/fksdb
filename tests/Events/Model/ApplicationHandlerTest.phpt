@@ -47,7 +47,7 @@ class ApplicationHandlerTest extends EventTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $event = $this->getContainer()->getByType(EventService::class)->createNewModel([
+        $event = $this->getContainer()->getByType(EventService::class)->storeModel([
             'event_type_id' => 1,
             'year' => 1,
             'event_year' => 1,

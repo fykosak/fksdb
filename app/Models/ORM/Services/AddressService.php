@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FKSDB\Models\ORM\Services;
 
 use Fykosak\NetteORM\Service;
-use Fykosak\NetteORM\Exceptions\ModelException;
 use FKSDB\Models\ORM\DbNames;
 use Fykosak\NetteORM\Model;
 use FKSDB\Models\ORM\Models\AddressModel;
@@ -13,28 +12,20 @@ use FKSDB\Models\ORM\Models\RegionModel;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
 use Tracy\Debugger;
 
+/**
+ * @method AddressModel findByPrimary($key)
+ */
 class AddressService extends Service
 {
 
     private const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * @throws ModelException
-     */
-    public function createNewModel(array $data): AddressModel
+    public function storeModel(array $data, ?Model $model = null): AddressModel
     {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
-        return parent::createNewModel($data);
-    }
-
-    public function updateModel(Model $model, array $data): bool
-    {
-        if (!isset($data['region_id'])) {
-            $data['region_id'] = $this->inferRegion($data['postal_code']);
-        }
-        return parent::updateModel($model, $data);
+        return parent::storeModel($data, $model);
     }
 
     /**

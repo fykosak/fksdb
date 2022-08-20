@@ -17,7 +17,7 @@ use Fykosak\NetteORM\Model;
  * @property-read string email
  * @property-read string ic
  * @property-read string izo
- * @property-read bool active
+ * @property-read int active
  * @property-read string note
  */
 class SchoolModel extends Model implements Resource

@@ -11,6 +11,8 @@ use FKSDB\Models\Authorization\EventRole\{ContestOrgRole,
     ParticipantRole
 };
 use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamMemberModel;
+use FKSDB\Models\ORM\Models\Fyziklani\TeamTeacherModel;
 use FKSDB\Models\ORM\Models\Schedule\PersonScheduleModel;
 use FKSDB\Models\ORM\Models\Schedule\SchedulePaymentModel;
 use FKSDB\Models\ORM\Models\Schedule\ScheduleGroupType;
@@ -335,29 +337,30 @@ class PersonModel extends Model implements Resource
     public function getEventRoles(EventModel $event): array
     {
         $roles = [];
-
-        $eventId = $event->event_id;
-        $teachers = $this->getFyziklaniTeachers()->where('fyziklani_team.event_id', $eventId);
+        $teachers = $this->getFyziklaniTeachers()->where('fyziklani_team.event_id', $event->event_id);
         if ($teachers->count('*')) {
             $teams = [];
+            /** @var TeamTeacherModel $row */
             foreach ($teachers as $row) {
                 $teams[] = $row->fyziklani_team;
             }
             $roles[] = new FyziklaniTeamTeacherRole($event, $teams);
         }
-
-        $eventOrg = $this->getEventOrgs()->where('event_id', $eventId)->fetch();
+        /** @var EventOrgModel $eventOrg */
+        $eventOrg = $this->getEventOrgs()->where('event_id', $event->event_id)->fetch();
         if (isset($eventOrg)) {
             $roles[] = new EventOrgRole($event, $eventOrg);
         }
-        $eventParticipant = $this->getEventParticipants()->where('event_id', $eventId)->fetch();
+        /** @var EventParticipantModel $eventParticipant */
+        $eventParticipant = $this->getEventParticipants()->where('event_id', $event->event_id)->fetch();
         if (isset($eventParticipant)) {
             $roles[] = new ParticipantRole(
                 $event,
                 $eventParticipant
             );
         }
-        $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $eventId)->fetch();
+        /** @var TeamMemberModel $teamMember */
+        $teamMember = $this->getTeamMembers()->where('fyziklani_team.event_id', $event->event_id)->fetch();
         if ($teamMember) {
             $roles[] = new FyziklaniTeamMemberRole(
                 $event,

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FKSDB\Models\Events\Model\Holder\SecondaryModelStrategies;
 
 use FKSDB\Models\Events\Model\Holder\BaseHolder;
-use Nette\Database\Table\ActiveRow;
+use Fykosak\NetteORM\Model;
 
 class SecondaryModelConflictException extends \RuntimeException
 {
@@ -25,10 +25,10 @@ class SecondaryModelConflictException extends \RuntimeException
         $this->conflicts = $conflicts;
     }
 
-    private function createMessage(?ActiveRow $model, iterable $conflicts): string
+    private function createMessage(?Model $model, iterable $conflicts): string
     {
         $ids = null;
-        /** @var ActiveRow $conflict */
+        /** @var Model $conflict */
         foreach ($conflicts as $conflict) {
             $ids = $conflict->getPrimary();
         }

@@ -10,7 +10,6 @@ use FKSDB\Models\WebService\NodeCreator;
 use FKSDB\Models\WebService\XMLHelper;
 use Fykosak\NetteORM\Model;
 use Fykosak\NetteORM\TypedGroupedSelection;
-use Nette\Database\Table\ActiveRow;
 use Nette\Security\Resource;
 
 /**
@@ -63,7 +62,7 @@ class ScheduleGroupModel extends Model implements Resource, NodeCreator
 
     /**
      * @param string $key
-     * @return ScheduleGroupType|mixed|ActiveRow|null
+     * @return ScheduleGroupType|mixed|null
      * @throws \ReflectionException
      */
     public function &__get(string $key)

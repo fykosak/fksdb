@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FKSDB\Models\Persons\Deduplication;
 
+use Fykosak\NetteORM\Model;
 use Fykosak\Utils\Logging\DevNullLogger;
 use Fykosak\Utils\Logging\Logger;
 use Nette\Database\Explorer;
-use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
 /**
@@ -20,8 +20,8 @@ class Merger
     public const IDX_MERGED = 'merged';
     public const IDX_RESOLUTION = 'resolution';
     private array $conflicts = [];
-    private ActiveRow $trunkRow;
-    private ActiveRow $mergedRow;
+    private Model $trunkRow;
+    private Model $mergedRow;
 
     private Explorer $explorer;
     private array $configuration;
@@ -46,7 +46,7 @@ class Merger
         $this->logger = $logger;
     }
 
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void
+    public function setMergedPair(Model $trunkRow, Model $mergedRow): void
     {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
@@ -163,7 +163,7 @@ class Merger
     /**
      * @internal Friend of Merger class.
      */
-    public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): void
+    public function addConflict(Model $trunkRow, Model $mergedRow, string $column): void
     {
         $data = &$this->getPairData($trunkRow, $mergedRow);
         $data[self::IDX_TRUNK][$column] = $trunkRow[$column];
@@ -173,7 +173,7 @@ class Merger
     /**
      * @internal Friend of Merger class.
      */
-    public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column): bool
+    public function hasResolution(Model $trunkRow, Model $mergedRow, string $column): bool
     {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return array_key_exists(self::IDX_RESOLUTION, $data) && array_key_exists($column, $data[self::IDX_RESOLUTION]);
@@ -183,18 +183,18 @@ class Merger
      * @return mixed
      * @internal Friend of Merger class.
      */
-    public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, string $column)
+    public function getResolution(Model $trunkRow, Model $mergedRow, string $column)
     {
         $data = $this->getPairData($trunkRow, $mergedRow);
         return $data[self::IDX_RESOLUTION][$column];
     }
 
-    private function getPairId(ActiveRow $trunkRow, ActiveRow $mergedRow): string
+    private function getPairId(Model $trunkRow, Model $mergedRow): string
     {
         return $trunkRow->getPrimary() . '_' . $mergedRow->getPrimary();
     }
 
-    private function &getPairData(ActiveRow $trunkRow, ActiveRow $mergedRow): array
+    private function &getPairData(Model $trunkRow, Model $mergedRow): array
     {
         $table = $trunkRow->getTable()->getName();
         $pairId = $this->getPairId($trunkRow, $mergedRow);

@@ -15,13 +15,13 @@ class OrgModule extends AbstractPageDisplayTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->getContainer()->getByType(OrgService::class)->createNewModel([
+        $this->getContainer()->getByType(OrgService::class)->storeModel([
             'person_id' => $this->person->person_id,
             'contest_id' => 1,
             'since' => 1,
             'order' => 1,
         ]);
-        $this->getContainer()->getByType(PersonInfoService::class)->createNewModel(
+        $this->getContainer()->getByType(PersonInfoService::class)->storeModel(
             ['person_id' => $this->person->person_id]
         );
     }

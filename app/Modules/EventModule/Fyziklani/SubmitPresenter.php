@@ -51,6 +51,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function titleDetail(): PageTitle
     {
@@ -69,6 +70,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderDetail(): void
     {
@@ -83,6 +85,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     final public function renderEdit(): void
     {
@@ -96,6 +99,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     public function handleCheck(): void
     {
@@ -139,6 +143,7 @@ class SubmitPresenter extends BasePresenter
      * @throws ModelNotFoundException
      * @throws CannotAccessModelException
      * @throws GoneException
+     * @throws \ReflectionException
      */
     protected function createComponentEditForm(): FyziklaniSubmitFormComponent
     {

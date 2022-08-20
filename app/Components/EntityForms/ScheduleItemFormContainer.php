@@ -47,7 +47,6 @@ class ScheduleItemFormContainer extends EntityFormComponent
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull2($values[self::CONTAINER]);
         $data['event_id'] = $this->event->event_id;
-        /** @var ScheduleItemModel $model */
         $model = $this->scheduleItemService->storeModel($data, $this->model);
         $this->flashMessage(sprintf(_('Item "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('ScheduleGroup:detail', ['id' => $model->schedule_group_id]);

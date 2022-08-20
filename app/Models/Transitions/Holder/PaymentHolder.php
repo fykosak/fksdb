@@ -21,7 +21,7 @@ class PaymentHolder implements ModelHolder
 
     public function updateState(EnumColumn $newState): void
     {
-        $this->service->updateModel($this->model, ['state' => $newState->value]);
+        $this->service->storeModel(['state' => $newState->value], $this->model);
     }
 
     public function getState(): ?EnumColumn
@@ -36,10 +36,6 @@ class PaymentHolder implements ModelHolder
 
     public function updateData(array $data): void
     {
-        if (isset($this->model)) {
-            $this->service->updateModel($this->model, $data);
-        } else {
-            $this->model = $this->service->createNewModel($data);
-        }
+        $this->service->storeModel($data, $this->model);
     }
 }

@@ -63,15 +63,15 @@ class SchoolFormComponent extends EntityFormComponent
         $connection->beginTransaction();
         if (isset($this->model)) {
             /* Address */
-            $this->addressService->updateModel($this->model->address, $addressData);
+            $this->addressService->storeModel($addressData, $this->model->address);
             /* School */
-            $this->schoolService->updateModel($this->model, $schoolData);
+            $this->schoolService->storeModel($schoolData, $this->model);
         } else {
             /* Address */
-            $address = $this->addressService->createNewModel($addressData);
+            $address = $this->addressService->storeModel($addressData);
             /* School */
             $schoolData['address_id'] = $address->address_id;
-            $this->schoolService->createNewModel($schoolData);
+            $this->schoolService->storeModel($schoolData);
         }
         $connection->commit();
 

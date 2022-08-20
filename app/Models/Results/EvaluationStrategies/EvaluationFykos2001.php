@@ -20,10 +20,10 @@ class EvaluationFykos2001 implements EvaluationStrategy
     public function getCategories(): array
     {
         return [
-            ModelCategory::tryFrom(ModelCategory::CAT_HS_1),
-            ModelCategory::tryFrom(ModelCategory::CAT_HS_2),
-            ModelCategory::tryFrom(ModelCategory::CAT_HS_3),
-            ModelCategory::tryFrom(ModelCategory::CAT_HS_4),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_1),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_2),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_3),
+            ModelCategory::tryFrom(ModelCategory::FYKOS_4),
         ];
     }
 
@@ -33,13 +33,13 @@ class EvaluationFykos2001 implements EvaluationStrategy
     public function categoryToStudyYears(ModelCategory $category): array
     {
         switch ($category->value) {
-            case ModelCategory::CAT_HS_1:
+            case ModelCategory::FYKOS_1:
                 return [6, 7, 8, 9, 1];
-            case ModelCategory::CAT_HS_2:
+            case ModelCategory::FYKOS_2:
                 return [2];
-            case ModelCategory::CAT_HS_3:
+            case ModelCategory::FYKOS_3:
                 return [3];
-            case ModelCategory::CAT_HS_4:
+            case ModelCategory::FYKOS_4:
                 return [null, 4];
             default:
                 throw new InvalidArgumentException('Invalid category ' . $category->value);

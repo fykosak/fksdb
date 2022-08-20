@@ -118,7 +118,7 @@ class PaymentFormComponent extends EntityFormComponent
         $connection->beginTransaction();
         try {
             if (isset($this->model)) {
-                $this->paymentService->updateModel($this->model, $data);
+                $this->paymentService->storeModel($data, $this->model);
                 $model = $this->model;
             } else {
                 $holder = $this->machine->createHolder(null);

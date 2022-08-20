@@ -42,7 +42,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka2@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]
         );
 
@@ -50,7 +50,7 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka3@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(OrgService::class)->createNewModel(
+        $this->getContainer()->getByType(OrgService::class)->storeModel(
             ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]
         );
 
@@ -58,24 +58,24 @@ class Authorization extends FyziklaniTestCase
             'email' => 'karkulka4@les.cz',
             'born' => DateTime::from('2000-01-01'),
         ], []);
-        $this->getContainer()->getByType(ContestantService::class)->createNewModel(
+        $this->getContainer()->getByType(ContestantService::class)->storeModel(
             ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]
         );
 
         $this->event = $this->createEvent([]);
-        $task = $this->getContainer()->getByType(TaskService::class)->createNewModel([
+        $task = $this->getContainer()->getByType(TaskService::class)->storeModel([
             'event_id' => $this->event->event_id,
             'label' => 'AA',
             'name' => 'tmp',
         ]);
 
-        $team = $this->getContainer()->getByType(TeamService2::class)->createNewModel([
+        $team = $this->getContainer()->getByType(TeamService2::class)->storeModel([
             'event_id' => $this->event->event_id,
             'name' => 'bar',
             'status' => 'applied',
             'category' => 'C',
         ]);
-        $this->submit = $this->getContainer()->getByType(SubmitService::class)->createNewModel([
+        $this->submit = $this->getContainer()->getByType(SubmitService::class)->storeModel([
             'fyziklani_task_id' => $task->fyziklani_task_id,
             'fyziklani_team_id' => $team->fyziklani_team_id,
             'points' => 5,

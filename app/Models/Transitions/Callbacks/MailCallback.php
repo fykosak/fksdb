@@ -9,7 +9,6 @@ use FKSDB\Models\Mail\MailTemplateFactory;
 use FKSDB\Models\ORM\Models\PersonModel;
 use FKSDB\Models\ORM\Services\EmailMessageService;
 use FKSDB\Models\Transitions\Holder\ModelHolder;
-use Fykosak\NetteORM\ReferencedAccessor;
 
 class MailCallback implements TransitionCallback
 {
@@ -33,11 +32,12 @@ class MailCallback implements TransitionCallback
 
     /**
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function __invoke(ModelHolder $holder, ...$args): void
     {
         /** @var PersonModel|null $person */
-        $person = ReferencedAccessor::accessModel($holder->getModel(), PersonModel::class);
+        $person = $holder->getModel()->getReferencedModel(PersonModel::class);
         if (is_null($person)) {
             throw new BadTypeException(PersonModel::class, $person);
         }

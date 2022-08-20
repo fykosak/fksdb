@@ -24,6 +24,7 @@ class ColumnPrinterComponent extends BaseComponent
     /**
      * @throws BadTypeException
      * @throws CannotAccessModelException
+     * @throws \ReflectionException
      */
     final public function render(string $field, Model $model, int $userPermission): void
     {

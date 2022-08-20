@@ -6,6 +6,7 @@ namespace FKSDB\Models\WebService\AESOP\Models;
 
 use FKSDB\Models\Exports\Formats\PlainTextResponse;
 use FKSDB\Models\ORM\Models\ContestYearModel;
+use FKSDB\Models\ORM\Models\TaskModel;
 use FKSDB\Models\ORM\Services\TaskService;
 use FKSDB\Models\Results\ModelCategory;
 use FKSDB\Models\Results\ResultsModelFactory;
@@ -86,6 +87,7 @@ WHERE
             ->where('year', $this->contestYear->year)
             ->where('series BETWEEN 1 AND 6');
         $sum = 0;
+        /** @var TaskModel $task */
         foreach ($tasks as $task) {
             $sum += $evalutationStrategy->getTaskPoints($task, $this->category);
         }
@@ -116,7 +118,6 @@ WHERE
         $studyYears = [];
         if ($this->category) {
             $studyYears = $evaluationStrategy->categoryToStudyYears($this->category);
-            $studyYears = is_array($studyYears) ? $studyYears : [$studyYears];
         }
 
         $graduationYears = [];
